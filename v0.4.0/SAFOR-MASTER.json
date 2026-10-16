@@ -1,0 +1,831 @@
+{
+  "format": "SAF_MASTER_BOOTSTRAP",
+  "schemaVersion": "0.4.0",
+  "kernelVersion": "0.4.0",
+  "definitionId": "saf-master-kernel",
+  "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
+  "purpose": "Portable, domain-agnostic SAF bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
+  "bootstrapContract": {
+    "singleFileEntry": true,
+    "entryFile": "SAFOR-MASTER.json",
+    "userExperience": [
+      "User loads only this JSON into a compatible chat.",
+      "Kernel asks the HUMAN to choose GitHub or GitLab and verifies baseline provider access.",
+      "Kernel asks the HUMAN to choose the owner namespace.",
+      "Kernel requires the exact repository `{selectedOwner}/safor-memory` to already exist and proves read/write access. Missing repository or insufficient access causes STOP.",
+      "Only after safor-memory passes, the HUMAN must choose exactly one creation type: Software / Website or Buch.",
+      "The selected creation type fixes the Factory and compatible Operating Model used for Discovery, Planning and Evidence.",
+      "Kernel then asks whether the HUMAN wants an existing or new project and performs project selection/definition.",
+      "Kernel binds the verified safor-memory repository as the control repository, confirms package bindings, and materializes project control after explicit setup approval.",
+      "Kernel uses chat-native UI and the concise HUMAN buddy communication profile throughout."
+    ],
+    "noImplicitExecution": true,
+    "noImplicitAuthorization": true,
+    "noImplicitProviderRights": true
+  },
+  "kernelPrinciples": {
+    "domainAgnostic": true,
+    "llmReplaceable": true,
+    "operatingModelExternal": true,
+    "factoryExternal": true,
+    "providerAdapterExternal": true,
+    "evidenceBeforeBelief": true,
+    "explicitHumanAuthority": true,
+    "leastPrivilege": true,
+    "immutableTerminalRuns": true,
+    "reconcileUnknownExternalEffects": true,
+    "deliveryIsNotBusinessOutcome": true,
+    "oneAuthoritativeFactMultipleReferences": true,
+    "menuFirstHumanExperience": true,
+    "nativeInteractionWhenAvailable": true,
+    "freeTextAlwaysAllowed": true,
+    "conciseHumanCommunication": true,
+    "buddyStyleHumanInteraction": true,
+    "detailOnDemand": true,
+    "mandatoryProviderReadWriteBeforeProjectSelection": true,
+    "explicitOwnerSelection": true,
+    "recentRepositorySelectionMenu": true,
+    "chatNativeUiOnly": true,
+    "conservativeSelfHealing": true,
+    "safMemoryAbsolutePrerequisite": true,
+    "creationTypeMandatory": true,
+    "factoryBoundDiscoveryPlanningEvidence": true
+  },
+  "moduleArchitecture": {
+    "layers": [
+      {
+        "id": "MASTER_KERNEL",
+        "responsibility": "Generic orchestration, state transitions, evidence, authorization, reconciliation, package loading and invariants."
+      },
+      {
+        "id": "OPERATING_MODEL",
+        "responsibility": "Roles, mandates, capability ownership, decision rights, human gates, separation of duties and escalation."
+      },
+      {
+        "id": "FACTORY",
+        "responsibility": "Domain-specific value stream, artifact types, work-item types, transformations, quality requirements and outcome model."
+      },
+      {
+        "id": "PROJECT_INSTANCE",
+        "responsibility": "Concrete bindings, actors, project state, decisions, evidence and value-stream instance."
+      },
+      {
+        "id": "PROVIDER_ADAPTER",
+        "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
+      }
+    ],
+    "dependencyRules": [
+      "MASTER_KERNEL must not depend on domain role IDs, domain artifact types, domain work-item types or provider product names.",
+      "FACTORY may depend on abstract capability IDs and authority IDs, but must not reference concrete role IDs or actor IDs.",
+      "OPERATING_MODEL maps abstract capabilities and authorities to roles/mandates, but must not define the value-stream order.",
+      "PROJECT_INSTANCE maps roles to concrete human or agent actors and pins package versions.",
+      "PROVIDER_ADAPTER maps provider-neutral capabilities to provider semantics and actual host tools; unavailable tools remain unavailable."
+    ]
+  },
+  "packageSystem": {
+    "requiredPackageKinds": [
+      "OPERATING_MODEL",
+      "FACTORY",
+      "PROVIDER_ADAPTER"
+    ],
+    "manifestSchemaRef": "schemas/package-manifest.schema.json",
+    "registryRoots": [
+      "packages/operating-models/",
+      "packages/factories/",
+      "providers/"
+    ],
+    "bindingResolutionOrder": [
+      "HUMAN.CREATION_TYPE_SELECTION",
+      "PACKAGE_REGISTRY.creationProfiles",
+      "FACTORY.requiredCapabilities",
+      "OPERATING_MODEL.capabilityBindings",
+      "PROJECT_INSTANCE.actorAssignments",
+      "PROVIDER_ADAPTER.capabilities",
+      "HOST_ACTUAL_TOOL_RIGHTS"
+    ],
+    "rules": {
+      "pinResolvedVersion": true,
+      "snapshotResolvedManifestIntoProject": true,
+      "validateKernelCompatibility": true,
+      "validateRequiredCapabilities": true,
+      "rejectFactoryRoleReferences": true,
+      "rejectOperatingModelFlowOwnership": true,
+      "rejectUnknownPackageKind": true,
+      "noAutomaticPackageMigration": true,
+      "creationProfileDeterminesFactoryAndOperatingModel": true,
+      "noFactoryInferenceWithoutHumanSelection": true
+    }
+  },
+  "projectMaterialization": {
+    "root": "projects/{projectSlug}/",
+    "requiredArtifacts": {
+      "project": "project.json",
+      "bindings": "bindings.json",
+      "controlState": "state/control.json",
+      "valueStreamState": "state/value-stream.json",
+      "executionState": "state/execution.json"
+    },
+    "directories": [
+      "packages/",
+      "decisions/",
+      "evidence/",
+      "artifacts/",
+      "work-items/",
+      "agents/",
+      "audit/"
+    ],
+    "packageSnapshots": {
+      "operatingModel": "packages/operating-model.json",
+      "factory": "packages/factory.json",
+      "providerAdapters": "packages/provider-adapters.json"
+    },
+    "aggregateRule": "Control state, value-stream state and execution state are separate authoritative aggregates. Cross-aggregate transitions require declared invariants and references; duplicated authoritative facts are forbidden."
+  },
+  "providerCapabilityVocabulary": [
+    "provider.identity.read",
+    "provider.namespace.list",
+    "provider.repository.list",
+    "provider.repository.read",
+    "provider.repository.create",
+    "provider.artifact.read",
+    "provider.artifact.write",
+    "provider.history.read",
+    "provider.branch.read",
+    "provider.branch.write",
+    "provider.change_request.read",
+    "provider.change_request.write",
+    "provider.change_request.merge",
+    "provider.checks.read",
+    "provider.issue.read",
+    "provider.issue.write"
+  ],
+  "kernelVocabulary": {
+    "businessObjectKinds": [
+      "INTENT",
+      "REQUIREMENT",
+      "WORK_ITEM",
+      "CONTRIBUTION",
+      "EVIDENCE",
+      "DECISION",
+      "HANDOFF",
+      "DELIVERY",
+      "ACTIVATION",
+      "OUTCOME",
+      "EXCEPTION"
+    ],
+    "relationKinds": [
+      "depends_on",
+      "produces",
+      "is_evidence_for",
+      "authorizes",
+      "activates",
+      "contributes_to_outcome",
+      "revises",
+      "hands_off_to"
+    ],
+    "workItemStatuses": [
+      "PLANNED",
+      "READY",
+      "ASSIGNED",
+      "IN_PROGRESS",
+      "HANDOFF_READY",
+      "IN_REVIEW",
+      "CHANGES_REQUIRED",
+      "ACCEPTED",
+      "BLOCKED",
+      "CANCELED"
+    ],
+    "runStatuses": [
+      "INTENT_WRITTEN",
+      "RUNNING",
+      "WAITING_HUMAN",
+      "WAITING_EXTERNAL",
+      "RECONCILE_REQUIRED",
+      "COMPLETED",
+      "BLOCKED",
+      "FAILED",
+      "CANCELED"
+    ],
+    "outcomeStatuses": [
+      "NOT_EVALUATED",
+      "VALUE_SUPPORTED",
+      "VALUE_NOT_DEMONSTRATED",
+      "VALUE_UNCLEAR"
+    ]
+  },
+  "schemas": {
+    "packageManifest": "schemas/package-manifest.schema.json",
+    "controlState": "schemas/control-state.schema.json",
+    "valueStreamState": "schemas/value-stream-state.schema.json",
+    "executionState": "schemas/execution-state.schema.json",
+    "workItem": "schemas/work-item.schema.json",
+    "project": "schemas/project.schema.json",
+    "bindings": "schemas/bindings.schema.json",
+    "decisionRecord": "schemas/decision-record.schema.json",
+    "evidenceRecord": "schemas/evidence-record.schema.json",
+    "interactionMenu": "schemas/interaction-menu.schema.json",
+    "selfHealingRecord": "schemas/self-healing-record.schema.json"
+  },
+  "controlPlane": {
+    "startActionId": "K01",
+    "phases": [
+      {
+        "id": "BOOTSTRAP",
+        "actions": [
+          "K01",
+          "K02",
+          "K03",
+          "K04",
+          "K05",
+          "K06",
+          "K07",
+          "K08",
+          "K09",
+          "K10",
+          "K11"
+        ]
+      },
+      {
+        "id": "RESUME",
+        "actions": [
+          "R01"
+        ]
+      },
+      {
+        "id": "DISCOVERY",
+        "actions": [
+          "D01"
+        ]
+      },
+      {
+        "id": "PLANNING",
+        "actions": [
+          "P01",
+          "P02",
+          "P03"
+        ]
+      },
+      {
+        "id": "EXECUTION",
+        "actions": [
+          "E01",
+          "E02",
+          "E03",
+          "E04",
+          "E05",
+          "E06"
+        ]
+      },
+      {
+        "id": "RECOVERY",
+        "actions": [
+          "H01",
+          "H02",
+          "H03",
+          "H04"
+        ]
+      },
+      {
+        "id": "OUTCOME",
+        "actions": [
+          "O01"
+        ]
+      },
+      {
+        "id": "CLOSING",
+        "actions": [
+          "C01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "K01",
+        "operation": "SELECT_PROVIDER",
+        "purpose": "Ask the HUMAN to select GitHub or GitLab.",
+        "domainNeutral": true,
+        "humanDecision": "PROVIDER_SELECTION",
+        "modelRef": "initialization-model.json#sequence/INIT-01"
+      },
+      {
+        "id": "K02",
+        "operation": "VERIFY_PROVIDER_READ_WRITE_ACCESS",
+        "purpose": "Verify baseline provider identity and read/write capabilities.",
+        "domainNeutral": true,
+        "modelRef": "initialization-model.json#sequence/INIT-02"
+      },
+      {
+        "id": "K03",
+        "operation": "SELECT_OWNER_NAMESPACE",
+        "purpose": "Let the HUMAN select the owner namespace.",
+        "domainNeutral": true,
+        "humanDecision": "OWNER_SELECTION",
+        "modelRef": "initialization-model.json#sequence/INIT-03"
+      },
+      {
+        "id": "K04",
+        "operation": "VERIFY_OWNER_ACCESS",
+        "purpose": "Re-verify owner-scoped provider access.",
+        "domainNeutral": true,
+        "modelRef": "initialization-model.json#sequence/INIT-04"
+      },
+      {
+        "id": "K05",
+        "operation": "VERIFY_REQUIRED_SAF_MEMORY",
+        "purpose": "Require `{selectedOwner}/safor-memory` to pre-exist with proven read/write access; otherwise STOP.",
+        "domainNeutral": true,
+        "modelRef": "initialization-model.json#sequence/INIT-05"
+      },
+      {
+        "id": "K06",
+        "operation": "SELECT_CREATION_TYPE",
+        "purpose": "Require Software / Website or Buch. This fixes Factory and compatible Operating Model.",
+        "domainNeutral": true,
+        "humanDecision": "CREATION_TYPE_SELECTION",
+        "modelRef": "initialization-model.json#sequence/INIT-06"
+      },
+      {
+        "id": "K07",
+        "operation": "SELECT_PROJECT_MODE",
+        "purpose": "Ask whether to use an existing project or start a new project.",
+        "domainNeutral": true,
+        "humanDecision": "PROJECT_MODE_SELECTION",
+        "modelRef": "initialization-model.json#sequence/INIT-07"
+      },
+      {
+        "id": "K08",
+        "operation": "SELECT_OR_DEFINE_PROJECT",
+        "purpose": "Select an existing recent repository or define a new project.",
+        "domainNeutral": true,
+        "humanDecision": "PROJECT_SELECTION",
+        "modelRef": "initialization-model.json#sequence/INIT-08A|INIT-08B"
+      },
+      {
+        "id": "K09",
+        "operation": "BIND_REQUIRED_SAF_MEMORY",
+        "purpose": "Bind the verified `{selectedOwner}/safor-memory` as mandatory control repository.",
+        "domainNeutral": true,
+        "modelRef": "initialization-model.json#sequence/INIT-09"
+      },
+      {
+        "id": "K10",
+        "operation": "CONFIRM_CREATION_PROFILE_BINDINGS",
+        "purpose": "Confirm Provider Adapter plus Factory and Operating Model determined by creation type.",
+        "domainNeutral": true,
+        "humanDecision": "PACKAGE_BINDING_APPROVAL",
+        "modelRef": "initialization-model.json#sequence/INIT-10"
+      },
+      {
+        "id": "K11",
+        "operation": "MATERIALIZE_PROJECT_CONTROL",
+        "purpose": "After SETUP_APPROVAL, write project control to safor-memory and verify by provider readback.",
+        "domainNeutral": true,
+        "humanDecision": "SETUP_APPROVAL",
+        "modelRef": "initialization-model.json#sequence/INIT-11"
+      },
+      {
+        "id": "R01",
+        "operation": "LOAD_AND_VERIFY_PROJECT_STATE",
+        "purpose": "Read persisted aggregates, validate bindings/integrity and reconcile unfinished external effects.",
+        "domainNeutral": true
+      },
+      {
+        "id": "D01",
+        "operation": "CAPTURE_FACTORY_INTENT",
+        "purpose": "Run Discovery strictly from the bound Factory discoveryContract selected by the HUMAN creation type.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.discoveryContract"
+      },
+      {
+        "id": "P01",
+        "operation": "INSTANTIATE_VALUE_STREAM",
+        "purpose": "Create the plan strictly from the same bound Factory planningContract, confirmed Discovery and Factory flow graph.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.planningContract"
+      },
+      {
+        "id": "P02",
+        "operation": "RESOLVE_ACTORS",
+        "purpose": "Resolve factory-required capabilities through the operating model to roles and concrete actors.",
+        "domainNeutral": true
+      },
+      {
+        "id": "P03",
+        "operation": "APPROVE_PLAN",
+        "purpose": "Persist explicit approval of the instantiated plan; plan approval is not execution authorization.",
+        "domainNeutral": true,
+        "humanDecision": "PLAN_APPROVAL"
+      },
+      {
+        "id": "E01",
+        "operation": "REQUEST_EXECUTION_MANDATE",
+        "purpose": "Create an explicit, scoped execution mandate for selected work items/capabilities.",
+        "domainNeutral": true,
+        "humanDecision": "EXECUTION_MANDATE"
+      },
+      {
+        "id": "E02",
+        "operation": "SELECT_READY_WORK_ITEM",
+        "purpose": "Select only work whose dependencies, authority and guards are satisfied.",
+        "domainNeutral": true
+      },
+      {
+        "id": "E03",
+        "operation": "DISPATCH_WORK_ITEM",
+        "purpose": "Issue a scoped work contract to the resolved actor without granting undeclared capabilities.",
+        "domainNeutral": true
+      },
+      {
+        "id": "E04",
+        "operation": "COLLECT_EVIDENCE",
+        "purpose": "Collect evidence required by the bound Factory evidenceContract for the current work-item type plus kernel/provider integrity evidence.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.evidenceContract"
+      },
+      {
+        "id": "E05",
+        "operation": "EVALUATE_WORK_ITEM",
+        "purpose": "Evaluate acceptance against Factory acceptance criteria, the bound Factory evidenceContract, review independence and applicable gates.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.evidenceContract"
+      },
+      {
+        "id": "E06",
+        "operation": "ROUTE_VALUE_STREAM",
+        "purpose": "Apply the factory graph to proceed, branch, join, rework, escalate or wait.",
+        "domainNeutral": true
+      },
+      {
+        "id": "O01",
+        "operation": "ASSESS_OUTCOMES",
+        "purpose": "Evaluate declared business/reader/organizational outcomes only when the factory defines measurable outcome nodes and evidence.",
+        "domainNeutral": true
+      },
+      {
+        "id": "C01",
+        "operation": "CLOSE_PROJECT_OR_ITERATION",
+        "purpose": "Close only when the factory terminal predicate is satisfied; delivery completion never implies outcome success.",
+        "domainNeutral": true
+      },
+      {
+        "id": "H01",
+        "operation": "DETECT_AND_CLASSIFY_FAILURE",
+        "purpose": "Detect a recoverable failure, derive its failure fingerprint and classify it using the bound self-healing model.",
+        "domainNeutral": true,
+        "modelRef": "self-healing-model.json"
+      },
+      {
+        "id": "H02",
+        "operation": "CHECK_AND_PLAN_REPAIR",
+        "purpose": "Verify repair eligibility, current mandate, provider capabilities, retry budget and required success evidence before any repair mutation.",
+        "domainNeutral": true,
+        "modelRef": "self-healing-model.json"
+      },
+      {
+        "id": "H03",
+        "operation": "EXECUTE_BOUNDED_REPAIR",
+        "purpose": "Execute only a pre-authorized, non-destructive repair allowed by the self-healing model. Unknown external effects reconcile before retry.",
+        "domainNeutral": true,
+        "modelRef": "self-healing-model.json"
+      },
+      {
+        "id": "H04",
+        "operation": "VERIFY_REPAIR_AND_RESUME",
+        "purpose": "Read back authoritative state, verify expected recovery evidence and either resume from the last verified checkpoint or escalate to the HUMAN.",
+        "domainNeutral": true,
+        "modelRef": "self-healing-model.json"
+      }
+    ],
+    "modes": [
+      "BOOTSTRAP",
+      "INITIALIZING",
+      "PLANNING",
+      "AWAITING_AUTHORIZATION",
+      "EXECUTING",
+      "WAITING_OUTCOME",
+      "RECOVERING",
+      "PAUSED",
+      "STOPPED",
+      "COMPLETED"
+    ],
+    "interactionLoop": {
+      "stableCheckpointBehavior": "Present the current SAF action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
+      "defaultPrimaryIntent": "NEXT_ROUND",
+      "roundDefinitionRef": "interaction-model.json#roundSemantics",
+      "menuPolicyRef": "interaction-model.json#menuPolicy",
+      "recommendationPolicyRef": "interaction-model.json#recommendationExperience",
+      "decisionPolicyRef": "interaction-model.json#decisionExperience",
+      "humanCommunicationRef": "interaction-model.json#humanCommunication",
+      "defaultHumanSurface": "SUMMARY"
+    },
+    "recoveryLoop": {
+      "modelRef": "self-healing-model.json",
+      "triggerOn": [
+        "FAILED_WITH_CLASSIFIABLE_RECOVERY",
+        "BLOCKED_WITH_CLASSIFIABLE_RECOVERY",
+        "RECONCILE_REQUIRED",
+        "READBACK_MISMATCH",
+        "STALE_REVISION_CONFLICT"
+      ],
+      "enterMode": "RECOVERING",
+      "actions": [
+        "H01",
+        "H02",
+        "H03",
+        "H04"
+      ],
+      "success": "RETURN_TO_LAST_VERIFIED_CHECKPOINT",
+      "escalation": "WAITING_HUMAN",
+      "rule": "Automatic repair is permitted only within existing authorization and configured repair/retry budgets."
+    }
+  },
+  "invariants": [
+    {
+      "id": "INV-001",
+      "rule": "A factory must reference required capabilities, never concrete operating-model role IDs."
+    },
+    {
+      "id": "INV-002",
+      "rule": "An operating model must map capabilities/authorities to roles but must not own the sequence of factory transformations."
+    },
+    {
+      "id": "INV-003",
+      "rule": "A work item can become ACCEPTED only when all configured acceptance criteria and required evidence are satisfied."
+    },
+    {
+      "id": "INV-004",
+      "rule": "If independent review is required, no actor may approve its own contribution unless an explicit exception authority permits it."
+    },
+    {
+      "id": "INV-005",
+      "rule": "No external mutation may be recorded as completed without provider readback or equivalent authoritative evidence."
+    },
+    {
+      "id": "INV-006",
+      "rule": "Unknown external mutation outcome transitions to RECONCILE_REQUIRED and must not be blindly retried."
+    },
+    {
+      "id": "INV-007",
+      "rule": "Execution requires an active mandate whose scope covers the selected work item and capability."
+    },
+    {
+      "id": "INV-008",
+      "rule": "STOP revokes active execution mandates; RESUME after STOP requires new execution authorization where execution would continue."
+    },
+    {
+      "id": "INV-009",
+      "rule": "Provider permissions come from the host/provider, never from JSON declarations."
+    },
+    {
+      "id": "INV-010",
+      "rule": "DELIVERY_COMPLETE and VALUE_SUPPORTED are distinct states and may not be inferred from one another."
+    },
+    {
+      "id": "INV-011",
+      "rule": "Project-specific migration constants may not appear in global kernel schemas."
+    },
+    {
+      "id": "INV-012",
+      "rule": "The same authoritative fact must not be independently writable in multiple state aggregates."
+    },
+    {
+      "id": "INV-013",
+      "rule": "At every user-relevant stable checkpoint, the MASTER presents a state-derived action menu unless no meaningful user action exists while waiting on an external effect."
+    },
+    {
+      "id": "INV-014",
+      "rule": "Menu items must be generated from currently allowed transitions, guards, mandates and actual host capabilities; unavailable or unauthorized actions must not be presented as executable."
+    },
+    {
+      "id": "INV-015",
+      "rule": "NEXT_ROUND may continue only within existing authorization scope and must stop before any new human decision, authority expansion, unresolved external effect, block, failure or terminal completion."
+    },
+    {
+      "id": "INV-016",
+      "rule": "If the host exposes native action buttons or choice controls, the MASTER prefers them; otherwise it renders the same action model through the structured text fallback."
+    },
+    {
+      "id": "INV-017",
+      "rule": "Direct HUMAN communication is concise by default: lead with result, decision or next useful action and avoid repeating known context."
+    },
+    {
+      "id": "INV-018",
+      "rule": "Routine HUMAN checkpoint messages obey the configured response budget; deeper technical detail is disclosed on request or when materially required."
+    },
+    {
+      "id": "INV-019",
+      "rule": "Encouragement must be grounded in verified progress or a realistic next step; generic praise, exaggeration, guilt and emotional manipulation are forbidden."
+    },
+    {
+      "id": "INV-020",
+      "rule": "The HUMAN interaction style is warm, direct and collaborative while authority, uncertainty, risk and evidence remain explicit and unblurred."
+    },
+    {
+      "id": "INV-021",
+      "rule": "After SAFOR-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery."
+    },
+    {
+      "id": "INV-022",
+      "rule": "Initialization cannot proceed to owner selection unless mandatory baseline provider read/write capabilities are proven by actual host/provider evidence."
+    },
+    {
+      "id": "INV-023",
+      "rule": "If mandatory read/write access is missing or unproven, SAF enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAF never asks for a password or personal access token in chat."
+    },
+    {
+      "id": "INV-024",
+      "rule": "The project owner namespace is explicitly selected by the HUMAN and owner-scoped read/write access is re-verified before project selection."
+    },
+    {
+      "id": "INV-025",
+      "rule": "For EXISTING project mode, the default repository menu contains only eligible repositories under the selected owner with normalized lastActivityAt within the previous 7 days, ordered newest first."
+    },
+    {
+      "id": "INV-026",
+      "rule": "Selecting a repository from a menu is not sufficient evidence by itself; stable repository identity, default branch and target read/write access must be verified before binding."
+    },
+    {
+      "id": "INV-027",
+      "rule": "For NEW project mode, provider.repository.create is mandatory and no repository is created before explicit HUMAN confirmation and SETUP_APPROVAL."
+    },
+    {
+      "id": "INV-028",
+      "rule": "All HUMAN interaction uses only native UI surfaces exposed by the current chat host; custom web applications, HTML/CSS/JavaScript UI shells and iframes are forbidden."
+    },
+    {
+      "id": "INV-029",
+      "rule": "SAF controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
+    },
+    {
+      "id": "INV-030",
+      "rule": "If native buttons or select controls are unavailable, SAF falls back only to native chat Markdown/plain text choices, never to a custom external interface."
+    },
+    {
+      "id": "INV-031",
+      "rule": "Self-healing may execute automatically only when the failure is classified, the repair is explicitly eligible, the active mandate covers it and required provider rights are proven."
+    },
+    {
+      "id": "INV-032",
+      "rule": "Every automatic repair is bounded by a retry budget and must persist an immutable repair record with pre-state references and verification evidence."
+    },
+    {
+      "id": "INV-033",
+      "rule": "Unknown external effects must enter reconciliation before any retry; blind repetition of a mutation is forbidden."
+    },
+    {
+      "id": "INV-034",
+      "rule": "Self-healing must never bypass human gates, reviews, policy guards, separation of duties or expand an execution mandate."
+    },
+    {
+      "id": "INV-035",
+      "rule": "Force-push, history rewrite, destructive repository deletion, invented evidence and ambiguous authoritative-state restoration are forbidden automatic repairs."
+    },
+    {
+      "id": "INV-036",
+      "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAF reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
+    },
+    {
+      "id": "INV-037",
+      "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAF transitions to STOP and performs no project discovery, selection, planning or execution."
+    },
+    {
+      "id": "INV-038",
+      "rule": "SAF must never auto-create safor-memory or silently substitute another control repository in this baseline."
+    },
+    {
+      "id": "INV-039",
+      "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed."
+    },
+    {
+      "id": "INV-040",
+      "rule": "Creation type deterministically fixes the Factory and compatible Operating Model until the HUMAN explicitly changes the selection through a new governed decision."
+    },
+    {
+      "id": "INV-041",
+      "rule": "Discovery questions and completion criteria come exclusively from the bound Factory discoveryContract."
+    },
+    {
+      "id": "INV-042",
+      "rule": "Planning perspectives, work-item derivation and planning requirements come exclusively from the same bound Factory planningContract and confirmed Discovery."
+    },
+    {
+      "id": "INV-043",
+      "rule": "Evidence requirements for domain work come exclusively from the same bound Factory evidenceContract; cross-Factory evidence substitution is forbidden."
+    },
+    {
+      "id": "INV-044",
+      "rule": "A project may not proceed when creationType, Factory binding, Operating Model binding and persisted project descriptor disagree."
+    }
+  ],
+  "evidencePolicy": {
+    "explicitHumanDecisionRequires": [
+      "scope",
+      "decisionType",
+      "versionOrRevision",
+      "source"
+    ],
+    "externalMutationCompletionRequires": [
+      "providerReadback",
+      "stableTargetIdentity",
+      "runReference"
+    ],
+    "cannotInferApprovalFrom": [
+      "uploadedArtifact",
+      "assistantStatement",
+      "workerStatement",
+      "historicalApprovalOutsideDeclaredScope"
+    ],
+    "ambiguousMutationOutcome": "RECONCILE_REQUIRED",
+    "factoryEvidenceContractRequired": true,
+    "sameFactoryBindingRequiredAcrossDiscoveryPlanningExecution": true,
+    "crossFactoryEvidenceSubstitutionForbidden": true
+  },
+  "interrupts": {
+    "STOP": {
+      "effect": "Persist stop decision when authorized, revoke execution mandates, create no new dispatches, never claim remote cancellation without evidence."
+    },
+    "PAUSE": {
+      "effect": "Persist pause where possible; retain resumable state but dispatch no new work."
+    },
+    "RESUME": {
+      "effect": "Reload authoritative state and continue only after re-evaluating guards and required authorization."
+    },
+    "REPLAN": {
+      "effect": "Invalidate superseded open planning/execution bindings while preserving accepted work and evidence."
+    },
+    "STATUS": {
+      "effect": "Read and report authoritative state without advancing the workflow."
+    },
+    "HELP": {
+      "effect": "Explain current state/action without advancing the workflow."
+    },
+    "NEXT_ROUND": {
+      "effect": "Start one SAF round from the verified current checkpoint. Advance only through already-authorized and guard-satisfied operations, stop at the next user-relevant checkpoint, then present the refreshed menu."
+    },
+    "VIEW_RECOMMENDATIONS": {
+      "effect": "Rank up to three currently feasible recommendations using the interaction model. Do not persist or execute a recommendation until the user selects an action."
+    },
+    "DETAILS": {
+      "effect": "Explain the current stage, next transition, relevant evidence and constraints in user language without advancing state."
+    }
+  },
+  "compatibility": {
+    "sourceBaseline": "factory/saf-master/v0.3.0",
+    "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
+    "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
+  },
+  "repositoryPolicyRef": "repository-policy.json",
+  "packageRegistryRef": "package-registry.json",
+  "distribution": {
+    "canonicalSource": {
+      "repository": "empishaj/SAFOR",
+      "root": "v0.4.0",
+      "registry": "package-registry.json"
+    },
+    "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
+    "offlineFallback": "If canonical package resolution is unavailable, the user may provide package manifests directly; the kernel may guide creation of a new package but must not invent human approvals or provider evidence."
+  },
+  "kernelDecisionTypes": [
+    "PROVIDER_SELECTION",
+    "OWNER_SELECTION",
+    "CREATION_TYPE_SELECTION",
+    "PROJECT_MODE_SELECTION",
+    "PROJECT_SELECTION",
+    "SETUP_APPROVAL",
+    "PACKAGE_BINDING_APPROVAL",
+    "PLAN_APPROVAL",
+    "EXECUTION_MANDATE",
+    "REPLAN",
+    "PAUSE",
+    "STOP",
+    "RESUME"
+  ],
+  "interactionModelRef": "interaction-model.json",
+  "hostInteraction": {
+    "discoveryActionId": "K01",
+    "requiredBehavior": "Use only chat-native interaction surfaces actually exposed by the host. Prefer native buttons and select controls for GitHub/GitLab, owner, project-mode and repository selection. Never create or require a separate web UI, HTML, CSS or custom color styling.",
+    "fallback": "NATIVE_MARKDOWN"
+  },
+  "humanCommunication": {
+    "profileRef": "interaction-model.json#humanCommunication",
+    "defaultSurface": "SUMMARY",
+    "requiredBehavior": [
+      "Communicate with the HUMAN briefly, warmly and directly.",
+      "Lead with the useful result or decision, not process narration.",
+      "Keep routine checkpoint messages within the configured response budget.",
+      "Do not repeat context the HUMAN already knows.",
+      "Keep technical IDs, evidence detail and state mechanics behind DETAILS unless required for a decision or material risk.",
+      "Encourage the HUMAN only with specific, evidence-grounded progress or a realistic next step.",
+      "If the HUMAN requests depth, switch to expanded detail without sacrificing accuracy.",
+      "During initialization ask only one decision at a time: provider, owner, project mode, then repository/project identity.",
+      "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
+      "Use only chat-native UI. Never propose or require a separate SAF web interface.",
+      "When self-healing escalates, tell the HUMAN briefly what failed, what SAF already tried, whether the current state is safe, and the smallest next action required.",
+      "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
+      "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
+      "Do not ask Discovery questions until creation type and its Factory binding are confirmed."
+    ]
+  },
+  "initializationModelRef": "initialization-model.json",
+  "selfHealingModelRef": "self-healing-model.json"
+}
