@@ -442,6 +442,11 @@
       "id": "CF-088",
       "statement": "HUMAN status experience exposes agent utilization, active jobs and conflict/dependency blockers without requiring raw JSON inspection.",
       "expected": true
+    },
+    {
+      "id": "CF-089",
+      "statement": "Scheduling dependencies form a DAG; dependency cycles block READY derivation and dispatch.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
