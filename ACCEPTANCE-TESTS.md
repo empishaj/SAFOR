@@ -90,17 +90,20 @@ Do not mark GA until GitHub and GitLab happy-path plus safety scenarios are inde
 3. The agent chat is bootstrapped once with control repository, project ID and agent ID.
 4. MASTER writes an immutable job contract to `agents/{agentId}/inbox/{jobId}.json`.
 5. MASTER writes authoritative lifecycle state to `master/jobs/{jobId}.json` with READY status.
-6. The HUMAN does not copy the full job contract into the agent chat.
-7. On external activation, the agent loads identity and state, scans inbox and rejects jobs assigned to another identity/revision.
-8. The agent claims the eligible job using optimistic concurrency on its own `state.json`.
-9. MASTER reads back the claim before advancing authoritative lifecycle to CLAIMED/RUNNING.
-10. The agent performs only job/mandate scope and writes evidence under its own evidence root.
-11. The agent writes `outbox/{jobId}.result.json` and sets local state to RESULT_SUBMITTED.
-12. The agent does not mark its own job VERIFIED or ACCEPTED.
-13. MASTER reads the result, validates job/identity binding, evidence, reviews and provider mutations.
-14. MASTER alone advances `master/jobs/{jobId}.json` to VERIFIED/ACCEPTED when all requirements pass.
+6. MASTER updates the fixed non-authoritative projection `agents/{agentId}/inbox/index.json`.
+7. The HUMAN does not copy the full job contract into the agent chat.
+8. On external activation, the agent loads identity/state and reads the fixed inbox index without requiring repository directory enumeration.
+9. The agent reads the referenced immutable job contract, verifies its blob identity and then reads the authoritative MASTER job state.
+10. The agent rejects stale index entries or jobs assigned to another identity/revision.
+11. The agent claims the eligible job using optimistic concurrency on its own `state.json`.
+12. MASTER reads back the claim before advancing authoritative lifecycle to CLAIMED/RUNNING.
+13. The agent performs only job/mandate scope and writes evidence under its own evidence root.
+14. The agent writes `outbox/{jobId}.result.json` and sets local state to RESULT_SUBMITTED.
+15. The agent does not mark its own job VERIFIED or ACCEPTED.
+16. MASTER reads the result, validates job/identity binding, evidence, reviews and provider mutations.
+17. MASTER alone advances `master/jobs/{jobId}.json` to VERIFIED/ACCEPTED when all requirements pass.
 
-**Pass condition:** all 14 observations are evidenced.
+**Pass condition:** all 17 observations are evidenced.
 
 ## G. Agent claim collision
 
