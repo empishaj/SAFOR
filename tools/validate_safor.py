@@ -21,7 +21,7 @@ manifest = load_json("RELEASE-MANIFEST.json")
 modular_master = load_json("v0.4.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
-if bundle.get("format") != "SAF_MASTER_COMPLETE_SINGLE_FILE":
+if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
     fail("Complete bundle format is invalid.")
 
 modules = bundle.get("embeddedModules", {})
@@ -118,7 +118,7 @@ for forbidden in ("empishaj/SAFOR.", "empishaj/saf-memory", "{selectedOwner}/saf
         fail(f"Forbidden legacy reference remains in complete bundle: {forbidden}")
 
 # Product-wide legacy branding scan.
-legacy_token = "SAF" + "-"
+legacy_token = "SAFOR" + "-"
 text_extensions = {".json", ".md", ".py", ".yml", ".yaml", ".txt"}
 skip_parts = {".git", "__pycache__"}
 for path in ROOT.rglob("*"):
