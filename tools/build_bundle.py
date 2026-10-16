@@ -7,35 +7,44 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 MODULE_PATHS = {
-    "kernel": "v0.4.0/SAFOR-MASTER.json",
-    "initialization": "v0.4.0/initialization-model.json",
-    "interaction": "v0.4.0/interaction-model.json",
-    "selfHealing": "v0.4.0/self-healing-model.json",
-    "repositoryPolicy": "v0.4.0/repository-policy.json",
-    "packageRegistry": "v0.4.0/package-registry.json",
-    "providerGithub": "v0.4.0/providers/github/0.1.0/package.json",
-    "providerGitlab": "v0.4.0/providers/gitlab/0.1.0/package.json",
-    "operatingModelSaas": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-    "operatingModelBook": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-    "factorySoftwareWebsite": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-    "factoryBook": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-    "schemaPackageManifest": "v0.4.0/schemas/package-manifest.schema.json",
-    "schemaControlState": "v0.4.0/schemas/control-state.schema.json",
-    "schemaValueStreamState": "v0.4.0/schemas/value-stream-state.schema.json",
-    "schemaExecutionState": "v0.4.0/schemas/execution-state.schema.json",
-    "schemaWorkItem": "v0.4.0/schemas/work-item.schema.json",
-    "schemaProject": "v0.4.0/schemas/project.schema.json",
-    "schemaBindings": "v0.4.0/schemas/bindings.schema.json",
-    "schemaDecisionRecord": "v0.4.0/schemas/decision-record.schema.json",
-    "schemaEvidenceRecord": "v0.4.0/schemas/evidence-record.schema.json",
-    "schemaInteractionMenu": "v0.4.0/schemas/interaction-menu.schema.json",
-    "schemaSelfHealingRecord": "v0.4.0/schemas/self-healing-record.schema.json",
-    "conformance": "v0.4.0/conformance.json",
+    "kernel": "v0.5.0/SAFOR-MASTER.json",
+    "initialization": "v0.5.0/initialization-model.json",
+    "interaction": "v0.5.0/interaction-model.json",
+    "memoryModel": "v0.5.0/memory-model.json",
+    "selfHealing": "v0.5.0/self-healing-model.json",
+    "repositoryPolicy": "v0.5.0/repository-policy.json",
+    "packageRegistry": "v0.5.0/package-registry.json",
+    "providerGithub": "v0.5.0/providers/github/0.1.0/package.json",
+    "providerGitlab": "v0.5.0/providers/gitlab/0.1.0/package.json",
+    "providerGenericGit": "v0.5.0/providers/git-generic/0.1.0/package.json",
+    "providerPlastic": "v0.5.0/providers/plastic-scm/0.1.0/package.json",
+    "memoryVersionedRepository": "v0.5.0/memory-providers/versioned-repository/1.0.0/package.json",
+    "memoryHostFilesystem": "v0.5.0/memory-providers/host-filesystem/0.1.0/package.json",
+    "operatingModelSaas": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+    "operatingModelBook": "v0.5.0/packages/operating-models/book-authoring/0.1.0/package.json",
+    "factorySoftwareWebsite": "v0.5.0/packages/factories/software-delivery/1.0.0/package.json",
+    "factoryBook": "v0.5.0/packages/factories/book-production/0.1.0/package.json",
+    "schemaPackageManifest": "v0.5.0/schemas/package-manifest.schema.json",
+    "schemaControlState": "v0.5.0/schemas/control-state.schema.json",
+    "schemaValueStreamState": "v0.5.0/schemas/value-stream-state.schema.json",
+    "schemaExecutionState": "v0.5.0/schemas/execution-state.schema.json",
+    "schemaWorkItem": "v0.5.0/schemas/work-item.schema.json",
+    "schemaProject": "v0.5.0/schemas/project.schema.json",
+    "schemaBindings": "v0.5.0/schemas/bindings.schema.json",
+    "schemaMemoryBinding": "v0.5.0/schemas/memory-binding.schema.json",
+    "schemaSessionRecord": "v0.5.0/schemas/session-record.schema.json",
+    "schemaOutputRecord": "v0.5.0/schemas/output-record.schema.json",
+    "schemaDecisionRecord": "v0.5.0/schemas/decision-record.schema.json",
+    "schemaEvidenceRecord": "v0.5.0/schemas/evidence-record.schema.json",
+    "schemaInteractionMenu": "v0.5.0/schemas/interaction-menu.schema.json",
+    "schemaSelfHealingRecord": "v0.5.0/schemas/self-healing-record.schema.json",
+    "conformance": "v0.5.0/conformance.json",
 }
 
 REFERENCE_RESOLUTION = {
     "initialization-model.json": "initialization",
     "interaction-model.json": "interaction",
+    "memory-model.json": "memoryModel",
     "self-healing-model.json": "selfHealing",
     "repository-policy.json": "repositoryPolicy",
     "package-registry.json": "packageRegistry",
@@ -46,12 +55,19 @@ REFERENCE_RESOLUTION = {
     "schemas/work-item.schema.json": "schemaWorkItem",
     "schemas/project.schema.json": "schemaProject",
     "schemas/bindings.schema.json": "schemaBindings",
+    "schemas/memory-binding.schema.json": "schemaMemoryBinding",
+    "schemas/session-record.schema.json": "schemaSessionRecord",
+    "schemas/output-record.schema.json": "schemaOutputRecord",
     "schemas/decision-record.schema.json": "schemaDecisionRecord",
     "schemas/evidence-record.schema.json": "schemaEvidenceRecord",
     "schemas/interaction-menu.schema.json": "schemaInteractionMenu",
     "schemas/self-healing-record.schema.json": "schemaSelfHealingRecord",
     "providers/github/0.1.0/package.json": "providerGithub",
     "providers/gitlab/0.1.0/package.json": "providerGitlab",
+    "providers/git-generic/0.1.0/package.json": "providerGenericGit",
+    "providers/plastic-scm/0.1.0/package.json": "providerPlastic",
+    "memory-providers/versioned-repository/1.0.0/package.json": "memoryVersionedRepository",
+    "memory-providers/host-filesystem/0.1.0/package.json": "memoryHostFilesystem",
     "packages/operating-models/saas-engineering/1.0.0/package.json": "operatingModelSaas",
     "packages/operating-models/book-authoring/0.1.0/package.json": "operatingModelBook",
     "packages/factories/software-delivery/1.0.0/package.json": "factorySoftwareWebsite",
@@ -77,12 +93,12 @@ def build_bundle():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     return {
         "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "bundleVersion": version,
         "definitionId": "safor-master-complete",
         "productName": "SAFOR",
         "productExpansion": "Systemic AI Factory Orchestration Runtime",
-        "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat.",
+        "purpose": "Self-contained SAFOR distribution with provider-neutral durable Memory, independent work-provider binding, multi-session collaboration and output provenance.",
         "entrypoint": "embeddedModules.kernel.content",
         "distributionMode": "SELF_CONTAINED_SINGLE_FILE",
         "runtimeContract": {
@@ -90,63 +106,66 @@ def build_bundle():
             "embeddedModulesAuthoritativeForBootstrap": True,
             "canonicalRepository": "empishaj/SAFOR",
             "canonicalBranch": "main",
-            "absoluteRuntimePrerequisite": {
-                "repositoryPattern": "{selectedOwner}/safor-memory",
-                "mustPreExist": True,
-                "mustBeReadable": True,
-                "mustBeWritable": True,
-                "autoCreate": False,
-                "onFailure": "STOP",
+            "memoryRequirement": {
+                "providerNeutral": True,
+                "humanSelectionOrApprovalRequired": True,
+                "mandatoryCapabilities": [
+                    "memory.object.read",
+                    "memory.object.write",
+                    "memory.revision.read",
+                    "memory.durability.prove",
+                    "memory.resume.prove",
+                ],
+                "eligibleProviderTypes": ["VERSIONED_REPOSITORY", "HOST_FILESYSTEM", "CUSTOM"],
+                "newLocationCreationRequiresExplicitHumanApproval": True,
+                "onNoEligibleMemory": "STOP",
+            },
+            "collaboration": {
+                "modes": ["PERSONAL", "SHARED_TEAM"],
+                "sharedTeamRequires": ["memory.shared_access", "memory.compare_and_swap OR memory.lock"],
+                "conflictOutcome": "RECONCILE_REQUIRED",
+                "chatHistoryIsAuthoritative": False,
             },
             "initializationOrder": [
-                "SELECT_PROVIDER",
-                "VERIFY_PROVIDER_READ_WRITE_ACCESS",
-                "SELECT_OWNER_NAMESPACE",
-                "VERIFY_OWNER_ACCESS",
-                "VERIFY_REQUIRED_SAFOR_MEMORY",
+                "DISCOVER_MEMORY_PROVIDER_OPTIONS",
+                "SELECT_MEMORY_PROVIDER",
+                "VERIFY_MEMORY_PROVIDER",
+                "SELECT_MEMORY_OWNER",
+                "SELECT_COLLABORATION_MODE",
+                "VERIFY_COLLABORATION_SAFETY",
+                "BIND_AND_INITIALIZE_MEMORY_ROOT",
                 "SELECT_CREATION_TYPE",
-                "SELECT_PROJECT_MODE",
+                "DISCOVER_AND_SELECT_WORK_PROVIDER",
+                "VERIFY_WORK_PROVIDER",
                 "SELECT_OR_DEFINE_PROJECT",
-                "BIND_REQUIRED_SAFOR_MEMORY",
-                "CONFIRM_CREATION_PROFILE_BINDINGS",
-                "MATERIALIZE_PROJECT_CONTROL",
+                "RESOLVE_AND_CONFIRM_PACKAGES",
+                "MATERIALIZE_PROJECT_AND_REGISTER_SESSION",
             ],
             "mandatoryCreationTypes": [
-                {
-                    "id": "SOFTWARE_WEBSITE",
-                    "label": "Software / Website",
-                    "factoryModule": "factorySoftwareWebsite",
-                    "operatingModelModule": "operatingModelSaas",
-                },
-                {
-                    "id": "BOOK",
-                    "label": "Buch",
-                    "factoryModule": "factoryBook",
-                    "operatingModelModule": "operatingModelBook",
-                },
+                {"id": "SOFTWARE_WEBSITE", "label": "Software / Website", "factoryModule": "factorySoftwareWebsite", "operatingModelModule": "operatingModelSaas"},
+                {"id": "BOOK", "label": "Buch", "factoryModule": "factoryBook", "operatingModelModule": "operatingModelBook"},
             ],
-            "factoryBindingRule": "Discovery, Planning and domain Evidence must always use the discoveryContract, planningContract and evidenceContract from the HUMAN-selected Factory. Cross-factory substitution is forbidden.",
+            "memoryAndWorkProviderIndependent": True,
+            "factoryBindingRule": "Discovery, Planning and domain Evidence always use the HUMAN-selected Factory contracts.",
+            "outputProvenanceRequired": True,
+            "freshSessionResumeFromMemory": True,
             "chatUiRule": "Use chat-native UI only.",
-            "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
-            "selfHealingRule": "Use the embedded conservative self-healing model.",
+            "selfHealingRule": "Use bounded conservative recovery; Memory conflicts reconcile before retry.",
         },
         "productRepository": {
             "repository": "empishaj/SAFOR",
             "role": "CANONICAL_SAFOR_PRODUCT_REPOSITORY",
             "independentFromHumanProjectContext": True,
         },
-        "runtimeMemoryRepository": {
-            "pattern": "{selectedOwner}/safor-memory",
-            "role": "MANDATORY_HUMAN_PROJECT_CONTROL_MEMORY",
-            "preExistingReadWriteRequired": True,
-            "onFailure": "STOP",
+        "runtimeMemory": {
+            "role": "HUMAN_OR_ORGANIZATION_CONTROLLED_AUTHORITATIVE_PROJECT_MEMORY",
+            "logicalOwner": "SAFOR_PROJECT",
+            "physicalOwner": "HUMAN_OR_ORGANIZATION",
+            "providerNeutral": True,
         },
         "referenceResolution": REFERENCE_RESOLUTION,
         "integrityManifest": {
-            key: {
-                "sourcePath": module["sourcePath"],
-                "sourceBlobSha": module["sourceBlobSha"],
-            }
+            key: {"sourcePath": module["sourcePath"], "sourceBlobSha": module["sourceBlobSha"]}
             for key, module in modules.items()
         },
         "embeddedModules": modules,
@@ -157,12 +176,10 @@ def canonical(obj):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", action="store_true", help="Fail if committed bundle differs from a reproducible build.")
+    parser.add_argument("--check", action="store_true")
     args = parser.parse_args()
-
     built = build_bundle()
     output = ROOT / "SAFOR-MASTER-COMPLETE.json"
-
     if args.check:
         committed = json.loads(output.read_text(encoding="utf-8"))
         if canonical(committed) != canonical(built):
@@ -171,7 +188,6 @@ def main():
             raise SystemExit(1)
         print("SAFOR bundle reproducibility: PASS")
         return
-
     output.write_text(json.dumps(built, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     print(f"Wrote {output}")
     print(f"Embedded modules: {len(built['embeddedModules'])}")
