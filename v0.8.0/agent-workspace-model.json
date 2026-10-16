@@ -22,7 +22,8 @@
     "agentEvidenceRoot": "agents/{agentId}/evidence/{jobId}/",
     "masterJobState": "master/jobs/{jobId}.json",
     "inboxIndex": "agents/{agentId}/inbox/index.json",
-    "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md"
+    "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md",
+    "jobHumanReadableProjection": "agents/{agentId}/inbox/{jobId}.md"
   },
   "ownership": {
     "MASTER_ONLY": [
@@ -30,6 +31,7 @@
       "agents/{agentId}/identity.json",
       "agents/{agentId}/inbox/index.json",
       "agents/{agentId}/inbox/{jobId}.json",
+      "agents/{agentId}/inbox/{jobId}.md",
       "master/jobs/{jobId}.json"
     ],
     "AGENT_ONLY": [
@@ -67,9 +69,11 @@
       "LOAD_AGENT_STATE",
       "LOAD_INBOX_INDEX",
       "SELECT_DISCOVERABLE_JOB",
-      "READ_JOB_CONTRACT",
+      "READ_AUTHORITATIVE_JOB_JSON",
+      "VERIFY_JOB_JSON_BLOB",
+      "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
       "READ_MASTER_JOB_STATE",
-      "VERIFY_JOB_ASSIGNMENT_AND_MANDATE",
+      "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
       "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
       "EXECUTE_ONLY_CLAIMED_JOB",
       "SUBMIT_RESULT_AND_EVIDENCE"
@@ -80,15 +84,19 @@
     "eligibleWhen": [
       "job is discoverable through the current MASTER-owned inbox index",
       "identity.status == ACTIVE",
-      "job.assignedAgentId == identity.agentId",
-      "job.assignedIdentityRevision == identity.identityRevision",
-      "job.dispatchState == READY",
+      "job.assignment.agentId == identity.agentId",
+      "job.assignment.identityRevision == identity.identityRevision",
+      "job.identity.immutableAfterDispatch == true",
+      "job.scheduling.dispatchState == READY",
       "masterJobState.lifecycleStatus is claimable for the current dispatch (READY or REWORK_READY)",
-      "referenced execution mandate is active and covers scope",
-      "actual provider rights cover required operations",
-      "job.dispatchWaveRef refers to an active MASTER dispatch wave",
-      "all job.resourceLeaseRefs are ACTIVE and assigned to this job/agent",
-      "all mutating gitWorkspaces exist on the declared dedicated branches at the declared immutable base commits"
+      "job.provenance.mandateRef and job.authorization.authorityBasis.mandateRef resolve to the same active mandate",
+      "actual provider rights cover every operation allowed by job.authorization",
+      "job.scheduling.dispatchWaveRef refers to an active MASTER dispatch wave",
+      "all job.scheduling.resourceLeaseRefs are ACTIVE and assigned to this job/agent",
+      "all mutating job.workspace.gitWorkspaces exist on the declared dedicated branches at declared immutable base commits",
+      "all mandatory job.skills are readable at their pinned blob identities",
+      "job.roleContract role is compatible with the persistent identity and current assignment",
+      "job.humanReadableProjection blob matches provider readback"
     ],
     "atomicity": "Claim is written through optimistic concurrency on agents/{agentId}/state.json using the provider-observed current revision/blob identity. Concurrent stale claims must fail and reconcile.",
     "masterObservation": "A claim is not authoritative for orchestration until MASTER reads back the agent state and advances master/jobs/{jobId}.json from READY to CLAIMED."
@@ -104,7 +112,11 @@
     "directDefaultBranchMutationForbidden": true,
     "agentMayWriteOnlyDeclaredGitWorkspaces": true,
     "crossJobBranchMutationForbidden": true,
-    "resourceLeaseRequiredForMutation": true
+    "resourceLeaseRequiredForMutation": true,
+    "roleSwitchForbidden": true,
+    "skillSubstitutionForbiddenWithoutContractChange": true,
+    "authorizationRule": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW",
+    "jobHumanProjectionRule": "The Markdown job view is derived from the authoritative JSON and may not expand scope, role, skills, authorization or outputs."
   },
   "resultProtocol": {
     "submission": "Agent writes the machine-readable outbox result, the mandatory HUMAN-readable Markdown result, referenced evidence and Git trace, then sets its local state to RESULT_SUBMITTED.",
@@ -196,11 +208,36 @@
     "mandatoryVerification": [
       "READ_REFERENCED_JOB_CONTRACT",
       "VERIFY_JOB_BLOB_SHA",
+      "VERIFY_HUMAN_JOB_REF_AND_BLOB_SHA",
       "READ_MASTER_JOB_STATE",
       "VERIFY_MASTER_LIFECYCLE_IS_CLAIMABLE",
       "VERIFY_IDENTITY_AND_DISPATCH_REVISION"
     ],
     "staleIndexRule": "The index is only a discovery projection. If an entry conflicts with the job contract or MASTER job state, the authoritative artifacts win and the agent must not claim from the stale entry.",
     "updateRule": "MASTER updates the index with revision-controlled writes and provider readback whenever jobs become discoverable, withdrawn, superseded or accepted."
+  },
+  "jobContractModelRef": "agent-job-contract-model.json",
+  "humanJobContract": {
+    "format": "MARKDOWN",
+    "path": "agents/{agentId}/inbox/{jobId}.md",
+    "authority": "NON_AUTHORITATIVE_PROJECTION",
+    "generatedFrom": "agents/{agentId}/inbox/{jobId}.json",
+    "requiredSections": [
+      "JOB_IDENTITY",
+      "PACKAGE_AND_SEQUENCE",
+      "MASTER_PROVENANCE",
+      "ASSIGNMENT",
+      "ROLE",
+      "SKILLS",
+      "TASK",
+      "DEPENDENCIES_AND_INPUTS",
+      "AUTHORIZATION",
+      "WORKSPACE_AND_GIT",
+      "SCHEDULING",
+      "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
+      "VERIFICATION_AND_REVIEW",
+      "CONSTRAINTS_AND_STOP_CONDITIONS"
+    ],
+    "publicationRule": "MASTER writes JSON and Markdown, verifies both by provider readback, then and only then marks the job READY and exposes it through inbox/index.json."
   }
 }
