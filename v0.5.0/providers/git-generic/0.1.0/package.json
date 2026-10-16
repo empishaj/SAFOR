@@ -1,0 +1,58 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.5.0",
+  "packageId": "safor.provider.git-generic",
+  "packageKind": "PROVIDER_ADAPTER",
+  "version": "0.1.0",
+  "name": "Generic Git Provider Adapter",
+  "description": "Provider contract for self-hosted or generic Git installations independent of GitHub/GitLab product APIs.",
+  "compatibility": {
+    "kernel": ">=0.5.0 <0.6.0"
+  },
+  "exports": {
+    "capabilities": [],
+    "authorities": [],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "memoryCapabilities": [],
+    "providerCapabilities": [
+      "provider.identity.read",
+      "provider.repository.list",
+      "provider.repository.read",
+      "provider.repository.create",
+      "provider.artifact.read",
+      "provider.artifact.write",
+      "provider.history.read",
+      "provider.branch.read",
+      "provider.branch.write"
+    ]
+  },
+  "dependencies": [],
+  "model": {
+    "providerId": "git-generic",
+    "terminology": {
+      "repository": "repository",
+      "branch": "branch",
+      "changeRequest": null,
+      "issue": null,
+      "checks": null
+    },
+    "runtimeBinding": {
+      "strategy": "DISCOVER_ACTUAL_HOST_TOOLS",
+      "rule": "Standard Git semantics do not imply issue, pull-request or CI APIs. Only proven host capabilities are available."
+    },
+    "writeSafety": {
+      "readCurrentRevisionBeforeWrite": true,
+      "readbackAfterWrite": true,
+      "unknownOutcome": "RECONCILE_REQUIRED"
+    },
+    "optionalCapabilities": [
+      "provider.change_request.read",
+      "provider.change_request.write",
+      "provider.change_request.merge",
+      "provider.checks.read",
+      "provider.issue.read",
+      "provider.issue.write"
+    ]
+  }
+}
