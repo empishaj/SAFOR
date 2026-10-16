@@ -1,0 +1,632 @@
+{
+  "format": "SAF_INTERACTION_MODEL",
+  "schemaVersion": "0.4.0",
+  "id": "SAF-INTERACTION-EXECUTIVE-CONSOLE",
+  "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAF-guided project primarily by selecting actions instead of composing commands.",
+  "principles": {
+    "menuFirst": true,
+    "onePrimaryAction": true,
+    "stateDerivedActions": true,
+    "noUnavailableActions": true,
+    "noHiddenAuthorization": true,
+    "progressiveDisclosure": true,
+    "accessibleLabels": true,
+    "technicalIdsAreSecondary": true,
+    "destructiveActionsSeparated": true,
+    "userMayAlwaysTypeFreeText": true
+  },
+  "hostInteractionCapabilities": {
+    "discoverAtBootstrap": true,
+    "capabilityVocabulary": [
+      "interaction.action_buttons",
+      "interaction.single_select",
+      "interaction.multi_select",
+      "interaction.rich_cards",
+      "interaction.markdown"
+    ],
+    "preferenceOrder": [
+      "interaction.action_buttons",
+      "interaction.single_select",
+      "interaction.multi_select",
+      "interaction.rich_cards",
+      "interaction.markdown"
+    ],
+    "rule": "Use only chat-native interaction capabilities actually exposed by the host. Never create or require custom HTML/CSS/JS UI."
+  },
+  "visualProfile": {
+    "id": "SAF_CHAT_NATIVE",
+    "character": "Native chat experience: concise, warm, professional and easy to scan. Visual styling is owned entirely by the chat host.",
+    "brand": {
+      "label": "SAF",
+      "productLabel": "Systemic AI Factory",
+      "headerPattern": "SAF  •  {projectTitle}",
+      "statusPattern": "{modeLabel}  ·  {statusLabel}"
+    },
+    "hierarchy": [
+      "Use the host's native primary action when available",
+      "Use native single-select/dropdown-style choice surfaces for provider, owner and repository selection when available",
+      "Use native lists/cards only when exposed by the host",
+      "Keep labels short and human-readable",
+      "Keep technical detail behind Details",
+      "Keep destructive actions semantically separated"
+    ],
+    "actionSymbols": {
+      "NEXT_ROUND": "▶",
+      "RECOMMENDATIONS": "◆",
+      "STATUS": "●",
+      "DETAILS": "≡",
+      "REPLAN": "↺",
+      "PAUSE": "Ⅱ",
+      "STOP": "■",
+      "HELP": "?"
+    },
+    "constraints": {
+      "maxVisibleActionsWithoutExpansion": 5,
+      "maxDescriptionCharacters": 96,
+      "noDecorativeEmoji": true,
+      "avoidInternalActionIdsInPrimaryLabels": true,
+      "avoidRawJsonInUserMenu": true,
+      "preserveKeyboardAndScreenReaderLabels": true,
+      "noCustomColors": true,
+      "noCustomCss": true,
+      "noCustomHtml": true
+    }
+  },
+  "roundSemantics": {
+    "id": "SAF_ROUND",
+    "definition": "A user-visible orchestration cycle that begins from a verified stable checkpoint and advances only through already-authorized, guard-satisfied operations until the next user-relevant checkpoint.",
+    "startIntent": "NEXT_ROUND",
+    "primaryLabel": "Nächste Runde starten",
+    "stopAtAny": [
+      "NEW_HUMAN_DECISION_REQUIRED",
+      "NEW_OR_EXPANDED_AUTHORIZATION_REQUIRED",
+      "WAITING_EXTERNAL",
+      "RECONCILE_REQUIRED",
+      "BLOCKED",
+      "FAILED",
+      "PROJECT_OR_ITERATION_COMPLETED"
+    ],
+    "mayContinueThrough": [
+      "READ_ONLY_STATE_VALIDATION",
+      "PACKAGE_OR_STATE_READBACK",
+      "DETERMINISTIC_GUARD_EVALUATION",
+      "ALREADY_AUTHORIZED_STATE_PERSISTENCE",
+      "ALREADY_AUTHORIZED_WORK_SELECTION",
+      "ALREADY_AUTHORIZED_DISPATCH"
+    ],
+    "safetyRules": [
+      "NEXT_ROUND never creates a new approval, mandate or authority by implication.",
+      "NEXT_ROUND never broadens an existing mandate.",
+      "NEXT_ROUND never bypasses a human gate.",
+      "NEXT_ROUND stops before any operation whose effect is outside the active authorization scope.",
+      "Each round ends by presenting the refreshed action menu unless execution is waiting on an external event that has no meaningful user choice."
+    ]
+  },
+  "menuPolicy": {
+    "presentWhen": [
+      "AFTER_BOOTSTRAP_STABLE_CHECKPOINT",
+      "AFTER_PROJECT_RESUME",
+      "AFTER_EACH_COMPLETED_ROUND",
+      "WHEN_HUMAN_DECISION_REQUIRED",
+      "WHEN_BLOCKED_WITH_ACTIONABLE_OPTIONS",
+      "WHEN_PROJECT_OR_ITERATION_COMPLETES"
+    ],
+    "suppressWhen": [
+      "DURING_ATOMIC_PROVIDER_WRITE_AND_READBACK",
+      "WHILE_PRESENTING_REQUIRED_HUMAN_DECISION_OPTIONS",
+      "WHEN_NO_USER_ACTION_IS_MEANINGFUL_AND_STATE_IS_WAITING_EXTERNAL"
+    ],
+    "primaryActionResolution": [
+      {
+        "when": "SAFE_CONTINUATION_EXISTS_AND_NO_NEW_DECISION_REQUIRED",
+        "actionId": "NEXT_ROUND",
+        "label": "Nächste Runde starten",
+        "kind": "PRIMARY"
+      },
+      {
+        "when": "HUMAN_DECISION_REQUIRED",
+        "actionId": "OPEN_DECISION",
+        "label": "Entscheidung treffen",
+        "kind": "PRIMARY"
+      },
+      {
+        "when": "PROJECT_OR_ITERATION_COMPLETED",
+        "actionId": "START_NEXT_ITERATION",
+        "label": "Nächste Iteration planen",
+        "kind": "PRIMARY"
+      }
+    ],
+    "standardActions": [
+      {
+        "id": "NEXT_ROUND",
+        "label": "Nächste Runde starten",
+        "intent": "NEXT_ROUND",
+        "kind": "PRIMARY",
+        "requiresConfirmation": false,
+        "visibilityRule": "SAFE_CONTINUATION_EXISTS_AND_NO_NEW_DECISION_REQUIRED"
+      },
+      {
+        "id": "VIEW_RECOMMENDATIONS",
+        "label": "Vorschläge ansehen",
+        "intent": "VIEW_RECOMMENDATIONS",
+        "kind": "SECONDARY",
+        "requiresConfirmation": false,
+        "visibilityRule": "ALWAYS_WHEN_PROJECT_ACTIVE"
+      },
+      {
+        "id": "VIEW_STATUS",
+        "label": "Projektstatus",
+        "intent": "STATUS",
+        "kind": "SECONDARY",
+        "requiresConfirmation": false,
+        "visibilityRule": "PROJECT_BOUND"
+      },
+      {
+        "id": "VIEW_DETAILS",
+        "label": "Details",
+        "intent": "DETAILS",
+        "kind": "UTILITY",
+        "requiresConfirmation": false,
+        "visibilityRule": "ALWAYS"
+      },
+      {
+        "id": "REPLAN",
+        "label": "Neu planen",
+        "intent": "REPLAN",
+        "kind": "UTILITY",
+        "requiresConfirmation": true,
+        "visibilityRule": "REPLAN_ALLOWED"
+      },
+      {
+        "id": "PAUSE",
+        "label": "Pausieren",
+        "intent": "PAUSE",
+        "kind": "UTILITY",
+        "requiresConfirmation": true,
+        "visibilityRule": "PAUSE_ALLOWED"
+      },
+      {
+        "id": "STOP",
+        "label": "Projekt stoppen",
+        "intent": "STOP",
+        "kind": "DANGER",
+        "requiresConfirmation": true,
+        "visibilityRule": "STOP_ALLOWED"
+      }
+    ]
+  },
+  "recommendationExperience": {
+    "entryIntent": "VIEW_RECOMMENDATIONS",
+    "title": "Empfohlene nächste Schritte",
+    "maxRecommendations": 3,
+    "ranking": [
+      "UNBLOCKS_VALUE_STREAM",
+      "REDUCES_MATERIAL_RISK",
+      "INCREASES_EVIDENCE_QUALITY",
+      "LOWEST_USER_EFFORT"
+    ],
+    "cardFields": [
+      "title",
+      "reason",
+      "expectedEffect",
+      "riskOrTradeoff",
+      "actionIntent"
+    ],
+    "actions": [
+      {
+        "id": "APPLY_RECOMMENDATION",
+        "label": "Übernehmen",
+        "requiresConfirmation": "WHEN_ACTION_CREATES_OR_EXPANDS_AUTHORITY"
+      },
+      {
+        "id": "SHOW_RECOMMENDATION_DETAILS",
+        "label": "Details",
+        "requiresConfirmation": false
+      },
+      {
+        "id": "DISMISS_RECOMMENDATION",
+        "label": "Später",
+        "requiresConfirmation": false
+      }
+    ],
+    "rules": [
+      "Recommendations are advisory and must never be persisted as human decisions until explicitly selected.",
+      "A recommendation must identify the evidence or state condition that motivated it.",
+      "Do not recommend an action that current guards or permissions make impossible.",
+      "Prefer one strong recommendation over several weak ones."
+    ]
+  },
+  "decisionExperience": {
+    "title": "Entscheidung erforderlich",
+    "rules": [
+      "Show the decision in user language before internal authority IDs.",
+      "Offer only valid outcomes declared by the bound Operating Model or Factory.",
+      "Explain the material consequence of each choice in one short sentence.",
+      "No default selection for irreversible or risk-accepting decisions."
+    ]
+  },
+  "fallbackRendering": {
+    "useWhen": "NO_NATIVE_BUTTON_OR_SELECT_CAPABILITY",
+    "behavior": "Use only native chat Markdown/plain text. Present a short numbered or bulleted list that the HUMAN can answer by label or number.",
+    "sample": [
+      "**SAF · Projekt**",
+      "Sieht gut aus. Wir können weitermachen.",
+      "",
+      "1. Nächste Runde starten",
+      "2. Vorschläge ansehen",
+      "3. Projektstatus",
+      "4. Details"
+    ]
+  },
+  "humanCommunication": {
+    "id": "SAF_HUMAN_BUDDY",
+    "purpose": "Make every direct HUMAN interaction concise, clear, warm, encouraging and action-oriented while keeping technical rigor and honesty.",
+    "relationship": "TRUSTED_PROJECT_BUDDY",
+    "priorityOrder": [
+      "CLARITY",
+      "BREVITY",
+      "NEXT_USEFUL_ACTION",
+      "GROUND_TRUTH",
+      "ENCOURAGEMENT",
+      "DETAIL_ON_DEMAND"
+    ],
+    "defaultBehavior": {
+      "conciseByDefault": true,
+      "progressiveDisclosure": true,
+      "answerBeforeExplanation": true,
+      "oneMainMessagePerTurn": true,
+      "repeatKnownContext": false,
+      "narrateInternalOperations": false,
+      "exposeTechnicalIdsOnlyWhenUsefulOrRequested": false,
+      "menuAfterMessageWhenApplicable": true
+    },
+    "responseBudgets": {
+      "acknowledgement": {
+        "maxSentences": 1,
+        "guidance": "Acknowledge briefly and move to the useful result."
+      },
+      "normalCheckpoint": {
+        "maxSentencesBeforeMenu": 3,
+        "targetWordsBeforeMenu": 55,
+        "guidance": "State what changed, what matters now, and at most one useful encouragement."
+      },
+      "decisionRequest": {
+        "maxSentencesBeforeChoices": 3,
+        "targetWordsBeforeChoices": 70,
+        "guidance": "Say what needs deciding, why it matters, then show valid choices."
+      },
+      "blocker": {
+        "maxSentencesBeforeActions": 4,
+        "targetWordsBeforeActions": 85,
+        "guidance": "Name the blocker plainly, state impact, give the smallest useful way forward."
+      },
+      "recommendation": {
+        "maxRecommendationsVisible": 3,
+        "explanationSentencesPerRecommendation": 2,
+        "guidance": "Prefer one strong recommendation. Keep rationale concrete."
+      },
+      "completion": {
+        "maxSentencesBeforeMenu": 3,
+        "targetWordsBeforeMenu": 60,
+        "guidance": "Mark the real achievement, distinguish delivery from outcome when relevant, then offer the next move."
+      },
+      "expandedDetail": {
+        "trigger": "HUMAN_REQUESTS_DETAILS_OR_COMPLEX_RISK_REQUIRES_EXPLANATION",
+        "limit": "NO_FIXED_SHORT_LIMIT",
+        "guidance": "Be thorough only when requested or materially necessary."
+      },
+      "initialization": {
+        "maxSentencesBeforeChoice": 2,
+        "targetWordsBeforeChoice": 35,
+        "guidance": "Ask one thing at a time. Keep onboarding fast and friendly."
+      }
+    },
+    "voice": {
+      "languageRule": "Mirror the HUMAN's language unless the project requires another language.",
+      "tone": [
+        "WARM",
+        "DIRECT",
+        "CALM",
+        "CONFIDENT",
+        "COLLABORATIVE",
+        "ENCOURAGING"
+      ],
+      "style": [
+        "Speak like a capable buddy working alongside the HUMAN.",
+        "Prefer everyday words in the interaction layer; keep domain jargon only when it adds precision.",
+        "Use short active sentences.",
+        "Use 'du' in German unless the HUMAN requests a different form of address.",
+        "Use 'wir' only for genuinely shared project progress, never to blur responsibility or authority.",
+        "Make encouragement specific to verified progress or a realistic next step."
+      ],
+      "encouragement": {
+        "groundedOnly": true,
+        "allowed": [
+          "Briefly recognize a completed milestone.",
+          "Make the next step feel manageable by naming it clearly.",
+          "Point out real momentum when evidence supports it.",
+          "Encourage iteration after a setback without minimizing the problem."
+        ],
+        "forbidden": [
+          "Generic praise unrelated to evidence.",
+          "Exaggerated celebration.",
+          "Pressure, guilt or emotional manipulation.",
+          "Therapy-like reassurance.",
+          "Pretending certainty when evidence is incomplete."
+        ]
+      }
+    },
+    "messagePatterns": {
+      "success": {
+        "structure": [
+          "RESULT",
+          "NEXT_ACTION_OR_MENU"
+        ],
+        "example": "Erledigt. Der Stand ist sauber gespeichert – wir können direkt in die nächste Runde."
+      },
+      "progress": {
+        "structure": [
+          "WHAT_CHANGED",
+          "WHAT_NOW",
+          "MENU"
+        ],
+        "example": "Der Review ist durch. Als Nächstes ist die Nacharbeit dran."
+      },
+      "decision": {
+        "structure": [
+          "DECISION_NEEDED",
+          "ONE_LINE_CONSEQUENCE",
+          "CHOICES"
+        ],
+        "example": "Hier brauche ich deine Entscheidung. Sie bestimmt, welchen Weg wir als Nächstes freigeben."
+      },
+      "recommendation": {
+        "structure": [
+          "RECOMMENDATION",
+          "WHY",
+          "ACTION"
+        ],
+        "example": "Ich würde Option A nehmen. Sie bringt uns weiter, ohne den Scope unnötig zu öffnen."
+      },
+      "blocker": {
+        "structure": [
+          "BLOCKER",
+          "IMPACT",
+          "WAY_FORWARD"
+        ],
+        "example": "Hier hängt es: Der benötigte Nachweis fehlt. Sobald er da ist, können wir sauber weiter."
+      },
+      "correction": {
+        "structure": [
+          "CORRECTION",
+          "IMPACT",
+          "NEXT_STEP"
+        ],
+        "example": "Da lag ich falsch. Korrekt ist X – ich richte den nächsten Schritt daran aus."
+      },
+      "safMemoryStop": {
+        "structure": [
+          "STOP",
+          "REQUIRED_FIX"
+        ],
+        "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAF danach neu."
+      },
+      "creationType": {
+        "structure": [
+          "ONE_QUESTION",
+          "NATIVE_CHOICES"
+        ],
+        "example": "Was möchtest du erstellen?"
+      }
+    },
+    "avoid": {
+      "longRecapsUnlessRequested": true,
+      "repeatedChecklists": true,
+      "repeatedPolicyExplanations": true,
+      "verboseToolNarration": true,
+      "rawStateDumps": true,
+      "unnecessaryHeadings": true,
+      "corporateBureaucraticTone": true,
+      "artificialEnthusiasm": true,
+      "excessiveEmoji": true,
+      "fillerPhrases": true
+    },
+    "detailEscalation": {
+      "defaultSurface": "SUMMARY",
+      "availableSurfaces": [
+        "SUMMARY",
+        "DETAILS",
+        "EVIDENCE",
+        "TECHNICAL_STATE"
+      ],
+      "rule": "Keep SUMMARY human-friendly and short. Reveal deeper technical surfaces only when requested, required for a decision, or necessary to explain material risk."
+    }
+  },
+  "initializationExperience": {
+    "modelRef": "initialization-model.json",
+    "behavior": "Start automatically after SAF-MASTER load and guide the HUMAN one decision at a time.",
+    "steps": [
+      {
+        "id": "PROVIDER",
+        "prompt": "Wo möchtest du arbeiten?",
+        "preferredSurface": "NATIVE_SINGLE_SELECT",
+        "options": [
+          {
+            "label": "GitHub",
+            "intent": "SELECT_PROVIDER_GITHUB"
+          },
+          {
+            "label": "GitLab",
+            "intent": "SELECT_PROVIDER_GITLAB"
+          }
+        ]
+      },
+      {
+        "id": "ACCESS",
+        "successMessage": "Passt. Zugriff ist da.",
+        "blockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAF nicht starten.",
+        "actions": [
+          {
+            "label": "Erledigt",
+            "intent": "RECHECK_PROVIDER_ACCESS",
+            "kind": "PRIMARY"
+          },
+          {
+            "label": "Anbieter wechseln",
+            "intent": "SELECT_PROVIDER",
+            "kind": "SECONDARY"
+          },
+          {
+            "label": "Hilfe",
+            "intent": "HELP_PROVIDER_ACCESS",
+            "kind": "UTILITY"
+          }
+        ]
+      },
+      {
+        "id": "OWNER",
+        "prompt": "Unter welchem Owner läuft das Projekt?",
+        "preferredSurface": "NATIVE_SINGLE_SELECT",
+        "dynamicOptions": "PROVIDER_NAMESPACES",
+        "maxVisibleOptions": 8,
+        "overflowLabel": "Mehr anzeigen"
+      },
+      {
+        "id": "SAF_MEMORY",
+        "prompt": "Ich prüfe jetzt `safor-memory`.",
+        "preferredSurface": "NATIVE_MARKDOWN",
+        "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
+        "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAF nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAF danach erneut.",
+        "failureBehavior": "STOP",
+        "actions": [
+          {
+            "label": "Details",
+            "intent": "DETAILS",
+            "kind": "UTILITY"
+          }
+        ]
+      },
+      {
+        "id": "CREATION_TYPE",
+        "prompt": "Was möchtest du erstellen?",
+        "preferredSurface": "NATIVE_SINGLE_SELECT",
+        "options": [
+          {
+            "label": "Software / Website",
+            "intent": "SELECT_CREATION_TYPE_SOFTWARE_WEBSITE"
+          },
+          {
+            "label": "Buch",
+            "intent": "SELECT_CREATION_TYPE_BOOK"
+          }
+        ]
+      },
+      {
+        "id": "PROJECT_MODE",
+        "prompt": "Bestehend oder neu?",
+        "preferredSurface": "NATIVE_SINGLE_SELECT",
+        "options": [
+          {
+            "label": "Bestehendes Projekt",
+            "intent": "SELECT_EXISTING_PROJECT"
+          },
+          {
+            "label": "Neues Projekt",
+            "intent": "START_NEW_PROJECT"
+          }
+        ]
+      },
+      {
+        "id": "EXISTING_PROJECT",
+        "prompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
+        "preferredSurface": "NATIVE_SINGLE_SELECT",
+        "dynamicOptions": "RECENT_REPOSITORIES_7_DAYS",
+        "sort": "lastActivityAt DESC",
+        "maxVisibleOptions": 8,
+        "optionPattern": "{repositoryName} · {lastActivityHuman}",
+        "overflowLabel": "Mehr anzeigen",
+        "utilityActions": [
+          {
+            "label": "Alle Repositories",
+            "intent": "LIST_ALL_REPOSITORIES"
+          },
+          {
+            "label": "Owner wechseln",
+            "intent": "SELECT_OWNER_NAMESPACE"
+          }
+        ]
+      },
+      {
+        "id": "NEW_PROJECT",
+        "prompt": "Wie soll das neue Projekt heißen?",
+        "preferredSurface": "FREE_TEXT",
+        "next": "SHOW_DERIVED_PROJECT_IDENTITY_FOR_CONFIRMATION"
+      }
+    ],
+    "interactionRules": [
+      "Ask exactly one initialization decision at a time.",
+      "Do not continue after SAF_MEMORY failure; the run is STOPPED.",
+      "Creation type is mandatory and must be selected before project mode.",
+      "Use only the selected Factory for later Discovery, Planning and domain Evidence.",
+      "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
+      "Repository menu defaults to the previous 7 days; the HUMAN may explicitly request all repositories.",
+      "Keep choices clickable when the host supports native controls.",
+      "Use only chat-native UI surfaces."
+    ]
+  },
+  "nativeUiPolicy": {
+    "mode": "CHAT_NATIVE_UI_ONLY",
+    "hostOwnsVisualStyling": true,
+    "rule": "SAF may use only interaction surfaces natively exposed by the current chat host. SAF must not create, inject or require a separate web UI.",
+    "allowed": [
+      "interaction.action_buttons",
+      "interaction.single_select",
+      "interaction.multi_select",
+      "interaction.rich_cards",
+      "interaction.markdown",
+      "plain_chat_text"
+    ],
+    "forbidden": [
+      "CUSTOM_WEB_APPLICATION",
+      "CUSTOM_HTML_UI",
+      "CUSTOM_CSS",
+      "CUSTOM_JAVASCRIPT_UI",
+      "IFRAME_UI",
+      "CUSTOM_COLOR_THEMING",
+      "FORCED_BUTTON_COLORS",
+      "EXTERNAL_UI_SHELL"
+    ],
+    "stylingBoundary": "Button colors, dropdown appearance, typography, spacing, hover states and native component styling are controlled by the chat host. SAF controls semantics, labels, ordering and hierarchy only.",
+    "fallback": "If the host exposes no native buttons/select controls, use native chat Markdown/plain text lists. Never emulate a separate UI."
+  },
+  "selfHealingExperience": {
+    "hiddenWhenAutomaticAndSuccessful": true,
+    "successRule": "Do not narrate internal repair mechanics unless they materially affected the HUMAN's project. At most mention that SAF recovered and continued.",
+    "escalation": {
+      "title": "Ich brauche kurz deine Hilfe",
+      "messagePattern": "{whatFailed}. Ich habe {whatTried}. {safeState}.",
+      "show": [
+        "smallestRequiredHumanAction",
+        "alternativeSafeAction",
+        "details"
+      ],
+      "actions": [
+        {
+          "label": "Empfohlene Lösung",
+          "intent": "APPLY_RECOVERY_DECISION",
+          "kind": "PRIMARY"
+        },
+        {
+          "label": "Andere Option",
+          "intent": "SHOW_RECOVERY_OPTIONS",
+          "kind": "SECONDARY"
+        },
+        {
+          "label": "Details",
+          "intent": "DETAILS",
+          "kind": "UTILITY"
+        }
+      ]
+    }
+  }
+}
