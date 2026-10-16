@@ -109,7 +109,7 @@
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.7.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "4088153c60914d5ef5b3be05ac0e8c9ab0f51169"
+      "sourceBlobSha": "4a9e0c476352ebcb0c37dc0342813407fc02b5f6"
     },
     "initialization": {
       "sourcePath": "v0.7.0/initialization-model.json",
@@ -153,11 +153,11 @@
     },
     "factorySoftwareWebsite": {
       "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
-      "sourceBlobSha": "491cbc52545b0ccbf76a4a8dc02832b589eb44a4"
+      "sourceBlobSha": "2d423793e7adb285704c6306a9ec32489486c32c"
     },
     "factoryBook": {
       "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
-      "sourceBlobSha": "f04cfc48238abaa4ccc0b4d2f739015955e74731"
+      "sourceBlobSha": "30c6be12010de70b1872ab35c310f97a1a529d2e"
     },
     "schemaPackageManifest": {
       "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
@@ -177,7 +177,7 @@
     },
     "schemaWorkItem": {
       "sourcePath": "v0.7.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "f40322c9ab58409202edafe318e0acbfbeea9b99"
+      "sourceBlobSha": "560e027d2415f6e69fb9d6df34f44f5d367ace72"
     },
     "schemaProject": {
       "sourcePath": "v0.7.0/schemas/project.schema.json",
@@ -229,7 +229,7 @@
     },
     "conformance": {
       "sourcePath": "v0.7.0/conformance.json",
-      "sourceBlobSha": "8e7dfaa6e171b0d4137ccdf1b9c39b92209965dc"
+      "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d"
     },
     "schemaAgentInboxIndex": {
       "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
@@ -237,7 +237,7 @@
     },
     "multiAgentScheduler": {
       "sourcePath": "v0.7.0/multi-agent-scheduler-model.json",
-      "sourceBlobSha": "21428379eb9ff0b6b53e134c3a8603e3651aa68b"
+      "sourceBlobSha": "894e3791b9f107409f226720de4fdf68060354ae"
     },
     "schemaSchedulerState": {
       "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
@@ -256,7 +256,7 @@
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.7.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "4088153c60914d5ef5b3be05ac0e8c9ab0f51169",
+      "sourceBlobSha": "4a9e0c476352ebcb0c37dc0342813407fc02b5f6",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.7.0",
@@ -1245,6 +1245,10 @@
           {
             "id": "INV-070",
             "rule": "With N free eligible agent slots and at least N mutually conflict-free READY ATOMIC jobs, the scheduler may dispatch up to N jobs in the same wave subject to the project parallelism ceiling."
+          },
+          {
+            "id": "INV-071",
+            "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
           }
         ],
         "evidencePolicy": {
@@ -3918,7 +3922,7 @@
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
       "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
-      "sourceBlobSha": "491cbc52545b0ccbf76a4a8dc02832b589eb44a4",
+      "sourceBlobSha": "2d423793e7adb285704c6306a9ec32489486c32c",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.7.0",
@@ -4195,8 +4199,8 @@
               "acceptanceCriteria",
               "evidenceRequirements",
               "execution",
-              "resourceAccess",
-              "parallelizationDecision"
+              "execution.resourceAccess",
+              "execution.parallelizationDecision"
             ],
             "conditionalRules": [
               {
@@ -4278,7 +4282,8 @@
               }
             ],
             "decompositionRule": "Implementation may be decomposed into ATOMIC child work only when solution design exposes independently acceptable outputs and conservative non-overlapping mutation domains; shared integration is modeled as an explicit downstream work item.",
-            "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan."
+            "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan.",
+            "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
       }
@@ -4286,7 +4291,7 @@
     "factoryBook": {
       "key": "factoryBook",
       "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
-      "sourceBlobSha": "f04cfc48238abaa4ccc0b4d2f739015955e74731",
+      "sourceBlobSha": "30c6be12010de70b1872ab35c310f97a1a529d2e",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.7.0",
@@ -4571,8 +4576,8 @@
               "acceptanceCriteria",
               "evidenceRequirements",
               "execution",
-              "resourceAccess",
-              "parallelizationDecision"
+              "execution.resourceAccess",
+              "execution.parallelizationDecision"
             ],
             "conditionalRules": [
               {
@@ -4657,7 +4662,8 @@
               }
             ],
             "decompositionRule": "Research, drafting, fact-check or editorial work may be decomposed only along explicit chapter/section/source domains with independent outputs and conservative conflict domains; shared manuscript integration is explicit.",
-            "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan."
+            "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan.",
+            "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
       }
@@ -5516,7 +5522,7 @@
     "schemaWorkItem": {
       "key": "schemaWorkItem",
       "sourcePath": "v0.7.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "f40322c9ab58409202edafe318e0acbfbeea9b99",
+      "sourceBlobSha": "560e027d2415f6e69fb9d6df34f44f5d367ace72",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "urn:safor:work-item:0.7.0",
@@ -5715,7 +5721,7 @@
               "parentWorkItemId",
               "childWorkItemIds",
               "joinPolicy",
-              "parallelizable",
+              "parallelizationDecision",
               "priority",
               "readySince",
               "resourceAccess",
@@ -5749,9 +5755,6 @@
                   "ALL_CHILDREN_ACCEPTED"
                 ]
               },
-              "parallelizable": {
-                "type": "boolean"
-              },
               "priority": {
                 "type": "integer",
                 "minimum": 0,
@@ -5775,6 +5778,36 @@
                   "string",
                   "null"
                 ]
+              },
+              "parallelizationDecision": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "classification",
+                  "rationale",
+                  "evidenceRefs"
+                ],
+                "properties": {
+                  "classification": {
+                    "enum": [
+                      "PARALLEL_CANDIDATE",
+                      "SERIAL_ONLY",
+                      "COMPOSITE_CONTAINER"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidenceRefs": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
               }
             }
           }
@@ -5876,7 +5909,80 @@
               }
             }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "unit": {
+                      "const": "ATOMIC"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "childWorkItemIds": {
+                      "maxItems": 0
+                    },
+                    "joinPolicy": {
+                      "const": "NONE"
+                    },
+                    "parallelizationDecision": {
+                      "properties": {
+                        "classification": {
+                          "enum": [
+                            "PARALLEL_CANDIDATE",
+                            "SERIAL_ONLY"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "unit": {
+                      "const": "COMPOSITE"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "childWorkItemIds": {
+                      "minItems": 1
+                    },
+                    "joinPolicy": {
+                      "const": "ALL_CHILDREN_ACCEPTED"
+                    },
+                    "parallelizationDecision": {
+                      "properties": {
+                        "classification": {
+                          "const": "COMPOSITE_CONTAINER"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "schemaProject": {
@@ -7891,7 +7997,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.7.0/conformance.json",
-      "sourceBlobSha": "8e7dfaa6e171b0d4137ccdf1b9c39b92209965dc",
+      "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.7.0",
@@ -8336,6 +8442,11 @@
             "id": "CF-088",
             "statement": "HUMAN status experience exposes agent utilization, active jobs and conflict/dependency blockers without requiring raw JSON inspection.",
             "expected": true
+          },
+          {
+            "id": "CF-089",
+            "statement": "Scheduling dependencies form a DAG; dependency cycles block READY derivation and dispatch.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
@@ -8464,7 +8575,7 @@
     "multiAgentScheduler": {
       "key": "multiAgentScheduler",
       "sourcePath": "v0.7.0/multi-agent-scheduler-model.json",
-      "sourceBlobSha": "21428379eb9ff0b6b53e134c3a8603e3651aa68b",
+      "sourceBlobSha": "894e3791b9f107409f226720de4fdf68060354ae",
       "content": {
         "format": "SAFOR_MULTI_AGENT_SCHEDULER_MODEL",
         "schemaVersion": "0.7.0",
@@ -8493,7 +8604,8 @@
           "compositeRule": "A COMPOSITE work item is never dispatched directly. Planning decomposes it into ATOMIC child work items with explicit dependencies, output contracts, resource access and join policy.",
           "defaultJoinPolicy": "ALL_CHILDREN_ACCEPTED",
           "parentCompletion": "A parent may advance beyond execution only after the configured child join predicate is satisfied and any required integration/review work is accepted.",
-          "selectiveRework": "Only affected child work items and downstream dependents are reopened; accepted unaffected children remain accepted."
+          "selectiveRework": "Only affected child work items and downstream dependents are reopened; accepted unaffected children remain accepted.",
+          "dependencyGraphRule": "Scheduling dependencies must form an acyclic directed graph. Any cycle is invalid planning state and blocks READY derivation until replanned."
         },
         "readinessPredicate": [
           "workItem.execution.unit == ATOMIC",
