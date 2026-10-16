@@ -30,7 +30,7 @@
   },
   "dependencies": [],
   "model": {
-    "providerType": "GIT_REPOSITORY",
+    "providerType": "VERSIONED_REPOSITORY",
     "backingRequirement": {
       "kind": "PROVIDER_ADAPTER",
       "requiresProviderCapabilities": [
