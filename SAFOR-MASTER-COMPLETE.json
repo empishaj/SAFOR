@@ -194,28 +194,34 @@
       "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
     },
     "schemaExecutionState": {
-      "sourcePath": "v0.8.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "30168388fa199bcaba5ee8fb64fd4d5c6abe37ab"
+      "sourcePath": "v0.9.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "19c2fb9fe5cae6fc2390af668c0d65a9e942e049",
+      "selfHealingProfileId": "MRP-SCHEMA_EXECUTION_STATE"
     },
     "schemaWorkItem": {
-      "sourcePath": "v0.8.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "3888f537eac32d391a0bd07345d7673d21cda426"
+      "sourcePath": "v0.9.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "c4ddd4b2cdd30342a57626546324982ca67d05f1",
+      "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
     },
     "schemaProject": {
-      "sourcePath": "v0.8.0/schemas/project.schema.json",
-      "sourceBlobSha": "95e00b62074361e0e44a446b403ba86499b32b28"
+      "sourcePath": "v0.9.0/schemas/project.schema.json",
+      "sourceBlobSha": "0b72fe7d057cc978bafeae109e0cbc0eb09aaa98",
+      "selfHealingProfileId": "MRP-SCHEMA_PROJECT"
     },
     "schemaBindings": {
-      "sourcePath": "v0.8.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "9671d2fcfbbe6e7557e949ade5ce7efb869ef28f"
+      "sourcePath": "v0.9.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "ff95ae299eb2b8e126d88de75a6d3baced831b1f",
+      "selfHealingProfileId": "MRP-SCHEMA_BINDINGS"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "v0.8.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "28ddbecc83e14b13e2bf01578ce89da3f03b1fe1"
+      "sourcePath": "v0.9.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "24811ff3d982618b25c787cb929da804a7625f09",
+      "selfHealingProfileId": "MRP-SCHEMA_DECISION_RECORD"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "v0.8.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "be9cb51ed593adbc10ee184775a464c4c80b7d5b"
+      "sourcePath": "v0.9.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "09f6d4e462bed76c27e543cfc36337350d6a80da",
+      "selfHealingProfileId": "MRP-SCHEMA_EVIDENCE_RECORD"
     },
     "schemaInteractionMenu": {
       "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
@@ -5717,12 +5723,12 @@
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "v0.8.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "30168388fa199bcaba5ee8fb64fd4d5c6abe37ab",
+      "sourcePath": "v0.9.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "19c2fb9fe5cae6fc2390af668c0d65a9e942e049",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:execution-state:0.8.0",
-        "title": "SAFOR Execution State 0.8.0",
+        "$id": "urn:safor:execution-state:0.9.0",
+        "title": "SAFOR Execution State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5745,7 +5751,7 @@
             "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -5998,16 +6004,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_EXECUTION_STATE"
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "v0.8.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "3888f537eac32d391a0bd07345d7673d21cda426",
+      "sourcePath": "v0.9.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "c4ddd4b2cdd30342a57626546324982ca67d05f1",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:work-item:0.8.0",
-        "title": "SAFOR Domain-Agnostic Work Item 0.8.0",
+        "$id": "urn:safor:work-item:0.9.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6464,16 +6471,17 @@
             }
           }
         ]
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "v0.8.0/schemas/project.schema.json",
-      "sourceBlobSha": "95e00b62074361e0e44a446b403ba86499b32b28",
+      "sourcePath": "v0.9.0/schemas/project.schema.json",
+      "sourceBlobSha": "0b72fe7d057cc978bafeae109e0cbc0eb09aaa98",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:project:0.8.0",
-        "title": "SAFOR Project Descriptor 0.8.0",
+        "$id": "urn:safor:project:0.9.0",
+        "title": "SAFOR Project Descriptor 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6494,7 +6502,7 @@
             "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -6596,16 +6604,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_PROJECT"
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.8.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "9671d2fcfbbe6e7557e949ade5ce7efb869ef28f",
+      "sourcePath": "v0.9.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "ff95ae299eb2b8e126d88de75a6d3baced831b1f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:bindings:0.8.0",
-        "title": "SAFOR Project Bindings 0.8.0",
+        "$id": "urn:safor:bindings:0.9.0",
+        "title": "SAFOR Project Bindings 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6623,7 +6632,7 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "revision": {
             "type": "integer",
@@ -6699,16 +6708,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_BINDINGS"
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "v0.8.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "28ddbecc83e14b13e2bf01578ce89da3f03b1fe1",
+      "sourcePath": "v0.9.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "24811ff3d982618b25c787cb929da804a7625f09",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:decision-record:0.8.0",
-        "title": "SAFOR Decision Record 0.8.0",
+        "$id": "urn:safor:decision-record:0.9.0",
+        "title": "SAFOR Decision Record 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6730,7 +6740,7 @@
             "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "decisionId": {
             "type": "string"
@@ -6772,16 +6782,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_DECISION_RECORD"
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "v0.8.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "be9cb51ed593adbc10ee184775a464c4c80b7d5b",
+      "sourcePath": "v0.9.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "09f6d4e462bed76c27e543cfc36337350d6a80da",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:evidence-record:0.8.0",
-        "title": "SAFOR Evidence Record 0.8.0",
+        "$id": "urn:safor:evidence-record:0.9.0",
+        "title": "SAFOR Evidence Record 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6801,7 +6812,7 @@
             "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "evidenceId": {
             "type": "string"
@@ -6851,7 +6862,8 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_EVIDENCE_RECORD"
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
