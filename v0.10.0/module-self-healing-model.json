@@ -138,19 +138,28 @@
         "COGNITIVE_LOAD_POLICY_INVALID",
         "HUMAN_LANGUAGE_POLICY_INVALID",
         "PRIMARY_ACTION_POLICY_INVALID",
-        "UNNECESSARY_HUMAN_DECISION_DETECTED"
+        "UNNECESSARY_HUMAN_DECISION_DETECTED",
+        "TERMINAL_MENU_MISSING",
+        "TERMINAL_MENU_NOT_LAST",
+        "MULTIPLE_TERMINAL_MENUS",
+        "TERMINAL_MENU_INVALID",
+        "POST_MENU_CONTENT_DETECTED"
       ],
       "automaticRepairs": [
         "RELOAD_VERIFIED_EMBEDDED_MODULE",
         "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE",
         "RESTORE_VERIFIED_INTERACTION_MODEL",
-        "SUPPRESS_DERIVABLE_OR_REPEATED_ASK"
+        "SUPPRESS_DERIVABLE_OR_REPEATED_ASK",
+        "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE",
+        "REGENERATE_SAFE_TERMINAL_MENU_FROM_AUTHORITATIVE_STATE"
       ],
       "forbiddenRepairs": [
         "INVENT_MISSING_EVIDENCE",
         "EXPAND_AUTHORITY_OR_SCOPE",
         "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
-        "ACCEPT_UNVERIFIED_STATE"
+        "ACCEPT_UNVERIFIED_STATE",
+        "INVENT_AUTHORITY_OR_STATE_TO_POPULATE_MENU",
+        "SUPPRESS_TERMINAL_MENU_REQUIREMENT"
       ],
       "retryBudget": 1,
       "preconditions": [
@@ -165,7 +174,7 @@
           "EXPECTED_STATE_MATCH",
           "REPAIR_RECORD_PERSISTED"
         ],
-        "successPredicate": "INTERACTION_MODEL_VALID_AND_NO_CONTROL_STATE_MUTATION_OCCURRED"
+        "successPredicate": "INTERACTION_MODEL_VALID_AND_EVERY_EMITTED_HUMAN_RESPONSE_TERMINATES_WITH_EXACTLY_ONE_VALID_MENU_WITH_NO_POST_MENU_CONTENT_AND_NO_CONTROL_STATE_MUTATION_OCCURRED"
       },
       "escalation": {
         "when": [
@@ -2121,6 +2130,58 @@
           "RETRY_BUDGET_EXHAUSTED",
           "SOURCE_OF_TRUTH_AMBIGUOUS",
           "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_HUMAN_RESPONSE",
+      "moduleKey": "schemaHumanResponse",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaHumanResponse + integrityManifest.schemaHumanResponse",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "HUMAN_RESPONSE_VALIDATION_FAILURE",
+        "TERMINAL_MENU_CONTRACT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+        "REMOVE_TERMINAL_MENU_REQUIREMENT"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "HUMAN_RESPONSE_SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_RESPONSE_VALIDATES_WITH_EXACTLY_ONE_TERMINAL_MENU"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
         ],
         "target": "HUMAN"
       }
