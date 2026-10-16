@@ -332,11 +332,21 @@
       "id": "CF-066",
       "statement": "Execution state references agent job states without duplicating their authoritative lifecycle fields.",
       "expected": true
+    },
+    {
+      "id": "CF-067",
+      "statement": "Every persistent agent has a fixed MASTER-owned inbox index at agents/{agentId}/inbox/index.json so job discovery never depends on repository directory enumeration or HUMAN prompt transport.",
+      "expected": true
+    },
+    {
+      "id": "CF-068",
+      "statement": "The inbox index is a non-authoritative discoverability projection; an agent must read the referenced immutable job contract and authoritative master/jobs/{jobId}.json before claim.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
     "branch": "safor/agent-workspace-v0.6.0-rc.1",
-    "result": "CI_PASS_E2E_PENDING",
-    "note": "Machine validation for the repository-native Agent Workspace Protocol passes. Scenarios F-H in ACCEPTANCE-TESTS.md remain required as empirical end-to-end acceptance before GA."
+    "result": "PASS_PENDING_REVALIDATION_AFTER_DISCOVERY_FIX",
+    "note": "Agent Workspace model now requires deterministic inbox/index.json discovery with authoritative MASTER job-state verification. Fresh CI and empirical Agent Workspace scenarios remain required."
   }
 }
