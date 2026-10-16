@@ -106,11 +106,12 @@
   },
   "gitIsolation": {
     "mutatingJobRule": "Every job with a non-empty writeSet receives one or more dedicated Git workspaces rooted at immutable base commits.",
-    "branchPattern": "safor/job/{jobId}/{agentId}",
+    "branchPattern": "safor/job/{jobKey}/{agentKey}",
     "directMainWriteForbidden": true,
     "crossJobBranchWriteForbidden": true,
     "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
-    "integrationRule": "Parallel contribution branches are integrated only after each job result is VERIFIED and required review/integration gates pass."
+    "integrationRule": "Parallel contribution branches are integrated only after each job result is VERIFIED and required review/integration gates pass.",
+    "branchKeyRule": "jobKey and agentKey are deterministic Git-ref-safe projections of jobId and agentId using only letters, digits, dot, underscore and hyphen; the original IDs remain authoritative in job/result records."
   },
   "fanOutFanIn": {
     "fanOut": "One approved parent may expose multiple READY atomic children; MASTER may dispatch a safe subset or all of them in one wave.",
