@@ -11,6 +11,7 @@ SAFOR
 + Factory
 + Provider Adapter
 + Project State
++ Agent Job Contract
 + Agent Workspace Protocol
 + Multi-Agent Scheduler
 + Evidence
@@ -33,6 +34,9 @@ Maps provider-neutral capabilities onto the actual GitHub/GitLab tools exposed b
 
 ### Project Instance
 Binds the selected Factory and Operating Model to concrete actors, repositories, state, decisions and evidence.
+
+### Agent Job Contract
+Defines the immutable MASTER-to-agent execution contract: job/package/sequence lineage, MASTER provenance, assigned identity, explicit role, versioned skills, immutable inputs, authorization boundaries, workspace/scheduling, fixed return routes, verification and the paired HUMAN-readable job projection.
 
 ### Agent Workspace Protocol
 Provides repository-native persistent identities and job handoff for agent actors. MASTER writes identity, inbox contracts and authoritative job lifecycle. Agents write only their own runtime state, outbox results, evidence and audit records. HUMAN prompt copying is not authoritative job transport.
@@ -115,6 +119,7 @@ MASTER
   ├─ agents/{agentId}/identity.json
   ├─ agents/{agentId}/inbox/index.json
   ├─ agents/{agentId}/inbox/{jobId}.json
+  ├─ agents/{agentId}/inbox/{jobId}.md
   └─ master/jobs/{jobId}.json
                     │
                     ▼
