@@ -1,0 +1,1317 @@
+{
+  "format": "SAFOR_PRODUCT_BUILD_PART",
+  "part": 4,
+  "modules": {
+    "v0.6.0/schemas/agent-registry.schema.json": {
+      "sha": "879a072e3ce918efeba40bfca3d848ef4d792bf1",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-registry:0.6.0",
+        "title": "SAFOR Agent Registry 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "revision",
+          "agents"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_REGISTRY"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "agents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/agentEntry"
+            }
+          }
+        },
+        "$defs": {
+          "agentEntry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "agentId",
+              "identityRef",
+              "workspaceRoot",
+              "registeredAt",
+              "registeredBy"
+            ],
+            "properties": {
+              "agentId": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+              },
+              "identityRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workspaceRoot": {
+                "type": "string",
+                "minLength": 1
+              },
+              "registeredAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "registeredBy": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "v0.6.0/schemas/agent-identity.schema.json": {
+      "sha": "cab29047828b301ba12460015b83609f238550e4",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-identity:0.6.0",
+        "title": "SAFOR Agent Identity 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "agentId",
+          "agentName",
+          "agentKind",
+          "masterId",
+          "controlRepository",
+          "workspaceRoot",
+          "identityRevision",
+          "status",
+          "registeredAt",
+          "initializedBy",
+          "roleIds",
+          "capabilityIds",
+          "activationContract"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_IDENTITY"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+          },
+          "agentName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentKind": {
+            "enum": [
+              "CHAT_AGENT",
+              "SERVICE_AGENT"
+            ]
+          },
+          "masterId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "controlRepository": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspaceRoot": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identityRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "PAUSED",
+              "REVOKED"
+            ]
+          },
+          "registeredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "initializedBy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "roleIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "capabilityIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "activationContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "activationMode",
+              "initialBootstrapFields",
+              "onActivation",
+              "jobPromptTransportRequired"
+            ],
+            "properties": {
+              "activationMode": {
+                "const": "EXTERNAL_TRIGGER_REQUIRED"
+              },
+              "initialBootstrapFields": {
+                "type": "array",
+                "items": {
+                  "enum": [
+                    "CONTROL_REPOSITORY",
+                    "PROJECT_ID",
+                    "AGENT_ID"
+                  ]
+                },
+                "minItems": 3,
+                "maxItems": 3,
+                "uniqueItems": true
+              },
+              "onActivation": {
+                "type": "array",
+                "minItems": 5,
+                "items": {
+                  "enum": [
+                    "LOAD_IDENTITY",
+                    "LOAD_AGENT_STATE",
+                    "SCAN_INBOX",
+                    "VERIFY_ELIGIBLE_JOB",
+                    "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+                    "EXECUTE_CLAIMED_JOB",
+                    "SUBMIT_RESULT"
+                  ]
+                }
+              },
+              "jobPromptTransportRequired": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "v0.6.0/schemas/agent-state.schema.json": {
+      "sha": "9eeba9b8e43ae5b2a63b3df5033e5f475260291a",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-state:0.6.0",
+        "title": "SAFOR Agent Runtime State 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "agentId",
+          "identityRevision",
+          "revision",
+          "runtimeStatus",
+          "session",
+          "currentJob",
+          "lastResultRef",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_STATE"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identityRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "runtimeStatus": {
+            "enum": [
+              "IDLE",
+              "CLAIMED",
+              "RUNNING",
+              "RESULT_SUBMITTED",
+              "BLOCKED",
+              "PAUSED",
+              "REVOKED"
+            ]
+          },
+          "session": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/session"
+              }
+            ]
+          },
+          "currentJob": {
+            "anyOf": [
+              {
+                "type": "null"
+              },
+              {
+                "$ref": "#/$defs/currentJob"
+              }
+            ]
+          },
+          "lastResultRef": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "session": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "sessionId",
+              "activatedAt"
+            ],
+            "properties": {
+              "sessionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "activatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          },
+          "currentJob": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "jobId",
+              "contractRef",
+              "observedContractBlobSha",
+              "masterJobStateRef",
+              "claimId",
+              "sessionId",
+              "phase",
+              "claimedAt",
+              "startedAt",
+              "lastCheckpointAt",
+              "resultRef"
+            ],
+            "properties": {
+              "jobId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "contractRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observedContractBlobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "masterJobStateRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "claimId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sessionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "phase": {
+                "enum": [
+                  "CLAIMED",
+                  "RUNNING",
+                  "RESULT_SUBMITTED",
+                  "BLOCKED"
+                ]
+              },
+              "claimedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "startedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "lastCheckpointAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "resultRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "v0.6.0/schemas/agent-job.schema.json": {
+      "sha": "2cbdb6666d215497e14be0740ee453bbf24a460a",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-job:0.6.0",
+        "title": "SAFOR Agent Job Contract 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "jobId",
+          "projectId",
+          "assignedAgentId",
+          "assignedIdentityRef",
+          "assignedIdentityRevision",
+          "issuedBy",
+          "issuedAt",
+          "dispatchRevision",
+          "dispatchState",
+          "workItemRef",
+          "executionContractRef",
+          "mandateRef",
+          "scope",
+          "inputs",
+          "requiredOutputs",
+          "evidenceRequirements",
+          "constraints",
+          "resultTarget"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_JOB"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "jobId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignedAgentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignedIdentityRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignedIdentityRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "issuedBy": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issuedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dispatchRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "dispatchState": {
+            "const": "READY"
+          },
+          "workItemRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionContractRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mandateRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "objective",
+              "allowedRepositories",
+              "allowedPaths"
+            ],
+            "properties": {
+              "objective": {
+                "type": "string",
+                "minLength": 1
+              },
+              "allowedRepositories": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "allowedPaths": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              }
+            }
+          },
+          "inputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ref"
+            }
+          },
+          "requiredOutputs": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "evidenceRequirements": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "uniqueItems": true
+          },
+          "constraints": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mayMerge",
+              "mayExpandScope",
+              "mayModifyMasterState",
+              "allowedProviderCapabilities",
+              "maxMutationAttempts"
+            ],
+            "properties": {
+              "mayMerge": {
+                "type": "boolean"
+              },
+              "mayExpandScope": {
+                "const": false
+              },
+              "mayModifyMasterState": {
+                "const": false
+              },
+              "allowedProviderCapabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "maxMutationAttempts": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "resultTarget": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "resultRef",
+              "evidenceRoot"
+            ],
+            "properties": {
+              "resultRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceRoot": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "$defs": {
+          "ref": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ref"
+            ],
+            "properties": {
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedType": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "v0.6.0/schemas/agent-job-state.schema.json": {
+      "sha": "c52acf402e58756fa48b1e1bb49171cae6705f13",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-job-state:0.6.0",
+        "title": "SAFOR MASTER Agent Job State 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "jobId",
+          "assignedAgentId",
+          "owner",
+          "revision",
+          "lifecycleStatus",
+          "contractRef",
+          "contractBlobSha",
+          "agentStateRef",
+          "resultRef",
+          "evidenceRefs",
+          "verification",
+          "transitionHistory",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_JOB_STATE"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignedAgentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "owner": {
+            "const": "MASTER"
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "lifecycleStatus": {
+            "enum": [
+              "READY",
+              "CLAIMED",
+              "RUNNING",
+              "RESULT_SUBMITTED",
+              "VERIFIED",
+              "ACCEPTED",
+              "REJECTED",
+              "REWORK_READY",
+              "BLOCKED",
+              "CANCELED",
+              "SUPERSEDED"
+            ]
+          },
+          "contractRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contractBlobSha": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentStateRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resultRef": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "verification": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "status",
+              "verifiedAt",
+              "observedRefs",
+              "reason"
+            ],
+            "properties": {
+              "status": {
+                "enum": [
+                  "NOT_STARTED",
+                  "PENDING",
+                  "PASS",
+                  "FAIL"
+                ]
+              },
+              "verifiedAt": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "observedRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "transitionHistory": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/transition"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "transition": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "from",
+              "to",
+              "at",
+              "actorId",
+              "evidenceRefs"
+            ],
+            "properties": {
+              "from": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "to": {
+                "type": "string",
+                "minLength": 1
+              },
+              "at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "actorId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              }
+            }
+          }
+        }
+      }
+    },
+    "v0.6.0/schemas/agent-result.schema.json": {
+      "sha": "5b4aaf52e7505fce6f0f46437f0e4968ee24de20",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-result:0.6.0",
+        "title": "SAFOR Agent Result 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "resultId",
+          "jobId",
+          "projectId",
+          "agentId",
+          "identityRevision",
+          "jobContractRef",
+          "observedJobContractBlobSha",
+          "claimId",
+          "sessionId",
+          "submittedAt",
+          "completionStatus",
+          "summary",
+          "outputs",
+          "evidenceRefs",
+          "providerMutationRefs",
+          "acceptanceSelfCheck",
+          "blockers"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_RESULT"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "resultId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identityRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "jobContractRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observedJobContractBlobSha": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claimId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sessionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "submittedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completionStatus": {
+            "enum": [
+              "COMPLETED",
+              "BLOCKED",
+              "FAILED",
+              "CANCELED"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "outputs": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ref"
+            }
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "providerMutationRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "acceptanceSelfCheck": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "passedChecks",
+              "failedChecks",
+              "notes"
+            ],
+            "properties": {
+              "passedChecks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "failedChecks": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "notes": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "blockers": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "$defs": {
+          "ref": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ref"
+            ],
+            "properties": {
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedType": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "v0.6.0/conformance.json": {
+      "sha": "a89ab6282c776673d4161b96c38b0d79a055fb35",
+      "content": {
+        "format": "SAFOR_CONFORMANCE_SUITE",
+        "schemaVersion": "0.6.0",
+        "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
+        "assertions": [
+          {
+            "id": "CF-001",
+            "statement": "SAFOR-MASTER.json is the single portable bootstrap entrypoint.",
+            "expected": true
+          },
+          {
+            "id": "CF-002",
+            "statement": "Kernel requires OPERATING_MODEL, FACTORY and PROVIDER_ADAPTER bindings.",
+            "expected": true
+          },
+          {
+            "id": "CF-003",
+            "statement": "Factory packages reference capabilities/authorities but contain no roleId bindings.",
+            "expected": true
+          },
+          {
+            "id": "CF-004",
+            "statement": "Every capability required by the software factory is exported by the SaaS engineering operating model.",
+            "expected": true
+          },
+          {
+            "id": "CF-005",
+            "statement": "Every authority required by the software factory is exported by the SaaS engineering operating model.",
+            "expected": true
+          },
+          {
+            "id": "CF-006",
+            "statement": "Every capability required by the book factory is exported by the book authoring operating model.",
+            "expected": true
+          },
+          {
+            "id": "CF-007",
+            "statement": "Every authority required by the book factory is exported by the book authoring operating model.",
+            "expected": true
+          },
+          {
+            "id": "CF-008",
+            "statement": "Provider adapters export only capabilities known to the kernel provider capability vocabulary.",
+            "expected": true
+          },
+          {
+            "id": "CF-009",
+            "statement": "Global schemas contain no safomwebsite-specific migration constant.",
+            "expected": true
+          },
+          {
+            "id": "CF-010",
+            "statement": "Work-item type is a factory-defined string and is not a kernel domain enum.",
+            "expected": true
+          },
+          {
+            "id": "CF-011",
+            "statement": "Control, value-stream and execution states are separate aggregates.",
+            "expected": true
+          },
+          {
+            "id": "CF-012",
+            "statement": "Delivery completion is distinct from outcome validation.",
+            "expected": true
+          },
+          {
+            "id": "CF-013",
+            "statement": "Kernel references a dedicated interaction model and interaction-menu schema.",
+            "expected": true
+          },
+          {
+            "id": "CF-014",
+            "statement": "A state-aware menu is required at user-relevant stable checkpoints.",
+            "expected": true
+          },
+          {
+            "id": "CF-015",
+            "statement": "NEXT_ROUND is bounded by existing authorization and stops before any new human decision or authority expansion.",
+            "expected": true
+          },
+          {
+            "id": "CF-016",
+            "statement": "Native clickable actions are preferred only when the host actually exposes a supported interaction capability.",
+            "expected": true
+          },
+          {
+            "id": "CF-017",
+            "statement": "Recommendations are advisory until explicitly selected and are ranked from current state/evidence.",
+            "expected": true
+          },
+          {
+            "id": "CF-018",
+            "statement": "Danger actions are visually separated and require confirmation.",
+            "expected": true
+          },
+          {
+            "id": "CF-019",
+            "statement": "Direct HUMAN communication uses the SAFOR_HUMAN_BUDDY profile.",
+            "expected": true
+          },
+          {
+            "id": "CF-020",
+            "statement": "Routine checkpoint communication is concise by default and governed by explicit response budgets.",
+            "expected": true
+          },
+          {
+            "id": "CF-021",
+            "statement": "HUMAN messages lead with the useful result, decision or next action instead of tool/process narration.",
+            "expected": true
+          },
+          {
+            "id": "CF-022",
+            "statement": "Technical state and evidence detail are progressively disclosed through Details unless immediately necessary.",
+            "expected": true
+          },
+          {
+            "id": "CF-023",
+            "statement": "Encouragement is specific and evidence-grounded; generic praise, exaggeration and emotional manipulation are forbidden.",
+            "expected": true
+          },
+          {
+            "id": "CF-024",
+            "statement": "Expanded detail remains available whenever the HUMAN requests it or material risk requires it.",
+            "expected": true
+          },
+          {
+            "id": "CF-025",
+            "statement": "Loading SAFOR-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
+            "expected": true
+          },
+          {
+            "id": "CF-026",
+            "statement": "Owner selection is blocked until mandatory baseline provider read/write capabilities are proven.",
+            "expected": true
+          },
+          {
+            "id": "CF-027",
+            "statement": "Missing provider rights produce a HUMAN blocker that explicitly requires read/write access without requesting passwords or PATs in chat.",
+            "expected": true
+          },
+          {
+            "id": "CF-028",
+            "statement": "The HUMAN explicitly selects an owner namespace and owner-scoped access is re-verified.",
+            "expected": true
+          },
+          {
+            "id": "CF-029",
+            "statement": "The HUMAN explicitly selects EXISTING or NEW project mode.",
+            "expected": true
+          },
+          {
+            "id": "CF-030",
+            "statement": "EXISTING mode defaults to eligible repositories active within the previous 7 days, sorted by normalized lastActivityAt descending.",
+            "expected": true
+          },
+          {
+            "id": "CF-031",
+            "statement": "The existing-project repository list is presented as a selectable menu with an option to show all repositories.",
+            "expected": true
+          },
+          {
+            "id": "CF-032",
+            "statement": "NEW mode requires provider.repository.create and does not create a repository before HUMAN confirmation and SETUP_APPROVAL.",
+            "expected": true
+          },
+          {
+            "id": "CF-033",
+            "statement": "Selected owner identity is persisted in the project descriptor.",
+            "expected": true
+          },
+          {
+            "id": "CF-034",
+            "statement": "All HUMAN interaction is restricted to chat-native UI surfaces exposed by the host.",
+            "expected": true
+          },
+          {
+            "id": "CF-035",
+            "statement": "Custom web UI, HTML, CSS, JavaScript UI shells, iframes and forced color theming are forbidden.",
+            "expected": true
+          },
+          {
+            "id": "CF-036",
+            "statement": "SAFOR controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
+            "expected": true
+          },
+          {
+            "id": "CF-037",
+            "statement": "When native buttons/selects are unavailable, fallback is native Markdown/plain text only.",
+            "expected": true
+          },
+          {
+            "id": "CF-038",
+            "statement": "Kernel references a conservative self-healing model and repair-record schema.",
+            "expected": true
+          },
+          {
+            "id": "CF-039",
+            "statement": "Self-healing has explicit detect, classify, plan, execute and verify stages.",
+            "expected": true
+          },
+          {
+            "id": "CF-040",
+            "statement": "Automatic repairs are limited to existing authorization and proven provider capabilities.",
+            "expected": true
+          },
+          {
+            "id": "CF-041",
+            "statement": "Retries are bounded by failure-class and operation budgets; unknown mutation effects reconcile before retry.",
+            "expected": true
+          },
+          {
+            "id": "CF-042",
+            "statement": "Every repair requires authoritative readback before success and persists an immutable repair record.",
+            "expected": true
+          },
+          {
+            "id": "CF-043",
+            "statement": "Human gates, reviews, mandates and policy guards cannot be bypassed by self-healing.",
+            "expected": true
+          },
+          {
+            "id": "CF-044",
+            "statement": "Force-push, history rewrite, destructive repository deletion and invented evidence are forbidden automatic repairs.",
+            "expected": true
+          },
+          {
+            "id": "CF-045",
+            "statement": "When automatic recovery is unsafe or exhausted, SAFOR escalates concisely to the HUMAN with the smallest required action.",
+            "expected": true
+          },
+          {
+            "id": "CF-046",
+            "statement": "`{selectedOwner}/safor-memory` must pre-exist before project selection and is the mandatory control repository.",
+            "expected": true
+          },
+          {
+            "id": "CF-047",
+            "statement": "safor-memory read and write access must be proven; missing repository or insufficient access causes STOP.",
+            "expected": true
+          },
+          {
+            "id": "CF-048",
+            "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
+            "expected": true
+          },
+          {
+            "id": "CF-049",
+            "statement": "The HUMAN must explicitly choose exactly one creation type: SOFTWARE_WEBSITE or BOOK.",
+            "expected": true
+          },
+          {
+            "id": "CF-050",
+            "statement": "Creation type deterministically selects the compatible Factory and Operating Model pair.",
+            "expected": true
+          },
+          {
+            "id": "CF-051",
+            "statement": "Software/Website and Book factories each define their own discoveryContract, planningContract and evidenceContract.",
+            "expected": true
+          },
+          {
+            "id": "CF-052",
+            "statement": "D01 Discovery resolves only the bound Factory discoveryContract.",
+            "expected": true
+          },
+          {
+            "id": "CF-053",
+            "statement": "P01 Planning resolves only the same bound Factory planningContract and confirmed Discovery.",
+            "expected": true
+          },
+          {
+            "id": "CF-054",
+            "statement": "E04/E05 collect and evaluate domain evidence only against the same bound Factory evidenceContract; cross-Factory substitution is forbidden.",
+            "expected": true
+          },
+          {
+            "id": "CF-055",
+            "statement": "Project descriptor persists the HUMAN-selected creationType and it must remain consistent with package bindings.",
+            "expected": true
+          },
+          {
+            "id": "CF-056",
+            "statement": "Kernel defines a repository-native Agent Workspace Protocol with persistent identities, inbox, state, outbox, evidence and MASTER job-state paths.",
+            "expected": true
+          },
+          {
+            "id": "CF-057",
+            "statement": "Agent registry and identity are MASTER-owned; agent state, outbox and agent evidence are AGENT-owned.",
+            "expected": true
+          },
+          {
+            "id": "CF-058",
+            "statement": "Agent jobs are immutable MASTER-dispatched contracts and copied chat prompts are not authoritative job transport.",
+            "expected": true
+          },
+          {
+            "id": "CF-059",
+            "statement": "An agent claim requires matching agentId and identityRevision plus an active covering mandate and actual provider rights.",
+            "expected": true
+          },
+          {
+            "id": "CF-060",
+            "statement": "Concurrent agent claims use optimistic concurrency and stale claims reconcile instead of silently succeeding.",
+            "expected": true
+          },
+          {
+            "id": "CF-061",
+            "statement": "MASTER-owned master/jobs/{jobId}.json is the authoritative lifecycle; agent-local state is not authoritative project status.",
+            "expected": true
+          },
+          {
+            "id": "CF-062",
+            "statement": "Agent result submission cannot self-verify or self-accept work.",
+            "expected": true
+          },
+          {
+            "id": "CF-063",
+            "statement": "MASTER verifies result binding, evidence, reviews and provider readback before VERIFIED/ACCEPTED.",
+            "expected": true
+          },
+          {
+            "id": "CF-064",
+            "statement": "Normal chat agents require an external activation trigger; background wakeup is not assumed.",
+            "expected": true
+          },
+          {
+            "id": "CF-065",
+            "statement": "Agent identity is stable across jobs and initial bootstrap requires only control repository, project ID and agent ID.",
+            "expected": true
+          },
+          {
+            "id": "CF-066",
+            "statement": "Execution state references agent job states without duplicating their authoritative lifecycle fields.",
+            "expected": true
+          }
+        ],
+        "lastManualVerification": {
+          "branch": "safor/agent-workspace-v0.6.0-rc.1",
+          "result": "PENDING_CI",
+          "note": "Agent Workspace Protocol added; machine validation and release bundle verification required before merge."
+        }
+      }
+    }
+  }
+}
