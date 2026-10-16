@@ -234,7 +234,7 @@ for cf in [f"CF-{i:03d}" for i in range(56,66)]:
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing v0.5 conformance assertion {cf}.")
 
-# Product-wide legacy SAF branding scan remains enforced.
+# Product-wide predecessor-branding scan remains enforced.
 legacy_upper = "SA" + "F"
 legacy_lower = "sa" + "f"
 legacy_patterns = (
