@@ -118,23 +118,35 @@ for forbidden in ("empishaj/SAFOR.", "empishaj/saf-memory", "{selectedOwner}/saf
         fail(f"Forbidden legacy reference remains in complete bundle: {forbidden}")
 
 # Product-wide legacy branding scan.
-legacy_token = "SAFOR" + "-"
+legacy_upper = "SA" + "F"
+legacy_lower = "sa" + "f"
+legacy_patterns = (
+    legacy_upper + "-",
+    legacy_upper + "_",
+    legacy_upper + " ",
+    "urn:" + legacy_lower + ":",
+    legacy_lower + ".",
+    legacy_lower + "-master",
+)
 text_extensions = {".json", ".md", ".py", ".yml", ".yaml", ".txt"}
 skip_parts = {".git", "__pycache__"}
 for path in ROOT.rglob("*"):
     if any(part in skip_parts for part in path.parts):
         continue
     rel = path.relative_to(ROOT)
-    if legacy_token in str(rel):
-        fail(f"Legacy branding remains in filename: {rel}")
+    rel_text = str(rel)
+    for pattern in legacy_patterns:
+        if pattern in rel_text:
+            fail(f"Legacy branding remains in filename: {rel} ({pattern})")
     if not path.is_file() or path.suffix.lower() not in text_extensions:
         continue
     try:
         text_content = path.read_text(encoding="utf-8")
     except UnicodeDecodeError:
         continue
-    if legacy_token in text_content:
-        fail(f"Legacy branding remains in file content: {rel}")
+    for pattern in legacy_patterns:
+        if pattern in text_content:
+            fail(f"Legacy branding remains in file content: {rel} ({pattern})")
 
 if errors:
     print("SAFOR validation: FAIL")
