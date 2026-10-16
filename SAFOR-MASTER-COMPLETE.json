@@ -218,16 +218,16 @@
       "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd"
     },
     "schemaAgentJob": {
-      "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e"
+      "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "542876ff2846d4451f37df7a6ad14669adef082c"
     },
     "schemaAgentJobState": {
-      "sourcePath": "v0.7.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "7387bb034dfe5d2de3a0140b5ae34c279ed87e25"
+      "sourcePath": "v0.8.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "1ba42eb60f706356ee73e8b79790aca2eaa617a6"
     },
     "schemaAgentResult": {
-      "sourcePath": "v0.7.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "501fa76563a3fb35b7d4f8e9fe7df80eb5011503"
+      "sourcePath": "v0.8.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501"
     },
     "conformance": {
       "sourcePath": "v0.7.0/conformance.json",
@@ -242,16 +242,16 @@
       "sourceBlobSha": "f8dd23326796bef109bfef6fc07d4737cec6bd2d"
     },
     "schemaSchedulerState": {
-      "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
-      "sourceBlobSha": "052c85a6e5cc67f6db31ac7595ff452bee48fc77"
+      "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "3acc33caec14f1e66465620244a536a22e536478"
     },
     "schemaDispatchWave": {
-      "sourcePath": "v0.7.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "46cd08135139f390a2ad8c2f6bedc25d1660cbe5"
+      "sourcePath": "v0.8.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "bf3e86b4289c6a7549152572cfc68693073d4170"
     },
     "schemaResourceLease": {
-      "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414"
+      "sourcePath": "v0.8.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d"
     },
     "agentJobContract": {
       "sourcePath": "v0.8.0/agent-job-contract-model.json",
@@ -7271,214 +7271,779 @@
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
-      "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e",
+      "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "542876ff2846d4451f37df7a6ad14669adef082c",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job:0.7.0",
-        "title": "SAFOR Agent Job Contract 0.7.0",
+        "$id": "urn:safor:agent-job:0.8.0",
+        "title": "SAFOR Canonical Agent Job Contract 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
           "format",
           "schemaVersion",
-          "jobId",
-          "projectId",
-          "assignedAgentId",
-          "assignedIdentityRef",
-          "assignedIdentityRevision",
-          "issuedBy",
-          "issuedAt",
-          "dispatchRevision",
-          "dispatchState",
-          "dispatchWaveRef",
-          "resourceLeaseRefs",
-          "workItemRef",
-          "executionContractRef",
-          "mandateRef",
-          "scope",
+          "identity",
+          "lineage",
+          "provenance",
+          "assignment",
+          "roleContract",
+          "skills",
+          "task",
+          "dependencies",
           "inputs",
-          "requiredOutputs",
-          "evidenceRequirements",
-          "resourceAccessSource",
-          "resourceAccess",
-          "gitWorkspaces",
+          "authorization",
+          "workspace",
+          "scheduling",
+          "outputContract",
+          "verificationContract",
           "constraints",
-          "resultTarget"
+          "humanReadableProjection"
         ],
         "properties": {
           "format": {
             "const": "SAFOR_AGENT_JOB"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
-          "jobId": {
-            "type": "string",
-            "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+          "identity": {
+            "$ref": "#/$defs/jobIdentity"
           },
-          "projectId": {
-            "type": "string",
-            "minLength": 1
+          "lineage": {
+            "$ref": "#/$defs/lineage"
           },
-          "assignedAgentId": {
-            "type": "string",
-            "minLength": 1
+          "provenance": {
+            "$ref": "#/$defs/provenance"
           },
-          "assignedIdentityRef": {
-            "type": "string",
-            "minLength": 1
+          "assignment": {
+            "$ref": "#/$defs/assignment"
           },
-          "assignedIdentityRevision": {
-            "type": "integer",
-            "minimum": 1
+          "roleContract": {
+            "$ref": "#/$defs/roleContract"
           },
-          "issuedBy": {
-            "type": "string",
-            "minLength": 1
-          },
-          "issuedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "dispatchRevision": {
-            "type": "integer",
-            "minimum": 1
-          },
-          "dispatchState": {
-            "const": "READY"
-          },
-          "workItemRef": {
-            "type": "string",
-            "minLength": 1
-          },
-          "executionContractRef": {
-            "type": "string",
-            "minLength": 1
-          },
-          "mandateRef": {
-            "type": "string",
-            "minLength": 1
-          },
-          "scope": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "objective",
-              "allowedRepositories",
-              "allowedPaths"
-            ],
-            "properties": {
-              "objective": {
-                "type": "string",
-                "minLength": 1
-              },
-              "allowedRepositories": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "uniqueItems": true
-              },
-              "allowedPaths": {
-                "type": "array",
-                "items": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "uniqueItems": true
-              }
+          "skills": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/skill"
             }
+          },
+          "task": {
+            "$ref": "#/$defs/task"
+          },
+          "dependencies": {
+            "$ref": "#/$defs/dependencies"
           },
           "inputs": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/ref"
+              "$ref": "#/$defs/input"
             }
           },
-          "requiredOutputs": {
-            "type": "array",
-            "minItems": 1,
-            "items": {
-              "type": "string",
-              "minLength": 1
-            },
-            "uniqueItems": true
+          "authorization": {
+            "$ref": "#/$defs/authorization"
           },
-          "evidenceRequirements": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "minLength": 1
-            },
-            "uniqueItems": true
+          "workspace": {
+            "$ref": "#/$defs/workspace"
+          },
+          "scheduling": {
+            "$ref": "#/$defs/scheduling"
+          },
+          "outputContract": {
+            "$ref": "#/$defs/outputContract"
+          },
+          "verificationContract": {
+            "$ref": "#/$defs/verificationContract"
           },
           "constraints": {
+            "$ref": "#/$defs/constraints"
+          },
+          "humanReadableProjection": {
+            "$ref": "#/$defs/humanReadableProjection"
+          }
+        },
+        "$defs": {
+          "jobIdentity": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "mayMerge",
-              "mayExpandScope",
-              "mayModifyMasterState",
-              "allowedProviderCapabilities",
-              "maxMutationAttempts"
+              "jobId",
+              "jobKey",
+              "jobType",
+              "contractRevision",
+              "immutableAfterDispatch"
             ],
             "properties": {
-              "mayMerge": {
-                "type": "boolean"
+              "jobId": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
               },
-              "mayExpandScope": {
-                "const": false
+              "jobKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
               },
-              "mayModifyMasterState": {
-                "const": false
+              "jobType": {
+                "type": "string",
+                "minLength": 1
               },
-              "allowedProviderCapabilities": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "uniqueItems": true
+              "contractRevision": {
+                "type": "integer",
+                "minimum": 1
               },
-              "maxMutationAttempts": {
+              "immutableAfterDispatch": {
+                "const": true
+              }
+            }
+          },
+          "lineage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "projectId",
+              "valueStreamId",
+              "packageId",
+              "packageRevision",
+              "packageSequence",
+              "workItemId",
+              "workItemRevision",
+              "parentWorkItemId",
+              "rootPackageId",
+              "sequence",
+              "supersedesJobId"
+            ],
+            "properties": {
+              "projectId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "valueStreamId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "packageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "packageRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "packageSequence": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "workItemId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workItemRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "parentWorkItemId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "rootPackageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sequence": {
+                "$ref": "#/$defs/sequence"
+              },
+              "supersedesJobId": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+              }
+            }
+          },
+          "sequence": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "planSequence",
+              "dispatchSequence",
+              "attempt",
+              "reworkCycle"
+            ],
+            "properties": {
+              "planSequence": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "dispatchSequence": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "attempt": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "reworkCycle": {
                 "type": "integer",
                 "minimum": 0
               }
             }
           },
-          "resultTarget": {
+          "provenance": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "resultRef",
-              "evidenceRoot",
-              "humanReadableResultRef"
+              "createdAt",
+              "issuedAt",
+              "createdBy",
+              "planningRef",
+              "executionStateRef",
+              "mandateRef"
             ],
             "properties": {
-              "resultRef": {
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "issuedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "createdBy": {
+                "$ref": "#/$defs/masterProvenance"
+              },
+              "planningRef": {
                 "type": "string",
                 "minLength": 1
               },
-              "evidenceRoot": {
+              "executionStateRef": {
                 "type": "string",
                 "minLength": 1
               },
-              "humanReadableResultRef": {
+              "mandateRef": {
                 "type": "string",
                 "minLength": 1
               }
             }
           },
-          "resourceAccess": {
+          "masterProvenance": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "readSet",
-              "writeSet",
-              "exclusiveKeys"
+              "masterId",
+              "masterVersion",
+              "masterRunId",
+              "masterStateRevision"
             ],
             "properties": {
+              "masterId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "masterVersion": {
+                "type": "string",
+                "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+              },
+              "masterRunId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "masterStateRevision": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "assignment": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "agentId",
+              "agentName",
+              "actorKind",
+              "identityRevision",
+              "identityRef",
+              "assignmentMode",
+              "assignmentReason"
+            ],
+            "properties": {
+              "agentId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "agentName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "actorKind": {
+                "const": "AGENT"
+              },
+              "identityRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "identityRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "assignmentMode": {
+                "const": "EXCLUSIVE"
+              },
+              "assignmentReason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "roleContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "roleId",
+              "roleName",
+              "roleDefinitionRef",
+              "roleDefinitionBlobSha",
+              "mission",
+              "responsibilities",
+              "mustNotActAs",
+              "decisionRights",
+              "authorityExpansionAllowed"
+            ],
+            "properties": {
+              "roleId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleDefinitionRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleDefinitionBlobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "mission": {
+                "type": "string",
+                "minLength": 1
+              },
+              "responsibilities": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mustNotActAs": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "decisionRights": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "authorityExpansionAllowed": {
+                "const": false
+              }
+            }
+          },
+          "skill": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "skillId",
+              "skillVersion",
+              "mandatory",
+              "description",
+              "executionInstructions",
+              "useFor",
+              "skillRef",
+              "skillBlobSha",
+              "requiredLevel"
+            ],
+            "properties": {
+              "skillId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "skillVersion": {
+                "type": "string",
+                "minLength": 1
+              },
+              "mandatory": {
+                "type": "boolean"
+              },
+              "description": {
+                "type": "string",
+                "minLength": 1
+              },
+              "executionInstructions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "useFor": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skillRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "skillBlobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "requiredLevel": {
+                "enum": [
+                  "BASIC",
+                  "PROFICIENT",
+                  "EXPERT"
+                ]
+              }
+            }
+          },
+          "task": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "title",
+              "objective",
+              "instruction",
+              "expectedOutcome",
+              "completionDefinition",
+              "inScope",
+              "outOfScope"
+            ],
+            "properties": {
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "objective": {
+                "type": "string",
+                "minLength": 1
+              },
+              "instruction": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedOutcome": {
+                "type": "string",
+                "minLength": 1
+              },
+              "completionDefinition": {
+                "type": "string",
+                "minLength": 1
+              },
+              "inScope": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "outOfScope": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "dependencies": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "requiredWorkItems",
+              "dependencyPredicate"
+            ],
+            "properties": {
+              "requiredWorkItems": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/dependency"
+                }
+              },
+              "dependencyPredicate": {
+                "const": "ALL_REQUIRED_ACCEPTED"
+              }
+            }
+          },
+          "dependency": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemId",
+              "requiredStatus",
+              "acceptanceRef",
+              "acceptanceBlobSha"
+            ],
+            "properties": {
+              "workItemId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "requiredStatus": {
+                "const": "ACCEPTED"
+              },
+              "acceptanceRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "acceptanceBlobSha": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "input": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "inputId",
+              "repository",
+              "path",
+              "commitSha",
+              "blobSha",
+              "mode",
+              "expectedType",
+              "purpose"
+            ],
+            "properties": {
+              "inputId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "commitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blobSha": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "mode": {
+                "const": "READ_ONLY"
+              },
+              "expectedType": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "authorization": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "authorityBasis",
+              "actualProviderRightsMustBeVerified",
+              "providerCapabilities",
+              "repositoryPermissions",
+              "explicitlyForbidden"
+            ],
+            "properties": {
+              "authorityBasis": {
+                "$ref": "#/$defs/authorityBasis"
+              },
+              "actualProviderRightsMustBeVerified": {
+                "const": true
+              },
+              "providerCapabilities": {
+                "$ref": "#/$defs/providerCapabilities"
+              },
+              "repositoryPermissions": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/repositoryPermission"
+                }
+              },
+              "explicitlyForbidden": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "authorityBasis": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mandateRef",
+              "mandateBlobSha",
+              "mandateMustRemainActive"
+            ],
+            "properties": {
+              "mandateRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "mandateBlobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "mandateMustRemainActive": {
+                "const": true
+              }
+            }
+          },
+          "providerCapabilities": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allowed",
+              "forbidden"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "forbidden": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "repositoryPermission": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "read",
+              "write",
+              "branchCreate",
+              "commit",
+              "push",
+              "changeRequestCreate",
+              "merge",
+              "deploy"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "read": {
+                "type": "boolean"
+              },
+              "write": {
+                "$ref": "#/$defs/writePermission"
+              },
+              "branchCreate": {
+                "type": "boolean"
+              },
+              "commit": {
+                "type": "boolean"
+              },
+              "push": {
+                "type": "boolean"
+              },
+              "changeRequestCreate": {
+                "type": "boolean"
+              },
+              "merge": {
+                "type": "boolean"
+              },
+              "deploy": {
+                "type": "boolean"
+              }
+            }
+          },
+          "writePermission": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allowed",
+              "branchOnly",
+              "allowedPaths"
+            ],
+            "properties": {
+              "allowed": {
+                "type": "boolean"
+              },
+              "branchOnly": {
+                "type": "boolean"
+              },
+              "allowedPaths": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "workspace": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "resourceAccessSource",
+              "readSet",
+              "writeSet",
+              "exclusiveKeys",
+              "gitWorkspaces"
+            ],
+            "properties": {
+              "resourceAccessSource": {
+                "$ref": "#/$defs/resourceAccessSource"
+              },
               "readSet": {
                 "type": "array",
                 "items": {
@@ -7498,14 +8063,13 @@
                   "type": "string",
                   "minLength": 1
                 }
+              },
+              "gitWorkspaces": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/gitWorkspace"
+                }
               }
-            },
-            "description": "Immutable dispatch snapshot of the authoritative work-item resource declaration. It must equal the resourceAccess in resourceAccessSource at dispatch time."
-          },
-          "gitWorkspaces": {
-            "type": "array",
-            "items": {
-              "$ref": "#/$defs/gitWorkspace"
             }
           },
           "resourceAccessSource": {
@@ -7523,40 +8087,6 @@
               "workItemBlobSha": {
                 "type": "string",
                 "minLength": 1
-              }
-            }
-          },
-          "dispatchWaveRef": {
-            "type": "string",
-            "minLength": 1
-          },
-          "resourceLeaseRefs": {
-            "type": "array",
-            "minItems": 1,
-            "uniqueItems": true,
-            "items": {
-              "type": "string",
-              "minLength": 1
-            }
-          }
-        },
-        "$defs": {
-          "ref": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "ref"
-            ],
-            "properties": {
-              "ref": {
-                "type": "string",
-                "minLength": 1
-              },
-              "expectedType": {
-                "type": [
-                  "string",
-                  "null"
-                ]
               }
             }
           },
@@ -7612,11 +8142,13 @@
             "required": [
               "repository",
               "baseCommitSha",
+              "jobKey",
+              "agentKey",
               "branch",
               "allowedPaths",
-              "mergeAuthority",
-              "jobKey",
-              "agentKey"
+              "directDefaultBranchWrite",
+              "crossJobBranchWrite",
+              "mergeAuthority"
             ],
             "properties": {
               "repository": {
@@ -7626,6 +8158,14 @@
               "baseCommitSha": {
                 "type": "string",
                 "minLength": 1
+              },
+              "jobKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "agentKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
               },
               "branch": {
                 "type": "string",
@@ -7640,17 +8180,485 @@
                   "minLength": 1
                 }
               },
+              "directDefaultBranchWrite": {
+                "const": false
+              },
+              "crossJobBranchWrite": {
+                "const": false
+              },
               "mergeAuthority": {
                 "const": "MASTER_OR_EXPLICIT_AUTHORITY"
-              },
-              "jobKey": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
-              },
-              "agentKey": {
-                "type": "string",
-                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
               }
+            }
+          },
+          "scheduling": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "priority",
+              "dispatchRevision",
+              "dispatchState",
+              "dispatchWaveRef",
+              "resourceLeaseRefs",
+              "claimPolicy",
+              "claimWindow"
+            ],
+            "properties": {
+              "priority": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "dispatchRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "dispatchState": {
+                "const": "READY"
+              },
+              "dispatchWaveRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "resourceLeaseRefs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "claimPolicy": {
+                "$ref": "#/$defs/claimPolicy"
+              },
+              "claimWindow": {
+                "$ref": "#/$defs/claimWindow"
+              }
+            }
+          },
+          "claimPolicy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "exclusiveAgentClaim",
+              "optimisticConcurrencyRequired"
+            ],
+            "properties": {
+              "exclusiveAgentClaim": {
+                "const": true
+              },
+              "optimisticConcurrencyRequired": {
+                "const": true
+              }
+            }
+          },
+          "claimWindow": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "notBefore",
+              "claimBy",
+              "onExpired"
+            ],
+            "properties": {
+              "notBefore": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "claimBy": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "onExpired": {
+                "const": "RECONCILE_WITH_MASTER"
+              }
+            }
+          },
+          "outputContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "machineResult",
+              "humanReadableResult",
+              "evidenceRoot",
+              "auditRoot",
+              "requiredOutputs",
+              "gitTraceRequired"
+            ],
+            "properties": {
+              "machineResult": {
+                "$ref": "#/$defs/resultTarget"
+              },
+              "humanReadableResult": {
+                "$ref": "#/$defs/humanResultTarget"
+              },
+              "evidenceRoot": {
+                "$ref": "#/$defs/rootTarget"
+              },
+              "auditRoot": {
+                "$ref": "#/$defs/rootTarget"
+              },
+              "requiredOutputs": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/requiredOutput"
+                }
+              },
+              "gitTraceRequired": {
+                "type": "boolean"
+              }
+            }
+          },
+          "resultTarget": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "ref",
+              "schemaRef",
+              "required"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "schemaRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required": {
+                "const": true
+              }
+            }
+          },
+          "humanResultTarget": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "ref",
+              "format",
+              "required",
+              "requiredSections"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "format": {
+                "const": "MARKDOWN"
+              },
+              "required": {
+                "const": true
+              },
+              "requiredSections": {
+                "$ref": "#/$defs/resultSections"
+              }
+            }
+          },
+          "resultSections": {
+            "type": "array",
+            "minItems": 8,
+            "maxItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "OBJECTIVE",
+                "WORK_PERFORMED",
+                "ARTIFACTS_CHANGED",
+                "GIT_TRACE",
+                "VERIFICATION",
+                "RESULT",
+                "RISKS_AND_LIMITS",
+                "OPEN_ITEMS"
+              ]
+            }
+          },
+          "rootTarget": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "ref"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "requiredOutput": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "outputId",
+              "type",
+              "required"
+            ],
+            "properties": {
+              "outputId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "type": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required": {
+                "type": "boolean"
+              }
+            }
+          },
+          "verificationContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "acceptanceCriteria",
+              "evidenceRequirements",
+              "review",
+              "selfAcceptanceAllowed",
+              "acceptanceAuthority"
+            ],
+            "properties": {
+              "acceptanceCriteria": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#/$defs/criterion"
+                }
+              },
+              "evidenceRequirements": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "review": {
+                "$ref": "#/$defs/review"
+              },
+              "selfAcceptanceAllowed": {
+                "const": false
+              },
+              "acceptanceAuthority": {
+                "const": "MASTER"
+              }
+            }
+          },
+          "criterion": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "criterionId",
+              "statement",
+              "required"
+            ],
+            "properties": {
+              "criterionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "statement": {
+                "type": "string",
+                "minLength": 1
+              },
+              "required": {
+                "type": "boolean"
+              }
+            }
+          },
+          "review": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "required",
+              "reviewCapability",
+              "reviewerAgentId",
+              "performerMustDifferFromReviewer"
+            ],
+            "properties": {
+              "required": {
+                "type": "boolean"
+              },
+              "reviewCapability": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reviewerAgentId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "performerMustDifferFromReviewer": {
+                "type": "boolean"
+              }
+            }
+          },
+          "constraints": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mayExpandScope",
+              "mayModifyMasterState",
+              "mayModifyJobContract",
+              "mayModifyAgentIdentity",
+              "mayModifyInboxIndex",
+              "mayModifySchedulerState",
+              "mayModifyResourceLease",
+              "mayChangeRole",
+              "mayDelegate",
+              "mayCreateCommits",
+              "mayCreateChangeRequest",
+              "mayMerge",
+              "mayDeploy",
+              "maximumMutationAttempts",
+              "stopImmediatelyOn"
+            ],
+            "properties": {
+              "mayExpandScope": {
+                "const": false
+              },
+              "mayModifyMasterState": {
+                "const": false
+              },
+              "mayModifyJobContract": {
+                "const": false
+              },
+              "mayModifyAgentIdentity": {
+                "const": false
+              },
+              "mayModifyInboxIndex": {
+                "const": false
+              },
+              "mayModifySchedulerState": {
+                "const": false
+              },
+              "mayModifyResourceLease": {
+                "const": false
+              },
+              "mayChangeRole": {
+                "const": false
+              },
+              "mayDelegate": {
+                "const": false
+              },
+              "mayCreateCommits": {
+                "type": "boolean"
+              },
+              "mayCreateChangeRequest": {
+                "type": "boolean"
+              },
+              "mayMerge": {
+                "type": "boolean"
+              },
+              "mayDeploy": {
+                "type": "boolean"
+              },
+              "maximumMutationAttempts": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "stopImmediatelyOn": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "humanReadableProjection": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "ref",
+              "format",
+              "blobSha",
+              "authoritative",
+              "generatedFromJson",
+              "requiredSections",
+              "readbackRequiredBeforeReady"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "format": {
+                "const": "MARKDOWN"
+              },
+              "blobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "authoritative": {
+                "const": false
+              },
+              "generatedFromJson": {
+                "const": true
+              },
+              "requiredSections": {
+                "$ref": "#/$defs/jobProjectionSections"
+              },
+              "readbackRequiredBeforeReady": {
+                "const": true
+              }
+            }
+          },
+          "jobProjectionSections": {
+            "type": "array",
+            "minItems": 14,
+            "maxItems": 14,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "JOB_IDENTITY",
+                "PACKAGE_AND_SEQUENCE",
+                "MASTER_PROVENANCE",
+                "ASSIGNMENT",
+                "ROLE",
+                "SKILLS",
+                "TASK",
+                "DEPENDENCIES_AND_INPUTS",
+                "AUTHORIZATION",
+                "WORKSPACE_AND_GIT",
+                "SCHEDULING",
+                "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
+                "VERIFICATION_AND_REVIEW",
+                "CONSTRAINTS_AND_STOP_CONDITIONS"
+              ]
             }
           }
         }
@@ -7658,12 +8666,12 @@
     },
     "schemaAgentJobState": {
       "key": "schemaAgentJobState",
-      "sourcePath": "v0.7.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "7387bb034dfe5d2de3a0140b5ae34c279ed87e25",
+      "sourcePath": "v0.8.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "1ba42eb60f706356ee73e8b79790aca2eaa617a6",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job-state:0.7.0",
-        "title": "SAFOR MASTER Agent Job State 0.7.0",
+        "$id": "urn:safor:agent-job-state:0.8.0",
+        "title": "SAFOR MASTER Agent Job State 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7672,6 +8680,19 @@
           "projectId",
           "jobId",
           "assignedAgentId",
+          "jobKey",
+          "packageId",
+          "packageSequence",
+          "workItemId",
+          "planSequence",
+          "dispatchSequence",
+          "attempt",
+          "reworkCycle",
+          "roleId",
+          "assignedIdentityRevision",
+          "contractRevision",
+          "humanJobRef",
+          "humanJobBlobSha",
           "owner",
           "revision",
           "lifecycleStatus",
@@ -7692,7 +8713,7 @@
             "const": "SAFOR_AGENT_JOB_STATE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -7823,6 +8844,58 @@
               "type": "string",
               "minLength": 1
             }
+          },
+          "jobKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "packageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "packageSequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "workItemId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "planSequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "dispatchSequence": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "attempt": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reworkCycle": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "roleId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "assignedIdentityRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "contractRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "humanJobRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "humanJobBlobSha": {
+            "type": "string",
+            "minLength": 1
           }
         },
         "$defs": {
@@ -7869,12 +8942,12 @@
     },
     "schemaAgentResult": {
       "key": "schemaAgentResult",
-      "sourcePath": "v0.7.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "501fa76563a3fb35b7d4f8e9fe7df80eb5011503",
+      "sourcePath": "v0.8.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-result:0.7.0",
-        "title": "SAFOR Agent Result 0.7.0",
+        "$id": "urn:safor:agent-result:0.8.0",
+        "title": "SAFOR Agent Result 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7905,7 +8978,7 @@
             "const": "SAFOR_AGENT_RESULT"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "resultId": {
             "type": "string",
@@ -8933,12 +10006,12 @@
     },
     "schemaSchedulerState": {
       "key": "schemaSchedulerState",
-      "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
-      "sourceBlobSha": "052c85a6e5cc67f6db31ac7595ff452bee48fc77",
+      "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "3acc33caec14f1e66465620244a536a22e536478",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:scheduler-state:0.7.0",
-        "title": "SAFOR Multi-Agent Scheduler State 0.7.0",
+        "$id": "urn:safor:scheduler-state:0.8.0",
+        "title": "SAFOR Multi-Agent Scheduler State 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -8958,7 +10031,7 @@
             "const": "SAFOR_SCHEDULER_STATE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -9054,12 +10127,12 @@
     },
     "schemaDispatchWave": {
       "key": "schemaDispatchWave",
-      "sourcePath": "v0.7.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "46cd08135139f390a2ad8c2f6bedc25d1660cbe5",
+      "sourcePath": "v0.8.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "bf3e86b4289c6a7549152572cfc68693073d4170",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:dispatch-wave:0.7.0",
-        "title": "SAFOR Dispatch Wave 0.7.0",
+        "$id": "urn:safor:dispatch-wave:0.8.0",
+        "title": "SAFOR Dispatch Wave 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9080,7 +10153,7 @@
             "const": "SAFOR_DISPATCH_WAVE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -9175,12 +10248,12 @@
     },
     "schemaResourceLease": {
       "key": "schemaResourceLease",
-      "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414",
+      "sourcePath": "v0.8.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:resource-lease:0.7.0",
-        "title": "SAFOR Multi-Agent Resource Lease 0.7.0",
+        "$id": "urn:safor:resource-lease:0.8.0",
+        "title": "SAFOR Multi-Agent Resource Lease 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9207,7 +10280,7 @@
             "const": "SAFOR_RESOURCE_LEASE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
