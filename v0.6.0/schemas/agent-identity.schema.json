@@ -120,12 +120,15 @@
         },
         "onActivation": {
           "type": "array",
-          "minItems": 5,
+          "minItems": 7,
           "items": {
             "enum": [
               "LOAD_IDENTITY",
               "LOAD_AGENT_STATE",
-              "SCAN_INBOX",
+              "LOAD_INBOX_INDEX",
+              "SELECT_DISCOVERABLE_JOB",
+              "READ_JOB_CONTRACT",
+              "READ_MASTER_JOB_STATE",
               "VERIFY_ELIGIBLE_JOB",
               "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
               "EXECUTE_CLAIMED_JOB",
