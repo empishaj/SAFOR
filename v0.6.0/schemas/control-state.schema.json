@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:control-state:0.5.0",
+  "title": "SAFOR Control State 0.5.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "kernelRef",
+    "projectRef",
+    "bindingsRef",
+    "mode",
+    "status",
+    "currentActionId",
+    "stateRevision",
+    "resumeMode",
+    "mandates",
+    "lastTransition",
+    "audit"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_CONTROL_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.5.0"
+    },
+    "kernelRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "version",
+        "sourceRef"
+      ],
+      "properties": {
+        "version": {
+          "const": "0.5.0"
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "projectRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projectId",
+        "projectSlug"
+      ],
+      "properties": {
+        "projectId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projectSlug": {
+          "type": "string",
+          "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+        }
+      }
+    },
+    "bindingsRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "revision"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "mode": {
+      "enum": [
+        "BOOTSTRAP",
+        "INITIALIZING",
+        "PLANNING",
+        "AWAITING_AUTHORIZATION",
+        "EXECUTING",
+        "WAITING_OUTCOME",
+        "RECOVERING",
+        "PAUSED",
+        "STOPPED",
+        "COMPLETED"
+      ]
+    },
+    "status": {
+      "enum": [
+        "READY",
+        "RUNNING",
+        "WAITING_HUMAN",
+        "WAITING_EXTERNAL",
+        "RECONCILE_REQUIRED",
+        "BLOCKED",
+        "FAILED",
+        "DONE"
+      ]
+    },
+    "currentActionId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "stateRevision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "resumeMode": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "mandates": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/mandate"
+      }
+    },
+    "lastTransition": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "expectedControlHead",
+        "lastVerifiedReadback"
+      ],
+      "properties": {
+        "expectedControlHead": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastVerifiedReadback": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "mandate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mandateId",
+        "type",
+        "active",
+        "scope",
+        "decisionRef",
+        "issuedAt",
+        "revokedAt"
+      ],
+      "properties": {
+        "mandateId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "active": {
+          "type": "boolean"
+        },
+        "scope": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "workItemIds",
+            "capabilities",
+            "objectRefs"
+          ],
+          "properties": {
+            "workItemIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "capabilities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "objectRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "decisionRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revokedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

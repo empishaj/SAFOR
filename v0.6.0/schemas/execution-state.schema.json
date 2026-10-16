@@ -1,0 +1,247 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:execution-state:0.5.0",
+  "title": "SAFOR Execution State 0.5.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "revision",
+    "actorAssignments",
+    "contracts",
+    "runs",
+    "reconciliation",
+    "selfHealing"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_EXECUTION_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.5.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "actorAssignments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assignment"
+      }
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/contract"
+      }
+    },
+    "runs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/run"
+      }
+    },
+    "reconciliation": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/reconciliation"
+      }
+    },
+    "selfHealing": {
+      "type": "array",
+      "items": {
+        "$ref": "self-healing-record.schema.json"
+      }
+    }
+  },
+  "$defs": {
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "roleId",
+        "actorId",
+        "actorKind",
+        "capabilities"
+      ],
+      "properties": {
+        "roleId": {
+          "type": "string"
+        },
+        "actorId": {
+          "type": "string"
+        },
+        "actorKind": {
+          "enum": [
+            "HUMAN",
+            "AGENT",
+            "SERVICE"
+          ]
+        },
+        "capabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "contractId",
+        "workItemId",
+        "performerActorId",
+        "reviewerActorIds",
+        "status",
+        "scope"
+      ],
+      "properties": {
+        "contractId": {
+          "type": "string"
+        },
+        "workItemId": {
+          "type": "string"
+        },
+        "performerActorId": {
+          "type": "string"
+        },
+        "reviewerActorIds": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "status": {
+          "enum": [
+            "PREPARED",
+            "ASSIGNED",
+            "IN_PROGRESS",
+            "RESULT_RECORDED",
+            "REWORK_REQUESTED",
+            "ACCEPTED",
+            "SUPERSEDED",
+            "CANCELED",
+            "BLOCKED"
+          ]
+        },
+        "scope": {
+          "type": "object"
+        }
+      }
+    },
+    "run": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runId",
+        "actionId",
+        "operationId",
+        "status",
+        "inputRefs",
+        "outputRefs",
+        "evidenceRefs",
+        "startedAt",
+        "endedAt",
+        "error"
+      ],
+      "properties": {
+        "runId": {
+          "type": "string"
+        },
+        "actionId": {
+          "type": "string"
+        },
+        "operationId": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "INTENT_WRITTEN",
+            "RUNNING",
+            "WAITING_HUMAN",
+            "WAITING_EXTERNAL",
+            "RECONCILE_REQUIRED",
+            "COMPLETED",
+            "BLOCKED",
+            "FAILED",
+            "CANCELED"
+          ]
+        },
+        "inputRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "outputRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "startedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "error": {
+          "type": [
+            "object",
+            "null"
+          ]
+        }
+      }
+    },
+    "reconciliation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operationId",
+        "status",
+        "observedRefs"
+      ],
+      "properties": {
+        "operationId": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "OPEN",
+            "RESOLVED_EFFECT_PRESENT",
+            "RESOLVED_EFFECT_ABSENT",
+            "MANUAL_DECISION_REQUIRED"
+          ]
+        },
+        "observedRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
