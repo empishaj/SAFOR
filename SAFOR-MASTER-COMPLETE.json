@@ -222,7 +222,7 @@
     },
     "conformance": {
       "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "a89ab6282c776673d4161b96c38b0d79a055fb35"
+      "sourceBlobSha": "2e9b265a28ef7d109be43f6193a0815cbb95bd7f"
     }
   },
   "embeddedModules": {
@@ -7012,7 +7012,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "a89ab6282c776673d4161b96c38b0d79a055fb35",
+      "sourceBlobSha": "2e9b265a28ef7d109be43f6193a0815cbb95bd7f",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.6.0",
@@ -7351,8 +7351,8 @@
         ],
         "lastManualVerification": {
           "branch": "safor/agent-workspace-v0.6.0-rc.1",
-          "result": "PENDING_CI",
-          "note": "Agent Workspace Protocol added; machine validation and release bundle verification required before merge."
+          "result": "CI_PASS_E2E_PENDING",
+          "note": "Machine validation for the repository-native Agent Workspace Protocol passes. Scenarios F-H in ACCEPTANCE-TESTS.md remain required as empirical end-to-end acceptance before GA."
         }
       }
     }
