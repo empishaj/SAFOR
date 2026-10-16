@@ -90,13 +90,13 @@ for action_id in ("E04","E05"):
         fail(f"{action_id} must bind Factory evidenceContract.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 86)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 87)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 110)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 111)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -109,6 +109,8 @@ if agent_job_model.get("authority", {}).get("humanProjection") != "agents/{agent
     fail("Canonical job model HUMAN projection path mismatch.")
 if agent_job_model.get("authorizationSemantics", {}).get("jobPermissionIsUpperBound") is not True:
     fail("Canonical job permissions must be an upper bound only.")
+if "must not invent" not in agent_job_model.get("roleAndSkillContract", {}).get("skillSourceRule", "").lower():
+    fail("Canonical job model must forbid invented skill provenance.")
 if agent_job_model.get("humanProjectionContract", {}).get("providerReadbackRequiredBeforeReady") is not True:
     fail("Canonical job Markdown must be read back before READY.")
 if agent_model.get("topology", {}).get("inboxIndex") != "agents/{agentId}/inbox/index.json":
