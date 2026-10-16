@@ -282,8 +282,8 @@
         "acceptanceCriteria",
         "evidenceRequirements",
         "execution",
-        "resourceAccess",
-        "parallelizationDecision"
+        "execution.resourceAccess",
+        "execution.parallelizationDecision"
       ],
       "conditionalRules": [
         {
@@ -368,7 +368,8 @@
         }
       ],
       "decompositionRule": "Research, drafting, fact-check or editorial work may be decomposed only along explicit chapter/section/source domains with independent outputs and conservative conflict domains; shared manuscript integration is explicit.",
-      "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan."
+      "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan.",
+      "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
     }
   }
 }
