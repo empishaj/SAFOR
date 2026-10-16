@@ -33,6 +33,8 @@
     "sharedTeamEligibility": "Only when the host additionally proves memory.shared_access and either memory.compare_and_swap or memory.lock.",
     "revisionStrategy": "Use a durable SAFOR revision metadata record and atomic replacement/locking semantics exposed by the host.",
     "creationRequiresExplicitHumanApproval": true,
-    "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once."
+    "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once.",
+    "persistenceProofRequired": true,
+    "persistenceProof": "The host must prove the same stable location survives session boundaries and can be reopened before it becomes authoritative SAFOR Memory."
   }
 }
