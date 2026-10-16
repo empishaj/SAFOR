@@ -63,7 +63,7 @@ See `AGENT-WORKSPACE.md`.
 
 ## Parallel agent scheduling
 
-SAFOR v0.8 can serve multiple persistent agent chats in parallel. Work is dispatched only as ATOMIC units whose dependencies are accepted, inputs are pinned, required capabilities are available, and mutation/resource domains do not conflict.
+SAFOR v0.10 can serve multiple persistent agent chats in parallel. Work is dispatched only as ATOMIC units whose dependencies are accepted, inputs are pinned, required capabilities are available, and mutation/resource domains do not conflict.
 
 With six active chat agents at one scheduling slot each, the MASTER can dispatch up to six mutually conflict-free READY jobs in one wave. Mutating jobs use dedicated `safor/job/{jobKey}/{agentKey}` branches.
 
@@ -91,7 +91,7 @@ See `AGENT-JOB-CONTRACT.md`.
 
 ## Module-wide self-healing
 
-SAFOR v0.9 gives every embedded module exactly one recovery profile. Recovery is constrained by module authority and repairability:
+SAFOR v0.10 gives every embedded module exactly one recovery profile. Recovery is constrained by module authority and repairability:
 
 - immutable modules: validate/reload expected blobs only,
 - pinned models/packages: restore verified expected versions/blobs,
