@@ -3,7 +3,9 @@
   "schemaVersion": "0.4.0",
   "bundleVersion": "0.4.0-complete",
   "definitionId": "saf-master-complete",
-  "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat. All kernel models, schemas, provider contracts, operating models and supported factories required for bootstrap are embedded in this single JSON.",
+  "productName": "SAFOR",
+  "productExpansion": "Systemic AI Factory Orchestration Runtime",
+  "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat.",
   "entrypoint": "embeddedModules.kernel.content",
   "distributionMode": "SELF_CONTAINED_SINGLE_FILE",
   "runtimeContract": {
@@ -50,9 +52,20 @@
       }
     ],
     "factoryBindingRule": "Discovery, Planning and domain Evidence must always use the discoveryContract, planningContract and evidenceContract from the HUMAN-selected Factory. Cross-factory substitution is forbidden.",
-    "chatUiRule": "Use chat-native UI only. No custom HTML, CSS, JavaScript or external UI shell.",
-    "humanCommunicationRule": "Use the embedded HUMAN buddy profile: concise, warm, direct, encouraging and detail-on-demand.",
-    "selfHealingRule": "Use the embedded conservative self-healing model. Automatic repair is bounded, evidence-driven and may not bypass gates, reviews or HUMAN authority."
+    "chatUiRule": "Use chat-native UI only.",
+    "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
+    "selfHealingRule": "Use the embedded conservative self-healing model."
+  },
+  "productRepository": {
+    "repository": "empishaj/SAFOR.",
+    "role": "CANONICAL_SAFOR_PRODUCT_REPOSITORY",
+    "independentFromHumanProjectContext": true
+  },
+  "runtimeMemoryRepository": {
+    "pattern": "{selectedOwner}/safor-memory",
+    "role": "MANDATORY_HUMAN_PROJECT_CONTROL_MEMORY",
+    "preExistingReadWriteRequired": true,
+    "onFailure": "STOP"
   },
   "referenceResolution": {
     "initialization-model.json": "initialization",
@@ -80,107 +93,107 @@
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "factory/saf-master/v0.4.0/SAF-MASTER.json",
-      "sourceBlobSha": "8538ff935c39df65863c9b2de7da9615627e367f"
+      "sourcePath": "v0.4.0/SAF-MASTER.json",
+      "sourceBlobSha": "f5583b143e6d47a56c4cb953456dab562e339d29"
     },
     "initialization": {
-      "sourcePath": "factory/saf-master/v0.4.0/initialization-model.json",
+      "sourcePath": "v0.4.0/initialization-model.json",
       "sourceBlobSha": "59a606db0ae8bf0ef0ea99615f52c45258a4b44c"
     },
     "interaction": {
-      "sourcePath": "factory/saf-master/v0.4.0/interaction-model.json",
+      "sourcePath": "v0.4.0/interaction-model.json",
       "sourceBlobSha": "068e89847cae90004428a8ae9241cb66a440e670"
     },
     "selfHealing": {
-      "sourcePath": "factory/saf-master/v0.4.0/self-healing-model.json",
+      "sourcePath": "v0.4.0/self-healing-model.json",
       "sourceBlobSha": "174b93661546d212743b497f4cd79e9e7490d37f"
     },
     "repositoryPolicy": {
-      "sourcePath": "factory/saf-master/v0.4.0/repository-policy.json",
+      "sourcePath": "v0.4.0/repository-policy.json",
       "sourceBlobSha": "651021e01ba57b60b22d355ffcbddd82de7d6c77"
     },
     "packageRegistry": {
-      "sourcePath": "factory/saf-master/v0.4.0/package-registry.json",
+      "sourcePath": "v0.4.0/package-registry.json",
       "sourceBlobSha": "c391dc9c830339c348c8ee858c61f5857d29e777"
     },
     "providerGithub": {
-      "sourcePath": "factory/saf-master/v0.4.0/providers/github/0.1.0/package.json",
+      "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
       "sourceBlobSha": "881e88536c6117ed99bac0c33c8aac420910cbf4"
     },
     "providerGitlab": {
-      "sourcePath": "factory/saf-master/v0.4.0/providers/gitlab/0.1.0/package.json",
+      "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
       "sourceBlobSha": "8a7f02a7367a359d22bb2d8720a8d6f8443d2608"
     },
     "operatingModelSaas": {
-      "sourcePath": "factory/saf-master/v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+      "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
       "sourceBlobSha": "4c27c7a89fa51145882c563a93fc63efee39b3ae"
     },
     "operatingModelBook": {
-      "sourcePath": "factory/saf-master/v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
+      "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
       "sourceBlobSha": "eee167495ca60e971b2526b10f3187538f68318b"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "factory/saf-master/v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
+      "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
       "sourceBlobSha": "e30f56cc2d7382ae07ab4ed3b9e8b2c557e7127a"
     },
     "factoryBook": {
-      "sourcePath": "factory/saf-master/v0.4.0/packages/factories/book-production/0.1.0/package.json",
+      "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
       "sourceBlobSha": "347b8f1abb3dbe84fe14b962f109301399507a40"
     },
     "schemaPackageManifest": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/package-manifest.schema.json",
+      "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
       "sourceBlobSha": "fded3f85a4e10c748fb48212476f2960bb009664"
     },
     "schemaControlState": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/control-state.schema.json",
+      "sourcePath": "v0.4.0/schemas/control-state.schema.json",
       "sourceBlobSha": "07c8e561574da5a8316b0a4c6ba5a6254cb02cd5"
     },
     "schemaValueStreamState": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/value-stream-state.schema.json",
+      "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
       "sourceBlobSha": "8e557b2ecbaad40d6b13047ae3679b16d90fd2df"
     },
     "schemaExecutionState": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/execution-state.schema.json",
+      "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
       "sourceBlobSha": "3e39db4fedcf6ef59a0765bbbafc916f5d6e1333"
     },
     "schemaWorkItem": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/work-item.schema.json",
+      "sourcePath": "v0.4.0/schemas/work-item.schema.json",
       "sourceBlobSha": "23f3bea85448d26df771686d1fe25cad3cd4a0cc"
     },
     "schemaProject": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/project.schema.json",
+      "sourcePath": "v0.4.0/schemas/project.schema.json",
       "sourceBlobSha": "0bddb70576fad1bace7ede9b069a4424829e498a"
     },
     "schemaBindings": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/bindings.schema.json",
+      "sourcePath": "v0.4.0/schemas/bindings.schema.json",
       "sourceBlobSha": "2a6ab5dd7f30c8d8e4792f8479824b17c9191b13"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/decision-record.schema.json",
+      "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
       "sourceBlobSha": "b7a2e88dbacb9c98f3b33bb098e7fe7f9ab1ebcd"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/evidence-record.schema.json",
+      "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
       "sourceBlobSha": "ecd5418e3fdafed68abaffc8c0a66352f32f802f"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/interaction-menu.schema.json",
+      "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
       "sourceBlobSha": "c34ce556d8d7cfdaa5b4a0223107976b8a1b6c91"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/self-healing-record.schema.json",
+      "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
       "sourceBlobSha": "5cdd731e1b6138db7042e1b71c01370d32aea751"
     },
     "conformance": {
-      "sourcePath": "factory/saf-master/v0.4.0/conformance.json",
+      "sourcePath": "v0.4.0/conformance.json",
       "sourceBlobSha": "48da4b94f6fd2c738ab17a5a257a1e6247a64600"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "factory/saf-master/v0.4.0/SAF-MASTER.json",
-      "sourceBlobSha": "8538ff935c39df65863c9b2de7da9615627e367f",
+      "sourcePath": "v0.4.0/SAF-MASTER.json",
+      "sourceBlobSha": "f5583b143e6d47a56c4cb953456dab562e339d29",
       "content": {
         "format": "SAF_MASTER_BOOTSTRAP",
         "schemaVersion": "0.4.0",
@@ -1015,7 +1028,7 @@
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "factory/saf-master/v0.4.0/initialization-model.json",
+      "sourcePath": "v0.4.0/initialization-model.json",
       "sourceBlobSha": "59a606db0ae8bf0ef0ea99615f52c45258a4b44c",
       "content": {
         "format": "SAF_INITIALIZATION_MODEL",
@@ -1396,7 +1409,7 @@
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "factory/saf-master/v0.4.0/interaction-model.json",
+      "sourcePath": "v0.4.0/interaction-model.json",
       "sourceBlobSha": "068e89847cae90004428a8ae9241cb66a440e670",
       "content": {
         "format": "SAF_INTERACTION_MODEL",
@@ -2033,7 +2046,7 @@
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "factory/saf-master/v0.4.0/self-healing-model.json",
+      "sourcePath": "v0.4.0/self-healing-model.json",
       "sourceBlobSha": "174b93661546d212743b497f4cd79e9e7490d37f",
       "content": {
         "format": "SAF_SELF_HEALING_MODEL",
@@ -2244,7 +2257,7 @@
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "factory/saf-master/v0.4.0/repository-policy.json",
+      "sourcePath": "v0.4.0/repository-policy.json",
       "sourceBlobSha": "651021e01ba57b60b22d355ffcbddd82de7d6c77",
       "content": {
         "kind": "SAF_REPOSITORY_BOUNDARY_POLICY",
@@ -2355,7 +2368,7 @@
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "factory/saf-master/v0.4.0/package-registry.json",
+      "sourcePath": "v0.4.0/package-registry.json",
       "sourceBlobSha": "c391dc9c830339c348c8ee858c61f5857d29e777",
       "content": {
         "format": "SAF_PACKAGE_REGISTRY",
@@ -2418,7 +2431,7 @@
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "factory/saf-master/v0.4.0/providers/github/0.1.0/package.json",
+      "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
       "sourceBlobSha": "881e88536c6117ed99bac0c33c8aac420910cbf4",
       "content": {
         "format": "SAF_PACKAGE_MANIFEST",
@@ -2568,7 +2581,7 @@
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "factory/saf-master/v0.4.0/providers/gitlab/0.1.0/package.json",
+      "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
       "sourceBlobSha": "8a7f02a7367a359d22bb2d8720a8d6f8443d2608",
       "content": {
         "format": "SAF_PACKAGE_MANIFEST",
@@ -2717,7 +2730,7 @@
     },
     "operatingModelSaas": {
       "key": "operatingModelSaas",
-      "sourcePath": "factory/saf-master/v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+      "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
       "sourceBlobSha": "4c27c7a89fa51145882c563a93fc63efee39b3ae",
       "content": {
         "format": "SAF_PACKAGE_MANIFEST",
@@ -3034,7 +3047,7 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "factory/saf-master/v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
+      "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
       "sourceBlobSha": "eee167495ca60e971b2526b10f3187538f68318b",
       "content": {
         "format": "SAF_PACKAGE_MANIFEST",
@@ -3255,7 +3268,7 @@
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "factory/saf-master/v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
+      "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
       "sourceBlobSha": "e30f56cc2d7382ae07ab4ed3b9e8b2c557e7127a",
       "content": {
         "format": "SAF_PACKAGE_MANIFEST",
@@ -3600,7 +3613,7 @@
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "factory/saf-master/v0.4.0/packages/factories/book-production/0.1.0/package.json",
+      "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
       "sourceBlobSha": "347b8f1abb3dbe84fe14b962f109301399507a40",
       "content": {
         "format": "SAF_PACKAGE_MANIFEST",
@@ -3956,7 +3969,7 @@
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/package-manifest.schema.json",
+      "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
       "sourceBlobSha": "fded3f85a4e10c748fb48212476f2960bb009664",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4110,7 +4123,7 @@
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/control-state.schema.json",
+      "sourcePath": "v0.4.0/schemas/control-state.schema.json",
       "sourceBlobSha": "07c8e561574da5a8316b0a4c6ba5a6254cb02cd5",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4349,7 +4362,7 @@
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/value-stream-state.schema.json",
+      "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
       "sourceBlobSha": "8e557b2ecbaad40d6b13047ae3679b16d90fd2df",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4522,7 +4535,7 @@
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/execution-state.schema.json",
+      "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
       "sourceBlobSha": "3e39db4fedcf6ef59a0765bbbafc916f5d6e1333",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4774,7 +4787,7 @@
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/work-item.schema.json",
+      "sourcePath": "v0.4.0/schemas/work-item.schema.json",
       "sourceBlobSha": "23f3bea85448d26df771686d1fe25cad3cd4a0cc",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -4991,7 +5004,7 @@
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/project.schema.json",
+      "sourcePath": "v0.4.0/schemas/project.schema.json",
       "sourceBlobSha": "0bddb70576fad1bace7ede9b069a4424829e498a",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5123,7 +5136,7 @@
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/bindings.schema.json",
+      "sourcePath": "v0.4.0/schemas/bindings.schema.json",
       "sourceBlobSha": "2a6ab5dd7f30c8d8e4792f8479824b17c9191b13",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5226,7 +5239,7 @@
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/decision-record.schema.json",
+      "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
       "sourceBlobSha": "b7a2e88dbacb9c98f3b33bb098e7fe7f9ab1ebcd",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5299,7 +5312,7 @@
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/evidence-record.schema.json",
+      "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
       "sourceBlobSha": "ecd5418e3fdafed68abaffc8c0a66352f32f802f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5378,7 +5391,7 @@
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/interaction-menu.schema.json",
+      "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
       "sourceBlobSha": "c34ce556d8d7cfdaa5b4a0223107976b8a1b6c91",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5556,7 +5569,7 @@
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "factory/saf-master/v0.4.0/schemas/self-healing-record.schema.json",
+      "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
       "sourceBlobSha": "5cdd731e1b6138db7042e1b71c01370d32aea751",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -5671,7 +5684,7 @@
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "factory/saf-master/v0.4.0/conformance.json",
+      "sourcePath": "v0.4.0/conformance.json",
       "sourceBlobSha": "48da4b94f6fd2c738ab17a5a257a1e6247a64600",
       "content": {
         "format": "SAF_CONFORMANCE_SUITE",
@@ -5961,16 +5974,5 @@
         }
       }
     }
-  },
-  "productRepository": {
-    "repository": "empishaj/SAFOR.",
-    "role": "CANONICAL_SAFOR_PRODUCT_REPOSITORY",
-    "independentFromHumanProjectContext": true
-  },
-  "runtimeMemoryRepository": {
-    "pattern": "{selectedOwner}/safor-memory",
-    "role": "MANDATORY_HUMAN_PROJECT_CONTROL_MEMORY",
-    "preExistingReadWriteRequired": true,
-    "onFailure": "STOP"
   }
 }
