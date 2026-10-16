@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/human-response.schema.json",
+  "title": "SAFOR HUMAN Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "responseId",
+    "phase",
+    "surface",
+    "content",
+    "terminalMenu",
+    "renderingContract"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_HUMAN_RESPONSE"
+    },
+    "schemaVersion": {
+      "const": "0.10.0"
+    },
+    "responseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "enum": [
+        "BOOTSTRAP",
+        "RESUME",
+        "DISCOVERY",
+        "PLANNING",
+        "SCHEDULING",
+        "AGENT_COORDINATION",
+        "EXECUTION",
+        "RECOVERY",
+        "OUTCOME",
+        "CLOSING"
+      ]
+    },
+    "surface": {
+      "enum": [
+        "SUMMARY",
+        "DETAILS",
+        "EVIDENCE",
+        "TECHNICAL_STATE"
+      ]
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ACKNOWLEDGEMENT",
+              "SUMMARY",
+              "STATUS",
+              "PROGRESS",
+              "DECISION_CONTEXT",
+              "BLOCKER",
+              "WARNING",
+              "RECOVERY",
+              "OUTCOME",
+              "COMPLETION",
+              "DETAIL"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "terminalMenu": {
+      "$ref": "interaction-menu.schema.json"
+    },
+    "renderingContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "renderOrder",
+        "terminalElement",
+        "exactlyOneTerminalMenu",
+        "contentAfterTerminalElementForbidden",
+        "stopRenderingAfterTerminalMenu"
+      ],
+      "properties": {
+        "renderOrder": {
+          "const": [
+            "content",
+            "terminalMenu"
+          ]
+        },
+        "terminalElement": {
+          "const": "terminalMenu"
+        },
+        "exactlyOneTerminalMenu": {
+          "const": true
+        },
+        "contentAfterTerminalElementForbidden": {
+          "const": true
+        },
+        "stopRenderingAfterTerminalMenu": {
+          "const": true
+        }
+      }
+    }
+  }
+}
