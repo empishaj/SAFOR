@@ -1,0 +1,58 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.5.0",
+  "packageId": "safor.provider.plastic-scm",
+  "packageKind": "PROVIDER_ADAPTER",
+  "version": "0.1.0",
+  "name": "Plastic SCM / Unity Version Control Provider Adapter",
+  "description": "Conceptual provider contract for Plastic SCM / Unity Version Control installations. Actual execution requires host-exposed tools or an organization-specific connector.",
+  "compatibility": {
+    "kernel": ">=0.5.0 <0.6.0"
+  },
+  "exports": {
+    "capabilities": [],
+    "authorities": [],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "memoryCapabilities": [],
+    "providerCapabilities": [
+      "provider.identity.read",
+      "provider.repository.list",
+      "provider.repository.read",
+      "provider.repository.create",
+      "provider.artifact.read",
+      "provider.artifact.write",
+      "provider.history.read",
+      "provider.branch.read",
+      "provider.branch.write"
+    ]
+  },
+  "dependencies": [],
+  "model": {
+    "providerId": "plastic-scm",
+    "terminology": {
+      "repository": "repository",
+      "branch": "branch_or_stream",
+      "revision": "changeset",
+      "changeRequest": "merge_or_code_review_when_exposed"
+    },
+    "runtimeBinding": {
+      "strategy": "DISCOVER_ACTUAL_HOST_TOOLS",
+      "implementedByDefault": false,
+      "rule": "This manifest defines SAFOR semantics only. If the chat host exposes no Plastic/Unity Version Control tool, actions remain unavailable rather than simulated."
+    },
+    "writeSafety": {
+      "readCurrentRevisionBeforeWrite": true,
+      "readbackAfterWrite": true,
+      "unknownOutcome": "RECONCILE_REQUIRED"
+    },
+    "optionalCapabilities": [
+      "provider.change_request.read",
+      "provider.change_request.write",
+      "provider.change_request.merge",
+      "provider.checks.read",
+      "provider.issue.read",
+      "provider.issue.write"
+    ]
+  }
+}
