@@ -57,7 +57,11 @@
     "multiAgentScheduling": true,
     "conflictAwareParallelDispatch": true,
     "gitIsolatedAgentMutations": true,
-    "humanReadableAgentResults": true
+    "humanReadableAgentResults": true,
+    "canonicalExplicitAgentJobContract": true,
+    "explicitRoleAndSkillBindingPerJob": true,
+    "humanReadableAgentJobProjection": true,
+    "explicitJobAuthorizationAndReturnRoutes": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -82,6 +86,10 @@
         "responsibility": "MASTER-owned dependency, capacity, conflict, lease, fan-out/fan-in and parallel dispatch-wave orchestration across multiple agent actors."
       },
       {
+        "id": "AGENT_JOB_CONTRACT",
+        "responsibility": "Immutable, self-describing MASTER-issued execution contract binding job identity, package lineage, MASTER provenance, agent/role/skills, scope, immutable inputs, authorization, workspace, scheduling, output routes and verification."
+      },
+      {
         "id": "AGENT_WORKSPACE_PROTOCOL",
         "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
       },
@@ -101,7 +109,11 @@
       "MULTI_AGENT_SCHEDULER may dispatch only ATOMIC READY work whose dependency/join predicates are satisfied.",
       "Parallel dispatch requires explicit resource declarations, free agent capacity and a conflict-free lease set.",
       "Mutating agent work uses dedicated job branches; direct default-branch writes are forbidden unless a separately governed non-agent operation explicitly permits them.",
-      "Every agent result has both machine-readable JSON and a Git-persisted HUMAN-readable Markdown report."
+      "Every agent result has both machine-readable JSON and a Git-persisted HUMAN-readable Markdown report.",
+      "AGENT_JOB_CONTRACT JSON is authoritative; the paired Markdown job view is a derived HUMAN-readable projection.",
+      "Every dispatched agent job explicitly binds the role the agent must assume and every mandatory versioned skill it must apply.",
+      "Job permissions are an upper bound only and never create provider rights.",
+      "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve."
     ]
   },
   "packageSystem": {
@@ -513,9 +525,9 @@
       {
         "id": "E03",
         "operation": "DISPATCH_WORK_ITEM",
-        "purpose": "Issue a scoped work contract to the resolved actor. AGENT work must be dispatched through an active conflict-checked scheduler wave; copied prompts are not authoritative.",
+        "purpose": "Issue a scoped execution contract to the resolved actor. AGENT work must be materialized through the canonical Agent Job Contract and an active conflict-checked scheduler wave; copied prompts are not authoritative.",
         "domainNeutral": true,
-        "modelRef": "agent-workspace-model.json"
+        "modelRef": "agent-job-contract-model.json"
       },
       {
         "id": "E04",
@@ -587,10 +599,10 @@
       },
       {
         "id": "A02",
-        "operation": "DISPATCH_AGENT_JOB",
-        "purpose": "Write an immutable agent job contract into the assigned agent inbox, update the fixed MASTER-owned inbox index projection, and create MASTER-owned job lifecycle state after an active mandate covers the work.",
+        "operation": "MATERIALIZE_AND_DISPATCH_AGENT_JOB",
+        "purpose": "Create the canonical immutable job contract with explicit package/sequence lineage, MASTER provenance, assigned identity, role, skills, immutable inputs, granular authorization, workspace, scheduling, output return routes and verification requirements; render the HUMAN-readable job Markdown, read back both, then publish the job as READY.",
         "domainNeutral": true,
-        "modelRef": "agent-workspace-model.json"
+        "modelRef": "agent-job-contract-model.json"
       },
       {
         "id": "A03",
@@ -651,7 +663,7 @@
       {
         "id": "S06",
         "operation": "DISPATCH_PARALLEL_WAVE",
-        "purpose": "Materialize dedicated Git job workspaces and dispatch all successfully leased assignments through the Agent Workspace Protocol, then read back every dispatch artifact.",
+        "purpose": "Materialize dedicated Git job workspaces, canonical JSON+Markdown job contracts and dispatch all successfully leased assignments through the Agent Workspace Protocol; read back every dispatch artifact before READY.",
         "domainNeutral": true,
         "modelRef": "multi-agent-scheduler-model.json"
       },
@@ -990,6 +1002,62 @@
     {
       "id": "INV-071",
       "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
+    },
+    {
+      "id": "INV-072",
+      "rule": "Every agent job has a globally unique immutable jobId, a HUMAN/Git-safe jobKey, packageId, workItemId and explicit plan/package/dispatch/attempt/rework sequence lineage."
+    },
+    {
+      "id": "INV-073",
+      "rule": "Every agent job records MASTER creation provenance including createdAt, issuedAt, masterId, masterVersion, masterRunId and masterStateRevision."
+    },
+    {
+      "id": "INV-074",
+      "rule": "Every agent job explicitly binds the target agentId and identityRevision plus the roleId/role definition the agent must assume for that job."
+    },
+    {
+      "id": "INV-075",
+      "rule": "Every mandatory job skill is explicit, versioned, described, includes execution instructions and is pinned to an immutable skill source/blob identity."
+    },
+    {
+      "id": "INV-076",
+      "rule": "All job inputs are read-only and pinned to immutable repository commit identities; path-scoped inputs pin blob identity when applicable."
+    },
+    {
+      "id": "INV-077",
+      "rule": "Job authorization explicitly separates provider capabilities and repository read/write/branch/commit/push/change-request/merge/deploy permissions. JSON authorization is only an upper bound and never grants provider rights."
+    },
+    {
+      "id": "INV-078",
+      "rule": "Every job declares machine result, HUMAN-readable result, evidence root and audit root before execution. The agent must not choose ad-hoc return locations."
+    },
+    {
+      "id": "INV-079",
+      "rule": "The canonical job JSON is authoritative and immutable after dispatch. Any scope, role, mandatory-skill or authorization expansion requires a new governed job/dispatch."
+    },
+    {
+      "id": "INV-080",
+      "rule": "Every canonical job has a MASTER-generated HUMAN-readable inbox/{jobId}.md projection whose blob SHA is pinned by the JSON contract and whose content may not expand the JSON contract."
+    },
+    {
+      "id": "INV-081",
+      "rule": "A job may become READY or enter inbox/index.json only after MASTER writes and provider-readbacks both job JSON and job Markdown and validates their binding."
+    },
+    {
+      "id": "INV-082",
+      "rule": "Rework never reuses a historical jobId. A new attempt receives a new jobId and may reference the superseded job through lineage."
+    },
+    {
+      "id": "INV-083",
+      "rule": "An agent must stop when mandate, identity revision, job supersession, resource lease, allowed write scope or required provider rights no longer satisfy the explicit job contract."
+    },
+    {
+      "id": "INV-084",
+      "rule": "The assigned agent may not change its job role, substitute a mandatory skill, delegate the job, mutate the job contract or expand its own authorization."
+    },
+    {
+      "id": "INV-085",
+      "rule": "MASTER acceptance evaluates the explicit verificationContract from the job; result submission and agent self-check never constitute acceptance."
     }
   ],
   "evidencePolicy": {
@@ -1107,5 +1175,6 @@
   "initializationModelRef": "initialization-model.json",
   "selfHealingModelRef": "self-healing-model.json",
   "agentWorkspaceModelRef": "agent-workspace-model.json",
-  "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json"
+  "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
+  "agentJobContractModelRef": "agent-job-contract-model.json"
 }
