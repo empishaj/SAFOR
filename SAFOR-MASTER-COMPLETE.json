@@ -93,24 +93,24 @@
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.4.0/SAF-MASTER.json",
-      "sourceBlobSha": "f3aad35a5e6e3e38e7aa5dea579d322e4c50aa62"
+      "sourcePath": "v0.4.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "8fcc6e79bcbbb8429f22d257dfe38b9d577119ab"
     },
     "initialization": {
       "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "59a606db0ae8bf0ef0ea99615f52c45258a4b44c"
+      "sourceBlobSha": "c38794bb5ae928f0f677ae2f71ed8df19c15698b"
     },
     "interaction": {
       "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "068e89847cae90004428a8ae9241cb66a440e670"
+      "sourceBlobSha": "df67acd40a2ab8c04d854c4691437f833eeb9734"
     },
     "selfHealing": {
       "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "174b93661546d212743b497f4cd79e9e7490d37f"
+      "sourceBlobSha": "fd405a5eed5c9110d74004f6fa030e39ca7e20f8"
     },
     "repositoryPolicy": {
       "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "651021e01ba57b60b22d355ffcbddd82de7d6c77"
+      "sourceBlobSha": "a9d2fb7500fb0ccb21175e1f9366b011270ed82e"
     },
     "packageRegistry": {
       "sourcePath": "v0.4.0/package-registry.json",
@@ -186,14 +186,14 @@
     },
     "conformance": {
       "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "48da4b94f6fd2c738ab17a5a257a1e6247a64600"
+      "sourceBlobSha": "81fe1c452bc5570c7c7792ba7a5da1d771034d73"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.4.0/SAF-MASTER.json",
-      "sourceBlobSha": "f3aad35a5e6e3e38e7aa5dea579d322e4c50aa62",
+      "sourcePath": "v0.4.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "8fcc6e79bcbbb8429f22d257dfe38b9d577119ab",
       "content": {
         "format": "SAF_MASTER_BOOTSTRAP",
         "schemaVersion": "0.4.0",
@@ -203,7 +203,7 @@
         "purpose": "Portable, domain-agnostic SAF bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
         "bootstrapContract": {
           "singleFileEntry": true,
-          "entryFile": "SAF-MASTER.json",
+          "entryFile": "SAFOR-MASTER.json",
           "userExperience": [
             "User loads only this JSON into a compatible chat.",
             "Kernel asks the HUMAN to choose GitHub or GitLab and verifies baseline provider access.",
@@ -818,7 +818,7 @@
           },
           {
             "id": "INV-021",
-            "rule": "After SAF-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery."
+            "rule": "After SAFOR-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery."
           },
           {
             "id": "INV-022",
@@ -1029,12 +1029,12 @@
     "initialization": {
       "key": "initialization",
       "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "59a606db0ae8bf0ef0ea99615f52c45258a4b44c",
+      "sourceBlobSha": "c38794bb5ae928f0f677ae2f71ed8df19c15698b",
       "content": {
         "format": "SAF_INITIALIZATION_MODEL",
         "schemaVersion": "0.4.0",
-        "id": "SAF-GUIDED-INITIALIZATION",
-        "purpose": "Mandatory guided initialization after SAF-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
+        "id": "SAFOR-GUIDED-INITIALIZATION",
+        "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
           "autoStartAfterBootstrapLoad": true,
           "firstHumanSurface": "PROVIDER_SELECTION_MENU",
@@ -1307,7 +1307,7 @@
           {
             "id": "INIT-09",
             "operation": "BIND_CONTROL_REPOSITORY",
-            "title": "SAF-Struktur vorbereiten",
+            "title": "SAFOR-Struktur vorbereiten",
             "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAF control repository. A different control repository is not allowed in this baseline."
           },
           {
@@ -1410,12 +1410,12 @@
     "interaction": {
       "key": "interaction",
       "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "068e89847cae90004428a8ae9241cb66a440e670",
+      "sourceBlobSha": "df67acd40a2ab8c04d854c4691437f833eeb9734",
       "content": {
         "format": "SAF_INTERACTION_MODEL",
         "schemaVersion": "0.4.0",
-        "id": "SAF-INTERACTION-EXECUTIVE-CONSOLE",
-        "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAF-guided project primarily by selecting actions instead of composing commands.",
+        "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
+        "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
           "menuFirst": true,
           "onePrimaryAction": true,
@@ -1857,7 +1857,7 @@
         },
         "initializationExperience": {
           "modelRef": "initialization-model.json",
-          "behavior": "Start automatically after SAF-MASTER load and guide the HUMAN one decision at a time.",
+          "behavior": "Start automatically after SAFOR-MASTER load and guide the HUMAN one decision at a time.",
           "steps": [
             {
               "id": "PROVIDER",
@@ -2047,11 +2047,11 @@
     "selfHealing": {
       "key": "selfHealing",
       "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "174b93661546d212743b497f4cd79e9e7490d37f",
+      "sourceBlobSha": "fd405a5eed5c9110d74004f6fa030e39ca7e20f8",
       "content": {
         "format": "SAF_SELF_HEALING_MODEL",
         "schemaVersion": "0.4.0",
-        "id": "SAF-CONSERVATIVE-SELF-HEALING",
+        "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
           "conservativeByDefault": true,
@@ -2258,11 +2258,11 @@
     "repositoryPolicy": {
       "key": "repositoryPolicy",
       "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "651021e01ba57b60b22d355ffcbddd82de7d6c77",
+      "sourceBlobSha": "a9d2fb7500fb0ccb21175e1f9366b011270ed82e",
       "content": {
         "kind": "SAF_REPOSITORY_BOUNDARY_POLICY",
         "version": "0.4.0",
-        "policyId": "SAF-REPO-BOUNDARY-V2",
+        "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
         "principles": {
           "controlPlaneSeparatedFromWorkArtifacts": true,
@@ -2296,7 +2296,7 @@
               ".saf/"
             ],
             "forbiddenNames": [
-              "SAF-MASTER.json",
+              "SAFOR-MASTER.json",
               "master-state.json",
               "launch-prompt.md",
               "work-contract.json"
@@ -5685,7 +5685,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "48da4b94f6fd2c738ab17a5a257a1e6247a64600",
+      "sourceBlobSha": "81fe1c452bc5570c7c7792ba7a5da1d771034d73",
       "content": {
         "format": "SAF_CONFORMANCE_SUITE",
         "schemaVersion": "0.4.0",
@@ -5693,7 +5693,7 @@
         "assertions": [
           {
             "id": "CF-001",
-            "statement": "SAF-MASTER.json is the single portable bootstrap entrypoint.",
+            "statement": "SAFOR-MASTER.json is the single portable bootstrap entrypoint.",
             "expected": true
           },
           {
@@ -5813,7 +5813,7 @@
           },
           {
             "id": "CF-025",
-            "statement": "Loading SAF-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
+            "statement": "Loading SAFOR-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
             "expected": true
           },
           {
