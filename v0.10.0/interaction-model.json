@@ -76,7 +76,7 @@
     "id": "SAFOR_ROUND",
     "definition": "A user-visible orchestration cycle that begins from a verified stable checkpoint and advances only through already-authorized, guard-satisfied operations until the next user-relevant checkpoint.",
     "startIntent": "NEXT_ROUND",
-    "primaryLabel": "Nächste Runde starten",
+    "primaryLabel": "Weiter",
     "stopAtAny": [
       "NEW_HUMAN_DECISION_REQUIRED",
       "NEW_OR_EXPANDED_AUTHORIZATION_REQUIRED",
@@ -139,7 +139,7 @@
     "standardActions": [
       {
         "id": "NEXT_ROUND",
-        "label": "Nächste Runde starten",
+        "label": "Weiter",
         "intent": "NEXT_ROUND",
         "kind": "PRIMARY",
         "requiresConfirmation": false,
@@ -242,8 +242,12 @@
       "Show the decision in user language before internal authority IDs.",
       "Offer only valid outcomes declared by the bound Operating Model or Factory.",
       "Explain the material consequence of each choice in one short sentence.",
-      "No default selection for irreversible or risk-accepting decisions."
-    ]
+      "No default selection for irreversible or risk-accepting decisions.",
+      "Before asking, evaluate the HUMAN Decision Gate and suppress questions whose answer is safely derivable or covered by an unchanged prior decision.",
+      "Record one legitimate interactionReason for every required HUMAN decision.",
+      "After plan approval, default to LOW or VERY_LOW HUMAN load outside material decisions, authority expansion, risk, irreversible action or outcome judgment."
+    ],
+    "gateRef": "human-decision-gate-model.json"
   },
   "fallbackRendering": {
     "useWhen": "NO_NATIVE_BUTTON_OR_SELECT_CAPABILITY",
@@ -252,7 +256,7 @@
       "**SAFOR · Projekt**",
       "Sieht gut aus. Wir können weitermachen.",
       "",
-      "1. Nächste Runde starten",
+      "1. Weiter",
       "2. Vorschläge ansehen",
       "3. Projektstatus",
       "4. Details"
@@ -278,7 +282,10 @@
       "repeatKnownContext": false,
       "narrateInternalOperations": false,
       "exposeTechnicalIdsOnlyWhenUsefulOrRequested": false,
-      "menuAfterMessageWhenApplicable": true
+      "menuAfterMessageWhenApplicable": true,
+      "cognitiveLoadPolicyRequired": true,
+      "deriveBeforeAsk": true,
+      "reuseUnchangedDecisions": true
     },
     "responseBudgets": {
       "acknowledgement": {
@@ -425,7 +432,7 @@
           "BLOCKERS",
           "NEXT_ACTION_OR_MENU"
         ],
-        "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
+        "example": "4 von 6 Agenten arbeiten. Ein weiterer Auftrag kann parallel starten. Zwei Aufgaben warten noch auf Ergebnisse anderer Arbeiten."
       },
       "moduleHealing": {
         "structure": [
@@ -436,7 +443,7 @@
           "CURRENT_SAFE_STATE",
           "NEXT_ACTION_IF_ANY"
         ],
-        "example": "Das Scheduler-Modul hatte einen veralteten READY-Stand. SAFOR hat ausschließlich die ableitbare Sicht neu berechnet und per Readback verifiziert. Der autoritative Work-Item-State blieb unverändert."
+        "example": "SAFOR hat einen veralteten Arbeitsstand erkannt und automatisch korrigiert. Die eigentlichen Aufgaben und Ergebnisse wurden nicht verändert. Der Projektstand ist wieder konsistent."
       }
     },
     "avoid": {
@@ -505,7 +512,7 @@
       },
       {
         "id": "OWNER",
-        "prompt": "Unter welchem Owner läuft das Projekt?",
+        "prompt": "Wo liegt dein Projekt?",
         "preferredSurface": "NATIVE_SINGLE_SELECT",
         "dynamicOptions": "PROVIDER_NAMESPACES",
         "maxVisibleOptions": 8,
@@ -513,7 +520,7 @@
       },
       {
         "id": "SAFOR_MEMORY",
-        "prompt": "Ich prüfe jetzt `safor-memory`.",
+        "prompt": "Ich prüfe den SAFOR-Arbeitsbereich.",
         "preferredSurface": "NATIVE_MARKDOWN",
         "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
         "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAFOR danach erneut.",
@@ -591,7 +598,8 @@
       "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
       "Repository menu defaults to the previous 7 days; the HUMAN may explicitly request all repositories.",
       "Keep choices clickable when the host supports native controls.",
-      "Use only chat-native UI surfaces."
+      "Use only chat-native UI surfaces.",
+      "Use HUMAN domain language on the default surface; keep Owner/Factory/Operating Model/Provider/READY/Readback and similar internal terms behind Details unless materially required."
     ]
   },
   "nativeUiPolicy": {
@@ -705,5 +713,276 @@
       "When automatic repair is forbidden, explain the exact authority/semantic boundary and the smallest HUMAN action required.",
       "Keep raw repair records behind Details unless needed for a decision."
     ]
+  },
+  "humanDecisionGateModelRef": "human-decision-gate-model.json",
+  "humanCognitiveLoadPolicy": {
+    "objective": "MAXIMIZE_NECESSARY_HUMAN_CONTRIBUTION_MINIMIZE_EXTRANEOUS_SYSTEM_LOAD",
+    "schemaRef": "schemas/human-cognitive-load-policy.schema.json",
+    "principles": {
+      "highLoadAllowedWhenHumanKnowledgeIsRequired": true,
+      "extraneousTechnicalLoadAlwaysMinimized": true,
+      "loadMustDecreaseAsContextBecomesKnown": true,
+      "humanIsDecisionMakerNotWorkflowOperator": true,
+      "progressiveDisclosureRequired": true,
+      "oneDecisionContextAtATime": true,
+      "deriveBeforeAsk": true,
+      "noRepeatedUnchangedApproval": true,
+      "domainLanguageFirst": true
+    },
+    "loadLevels": {
+      "VERY_LOW": "Nur materieller Status oder eine sehr leichte Aktion.",
+      "LOW": "Eine begrenzte Entscheidung oder Ausnahme mit wenig neuem Kontext.",
+      "MEDIUM": "Bedeutende Plan-, Freigabe-, Ziel- oder Trade-off-Entscheidung.",
+      "HIGH": "Substanzieller HUMAN-Beitrag zu nicht ableitbarem Intent, Domänenwissen, Prioritäten oder Werturteilen."
+    },
+    "phaseProfiles": {
+      "BOOTSTRAP": {
+        "targetLoad": "MEDIUM",
+        "purpose": "HUMAN-kontrollierte Umgebung und Projektkontext festlegen.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "GUIDED",
+        "technicalDetailDefault": "HIDDEN",
+        "temporaryEscalationReasons": [
+          "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "NEW_OR_EXPANDED_AUTHORITY_REQUIRED"
+        ]
+      },
+      "DISCOVERY": {
+        "targetLoad": "HIGH",
+        "purpose": "Nicht ableitbares HUMAN-Wissen erwerben.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "DIALOGUE",
+        "technicalDetailDefault": "HIDDEN",
+        "allowDeepQuestions": true,
+        "humanContributionRequired": [
+          "GOAL",
+          "PROBLEM",
+          "TARGET_USERS",
+          "VALUE_HYPOTHESIS",
+          "SCOPE_BOUNDARIES",
+          "PRIORITIES",
+          "MATERIAL_CONSTRAINTS"
+        ],
+        "temporaryEscalationReasons": [
+          "GOAL_CONFLICT_REQUIRES_PRIORITY",
+          "MATERIAL_ALTERNATIVE_CHOICE"
+        ]
+      },
+      "PLANNING": {
+        "targetLoad": "MEDIUM",
+        "purpose": "Interpretation, Plan und materielle Trade-offs validieren.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "DECISION_WHEN_NEEDED",
+        "technicalDetailDefault": "HIDDEN",
+        "masterMustRecommendPreferredOption": true,
+        "showSummaryBeforeDetail": true,
+        "temporaryEscalationReasons": [
+          "MATERIAL_ALTERNATIVE_CHOICE",
+          "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+          "MATERIAL_RISK_ACCEPTANCE_REQUIRED"
+        ]
+      },
+      "SCHEDULING": {
+        "targetLoad": "VERY_LOW",
+        "purpose": "MASTER absorbiert interne Orchestrierung.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "NONE",
+        "technicalDetailDefault": "HIDDEN",
+        "temporaryEscalationReasons": [
+          "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "RECOVERY_CANNOT_PROCEED_SAFELY"
+        ]
+      },
+      "AGENT_COORDINATION": {
+        "targetLoad": "VERY_LOW",
+        "purpose": "MASTER koordiniert Agenten ohne HUMAN-Mikromanagement.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "NONE",
+        "technicalDetailDefault": "HIDDEN",
+        "temporaryEscalationReasons": [
+          "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+          "NEW_OR_EXPANDED_AUTHORITY_REQUIRED"
+        ]
+      },
+      "EXECUTION": {
+        "targetLoad": "LOW",
+        "purpose": "HUMAN informiert halten, SAFOR führt autorisierte Arbeit aus.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "EXCEPTION_ONLY",
+        "technicalDetailDefault": "HIDDEN",
+        "temporaryEscalationReasons": [
+          "SCOPE_CHANGE_REQUIRED",
+          "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+          "IRREVERSIBLE_ACTION_REQUIRED",
+          "GOAL_CONFLICT_REQUIRES_PRIORITY"
+        ]
+      },
+      "RECOVERY": {
+        "targetLoad": "LOW",
+        "purpose": "Sicher automatisch reparieren, HUMAN nur an definierten Eskalationsgrenzen einbeziehen.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "ESCALATION_ONLY",
+        "technicalDetailDefault": "HIDDEN",
+        "temporaryEscalationReasons": [
+          "RECOVERY_CANNOT_PROCEED_SAFELY",
+          "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+          "NEW_OR_EXPANDED_AUTHORITY_REQUIRED"
+        ]
+      },
+      "OUTCOME": {
+        "targetLoad": "MEDIUM",
+        "purpose": "HUMAN bewertet Wert und Geschäftsbedeutung.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "DECISION_WHEN_NEEDED",
+        "technicalDetailDefault": "HIDDEN",
+        "humanContributionRequired": [
+          "VALUE_JUDGMENT",
+          "BUSINESS_OUTCOME_ACCEPTANCE"
+        ],
+        "temporaryEscalationReasons": [
+          "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+          "BUSINESS_OR_PRODUCT_DECISION_REQUIRED"
+        ]
+      },
+      "CLOSING": {
+        "targetLoad": "LOW",
+        "purpose": "Verifiziertes Ergebnis, Restrisiken und nächsten sinnvollen Schritt verdichten.",
+        "maxNewDecisionsPerTurn": 1,
+        "humanInteractionDefault": "SUMMARY",
+        "technicalDetailDefault": "HIDDEN",
+        "temporaryEscalationReasons": [
+          "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+          "IRREVERSIBLE_ACTION_REQUIRED"
+        ]
+      }
+    },
+    "adaptiveLoadRules": {
+      "whenContextConfidenceIncreases": "REDUCE_HUMAN_LOAD",
+      "whenDecisionPatternAlreadyApproved": "REUSE_DECISION_IF_SCOPE_AND_BOUND_INPUTS_UNCHANGED",
+      "whenExistingMandateCoversAction": "DO_NOT_REASK",
+      "whenPreferenceAlreadyKnown": "REUSE_UNLESS_MATERIAL_CHANGE",
+      "whenNoMaterialChange": "DO_NOT_REPEAT_CONTEXT",
+      "whenNewMaterialRiskAppears": "TEMPORARILY_INCREASE_LOAD",
+      "whenGoalAmbiguityIncreases": "TEMPORARILY_INCREASE_LOAD",
+      "afterPlanApproval": "DEFAULT_EXECUTION_LOAD_LOW",
+      "afterExecutionMandate": "ABSORB_INTERNAL_ORCHESTRATION"
+    },
+    "heuristicLoadEstimate": {
+      "notPsychometricMeasure": true,
+      "purpose": "Interne Governance-Heuristik zur Erkennung vermeidbarer Interaktionskomplexität; kein validiertes psychologisches Messinstrument.",
+      "range": {
+        "min": 0,
+        "max": 100
+      },
+      "factors": {
+        "decisionComplexity": {
+          "maxPoints": 30
+        },
+        "newContext": {
+          "maxPoints": 20
+        },
+        "choiceCount": {
+          "maxPoints": 10
+        },
+        "contextSwitching": {
+          "maxPoints": 15
+        },
+        "technicalTerminologyExposure": {
+          "maxPoints": 25
+        }
+      },
+      "thresholds": {
+        "VERY_LOW": {
+          "min": 0,
+          "max": 20
+        },
+        "LOW": {
+          "min": 21,
+          "max": 40
+        },
+        "MEDIUM": {
+          "min": 41,
+          "max": 70
+        },
+        "HIGH": {
+          "min": 71,
+          "max": 100
+        }
+      },
+      "phaseMaximumWithoutExplicitEscalation": {
+        "BOOTSTRAP": 70,
+        "DISCOVERY": 100,
+        "PLANNING": 70,
+        "SCHEDULING": 20,
+        "AGENT_COORDINATION": 20,
+        "EXECUTION": 40,
+        "RECOVERY": 40,
+        "OUTCOME": 70,
+        "CLOSING": 40
+      }
+    },
+    "questionPolicy": {
+      "maxNewDecisionContextsPerTurn": 1,
+      "askOnlyMinimumNecessaryQuestion": true,
+      "decisionReasonMustBeRecorded": true,
+      "decisionReasonNeedNotBeShownUnlessUseful": true,
+      "noQuestionWhenAnswerSafelyDerivable": true,
+      "noQuestionWhenUnchangedDecisionReusable": true
+    }
+  },
+  "humanLanguagePolicy": {
+    "defaultVocabulary": "HUMAN_DOMAIN_LANGUAGE",
+    "technicalIdsHiddenByDefault": true,
+    "internalTermsHiddenByDefault": [
+      "DISPATCH_WAVE",
+      "RESOURCE_LEASE",
+      "READY",
+      "CLAIMED",
+      "PROVIDER_READBACK",
+      "WORK_ITEM",
+      "FAILURE_FINGERPRINT",
+      "MODULE_RECOVERY_PROFILE",
+      "EXECUTION_MANDATE",
+      "CONFLICT_DOMAIN",
+      "AGENT_SLOT"
+    ],
+    "humanTerms": {
+      "WORK_ITEM": "Aufgabe",
+      "DISPATCH": "starten oder zuweisen",
+      "RESOURCE_LEASE": "reservierter Arbeitsbereich",
+      "READY": "bereit",
+      "PROVIDER_READBACK": "Git-Stand geprüft",
+      "RECONCILE_REQUIRED": "Zustand muss zuerst geprüft werden",
+      "EXECUTION_MANDATE": "Freigabe",
+      "AGENT_SLOT": "verfügbarer Agent",
+      "CONFLICT_DOMAIN": "gemeinsam genutzter Arbeitsbereich"
+    },
+    "showInternalTermWhen": [
+      "HUMAN_REQUESTS_DETAILS",
+      "TECHNICAL_DECISION_REQUIRES_TERM",
+      "AUDIT_OR_DEBUG_CONTEXT"
+    ],
+    "summaryRule": "Erkläre standardmäßig: Was ist passiert? Was bedeutet es fürs Projekt? Muss der HUMAN etwas tun? Was passiert als Nächstes?"
+  },
+  "primaryActionPolicy": {
+    "labelMode": "DOMAIN_SPECIFIC_DYNAMIC",
+    "fallbackLabel": "Weiter",
+    "examples": {
+      "PLAN_READY": "Plan prüfen",
+      "EXECUTION_READY": "Arbeit starten",
+      "REVIEW_READY": "Review starten",
+      "REWORK_READY": "Nacharbeit starten",
+      "NEXT_PACKAGE_READY": "Mit nächster Aufgabe weitermachen",
+      "OUTCOME_READY": "Ergebnis bewerten"
+    },
+    "forbiddenDefaultLabels": [
+      "NEXT_ROUND",
+      "E03",
+      "DISPATCH_WORK_ITEM",
+      "EXECUTE_TRANSITION"
+    ],
+    "rule": "Interne Intent-IDs bestimmen nie das HUMAN-Label, wenn eine konkrete fachliche Aktion benannt werden kann."
   }
 }
