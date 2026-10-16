@@ -5968,7 +5968,7 @@
           }
         ],
         "lastManualVerification": {
-          "branch": "saf/master-v0.5.0",
+          "branch": "safor/v0.5.0-rc.1",
           "result": "PASS",
           "note": "Provider readback verified mandatory pre-existing writable safor-memory, hard STOP on missing access, mandatory Software/Website vs Book selection, deterministic Factory/Operating Model mapping, and Factory-bound Discovery, Planning and Evidence contracts."
         }
