@@ -1,11 +1,11 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.4.0",
-  "bundleVersion": "0.4.0-rc.1",
+  "schemaVersion": "0.5.0",
+  "bundleVersion": "0.5.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
-  "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat.",
+  "purpose": "Self-contained SAFOR distribution with provider-neutral durable Memory, independent work-provider binding, multi-session collaboration and output provenance.",
   "entrypoint": "embeddedModules.kernel.content",
   "distributionMode": "SELF_CONTAINED_SINGLE_FILE",
   "runtimeContract": {
@@ -16,26 +16,50 @@
     "embeddedModulesAuthoritativeForBootstrap": true,
     "canonicalRepository": "empishaj/SAFOR",
     "canonicalBranch": "main",
-    "absoluteRuntimePrerequisite": {
-      "repositoryPattern": "{selectedOwner}/safor-memory",
-      "mustPreExist": true,
-      "mustBeReadable": true,
-      "mustBeWritable": true,
-      "autoCreate": false,
-      "onFailure": "STOP"
+    "memoryRequirement": {
+      "providerNeutral": true,
+      "humanSelectionOrApprovalRequired": true,
+      "mandatoryCapabilities": [
+        "memory.object.read",
+        "memory.object.write",
+        "memory.revision.read",
+        "memory.durability.prove",
+        "memory.resume.prove"
+      ],
+      "eligibleProviderTypes": [
+        "VERSIONED_REPOSITORY",
+        "HOST_FILESYSTEM",
+        "CUSTOM"
+      ],
+      "newLocationCreationRequiresExplicitHumanApproval": true,
+      "onNoEligibleMemory": "STOP"
+    },
+    "collaboration": {
+      "modes": [
+        "PERSONAL",
+        "SHARED_TEAM"
+      ],
+      "sharedTeamRequires": [
+        "memory.shared_access",
+        "memory.compare_and_swap OR memory.lock"
+      ],
+      "conflictOutcome": "RECONCILE_REQUIRED",
+      "chatHistoryIsAuthoritative": false
     },
     "initializationOrder": [
-      "SELECT_PROVIDER",
-      "VERIFY_PROVIDER_READ_WRITE_ACCESS",
-      "SELECT_OWNER_NAMESPACE",
-      "VERIFY_OWNER_ACCESS",
-      "VERIFY_REQUIRED_SAFOR_MEMORY",
+      "DISCOVER_MEMORY_PROVIDER_OPTIONS",
+      "SELECT_MEMORY_PROVIDER",
+      "VERIFY_MEMORY_PROVIDER",
+      "SELECT_MEMORY_OWNER",
+      "SELECT_COLLABORATION_MODE",
+      "VERIFY_COLLABORATION_SAFETY",
+      "BIND_AND_INITIALIZE_MEMORY_ROOT",
       "SELECT_CREATION_TYPE",
-      "SELECT_PROJECT_MODE",
+      "DISCOVER_AND_SELECT_WORK_PROVIDER",
+      "VERIFY_WORK_PROVIDER",
       "SELECT_OR_DEFINE_PROJECT",
-      "BIND_REQUIRED_SAFOR_MEMORY",
-      "CONFIRM_CREATION_PROFILE_BINDINGS",
-      "MATERIALIZE_PROJECT_CONTROL"
+      "RESOLVE_AND_CONFIRM_PACKAGES",
+      "MATERIALIZE_PROJECT_AND_REGISTER_SESSION"
     ],
     "mandatoryCreationTypes": [
       {
@@ -51,25 +75,28 @@
         "operatingModelModule": "operatingModelBook"
       }
     ],
-    "factoryBindingRule": "Discovery, Planning and domain Evidence must always use the discoveryContract, planningContract and evidenceContract from the HUMAN-selected Factory. Cross-factory substitution is forbidden.",
+    "memoryAndWorkProviderIndependent": true,
+    "factoryBindingRule": "Discovery, Planning and domain Evidence always use the HUMAN-selected Factory contracts.",
+    "outputProvenanceRequired": true,
+    "freshSessionResumeFromMemory": true,
     "chatUiRule": "Use chat-native UI only.",
-    "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
-    "selfHealingRule": "Use the embedded conservative self-healing model."
+    "selfHealingRule": "Use bounded conservative recovery; Memory conflicts reconcile before retry."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
     "role": "CANONICAL_SAFOR_PRODUCT_REPOSITORY",
     "independentFromHumanProjectContext": true
   },
-  "runtimeMemoryRepository": {
-    "pattern": "{selectedOwner}/safor-memory",
-    "role": "MANDATORY_HUMAN_PROJECT_CONTROL_MEMORY",
-    "preExistingReadWriteRequired": true,
-    "onFailure": "STOP"
+  "runtimeMemory": {
+    "role": "HUMAN_OR_ORGANIZATION_CONTROLLED_AUTHORITATIVE_PROJECT_MEMORY",
+    "logicalOwner": "SAFOR_PROJECT",
+    "physicalOwner": "HUMAN_OR_ORGANIZATION",
+    "providerNeutral": true
   },
   "referenceResolution": {
     "initialization-model.json": "initialization",
     "interaction-model.json": "interaction",
+    "memory-model.json": "memoryModel",
     "self-healing-model.json": "selfHealing",
     "repository-policy.json": "repositoryPolicy",
     "package-registry.json": "packageRegistry",
@@ -80,12 +107,19 @@
     "schemas/work-item.schema.json": "schemaWorkItem",
     "schemas/project.schema.json": "schemaProject",
     "schemas/bindings.schema.json": "schemaBindings",
+    "schemas/memory-binding.schema.json": "schemaMemoryBinding",
+    "schemas/session-record.schema.json": "schemaSessionRecord",
+    "schemas/output-record.schema.json": "schemaOutputRecord",
     "schemas/decision-record.schema.json": "schemaDecisionRecord",
     "schemas/evidence-record.schema.json": "schemaEvidenceRecord",
     "schemas/interaction-menu.schema.json": "schemaInteractionMenu",
     "schemas/self-healing-record.schema.json": "schemaSelfHealingRecord",
     "providers/github/0.1.0/package.json": "providerGithub",
     "providers/gitlab/0.1.0/package.json": "providerGitlab",
+    "providers/git-generic/0.1.0/package.json": "providerGenericGit",
+    "providers/plastic-scm/0.1.0/package.json": "providerPlastic",
+    "memory-providers/versioned-repository/1.0.0/package.json": "memoryVersionedRepository",
+    "memory-providers/host-filesystem/0.1.0/package.json": "memoryHostFilesystem",
     "packages/operating-models/saas-engineering/1.0.0/package.json": "operatingModelSaas",
     "packages/operating-models/book-authoring/0.1.0/package.json": "operatingModelBook",
     "packages/factories/software-delivery/1.0.0/package.json": "factorySoftwareWebsite",
@@ -93,131 +127,166 @@
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.4.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "50467cc10733b15ef67c7a1d481eaaa77afa1507"
+      "sourcePath": "v0.5.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "b582d0baa92ef934040b9461e4cc4f47767ed471"
     },
     "initialization": {
-      "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "c8c9d0be9724e6c5901b944e03cbd32ac4b68ca1"
+      "sourcePath": "v0.5.0/initialization-model.json",
+      "sourceBlobSha": "9b75919a74450c69b0a9223bdbc3773065cd9235"
     },
     "interaction": {
-      "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "04912584b13ba341d44bec6e79e85e474b95fb90"
+      "sourcePath": "v0.5.0/interaction-model.json",
+      "sourceBlobSha": "c3c26d7399101a48cd4d9e5007b206f023b4601b"
+    },
+    "memoryModel": {
+      "sourcePath": "v0.5.0/memory-model.json",
+      "sourceBlobSha": "b7255d5d75d00de08cbf96b6bd9ba2e61a4589ad"
     },
     "selfHealing": {
-      "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "8fefc1a92dbec84aa9bb42aae6c552b4cfe3a3b3"
+      "sourcePath": "v0.5.0/self-healing-model.json",
+      "sourceBlobSha": "6aa83eec6683ddd476602da50a733459aa67367e"
     },
     "repositoryPolicy": {
-      "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "46826fd746eddbdbf7d99648f1142af368724672"
+      "sourcePath": "v0.5.0/repository-policy.json",
+      "sourceBlobSha": "d2220c5fc4b42544fc62007d9473bbf390c91fe0"
     },
     "packageRegistry": {
-      "sourcePath": "v0.4.0/package-registry.json",
-      "sourceBlobSha": "f8ee0b75924af114a9b9ecf0825fe242503edd64"
+      "sourcePath": "v0.5.0/package-registry.json",
+      "sourceBlobSha": "5cdde2748aa2d611d1615f070e47c39cb842df23"
     },
     "providerGithub": {
-      "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "6b109d6604008f3cc325daf95d639a5b5f2103ca"
+      "sourcePath": "v0.5.0/providers/github/0.1.0/package.json",
+      "sourceBlobSha": "40db0272b2b2f10cbe8078255552998431e231fe"
     },
     "providerGitlab": {
-      "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "b3a8948103a8bb49c19a21d6168f52b17847ce69"
+      "sourcePath": "v0.5.0/providers/gitlab/0.1.0/package.json",
+      "sourceBlobSha": "37eb65be4efb1c2e0c9153bdfae78e7a4d2e64ca"
+    },
+    "providerGenericGit": {
+      "sourcePath": "v0.5.0/providers/git-generic/0.1.0/package.json",
+      "sourceBlobSha": "68016c537105603f61ffac29501eaa39502a82a8"
+    },
+    "providerPlastic": {
+      "sourcePath": "v0.5.0/providers/plastic-scm/0.1.0/package.json",
+      "sourceBlobSha": "ad90268fe9c38c9a6e8e653317ba179ec1934b11"
+    },
+    "memoryVersionedRepository": {
+      "sourcePath": "v0.5.0/memory-providers/versioned-repository/1.0.0/package.json",
+      "sourceBlobSha": "6275405cb4654f226af8177cb8a69232afceeba8"
+    },
+    "memoryHostFilesystem": {
+      "sourcePath": "v0.5.0/memory-providers/host-filesystem/0.1.0/package.json",
+      "sourceBlobSha": "786e04d9426eb2d62f9c9fd6400d4ac9472326a2"
     },
     "operatingModelSaas": {
-      "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "e4b7d65390df0ddbc9a6f780072c1ecd6ce9f572"
+      "sourcePath": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+      "sourceBlobSha": "c4236473c2e7085134d2fc8fc4450d94348d36ba"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "9fd198d8520069380aad54357bf42c5795bc1f4a"
+      "sourcePath": "v0.5.0/packages/operating-models/book-authoring/0.1.0/package.json",
+      "sourceBlobSha": "b735fa8530a8005ded10d7a6bc0bffeb126f5b85"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "f09e3aa819930ae0855da544f92973694198a689"
+      "sourcePath": "v0.5.0/packages/factories/software-delivery/1.0.0/package.json",
+      "sourceBlobSha": "cf756d86e6ab2da26747e5a5f47fae0f717b53e4"
     },
     "factoryBook": {
-      "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "201d1a91d80527d500e4ee43faa6d75e35de1ec3"
+      "sourcePath": "v0.5.0/packages/factories/book-production/0.1.0/package.json",
+      "sourceBlobSha": "1c30723406d9b5ffc0d9cefeca5ce7f6efb73559"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "bd05d11b8020414759ab68b2bfc9caae972f5ceb"
+      "sourcePath": "v0.5.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "7602f752237972e534c9ca59eff23fec5e85a336"
     },
     "schemaControlState": {
-      "sourcePath": "v0.4.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "d036dd138629694036ca9f49d6ccfc240a18b30c"
+      "sourcePath": "v0.5.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "d424985a00429e6b40cdfd18fba614441fd1fd01"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "a273aa7f6a4a79b197f5d398383321d012e7c019"
+      "sourcePath": "v0.5.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "fba75e68a96fbac2d4694885976c452bed2c7f11"
     },
     "schemaExecutionState": {
-      "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "b20e6170c9dd66d24a12c27f46545994989aa384"
+      "sourcePath": "v0.5.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "bfed9529dcc1538131e761704e71d2fc7b970a0f"
     },
     "schemaWorkItem": {
-      "sourcePath": "v0.4.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "cf36ff77d844511ecab1924c7daed44ce3ff48f1"
+      "sourcePath": "v0.5.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "2838e5b1185cc5c650a8dd39330fd8f66aa52216"
     },
     "schemaProject": {
-      "sourcePath": "v0.4.0/schemas/project.schema.json",
-      "sourceBlobSha": "3e08045c943922b61afdcb632f3e93246264df2e"
+      "sourcePath": "v0.5.0/schemas/project.schema.json",
+      "sourceBlobSha": "112636fdb83b4c1285ea10ff844732b95bce1a3e"
     },
     "schemaBindings": {
-      "sourcePath": "v0.4.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4317e4cb8efcd6780c32301b3b6bbb5ba4f6966b"
+      "sourcePath": "v0.5.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "06f63df99b7e8497c1918a444daa7047e6ee33e4"
+    },
+    "schemaMemoryBinding": {
+      "sourcePath": "v0.5.0/schemas/memory-binding.schema.json",
+      "sourceBlobSha": "1c9611d68886d22e152bb7519226a7fa9ef8f2c4"
+    },
+    "schemaSessionRecord": {
+      "sourcePath": "v0.5.0/schemas/session-record.schema.json",
+      "sourceBlobSha": "728643a7f9beae36da36c508ffebec389a27a78e"
+    },
+    "schemaOutputRecord": {
+      "sourcePath": "v0.5.0/schemas/output-record.schema.json",
+      "sourceBlobSha": "97dbbe1e1cd5692e5de742c91ee491bc1babb40a"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "27a47aa2192fb208d04d5a846f070e3534b9b434"
+      "sourcePath": "v0.5.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "c202dc2d3e4b5b56cbabb51f4def1e37dd8cdfcb"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "aa7882e9ad1a72c5e89cf7226586e1b912e64ddd"
+      "sourcePath": "v0.5.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "4e3aab58cbdd6b39f42d521e0e509a419b7dabb0"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "1c1d070d6956fca7f5e4256515e41984e517f14a"
+      "sourcePath": "v0.5.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "9ac24cadf990eb0548472a5ea8a69fb3d28f0fdb"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "6150f6386fe4b98a31a9f5efeb27a061c3a61821"
+      "sourcePath": "v0.5.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "c6a6ae84de4380dee160de946e3f07fb6d759c29"
     },
     "conformance": {
-      "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "68f1251204d3ad1a67c61f3b8a4327b76a3e19f6"
+      "sourcePath": "v0.5.0/conformance.json",
+      "sourceBlobSha": "79f2abac8b0f1cc4d43225d5b9eb4d6d7e93bb24"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.4.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "50467cc10733b15ef67c7a1d481eaaa77afa1507",
+      "sourcePath": "v0.5.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "b582d0baa92ef934040b9461e4cc4f47767ed471",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.4.0",
-        "kernelVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
+        "kernelVersion": "0.5.0",
         "definitionId": "safor-master-kernel",
-        "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-        "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
+        "maturity": "REFERENCE_BASELINE_S3_PROVIDER_NEUTRAL_MEMORY_MULTI_SESSION",
+        "purpose": "Portable SAFOR bootstrap and orchestration kernel with provider-neutral durable Memory, independent work-provider binding, multi-human/multi-LLM collaboration and per-output provenance.",
         "bootstrapContract": {
           "singleFileEntry": true,
           "entryFile": "SAFOR-MASTER.json",
           "userExperience": [
             "User loads only this JSON into a compatible chat.",
-            "Kernel asks the HUMAN to choose GitHub or GitLab and verifies baseline provider access.",
-            "Kernel asks the HUMAN to choose the owner namespace.",
-            "Kernel requires the exact repository `{selectedOwner}/safor-memory` to already exist and proves read/write access. Missing repository or insufficient access causes STOP.",
-            "Only after safor-memory passes, the HUMAN must choose exactly one creation type: Software / Website or Buch.",
-            "The selected creation type fixes the Factory and compatible Operating Model used for Discovery, Planning and Evidence.",
-            "Kernel then asks whether the HUMAN wants an existing or new project and performs project selection/definition.",
-            "Kernel binds the verified safor-memory repository as the control repository, confirms package bindings, and materializes project control after explicit setup approval.",
-            "Kernel uses chat-native UI and the concise HUMAN buddy communication profile throughout."
+            "Kernel discovers actually available SAFOR Memory options before asking for any work-provider product.",
+            "HUMAN explicitly selects or approves a Memory provider and ownership.",
+            "Kernel proves durable read/write/revision/resume semantics; without any eligible persistent Memory, SAFOR stops.",
+            "HUMAN selects PERSONAL or SHARED_TEAM collaboration; shared mode additionally proves shared access and CAS/lock concurrency.",
+            "Kernel binds and read-backs the Memory root. Repository-backed Memory may be named `safor-memory`, but that name is not a universal protocol requirement.",
+            "HUMAN must choose Software / Website or Buch. That selection fixes Factory-specific Discovery, Planning and Evidence.",
+            "Only then does SAFOR discover/select the work/SCM provider independently of Memory.",
+            "Kernel resolves packages, materializes project state into SAFOR Memory, registers the current session and verifies readback before work begins.",
+            "A fresh chat must be able to resume from Memory without depending on prior chat history."
           ],
           "noImplicitExecution": true,
           "noImplicitAuthorization": true,
-          "noImplicitProviderRights": true
+          "noImplicitProviderRights": true,
+          "noImplicitMemoryCreation": true,
+          "noImplicitMemoryOwnership": true
         },
         "kernelPrinciples": {
           "domainAgnostic": true,
@@ -225,6 +294,7 @@
           "operatingModelExternal": true,
           "factoryExternal": true,
           "providerAdapterExternal": true,
+          "memoryProviderExternal": true,
           "evidenceBeforeBelief": true,
           "explicitHumanAuthority": true,
           "leastPrivilege": true,
@@ -238,20 +308,27 @@
           "conciseHumanCommunication": true,
           "buddyStyleHumanInteraction": true,
           "detailOnDemand": true,
-          "mandatoryProviderReadWriteBeforeProjectSelection": true,
-          "explicitOwnerSelection": true,
-          "recentRepositorySelectionMenu": true,
           "chatNativeUiOnly": true,
           "conservativeSelfHealing": true,
-          "safMemoryAbsolutePrerequisite": true,
           "creationTypeMandatory": true,
-          "factoryBoundDiscoveryPlanningEvidence": true
+          "factoryBoundDiscoveryPlanningEvidence": true,
+          "memoryProviderNeutral": true,
+          "memoryOwnedByHumanOrOrganization": true,
+          "noAuthoritativeStateOnlyInChat": true,
+          "memoryAndWorkProviderIndependent": true,
+          "multiHumanMultiLlm": true,
+          "perOutputProvenance": true,
+          "multiWriterConflictSafe": true
         },
         "moduleArchitecture": {
           "layers": [
             {
               "id": "MASTER_KERNEL",
-              "responsibility": "Generic orchestration, state transitions, evidence, authorization, reconciliation, package loading and invariants."
+              "responsibility": "Generic orchestration, state transitions, authorization, evidence, Memory persistence rules, reconciliation, package loading and invariants."
+            },
+            {
+              "id": "MEMORY_PROVIDER_ADAPTER",
+              "responsibility": "Maps abstract SAFOR Memory capabilities to a durable storage implementation such as a versioned repository, persistent host filesystem or organization-specific store."
             },
             {
               "id": "OPERATING_MODEL",
@@ -259,43 +336,50 @@
             },
             {
               "id": "FACTORY",
-              "responsibility": "Domain-specific value stream, artifact types, work-item types, transformations, quality requirements and outcome model."
+              "responsibility": "Domain-specific Discovery, Planning, value stream, artifact/work-item types, transformations, Evidence requirements and outcome model."
             },
             {
               "id": "PROJECT_INSTANCE",
-              "responsibility": "Concrete bindings, actors, project state, decisions, evidence and value-stream instance."
+              "responsibility": "Concrete Memory binding, workspaces, actors, sessions, project state, decisions, outputs, provenance and evidence."
             },
             {
               "id": "PROVIDER_ADAPTER",
-              "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
+              "responsibility": "Maps work/SCM provider-neutral capabilities to actually available host tools. It is independent of SAFOR Memory."
             }
           ],
           "dependencyRules": [
-            "MASTER_KERNEL must not depend on domain role IDs, domain artifact types, domain work-item types or provider product names.",
-            "FACTORY may depend on abstract capability IDs and authority IDs, but must not reference concrete role IDs or actor IDs.",
-            "OPERATING_MODEL maps abstract capabilities and authorities to roles/mandates, but must not define the value-stream order.",
-            "PROJECT_INSTANCE maps roles to concrete human or agent actors and pins package versions.",
-            "PROVIDER_ADAPTER maps provider-neutral capabilities to provider semantics and actual host tools; unavailable tools remain unavailable."
+            "MASTER_KERNEL must not depend on domain role IDs, domain artifact types, provider product names or a specific Memory storage product.",
+            "FACTORY may depend on abstract capabilities/authorities and workspace requirements, but must not reference concrete actor IDs.",
+            "OPERATING_MODEL maps capabilities/authorities to roles but must not own Factory flow order.",
+            "MEMORY_PROVIDER_ADAPTER proves durable Memory capabilities; it does not define project domain semantics.",
+            "PROVIDER_ADAPTER maps work-system capabilities to provider semantics; unavailable tools remain unavailable and are never simulated.",
+            "PROJECT_INSTANCE pins all packages and binds concrete Memory, workspaces, actors and sessions."
           ]
         },
         "packageSystem": {
           "requiredPackageKinds": [
             "OPERATING_MODEL",
             "FACTORY",
-            "PROVIDER_ADAPTER"
+            "MEMORY_PROVIDER_ADAPTER"
           ],
           "manifestSchemaRef": "schemas/package-manifest.schema.json",
           "registryRoots": [
             "packages/operating-models/",
             "packages/factories/",
+            "memory-providers/",
             "providers/"
           ],
           "bindingResolutionOrder": [
+            "HOST_ACTUAL_MEMORY_CAPABILITIES",
+            "HUMAN.MEMORY_PROVIDER_SELECTION",
+            "MEMORY_PROVIDER_ADAPTER",
             "HUMAN.CREATION_TYPE_SELECTION",
             "PACKAGE_REGISTRY.creationProfiles",
             "FACTORY.requiredCapabilities",
             "OPERATING_MODEL.capabilityBindings",
             "PROJECT_INSTANCE.actorAssignments",
+            "FACTORY.workspaceRequirements",
+            "HUMAN.WORK_PROVIDER_SELECTION",
             "PROVIDER_ADAPTER.capabilities",
             "HOST_ACTUAL_TOOL_RIGHTS"
           ],
@@ -309,20 +393,28 @@
             "rejectUnknownPackageKind": true,
             "noAutomaticPackageMigration": true,
             "creationProfileDeterminesFactoryAndOperatingModel": true,
-            "noFactoryInferenceWithoutHumanSelection": true
+            "noFactoryInferenceWithoutHumanSelection": true,
+            "memoryProviderRequired": true,
+            "workProviderAdaptersFactoryDependent": true,
+            "memoryAndWorkProviderMayDiffer": true,
+            "noProviderProductInference": true
           }
         },
         "projectMaterialization": {
           "root": "projects/{projectSlug}/",
+          "storage": "BOUND_MEMORY_PROVIDER",
           "requiredArtifacts": {
             "project": "project.json",
             "bindings": "bindings.json",
+            "memoryBinding": "memory-binding.json",
             "controlState": "state/control.json",
             "valueStreamState": "state/value-stream.json",
             "executionState": "state/execution.json"
           },
           "directories": [
             "packages/",
+            "sessions/",
+            "outputs/",
             "decisions/",
             "evidence/",
             "artifacts/",
@@ -333,9 +425,10 @@
           "packageSnapshots": {
             "operatingModel": "packages/operating-model.json",
             "factory": "packages/factory.json",
-            "providerAdapters": "packages/provider-adapters.json"
+            "memoryProvider": "packages/memory-provider.json",
+            "workProviderAdapters": "packages/work-provider-adapters.json"
           },
-          "aggregateRule": "Control state, value-stream state and execution state are separate authoritative aggregates. Cross-aggregate transitions require declared invariants and references; duplicated authoritative facts are forbidden."
+          "aggregateRule": "Control, value-stream and execution states remain separate authoritative aggregates. Every authoritative write is committed through the bound Memory provider with expected-revision semantics and readback."
         },
         "providerCapabilityVocabulary": [
           "provider.identity.read",
@@ -417,6 +510,9 @@
           "workItem": "schemas/work-item.schema.json",
           "project": "schemas/project.schema.json",
           "bindings": "schemas/bindings.schema.json",
+          "memoryBinding": "schemas/memory-binding.schema.json",
+          "sessionRecord": "schemas/session-record.schema.json",
+          "outputRecord": "schemas/output-record.schema.json",
           "decisionRecord": "schemas/decision-record.schema.json",
           "evidenceRecord": "schemas/evidence-record.schema.json",
           "interactionMenu": "schemas/interaction-menu.schema.json",
@@ -438,7 +534,9 @@
                 "K08",
                 "K09",
                 "K10",
-                "K11"
+                "K11",
+                "K12",
+                "K13"
               ]
             },
             {
@@ -497,92 +595,107 @@
           "actions": [
             {
               "id": "K01",
-              "operation": "SELECT_PROVIDER",
-              "purpose": "Ask the HUMAN to select GitHub or GitLab.",
+              "operation": "DISCOVER_MEMORY_PROVIDER_OPTIONS",
+              "purpose": "Discover actually eligible durable SAFOR Memory options from host and connected-provider capabilities.",
               "domainNeutral": true,
-              "humanDecision": "PROVIDER_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-01"
             },
             {
               "id": "K02",
-              "operation": "VERIFY_PROVIDER_READ_WRITE_ACCESS",
-              "purpose": "Verify baseline provider identity and read/write capabilities.",
+              "operation": "SELECT_MEMORY_PROVIDER",
+              "purpose": "Require explicit HUMAN selection or approval of the Memory provider.",
               "domainNeutral": true,
+              "humanDecision": "MEMORY_PROVIDER_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-02"
             },
             {
               "id": "K03",
-              "operation": "SELECT_OWNER_NAMESPACE",
-              "purpose": "Let the HUMAN select the owner namespace.",
+              "operation": "VERIFY_MEMORY_PROVIDER",
+              "purpose": "Prove durable read/write/revision/resume semantics. Missing GitHub/GitLab alone is not a blocker; missing durable Memory is.",
               "domainNeutral": true,
-              "humanDecision": "OWNER_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-03"
             },
             {
               "id": "K04",
-              "operation": "VERIFY_OWNER_ACCESS",
-              "purpose": "Re-verify owner-scoped provider access.",
+              "operation": "SELECT_MEMORY_OWNER",
+              "purpose": "Bind physical Memory ownership to a HUMAN or organization; SAFOR/LLM receives access only.",
               "domainNeutral": true,
+              "humanDecision": "MEMORY_OWNER_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-04"
             },
             {
               "id": "K05",
-              "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
-              "purpose": "Require `{selectedOwner}/safor-memory` to pre-exist with proven read/write access; otherwise STOP.",
+              "operation": "SELECT_COLLABORATION_MODE",
+              "purpose": "Require PERSONAL or SHARED_TEAM collaboration mode.",
               "domainNeutral": true,
+              "humanDecision": "COLLABORATION_MODE_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-05"
             },
             {
               "id": "K06",
-              "operation": "SELECT_CREATION_TYPE",
-              "purpose": "Require Software / Website or Buch. This fixes Factory and compatible Operating Model.",
+              "operation": "VERIFY_COLLABORATION_SAFETY",
+              "purpose": "For SHARED_TEAM prove shared access and CAS/lock-style multi-writer safety.",
               "domainNeutral": true,
-              "humanDecision": "CREATION_TYPE_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-06"
             },
             {
               "id": "K07",
-              "operation": "SELECT_PROJECT_MODE",
-              "purpose": "Ask whether to use an existing project or start a new project.",
+              "operation": "BIND_AND_INITIALIZE_MEMORY_ROOT",
+              "purpose": "Bind or explicitly create the approved Memory location, persist memory.json and verify readback.",
               "domainNeutral": true,
-              "humanDecision": "PROJECT_MODE_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-07"
             },
             {
               "id": "K08",
-              "operation": "SELECT_OR_DEFINE_PROJECT",
-              "purpose": "Select an existing recent repository or define a new project.",
+              "operation": "SELECT_CREATION_TYPE",
+              "purpose": "Require Software / Website or Buch; selection fixes Factory and compatible Operating Model.",
               "domainNeutral": true,
-              "humanDecision": "PROJECT_SELECTION",
-              "modelRef": "initialization-model.json#sequence/INIT-08A|INIT-08B"
+              "humanDecision": "CREATION_TYPE_SELECTION",
+              "modelRef": "initialization-model.json#sequence/INIT-08"
             },
             {
               "id": "K09",
-              "operation": "BIND_REQUIRED_SAFOR_MEMORY",
-              "purpose": "Bind the verified `{selectedOwner}/safor-memory` as mandatory control repository.",
+              "operation": "DISCOVER_AND_SELECT_WORK_PROVIDER",
+              "purpose": "Discover/select the work/SCM provider independently from Memory using Factory workspace requirements.",
               "domainNeutral": true,
+              "humanDecision": "WORK_PROVIDER_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-09"
             },
             {
               "id": "K10",
-              "operation": "CONFIRM_CREATION_PROFILE_BINDINGS",
-              "purpose": "Confirm Provider Adapter plus Factory and Operating Model determined by creation type.",
+              "operation": "VERIFY_WORK_PROVIDER",
+              "purpose": "Verify only work-provider capabilities required by the selected Factory and intended operation.",
               "domainNeutral": true,
-              "humanDecision": "PACKAGE_BINDING_APPROVAL",
               "modelRef": "initialization-model.json#sequence/INIT-10"
             },
             {
               "id": "K11",
-              "operation": "MATERIALIZE_PROJECT_CONTROL",
-              "purpose": "After SETUP_APPROVAL, write project control to safor-memory and verify by provider readback.",
+              "operation": "SELECT_OR_DEFINE_PROJECT",
+              "purpose": "Select an existing workspace or define a new project using the selected work provider.",
               "domainNeutral": true,
-              "humanDecision": "SETUP_APPROVAL",
+              "humanDecision": "PROJECT_SELECTION",
               "modelRef": "initialization-model.json#sequence/INIT-11"
             },
             {
+              "id": "K12",
+              "operation": "RESOLVE_AND_CONFIRM_PACKAGES",
+              "purpose": "Pin Memory Provider, Factory, Operating Model and required Work Provider Adapter packages.",
+              "domainNeutral": true,
+              "humanDecision": "PACKAGE_BINDING_APPROVAL",
+              "modelRef": "initialization-model.json#sequence/INIT-12"
+            },
+            {
+              "id": "K13",
+              "operation": "MATERIALIZE_PROJECT_AND_REGISTER_SESSION",
+              "purpose": "Persist project/bindings/state in SAFOR Memory, register current session and verify authoritative readback.",
+              "domainNeutral": true,
+              "humanDecision": "SETUP_APPROVAL",
+              "modelRef": "initialization-model.json#sequence/INIT-13"
+            },
+            {
               "id": "R01",
-              "operation": "LOAD_AND_VERIFY_PROJECT_STATE",
-              "purpose": "Read persisted aggregates, validate bindings/integrity and reconcile unfinished external effects.",
+              "operation": "LOAD_MEMORY_AND_REHYDRATE_PROJECT",
+              "purpose": "Open the bound Memory provider, load authoritative project state and package pins, register the new session, reconcile unfinished effects and continue without requiring prior chat history.",
               "domainNeutral": true
             },
             {
@@ -633,15 +746,15 @@
             },
             {
               "id": "E04",
-              "operation": "COLLECT_EVIDENCE",
-              "purpose": "Collect evidence required by the bound Factory evidenceContract for the current work-item type plus kernel/provider integrity evidence.",
+              "operation": "PERSIST_OUTPUT_PROVENANCE_AND_COLLECT_EVIDENCE",
+              "purpose": "Persist every produced output together with its output provenance record at an authoritative Memory revision, then collect Factory-specific and provider evidence.",
               "domainNeutral": true,
               "modelRef": "BOUND_FACTORY.model.evidenceContract"
             },
             {
               "id": "E05",
               "operation": "EVALUATE_WORK_ITEM",
-              "purpose": "Evaluate acceptance against Factory acceptance criteria, the bound Factory evidenceContract, review independence and applicable gates.",
+              "purpose": "Evaluate acceptance only after output provenance, required Factory evidence, review independence and applicable gates are persisted and verified.",
               "domainNeutral": true,
               "modelRef": "BOUND_FACTORY.model.evidenceContract"
             },
@@ -818,31 +931,31 @@
           },
           {
             "id": "INV-021",
-            "rule": "After SAFOR-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery."
+            "rule": "After SAFOR-MASTER load, guided initialization begins with discovery of actually eligible Memory providers, not with a hard-coded GitHub/GitLab choice."
           },
           {
             "id": "INV-022",
-            "rule": "Initialization cannot proceed to owner selection unless mandatory baseline provider read/write capabilities are proven by actual host/provider evidence."
+            "rule": "Creation type, project selection, Planning and Execution are blocked until a Memory provider proves durable read/write/revision/resume semantics."
           },
           {
             "id": "INV-023",
-            "rule": "If mandatory read/write access is missing or unproven, SAFOR enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAFOR never asks for a password or personal access token in chat."
+            "rule": "Absence of GitHub or GitLab is not itself a blocker. Absence of any eligible durable Memory provider is a STOP condition; credentials must never be requested in chat."
           },
           {
             "id": "INV-024",
-            "rule": "The project owner namespace is explicitly selected by the HUMAN and owner-scoped read/write access is re-verified before project selection."
+            "rule": "Physical SAFOR Memory is owned/controlled by the HUMAN or organization; SAFOR and any LLM only receive verified access."
           },
           {
             "id": "INV-025",
-            "rule": "For EXISTING project mode, the default repository menu contains only eligible repositories under the selected owner with normalized lastActivityAt within the previous 7 days, ordered newest first."
+            "rule": "Memory provider and work/SCM provider are independent bindings and may be different products or technologies."
           },
           {
             "id": "INV-026",
-            "rule": "Selecting a repository from a menu is not sufficient evidence by itself; stable repository identity, default branch and target read/write access must be verified before binding."
+            "rule": "SHARED_TEAM mode requires shared access plus compare-and-swap or lock semantics; otherwise multi-writer execution is forbidden."
           },
           {
             "id": "INV-027",
-            "rule": "For NEW project mode, provider.repository.create is mandatory and no repository is created before explicit HUMAN confirmation and SETUP_APPROVAL."
+            "rule": "No project fact required by a later step may exist only in chat context; it must be persisted to authoritative SAFOR Memory first."
           },
           {
             "id": "INV-028",
@@ -882,11 +995,11 @@
           },
           {
             "id": "INV-037",
-            "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAFOR transitions to STOP and performs no project discovery, selection, planning or execution."
+            "rule": "The HUMAN must explicitly select or approve the Memory provider and any creation of a new Memory location; no silent Memory creation is allowed."
           },
           {
             "id": "INV-038",
-            "rule": "SAFOR must never auto-create safor-memory or silently substitute another control repository in this baseline."
+            "rule": "Every authoritative decision, mandate, actor assignment, state transition, evidence record, repair record, package binding and work result must be committed to SAFOR Memory before dependent work continues."
           },
           {
             "id": "INV-039",
@@ -911,6 +1024,46 @@
           {
             "id": "INV-044",
             "rule": "A project may not proceed when creationType, Factory binding, Operating Model binding and persisted project descriptor disagree."
+          },
+          {
+            "id": "INV-045",
+            "rule": "Every persisted Factory output requires a SAFOR_OUTPUT_RECORD containing producer/session identity, SAFOR protocol/package versions, Memory revision and LLM provenance fields."
+          },
+          {
+            "id": "INV-046",
+            "rule": "LLM provider/model/version provenance may only contain values actually exposed by the host; unavailable identity is recorded as NOT_EXPOSED/null and must never be guessed."
+          },
+          {
+            "id": "INV-047",
+            "rule": "A fresh chat/session must be able to resume project work from SAFOR Memory and pinned packages without access to previous chat history."
+          },
+          {
+            "id": "INV-048",
+            "rule": "Every active HUMAN/agent/service session is registered with a unique session ID and base Memory revision before it produces authoritative work."
+          },
+          {
+            "id": "INV-049",
+            "rule": "A Memory revision conflict in shared mode transitions to RECONCILE_REQUIRED; overwriting unseen authoritative state is forbidden."
+          },
+          {
+            "id": "INV-050",
+            "rule": "Work-provider eligibility is capability-based. Generic Git, GitHub, GitLab, Plastic/Unity Version Control or future systems may participate only through an adapter whose actual host capabilities are proven."
+          },
+          {
+            "id": "INV-051",
+            "rule": "A provider adapter manifest never proves tool availability. Missing host tools make operations unavailable; SAFOR must not simulate execution."
+          },
+          {
+            "id": "INV-052",
+            "rule": "Changing Memory provider, Memory owner or collaboration mode is a governed migration decision and cannot occur implicitly during execution or self-healing."
+          },
+          {
+            "id": "INV-053",
+            "rule": "SAFOR Memory may be backed by a versioned repository, a durable host filesystem or another compliant provider; the storage implementation is not the protocol identity."
+          },
+          {
+            "id": "INV-054",
+            "rule": "The authoritative project state belongs to the HUMAN/organization-controlled Memory, never to an individual chat, LLM instance or provider session."
           }
         ],
         "evidencePolicy": {
@@ -934,7 +1087,12 @@
           "ambiguousMutationOutcome": "RECONCILE_REQUIRED",
           "factoryEvidenceContractRequired": true,
           "sameFactoryBindingRequiredAcrossDiscoveryPlanningExecution": true,
-          "crossFactoryEvidenceSubstitutionForbidden": true
+          "crossFactoryEvidenceSubstitutionForbidden": true,
+          "outputProvenanceRequired": true,
+          "outputProvenanceSchemaRef": "schemas/output-record.schema.json",
+          "authoritativeMemoryCommitRequiredBeforeDependency": true,
+          "llmIdentityRule": "Observe; never infer or invent provider/model/version.",
+          "sharedMemoryConflict": "RECONCILE_REQUIRED"
         },
         "interrupts": {
           "STOP": {
@@ -975,17 +1133,19 @@
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.4.0",
+            "root": "v0.5.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
           "offlineFallback": "If canonical package resolution is unavailable, the user may provide package manifests directly; the kernel may guide creation of a new package but must not invent human approvals or provider evidence."
         },
         "kernelDecisionTypes": [
-          "PROVIDER_SELECTION",
-          "OWNER_SELECTION",
+          "MEMORY_PROVIDER_SELECTION",
+          "MEMORY_OWNER_SELECTION",
+          "COLLABORATION_MODE_SELECTION",
+          "MEMORY_LOCATION_CREATION_APPROVAL",
           "CREATION_TYPE_SELECTION",
-          "PROJECT_MODE_SELECTION",
+          "WORK_PROVIDER_SELECTION",
           "PROJECT_SELECTION",
           "SETUP_APPROVAL",
           "PACKAGE_BINDING_APPROVAL",
@@ -994,7 +1154,8 @@
           "REPLAN",
           "PAUSE",
           "STOP",
-          "RESUME"
+          "RESUME",
+          "MEMORY_MIGRATION_APPROVAL"
         ],
         "interactionModelRef": "interaction-model.json",
         "hostInteraction": {
@@ -1023,161 +1184,144 @@
           ]
         },
         "initializationModelRef": "initialization-model.json",
-        "selfHealingModelRef": "self-healing-model.json"
+        "selfHealingModelRef": "self-healing-model.json",
+        "memoryCapabilityVocabulary": [
+          "memory.identity.read",
+          "memory.object.list",
+          "memory.object.read",
+          "memory.object.write",
+          "memory.revision.read",
+          "memory.compare_and_swap",
+          "memory.lock",
+          "memory.history.read",
+          "memory.shared_access",
+          "memory.durability.prove",
+          "memory.resume.prove"
+        ],
+        "memoryModelRef": "memory-model.json"
       }
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "c8c9d0be9724e6c5901b944e03cbd32ac4b68ca1",
+      "sourcePath": "v0.5.0/initialization-model.json",
+      "sourceBlobSha": "9b75919a74450c69b0a9223bdbc3773065cd9235",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
-        "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
-        "entryBehavior": {
-          "autoStartAfterBootstrapLoad": true,
-          "firstHumanSurface": "PROVIDER_SELECTION_MENU",
-          "noProjectWorkBeforeComplete": true,
-          "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAFOR_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
-        },
+        "purpose": "Guide a HUMAN from an uploaded SAFOR bundle to a durable, resumable project without coupling SAFOR Memory to a specific source-control product.",
+        "completionPredicate": "MEMORY_VERIFIED_AND_SESSION_REGISTERED_AND_CREATION_TYPE_SELECTED_AND_REQUIRED_WORKSPACE_BOUND_AND_PACKAGES_PINNED_AND_PROJECT_STATE_READBACK_VERIFIED",
+        "stopRule": "STOP only when a mandatory capability cannot be proven or the HUMAN declines a required authorization. Missing GitHub/GitLab alone is never a STOP reason.",
         "sequence": [
           {
             "id": "INIT-01",
-            "operation": "SELECT_PROVIDER",
-            "humanDecision": "PROVIDER_SELECTION",
-            "title": "Wo arbeiten wir?",
-            "menu": {
-              "type": "SINGLE_SELECT",
-              "options": [
-                {
-                  "id": "GITHUB",
-                  "label": "GitHub",
-                  "providerPackageId": "safor.provider.github"
-                },
-                {
-                  "id": "GITLAB",
-                  "label": "GitLab",
-                  "providerPackageId": "safor.provider.gitlab"
-                }
-              ]
-            },
-            "rule": "The HUMAN explicitly selects GitHub or GitLab. Never silently choose a provider merely because a connection exists."
-          },
-          {
-            "id": "INIT-02",
-            "operation": "VERIFY_BASE_PROVIDER_ACCESS",
-            "title": "Zugriff prüfen",
-            "requires": [
-              "provider.identity.read",
-              "provider.namespace.list",
-              "provider.repository.list",
-              "provider.repository.read",
-              "provider.artifact.read",
-              "provider.artifact.write",
-              "provider.history.read",
-              "provider.branch.read",
-              "provider.branch.write"
-            ],
-            "passOutcome": "PROVIDER_ACCESS_VERIFIED",
-            "failOutcome": "WAITING_HUMAN_PROVIDER_ACCESS",
-            "rule": "Verify actual host/provider capabilities. Declarations in JSON are never proof of access.",
-            "humanBlockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
-            "blockerMenu": [
+            "operation": "DISCOVER_MEMORY_PROVIDER_OPTIONS",
+            "title": "Wo soll dein SAFOR Memory liegen?",
+            "source": "ACTUAL_HOST_AND_CONNECTED_PROVIDER_CAPABILITIES",
+            "rule": "Discover only memory providers that can plausibly satisfy SAFOR Memory capabilities. Do not assume a provider is usable because its product is named or connected.",
+            "candidates": [
               {
-                "id": "ACCESS_DONE",
-                "label": "Erledigt",
-                "intent": "RECHECK_PROVIDER_ACCESS",
-                "kind": "PRIMARY"
+                "providerType": "VERSIONED_REPOSITORY",
+                "examples": [
+                  "GitHub",
+                  "GitLab",
+                  "generic/self-hosted Git",
+                  "Plastic SCM / Unity Version Control when a compatible connector exposes equivalent artifact/revision semantics"
+                ]
               },
               {
-                "id": "SWITCH_PROVIDER",
-                "label": "Anbieter wechseln",
-                "intent": "SELECT_PROVIDER",
-                "kind": "SECONDARY"
+                "providerType": "HOST_FILESYSTEM",
+                "examples": [
+                  "persistent local filesystem",
+                  "mounted team volume"
+                ],
+                "eligibility": "Host must explicitly expose durable storage."
               },
               {
-                "id": "ACCESS_HELP",
-                "label": "Hilfe",
-                "intent": "HELP_PROVIDER_ACCESS",
-                "kind": "UTILITY"
+                "providerType": "CUSTOM",
+                "examples": [
+                  "organization-specific adapter"
+                ],
+                "eligibility": "Must implement MEMORY_PROVIDER_ADAPTER contract."
               }
-            ],
-            "retryPolicy": {
-              "onHumanSignal": "ACCESS_DONE",
-              "automaticRechecks": 1,
-              "onStillMissing": "WAITING_HUMAN_PROVIDER_ACCESS"
-            },
-            "prohibited": [
-              "ASK_FOR_PASSWORD",
-              "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT",
-              "CLAIM_ACCESS_WITHOUT_PROVIDER_EVIDENCE"
             ]
           },
           {
+            "id": "INIT-02",
+            "operation": "SELECT_MEMORY_PROVIDER",
+            "humanDecision": "MEMORY_PROVIDER_SELECTION",
+            "title": "Welches Memory möchtest du verwenden?",
+            "rule": "The HUMAN explicitly selects or approves one discovered memory provider. There is no silent default."
+          },
+          {
             "id": "INIT-03",
-            "operation": "SELECT_OWNER_NAMESPACE",
-            "humanDecision": "OWNER_SELECTION",
-            "title": "Unter welchem Owner läuft das Projekt?",
-            "source": "provider.namespace.list",
-            "optionRules": [
-              "Include the authenticated personal namespace when available.",
-              "Include organizations/groups visible to the authenticated identity.",
-              "Prefer namespaces where repository write capability can be verified.",
-              "Show owner display name and provider namespace handle; hide internal stable IDs behind Details."
+            "operation": "VERIFY_MEMORY_PROVIDER",
+            "title": "Memory prüfen",
+            "requires": [
+              "memory.object.read",
+              "memory.object.write",
+              "memory.revision.read",
+              "memory.durability.prove",
+              "memory.resume.prove"
             ],
-            "menu": {
-              "type": "SINGLE_SELECT",
-              "maxVisibleOptions": 8,
-              "overflowAction": {
-                "id": "SHOW_MORE_OWNERS",
-                "label": "Mehr anzeigen"
-              }
-            }
+            "rule": "Prove durable read/write/revision/resume semantics using actual host/provider evidence. A successful one-time file write is insufficient proof of persistence.",
+            "whenLocationMissing": {
+              "action": "PROPOSE_MEMORY_CREATION",
+              "requiresHumanApproval": true,
+              "requiresCapability": "PROVIDER_OR_HOST_CREATE_LOCATION_WHEN_NEEDED",
+              "rule": "SAFOR may create a memory location only after the HUMAN approves its identity and scope. No silent creation."
+            },
+            "failureOutcome": "STOP",
+            "stopMessage": "Stopp. Ich habe noch keinen Speicher, den ich dauerhaft lesen, schreiben und in einer neuen Sitzung wiederfinden kann."
           },
           {
             "id": "INIT-04",
-            "operation": "VERIFY_OWNER_ACCESS",
-            "title": "Owner-Zugriff prüfen",
-            "requires": [
-              "provider.repository.list",
-              "provider.repository.read",
-              "provider.artifact.read",
-              "provider.artifact.write"
+            "operation": "SELECT_MEMORY_OWNER",
+            "humanDecision": "MEMORY_OWNER_SELECTION",
+            "title": "Wem gehört dieses Memory?",
+            "options": [
+              "HUMAN",
+              "ORGANIZATION"
             ],
-            "conditionalRequires": [
-              {
-                "when": "PROJECT_MODE_NEW",
-                "capability": "provider.repository.create"
-              }
-            ],
-            "rule": "Re-verify access in the selected owner namespace because organization/group policy may be stricter than account-level access.",
-            "failMessage": "Für diesen Owner fehlen mir noch die nötigen Lese-/Schreibrechte. Bitte gib sie frei oder wähle einen anderen Owner."
+            "rule": "The physical memory is controlled by the HUMAN or organization. SAFOR and the LLM receive access only."
           },
           {
             "id": "INIT-05",
-            "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
-            "title": "SAFOR Memory prüfen",
-            "requires": [
-              "provider.repository.read",
-              "provider.artifact.read",
-              "provider.artifact.write"
-            ],
-            "target": "{selectedOwner}/safor-memory",
-            "passOutcome": "SAFOR_MEMORY_VERIFIED",
-            "failOutcome": "STOP",
-            "rule": "The repository `{selectedOwner}/safor-memory` must already exist and actual read/write access must be proven. SAFOR never creates this repository automatically.",
-            "stopMessage": "Stopp. Unter diesem Owner fehlt ein nutzbares `safor-memory` oder die Lese-/Schreibrechte reichen nicht. Bitte richte `safor-memory` ein und starte SAFOR danach erneut.",
-            "prohibited": [
-              "AUTO_CREATE_SAFOR_MEMORY",
-              "CONTINUE_WITHOUT_SAFOR_MEMORY",
-              "CONTINUE_WITH_READ_ONLY_SAFOR_MEMORY",
-              "ASK_FOR_PASSWORD",
-              "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT"
+            "operation": "SELECT_COLLABORATION_MODE",
+            "humanDecision": "COLLABORATION_MODE_SELECTION",
+            "title": "Arbeitest du allein oder gemeinsam?",
+            "options": [
+              {
+                "id": "PERSONAL",
+                "label": "Persönlich"
+              },
+              {
+                "id": "SHARED_TEAM",
+                "label": "Gemeinsam im Team"
+              }
             ]
           },
           {
             "id": "INIT-06",
+            "operation": "VERIFY_COLLABORATION_SAFETY",
+            "title": "Gemeinsames Arbeiten absichern",
+            "rules": [
+              "PERSONAL requires the mandatory memory baseline and may use SINGLE_WRITER concurrency.",
+              "SHARED_TEAM additionally requires memory.shared_access and either memory.compare_and_swap or memory.lock.",
+              "If shared multi-writer safety cannot be proven, SHARED_TEAM is blocked; SAFOR may offer PERSONAL instead."
+            ]
+          },
+          {
+            "id": "INIT-07",
+            "operation": "BIND_AND_INITIALIZE_MEMORY_ROOT",
+            "title": "SAFOR Memory verbinden",
+            "artifacts": [
+              "memory.json"
+            ],
+            "rule": "Bind the stable memory location, persist ownership/provider/concurrency metadata and read it back. The location name is provider-specific; `safor-memory` is a recommendation for repository-backed memory, not a universal requirement."
+          },
+          {
+            "id": "INIT-08",
             "operation": "SELECT_CREATION_TYPE",
             "humanDecision": "CREATION_TYPE_SELECTION",
             "title": "Was möchtest du erstellen?",
@@ -1198,222 +1342,98 @@
                 }
               ]
             },
-            "rule": "Exactly one creation type is mandatory. Selection determines the Factory and compatible Operating Model used for Discovery, Planning and Evidence."
-          },
-          {
-            "id": "INIT-07",
-            "operation": "SELECT_PROJECT_MODE",
-            "humanDecision": "PROJECT_MODE_SELECTION",
-            "title": "Wie starten wir?",
-            "menu": {
-              "type": "SINGLE_SELECT",
-              "options": [
-                {
-                  "id": "EXISTING",
-                  "label": "Bestehendes Projekt",
-                  "intent": "SELECT_EXISTING_PROJECT"
-                },
-                {
-                  "id": "NEW",
-                  "label": "Neues Projekt",
-                  "intent": "START_NEW_PROJECT"
-                }
-              ]
-            }
-          },
-          {
-            "id": "INIT-08A",
-            "operation": "LIST_RECENT_EXISTING_REPOSITORIES",
-            "when": "PROJECT_MODE_EXISTING",
-            "title": "Welches Projekt nehmen wir?",
-            "source": "provider.repository.list",
-            "activityWindow": {
-              "days": 7,
-              "clock": "HOST_CURRENT_TIME",
-              "normalizedField": "lastActivityAt",
-              "includeOnlyAtOrAfter": "NOW_MINUS_7_DAYS"
-            },
-            "ordering": "lastActivityAt DESC",
-            "maxVisibleRepositories": 8,
-            "repositoryEligibility": [
-              "Repository belongs to or is accessible under the selected owner namespace.",
-              "Repository is not archived unless the HUMAN explicitly requests archived repositories.",
-              "Repository read access is proven.",
-              "Repository write access is proven for the project workflow baseline."
-            ],
-            "emptyState": {
-              "message": "In den letzten 7 Tagen wurde hier kein passendes Repository angefasst.",
-              "actions": [
-                {
-                  "id": "SHOW_ALL_REPOS",
-                  "label": "Alle Repositories",
-                  "intent": "LIST_ALL_REPOSITORIES"
-                },
-                {
-                  "id": "START_NEW_PROJECT",
-                  "label": "Neues Projekt",
-                  "intent": "START_NEW_PROJECT"
-                },
-                {
-                  "id": "CHANGE_OWNER",
-                  "label": "Owner wechseln",
-                  "intent": "SELECT_OWNER_NAMESPACE"
-                }
-              ]
-            },
-            "menu": {
-              "type": "SINGLE_SELECT",
-              "optionLabelPattern": "{repositoryName}",
-              "optionDescriptionPattern": "Zuletzt aktiv: {lastActivityHuman}",
-              "overflowAction": {
-                "id": "SHOW_MORE_REPOS",
-                "label": "Mehr anzeigen"
-              },
-              "utilityActions": [
-                {
-                  "id": "SHOW_ALL_REPOS",
-                  "label": "Alle Repositories",
-                  "intent": "LIST_ALL_REPOSITORIES"
-                },
-                {
-                  "id": "CHANGE_OWNER",
-                  "label": "Owner wechseln",
-                  "intent": "SELECT_OWNER_NAMESPACE"
-                }
-              ]
-            },
-            "selectionVerification": [
-              "Read repository metadata and stable ID.",
-              "Read default branch.",
-              "Re-verify read/write access on the selected repository.",
-              "Persist the stable repository identity only after HUMAN selection."
-            ]
-          },
-          {
-            "id": "INIT-08B",
-            "operation": "DEFINE_NEW_PROJECT",
-            "when": "PROJECT_MODE_NEW",
-            "title": "Wie soll das neue Projekt heißen?",
-            "humanInput": [
-              "projectName"
-            ],
-            "validation": [
-              "Derive and show a valid project slug.",
-              "Check name/slug collision in selected owner namespace.",
-              "Require provider.repository.create before creation.",
-              "Do not create the repository before the HUMAN confirms the proposed project identity and setup scope."
-            ]
+            "rule": "Exactly one creation type is mandatory. The selected Factory controls Discovery, Planning, Evidence and outcome semantics."
           },
           {
             "id": "INIT-09",
-            "operation": "BIND_CONTROL_REPOSITORY",
-            "title": "SAFOR-Struktur vorbereiten",
-            "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAFOR control repository. A different control repository is not allowed in this baseline."
+            "operation": "DISCOVER_AND_SELECT_WORK_PROVIDER",
+            "humanDecision": "WORK_PROVIDER_SELECTION",
+            "title": "Wo liegen die Arbeitsartefakte?",
+            "source": "BOUND_FACTORY_WORKSPACE_REQUIREMENTS_PLUS_ACTUAL_HOST_CAPABILITIES",
+            "providerExamples": [
+              "GitHub",
+              "GitLab",
+              "generic/self-hosted Git",
+              "Plastic SCM / Unity Version Control",
+              "other compatible provider adapter"
+            ],
+            "rule": "Work/SCM provider selection is independent from SAFOR Memory. Offer only providers whose actual host tools satisfy the bound Factory's workspace requirements. If the Factory declares workspaceRequirements.required=false, also offer MEMORY_ONLY.",
+            "memoryOnlyOption": {
+              "id": "MEMORY_ONLY",
+              "label": "Nur SAFOR Memory",
+              "when": "BOUND_FACTORY.model.workspaceRequirements.required == false"
+            }
           },
           {
             "id": "INIT-10",
-            "operation": "RESOLVE_PROJECT_PACKAGES",
-            "title": "Arbeitsmodell auswählen",
-            "rule": "Resolve the Provider Adapter and bind the Factory/Operating Model predetermined by CREATION_TYPE_SELECTION. HUMAN confirms the proposed bindings; do not silently substitute a different Factory."
+            "operation": "VERIFY_WORK_PROVIDER",
+            "title": "Arbeitsumgebung prüfen",
+            "rule": "If MEMORY_ONLY is selected and allowed by the bound Factory, no external work provider is required. Otherwise verify only the provider capabilities required by the selected Factory and intended operation."
           },
           {
             "id": "INIT-11",
-            "operation": "MATERIALIZE_PROJECT_CONTROL",
+            "operation": "SELECT_OR_DEFINE_PROJECT",
+            "humanDecision": "PROJECT_SELECTION",
+            "title": "Welches Projekt?",
+            "modes": [
+              "EXISTING",
+              "NEW"
+            ],
+            "existingRule": "List eligible workspaces from the selected work provider, using provider-specific activity metadata when available.",
+            "newRule": "Creation requires explicit HUMAN confirmation plus actual create capability. Never create before confirmation."
+          },
+          {
+            "id": "INIT-12",
+            "operation": "RESOLVE_AND_CONFIRM_PACKAGES",
+            "humanDecision": "PACKAGE_BINDING_APPROVAL",
+            "title": "Arbeitsmodell bestätigen",
+            "rule": "Pin MEMORY_PROVIDER_ADAPTER, FACTORY, OPERATING_MODEL and required PROVIDER_ADAPTER packages. Creation type determines Factory/Operating Model; memory and work providers remain independently selected."
+          },
+          {
+            "id": "INIT-13",
+            "operation": "MATERIALIZE_PROJECT_AND_REGISTER_SESSION",
+            "humanDecision": "SETUP_APPROVAL",
             "title": "Projekt starten",
-            "rule": "After SETUP_APPROVAL, write and read back the project control structure. Initialization completes only after provider readback succeeds."
+            "rule": "After explicit setup approval, persist project descriptor, bindings, memory binding and initial state in SAFOR Memory, register the current session and read everything back before initialization completes."
           }
         ],
-        "repositoryActivityNormalization": {
-          "purpose": "Normalize 'recently touched' repositories across providers.",
-          "field": "lastActivityAt",
-          "providerRules": {
-            "github": {
-              "preferredFields": [
-                "updated_at",
-                "pushed_at"
-              ],
-              "selectionRule": "Use the most recent trustworthy repository activity timestamp exposed by the provider; prefer updated_at for broad project activity and retain pushed_at as supporting detail when available.",
-              "fallback": "latest_default_branch_commit_at"
-            },
-            "gitlab": {
-              "preferredFields": [
-                "last_activity_at"
-              ],
-              "selectionRule": "Use last_activity_at when available.",
-              "fallback": "latest_default_branch_commit_at"
-            }
-          },
-          "displayRule": "Show only a human-readable relative or local date in the menu; keep raw timestamps in evidence/details."
+        "memoryOptionRendering": {
+          "labelPattern": "{providerLabel}",
+          "descriptionPattern": "{locationType} · {collaborationCapability}",
+          "details": [
+            "stableLocation",
+            "verifiedCapabilities",
+            "ownershipOptions",
+            "sharedTeamEligibility"
+          ]
         },
-        "permissionSemantics": {
-          "baselineReadWriteIsMandatory": true,
-          "leastPrivilegeStillApplies": true,
-          "explanation": "SAFOR requires proven read/write access for its control and project workflow. Additional provider capabilities are requested only when the selected Factory or operation needs them.",
-          "mandatoryBeforeOwnerSelection": true,
-          "ownerScopedRecheck": true,
-          "newProjectAdditionalCapability": "provider.repository.create",
-          "noProgressOnFailure": true,
-          "safMemoryReadWriteMandatory": true,
-          "safMemoryMissingOutcome": "STOP",
-          "safMemoryAutoCreate": false
+        "workProviderActivityNormalization": {
+          "purpose": "Normalize optional recent-workspace discovery across SCM providers.",
+          "rule": "Use provider-native activity metadata when available. Lack of a normalized activity timestamp must not make an otherwise valid work provider unusable."
         },
-        "humanExperience": {
-          "buddyMessages": {
-            "providerPrompt": "Wo möchtest du arbeiten?",
-            "accessPassed": "Passt. Zugriff ist da.",
-            "ownerPrompt": "Unter welchem Owner läuft das Projekt?",
-            "projectModePrompt": "Bestehend oder neu?",
-            "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
-            "ready": "Alles sitzt. Jetzt können wir das Projekt sauber aufsetzen.",
-            "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
-            "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
-            "creationTypePrompt": "Was möchtest du erstellen?"
-          },
-          "keepTechnicalDetailsBehind": "DETAILS",
-          "menusPreferred": true
-        },
-        "absolutePrerequisites": {
-          "safMemoryRepository": {
-            "required": true,
-            "exactRepositoryName": "safor-memory",
-            "locationPattern": "{selectedOwner}/safor-memory",
-            "mustExistBeforeProjectSelection": true,
-            "mustBeReadable": true,
-            "mustBeWritable": true,
-            "autoCreateForbidden": true,
-            "failureOutcome": "STOP",
-            "humanMessage": "Für SAFOR brauchst du unter diesem Owner zwingend ein Repository namens `safor-memory` mit Lese- und Schreibrechten. Bitte richte es ein und starte SAFOR danach erneut.",
-            "rule": "Missing repository, unreadable repository or unproven write access is a hard initialization STOP. SAFOR must not create safor-memory automatically and must not continue to creation-type or project selection."
-          }
-        },
-        "creationTypes": {
-          "required": true,
-          "humanDecision": "CREATION_TYPE_SELECTION",
-          "options": [
-            {
-              "id": "SOFTWARE_WEBSITE",
-              "label": "Software / Website",
-              "factoryPackageId": "safor.factory.software-delivery",
-              "operatingModelPackageId": "safor.om.saas-engineering"
-            },
-            {
-              "id": "BOOK",
-              "label": "Buch",
-              "factoryPackageId": "safor.factory.book-production",
-              "operatingModelPackageId": "safor.om.book-authoring"
-            }
+        "identityAndSecrets": {
+          "neverRequest": [
+            "PASSWORD",
+            "PERSONAL_ACCESS_TOKEN_IN_CHAT",
+            "PRIVATE_KEY_IN_CHAT",
+            "RECOVERY_CODE"
           ],
-          "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
+          "rule": "Use host/provider connection mechanisms. Actual permissions are evidence, not declarations in JSON."
+        },
+        "stateAuthority": {
+          "chatContext": "NON_AUTHORITATIVE_CACHE",
+          "memory": "AUTHORITATIVE_PROJECT_STATE",
+          "rule": "Every decision or state change required by a later step must be persisted to SAFOR Memory before the later step may rely on it."
         }
       }
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "04912584b13ba341d44bec6e79e85e474b95fb90",
+      "sourcePath": "v0.5.0/interaction-model.json",
+      "sourceBlobSha": "c3c26d7399101a48cd4d9e5007b206f023b4601b",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -1830,6 +1850,29 @@
                 "NATIVE_CHOICES"
               ],
               "example": "Was möchtest du erstellen?"
+            },
+            "memoryBlocker": {
+              "structure": [
+                "BLOCKER",
+                "WHY",
+                "WAY_FORWARD"
+              ],
+              "example": "Stopp. Dieser Speicher ist noch nicht als dauerhaft und wiederauffindbar bestätigt. Wähle eine andere Memory-Option oder gib die nötigen Rechte frei."
+            },
+            "memoryReady": {
+              "structure": [
+                "RESULT",
+                "NEXT_ACTION"
+              ],
+              "example": "Memory steht. Der Projektzustand kann jetzt unabhängig von diesem Chat weitergeführt werden."
+            },
+            "sharedTeam": {
+              "structure": [
+                "RESULT",
+                "CONCURRENCY_STATUS",
+                "NEXT_ACTION"
+              ],
+              "example": "Team-Modus ist abgesichert. Mehrere Sessions können arbeiten, ohne ungesehenen Zustand zu überschreiben."
             }
           },
           "avoid": {
@@ -1857,65 +1900,70 @@
         },
         "initializationExperience": {
           "modelRef": "initialization-model.json",
-          "behavior": "Start automatically after SAFOR-MASTER load and guide the HUMAN one decision at a time.",
+          "behavior": "Start automatically after SAFOR-MASTER load and guide the HUMAN one decision at a time. Establish durable SAFOR Memory before Factory or work-provider setup.",
           "steps": [
             {
-              "id": "PROVIDER",
-              "prompt": "Wo möchtest du arbeiten?",
+              "id": "MEMORY_PROVIDER",
+              "prompt": "Wo soll dein SAFOR Memory liegen?",
               "preferredSurface": "NATIVE_SINGLE_SELECT",
-              "options": [
+              "dynamicOptions": "ELIGIBLE_MEMORY_PROVIDERS",
+              "optionDescription": "Nur tatsächlich verfügbare und prüfbare Speicher anzeigen.",
+              "utilityActions": [
                 {
-                  "label": "GitHub",
-                  "intent": "SELECT_PROVIDER_GITHUB"
-                },
-                {
-                  "label": "GitLab",
-                  "intent": "SELECT_PROVIDER_GITLAB"
+                  "label": "Details",
+                  "intent": "DETAILS"
                 }
               ]
             },
             {
-              "id": "ACCESS",
-              "successMessage": "Passt. Zugriff ist da.",
-              "blockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
+              "id": "MEMORY_VERIFY",
+              "successMessage": "Passt. Das Memory ist dauerhaft erreichbar.",
+              "blockerMessage": "Stopp. Ich brauche einen Speicher, den ich dauerhaft lesen, schreiben und in einer neuen Sitzung wiederfinden kann.",
               "actions": [
                 {
-                  "label": "Erledigt",
-                  "intent": "RECHECK_PROVIDER_ACCESS",
-                  "kind": "PRIMARY"
-                },
-                {
-                  "label": "Anbieter wechseln",
-                  "intent": "SELECT_PROVIDER",
+                  "label": "Andere Memory-Option",
+                  "intent": "SELECT_MEMORY_PROVIDER",
                   "kind": "SECONDARY"
                 },
                 {
-                  "label": "Hilfe",
-                  "intent": "HELP_PROVIDER_ACCESS",
-                  "kind": "UTILITY"
-                }
-              ]
-            },
-            {
-              "id": "OWNER",
-              "prompt": "Unter welchem Owner läuft das Projekt?",
-              "preferredSurface": "NATIVE_SINGLE_SELECT",
-              "dynamicOptions": "PROVIDER_NAMESPACES",
-              "maxVisibleOptions": 8,
-              "overflowLabel": "Mehr anzeigen"
-            },
-            {
-              "id": "SAFOR_MEMORY",
-              "prompt": "Ich prüfe jetzt `safor-memory`.",
-              "preferredSurface": "NATIVE_MARKDOWN",
-              "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
-              "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAFOR danach erneut.",
-              "failureBehavior": "STOP",
-              "actions": [
+                  "label": "Erneut prüfen",
+                  "intent": "RECHECK_MEMORY_PROVIDER",
+                  "kind": "PRIMARY"
+                },
                 {
                   "label": "Details",
                   "intent": "DETAILS",
                   "kind": "UTILITY"
+                }
+              ]
+            },
+            {
+              "id": "MEMORY_OWNER",
+              "prompt": "Wem gehört dieses Memory?",
+              "preferredSurface": "NATIVE_SINGLE_SELECT",
+              "options": [
+                {
+                  "label": "Mir / einem Human",
+                  "intent": "SELECT_MEMORY_OWNER_HUMAN"
+                },
+                {
+                  "label": "Meiner Organisation",
+                  "intent": "SELECT_MEMORY_OWNER_ORGANIZATION"
+                }
+              ]
+            },
+            {
+              "id": "COLLABORATION_MODE",
+              "prompt": "Arbeitest du allein oder gemeinsam?",
+              "preferredSurface": "NATIVE_SINGLE_SELECT",
+              "options": [
+                {
+                  "label": "Persönlich",
+                  "intent": "SELECT_COLLABORATION_PERSONAL"
+                },
+                {
+                  "label": "Gemeinsam im Team",
+                  "intent": "SELECT_COLLABORATION_SHARED_TEAM"
                 }
               ]
             },
@@ -1935,56 +1983,38 @@
               ]
             },
             {
-              "id": "PROJECT_MODE",
-              "prompt": "Bestehend oder neu?",
+              "id": "WORK_PROVIDER",
+              "prompt": "Wo liegen deine Arbeitsartefakte?",
               "preferredSurface": "NATIVE_SINGLE_SELECT",
-              "options": [
-                {
-                  "label": "Bestehendes Projekt",
-                  "intent": "SELECT_EXISTING_PROJECT"
-                },
-                {
-                  "label": "Neues Projekt",
-                  "intent": "START_NEW_PROJECT"
-                }
-              ]
+              "dynamicOptions": "ELIGIBLE_WORK_PROVIDERS_FOR_BOUND_FACTORY",
+              "examples": [
+                "GitHub",
+                "GitLab",
+                "Generic Git",
+                "Plastic SCM / Unity Version Control",
+                "Nur SAFOR Memory (wenn Factory erlaubt)"
+              ],
+              "optionalWhen": "BOUND_FACTORY.model.workspaceRequirements.required == false"
             },
             {
-              "id": "EXISTING_PROJECT",
-              "prompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
-              "preferredSurface": "NATIVE_SINGLE_SELECT",
-              "dynamicOptions": "RECENT_REPOSITORIES_7_DAYS",
-              "sort": "lastActivityAt DESC",
-              "maxVisibleOptions": 8,
-              "optionPattern": "{repositoryName} · {lastActivityHuman}",
-              "overflowLabel": "Mehr anzeigen",
-              "utilityActions": [
-                {
-                  "label": "Alle Repositories",
-                  "intent": "LIST_ALL_REPOSITORIES"
-                },
-                {
-                  "label": "Owner wechseln",
-                  "intent": "SELECT_OWNER_NAMESPACE"
-                }
+              "id": "PROJECT",
+              "prompt": "Welches Projekt verwenden wir?",
+              "preferredSurface": "NATIVE_SINGLE_SELECT_OR_FREE_TEXT",
+              "modes": [
+                "EXISTING",
+                "NEW"
               ]
-            },
-            {
-              "id": "NEW_PROJECT",
-              "prompt": "Wie soll das neue Projekt heißen?",
-              "preferredSurface": "FREE_TEXT",
-              "next": "SHOW_DERIVED_PROJECT_IDENTITY_FOR_CONFIRMATION"
             }
           ],
           "interactionRules": [
             "Ask exactly one initialization decision at a time.",
-            "Do not continue after SAFOR_MEMORY failure; the run is STOPPED.",
-            "Creation type is mandatory and must be selected before project mode.",
-            "Use only the selected Factory for later Discovery, Planning and domain Evidence.",
-            "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
-            "Repository menu defaults to the previous 7 days; the HUMAN may explicitly request all repositories.",
-            "Keep choices clickable when the host supports native controls.",
-            "Use only chat-native UI surfaces."
+            "Do not continue when no durable read/write/resume-capable Memory provider can be proven.",
+            "Do not equate GitHub/GitLab availability with SAFOR Memory availability.",
+            "Creation type is mandatory and determines Factory-specific Discovery, Planning and Evidence.",
+            "Memory provider and work provider are independent choices.",
+            "For SHARED_TEAM, do not proceed without shared access and proven CAS/lock style concurrency.",
+            "Use only chat-native UI surfaces.",
+            "Keep technical package IDs and stable IDs behind Details unless needed for a decision."
           ]
         },
         "nativeUiPolicy": {
@@ -2044,13 +2074,156 @@
         }
       }
     },
+    "memoryModel": {
+      "key": "memoryModel",
+      "sourcePath": "v0.5.0/memory-model.json",
+      "sourceBlobSha": "b7255d5d75d00de08cbf96b6bd9ba2e61a4589ad",
+      "content": {
+        "format": "SAFOR_MEMORY_MODEL",
+        "schemaVersion": "0.5.0",
+        "id": "SAFOR-MEMORY-MODEL",
+        "purpose": "Define SAFOR Memory as provider-neutral durable project state that can be shared across humans, sessions and LLMs without depending on a specific repository product.",
+        "principles": {
+          "providerNeutral": true,
+          "humanOrOrganizationOwned": true,
+          "llmNeverOwnsMemory": true,
+          "durableBeforeUse": true,
+          "noAuthoritativeStateOnlyInChat": true,
+          "resumableAcrossSessions": true,
+          "multiWriterSafeWhenShared": true,
+          "evidenceBeforeBelief": true,
+          "explicitHumanProviderSelection": true,
+          "noProviderNameImpliesCapability": true
+        },
+        "capabilityVocabulary": [
+          "memory.identity.read",
+          "memory.object.list",
+          "memory.object.read",
+          "memory.object.write",
+          "memory.revision.read",
+          "memory.compare_and_swap",
+          "memory.lock",
+          "memory.history.read",
+          "memory.shared_access",
+          "memory.durability.prove",
+          "memory.resume.prove"
+        ],
+        "mandatoryCapabilities": [
+          "memory.object.read",
+          "memory.object.write",
+          "memory.revision.read",
+          "memory.durability.prove",
+          "memory.resume.prove"
+        ],
+        "sharedTeamAdditionalRequirement": {
+          "anyOf": [
+            [
+              "memory.compare_and_swap"
+            ],
+            [
+              "memory.lock"
+            ]
+          ],
+          "alsoRequire": [
+            "memory.shared_access"
+          ],
+          "rule": "SHARED_TEAM mode is forbidden unless shared access and a proven multi-writer concurrency mechanism exist."
+        },
+        "providerTypes": [
+          {
+            "id": "VERSIONED_REPOSITORY",
+            "description": "Any provider-backed versioned artifact repository whose adapter proves the mandatory memory capabilities."
+          },
+          {
+            "id": "HOST_FILESYSTEM",
+            "description": "A host-provided durable filesystem location. Eligibility requires proof that data survives chat/session restart and can be reopened."
+          },
+          {
+            "id": "CUSTOM",
+            "description": "A future or organization-specific memory provider implementing the SAFOR Memory Provider Adapter contract."
+          }
+        ],
+        "selectionPolicy": {
+          "humanMustChooseOrApprove": true,
+          "discoverActualHostCapabilitiesFirst": true,
+          "noSilentDefault": true,
+          "createAllowedOnlyAfterExplicitHumanApproval": true,
+          "noCredentialsInChat": true,
+          "failureOutcome": "STOP",
+          "failureRule": "Lack of GitHub/GitLab is not a blocker. Lack of any provider that can prove durable read/write/resume semantics is a blocker."
+        },
+        "ownership": {
+          "logicalOwner": "SAFOR_PROJECT",
+          "physicalOwner": "HUMAN_OR_ORGANIZATION",
+          "rule": "The model may access SAFOR Memory only through verified permissions; it never owns or becomes the authoritative holder of project state."
+        },
+        "authoritativeStatePolicy": {
+          "mustPersistBeforeDependentTransition": [
+            "HUMAN_DECISION",
+            "MANDATE",
+            "ACTOR_ASSIGNMENT",
+            "WORK_RESULT",
+            "OUTPUT_PROVENANCE",
+            "EVIDENCE",
+            "STATE_TRANSITION",
+            "REPAIR_RECORD",
+            "PACKAGE_BINDING"
+          ],
+          "chatContextStatus": "NON_AUTHORITATIVE_CACHE",
+          "writeFailure": "STOP_OR_WAITING_HUMAN",
+          "rule": "No later action may rely on a project fact that exists only in chat context."
+        },
+        "concurrency": {
+          "everyWriteUsesExpectedRevision": true,
+          "conflictOutcome": "RECONCILE_REQUIRED",
+          "sharedWriterIdentityRequired": true,
+          "immutableAuditRequired": true,
+          "rule": "Concurrent sessions reload authoritative memory after conflicts and never overwrite unseen state."
+        },
+        "resume": {
+          "sessionStart": "LOAD_MEMORY_BINDING_AND_AUTHORITATIVE_PROJECT_STATE",
+          "registerSession": true,
+          "chatHistoryRequired": false,
+          "rule": "A fresh chat must be able to reconstruct actionable project state from SAFOR Memory plus pinned product packages."
+        },
+        "provenance": {
+          "perOutputRequired": true,
+          "schemaRef": "schemas/output-record.schema.json",
+          "sessionSchemaRef": "schemas/session-record.schema.json",
+          "modelDataRule": "Record only model/provider/version data actually exposed by the host. Unknown values must remain null with observability NOT_EXPOSED; never invent model identity."
+        },
+        "layout": {
+          "rootDescriptor": "memory.json",
+          "projectRoot": "projects/{projectSlug}/",
+          "requiredProjectArtifacts": [
+            "project.json",
+            "bindings.json",
+            "memory-binding.json",
+            "state/control.json",
+            "state/value-stream.json",
+            "state/execution.json"
+          ],
+          "directories": [
+            "sessions/",
+            "outputs/",
+            "decisions/",
+            "evidence/",
+            "artifacts/",
+            "work-items/",
+            "agents/",
+            "audit/",
+            "packages/"
+          ]
+        }
+      }
+    },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "8fefc1a92dbec84aa9bb42aae6c552b4cfe3a3b3",
+      "sourcePath": "v0.5.0/self-healing-model.json",
+      "sourceBlobSha": "6aa83eec6683ddd476602da50a733459aa67367e",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2101,12 +2274,12 @@
           },
           {
             "id": "SH-03",
-            "name": "STALE_REVISION_CONFLICT",
+            "name": "STALE_MEMORY_OR_PROVIDER_REVISION_CONFLICT",
             "examples": [
-              "expected branch head changed",
-              "optimistic-lock conflict"
+              "SAFOR Memory expected revision mismatch",
+              "work provider revision changed since read"
             ],
-            "automaticRepair": "REFRESH_STATE_AND_REEVALUATE",
+            "automaticRepair": "REFRESH_AUTHORITATIVE_STATE_AND_REEVALUATE",
             "defaultRetryBudget": 1,
             "requiresReconciliation": false
           },
@@ -2181,11 +2354,12 @@
         "eligibilityRules": [
           "The repair must stay inside the currently active mandate and bound package policies.",
           "The repair must not create a new business, product, risk or governance decision.",
-          "The repair must be idempotent or have an explicit reconciliation/compensation strategy.",
-          "Required provider capabilities and rights must be proven immediately before repair.",
-          "The authoritative pre-repair state must be captured or referenced.",
+          "The repair must not change the selected Memory provider, owner, collaboration mode, Factory or Operating Model.",
+          "Required Memory/Work provider capabilities must be proven immediately before repair.",
+          "The authoritative pre-repair Memory revision must be captured or referenced.",
           "A repair must define success evidence before it runs.",
-          "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry."
+          "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry.",
+          "A shared-memory conflict must reload authoritative Memory before any retry."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -2199,7 +2373,11 @@
           "MERGE_WITH_FAILED_REQUIRED_CHECKS",
           "CHANGE_OPERATING_MODEL_OR_FACTORY_BINDING",
           "CHANGE_SECURITY_OR_COMPLIANCE_POLICY",
-          "INVENT_MISSING_EVIDENCE"
+          "INVENT_MISSING_EVIDENCE",
+          "CHANGE_MEMORY_PROVIDER",
+          "CHANGE_MEMORY_OWNER",
+          "DOWNGRADE_SHARED_CONCURRENCY_SAFETY",
+          "OVERWRITE_UNSEEN_MEMORY_REVISION"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -2257,90 +2435,76 @@
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "46826fd746eddbdbf7d99648f1142af368724672",
+      "sourcePath": "v0.5.0/repository-policy.json",
+      "sourceBlobSha": "d2220c5fc4b42544fc62007d9473bbf390c91fe0",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-        "version": "0.4.0",
-        "policyId": "SAFOR-REPO-BOUNDARY-V2",
+        "version": "0.5.0",
+        "policyId": "SAFOR-REPO-BOUNDARY-V3",
         "denyByDefault": true,
         "principles": {
-          "controlPlaneSeparatedFromWorkArtifacts": true,
+          "memoryIndependentFromWorkProvider": true,
+          "controlPlaneSeparatedFromDomainArtifacts": true,
           "providerNeutral": true,
           "projectScopedControl": true,
-          "workerMayNotMutateControlStateByDefault": true,
-          "packagesAreReadOnlyAfterProjectPinning": true,
+          "workerMayNotMutateAuthoritativeMemoryByDefault": true,
+          "packagesReadOnlyAfterPinning": true,
           "actualProviderRightsOverrideDeclaredIntent": true
         },
-        "repositoryClasses": {
-          "CONTROL_REPOSITORY": {
-            "purpose": "Persist SAFOR project bindings, control/value-stream/execution states, decisions, evidence, package snapshots and audit records.",
+        "memoryBoundary": {
+          "authoritativeStateLocation": "BOUND_MEMORY_PROVIDER",
+          "versionedRepositoryMemory": {
+            "recommendedRepositoryName": "safor-memory",
+            "exactNameRequired": false,
             "allowedRoots": [
               "projects/",
-              "factory/"
+              "memory.json"
             ],
-            "forbiddenContentClasses": [
-              "DOMAIN_EXECUTABLE_ARTIFACT"
-            ],
-            "requiredName": "safor-memory"
+            "rule": "When SAFOR Memory is repository-backed, the physical repository is a storage implementation, not the definition of SAFOR Memory."
           },
-          "WORK_REPOSITORY": {
-            "purpose": "Persist domain work artifacts such as source code, manuscripts, research outputs, designs or other factory-defined deliverables.",
-            "forbiddenPrefixes": [
-              "factory/",
-              "safor-master/",
-              "control-plane/",
-              "projects/",
-              "agents/",
-              "contracts/",
-              ".saf/"
-            ],
-            "forbiddenNames": [
-              "SAFOR-MASTER.json",
-              "master-state.json",
-              "launch-prompt.md",
-              "work-contract.json"
-            ]
+          "hostFilesystemMemory": {
+            "rule": "A filesystem path is eligible only when durability and resume semantics are proven by the host. Ephemeral scratch storage is forbidden as authoritative Memory."
           },
-          "FACTORY_RUNTIME_CODE_REPOSITORY": {
-            "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
-            "status": "UNBOUND_BY_DEFAULT"
-          }
+          "noChatOnlyState": true
         },
-        "projectControlLayout": {
-          "root": "projects/{projectSlug}/",
-          "permittedPrefixes": [
-            "packages/",
-            "state/",
-            "decisions/",
-            "evidence/",
-            "artifacts/",
-            "work-items/",
+        "workRepository": {
+          "purpose": "Persist domain work artifacts according to the bound Factory.",
+          "forbiddenPrefixes": [
+            "safor-control/",
+            "projects/",
             "agents/",
-            "audit/"
+            "contracts/",
+            ".safor/"
           ],
-          "requiredFiles": [
-            "project.json",
-            "bindings.json",
-            "state/control.json",
-            "state/value-stream.json",
-            "state/execution.json"
-          ]
+          "forbiddenNames": [
+            "SAFOR-MASTER.json",
+            "SAFOR-MASTER-COMPLETE.json",
+            "memory.json",
+            "master-state.json"
+          ],
+          "rule": "Domain work providers and repositories are independent of the Memory provider."
+        },
+        "concurrency": {
+          "expectedMemoryRevisionBeforeWrite": true,
+          "sharedModeRequires": [
+            "memory.shared_access",
+            "memory.compare_and_swap OR memory.lock"
+          ],
+          "conflictOutcome": "RECONCILE_REQUIRED",
+          "blindOverwriteForbidden": true
         },
         "reconciliation": {
-          "readCurrentProviderRevisionBeforeWrite": true,
-          "compareExpectedRevision": true,
-          "requireProviderReadback": true,
+          "readCurrentRevisionBeforeWrite": true,
+          "requireAuthoritativeReadback": true,
           "unknownMutationOutcome": "RECONCILE_REQUIRED",
           "blockOnUnexpectedHistoryRewrite": true
         },
-        "note": "Domain work artifact classes are defined by the bound FACTORY package. This policy intentionally contains no software-specific source/test/config taxonomy.",
         "selfHealingSafety": {
           "allowed": "Only verified, bounded, non-destructive repairs within existing authorization.",
           "forbidden": [
             "force_push",
             "history_rewrite",
-            "repository_delete",
+            "memory_location_delete",
             "authoritative_state_delete_without_verified_restore",
             "gate_bypass",
             "review_bypass",
@@ -2349,30 +2513,16 @@
           ],
           "requireReadbackAfterRepair": true,
           "requireReconciliationBeforeRetryOnUnknownEffect": true
-        },
-        "controlRepositoryRequirement": {
-          "mandatory": true,
-          "exactName": "safor-memory",
-          "locationPattern": "{selectedOwner}/safor-memory",
-          "mustPreExist": true,
-          "autoCreate": false,
-          "visibility": "PRIVATE_RECOMMENDED_AND_POLICY_COMPLIANT",
-          "accessRequired": [
-            "READ",
-            "WRITE"
-          ],
-          "onMissingOrInsufficientAccess": "STOP",
-          "rule": "SAFOR may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
         }
       }
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.4.0/package-registry.json",
-      "sourceBlobSha": "f8ee0b75924af114a9b9ecf0825fe242503edd64",
+      "sourcePath": "v0.5.0/package-registry.json",
+      "sourceBlobSha": "5cdde2748aa2d611d1615f070e47c39cb842df23",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
@@ -2410,9 +2560,34 @@
             "kind": "PROVIDER_ADAPTER",
             "version": "0.1.0",
             "path": "providers/gitlab/0.1.0/package.json"
+          },
+          {
+            "packageId": "safor.provider.git-generic",
+            "kind": "PROVIDER_ADAPTER",
+            "version": "0.1.0",
+            "path": "providers/git-generic/0.1.0/package.json"
+          },
+          {
+            "packageId": "safor.provider.plastic-scm",
+            "kind": "PROVIDER_ADAPTER",
+            "version": "0.1.0",
+            "path": "providers/plastic-scm/0.1.0/package.json"
+          },
+          {
+            "packageId": "safor.memory.versioned-repository",
+            "kind": "MEMORY_PROVIDER_ADAPTER",
+            "version": "1.0.0",
+            "path": "memory-providers/versioned-repository/1.0.0/package.json"
+          },
+          {
+            "packageId": "safor.memory.host-filesystem",
+            "kind": "MEMORY_PROVIDER_ADAPTER",
+            "version": "0.1.0",
+            "path": "memory-providers/host-filesystem/0.1.0/package.json"
           }
         ],
-        "selectionRule": "The HUMAN must first select a creation profile. Its Factory and compatible Operating Model become mandatory project bindings; the Provider Adapter remains provider-derived. All bindings are validated, pinned and snapshotted.",
+        "memorySelectionRule": "The HUMAN explicitly selects or approves the SAFOR Memory provider after actual host capabilities are discovered. Provider eligibility is capability-based, not product-name-based.",
+        "workProviderSelectionRule": "Work/SCM providers are independent from SAFOR Memory. A project may use a different provider for work artifacts than for memory.",
         "creationProfiles": [
           {
             "creationType": "SOFTWARE_WEBSITE",
@@ -2431,18 +2606,18 @@
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "6b109d6604008f3cc325daf95d639a5b5f2103ca",
+      "sourcePath": "v0.5.0/providers/github/0.1.0/package.json",
+      "sourceBlobSha": "40db0272b2b2f10cbe8078255552998431e231fe",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
         "version": "0.1.0",
         "name": "GitHub Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitHub. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [],
@@ -2466,7 +2641,8 @@
             "provider.checks.read",
             "provider.issue.read",
             "provider.issue.write"
-          ]
+          ],
+          "memoryCapabilities": []
         },
         "dependencies": [],
         "model": {
@@ -2581,18 +2757,18 @@
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "b3a8948103a8bb49c19a21d6168f52b17847ce69",
+      "sourcePath": "v0.5.0/providers/gitlab/0.1.0/package.json",
+      "sourceBlobSha": "37eb65be4efb1c2e0c9153bdfae78e7a4d2e64ca",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
         "version": "0.1.0",
         "name": "GitLab Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [],
@@ -2616,7 +2792,8 @@
             "provider.checks.read",
             "provider.issue.read",
             "provider.issue.write"
-          ]
+          ],
+          "memoryCapabilities": []
         },
         "dependencies": [],
         "model": {
@@ -2728,20 +2905,258 @@
         }
       }
     },
-    "operatingModelSaas": {
-      "key": "operatingModelSaas",
-      "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "e4b7d65390df0ddbc9a6f780072c1ecd6ce9f572",
+    "providerGenericGit": {
+      "key": "providerGenericGit",
+      "sourcePath": "v0.5.0/providers/git-generic/0.1.0/package.json",
+      "sourceBlobSha": "68016c537105603f61ffac29501eaa39502a82a8",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
+        "packageId": "safor.provider.git-generic",
+        "packageKind": "PROVIDER_ADAPTER",
+        "version": "0.1.0",
+        "name": "Generic Git Provider Adapter",
+        "description": "Provider contract for self-hosted or generic Git installations independent of GitHub/GitLab product APIs.",
+        "compatibility": {
+          "kernel": ">=0.5.0 <0.6.0"
+        },
+        "exports": {
+          "capabilities": [],
+          "authorities": [],
+          "workItemTypes": [],
+          "artifactTypes": [],
+          "memoryCapabilities": [],
+          "providerCapabilities": [
+            "provider.identity.read",
+            "provider.repository.list",
+            "provider.repository.read",
+            "provider.repository.create",
+            "provider.artifact.read",
+            "provider.artifact.write",
+            "provider.history.read",
+            "provider.branch.read",
+            "provider.branch.write"
+          ]
+        },
+        "dependencies": [],
+        "model": {
+          "providerId": "git-generic",
+          "terminology": {
+            "repository": "repository",
+            "branch": "branch",
+            "changeRequest": null,
+            "issue": null,
+            "checks": null
+          },
+          "runtimeBinding": {
+            "strategy": "DISCOVER_ACTUAL_HOST_TOOLS",
+            "rule": "Standard Git semantics do not imply issue, pull-request or CI APIs. Only proven host capabilities are available."
+          },
+          "writeSafety": {
+            "readCurrentRevisionBeforeWrite": true,
+            "readbackAfterWrite": true,
+            "unknownOutcome": "RECONCILE_REQUIRED"
+          },
+          "optionalCapabilities": [
+            "provider.change_request.read",
+            "provider.change_request.write",
+            "provider.change_request.merge",
+            "provider.checks.read",
+            "provider.issue.read",
+            "provider.issue.write"
+          ]
+        }
+      }
+    },
+    "providerPlastic": {
+      "key": "providerPlastic",
+      "sourcePath": "v0.5.0/providers/plastic-scm/0.1.0/package.json",
+      "sourceBlobSha": "ad90268fe9c38c9a6e8e653317ba179ec1934b11",
+      "content": {
+        "format": "SAFOR_PACKAGE_MANIFEST",
+        "schemaVersion": "0.5.0",
+        "packageId": "safor.provider.plastic-scm",
+        "packageKind": "PROVIDER_ADAPTER",
+        "version": "0.1.0",
+        "name": "Plastic SCM / Unity Version Control Provider Adapter",
+        "description": "Conceptual provider contract for Plastic SCM / Unity Version Control installations. Actual execution requires host-exposed tools or an organization-specific connector.",
+        "compatibility": {
+          "kernel": ">=0.5.0 <0.6.0"
+        },
+        "exports": {
+          "capabilities": [],
+          "authorities": [],
+          "workItemTypes": [],
+          "artifactTypes": [],
+          "memoryCapabilities": [],
+          "providerCapabilities": [
+            "provider.identity.read",
+            "provider.repository.list",
+            "provider.repository.read",
+            "provider.repository.create",
+            "provider.artifact.read",
+            "provider.artifact.write",
+            "provider.history.read",
+            "provider.branch.read",
+            "provider.branch.write"
+          ]
+        },
+        "dependencies": [],
+        "model": {
+          "providerId": "plastic-scm",
+          "terminology": {
+            "repository": "repository",
+            "branch": "branch_or_stream",
+            "revision": "changeset",
+            "changeRequest": "merge_or_code_review_when_exposed"
+          },
+          "runtimeBinding": {
+            "strategy": "DISCOVER_ACTUAL_HOST_TOOLS",
+            "implementedByDefault": false,
+            "rule": "This manifest defines SAFOR semantics only. If the chat host exposes no Plastic/Unity Version Control tool, actions remain unavailable rather than simulated."
+          },
+          "writeSafety": {
+            "readCurrentRevisionBeforeWrite": true,
+            "readbackAfterWrite": true,
+            "unknownOutcome": "RECONCILE_REQUIRED"
+          },
+          "optionalCapabilities": [
+            "provider.change_request.read",
+            "provider.change_request.write",
+            "provider.change_request.merge",
+            "provider.checks.read",
+            "provider.issue.read",
+            "provider.issue.write"
+          ]
+        }
+      }
+    },
+    "memoryVersionedRepository": {
+      "key": "memoryVersionedRepository",
+      "sourcePath": "v0.5.0/memory-providers/versioned-repository/1.0.0/package.json",
+      "sourceBlobSha": "6275405cb4654f226af8177cb8a69232afceeba8",
+      "content": {
+        "format": "SAFOR_PACKAGE_MANIFEST",
+        "schemaVersion": "0.5.0",
+        "packageId": "safor.memory.versioned-repository",
+        "packageKind": "MEMORY_PROVIDER_ADAPTER",
+        "version": "1.0.0",
+        "name": "Versioned Repository Memory Adapter",
+        "description": "SAFOR Memory adapter for versioned artifact repositories such as GitHub, GitLab, generic Git or other SCM providers that expose equivalent artifact and revision capabilities.",
+        "compatibility": {
+          "kernel": ">=0.5.0 <0.6.0"
+        },
+        "exports": {
+          "capabilities": [],
+          "authorities": [],
+          "workItemTypes": [],
+          "artifactTypes": [],
+          "providerCapabilities": [],
+          "memoryCapabilities": [
+            "memory.identity.read",
+            "memory.object.list",
+            "memory.object.read",
+            "memory.object.write",
+            "memory.revision.read",
+            "memory.compare_and_swap",
+            "memory.history.read",
+            "memory.shared_access",
+            "memory.durability.prove",
+            "memory.resume.prove"
+          ]
+        },
+        "dependencies": [],
+        "model": {
+          "providerType": "VERSIONED_REPOSITORY",
+          "backingRequirement": {
+            "kind": "PROVIDER_ADAPTER",
+            "requiresProviderCapabilities": [
+              "provider.artifact.read",
+              "provider.artifact.write",
+              "provider.history.read"
+            ]
+          },
+          "locationPolicy": {
+            "recommendedName": "safor-memory",
+            "nameIsProtocolRequirement": false,
+            "existingOrCreated": "HUMAN_DECIDES",
+            "creationRequiresExplicitApproval": true
+          },
+          "mapping": {
+            "memory.object.read": "provider.artifact.read",
+            "memory.object.write": "provider.artifact.write",
+            "memory.revision.read": "provider.history.read",
+            "memory.compare_and_swap": "expected revision / ref guarded write when supported",
+            "memory.history.read": "provider.history.read"
+          },
+          "sharedMode": "ELIGIBLE_WHEN_BACKING_PROVIDER_PROVES_SHARED_ACCESS_AND_CONCURRENCY",
+          "verification": [
+            "read known object or root descriptor",
+            "perform authorized test/write or capability proof",
+            "read back exact effect",
+            "verify revision changes",
+            "prove future session can resolve stable location"
+          ]
+        }
+      }
+    },
+    "memoryHostFilesystem": {
+      "key": "memoryHostFilesystem",
+      "sourcePath": "v0.5.0/memory-providers/host-filesystem/0.1.0/package.json",
+      "sourceBlobSha": "786e04d9426eb2d62f9c9fd6400d4ac9472326a2",
+      "content": {
+        "format": "SAFOR_PACKAGE_MANIFEST",
+        "schemaVersion": "0.5.0",
+        "packageId": "safor.memory.host-filesystem",
+        "packageKind": "MEMORY_PROVIDER_ADAPTER",
+        "version": "0.1.0",
+        "name": "Host Filesystem Memory Adapter",
+        "description": "SAFOR Memory adapter for a host-provided persistent filesystem or mounted volume.",
+        "compatibility": {
+          "kernel": ">=0.5.0 <0.6.0"
+        },
+        "exports": {
+          "capabilities": [],
+          "authorities": [],
+          "workItemTypes": [],
+          "artifactTypes": [],
+          "providerCapabilities": [],
+          "memoryCapabilities": [
+            "memory.identity.read",
+            "memory.object.list",
+            "memory.object.read",
+            "memory.object.write",
+            "memory.revision.read",
+            "memory.durability.prove",
+            "memory.resume.prove"
+          ]
+        },
+        "dependencies": [],
+        "model": {
+          "providerType": "HOST_FILESYSTEM",
+          "eligibilityRule": "The host must explicitly expose a persistent path or mounted storage and SAFOR must prove it can reopen the same stable location after session boundaries. Ephemeral scratch space is ineligible.",
+          "defaultCollaborationMode": "PERSONAL",
+          "sharedTeamEligibility": "Only when the host additionally proves memory.shared_access and either memory.compare_and_swap or memory.lock.",
+          "revisionStrategy": "Use a durable SAFOR revision metadata record and atomic replacement/locking semantics exposed by the host.",
+          "creationRequiresExplicitHumanApproval": true,
+          "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once."
+        }
+      }
+    },
+    "operatingModelSaas": {
+      "key": "operatingModelSaas",
+      "sourcePath": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+      "sourceBlobSha": "c4236473c2e7085134d2fc8fc4450d94348d36ba",
+      "content": {
+        "format": "SAFOR_PACKAGE_MANIFEST",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
         "version": "1.0.0",
         "name": "SaaS Engineering Reference Operating Model",
         "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -2767,7 +3182,8 @@
           ],
           "workItemTypes": [],
           "artifactTypes": [],
-          "providerCapabilities": []
+          "providerCapabilities": [],
+          "memoryCapabilities": []
         },
         "dependencies": [],
         "model": {
@@ -3047,18 +3463,18 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "9fd198d8520069380aad54357bf42c5795bc1f4a",
+      "sourcePath": "v0.5.0/packages/operating-models/book-authoring/0.1.0/package.json",
+      "sourceBlobSha": "b735fa8530a8005ded10d7a6bc0bffeb126f5b85",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
         "version": "0.1.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3081,7 +3497,8 @@
           ],
           "workItemTypes": [],
           "artifactTypes": [],
-          "providerCapabilities": []
+          "providerCapabilities": [],
+          "memoryCapabilities": []
         },
         "dependencies": [],
         "model": {
@@ -3268,18 +3685,18 @@
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "f09e3aa819930ae0855da544f92973694198a689",
+      "sourcePath": "v0.5.0/packages/factories/software-delivery/1.0.0/package.json",
+      "sourceBlobSha": "cf756d86e6ab2da26747e5a5f47fae0f717b53e4",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
         "version": "1.0.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3324,7 +3741,8 @@
             "ACTIVATION",
             "OUTCOME"
           ],
-          "providerCapabilities": []
+          "providerCapabilities": [],
+          "memoryCapabilities": []
         },
         "dependencies": [],
         "model": {
@@ -3607,24 +4025,45 @@
               "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
               "DELIVERY_AS_OUTCOME_EVIDENCE"
             ]
+          },
+          "outputProvenance": {
+            "required": true,
+            "schemaRef": "schemas/output-record.schema.json",
+            "rule": "Every persisted factory output must have a SAFOR output provenance record. LLM/provider/model/version values may only be recorded when actually exposed by the host."
+          },
+          "workspaceRequirements": {
+            "required": true,
+            "minimumProviderCapabilities": [
+              "provider.artifact.read",
+              "provider.artifact.write",
+              "provider.history.read"
+            ],
+            "preferredCapabilities": [
+              "provider.branch.read",
+              "provider.branch.write",
+              "provider.change_request.read",
+              "provider.change_request.write",
+              "provider.checks.read"
+            ],
+            "rule": "Software/Website work requires a versioned work provider. Review, issue and CI capabilities are optional unless a work item explicitly requires them."
           }
         }
       }
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "201d1a91d80527d500e4ee43faa6d75e35de1ec3",
+      "sourcePath": "v0.5.0/packages/factories/book-production/0.1.0/package.json",
+      "sourceBlobSha": "1c30723406d9b5ffc0d9cefeca5ce7f6efb73559",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
         "version": "0.1.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3669,7 +4108,8 @@
             "PUBLICATION_PACKAGE",
             "READER_OUTCOME"
           ],
-          "providerCapabilities": []
+          "providerCapabilities": [],
+          "memoryCapabilities": []
         },
         "dependencies": [],
         "model": {
@@ -3963,18 +4403,34 @@
               "UNVERIFIED_SOURCE_LIST_AS_RESEARCH_EVIDENCE",
               "PUBLICATION_AS_READER_OUTCOME_EVIDENCE"
             ]
+          },
+          "outputProvenance": {
+            "required": true,
+            "schemaRef": "schemas/output-record.schema.json",
+            "rule": "Every persisted factory output must have a SAFOR output provenance record. LLM/provider/model/version values may only be recorded when actually exposed by the host."
+          },
+          "workspaceRequirements": {
+            "required": false,
+            "minimumProviderCapabilities": [],
+            "optionalExternalProviderCapabilities": [
+              "provider.artifact.read",
+              "provider.artifact.write",
+              "provider.history.read"
+            ],
+            "memoryOnlyAllowed": true,
+            "rule": "Book work may remain entirely inside SAFOR Memory when the HUMAN chooses that mode, or use an external versioned workspace when available."
           }
         }
       }
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "bd05d11b8020414759ab68b2bfc9caae972f5ceb",
+      "sourcePath": "v0.5.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "7602f752237972e534c9ca59eff23fec5e85a336",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.4.0",
-        "title": "SAFOR Package Manifest 0.4.0",
+        "$id": "urn:safor:package-manifest:0.5.0",
+        "title": "SAFOR Package Manifest 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -3995,17 +4451,18 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "packageId": {
             "type": "string",
-            "pattern": "^saf\\.(om|factory|provider)\\.[a-z0-9][a-z0-9.-]*$"
+            "pattern": "^safor\\.(om|factory|provider|memory)\\.[a-z0-9][a-z0-9.-]*$"
           },
           "packageKind": {
             "enum": [
               "OPERATING_MODEL",
               "FACTORY",
-              "PROVIDER_ADAPTER"
+              "PROVIDER_ADAPTER",
+              "MEMORY_PROVIDER_ADAPTER"
             ]
           },
           "version": {
@@ -4041,7 +4498,8 @@
               "authorities",
               "workItemTypes",
               "artifactTypes",
-              "providerCapabilities"
+              "providerCapabilities",
+              "memoryCapabilities"
             ],
             "properties": {
               "capabilities": {
@@ -4073,6 +4531,13 @@
                 "uniqueItems": true
               },
               "providerCapabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "memoryCapabilities": {
                 "type": "array",
                 "items": {
                   "type": "string"
@@ -4123,12 +4588,12 @@
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.4.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "d036dd138629694036ca9f49d6ccfc240a18b30c",
+      "sourcePath": "v0.5.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "d424985a00429e6b40cdfd18fba614441fd1fd01",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.4.0",
-        "title": "SAFOR Control State 0.4.0",
+        "$id": "urn:safor:control-state:0.5.0",
+        "title": "SAFOR Control State 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4151,7 +4616,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "kernelRef": {
             "type": "object",
@@ -4362,12 +4827,12 @@
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "a273aa7f6a4a79b197f5d398383321d012e7c019",
+      "sourcePath": "v0.5.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "fba75e68a96fbac2d4694885976c452bed2c7f11",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.4.0",
-        "title": "SAFOR Value Stream State 0.4.0",
+        "$id": "urn:safor:value-stream-state:0.5.0",
+        "title": "SAFOR Value Stream State 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4387,7 +4852,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "projectId": {
             "type": "string",
@@ -4535,12 +5000,12 @@
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "b20e6170c9dd66d24a12c27f46545994989aa384",
+      "sourcePath": "v0.5.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "bfed9529dcc1538131e761704e71d2fc7b970a0f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:execution-state:0.4.0",
-        "title": "SAFOR Execution State 0.4.0",
+        "$id": "urn:safor:execution-state:0.5.0",
+        "title": "SAFOR Execution State 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4549,8 +5014,10 @@
           "projectId",
           "revision",
           "actorAssignments",
+          "sessions",
           "contracts",
           "runs",
+          "outputRefs",
           "reconciliation",
           "selfHealing"
         ],
@@ -4559,11 +5026,10 @@
             "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "projectId": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           },
           "revision": {
             "type": "integer",
@@ -4573,6 +5039,12 @@
             "type": "array",
             "items": {
               "$ref": "#/$defs/assignment"
+            }
+          },
+          "sessions": {
+            "type": "array",
+            "items": {
+              "$ref": "session-record.schema.json"
             }
           },
           "contracts": {
@@ -4585,6 +5057,12 @@
             "type": "array",
             "items": {
               "$ref": "#/$defs/run"
+            }
+          },
+          "outputRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
             }
           },
           "reconciliation": {
@@ -4686,6 +5164,7 @@
               "runId",
               "actionId",
               "operationId",
+              "sessionId",
               "status",
               "inputRefs",
               "outputRefs",
@@ -4702,6 +5181,9 @@
                 "type": "string"
               },
               "operationId": {
+                "type": "string"
+              },
+              "sessionId": {
                 "type": "string"
               },
               "status": {
@@ -4787,12 +5269,12 @@
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "v0.4.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "cf36ff77d844511ecab1924c7daed44ce3ff48f1",
+      "sourcePath": "v0.5.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "2838e5b1185cc5c650a8dd39330fd8f66aa52216",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:work-item:0.4.0",
-        "title": "SAFOR Domain-Agnostic Work Item 0.4.0",
+        "$id": "urn:safor:work-item:0.5.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5004,12 +5486,12 @@
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "v0.4.0/schemas/project.schema.json",
-      "sourceBlobSha": "3e08045c943922b61afdcb632f3e93246264df2e",
+      "sourcePath": "v0.5.0/schemas/project.schema.json",
+      "sourceBlobSha": "112636fdb83b4c1285ea10ff844732b95bce1a3e",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:project:0.4.0",
-        "title": "SAFOR Project Descriptor 0.4.0",
+        "$id": "urn:safor:project:0.5.0",
+        "title": "SAFOR Project Descriptor 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5018,19 +5500,18 @@
           "projectId",
           "projectSlug",
           "title",
-          "owner",
           "creationType",
           "goal",
           "createdAt",
-          "controlRepository",
-          "workRepositories"
+          "memoryBindingRef",
+          "workspaces"
         ],
         "properties": {
           "format": {
             "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "projectId": {
             "type": "string",
@@ -5044,6 +5525,12 @@
             "type": "string",
             "minLength": 1
           },
+          "creationType": {
+            "enum": [
+              "SOFTWARE_WEBSITE",
+              "BOOK"
+            ]
+          },
           "goal": {
             "type": "string",
             "minLength": 1
@@ -5052,78 +5539,40 @@
             "type": "string",
             "format": "date-time"
           },
-          "controlRepository": {
-            "$ref": "#/$defs/repositoryRef"
+          "memoryBindingRef": {
+            "type": "string",
+            "minLength": 1
           },
-          "workRepositories": {
+          "workspaces": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/repositoryRef"
+              "$ref": "#/$defs/workspaceRef"
             }
-          },
-          "owner": {
+          }
+        },
+        "$defs": {
+          "workspaceRef": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "provider",
-              "namespace",
-              "stableId"
+              "providerPackageId",
+              "stableId",
+              "purpose"
             ],
             "properties": {
-              "provider": {
+              "providerPackageId": {
                 "type": "string",
-                "minLength": 1
-              },
-              "namespace": {
-                "type": "string",
-                "minLength": 1
+                "pattern": "^safor\\.provider\\."
               },
               "stableId": {
                 "type": "string",
                 "minLength": 1
               },
-              "displayName": {
+              "branchOrStream": {
                 "type": [
                   "string",
                   "null"
                 ]
-              }
-            }
-          },
-          "creationType": {
-            "enum": [
-              "SOFTWARE_WEBSITE",
-              "BOOK"
-            ]
-          }
-        },
-        "$defs": {
-          "repositoryRef": {
-            "type": "object",
-            "additionalProperties": false,
-            "required": [
-              "provider",
-              "stableId",
-              "repository",
-              "branch",
-              "purpose"
-            ],
-            "properties": {
-              "provider": {
-                "type": "string",
-                "minLength": 1
-              },
-              "stableId": {
-                "type": "string",
-                "minLength": 1
-              },
-              "repository": {
-                "type": "string",
-                "minLength": 1
-              },
-              "branch": {
-                "type": "string",
-                "minLength": 1
               },
               "purpose": {
                 "type": "string",
@@ -5136,12 +5585,12 @@
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.4.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4317e4cb8efcd6780c32301b3b6bbb5ba4f6966b",
+      "sourcePath": "v0.5.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "06f63df99b7e8497c1918a444daa7047e6ee33e4",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:bindings:0.4.0",
-        "title": "SAFOR Project Bindings 0.4.0",
+        "$id": "urn:safor:bindings:0.5.0",
+        "title": "SAFOR Project Bindings 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5151,7 +5600,8 @@
           "kernel",
           "operatingModel",
           "factory",
-          "providerAdapters",
+          "memoryProvider",
+          "workProviderAdapters",
           "actorAssignments"
         ],
         "properties": {
@@ -5159,7 +5609,7 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "revision": {
             "type": "integer",
@@ -5174,9 +5624,11 @@
           "factory": {
             "$ref": "#/$defs/binding"
           },
-          "providerAdapters": {
+          "memoryProvider": {
+            "$ref": "#/$defs/binding"
+          },
+          "workProviderAdapters": {
             "type": "array",
-            "minItems": 1,
             "items": {
               "$ref": "#/$defs/binding"
             }
@@ -5184,28 +5636,7 @@
           "actorAssignments": {
             "type": "array",
             "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "roleId",
-                "actorId",
-                "actorKind"
-              ],
-              "properties": {
-                "roleId": {
-                  "type": "string"
-                },
-                "actorId": {
-                  "type": "string"
-                },
-                "actorKind": {
-                  "enum": [
-                    "HUMAN",
-                    "AGENT",
-                    "SERVICE"
-                  ]
-                }
-              }
+              "$ref": "#/$defs/actor"
             }
           }
         },
@@ -5233,18 +5664,518 @@
                 "type": "string"
               }
             }
+          },
+          "actor": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "roleId",
+              "actorId",
+              "actorKind"
+            ],
+            "properties": {
+              "roleId": {
+                "type": "string"
+              },
+              "actorId": {
+                "type": "string"
+              },
+              "actorKind": {
+                "enum": [
+                  "HUMAN",
+                  "AGENT",
+                  "SERVICE"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemaMemoryBinding": {
+      "key": "schemaMemoryBinding",
+      "sourcePath": "v0.5.0/schemas/memory-binding.schema.json",
+      "sourceBlobSha": "1c9611d68886d22e152bb7519226a7fa9ef8f2c4",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:memory-binding:0.5.0",
+        "title": "SAFOR Memory Binding 0.5.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "memoryId",
+          "mode",
+          "owner",
+          "provider",
+          "location",
+          "verifiedCapabilities",
+          "concurrency",
+          "lastVerifiedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_MEMORY_BINDING"
+          },
+          "schemaVersion": {
+            "const": "0.5.0"
+          },
+          "memoryId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mode": {
+            "enum": [
+              "PERSONAL",
+              "SHARED_TEAM"
+            ]
+          },
+          "owner": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ownerKind",
+              "ownerRef"
+            ],
+            "properties": {
+              "ownerKind": {
+                "enum": [
+                  "HUMAN",
+                  "ORGANIZATION"
+                ]
+              },
+              "ownerRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "displayName": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "provider": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "packageId",
+              "version",
+              "providerType"
+            ],
+            "properties": {
+              "packageId": {
+                "type": "string",
+                "pattern": "^safor\\.memory\\."
+              },
+              "version": {
+                "type": "string"
+              },
+              "providerType": {
+                "enum": [
+                  "VERSIONED_REPOSITORY",
+                  "HOST_FILESYSTEM",
+                  "CUSTOM"
+                ]
+              }
+            }
+          },
+          "location": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": [
+              "stableRef"
+            ],
+            "properties": {
+              "stableRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "displayRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "verifiedCapabilities": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
+          "concurrency": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "strategy",
+              "revisionRef"
+            ],
+            "properties": {
+              "strategy": {
+                "enum": [
+                  "COMPARE_AND_SWAP",
+                  "LOCK",
+                  "SINGLE_WRITER"
+                ]
+              },
+              "revisionRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lockRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "lastVerifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      }
+    },
+    "schemaSessionRecord": {
+      "key": "schemaSessionRecord",
+      "sourcePath": "v0.5.0/schemas/session-record.schema.json",
+      "sourceBlobSha": "728643a7f9beae36da36c508ffebec389a27a78e",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:session-record:0.5.0",
+        "title": "SAFOR Session Record 0.5.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "sessionId",
+          "projectId",
+          "actorId",
+          "actorKind",
+          "host",
+          "llm",
+          "baseMemoryRevision",
+          "startedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_SESSION_RECORD"
+          },
+          "schemaVersion": {
+            "const": "0.5.0"
+          },
+          "sessionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actorId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actorKind": {
+            "enum": [
+              "HUMAN",
+              "AGENT",
+              "SERVICE"
+            ]
+          },
+          "host": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "product"
+            ],
+            "properties": {
+              "product": {
+                "type": "string",
+                "minLength": 1
+              },
+              "instanceRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "llm": {
+            "$ref": "#/$defs/llm"
+          },
+          "baseMemoryRevision": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "llm": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "used",
+              "observability"
+            ],
+            "properties": {
+              "used": {
+                "type": "boolean"
+              },
+              "observability": {
+                "enum": [
+                  "OBSERVED",
+                  "PARTIALLY_OBSERVED",
+                  "NOT_EXPOSED"
+                ]
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "modelVersion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemaOutputRecord": {
+      "key": "schemaOutputRecord",
+      "sourcePath": "v0.5.0/schemas/output-record.schema.json",
+      "sourceBlobSha": "97dbbe1e1cd5692e5de742c91ee491bc1babb40a",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:output-record:0.5.0",
+        "title": "SAFOR Output Provenance Record 0.5.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "outputId",
+          "projectId",
+          "artifactRef",
+          "createdAt",
+          "producer",
+          "llm",
+          "safor",
+          "inputRefs",
+          "evidenceRefs",
+          "memoryRevision"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_OUTPUT_RECORD"
+          },
+          "schemaVersion": {
+            "const": "0.5.0"
+          },
+          "outputId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workItemId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "artifactRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "producer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "actorId",
+              "actorKind",
+              "sessionId"
+            ],
+            "properties": {
+              "actorId": {
+                "type": "string"
+              },
+              "actorKind": {
+                "enum": [
+                  "HUMAN",
+                  "AGENT",
+                  "SERVICE"
+                ]
+              },
+              "roleId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "sessionId": {
+                "type": "string"
+              }
+            }
+          },
+          "llm": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "used",
+              "observability",
+              "provider",
+              "model",
+              "modelVersion"
+            ],
+            "properties": {
+              "used": {
+                "type": "boolean"
+              },
+              "observability": {
+                "enum": [
+                  "OBSERVED",
+                  "PARTIALLY_OBSERVED",
+                  "NOT_EXPOSED"
+                ]
+              },
+              "provider": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "model": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "modelVersion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "safor": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "protocolVersion",
+              "kernelVersion",
+              "factoryPackageId",
+              "factoryVersion",
+              "operatingModelPackageId",
+              "operatingModelVersion"
+            ],
+            "properties": {
+              "protocolVersion": {
+                "const": "0.5.0"
+              },
+              "kernelVersion": {
+                "const": "0.5.0"
+              },
+              "factoryPackageId": {
+                "type": "string"
+              },
+              "factoryVersion": {
+                "type": "string"
+              },
+              "operatingModelPackageId": {
+                "type": "string"
+              },
+              "operatingModelVersion": {
+                "type": "string"
+              }
+            }
+          },
+          "inputRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "memoryRevision": {
+            "type": [
+              "string",
+              "integer"
+            ]
+          },
+          "contentIntegrity": {
+            "type": [
+              "object",
+              "null"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "algorithm": {
+                "type": "string"
+              },
+              "digest": {
+                "type": "string"
+              }
+            }
           }
         }
       }
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "27a47aa2192fb208d04d5a846f070e3534b9b434",
+      "sourcePath": "v0.5.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "c202dc2d3e4b5b56cbabb51f4def1e37dd8cdfcb",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:decision-record:0.4.0",
-        "title": "SAFOR Decision Record 0.4.0",
+        "$id": "urn:safor:decision-record:0.5.0",
+        "title": "SAFOR Decision Record 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5254,8 +6185,10 @@
           "decisionType",
           "authorityId",
           "actorId",
+          "sessionId",
           "scope",
           "revision",
+          "memoryRevision",
           "decision",
           "source",
           "createdAt",
@@ -5266,7 +6199,7 @@
             "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "decisionId": {
             "type": "string"
@@ -5280,12 +6213,21 @@
           "actorId": {
             "type": "string"
           },
+          "sessionId": {
+            "type": "string"
+          },
           "scope": {
             "type": "object"
           },
           "revision": {
             "type": "integer",
             "minimum": 1
+          },
+          "memoryRevision": {
+            "type": [
+              "string",
+              "integer"
+            ]
           },
           "decision": {
             "type": "string"
@@ -5312,12 +6254,12 @@
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "aa7882e9ad1a72c5e89cf7226586e1b912e64ddd",
+      "sourcePath": "v0.5.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "4e3aab58cbdd6b39f42d521e0e509a419b7dabb0",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:evidence-record:0.4.0",
-        "title": "SAFOR Evidence Record 0.4.0",
+        "$id": "urn:safor:evidence-record:0.5.0",
+        "title": "SAFOR Evidence Record 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5330,14 +6272,15 @@
           "observedAt",
           "reference",
           "integrity",
-          "claims"
+          "claims",
+          "provenanceRef"
         ],
         "properties": {
           "format": {
             "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "evidenceId": {
             "type": "string"
@@ -5385,18 +6328,22 @@
             "items": {
               "type": "string"
             }
+          },
+          "provenanceRef": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "1c1d070d6956fca7f5e4256515e41984e517f14a",
+      "sourcePath": "v0.5.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "9ac24cadf990eb0548472a5ea8a69fb3d28f0fdb",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.4.0",
-        "title": "SAFOR Interaction Menu 0.4.0",
+        "$id": "urn:safor:interaction-menu:0.5.0",
+        "title": "SAFOR Interaction Menu 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5412,7 +6359,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "menuId": {
             "type": "string",
@@ -5569,12 +6516,12 @@
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "6150f6386fe4b98a31a9f5efeb27a061c3a61821",
+      "sourcePath": "v0.5.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "c6a6ae84de4380dee160de946e3f07fb6d759c29",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.4.0",
-        "title": "SAFOR Self-Healing Record 0.4.0",
+        "$id": "urn:safor:self-healing-record:0.5.0",
+        "title": "SAFOR Self-Healing Record 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5582,10 +6529,13 @@
           "failureClass",
           "failureFingerprint",
           "subjectRef",
+          "sessionId",
           "status",
           "proposedAction",
           "authorityBasis",
           "attemptNumber",
+          "preMemoryRevision",
+          "postMemoryRevision",
           "preStateRefs",
           "successEvidenceRequirements",
           "evidenceRefs",
@@ -5607,6 +6557,10 @@
             "minLength": 1
           },
           "subjectRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sessionId": {
             "type": "string",
             "minLength": 1
           },
@@ -5635,6 +6589,20 @@
           "attemptNumber": {
             "type": "integer",
             "minimum": 1
+          },
+          "preMemoryRevision": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
+          },
+          "postMemoryRevision": {
+            "type": [
+              "string",
+              "integer",
+              "null"
+            ]
           },
           "preStateRefs": {
             "type": "array",
@@ -5684,12 +6652,12 @@
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "68f1251204d3ad1a67c61f3b8a4327b76a3e19f6",
+      "sourcePath": "v0.5.0/conformance.json",
+      "sourceBlobSha": "79f2abac8b0f1cc4d43225d5b9eb4d6d7e93bb24",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.4.0",
-        "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
+        "schemaVersion": "0.5.0",
+        "purpose": "Declarative architecture checks for SAFOR v0.5.0 provider-neutral Memory, multi-session collaboration and output provenance.",
         "assertions": [
           {
             "id": "CF-001",
@@ -5813,47 +6781,47 @@
           },
           {
             "id": "CF-025",
-            "statement": "Loading SAFOR-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
+            "statement": "Loading SAFOR-MASTER starts guided initialization by discovering eligible Memory providers, not by hard-coding GitHub/GitLab.",
             "expected": true
           },
           {
             "id": "CF-026",
-            "statement": "Owner selection is blocked until mandatory baseline provider read/write capabilities are proven.",
+            "statement": "Creation type and project work are blocked until a Memory provider proves durable read/write/revision/resume capabilities.",
             "expected": true
           },
           {
             "id": "CF-027",
-            "statement": "Missing provider rights produce a HUMAN blocker that explicitly requires read/write access without requesting passwords or PATs in chat.",
+            "statement": "Missing GitHub/GitLab alone is not a blocker; absence of any eligible durable Memory provider causes STOP without requesting credentials in chat.",
             "expected": true
           },
           {
             "id": "CF-028",
-            "statement": "The HUMAN explicitly selects an owner namespace and owner-scoped access is re-verified.",
+            "statement": "The HUMAN explicitly selects or approves the Memory provider and physical owner (HUMAN or ORGANIZATION).",
             "expected": true
           },
           {
             "id": "CF-029",
-            "statement": "The HUMAN explicitly selects EXISTING or NEW project mode.",
+            "statement": "The HUMAN explicitly selects PERSONAL or SHARED_TEAM collaboration mode.",
             "expected": true
           },
           {
             "id": "CF-030",
-            "statement": "EXISTING mode defaults to eligible repositories active within the previous 7 days, sorted by normalized lastActivityAt descending.",
+            "statement": "SHARED_TEAM requires shared access plus compare-and-swap or lock style concurrency.",
             "expected": true
           },
           {
             "id": "CF-031",
-            "statement": "The existing-project repository list is presented as a selectable menu with an option to show all repositories.",
+            "statement": "Memory provider selection is independent from work/SCM provider selection.",
             "expected": true
           },
           {
             "id": "CF-032",
-            "statement": "NEW mode requires provider.repository.create and does not create a repository before HUMAN confirmation and SETUP_APPROVAL.",
+            "statement": "Creation of a new Memory location requires explicit HUMAN approval and actual create capability.",
             "expected": true
           },
           {
             "id": "CF-033",
-            "statement": "Selected owner identity is persisted in the project descriptor.",
+            "statement": "Project state persists a Memory binding with owner, provider, stable location, verified capabilities and concurrency strategy.",
             "expected": true
           },
           {
@@ -5918,17 +6886,17 @@
           },
           {
             "id": "CF-046",
-            "statement": "`{selectedOwner}/safor-memory` must pre-exist before project selection and is the mandatory control repository.",
+            "statement": "SAFOR Memory is provider-neutral and may be backed by a versioned repository, durable host filesystem or compliant custom provider.",
             "expected": true
           },
           {
             "id": "CF-047",
-            "statement": "safor-memory read and write access must be proven; missing repository or insufficient access causes STOP.",
+            "statement": "A one-time successful write is not sufficient; Memory durability and resume semantics must be proven.",
             "expected": true
           },
           {
             "id": "CF-048",
-            "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
+            "statement": "No authoritative project state required later may exist only in chat context.",
             "expected": true
           },
           {
@@ -5958,19 +6926,69 @@
           },
           {
             "id": "CF-054",
-            "statement": "E04/E05 collect and evaluate domain evidence only against the same bound Factory evidenceContract; cross-Factory substitution is forbidden.",
+            "statement": "E04/E05 persist output provenance and evaluate domain evidence only against the same bound Factory evidenceContract.",
             "expected": true
           },
           {
             "id": "CF-055",
-            "statement": "Project descriptor persists the HUMAN-selected creationType and it must remain consistent with package bindings.",
+            "statement": "Project descriptor persists creationType and Memory binding reference and remains consistent with pinned package bindings.",
+            "expected": true
+          },
+          {
+            "id": "CF-056",
+            "statement": "Every persisted Factory output has a SAFOR output provenance record containing producer/session identity, Memory revision and pinned SAFOR/Factory/Operating-Model versions.",
+            "expected": true
+          },
+          {
+            "id": "CF-057",
+            "statement": "LLM provider/model/version provenance records only host-observed values; unavailable values remain null with NOT_EXPOSED rather than being guessed.",
+            "expected": true
+          },
+          {
+            "id": "CF-058",
+            "statement": "A fresh session can rehydrate project state from SAFOR Memory and pinned packages without prior chat history.",
+            "expected": true
+          },
+          {
+            "id": "CF-059",
+            "statement": "Generic Git and Plastic SCM / Unity Version Control are modeled as optional capability-based work-provider adapters; tool availability is never inferred from the manifest.",
+            "expected": true
+          },
+          {
+            "id": "CF-060",
+            "statement": "Host-filesystem Memory is eligible only when the host proves persistence and resume semantics; ephemeral scratch storage is rejected.",
+            "expected": true
+          },
+          {
+            "id": "CF-061",
+            "statement": "Software/Website requires a versioned work provider while Book may use Memory-only mode when the HUMAN chooses it.",
+            "expected": true
+          },
+          {
+            "id": "CF-062",
+            "statement": "Every active HUMAN/agent/service session is registered with session identity, host/LLM observability and base Memory revision.",
+            "expected": true
+          },
+          {
+            "id": "CF-063",
+            "statement": "Shared Memory revision conflicts enter RECONCILE_REQUIRED and cannot overwrite unseen state.",
+            "expected": true
+          },
+          {
+            "id": "CF-064",
+            "statement": "The package system supports MEMORY_PROVIDER_ADAPTER as an independent package kind and requires one bound Memory provider for every project.",
+            "expected": true
+          },
+          {
+            "id": "CF-065",
+            "statement": "Memory or work provider product names never count as proof of capabilities; actual host/provider evidence is required.",
             "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "saf/master-v0.4.0",
-          "result": "PASS",
-          "note": "Provider readback verified mandatory pre-existing writable safor-memory, hard STOP on missing access, mandatory Software/Website vs Book selection, deterministic Factory/Operating Model mapping, and Factory-bound Discovery, Planning and Evidence contracts."
+          "branch": "safor/memory-provider-v0.5.0",
+          "result": "PENDING",
+          "note": "v0.5.0 provider-neutral Memory conformance defined; automated and end-to-end verification pending."
         }
       }
     }
