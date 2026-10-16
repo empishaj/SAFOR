@@ -1,0 +1,138 @@
+{
+  "format": "SAFOR_MEMORY_MODEL",
+  "schemaVersion": "0.5.0",
+  "id": "SAFOR-MEMORY-MODEL",
+  "purpose": "Define SAFOR Memory as provider-neutral durable project state that can be shared across humans, sessions and LLMs without depending on a specific repository product.",
+  "principles": {
+    "providerNeutral": true,
+    "humanOrOrganizationOwned": true,
+    "llmNeverOwnsMemory": true,
+    "durableBeforeUse": true,
+    "noAuthoritativeStateOnlyInChat": true,
+    "resumableAcrossSessions": true,
+    "multiWriterSafeWhenShared": true,
+    "evidenceBeforeBelief": true,
+    "explicitHumanProviderSelection": true,
+    "noProviderNameImpliesCapability": true
+  },
+  "capabilityVocabulary": [
+    "memory.identity.read",
+    "memory.object.list",
+    "memory.object.read",
+    "memory.object.write",
+    "memory.revision.read",
+    "memory.compare_and_swap",
+    "memory.lock",
+    "memory.history.read",
+    "memory.shared_access",
+    "memory.durability.prove",
+    "memory.resume.prove"
+  ],
+  "mandatoryCapabilities": [
+    "memory.object.read",
+    "memory.object.write",
+    "memory.revision.read",
+    "memory.durability.prove",
+    "memory.resume.prove"
+  ],
+  "sharedTeamAdditionalRequirement": {
+    "anyOf": [
+      [
+        "memory.compare_and_swap"
+      ],
+      [
+        "memory.lock"
+      ]
+    ],
+    "alsoRequire": [
+      "memory.shared_access"
+    ],
+    "rule": "SHARED_TEAM mode is forbidden unless shared access and a proven multi-writer concurrency mechanism exist."
+  },
+  "providerTypes": [
+    {
+      "id": "VERSIONED_REPOSITORY",
+      "description": "Any provider-backed versioned artifact repository whose adapter proves the mandatory memory capabilities."
+    },
+    {
+      "id": "HOST_FILESYSTEM",
+      "description": "A host-provided durable filesystem location. Eligibility requires proof that data survives chat/session restart and can be reopened."
+    },
+    {
+      "id": "CUSTOM",
+      "description": "A future or organization-specific memory provider implementing the SAFOR Memory Provider Adapter contract."
+    }
+  ],
+  "selectionPolicy": {
+    "humanMustChooseOrApprove": true,
+    "discoverActualHostCapabilitiesFirst": true,
+    "noSilentDefault": true,
+    "createAllowedOnlyAfterExplicitHumanApproval": true,
+    "noCredentialsInChat": true,
+    "failureOutcome": "STOP",
+    "failureRule": "Lack of GitHub/GitLab is not a blocker. Lack of any provider that can prove durable read/write/resume semantics is a blocker."
+  },
+  "ownership": {
+    "logicalOwner": "SAFOR_PROJECT",
+    "physicalOwner": "HUMAN_OR_ORGANIZATION",
+    "rule": "The model may access SAFOR Memory only through verified permissions; it never owns or becomes the authoritative holder of project state."
+  },
+  "authoritativeStatePolicy": {
+    "mustPersistBeforeDependentTransition": [
+      "HUMAN_DECISION",
+      "MANDATE",
+      "ACTOR_ASSIGNMENT",
+      "WORK_RESULT",
+      "OUTPUT_PROVENANCE",
+      "EVIDENCE",
+      "STATE_TRANSITION",
+      "REPAIR_RECORD",
+      "PACKAGE_BINDING"
+    ],
+    "chatContextStatus": "NON_AUTHORITATIVE_CACHE",
+    "writeFailure": "STOP_OR_WAITING_HUMAN",
+    "rule": "No later action may rely on a project fact that exists only in chat context."
+  },
+  "concurrency": {
+    "everyWriteUsesExpectedRevision": true,
+    "conflictOutcome": "RECONCILE_REQUIRED",
+    "sharedWriterIdentityRequired": true,
+    "immutableAuditRequired": true,
+    "rule": "Concurrent sessions reload authoritative memory after conflicts and never overwrite unseen state."
+  },
+  "resume": {
+    "sessionStart": "LOAD_MEMORY_BINDING_AND_AUTHORITATIVE_PROJECT_STATE",
+    "registerSession": true,
+    "chatHistoryRequired": false,
+    "rule": "A fresh chat must be able to reconstruct actionable project state from SAFOR Memory plus pinned product packages."
+  },
+  "provenance": {
+    "perOutputRequired": true,
+    "schemaRef": "schemas/output-record.schema.json",
+    "sessionSchemaRef": "schemas/session-record.schema.json",
+    "modelDataRule": "Record only model/provider/version data actually exposed by the host. Unknown values must remain null with observability NOT_EXPOSED; never invent model identity."
+  },
+  "layout": {
+    "rootDescriptor": "memory.json",
+    "projectRoot": "projects/{projectSlug}/",
+    "requiredProjectArtifacts": [
+      "project.json",
+      "bindings.json",
+      "memory-binding.json",
+      "state/control.json",
+      "state/value-stream.json",
+      "state/execution.json"
+    ],
+    "directories": [
+      "sessions/",
+      "outputs/",
+      "decisions/",
+      "evidence/",
+      "artifacts/",
+      "work-items/",
+      "agents/",
+      "audit/",
+      "packages/"
+    ]
+  }
+}
