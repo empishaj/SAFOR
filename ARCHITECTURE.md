@@ -108,6 +108,7 @@ MASTER
   │
   ├─ agents/index.json
   ├─ agents/{agentId}/identity.json
+  ├─ agents/{agentId}/inbox/index.json
   ├─ agents/{agentId}/inbox/{jobId}.json
   └─ master/jobs/{jobId}.json
                     │
@@ -123,4 +124,4 @@ MASTER
           verifies result + evidence
 ```
 
-The agent receives its identity once. Subsequent jobs are retrieved from its repository workspace. A normal chat still requires an external HUMAN, automation or host-supported activation trigger; SAFOR does not assume autonomous background wakeup.
+The agent receives its identity once. Subsequent jobs are retrieved from its repository workspace. Job discovery starts from the fixed MASTER-owned `inbox/index.json` projection; the agent then verifies the referenced immutable job and authoritative `master/jobs/{jobId}.json` state before claim. A normal chat still requires an external HUMAN, automation or host-supported activation trigger; SAFOR does not assume autonomous background wakeup.
