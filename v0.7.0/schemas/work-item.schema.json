@@ -16,6 +16,7 @@
     "expectedOutputs",
     "acceptanceCriteria",
     "dependencies",
+    "execution",
     "assignment",
     "review",
     "evidenceRequirements",
@@ -186,6 +187,77 @@
           }
         }
       }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "unit",
+        "parentWorkItemId",
+        "childWorkItemIds",
+        "joinPolicy",
+        "parallelizable",
+        "priority",
+        "readySince",
+        "resourceAccess",
+        "integrationRequired",
+        "integrationWorkItemRef"
+      ],
+      "properties": {
+        "unit": {
+          "enum": [
+            "ATOMIC",
+            "COMPOSITE"
+          ]
+        },
+        "parentWorkItemId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "childWorkItemIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "joinPolicy": {
+          "enum": [
+            "NONE",
+            "ALL_CHILDREN_ACCEPTED"
+          ]
+        },
+        "parallelizable": {
+          "type": "boolean"
+        },
+        "priority": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100
+        },
+        "readySince": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "resourceAccess": {
+          "$ref": "#/$defs/resourceAccess"
+        },
+        "integrationRequired": {
+          "type": "boolean"
+        },
+        "integrationWorkItemRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
     }
   },
   "$defs": {
@@ -205,6 +277,83 @@
             "string",
             "null"
           ]
+        }
+      }
+    },
+    "resourceAccess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "readSet",
+        "writeSet",
+        "exclusiveKeys"
+      ],
+      "properties": {
+        "readSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readResource"
+          }
+        },
+        "writeSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/writeResource"
+          }
+        },
+        "exclusiveKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "readResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "path",
+        "immutableRevision"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "immutableRevision": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "writeResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "path",
+        "conflictDomain"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conflictDomain": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
