@@ -21,7 +21,8 @@
     "agentResult": "agents/{agentId}/outbox/{jobId}.result.json",
     "agentEvidenceRoot": "agents/{agentId}/evidence/{jobId}/",
     "masterJobState": "master/jobs/{jobId}.json",
-    "inboxIndex": "agents/{agentId}/inbox/index.json"
+    "inboxIndex": "agents/{agentId}/inbox/index.json",
+    "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md"
   },
   "ownership": {
     "MASTER_ONLY": [
@@ -34,6 +35,7 @@
     "AGENT_ONLY": [
       "agents/{agentId}/state.json",
       "agents/{agentId}/outbox/{jobId}.result.json",
+      "agents/{agentId}/outbox/{jobId}.result.md",
       "agents/{agentId}/evidence/{jobId}/",
       "agents/{agentId}/audit/"
     ],
@@ -93,21 +95,47 @@
     "jobChangePolicy": "Changed scope or mandate produces a new dispatchRevision or a superseding job; the agent never silently mutates its inbox contract.",
     "agentMayWriteMasterJobState": false,
     "agentMayExpandScope": false,
-    "agentMustPersistEvidence": true
+    "agentMustPersistEvidence": true,
+    "agentMustPersistHumanReadableResult": true,
+    "gitMutationTraceRequired": true,
+    "directDefaultBranchMutationForbidden": true
   },
   "resultProtocol": {
-    "submission": "Agent writes outbox result and referenced evidence, then sets its local state to RESULT_SUBMITTED.",
+    "submission": "Agent writes the machine-readable outbox result, the mandatory HUMAN-readable Markdown result, referenced evidence and Git trace, then sets its local state to RESULT_SUBMITTED.",
     "notAcceptance": "Agent result is a claim of work performed, never authoritative acceptance.",
     "masterVerification": [
       "READ_RESULT",
       "VALIDATE_IDENTITY_AND_JOB_BINDING",
       "VERIFY_CONTRACT_BLOB_IDENTITY",
+      "READ_HUMAN_READABLE_RESULT",
+      "VERIFY_HUMAN_RESULT_BLOB",
+      "VERIFY_GIT_TRACE",
       "READ_REFERENCED_EVIDENCE",
       "READ_BACK_EXTERNAL_MUTATIONS",
       "APPLY_REVIEW_AND_FACTORY_EVIDENCE_REQUIREMENTS",
       "ADVANCE_MASTER_JOB_STATE"
     ],
-    "acceptanceAuthority": "Only MASTER may mark VERIFIED/ACCEPTED after required evidence, review and gates are satisfied."
+    "acceptanceAuthority": "Only MASTER may mark VERIFIED/ACCEPTED after required evidence, review and gates are satisfied.",
+    "humanReadableContract": {
+      "format": "MARKDOWN",
+      "path": "agents/{agentId}/outbox/{jobId}.result.md",
+      "requiredSections": [
+        "OBJECTIVE",
+        "WORK_PERFORMED",
+        "ARTIFACTS_CHANGED",
+        "GIT_TRACE",
+        "VERIFICATION",
+        "RESULT",
+        "RISKS_AND_LIMITS",
+        "OPEN_ITEMS"
+      ],
+      "rule": "Every job produces a HUMAN-readable result, including read-only jobs. The machine JSON must pin the Markdown blob identity."
+    },
+    "gitTraceContract": {
+      "mutatingJobs": "Every repository mutation must be attributable to the job through dedicated branch, immutable base commit, result commit SHA(s), changed paths and provider readback.",
+      "readOnlyJobs": "A read-only job may have an empty work-repository gitTrace, but its HUMAN-readable and machine-readable outbox results still persist in the Git-backed control repository.",
+      "verification": "MASTER reads back every claimed commit/branch/change request before result verification."
+    }
   },
   "lifecycle": {
     "masterStatuses": [
