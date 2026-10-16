@@ -220,16 +220,16 @@
       "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e"
     },
     "schemaAgentJobState": {
-      "sourcePath": "v0.6.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "c52acf402e58756fa48b1e1bb49171cae6705f13"
+      "sourcePath": "v0.7.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "7387bb034dfe5d2de3a0140b5ae34c279ed87e25"
     },
     "schemaAgentResult": {
-      "sourcePath": "v0.6.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "5b4aaf52e7505fce6f0f46437f0e4968ee24de20"
+      "sourcePath": "v0.7.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "501fa76563a3fb35b7d4f8e9fe7df80eb5011503"
     },
     "conformance": {
-      "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7"
+      "sourcePath": "v0.7.0/conformance.json",
+      "sourceBlobSha": "8e7dfaa6e171b0d4137ccdf1b9c39b92209965dc"
     },
     "schemaAgentInboxIndex": {
       "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
@@ -238,6 +238,18 @@
     "multiAgentScheduler": {
       "sourcePath": "v0.7.0/multi-agent-scheduler-model.json",
       "sourceBlobSha": "21428379eb9ff0b6b53e134c3a8603e3651aa68b"
+    },
+    "schemaSchedulerState": {
+      "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "052c85a6e5cc67f6db31ac7595ff452bee48fc77"
+    },
+    "schemaDispatchWave": {
+      "sourcePath": "v0.7.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "46cd08135139f390a2ad8c2f6bedc25d1660cbe5"
+    },
+    "schemaResourceLease": {
+      "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414"
     }
   },
   "embeddedModules": {
@@ -7378,12 +7390,12 @@
     },
     "schemaAgentJobState": {
       "key": "schemaAgentJobState",
-      "sourcePath": "v0.6.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "c52acf402e58756fa48b1e1bb49171cae6705f13",
+      "sourcePath": "v0.7.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "7387bb034dfe5d2de3a0140b5ae34c279ed87e25",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job-state:0.6.0",
-        "title": "SAFOR MASTER Agent Job State 0.6.0",
+        "$id": "urn:safor:agent-job-state:0.7.0",
+        "title": "SAFOR MASTER Agent Job State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7397,6 +7409,9 @@
           "lifecycleStatus",
           "contractRef",
           "contractBlobSha",
+          "dispatchWaveRef",
+          "resourceLeaseRefs",
+          "gitWorkspaceRefs",
           "agentStateRef",
           "resultRef",
           "evidenceRefs",
@@ -7409,7 +7424,7 @@
             "const": "SAFOR_AGENT_JOB_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -7519,6 +7534,27 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "dispatchWaveRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resourceLeaseRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gitWorkspaceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "$defs": {
@@ -7565,12 +7601,12 @@
     },
     "schemaAgentResult": {
       "key": "schemaAgentResult",
-      "sourcePath": "v0.6.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "5b4aaf52e7505fce6f0f46437f0e4968ee24de20",
+      "sourcePath": "v0.7.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "501fa76563a3fb35b7d4f8e9fe7df80eb5011503",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-result:0.6.0",
-        "title": "SAFOR Agent Result 0.6.0",
+        "$id": "urn:safor:agent-result:0.7.0",
+        "title": "SAFOR Agent Result 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7589,6 +7625,8 @@
           "completionStatus",
           "summary",
           "outputs",
+          "gitTrace",
+          "humanReadableReport",
           "evidenceRefs",
           "providerMutationRefs",
           "acceptanceSelfCheck",
@@ -7599,7 +7637,7 @@
             "const": "SAFOR_AGENT_RESULT"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "resultId": {
             "type": "string",
@@ -7709,6 +7747,63 @@
             "items": {
               "type": "string"
             }
+          },
+          "humanReadableReport": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ref",
+              "commitSha",
+              "repository",
+              "blobSha",
+              "format",
+              "requiredSections"
+            ],
+            "properties": {
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "format": {
+                "const": "MARKDOWN"
+              },
+              "requiredSections": {
+                "type": "array",
+                "minItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "OBJECTIVE",
+                    "WORK_PERFORMED",
+                    "ARTIFACTS_CHANGED",
+                    "GIT_TRACE",
+                    "VERIFICATION",
+                    "RESULT",
+                    "RISKS_AND_LIMITS",
+                    "OPEN_ITEMS"
+                  ]
+                },
+                "maxItems": 8
+              },
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commitSha": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "gitTrace": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/gitTraceEntry"
+            }
           }
         },
         "$defs": {
@@ -7730,17 +7825,76 @@
                 ]
               }
             }
+          },
+          "gitTraceEntry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "branch",
+              "baseCommitSha",
+              "headCommitSha",
+              "commitShas",
+              "changedPaths",
+              "changeRequestRef",
+              "providerReadbackRef"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "branch": {
+                "type": "string",
+                "minLength": 1
+              },
+              "baseCommitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "headCommitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commitShas": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "changedPaths": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "changeRequestRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "providerReadbackRef": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7",
+      "sourcePath": "v0.7.0/conformance.json",
+      "sourceBlobSha": "8e7dfaa6e171b0d4137ccdf1b9c39b92209965dc",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
@@ -8082,12 +8236,112 @@
             "id": "CF-068",
             "statement": "The inbox index is a non-authoritative discoverability projection; an agent must read the referenced immutable job contract and authoritative master/jobs/{jobId}.json before claim.",
             "expected": true
+          },
+          {
+            "id": "CF-069",
+            "statement": "Kernel references a dedicated MASTER-owned multi-agent scheduler model and scheduler state.",
+            "expected": true
+          },
+          {
+            "id": "CF-070",
+            "statement": "Only ATOMIC work items are dispatchable; COMPOSITE work items require explicit child decomposition and join policy.",
+            "expected": true
+          },
+          {
+            "id": "CF-071",
+            "statement": "READY scheduling requires accepted dependencies, immutable read inputs, active mandate and complete resource declarations.",
+            "expected": true
+          },
+          {
+            "id": "CF-072",
+            "statement": "Agent registry declares dispatchEnabled and maxConcurrentJobs; normal chat-agent capacity defaults conceptually to one slot.",
+            "expected": true
+          },
+          {
+            "id": "CF-073",
+            "statement": "Scheduler may use multiple free agent slots in one dispatch wave when mutually conflict-free READY jobs exist.",
+            "expected": true
+          },
+          {
+            "id": "CF-074",
+            "statement": "Concurrent jobs are rejected when write conflict domains or exclusive keys intersect.",
+            "expected": true
+          },
+          {
+            "id": "CF-075",
+            "statement": "Unknown or project-wide mutation conflict is serialized rather than optimistically parallelized.",
+            "expected": true
+          },
+          {
+            "id": "CF-076",
+            "statement": "MASTER-owned resource leases are acquired and read back before an agent job is considered dispatched.",
+            "expected": true
+          },
+          {
+            "id": "CF-077",
+            "statement": "Lease expiry or lost progress causes reconciliation and never silent overlapping reassignment.",
+            "expected": true
+          },
+          {
+            "id": "CF-078",
+            "statement": "Every mutating agent job receives a dedicated Git branch from an immutable base commit.",
+            "expected": true
+          },
+          {
+            "id": "CF-079",
+            "statement": "Agent direct writes to the default branch and cross-job branches are forbidden.",
+            "expected": true
+          },
+          {
+            "id": "CF-080",
+            "statement": "Every mutating agent result includes provider-verifiable Git base/head/commit/path traceability.",
+            "expected": true
+          },
+          {
+            "id": "CF-081",
+            "statement": "Every agent job, including read-only work, persists a HUMAN-readable Markdown result alongside machine JSON.",
+            "expected": true
+          },
+          {
+            "id": "CF-082",
+            "statement": "Machine result pins the HUMAN-readable report by control repository, blob SHA and commit SHA.",
+            "expected": true
+          },
+          {
+            "id": "CF-083",
+            "statement": "Downstream fan-in work becomes READY only from ACCEPTED required upstream work, not from submission alone.",
+            "expected": true
+          },
+          {
+            "id": "CF-084",
+            "statement": "Dispatch-wave and resource-lease records persist the MASTER scheduling decision for audit.",
+            "expected": true
+          },
+          {
+            "id": "CF-085",
+            "statement": "Agent job resource access is an immutable dispatch snapshot pinned to the authoritative work-item blob.",
+            "expected": true
+          },
+          {
+            "id": "CF-086",
+            "statement": "Read inputs used for parallel scheduling are pinned to immutable revisions.",
+            "expected": true
+          },
+          {
+            "id": "CF-087",
+            "statement": "Factory planning contracts require execution/resource/parallelization data and declare natural parallelism where applicable.",
+            "expected": true
+          },
+          {
+            "id": "CF-088",
+            "statement": "HUMAN status experience exposes agent utilization, active jobs and conflict/dependency blockers without requiring raw JSON inspection.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/agent-workspace-v0.6.0-rc.1",
-          "result": "PASS_PENDING_REVALIDATION_AFTER_DISCOVERY_FIX",
-          "note": "Agent Workspace model now requires deterministic inbox/index.json discovery with authoritative MASTER job-state verification. Fresh CI and empirical Agent Workspace scenarios remain required."
+          "branch": "safor/multi-agent-scheduler-v0.7.0-rc.1",
+          "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
+          "note": "v0.7 multi-agent scheduler, Git-isolated jobs and HUMAN-readable result contracts added. CI and empirical six-agent scheduling acceptance remain required."
         }
       }
     },
@@ -8343,6 +8597,371 @@
             "reworkQueue"
           ],
           "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
+        }
+      }
+    },
+    "schemaSchedulerState": {
+      "key": "schemaSchedulerState",
+      "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "052c85a6e5cc67f6db31ac7595ff452bee48fc77",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:scheduler-state:0.7.0",
+        "title": "SAFOR Multi-Agent Scheduler State 0.7.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "revision",
+          "maxParallelJobs",
+          "activeWaveRefs",
+          "activeLeaseRefs",
+          "queuedWorkItemRefs",
+          "blockedWork",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_SCHEDULER_STATE"
+          },
+          "schemaVersion": {
+            "const": "0.7.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "maxParallelJobs": {
+            "oneOf": [
+              {
+                "const": "AUTO"
+              },
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 128
+              }
+            ]
+          },
+          "activeWaveRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "activeLeaseRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "queuedWorkItemRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "blockedWork": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/blocked"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "blocked": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemRef",
+              "reasonCode",
+              "conflictingRefs"
+            ],
+            "properties": {
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reasonCode": {
+                "enum": [
+                  "DEPENDENCY",
+                  "NO_ELIGIBLE_AGENT",
+                  "NO_CAPACITY",
+                  "RESOURCE_CONFLICT",
+                  "SOD",
+                  "MANDATE",
+                  "PROVIDER_RIGHTS",
+                  "UNKNOWN_CONFLICT"
+                ]
+              },
+              "conflictingRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemaDispatchWave": {
+      "key": "schemaDispatchWave",
+      "sourcePath": "v0.7.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "46cd08135139f390a2ad8c2f6bedc25d1660cbe5",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:dispatch-wave:0.7.0",
+        "title": "SAFOR Dispatch Wave 0.7.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "waveId",
+          "revision",
+          "status",
+          "candidateWorkItemRefs",
+          "selectedAssignments",
+          "leaseRefs",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_DISPATCH_WAVE"
+          },
+          "schemaVersion": {
+            "const": "0.7.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "waveId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "LEASING",
+              "DISPATCHING",
+              "RUNNING",
+              "COMPLETED",
+              "BLOCKED",
+              "RECONCILE_REQUIRED"
+            ]
+          },
+          "candidateWorkItemRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "selectedAssignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/assignment"
+            }
+          },
+          "leaseRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "assignment": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemRef",
+              "jobId",
+              "agentId",
+              "identityRevision",
+              "reason"
+            ],
+            "properties": {
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jobId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "agentId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "identityRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemaResourceLease": {
+      "key": "schemaResourceLease",
+      "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:resource-lease:0.7.0",
+        "title": "SAFOR Multi-Agent Resource Lease 0.7.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "leaseId",
+          "revision",
+          "status",
+          "dispatchWaveRef",
+          "jobId",
+          "agentId",
+          "agentSlot",
+          "writeConflictDomains",
+          "exclusiveKeys",
+          "jobBranches",
+          "acquiredAt",
+          "expiresAt",
+          "releaseEvidenceRefs",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_RESOURCE_LEASE"
+          },
+          "schemaVersion": {
+            "const": "0.7.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "leaseId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "RESERVED",
+              "ACTIVE",
+              "RELEASE_PENDING",
+              "RELEASED",
+              "RECONCILE_REQUIRED"
+            ]
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentSlot": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "writeConflictDomains": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "exclusiveKeys": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "jobBranches": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "acquiredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "releaseEvidenceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dispatchWaveRef": {
+            "type": "string",
+            "minLength": 1
+          }
         }
       }
     }
