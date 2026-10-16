@@ -140,6 +140,7 @@ def build_bundle():
                 "onFailure": "STOP",
             },
             "initializationOrder": [
+                "VERIFY_MODULE_RECOVERY_BASELINE",
                 "SELECT_PROVIDER",
                 "VERIFY_PROVIDER_READ_WRITE_ACCESS",
                 "SELECT_OWNER_NAMESPACE",
