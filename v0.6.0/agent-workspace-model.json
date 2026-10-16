@@ -20,12 +20,14 @@
     "jobContract": "agents/{agentId}/inbox/{jobId}.json",
     "agentResult": "agents/{agentId}/outbox/{jobId}.result.json",
     "agentEvidenceRoot": "agents/{agentId}/evidence/{jobId}/",
-    "masterJobState": "master/jobs/{jobId}.json"
+    "masterJobState": "master/jobs/{jobId}.json",
+    "inboxIndex": "agents/{agentId}/inbox/index.json"
   },
   "ownership": {
     "MASTER_ONLY": [
       "agents/index.json",
       "agents/{agentId}/identity.json",
+      "agents/{agentId}/inbox/index.json",
       "agents/{agentId}/inbox/{jobId}.json",
       "master/jobs/{jobId}.json"
     ],
@@ -61,7 +63,9 @@
       "LOAD_IDENTITY",
       "VERIFY_IDENTITY_STATUS_ACTIVE",
       "LOAD_AGENT_STATE",
-      "SCAN_INBOX",
+      "LOAD_INBOX_INDEX",
+      "SELECT_DISCOVERABLE_JOB",
+      "READ_JOB_CONTRACT",
       "READ_MASTER_JOB_STATE",
       "VERIFY_JOB_ASSIGNMENT_AND_MANDATE",
       "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
@@ -72,11 +76,12 @@
   },
   "claimProtocol": {
     "eligibleWhen": [
+      "job is discoverable through the current MASTER-owned inbox index",
       "identity.status == ACTIVE",
       "job.assignedAgentId == identity.agentId",
       "job.assignedIdentityRevision == identity.identityRevision",
       "job.dispatchState == READY",
-      "masterJobState.lifecycleStatus == READY",
+      "masterJobState.lifecycleStatus is claimable for the current dispatch (READY or REWORK_READY)",
       "referenced execution mandate is active and covers scope",
       "actual provider rights cover required operations"
     ],
@@ -146,5 +151,22 @@
     "noSelfAcceptance": true,
     "noAutomaticJobReassignment": true,
     "noAutomaticIdentityMutation": true
+  },
+  "discoveryProtocol": {
+    "indexRef": "agents/{agentId}/inbox/index.json",
+    "purpose": "Provide a deterministic fixed read target for job discovery so an agent never depends on repository directory enumeration or HUMAN prompt transport.",
+    "authority": "NON_AUTHORITATIVE_DISCOVERABILITY_PROJECTION",
+    "masterOwned": true,
+    "noDirectoryEnumerationRequired": true,
+    "entrySelection": "Read entries in stored order and consider only AVAILABLE or REWORK_AVAILABLE entries for the active identity revision.",
+    "mandatoryVerification": [
+      "READ_REFERENCED_JOB_CONTRACT",
+      "VERIFY_JOB_BLOB_SHA",
+      "READ_MASTER_JOB_STATE",
+      "VERIFY_MASTER_LIFECYCLE_IS_CLAIMABLE",
+      "VERIFY_IDENTITY_AND_DISPATCH_REVISION"
+    ],
+    "staleIndexRule": "The index is only a discovery projection. If an entry conflicts with the job contract or MASTER job state, the authoritative artifacts win and the agent must not claim from the stale entry.",
+    "updateRule": "MASTER updates the index with revision-controlled writes and provider readback whenever jobs become discoverable, withdrawn, superseded or accepted."
   }
 }
