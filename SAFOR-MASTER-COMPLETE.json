@@ -230,8 +230,8 @@
       "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501"
     },
     "conformance": {
-      "sourcePath": "v0.7.0/conformance.json",
-      "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d"
+      "sourcePath": "v0.8.0/conformance.json",
+      "sourceBlobSha": "168d467fb9c9827470cd06f745184177a562bc2f"
     },
     "schemaAgentInboxIndex": {
       "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
@@ -9231,11 +9231,11 @@
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.7.0/conformance.json",
-      "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d",
+      "sourcePath": "v0.8.0/conformance.json",
+      "sourceBlobSha": "168d467fb9c9827470cd06f745184177a562bc2f",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
@@ -9682,12 +9682,117 @@
             "id": "CF-089",
             "statement": "Scheduling dependencies form a DAG; dependency cycles block READY derivation and dispatch.",
             "expected": true
+          },
+          {
+            "id": "CF-090",
+            "statement": "Every agent job uses the canonical hierarchical v0.8 execution contract rather than the former flat job structure.",
+            "expected": true
+          },
+          {
+            "id": "CF-091",
+            "statement": "Every job has a globally unique UUIDv7 jobId and a separate HUMAN/Git-safe jobKey.",
+            "expected": true
+          },
+          {
+            "id": "CF-092",
+            "statement": "Every job explicitly records packageId, workItemId, package/plan/dispatch sequence, attempt and rework lineage.",
+            "expected": true
+          },
+          {
+            "id": "CF-093",
+            "statement": "Every job records MASTER provenance and creation/issue timestamps sufficient to reconstruct which MASTER run/state created it.",
+            "expected": true
+          },
+          {
+            "id": "CF-094",
+            "statement": "Every job explicitly binds the target agent identity revision and the role the subagent must assume.",
+            "expected": true
+          },
+          {
+            "id": "CF-095",
+            "statement": "Every job contains one or more explicit versioned skill contracts with description, execution instructions and immutable skill refs.",
+            "expected": true
+          },
+          {
+            "id": "CF-096",
+            "statement": "Every job input is READ_ONLY and pinned to an immutable repository commit; path inputs may additionally pin blob identity.",
+            "expected": true
+          },
+          {
+            "id": "CF-097",
+            "statement": "Every job declares provider capability bounds and per-repository read/write/branch/commit/push/change-request/merge/deploy permissions.",
+            "expected": true
+          },
+          {
+            "id": "CF-098",
+            "statement": "Job authorization is an upper bound only; actual provider rights, mandate and SAFOR policy remain independently required.",
+            "expected": true
+          },
+          {
+            "id": "CF-099",
+            "statement": "Every job fixes machine result, HUMAN result, evidence and audit return paths before execution.",
+            "expected": true
+          },
+          {
+            "id": "CF-100",
+            "statement": "Every job explicitly declares acceptance criteria, evidence requirements, review contract, self-acceptance prohibition and MASTER acceptance authority.",
+            "expected": true
+          },
+          {
+            "id": "CF-101",
+            "statement": "Every canonical job JSON has a MASTER-generated inbox/{jobId}.md HUMAN projection whose blob is pinned in the JSON.",
+            "expected": true
+          },
+          {
+            "id": "CF-102",
+            "statement": "The HUMAN job Markdown is non-authoritative and may not expand scope, role, skills, rights, outputs or verification beyond JSON.",
+            "expected": true
+          },
+          {
+            "id": "CF-103",
+            "statement": "MASTER reads back both job JSON and job Markdown before marking the job READY or publishing it in inbox/index.json.",
+            "expected": true
+          },
+          {
+            "id": "CF-104",
+            "statement": "Inbox index exposes package/work-item/sequence/role and HUMAN job projection references for discoverability.",
+            "expected": true
+          },
+          {
+            "id": "CF-105",
+            "statement": "MASTER job lifecycle state persists package/work-item/sequence/role/identity/job-contract revision and HUMAN job projection lineage.",
+            "expected": true
+          },
+          {
+            "id": "CF-106",
+            "statement": "Rework uses a new jobId and may reference the superseded job; historical job identities are never reused.",
+            "expected": true
+          },
+          {
+            "id": "CF-107",
+            "statement": "Agents cannot mutate canonical job JSON/Markdown, change role, substitute mandatory skills, delegate, expand scope or expand authorization.",
+            "expected": true
+          },
+          {
+            "id": "CF-108",
+            "statement": "Agent execution stops on revoked mandate, identity mismatch, supersession, invalid lease, write outside allowed scope or missing required provider rights.",
+            "expected": true
+          },
+          {
+            "id": "CF-109",
+            "statement": "Scheduler materialization explicitly builds canonical JSON, renders/pins Markdown and readbacks both before dispatch publication.",
+            "expected": true
+          },
+          {
+            "id": "CF-110",
+            "statement": "Job skills are self-contained for execution but retain authoritative immutable provenance through skillRef + skillBlobSha; MASTER may not invent skill provenance.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/multi-agent-scheduler-v0.7.0-rc.1",
+          "branch": "safor/job-contract-v0.8.0-rc.1",
           "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "v0.7 multi-agent scheduler, Git-isolated jobs and HUMAN-readable result contracts added. CI and empirical six-agent scheduling acceptance remain required."
+          "note": "Canonical v0.8 explicit job contract with package/sequence provenance, role, skills, granular rights, fixed return routes and HUMAN job projection added. CI and empirical dispatch acceptance remain required."
         }
       }
     },
