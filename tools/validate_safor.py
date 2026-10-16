@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.8.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.9.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -31,13 +31,83 @@ required_modules = {
     "factorySoftwareWebsite","factoryBook","schemaPackageManifest","schemaControlState",
     "schemaValueStreamState","schemaExecutionState","schemaWorkItem","schemaProject",
     "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu",
-    "schemaSelfHealingRecord","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
+    "schemaSelfHealingRecord","schemaModuleRecoveryProfile","moduleSelfHealing","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
     "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
     "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
 }
 missing = sorted(required_modules - set(modules))
 if missing:
     fail("Missing embedded modules: " + ", ".join(missing))
+
+module_recovery_model = modules.get("moduleSelfHealing", {}).get("content", {})
+profiles = module_recovery_model.get("moduleProfiles", [])
+profile_by_key = {}
+profile_ids = set()
+for profile in profiles:
+    key = profile.get("moduleKey")
+    pid = profile.get("profileId")
+    if not key or not pid:
+        fail("Module recovery profile missing moduleKey/profileId.")
+        continue
+    if key in profile_by_key:
+        fail(f"Duplicate module recovery profile for {key}.")
+    if pid in profile_ids:
+        fail(f"Duplicate module recovery profileId {pid}.")
+    profile_by_key[key] = profile
+    profile_ids.add(pid)
+
+module_keys = set(modules)
+profile_keys = set(profile_by_key)
+if module_keys != profile_keys:
+    missing_profiles = sorted(module_keys - profile_keys)
+    unknown_profiles = sorted(profile_keys - module_keys)
+    if missing_profiles:
+        fail("Embedded modules missing recovery profiles: " + ", ".join(missing_profiles))
+    if unknown_profiles:
+        fail("Recovery profiles target unknown module keys: " + ", ".join(unknown_profiles))
+
+coverage = module_recovery_model.get("coverageContract", {})
+for field in ("exactCoverageRequired","oneProfilePerEmbeddedModule","noUnprofiledEmbeddedModules","noProfilesForUnknownModuleKeys"):
+    if coverage.get(field) is not True:
+        fail(f"Module recovery coverage contract {field} must be true.")
+
+profile_required_fields = (
+    "profileId","moduleKey","moduleClass","authorityType","repairability",
+    "failureDetectors","automaticRepairs","forbiddenRepairs","retryBudget",
+    "verification","escalation"
+)
+valid_repairability = {
+    "IMMUTABLE_VALIDATE_ONLY","RESTORE_FROM_VERIFIED_SOURCE",
+    "REGENERATE_DERIVED_ONLY","REBIND_EXTERNAL_CAPABILITY"
+}
+integrity_manifest = bundle.get("integrityManifest", {})
+for key, module in modules.items():
+    profile = profile_by_key.get(key, {})
+    for field in profile_required_fields:
+        if field not in profile:
+            fail(f"Recovery profile {key} missing {field}.")
+    if profile.get("repairability") not in valid_repairability:
+        fail(f"Recovery profile {key} has invalid repairability.")
+    if not profile.get("failureDetectors"):
+        fail(f"Recovery profile {key} needs failure detectors.")
+    if not profile.get("automaticRepairs"):
+        fail(f"Recovery profile {key} needs automatic repair policy.")
+    if not profile.get("forbiddenRepairs"):
+        fail(f"Recovery profile {key} needs forbidden repair policy.")
+    expected_pid = profile.get("profileId")
+    if module.get("selfHealingProfileId") != expected_pid:
+        fail(f"Embedded module {key} selfHealingProfileId mismatch.")
+    manifest_entry = integrity_manifest.get(key, {})
+    if manifest_entry.get("selfHealingProfileId") != expected_pid:
+        fail(f"Integrity manifest {key} selfHealingProfileId mismatch.")
+    if not str(module.get("sourcePath","")).startswith("v0.9.0/"):
+        fail(f"Embedded module {key} must come from v0.9.0 source.")
+
+recovery_schema = modules.get("schemaModuleRecoveryProfile", {}).get("content", {})
+schema_required = set(recovery_schema.get("required", []))
+for field in profile_required_fields:
+    if field not in schema_required:
+        fail(f"Module recovery profile schema missing required field {field}.")
 
 refs = bundle.get("referenceResolution", {})
 bad_refs = sorted(f"{ref}->{target}" for ref, target in refs.items() if target not in modules)
@@ -89,18 +159,52 @@ for action_id in ("E04","E05"):
     if actions.get(action_id, {}).get("modelRef") != "BOUND_FACTORY.model.evidenceContract":
         fail(f"{action_id} must bind Factory evidenceContract.")
 
+if actions.get("H01", {}).get("modelRef") != "module-self-healing-model.json":
+    fail("H01 must bind module-self-healing-model.json.")
+if actions.get("H02", {}).get("modelRef") != "self-healing-model.json":
+    fail("H02 must bind self-healing-model.json.")
+for action_id in ("H03","H04"):
+    if actions.get(action_id, {}).get("modelRef") != "module-self-healing-model.json":
+        fail(f"{action_id} must bind module-self-healing-model.json.")
+if kernel.get("moduleSelfHealingModelRef") != "module-self-healing-model.json":
+    fail("Kernel must reference module-self-healing-model.json.")
+if kernel.get("schemas", {}).get("moduleRecoveryProfile") != "schemas/module-recovery-profile.schema.json":
+    fail("Kernel must reference module recovery profile schema.")
+
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 87)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 104)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 111)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 130)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
 
+
+self_healing = modules.get("selfHealing", {}).get("content", {})
+if self_healing.get("moduleRecoveryModelRef") != "module-self-healing-model.json":
+    fail("Self-healing model must reference module recovery model.")
+for principle in ("moduleProfileRequired","exactModuleCoverageRequired","failClosedOnRecoveryControlFailure","derivedOnlyRegeneration","noSemanticAutoRewrite"):
+    if self_healing.get("principles", {}).get(principle) is not True:
+        fail(f"Self-healing principle {principle} must be true.")
+failure_classes = {x.get("id"): x for x in self_healing.get("failureClasses", [])}
+for n in range(10, 19):
+    cid = f"SH-{n:02d}"
+    if cid not in failure_classes:
+        fail(f"Missing module-aware self-healing failure class {cid}.")
+if self_healing.get("moduleRecoveryDispatch", {}).get("noMatch") != "STOP_AND_ESCALATE":
+    fail("Unknown module recovery target must STOP_AND_ESCALATE.")
+if self_healing.get("moduleRecoveryDispatch", {}).get("multipleMatches") != "STOP_AND_ESCALATE":
+    fail("Ambiguous module recovery target must STOP_AND_ESCALATE.")
+
+repair_schema = modules.get("schemaSelfHealingRecord", {}).get("content", {})
+repair_required = set(repair_schema.get("required", []))
+for field in ("moduleKey","moduleProfileId","moduleAuthorityType","moduleRepairability","moduleSourceRef","profileDecision"):
+    if field not in repair_required:
+        fail(f"Self-healing record schema missing module-aware field {field}.")
 agent_model = modules.get("agentWorkspace", {}).get("content", {})
 agent_job_model = modules.get("agentJobContract", {}).get("content", {})
 if agent_job_model.get("authority", {}).get("authoritativeArtifact") != "agents/{agentId}/inbox/{jobId}.json":
@@ -383,10 +487,10 @@ if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
 if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
     fail("Release manifest latest alias mismatch.")
-if manifest.get("sourceRoot") != "v0.8.0":
-    fail("Release manifest source root must be v0.8.0.")
-if bundle.get("schemaVersion") != "0.8.0":
-    fail("Complete bundle schemaVersion must be 0.8.0.")
+if manifest.get("sourceRoot") != "v0.9.0":
+    fail("Release manifest source root must be v0.9.0.")
+if bundle.get("schemaVersion") != "0.9.0":
+    fail("Complete bundle schemaVersion must be 0.9.0.")
 versioned_bundle = load_json(expected_versioned)
 if versioned_bundle != bundle:
     fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")
@@ -453,3 +557,5 @@ print("- Git-isolated agent mutations: verified")
 print("- HUMAN-readable agent results + Git trace: verified")
 print("- Canonical explicit agent jobs: package/sequence/provenance/role/skills/rights/return routes verified")
 print("- HUMAN-readable agent job projection: verified")
+print("- Module-wide self-healing coverage: verified for every embedded module")
+print("- Profile-constrained recovery / fail-closed recovery control: verified")
