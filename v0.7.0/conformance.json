@@ -342,11 +342,111 @@
       "id": "CF-068",
       "statement": "The inbox index is a non-authoritative discoverability projection; an agent must read the referenced immutable job contract and authoritative master/jobs/{jobId}.json before claim.",
       "expected": true
+    },
+    {
+      "id": "CF-069",
+      "statement": "Kernel references a dedicated MASTER-owned multi-agent scheduler model and scheduler state.",
+      "expected": true
+    },
+    {
+      "id": "CF-070",
+      "statement": "Only ATOMIC work items are dispatchable; COMPOSITE work items require explicit child decomposition and join policy.",
+      "expected": true
+    },
+    {
+      "id": "CF-071",
+      "statement": "READY scheduling requires accepted dependencies, immutable read inputs, active mandate and complete resource declarations.",
+      "expected": true
+    },
+    {
+      "id": "CF-072",
+      "statement": "Agent registry declares dispatchEnabled and maxConcurrentJobs; normal chat-agent capacity defaults conceptually to one slot.",
+      "expected": true
+    },
+    {
+      "id": "CF-073",
+      "statement": "Scheduler may use multiple free agent slots in one dispatch wave when mutually conflict-free READY jobs exist.",
+      "expected": true
+    },
+    {
+      "id": "CF-074",
+      "statement": "Concurrent jobs are rejected when write conflict domains or exclusive keys intersect.",
+      "expected": true
+    },
+    {
+      "id": "CF-075",
+      "statement": "Unknown or project-wide mutation conflict is serialized rather than optimistically parallelized.",
+      "expected": true
+    },
+    {
+      "id": "CF-076",
+      "statement": "MASTER-owned resource leases are acquired and read back before an agent job is considered dispatched.",
+      "expected": true
+    },
+    {
+      "id": "CF-077",
+      "statement": "Lease expiry or lost progress causes reconciliation and never silent overlapping reassignment.",
+      "expected": true
+    },
+    {
+      "id": "CF-078",
+      "statement": "Every mutating agent job receives a dedicated Git branch from an immutable base commit.",
+      "expected": true
+    },
+    {
+      "id": "CF-079",
+      "statement": "Agent direct writes to the default branch and cross-job branches are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-080",
+      "statement": "Every mutating agent result includes provider-verifiable Git base/head/commit/path traceability.",
+      "expected": true
+    },
+    {
+      "id": "CF-081",
+      "statement": "Every agent job, including read-only work, persists a HUMAN-readable Markdown result alongside machine JSON.",
+      "expected": true
+    },
+    {
+      "id": "CF-082",
+      "statement": "Machine result pins the HUMAN-readable report by control repository, blob SHA and commit SHA.",
+      "expected": true
+    },
+    {
+      "id": "CF-083",
+      "statement": "Downstream fan-in work becomes READY only from ACCEPTED required upstream work, not from submission alone.",
+      "expected": true
+    },
+    {
+      "id": "CF-084",
+      "statement": "Dispatch-wave and resource-lease records persist the MASTER scheduling decision for audit.",
+      "expected": true
+    },
+    {
+      "id": "CF-085",
+      "statement": "Agent job resource access is an immutable dispatch snapshot pinned to the authoritative work-item blob.",
+      "expected": true
+    },
+    {
+      "id": "CF-086",
+      "statement": "Read inputs used for parallel scheduling are pinned to immutable revisions.",
+      "expected": true
+    },
+    {
+      "id": "CF-087",
+      "statement": "Factory planning contracts require execution/resource/parallelization data and declare natural parallelism where applicable.",
+      "expected": true
+    },
+    {
+      "id": "CF-088",
+      "statement": "HUMAN status experience exposes agent utilization, active jobs and conflict/dependency blockers without requiring raw JSON inspection.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
-    "branch": "safor/agent-workspace-v0.7.0-rc.1",
-    "result": "PASS_PENDING_REVALIDATION_AFTER_DISCOVERY_FIX",
-    "note": "Agent Workspace model now requires deterministic inbox/index.json discovery with authoritative MASTER job-state verification. Fresh CI and empirical Agent Workspace scenarios remain required."
+    "branch": "safor/multi-agent-scheduler-v0.7.0-rc.1",
+    "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
+    "note": "v0.7 multi-agent scheduler, Git-isolated jobs and HUMAN-readable result contracts added. CI and empirical six-agent scheduling acceptance remain required."
   }
 }
