@@ -8,8 +8,14 @@
     "repairId",
     "failureClass",
     "failureFingerprint",
+    "moduleKey",
+    "moduleProfileId",
+    "moduleAuthorityType",
+    "moduleRepairability",
+    "moduleSourceRef",
     "subjectRef",
     "status",
+    "profileDecision",
     "proposedAction",
     "authorityBasis",
     "attemptNumber",
@@ -45,7 +51,8 @@
         "SUCCEEDED",
         "FAILED",
         "ESCALATED",
-        "CANCELED"
+        "CANCELED",
+        "RECONCILE_REQUIRED"
       ]
     },
     "proposedAction": {
@@ -105,6 +112,68 @@
         "string",
         "null"
       ]
+    },
+    "moduleKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "moduleProfileId": {
+      "type": "string",
+      "pattern": "^MRP-[A-Z0-9_-]+$"
+    },
+    "moduleAuthorityType": {
+      "enum": [
+        "EMBEDDED_BOOTSTRAP_AUTHORITY",
+        "PINNED_CANONICAL_SOURCE",
+        "DERIVED_RUNTIME_PROJECTION",
+        "EXTERNAL_PROVIDER_BOUND"
+      ]
+    },
+    "moduleRepairability": {
+      "enum": [
+        "IMMUTABLE_VALIDATE_ONLY",
+        "RESTORE_FROM_VERIFIED_SOURCE",
+        "REGENERATE_DERIVED_ONLY",
+        "REBIND_EXTERNAL_CAPABILITY"
+      ]
+    },
+    "moduleSourceRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profileDecision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "failureClassAction",
+        "profileAllowedActions",
+        "selectedAction",
+        "selectionReason"
+      ],
+      "properties": {
+        "failureClassAction": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profileAllowedActions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "selectedAction": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "selectionReason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
     }
   }
 }
