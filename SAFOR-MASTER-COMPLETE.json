@@ -164,28 +164,34 @@
       "selfHealingProfileId": "MRP-OPERATING_MODEL_SAAS"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
-      "sourceBlobSha": "2c8b0e2db432bc34260cb13c852971ac910d3c4d"
+      "sourcePath": "v0.9.0/packages/operating-models/book-authoring/0.4.0/package.json",
+      "sourceBlobSha": "de3a2a6c5575456527b7659535578e58f6e7a455",
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_BOOK"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
-      "sourceBlobSha": "d4c767316294beb99056cabec439c080f02550f2"
+      "sourcePath": "v0.9.0/packages/factories/software-delivery/1.3.0/package.json",
+      "sourceBlobSha": "2544dbdb3a5e89bba94266719074225ea4cb52b0",
+      "selfHealingProfileId": "MRP-FACTORY_SOFTWARE_WEBSITE"
     },
     "factoryBook": {
-      "sourcePath": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
-      "sourceBlobSha": "4478dca330443bc4f16268b5439b4a2ed97c6ea3"
+      "sourcePath": "v0.9.0/packages/factories/book-production/0.4.0/package.json",
+      "sourceBlobSha": "9843e50a91d2bcdd859ee49995d2b90b57889bae",
+      "selfHealingProfileId": "MRP-FACTORY_BOOK"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.8.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "80ef74814cfc082a4530a3b27f284e91c2a345bd"
+      "sourcePath": "v0.9.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ef998a267fba1242f269dddbb40d1682374b1245",
+      "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_MANIFEST"
     },
     "schemaControlState": {
-      "sourcePath": "v0.8.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "dd1ca6daf7c279b8090d614a34fa6d38e9e19cc1"
+      "sourcePath": "v0.9.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "da087c05a1e0d11ec8682e57d2a9dbf73260537a",
+      "selfHealingProfileId": "MRP-SCHEMA_CONTROL_STATE"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.8.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "9551e370b6d64e8a27b908408739e962c0b514b9"
+      "sourcePath": "v0.9.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "5983bc6fd6689249a3beaf7306f48bfa56c0ea33",
+      "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
     },
     "schemaExecutionState": {
       "sourcePath": "v0.8.0/schemas/execution-state.schema.json",
@@ -4169,18 +4175,18 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
-      "sourceBlobSha": "2c8b0e2db432bc34260cb13c852971ac910d3c4d",
+      "sourcePath": "v0.9.0/packages/operating-models/book-authoring/0.4.0/package.json",
+      "sourceBlobSha": "de3a2a6c5575456527b7659535578e58f6e7a455",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -4386,22 +4392,23 @@
             }
           ]
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_BOOK"
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
-      "sourceBlobSha": "d4c767316294beb99056cabec439c080f02550f2",
+      "sourcePath": "v0.9.0/packages/factories/software-delivery/1.3.0/package.json",
+      "sourceBlobSha": "2544dbdb3a5e89bba94266719074225ea4cb52b0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -4755,22 +4762,23 @@
             "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-FACTORY_SOFTWARE_WEBSITE"
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
-      "sourceBlobSha": "4478dca330443bc4f16268b5439b4a2ed97c6ea3",
+      "sourcePath": "v0.9.0/packages/factories/book-production/0.4.0/package.json",
+      "sourceBlobSha": "9843e50a91d2bcdd859ee49995d2b90b57889bae",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -5135,16 +5143,17 @@
             "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-FACTORY_BOOK"
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.8.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "80ef74814cfc082a4530a3b27f284e91c2a345bd",
+      "sourcePath": "v0.9.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ef998a267fba1242f269dddbb40d1682374b1245",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.8.0",
-        "title": "SAFOR Package Manifest 0.8.0",
+        "$id": "urn:safor:package-manifest:0.9.0",
+        "title": "SAFOR Package Manifest 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5165,7 +5174,7 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "packageId": {
             "type": "string",
@@ -5289,16 +5298,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_MANIFEST"
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.8.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "dd1ca6daf7c279b8090d614a34fa6d38e9e19cc1",
+      "sourcePath": "v0.9.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "da087c05a1e0d11ec8682e57d2a9dbf73260537a",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.8.0",
-        "title": "SAFOR Control State 0.8.0",
+        "$id": "urn:safor:control-state:0.9.0",
+        "title": "SAFOR Control State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5321,7 +5331,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "kernelRef": {
             "type": "object",
@@ -5332,7 +5342,7 @@
             ],
             "properties": {
               "version": {
-                "const": "0.8.0"
+                "const": "0.9.0"
               },
               "sourceRef": {
                 "type": "string",
@@ -5528,16 +5538,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_CONTROL_STATE"
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.8.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "9551e370b6d64e8a27b908408739e962c0b514b9",
+      "sourcePath": "v0.9.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "5983bc6fd6689249a3beaf7306f48bfa56c0ea33",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.8.0",
-        "title": "SAFOR Value Stream State 0.8.0",
+        "$id": "urn:safor:value-stream-state:0.9.0",
+        "title": "SAFOR Value Stream State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5557,7 +5568,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -5701,7 +5712,8 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
