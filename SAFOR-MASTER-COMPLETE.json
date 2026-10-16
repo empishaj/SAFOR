@@ -139,24 +139,29 @@
       "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "repositoryPolicy": {
-      "sourcePath": "v0.8.0/repository-policy.json",
-      "sourceBlobSha": "2f1d516150a3e13339ca6604398e8eefe07aeb3e"
+      "sourcePath": "v0.9.0/repository-policy.json",
+      "sourceBlobSha": "32c302f6947dfbacf83902b77bc3f8a2becaf5e0",
+      "selfHealingProfileId": "MRP-REPOSITORY_POLICY"
     },
     "packageRegistry": {
-      "sourcePath": "v0.8.0/package-registry.json",
-      "sourceBlobSha": "69bdf69c9477d1bb6824076151f35c2151058600"
+      "sourcePath": "v0.9.0/package-registry.json",
+      "sourceBlobSha": "4c43a96b874fd3541d1a39715577efc8701a3cdf",
+      "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
     "providerGithub": {
-      "sourcePath": "v0.8.0/providers/github/0.3.0/package.json",
-      "sourceBlobSha": "294445187acfeb7f12a03549d3c870b5ade68199"
+      "sourcePath": "v0.9.0/providers/github/0.4.0/package.json",
+      "sourceBlobSha": "baa99f6f3044961e13619863dbe5812d7457a03c",
+      "selfHealingProfileId": "MRP-PROVIDER_GITHUB"
     },
     "providerGitlab": {
-      "sourcePath": "v0.8.0/providers/gitlab/0.3.0/package.json",
-      "sourceBlobSha": "7659b2a19c590f297a31eb3e56dd9127b83fc2b6"
+      "sourcePath": "v0.9.0/providers/gitlab/0.4.0/package.json",
+      "sourceBlobSha": "877adb02f89dc79a67a515530ff69d0967f758db",
+      "selfHealingProfileId": "MRP-PROVIDER_GITLAB"
     },
     "operatingModelSaas": {
-      "sourcePath": "v0.8.0/packages/operating-models/saas-engineering/1.2.0/package.json",
-      "sourceBlobSha": "fa695a7256439845e13bf686dd036133a5695525"
+      "sourcePath": "v0.9.0/packages/operating-models/saas-engineering/1.3.0/package.json",
+      "sourceBlobSha": "9666be8c08c31ee742a0917b83133c81346ed2f0",
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_SAAS"
     },
     "operatingModelBook": {
       "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
@@ -247,8 +252,9 @@
       "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428"
     },
     "multiAgentScheduler": {
-      "sourcePath": "v0.8.0/multi-agent-scheduler-model.json",
-      "sourceBlobSha": "f8dd23326796bef109bfef6fc07d4737cec6bd2d"
+      "sourcePath": "v0.9.0/multi-agent-scheduler-model.json",
+      "sourceBlobSha": "82179183ee4c4036ab7f45144a8ebc561f9c73ac",
+      "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
     },
     "schemaSchedulerState": {
       "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
@@ -3293,11 +3299,11 @@
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "v0.8.0/repository-policy.json",
-      "sourceBlobSha": "2f1d516150a3e13339ca6604398e8eefe07aeb3e",
+      "sourcePath": "v0.9.0/repository-policy.json",
+      "sourceBlobSha": "32c302f6947dfbacf83902b77bc3f8a2becaf5e0",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-        "version": "0.8.0",
+        "version": "0.9.0",
         "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
         "principles": {
@@ -3475,52 +3481,53 @@
           "providerReadbackBeforeReady": true,
           "agentMutationForbidden": true
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-REPOSITORY_POLICY"
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.8.0/package-registry.json",
-      "sourceBlobSha": "69bdf69c9477d1bb6824076151f35c2151058600",
+      "sourcePath": "v0.9.0/package-registry.json",
+      "sourceBlobSha": "4c43a96b874fd3541d1a39715577efc8701a3cdf",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.2.0",
-            "path": "packages/operating-models/saas-engineering/1.2.0/package.json"
+            "version": "1.3.0",
+            "path": "packages/operating-models/saas-engineering/1.3.0/package.json"
           },
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.2.0",
-            "path": "packages/factories/software-delivery/1.2.0/package.json"
+            "version": "1.3.0",
+            "path": "packages/factories/software-delivery/1.3.0/package.json"
           },
           {
             "packageId": "safor.om.book-authoring",
             "kind": "OPERATING_MODEL",
-            "version": "0.3.0",
-            "path": "packages/operating-models/book-authoring/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "packages/operating-models/book-authoring/0.4.0/package.json"
           },
           {
             "packageId": "safor.factory.book-production",
             "kind": "FACTORY",
-            "version": "0.3.0",
-            "path": "packages/factories/book-production/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "packages/factories/book-production/0.4.0/package.json"
           },
           {
             "packageId": "safor.provider.github",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.3.0",
-            "path": "providers/github/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "providers/github/0.4.0/package.json"
           },
           {
             "packageId": "safor.provider.gitlab",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.3.0",
-            "path": "providers/gitlab/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "providers/gitlab/0.4.0/package.json"
           }
         ],
         "selectionRule": "The HUMAN must first select a creation profile. Its Factory and compatible Operating Model become mandatory project bindings; the Provider Adapter remains provider-derived. All bindings are validated, pinned and snapshotted.",
@@ -3538,22 +3545,23 @@
             "operatingModelPackageId": "safor.om.book-authoring"
           }
         ]
-      }
+      },
+      "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "v0.8.0/providers/github/0.3.0/package.json",
-      "sourceBlobSha": "294445187acfeb7f12a03549d3c870b5ade68199",
+      "sourcePath": "v0.9.0/providers/github/0.4.0/package.json",
+      "sourceBlobSha": "baa99f6f3044961e13619863dbe5812d7457a03c",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "GitHub Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitHub. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [],
@@ -3688,22 +3696,23 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-PROVIDER_GITHUB"
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "v0.8.0/providers/gitlab/0.3.0/package.json",
-      "sourceBlobSha": "7659b2a19c590f297a31eb3e56dd9127b83fc2b6",
+      "sourcePath": "v0.9.0/providers/gitlab/0.4.0/package.json",
+      "sourceBlobSha": "877adb02f89dc79a67a515530ff69d0967f758db",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "GitLab Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [],
@@ -3837,22 +3846,23 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-PROVIDER_GITLAB"
     },
     "operatingModelSaas": {
       "key": "operatingModelSaas",
-      "sourcePath": "v0.8.0/packages/operating-models/saas-engineering/1.2.0/package.json",
-      "sourceBlobSha": "fa695a7256439845e13bf686dd036133a5695525",
+      "sourcePath": "v0.9.0/packages/operating-models/saas-engineering/1.3.0/package.json",
+      "sourceBlobSha": "9666be8c08c31ee742a0917b83133c81346ed2f0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "name": "SaaS Engineering Reference Operating Model",
         "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -4154,7 +4164,8 @@
           "path": "derived from planning/Value-Creation-Stream-Metamodell.md and planning/KI-Fabrik-Referenzkonzept.md",
           "ref": "778d47ff4169c2b85de2d17b0be9a4fb03340fee"
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_SAAS"
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
@@ -10277,11 +10288,11 @@
     },
     "multiAgentScheduler": {
       "key": "multiAgentScheduler",
-      "sourcePath": "v0.8.0/multi-agent-scheduler-model.json",
-      "sourceBlobSha": "f8dd23326796bef109bfef6fc07d4737cec6bd2d",
+      "sourcePath": "v0.9.0/multi-agent-scheduler-model.json",
+      "sourceBlobSha": "82179183ee4c4036ab7f45144a8ebc561f9c73ac",
       "content": {
         "format": "SAFOR_MULTI_AGENT_SCHEDULER_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-CONFLICT-AWARE-MULTI-AGENT-SCHEDULER",
         "purpose": "MASTER-owned scheduling protocol that decomposes approved work into atomic execution units and dispatches the largest safe parallel wave that fits dependencies, agent capabilities, capacity, separation-of-duties rules and mutation-conflict constraints.",
         "topology": {
@@ -10435,7 +10446,8 @@
           "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
         },
         "jobContractModelRef": "agent-job-contract-model.json"
-      }
+      },
+      "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
     },
     "schemaSchedulerState": {
       "key": "schemaSchedulerState",
