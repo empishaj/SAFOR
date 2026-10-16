@@ -272,7 +272,10 @@
         "dependencies",
         "expectedOutputs",
         "acceptanceCriteria",
-        "evidenceRequirements"
+        "evidenceRequirements",
+        "execution",
+        "resourceAccess",
+        "parallelizationDecision"
       ],
       "conditionalRules": [
         {
@@ -335,6 +338,26 @@
         "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
         "DELIVERY_AS_OUTCOME_EVIDENCE"
       ]
+    },
+    "schedulingContract": {
+      "atomicDispatchOnly": true,
+      "compositeDecompositionRequired": true,
+      "resourceAccessRequired": true,
+      "immutableReadInputsRequired": true,
+      "unknownMutationConflict": "SERIALIZE",
+      "dedicatedGitBranchForMutations": true,
+      "naturalParallelism": [
+        {
+          "after": "SW-03",
+          "nodes": [
+            "SW-04",
+            "SW-05"
+          ],
+          "joinAt": "SW-06"
+        }
+      ],
+      "decompositionRule": "Implementation may be decomposed into ATOMIC child work only when solution design exposes independently acceptable outputs and conservative non-overlapping mutation domains; shared integration is modeled as an explicit downstream work item.",
+      "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan."
     }
   }
 }
