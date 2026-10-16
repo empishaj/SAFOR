@@ -252,7 +252,7 @@
     },
     "conformance": {
       "sourcePath": "v0.5.0/conformance.json",
-      "sourceBlobSha": "79f2abac8b0f1cc4d43225d5b9eb4d6d7e93bb24"
+      "sourceBlobSha": "5256638b06df61bce48ab90e06d2972a10149920"
     }
   },
   "embeddedModules": {
@@ -6655,7 +6655,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.5.0/conformance.json",
-      "sourceBlobSha": "79f2abac8b0f1cc4d43225d5b9eb4d6d7e93bb24",
+      "sourceBlobSha": "5256638b06df61bce48ab90e06d2972a10149920",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.5.0",
@@ -6989,8 +6989,9 @@
         ],
         "lastManualVerification": {
           "branch": "safor/memory-provider-v0.5.0",
-          "result": "PENDING",
-          "note": "v0.5.0 provider-neutral Memory conformance defined; automated and end-to-end verification pending."
+          "result": "PASS",
+          "workflowRunId": 38931379703,
+          "note": "CI verified reproducible 32-module bundle plus provider-neutral Memory, independent work-provider binding, shared-session concurrency model, fresh-session resume contract and per-output provenance."
         }
       }
     }
