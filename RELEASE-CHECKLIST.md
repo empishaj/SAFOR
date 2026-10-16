@@ -5,6 +5,7 @@
 - [ ] `VERSION` matches the intended release.
 - [ ] `CHANGELOG.md` contains the release.
 - [ ] `RELEASE-MANIFEST.json` matches the canonical repository and artifact.
+- [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
 - [ ] `SAFOR-MASTER-COMPLETE.json` is rebuilt from canonical `empishaj/SAFOR` source.
@@ -21,7 +22,7 @@
 
 ## Additional gates for General Availability
 
-- [ ] GitHub blank-chat end-to-end acceptance passes.
-- [ ] GitLab blank-chat end-to-end acceptance passes.
+- [ ] GitHub blank-chat end-to-end acceptance passes according to `ACCEPTANCE-TESTS.md`.
+- [ ] GitLab blank-chat end-to-end acceptance passes according to `ACCEPTANCE-TESTS.md`.
 - [ ] License/distribution decision is explicit.
 - [ ] Public repository slug is final and stable.
