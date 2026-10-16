@@ -1,0 +1,187 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:output-record:0.5.0",
+  "title": "SAFOR Output Provenance Record 0.5.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "outputId",
+    "projectId",
+    "artifactRef",
+    "createdAt",
+    "producer",
+    "llm",
+    "safor",
+    "inputRefs",
+    "evidenceRefs",
+    "memoryRevision"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_OUTPUT_RECORD"
+    },
+    "schemaVersion": {
+      "const": "0.5.0"
+    },
+    "outputId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workItemId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "artifactRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "producer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "actorId",
+        "actorKind",
+        "sessionId"
+      ],
+      "properties": {
+        "actorId": {
+          "type": "string"
+        },
+        "actorKind": {
+          "enum": [
+            "HUMAN",
+            "AGENT",
+            "SERVICE"
+          ]
+        },
+        "roleId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "sessionId": {
+          "type": "string"
+        }
+      }
+    },
+    "llm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "used",
+        "observability",
+        "provider",
+        "model",
+        "modelVersion"
+      ],
+      "properties": {
+        "used": {
+          "type": "boolean"
+        },
+        "observability": {
+          "enum": [
+            "OBSERVED",
+            "PARTIALLY_OBSERVED",
+            "NOT_EXPOSED"
+          ]
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "modelVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "safor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocolVersion",
+        "kernelVersion",
+        "factoryPackageId",
+        "factoryVersion",
+        "operatingModelPackageId",
+        "operatingModelVersion"
+      ],
+      "properties": {
+        "protocolVersion": {
+          "const": "0.5.0"
+        },
+        "kernelVersion": {
+          "const": "0.5.0"
+        },
+        "factoryPackageId": {
+          "type": "string"
+        },
+        "factoryVersion": {
+          "type": "string"
+        },
+        "operatingModelPackageId": {
+          "type": "string"
+        },
+        "operatingModelVersion": {
+          "type": "string"
+        }
+      }
+    },
+    "inputRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "memoryRevision": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "contentIntegrity": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "algorithm": {
+          "type": "string"
+        },
+        "digest": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
