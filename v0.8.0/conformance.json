@@ -547,6 +547,11 @@
       "id": "CF-109",
       "statement": "Scheduler materialization explicitly builds canonical JSON, renders/pins Markdown and readbacks both before dispatch publication.",
       "expected": true
+    },
+    {
+      "id": "CF-110",
+      "statement": "Job skills are self-contained for execution but retain authoritative immutable provenance through skillRef + skillBlobSha; MASTER may not invent skill provenance.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
