@@ -18,7 +18,7 @@ Current target: **v0.4.0-rc.1**
 | Bounded self-healing | PASS |
 | Machine-readable validation | PASS |
 | CI validation | PASS when workflow is green |
-| Product repository slug without trailing punctuation | OPEN |
+| Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |
 | GitLab end-to-end blank-chat acceptance run | OPEN |
