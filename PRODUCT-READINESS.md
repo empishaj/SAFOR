@@ -41,8 +41,8 @@ Current modular source: **`v0.8.0/`**
 | Conflict-aware serialization acceptance | OPEN |
 | HUMAN-readable + Git-trace result acceptance | OPEN |
 | Agent Workspace end-to-end acceptance | OPEN |
-| Machine-readable validation | PENDING current v0.8 PR CI |
-| CI validation | PENDING current v0.8 PR CI |
+| Machine-readable validation | PASS on PR #6 validated head |
+| CI validation | PASS on PR #6 validated head |
 | Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |
