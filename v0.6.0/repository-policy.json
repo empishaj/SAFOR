@@ -111,6 +111,7 @@
     "masterOwned": [
       "agents/index.json",
       "agents/{agentId}/identity.json",
+      "agents/{agentId}/inbox/index.json",
       "agents/{agentId}/inbox/{jobId}.json",
       "master/jobs/{jobId}.json"
     ],
@@ -120,7 +121,8 @@
       "agents/{agentId}/evidence/{jobId}/",
       "agents/{agentId}/audit/"
     ],
-    "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox or MASTER job lifecycle artifacts.",
-    "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant."
+    "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts or MASTER job lifecycle artifacts.",
+    "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant.",
+    "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required."
   }
 }
