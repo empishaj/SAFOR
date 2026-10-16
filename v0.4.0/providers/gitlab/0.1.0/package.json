@@ -1,7 +1,7 @@
 {
-  "format": "SAF_PACKAGE_MANIFEST",
+  "format": "SAFOR_PACKAGE_MANIFEST",
   "schemaVersion": "0.4.0",
-  "packageId": "saf.provider.gitlab",
+  "packageId": "safor.provider.gitlab",
   "packageKind": "PROVIDER_ADAPTER",
   "version": "0.1.0",
   "name": "GitLab Provider Adapter Contract",
