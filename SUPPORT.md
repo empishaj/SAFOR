@@ -2,36 +2,39 @@
 
 ## Current maturity
 
-SAFOR v0.4.0-rc.1 is a **Release Candidate**.
+SAFOR v0.5.0-rc.1 is a Release Candidate architecture.
 
-The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
+## Memory
 
-## Supported creation types
+SAFOR does not require a specific storage vendor. It requires a Memory provider that can prove durability, read/write access, revision identity and future-session resume.
 
-- Software / Website
-- Buch
+Supported contracts:
+- versioned repository,
+- persistent host filesystem,
+- custom Memory Provider Adapter.
 
-Additional Factories are not implicitly supported until they are published, bound and validated.
+A provider contract is not proof that the current chat host exposes the necessary tool.
 
-## Supported provider contracts
+## Work providers
 
-- GitHub
-- GitLab
+SAFOR includes contracts for GitHub, GitLab, generic/self-hosted Git and Plastic SCM / Unity Version Control.
 
-Actual usability depends on the chat host exposing the required provider connection and capabilities.
+Actual execution depends on host connectors. SAFOR will not simulate missing provider tools.
 
-## What SAFOR does not promise
+## Collaboration
 
-- It cannot create provider permissions that the HUMAN/account does not have.
-- It cannot force a chat host to expose native UI controls.
-- It cannot guarantee cancellation of an external operation without provider evidence.
-- It does not treat delivery as proof of business/reader outcome.
-- It does not silently repair high-impact or authorization-expanding failures.
+Shared Team mode is supported only when the Memory provider can prove shared access and safe multi-writer concurrency.
 
-## Escalation
+## LLM portability
 
-When safe automatic continuation is impossible, SAFOR stops or waits for the HUMAN and reports:
-1. what failed,
-2. what was already attempted,
-3. the current safe state,
-4. the smallest required HUMAN action.
+Project continuation must not depend on one LLM or one chat transcript. Exact model provenance is recorded only when exposed by the host.
+
+## Non-promises
+
+SAFOR cannot:
+- grant provider/storage permissions,
+- turn ephemeral filesystem storage into durable Memory,
+- infer exact LLM model versions the host does not expose,
+- guarantee provider features that are not connected,
+- treat delivery as proof of outcome,
+- bypass HUMAN authority or reviews.
