@@ -16,6 +16,8 @@
     "issuedAt",
     "dispatchRevision",
     "dispatchState",
+    "dispatchWaveRef",
+    "resourceLeaseRefs",
     "workItemRef",
     "executionContractRef",
     "mandateRef",
@@ -247,6 +249,19 @@
           "type": "string",
           "minLength": 1
         }
+      }
+    },
+    "dispatchWaveRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLeaseRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
       }
     }
   },
