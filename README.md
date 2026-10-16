@@ -36,6 +36,7 @@ These concerns are intentionally separate.
 - [Support & boundaries](SUPPORT.md)
 - [Product readiness](PRODUCT-READINESS.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
+- [End-to-end acceptance tests](ACCEPTANCE-TESTS.md)
 - [Changelog](CHANGELOG.md)
 - [Contributing](CONTRIBUTING.md)
 
