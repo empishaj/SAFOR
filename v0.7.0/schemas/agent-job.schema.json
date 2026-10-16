@@ -23,6 +23,7 @@
     "inputs",
     "requiredOutputs",
     "evidenceRequirements",
+    "resourceAccessSource",
     "resourceAccess",
     "gitWorkspaces",
     "constraints",
@@ -221,12 +222,31 @@
             "minLength": 1
           }
         }
-      }
+      },
+      "description": "Immutable dispatch snapshot of the authoritative work-item resource declaration. It must equal the resourceAccess in resourceAccessSource at dispatch time."
     },
     "gitWorkspaces": {
       "type": "array",
       "items": {
         "$ref": "#/$defs/gitWorkspace"
+      }
+    },
+    "resourceAccessSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workItemRef",
+        "workItemBlobSha"
+      ],
+      "properties": {
+        "workItemRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workItemBlobSha": {
+          "type": "string",
+          "minLength": 1
+        }
       }
     }
   },
