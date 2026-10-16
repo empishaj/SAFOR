@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
