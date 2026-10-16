@@ -1,6 +1,6 @@
 {
   "format": "SAFOR_INTERACTION_MODEL",
-  "schemaVersion": "0.5.0",
+  "schemaVersion": "0.6.0",
   "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
   "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
   "principles": {

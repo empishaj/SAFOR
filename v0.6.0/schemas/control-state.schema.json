@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:safor:control-state:0.5.0",
-  "title": "SAFOR Control State 0.5.0",
+  "$id": "urn:safor:control-state:0.6.0",
+  "title": "SAFOR Control State 0.6.0",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -24,7 +24,7 @@
       "const": "SAFOR_CONTROL_STATE"
     },
     "schemaVersion": {
-      "const": "0.5.0"
+      "const": "0.6.0"
     },
     "kernelRef": {
       "type": "object",
@@ -35,7 +35,7 @@
       ],
       "properties": {
         "version": {
-          "const": "0.5.0"
+          "const": "0.6.0"
         },
         "sourceRef": {
           "type": "string",

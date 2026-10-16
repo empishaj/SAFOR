@@ -1,13 +1,13 @@
 {
   "format": "SAFOR_PACKAGE_MANIFEST",
-  "schemaVersion": "0.5.0",
+  "schemaVersion": "0.6.0",
   "packageId": "safor.provider.gitlab",
   "packageKind": "PROVIDER_ADAPTER",
   "version": "0.1.0",
   "name": "GitLab Provider Adapter Contract",
   "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
   "compatibility": {
-    "kernel": ">=0.5.0 <0.6.0"
+    "kernel": ">=0.6.0 <0.7.0"
   },
   "exports": {
     "capabilities": [],

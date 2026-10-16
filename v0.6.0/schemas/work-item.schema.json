@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:safor:work-item:0.5.0",
-  "title": "SAFOR Domain-Agnostic Work Item 0.5.0",
+  "$id": "urn:safor:work-item:0.6.0",
+  "title": "SAFOR Domain-Agnostic Work Item 0.6.0",
   "type": "object",
   "additionalProperties": false,
   "required": [

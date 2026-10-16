@@ -1,13 +1,13 @@
 {
   "format": "SAFOR_PACKAGE_MANIFEST",
-  "schemaVersion": "0.5.0",
+  "schemaVersion": "0.6.0",
   "packageId": "safor.factory.book-production",
   "packageKind": "FACTORY",
   "version": "0.1.0",
   "name": "Book Production and Reader Outcome Factory",
   "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
   "compatibility": {
-    "kernel": ">=0.5.0 <0.6.0"
+    "kernel": ">=0.6.0 <0.7.0"
   },
   "exports": {
     "capabilities": [

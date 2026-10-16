@@ -1,6 +1,6 @@
 {
   "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "policyId": "SAFOR-REPO-BOUNDARY-V2",
   "denyByDefault": true,
   "principles": {
@@ -9,11 +9,12 @@
     "projectScopedControl": true,
     "workerMayNotMutateControlStateByDefault": true,
     "packagesAreReadOnlyAfterProjectPinning": true,
-    "actualProviderRightsOverrideDeclaredIntent": true
+    "actualProviderRightsOverrideDeclaredIntent": true,
+    "agentWorkspaceOwnershipSeparated": true
   },
   "repositoryClasses": {
     "CONTROL_REPOSITORY": {
-      "purpose": "Persist SAFOR project bindings, control/value-stream/execution states, decisions, evidence, package snapshots and audit records.",
+      "purpose": "Persist SAFOR project bindings, control/value-stream/execution states, decisions, evidence, package snapshots, repository-native agent workspaces, MASTER job lifecycle and audit records.",
       "allowedRoots": [
         "projects/",
         "factory/"
@@ -56,14 +57,16 @@
       "artifacts/",
       "work-items/",
       "agents/",
-      "audit/"
+      "audit/",
+      "master/jobs/"
     ],
     "requiredFiles": [
       "project.json",
       "bindings.json",
       "state/control.json",
       "state/value-stream.json",
-      "state/execution.json"
+      "state/execution.json",
+      "agents/index.json"
     ]
   },
   "reconciliation": {
@@ -102,5 +105,22 @@
     ],
     "onMissingOrInsufficientAccess": "STOP",
     "rule": "SAFOR may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
+  },
+  "agentWorkspaceOwnership": {
+    "modelRef": "agent-workspace-model.json",
+    "masterOwned": [
+      "agents/index.json",
+      "agents/{agentId}/identity.json",
+      "agents/{agentId}/inbox/{jobId}.json",
+      "master/jobs/{jobId}.json"
+    ],
+    "agentOwned": [
+      "agents/{agentId}/state.json",
+      "agents/{agentId}/outbox/{jobId}.result.json",
+      "agents/{agentId}/evidence/{jobId}/",
+      "agents/{agentId}/audit/"
+    ],
+    "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox or MASTER job lifecycle artifacts.",
+    "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant."
   }
 }
