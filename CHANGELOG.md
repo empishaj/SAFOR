@@ -7,7 +7,7 @@ All notable SAFOR product changes are documented here.
 ### Changed
 - Promoted the SAFOR product baseline to kernel/schema contract version 0.5.0.
 - Added the dedicated modular source tree `v0.5.0/` while retaining `v0.4.0/` as historical source.
-- Completed the SAF → SAFOR namespace migration across formats, package IDs, schema URNs and runtime identifiers.
+- Completed the legacy namespace migration across formats, package IDs, schema URNs and runtime identifiers.
 - Canonical product source is `empishaj/SAFOR`; project runtime memory remains `{OWNER}/safor-memory`.
 - Package compatibility for the v0.5.0 source tree now requires kernel `>=0.5.0 <0.6.0`.
 - Release distribution is now explicitly versioned as `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json`, with `SAFOR-MASTER-COMPLETE.json` retained as the latest alias.
