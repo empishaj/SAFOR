@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:project:0.5.0",
+  "title": "SAFOR Project Descriptor 0.5.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "projectSlug",
+    "title",
+    "creationType",
+    "goal",
+    "createdAt",
+    "memoryBindingRef",
+    "workspaces"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PROJECT"
+    },
+    "schemaVersion": {
+      "const": "0.5.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creationType": {
+      "enum": [
+        "SOFTWARE_WEBSITE",
+        "BOOK"
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "memoryBindingRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workspaces": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/workspaceRef"
+      }
+    }
+  },
+  "$defs": {
+    "workspaceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "providerPackageId",
+        "stableId",
+        "purpose"
+      ],
+      "properties": {
+        "providerPackageId": {
+          "type": "string",
+          "pattern": "^safor\\.provider\\."
+        },
+        "stableId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branchOrStream": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
