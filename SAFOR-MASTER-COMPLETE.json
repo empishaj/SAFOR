@@ -249,16 +249,19 @@
       "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
     },
     "schemaAgentJob": {
-      "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "542876ff2846d4451f37df7a6ad14669adef082c"
+      "sourcePath": "v0.9.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "56e0a1b173d0e4a7e31ccf970cad333e69b67de6",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
     },
     "schemaAgentJobState": {
-      "sourcePath": "v0.8.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "1ba42eb60f706356ee73e8b79790aca2eaa617a6"
+      "sourcePath": "v0.9.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "39c9abf55d1e9264948a962d7e7a9a05dc5559da",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
     },
     "schemaAgentResult": {
-      "sourcePath": "v0.8.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501"
+      "sourcePath": "v0.9.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "1122fdc91a8065c3e1aa1f55688091cf93ce8e94",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
     },
     "conformance": {
       "sourcePath": "v0.8.0/conformance.json",
@@ -275,16 +278,19 @@
       "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
     },
     "schemaSchedulerState": {
-      "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
-      "sourceBlobSha": "3acc33caec14f1e66465620244a536a22e536478"
+      "sourcePath": "v0.9.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "639799d514414e4fdaecc4a0e761fc39adcb3ee0",
+      "selfHealingProfileId": "MRP-SCHEMA_SCHEDULER_STATE"
     },
     "schemaDispatchWave": {
-      "sourcePath": "v0.8.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "bf3e86b4289c6a7549152572cfc68693073d4170"
+      "sourcePath": "v0.9.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "e924a0ef8b6b825c8a5743dc84d54dd517602075",
+      "selfHealingProfileId": "MRP-SCHEMA_DISPATCH_WAVE"
     },
     "schemaResourceLease": {
-      "sourcePath": "v0.8.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d"
+      "sourcePath": "v0.9.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "1474979d2ab006feed7d14394839149dccc4c30e",
+      "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
     },
     "agentJobContract": {
       "sourcePath": "v0.9.0/agent-job-contract-model.json",
@@ -7714,12 +7720,12 @@
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
-      "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "542876ff2846d4451f37df7a6ad14669adef082c",
+      "sourcePath": "v0.9.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "56e0a1b173d0e4a7e31ccf970cad333e69b67de6",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job:0.8.0",
-        "title": "SAFOR Canonical Agent Job Contract 0.8.0",
+        "$id": "urn:safor:agent-job:0.9.0",
+        "title": "SAFOR Canonical Agent Job Contract 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7747,7 +7753,7 @@
             "const": "SAFOR_AGENT_JOB"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "identity": {
             "$ref": "#/$defs/jobIdentity"
@@ -9105,16 +9111,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
     },
     "schemaAgentJobState": {
       "key": "schemaAgentJobState",
-      "sourcePath": "v0.8.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "1ba42eb60f706356ee73e8b79790aca2eaa617a6",
+      "sourcePath": "v0.9.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "39c9abf55d1e9264948a962d7e7a9a05dc5559da",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job-state:0.8.0",
-        "title": "SAFOR MASTER Agent Job State 0.8.0",
+        "$id": "urn:safor:agent-job-state:0.9.0",
+        "title": "SAFOR MASTER Agent Job State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9156,7 +9163,7 @@
             "const": "SAFOR_AGENT_JOB_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -9381,16 +9388,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
     },
     "schemaAgentResult": {
       "key": "schemaAgentResult",
-      "sourcePath": "v0.8.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501",
+      "sourcePath": "v0.9.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "1122fdc91a8065c3e1aa1f55688091cf93ce8e94",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-result:0.8.0",
-        "title": "SAFOR Agent Result 0.8.0",
+        "$id": "urn:safor:agent-result:0.9.0",
+        "title": "SAFOR Agent Result 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9421,7 +9429,7 @@
             "const": "SAFOR_AGENT_RESULT"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "resultId": {
             "type": "string",
@@ -9670,7 +9678,8 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
     },
     "conformance": {
       "key": "conformance",
@@ -10556,12 +10565,12 @@
     },
     "schemaSchedulerState": {
       "key": "schemaSchedulerState",
-      "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
-      "sourceBlobSha": "3acc33caec14f1e66465620244a536a22e536478",
+      "sourcePath": "v0.9.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "639799d514414e4fdaecc4a0e761fc39adcb3ee0",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:scheduler-state:0.8.0",
-        "title": "SAFOR Multi-Agent Scheduler State 0.8.0",
+        "$id": "urn:safor:scheduler-state:0.9.0",
+        "title": "SAFOR Multi-Agent Scheduler State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10581,7 +10590,7 @@
             "const": "SAFOR_SCHEDULER_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10673,16 +10682,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_SCHEDULER_STATE"
     },
     "schemaDispatchWave": {
       "key": "schemaDispatchWave",
-      "sourcePath": "v0.8.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "bf3e86b4289c6a7549152572cfc68693073d4170",
+      "sourcePath": "v0.9.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "e924a0ef8b6b825c8a5743dc84d54dd517602075",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:dispatch-wave:0.8.0",
-        "title": "SAFOR Dispatch Wave 0.8.0",
+        "$id": "urn:safor:dispatch-wave:0.9.0",
+        "title": "SAFOR Dispatch Wave 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10703,7 +10713,7 @@
             "const": "SAFOR_DISPATCH_WAVE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10794,16 +10804,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_DISPATCH_WAVE"
     },
     "schemaResourceLease": {
       "key": "schemaResourceLease",
-      "sourcePath": "v0.8.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d",
+      "sourcePath": "v0.9.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "1474979d2ab006feed7d14394839149dccc4c30e",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:resource-lease:0.8.0",
-        "title": "SAFOR Multi-Agent Resource Lease 0.8.0",
+        "$id": "urn:safor:resource-lease:0.9.0",
+        "title": "SAFOR Multi-Agent Resource Lease 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10830,7 +10841,7 @@
             "const": "SAFOR_RESOURCE_LEASE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10917,7 +10928,8 @@
             "minLength": 1
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
     },
     "agentJobContract": {
       "key": "agentJobContract",
