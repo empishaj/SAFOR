@@ -18,6 +18,7 @@ projects/{projectSlug}/
 │       ├── identity.json
 │       ├── state.json
 │       ├── inbox/
+│       │   ├── index.json
 │       │   └── {jobId}.json
 │       ├── outbox/
 │       │   └── {jobId}.result.json
@@ -34,6 +35,7 @@ projects/{projectSlug}/
 ### MASTER-owned
 - `agents/index.json`
 - `agents/{agentId}/identity.json`
+- `agents/{agentId}/inbox/index.json` — non-authoritative job discovery projection
 - `agents/{agentId}/inbox/{jobId}.json`
 - `master/jobs/{jobId}.json`
 
@@ -63,6 +65,7 @@ MASTER
   │
   ├─ writes immutable inbox job
   ├─ writes master/jobs state = READY
+  ├─ updates inbox/index.json projection
   │
   ▼
 external activation
@@ -71,7 +74,9 @@ external activation
 AGENT
   ├─ loads identity
   ├─ loads state
-  ├─ scans inbox
+  ├─ reads fixed inbox/index.json
+  ├─ reads referenced immutable job contract
+  ├─ reads authoritative master job state
   ├─ verifies assignment + identity revision
   ├─ verifies mandate + provider rights
   ├─ claims using optimistic concurrency
@@ -87,6 +92,14 @@ MASTER
   ├─ applies review / SoD / Factory criteria
   └─ advances authoritative job lifecycle
 ```
+
+## Deterministic job discovery
+
+The agent does **not** rely on listing an inbox directory. It reads the fixed path `agents/{agentId}/inbox/index.json`.
+
+That index is only a discoverability projection. It may point to AVAILABLE or REWORK_AVAILABLE jobs, but it never decides whether a job is actually claimable. Before claiming, the agent must read the referenced immutable job contract, verify its blob identity, and read the authoritative `master/jobs/{jobId}.json` record. If the index is stale, the authoritative artifacts win.
+
+This keeps job pickup deterministic even when a host exposes file read/write but no repository-directory listing primitive.
 
 ## Authoritative lifecycle
 
