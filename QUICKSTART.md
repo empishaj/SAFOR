@@ -13,7 +13,7 @@ If `safor-memory` does not already exist or is not writable, SAFOR stops. It nev
 
 ## Start
 
-1. Load `SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
+1. Load `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
 2. Choose **GitHub** or **GitLab**.
 3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
 4. Choose the owner/namespace.
@@ -87,3 +87,17 @@ The JSON explicitly contains job/package/work-item identity and sequence, MASTER
 The agent may not change role, substitute mandatory skills, expand scope/rights, choose ad-hoc output paths or self-accept the result.
 
 See `AGENT-JOB-CONTRACT.md`.
+
+
+## Module-wide self-healing
+
+SAFOR v0.9 gives every embedded module exactly one recovery profile. Recovery is constrained by module authority and repairability:
+
+- immutable modules: validate/reload expected blobs only,
+- pinned models/packages: restore verified expected versions/blobs,
+- derived artifacts: regenerate only from authoritative sources,
+- provider bindings: refresh observed capabilities without permission elevation.
+
+Every repair is persisted with module/profile identity and succeeds only after authoritative readback.
+
+See `MODULE-SELF-HEALING.md`.
