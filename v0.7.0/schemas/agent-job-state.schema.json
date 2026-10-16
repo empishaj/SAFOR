@@ -15,6 +15,9 @@
     "lifecycleStatus",
     "contractRef",
     "contractBlobSha",
+    "dispatchWaveRef",
+    "resourceLeaseRefs",
+    "gitWorkspaceRefs",
     "agentStateRef",
     "resultRef",
     "evidenceRefs",
@@ -137,6 +140,27 @@
     "updatedAt": {
       "type": "string",
       "format": "date-time"
+    },
+    "dispatchWaveRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLeaseRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "gitWorkspaceRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   },
   "$defs": {
