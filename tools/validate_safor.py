@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.9.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.10.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -31,7 +31,7 @@ required_modules = {
     "factorySoftwareWebsite","factoryBook","schemaPackageManifest","schemaControlState",
     "schemaValueStreamState","schemaExecutionState","schemaWorkItem","schemaProject",
     "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu",
-    "schemaSelfHealingRecord","schemaModuleRecoveryProfile","moduleSelfHealing","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
+    "humanDecisionGate","schemaHumanCognitiveLoadPolicy","schemaHumanDecisionGate","schemaSelfHealingRecord","schemaModuleRecoveryProfile","moduleSelfHealing","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
     "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
     "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
 }
@@ -100,8 +100,8 @@ for key, module in modules.items():
     manifest_entry = integrity_manifest.get(key, {})
     if manifest_entry.get("selfHealingProfileId") != expected_pid:
         fail(f"Integrity manifest {key} selfHealingProfileId mismatch.")
-    if not str(module.get("sourcePath","")).startswith("v0.9.0/"):
-        fail(f"Embedded module {key} must come from v0.9.0 source.")
+    if not str(module.get("sourcePath","")).startswith("v0.10.0/"):
+        fail(f"Embedded module {key} must come from v0.10.0 source.")
 
 recovery_schema = modules.get("schemaModuleRecoveryProfile", {}).get("content", {})
 schema_required = set(recovery_schema.get("required", []))
@@ -182,13 +182,13 @@ if kernel.get("schemas", {}).get("moduleRecoveryProfile") != "schemas/module-rec
     fail("Kernel must reference module recovery profile schema.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 106)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 121)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 132)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 154)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -201,7 +201,7 @@ for principle in ("moduleProfileRequired","exactModuleCoverageRequired","failClo
     if self_healing.get("principles", {}).get(principle) is not True:
         fail(f"Self-healing principle {principle} must be true.")
 failure_classes = {x.get("id"): x for x in self_healing.get("failureClasses", [])}
-for n in range(10, 19):
+for n in range(10, 20):
     cid = f"SH-{n:02d}"
     if cid not in failure_classes:
         fail(f"Missing module-aware self-healing failure class {cid}.")
@@ -480,6 +480,155 @@ interaction = modules.get("interaction", {}).get("content", {})
 if "multiAgentStatusExperience" not in interaction:
     fail("Interaction model must expose multi-agent utilization/status.")
 
+cognitive = interaction.get("humanCognitiveLoadPolicy", {})
+if cognitive.get("schemaRef") != "schemas/human-cognitive-load-policy.schema.json":
+    fail("Interaction model must bind the HUMAN cognitive-load schema.")
+principles = cognitive.get("principles", {})
+for key in ("highLoadAllowedWhenHumanKnowledgeIsRequired","extraneousTechnicalLoadAlwaysMinimized","loadMustDecreaseAsContextBecomesKnown","humanIsDecisionMakerNotWorkflowOperator","progressiveDisclosureRequired","oneDecisionContextAtATime","deriveBeforeAsk","noRepeatedUnchangedApproval","domainLanguageFirst"):
+    if principles.get(key) is not True:
+        fail(f"Cognitive-load principle {key} must be true.")
+phase_profiles = cognitive.get("phaseProfiles", {})
+expected_phase_loads = {
+    "BOOTSTRAP":"MEDIUM","DISCOVERY":"HIGH","PLANNING":"MEDIUM","SCHEDULING":"VERY_LOW",
+    "AGENT_COORDINATION":"VERY_LOW","EXECUTION":"LOW","RECOVERY":"LOW","OUTCOME":"MEDIUM","CLOSING":"LOW"
+}
+for phase, expected_load in expected_phase_loads.items():
+    profile = phase_profiles.get(phase, {})
+    if profile.get("targetLoad") != expected_load:
+        fail(f"{phase} cognitive-load target must be {expected_load}.")
+    if profile.get("maxNewDecisionsPerTurn") != 1:
+        fail(f"{phase} must limit new HUMAN decision contexts to one per turn.")
+    if profile.get("technicalDetailDefault") != "HIDDEN":
+        fail(f"{phase} must hide technical detail by default.")
+if phase_profiles.get("DISCOVERY", {}).get("allowDeepQuestions") is not True:
+    fail("DISCOVERY must explicitly allow deep sequential questions.")
+if phase_profiles.get("SCHEDULING", {}).get("humanInteractionDefault") != "NONE":
+    fail("SCHEDULING HUMAN interaction default must be NONE.")
+if phase_profiles.get("AGENT_COORDINATION", {}).get("humanInteractionDefault") != "NONE":
+    fail("AGENT_COORDINATION HUMAN interaction default must be NONE.")
+if phase_profiles.get("EXECUTION", {}).get("humanInteractionDefault") != "EXCEPTION_ONLY":
+    fail("EXECUTION HUMAN interaction default must be EXCEPTION_ONLY.")
+if phase_profiles.get("RECOVERY", {}).get("humanInteractionDefault") != "ESCALATION_ONLY":
+    fail("RECOVERY HUMAN interaction default must be ESCALATION_ONLY.")
+
+heuristic = cognitive.get("heuristicLoadEstimate", {})
+if heuristic.get("notPsychometricMeasure") is not True:
+    fail("Cognitive-load estimate must explicitly be non-psychometric.")
+factor_sum = sum(v.get("maxPoints", 0) for v in heuristic.get("factors", {}).values() if isinstance(v, dict))
+if factor_sum != 100:
+    fail("Cognitive-load heuristic factor maxima must sum to 100.")
+phase_max = heuristic.get("phaseMaximumWithoutExplicitEscalation", {})
+for phase in expected_phase_loads:
+    if phase not in phase_max:
+        fail(f"Cognitive-load heuristic missing phase maximum for {phase}.")
+
+question_policy = cognitive.get("questionPolicy", {})
+for key in ("askOnlyMinimumNecessaryQuestion","decisionReasonMustBeRecorded","noQuestionWhenAnswerSafelyDerivable","noQuestionWhenUnchangedDecisionReusable"):
+    if question_policy.get(key) is not True:
+        fail(f"Cognitive question policy {key} must be true.")
+if question_policy.get("maxNewDecisionContextsPerTurn") != 1:
+    fail("Cognitive question policy must allow one new decision context per turn.")
+
+language = interaction.get("humanLanguagePolicy", {})
+if language.get("defaultVocabulary") != "HUMAN_DOMAIN_LANGUAGE":
+    fail("Default HUMAN vocabulary must be HUMAN_DOMAIN_LANGUAGE.")
+if language.get("technicalIdsHiddenByDefault") is not True:
+    fail("Technical IDs must be hidden by default.")
+for term in ("DISPATCH_WAVE","RESOURCE_LEASE","PROVIDER_READBACK","EXECUTION_MANDATE"):
+    if term not in language.get("internalTermsHiddenByDefault", []):
+        fail(f"HUMAN language policy must hide internal term {term}.")
+if language.get("humanTerms", {}).get("WORK_ITEM") != "Aufgabe":
+    fail("WORK_ITEM must map to HUMAN term Aufgabe.")
+
+primary = interaction.get("primaryActionPolicy", {})
+if primary.get("labelMode") != "DOMAIN_SPECIFIC_DYNAMIC":
+    fail("Primary actions must use domain-specific dynamic labels.")
+if primary.get("fallbackLabel") != "Weiter":
+    fail("Primary action fallback label must be Weiter.")
+if "NEXT_ROUND" not in primary.get("forbiddenDefaultLabels", []):
+    fail("NEXT_ROUND must be forbidden as a default HUMAN label.")
+
+gate = modules.get("humanDecisionGate", {}).get("content", {})
+if gate.get("defaultDecision") != "DO_NOT_ASK":
+    fail("HUMAN Decision Gate must default to DO_NOT_ASK.")
+legit = [x.get("id") for x in gate.get("legitimateReasons", [])]
+if len(set(legit)) != 12:
+    fail("HUMAN Decision Gate must define exactly 12 unique legitimate reasons.")
+for item in ("JOB_ID_GENERATION","RESOURCE_LEASE_MANAGEMENT","DISPATCH_WAVE_PLANNING","READBACK_VERIFICATION","INTERNAL_STATE_TRANSITIONS","FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE"):
+    if item not in gate.get("mustNotAskHumanFor", []):
+        fail(f"HUMAN Decision Gate must forbid delegation of {item}.")
+if gate.get("decisionReusePolicy", {}).get("unchangedApprovalRepetitionForbidden") is not True:
+    fail("Unchanged HUMAN approval repetition must be forbidden.")
+if gate.get("latePhasePolicy", {}).get("schedulingDefault") != "NO_HUMAN_INTERACTION":
+    fail("Decision Gate scheduling default must be NO_HUMAN_INTERACTION.")
+if gate.get("latePhasePolicy", {}).get("executionDefault") != "EXCEPTION_ONLY":
+    fail("Decision Gate execution default must be EXCEPTION_ONLY.")
+if gate.get("latePhasePolicy", {}).get("recoveryDefault") != "ESCALATION_ONLY":
+    fail("Decision Gate recovery default must be ESCALATION_ONLY.")
+
+if kernel.get("humanDecisionGateModelRef") != "human-decision-gate-model.json":
+    fail("Kernel must bind human-decision-gate-model.json.")
+if kernel.get("schemas", {}).get("humanCognitiveLoadPolicy") != "schemas/human-cognitive-load-policy.schema.json":
+    fail("Kernel must bind HUMAN cognitive-load schema.")
+if kernel.get("schemas", {}).get("humanDecisionGate") != "schemas/human-decision-gate.schema.json":
+    fail("Kernel must bind HUMAN decision-gate schema.")
+guard = kernel.get("controlPlane", {}).get("crossCuttingGuards", {}).get("humanDecisionGate", {})
+if guard.get("defaultOutcome") != "DO_NOT_ASK" or guard.get("appliesBefore") != "EVERY_HUMAN_QUESTION_APPROVAL_OR_CHOICE":
+    fail("Kernel cross-cutting HUMAN Decision Gate contract is invalid.")
+
+if actions.get("K10", {}).get("humanDecision") is not None:
+    fail("K10 deterministic creation-profile binding must not require unconditional HUMAN approval.")
+if actions.get("K10", {}).get("humanDecisionWhen") != "ONLY_IF_NON_STANDARD_CHANGED_OR_CONFLICTING_BINDING_REQUIRES_HUMAN_CHOICE":
+    fail("K10 must declare the exceptional HUMAN-decision condition.")
+if actions.get("K10A", {}).get("humanDecision") != "PACKAGE_BINDING_APPROVAL":
+    fail("K10A must carry exceptional PACKAGE_BINDING_APPROVAL.")
+bootstrap_actions = next((p.get("actions", []) for p in kernel.get("controlPlane", {}).get("phases", []) if p.get("id") == "BOOTSTRAP"), [])
+if "K10" not in bootstrap_actions or "K10A" not in bootstrap_actions or bootstrap_actions.index("K10A") != bootstrap_actions.index("K10") + 1:
+    fail("BOOTSTRAP must place exceptional K10A immediately after deterministic K10.")
+
+for action in kernel.get("controlPlane", {}).get("actions", []):
+    if action.get("humanDecision"):
+        contract = action.get("humanInteractionContract", {})
+        for field in ("gateRef","phase","reason","targetLoad","maxNewDecisionContexts","technicalDetailExposure","deriveBeforeAsk","reuseUnchangedDecision"):
+            if field not in contract:
+                fail(f"{action.get('id')} HUMAN decision action missing interaction contract field {field}.")
+        if contract.get("gateRef") != "human-decision-gate-model.json":
+            fail(f"{action.get('id')} must bind HUMAN Decision Gate.")
+        if contract.get("maxNewDecisionContexts") != 1:
+            fail(f"{action.get('id')} must limit HUMAN interaction to one decision context.")
+        if contract.get("deriveBeforeAsk") is not True or contract.get("reuseUnchangedDecision") is not True:
+            fail(f"{action.get('id')} must derive/reuse before asking.")
+        if contract.get("reason") not in legit:
+            fail(f"{action.get('id')} uses an invalid HUMAN interaction reason.")
+
+for action_id in ("D01","O01"):
+    contract = actions.get(action_id, {}).get("humanInteractionContract", {})
+    if contract.get("gateRef") != "human-decision-gate-model.json":
+        fail(f"{action_id} dynamic HUMAN interaction must be Decision-Gate governed.")
+if actions.get("D01", {}).get("humanInteractionContract", {}).get("targetLoad") != "HIGH":
+    fail("D01 DISCOVERY target HUMAN load must be HIGH.")
+
+interaction_menu_schema = modules.get("schemaInteractionMenu", {}).get("content", {})
+context_required = interaction_menu_schema.get("properties", {}).get("context", {}).get("required", [])
+for field in ("phase","cognitiveLoadTarget","interactionReason","decisionRequired","technicalDetailExposure","decisionGateOutcome","heuristicLoadEstimate","reusedDecisionRef"):
+    if field not in context_required:
+        fail(f"Interaction menu context missing HUMAN governance field {field}.")
+
+cognitive_schema = modules.get("schemaHumanCognitiveLoadPolicy", {}).get("content", {})
+for field in ("objective","schemaRef","principles","loadLevels","phaseProfiles","adaptiveLoadRules","heuristicLoadEstimate","questionPolicy"):
+    if field not in cognitive_schema.get("required", []):
+        fail(f"HUMAN cognitive-load schema missing required field {field}.")
+gate_schema = modules.get("schemaHumanDecisionGate", {}).get("content", {})
+for field in ("defaultDecision","legitimateReasons","mustNotAskHumanFor","evaluationAlgorithm","decisionReusePolicy","latePhasePolicy"):
+    if field not in gate_schema.get("required", []):
+        fail(f"HUMAN decision-gate schema missing required field {field}.")
+
+if "SH-19" not in failure_classes:
+    fail("Self-healing failure taxonomy must include SH-19 HUMAN interaction governance failure.")
+for module_key in ("humanDecisionGate","schemaHumanCognitiveLoadPolicy","schemaHumanDecisionGate"):
+    if module_key not in profile_by_key:
+        fail(f"Module self-healing missing HUMAN governance recovery profile {module_key}.")
+
 for schema_name in ("schemaSchedulerState","schemaDispatchWave","schemaResourceLease"):
     if not modules.get(schema_name, {}).get("content"):
         fail(f"Missing scheduler schema module {schema_name}.")
@@ -497,10 +646,10 @@ if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
 if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
     fail("Release manifest latest alias mismatch.")
-if manifest.get("sourceRoot") != "v0.9.0":
-    fail("Release manifest source root must be v0.9.0.")
-if bundle.get("schemaVersion") != "0.9.0":
-    fail("Complete bundle schemaVersion must be 0.9.0.")
+if manifest.get("sourceRoot") != "v0.10.0":
+    fail("Release manifest source root must be v0.10.0.")
+if bundle.get("schemaVersion") != "0.10.0":
+    fail("Complete bundle schemaVersion must be 0.10.0.")
 versioned_bundle = load_json(expected_versioned)
 if versioned_bundle != bundle:
     fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")
@@ -569,3 +718,6 @@ print("- Canonical explicit agent jobs: package/sequence/provenance/role/skills/
 print("- HUMAN-readable agent job projection: verified")
 print("- Module-wide self-healing coverage: verified for every embedded module")
 print("- Profile-constrained recovery / fail-closed recovery control: verified")
+print("- Phase-aware HUMAN cognitive-load governance: verified")
+print("- Derive-before-ask / unchanged-decision reuse: verified")
+print("- HUMAN Decision Gate and domain-language abstraction: verified")

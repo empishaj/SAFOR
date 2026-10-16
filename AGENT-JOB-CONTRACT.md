@@ -1,6 +1,6 @@
 # SAFOR Canonical Agent Job Contract
 
-SAFOR v0.8 defines every MASTER-to-agent job as an immutable execution contract.
+SAFOR v0.10 defines every MASTER-to-agent job as an immutable execution contract.
 
 ## Authoritative artifacts
 

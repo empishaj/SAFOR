@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.9.0-rc.1",
+  "version": "0.10.0-rc.1",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
-  "sourceRoot": "v0.9.0",
-  "distributable": "SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json",
+  "sourceRoot": "v0.10.0",
+  "distributable": "SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json",
   "latestAlias": "SAFOR-MASTER-COMPLETE.json",
-  "previousVersion": "0.8.0-rc.1",
+  "previousVersion": "0.9.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -35,7 +35,13 @@
     "MODULE_WIDE_SELF_HEALING",
     "EXACT_MODULE_RECOVERY_PROFILE_COVERAGE",
     "PROFILE_CONSTRAINED_RECOVERY",
-    "FAIL_CLOSED_RECOVERY_CONTROL"
+    "FAIL_CLOSED_RECOVERY_CONTROL",
+    "PHASE_AWARE_HUMAN_COGNITIVE_LOAD",
+    "HUMAN_DECISION_GATE",
+    "DERIVE_BEFORE_ASK",
+    "UNCHANGED_HUMAN_DECISION_REUSE",
+    "HUMAN_DOMAIN_LANGUAGE_ABSTRACTION",
+    "DYNAMIC_PRIMARY_ACTION_LABELS"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -47,6 +53,7 @@
     "SIX_AGENT_PARALLEL_SCHEDULING_ACCEPTANCE",
     "AGENT_GIT_TRACE_AND_HUMAN_RESULT_ACCEPTANCE",
     "EXPLICIT_AGENT_JOB_CONTRACT_END_TO_END_ACCEPTANCE",
-    "MODULE_WIDE_SELF_HEALING_END_TO_END_ACCEPTANCE"
+    "MODULE_WIDE_SELF_HEALING_END_TO_END_ACCEPTANCE",
+    "HUMAN_COGNITIVE_LOAD_END_TO_END_ACCEPTANCE"
   ]
 }

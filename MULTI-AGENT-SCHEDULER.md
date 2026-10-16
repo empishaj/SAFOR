@@ -1,6 +1,6 @@
 # SAFOR Multi-Agent Scheduler
 
-SAFOR v0.7 adds a MASTER-owned scheduler for safe parallel work across multiple persistent agent chats.
+SAFOR v0.10 provides a MASTER-owned scheduler for safe parallel work across multiple persistent agent chats.
 
 ## Goal
 

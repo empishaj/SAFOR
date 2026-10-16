@@ -15,6 +15,7 @@ SAFOR
 + Agent Workspace Protocol
 + Multi-Agent Scheduler
 + Module Self-Healing
++ HUMAN Interaction Governance
 + Evidence
 + HUMAN Authority
 ```
@@ -29,6 +30,9 @@ Defines roles, capabilities, mandates, decision rights, gates and separation of 
 
 ### Factory
 Defines domain-specific Discovery, Planning, value-stream transformations, acceptance requirements, Evidence and outcome logic.
+
+### HUMAN Interaction Governance
+Controls when HUMAN cognition is valuable and when SAFOR must absorb complexity. It applies a phase-aware Cognitive Load Policy, derive-before-ask Decision Gate, unchanged-decision reuse, HUMAN-domain terminology and dynamic primary-action labels.
 
 ### Module Self-Healing
 Assigns exactly one recovery profile to every embedded module. Profiles define authority type, repairability, detectors, allowed/forbidden repairs, retry budget, verification and escalation. Recovery is fail-closed when recovery-control integrity cannot be proven.
@@ -166,3 +170,24 @@ Automatic repair is the intersection of:
 Authoritative semantics are never guessed or silently rewritten. Derived projections may be regenerated only from verified authoritative sources. Unknown mutation effects reconcile before retry.
 
 See [MODULE-SELF-HEALING.md](MODULE-SELF-HEALING.md).
+
+
+## Phase-aware HUMAN cognitive load
+
+SAFOR intentionally permits higher HUMAN load during Discovery because goals, priorities and value judgments cannot always be derived. Once plan and authority are established, routine interaction load falls.
+
+```text
+BOOTSTRAP          MEDIUM
+DISCOVERY          HIGH
+PLANNING           MEDIUM
+SCHEDULING         VERY_LOW
+AGENT_COORDINATION VERY_LOW
+EXECUTION          LOW
+RECOVERY           LOW
+OUTCOME            MEDIUM
+CLOSING            LOW
+```
+
+Every question passes the HUMAN Decision Gate. SAFOR derives/reuses before asking and keeps internal orchestration behind the interaction abstraction layer.
+
+See [HUMAN-COGNITIVE-LOAD.md](HUMAN-COGNITIVE-LOAD.md).

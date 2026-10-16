@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.9.0-rc.1 — Release Candidate**
+> Current maturity: **v0.10.0-rc.1 — Release Candidate**
 
 ## Start here
 
@@ -25,10 +25,10 @@ These concerns are intentionally separate.
 
 ## Distribution
 
-- `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json` — immutable-name release-candidate distribution.
+- `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json` — immutable-name release-candidate distribution.
 - `SAFOR-MASTER-COMPLETE.json` — latest release-candidate alias.
-- `v0.9.0/` — current modular source baseline with module-wide profile-constrained self-healing, canonical explicit Agent Job Contract, repository-native Agent Workspace Protocol and conflict-aware Multi-Agent Scheduler.
-- `v0.8.0/`, `v0.7.0/`, `v0.6.0/`, `v0.5.0/` and `v0.4.0/` — retained historical source baselines.
+- `v0.10.0/` — current modular source baseline with phase-aware HUMAN cognitive-load governance, Decision Gate, module-wide self-healing, canonical Agent Job Contract, repository-native Agent Workspace and conflict-aware Multi-Agent Scheduler.
+- `v0.9.0/`, `v0.8.0/`, `v0.7.0/`, `v0.6.0/`, `v0.5.0/` and `v0.4.0/` — retained historical source baselines.
 
 ## Product documentation
 
@@ -37,6 +37,7 @@ These concerns are intentionally separate.
 - [Agent Workspace Protocol](AGENT-WORKSPACE.md)
 - [Agent Job Contract](AGENT-JOB-CONTRACT.md)
 - [Module-wide Self-Healing](MODULE-SELF-HEALING.md)
+- [HUMAN Cognitive Load](HUMAN-COGNITIVE-LOAD.md)
 - [Multi-Agent Scheduler](MULTI-AGENT-SCHEDULER.md)
 - [Security](SECURITY.md)
 - [Support & boundaries](SUPPORT.md)
@@ -56,4 +57,4 @@ The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR is currently a **Release Candidate**, not General Availability. GA requires clean GitHub/GitLab, Agent Workspace, canonical explicit Job Contract, module-wide self-healing, six-agent parallel scheduling and Git-trace/HUMAN-result acceptance plus an explicit HUMAN licensing/distribution decision.
+SAFOR is currently a **Release Candidate**, not General Availability. GA requires clean GitHub/GitLab, Agent Workspace, canonical Job Contract, module-wide self-healing, HUMAN cognitive-load acceptance, six-agent parallel scheduling and Git-trace/HUMAN-result acceptance plus an explicit HUMAN licensing/distribution decision.

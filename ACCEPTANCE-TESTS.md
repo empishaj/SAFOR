@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -253,3 +253,55 @@ For one mutating agent job and one read-only agent job:
 21. No repair is marked SUCCEEDED before authoritative readback satisfies the profile success predicate.
 
 **Pass condition:** all 21 observations are evidenced from repository/provider state. No authoritative semantic artifact is silently rewritten and no permission is inferred or elevated.
+
+
+## N. HUMAN Cognitive Load and Communication
+
+**Preconditions**
+- Start a fresh chat with the exact v0.10 release artifact.
+- Use a realistic project where Discovery requires genuine HUMAN intent and priorities.
+- Retain the interaction transcript plus emitted interaction-menu metadata.
+
+**Expected — initialization and Discovery**
+1. Initialization asks one HUMAN decision context at a time.
+2. HUMAN-controlled choices such as provider/project location/creation type may create MEDIUM load.
+3. Discovery may reach HIGH load because SAFOR asks meaningful questions about goal, users, value, scope, priorities and constraints.
+4. Discovery does not expose internal IDs, leases, dispatch waves, READY/CLAIMED states or provider-readback mechanics on the default surface.
+5. Every Discovery question carries the legitimate reason `NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT` or another valid Decision-Gate reason.
+6. SAFOR does not ask a Discovery question when the answer is already safely derivable from approved state/evidence.
+
+**Expected — planning transition**
+7. Planning presents a summarized interpretation and material tradeoffs before technical detail.
+8. The HUMAN approves the plan once for the pinned plan/scope.
+9. Re-reading or resuming the unchanged plan does not trigger the same approval again.
+10. Deterministic Factory/Operating-Model/Provider binding after creation-type selection does not create a second approval request.
+11. Only a materially changed/non-standard/conflicting binding may invoke K10A.
+
+**Expected — execution load reduction**
+12. After plan approval and a covering execution mandate, Scheduling and Agent Coordination proceed without HUMAN questions for job IDs, agent selection when deterministic, branches, resource leases, dispatch waves, readbacks, evidence collection or internal state transitions.
+13. Scheduling and Agent Coordination report target load `VERY_LOW`; Execution reports `LOW`.
+14. An unchanged active execution mandate is reused rather than requested again.
+15. An unchanged ACTIVE persistent agent identity is reused without HUMAN reapproval.
+16. Routine successful execution uses concise progress/status communication rather than technical confirmations.
+
+**Expected — language and actions**
+17. Default SUMMARY communication answers: what happened, what it means for the project, whether HUMAN action is required and what happens next.
+18. Internal SAFOR terms and technical IDs are hidden until Details, audit/debug context or a technical decision actually requires them.
+19. Primary action labels describe the concrete next domain action when possible; fallback is `Weiter`, never an internal action ID.
+
+**Expected — legitimate temporary re-escalation**
+20. Introduce a material scope change, new risk or authority expansion during Execution.
+21. SAFOR temporarily raises HUMAN involvement only for that material decision and records the explicit Decision-Gate reason.
+22. The turn still contains at most one new decision context.
+23. After the decision is resolved, routine HUMAN load returns to the phase default instead of remaining elevated.
+
+**Expected — recovery**
+24. A safely repairable internal failure is handled without a HUMAN decision and summarized only when material.
+25. A failure that cannot be repaired safely escalates with one clear blocker/decision and no unnecessary recovery internals on SUMMARY.
+26. If the HUMAN Decision Gate/Cognitive Load Policy is invalid, SAFOR suppresses nonessential questions and fails closed; it never infers approval.
+
+**Measurement integrity**
+27. The optional 0–100 load value is treated only as an internal governance heuristic.
+28. SAFOR never presents that number as a validated psychological/scientific cognitive-load measurement.
+
+**Pass condition:** all 28 observations are evidenced. The transcript must show a deliberately higher HUMAN contribution during genuine Discovery and a clear reduction after planning/authorization, with only temporary, reasoned load increases for material decisions.

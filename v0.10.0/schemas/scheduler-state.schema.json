@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:scheduler-state:0.10.0",
+  "title": "SAFOR Multi-Agent Scheduler State 0.10.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "revision",
+    "maxParallelJobs",
+    "activeWaveRefs",
+    "activeLeaseRefs",
+    "queuedWorkItemRefs",
+    "blockedWork",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_SCHEDULER_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.10.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "maxParallelJobs": {
+      "oneOf": [
+        {
+          "const": "AUTO"
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        }
+      ]
+    },
+    "activeWaveRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "activeLeaseRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "queuedWorkItemRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "blockedWork": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/blocked"
+      }
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "blocked": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workItemRef",
+        "reasonCode",
+        "conflictingRefs"
+      ],
+      "properties": {
+        "workItemRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reasonCode": {
+          "enum": [
+            "DEPENDENCY",
+            "NO_ELIGIBLE_AGENT",
+            "NO_CAPACITY",
+            "RESOURCE_CONFLICT",
+            "SOD",
+            "MANDATE",
+            "PROVIDER_RIGHTS",
+            "UNKNOWN_CONFLICT"
+          ]
+        },
+        "conflictingRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

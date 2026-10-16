@@ -1,0 +1,2129 @@
+{
+  "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
+  "schemaVersion": "0.10.0",
+  "id": "SAFOR-MODULE-WIDE-SELF-HEALING",
+  "purpose": "Provide one explicit, bounded recovery profile for every embedded SAFOR module so failures are detected and repaired according to module authority, derivability and risk without semantic invention.",
+  "coverageContract": {
+    "exactCoverageRequired": true,
+    "oneProfilePerEmbeddedModule": true,
+    "noUnprofiledEmbeddedModules": true,
+    "noProfilesForUnknownModuleKeys": true,
+    "profileSchemaRef": "schemas/module-recovery-profile.schema.json",
+    "evaluatedAgainst": "SAFOR complete bundle embeddedModules keys"
+  },
+  "globalRules": [
+    "Repair never changes business/product/governance semantics unless a separate HUMAN-governed change creates a new authoritative artifact.",
+    "Authoritative immutable artifacts are validated/restored from verified sources, not heuristically rewritten.",
+    "Derived artifacts may be regenerated only from verified authoritative sources.",
+    "External provider capability failures are rebound/revalidated; permissions are never fabricated or elevated.",
+    "Unknown mutation effects reconcile before retry.",
+    "Every module repair creates or updates a self-healing record and requires authoritative readback.",
+    "Repeated failure fingerprints obey the lower of module-profile and failure-class retry budgets.",
+    "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP.",
+    "HUMAN interaction governance is fail-closed: if the Decision Gate or Cognitive Load Policy cannot be validated, SAFOR may show only the minimum safe blocker and must not infer approval.",
+    "Recovery may suppress an unnecessary HUMAN question, but may never answer a required HUMAN decision on the HUMAN's behalf."
+  ],
+  "moduleProfiles": [
+    {
+      "profileId": "MRP-KERNEL",
+      "moduleKey": "kernel",
+      "moduleClass": "KERNEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.kernel + integrityManifest.kernel",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "KERNEL_INVARIANT_MISSING",
+        "CONTROL_ACTION_MODEL_REF_INVALID",
+        "KERNEL_SCHEMA_VERSION_MISMATCH"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE",
+        "STOP_IF_EXPECTED_BLOB_CANNOT_BE_PROVEN"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_REWRITE_KERNEL_SEMANTICS"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "KERNEL_BLOB_AND_INVARIANTS_MATCH_EXPECTED_DISTRIBUTION"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-INITIALIZATION",
+      "moduleKey": "initialization",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.initialization + integrityManifest.initialization",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "INITIALIZATION_SEQUENCE_BROKEN",
+        "MANDATORY_GATE_MISSING",
+        "INVALID_INIT_MODEL_REF"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "RESTORE_FROM_EXPECTED_PINNED_BLOB",
+        "RESTART_FROM_LAST_VERIFIED_INIT_CHECKPOINT"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INITIALIZATION_MODEL_MATCHES_PINNED_BLOB_AND_MANDATORY_GATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-INTERACTION",
+      "moduleKey": "interaction",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.interaction + integrityManifest.interaction",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_SURFACE_CONTRACT_INVALID",
+        "MENU_MODEL_INVALID",
+        "STATUS_SURFACE_INVALID",
+        "COGNITIVE_LOAD_POLICY_INVALID",
+        "HUMAN_LANGUAGE_POLICY_INVALID",
+        "PRIMARY_ACTION_POLICY_INVALID",
+        "UNNECESSARY_HUMAN_DECISION_DETECTED"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE",
+        "RESTORE_VERIFIED_INTERACTION_MODEL",
+        "SUPPRESS_DERIVABLE_OR_REPEATED_ASK"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_MODEL_VALID_AND_NO_CONTROL_STATE_MUTATION_OCCURRED"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SELF_HEALING",
+      "moduleKey": "selfHealing",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.selfHealing + integrityManifest.selfHealing",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "FAILURE_CLASS_UNKNOWN",
+        "REPAIR_POLICY_INVALID",
+        "SELF_HEALING_RECURSION_GUARD_TRIGGERED"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "STOP_AUTOMATIC_REPAIR_AND_ESCALATE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "SELF_MODIFY_REPAIR_POLICY"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SELF_HEALING_MODEL_MATCHES_PINNED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-MODULE_SELF_HEALING",
+      "moduleKey": "moduleSelfHealing",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.moduleSelfHealing + integrityManifest.moduleSelfHealing",
+      "failureDetectors": [
+        "MODULE_PROFILE_COVERAGE_GAP",
+        "MODULE_PROFILE_DUPLICATE",
+        "PROFILE_SCHEMA_INVALID",
+        "PROFILE_BLOB_MISMATCH"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "RECOMPUTE_COVERAGE_REPORT_WITHOUT_MUTATING_PROFILES",
+        "STOP_IF_ANY_EMBEDDED_MODULE_LACKS_PROFILE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_GENERATE_SEMANTIC_RECOVERY_PROFILE"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "EVERY_EMBEDDED_MODULE_HAS_EXACTLY_ONE_VALID_RECOVERY_PROFILE"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-AGENT_WORKSPACE",
+      "moduleKey": "agentWorkspace",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "REGENERATE_DERIVED_ONLY",
+      "sourceOfTruth": "authoritative agent identity/job/master-job artifacts + embeddedModules.agentWorkspace",
+      "failureDetectors": [
+        "INBOX_INDEX_MISSING_OR_STALE",
+        "AGENT_STATE_STALE_REVISION",
+        "CLAIM_BINDING_MISMATCH",
+        "WORKSPACE_DERIVED_ARTIFACT_MISSING"
+      ],
+      "automaticRepairs": [
+        "REGENERATE_INBOX_INDEX_FROM_MASTER_JOB_STATE",
+        "REFRESH_AGENT_STATE_AND_REEVALUATE_CLAIM",
+        "RECREATE_MISSING_DERIVED_WORKSPACE_ARTIFACT"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "DERIVED_WORKSPACE_ARTIFACTS_MATCH_AUTHORITATIVE_AGENT_AND_MASTER_JOB_STATE"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-AGENT_JOB_CONTRACT",
+      "moduleKey": "agentJobContract",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "REGENERATE_DERIVED_ONLY",
+      "sourceOfTruth": "authoritative inbox/{jobId}.json + pinned role/skill/input sources",
+      "failureDetectors": [
+        "JOB_JSON_INVALID",
+        "JOB_HUMAN_PROJECTION_MISSING",
+        "JOB_HUMAN_PROJECTION_BLOB_MISMATCH",
+        "JOB_ROLE_BINDING_MISMATCH",
+        "JOB_SKILL_SOURCE_MISMATCH",
+        "JOB_AUTHORIZATION_MISMATCH",
+        "JOB_RETURN_ROUTE_INVALID"
+      ],
+      "automaticRepairs": [
+        "RENDER_JOB_MARKDOWN_FROM_VALID_JOB_JSON",
+        "RECOMPUTE_AND_VERIFY_JOB_MARKDOWN_BLOB",
+        "BLOCK_JOB_ON_ROLE_SKILL_AUTHORIZATION_OR_INPUT_MISMATCH",
+        "CREATE_SUPERSEDING_JOB_FOR_SEMANTIC_CHANGE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_MUTATE_DISPATCHED_JOB_JSON",
+        "AUTO_CHANGE_ROLE_OR_SKILL",
+        "AUTO_EXPAND_JOB_AUTHORIZATION"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "JOB_JSON_UNCHANGED_AND_VALID_AND_JOB_MARKDOWN_MATCHES_PINNED_PROJECTION"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-MULTI_AGENT_SCHEDULER",
+      "moduleKey": "multiAgentScheduler",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "REGENERATE_DERIVED_ONLY",
+      "sourceOfTruth": "accepted work-item DAG + agent registry + master/jobs + active resource leases",
+      "failureDetectors": [
+        "READY_SET_STALE",
+        "AGENT_CAPACITY_DRIFT",
+        "RESOURCE_LEASE_CONFLICT",
+        "DEPENDENCY_CYCLE",
+        "DISPATCH_WAVE_DERIVATION_MISMATCH",
+        "LEASE_EXPIRY_WITH_UNKNOWN_EFFECT"
+      ],
+      "automaticRepairs": [
+        "REBUILD_READY_SET",
+        "RECOMPUTE_AGENT_CAPACITY",
+        "REPLAN_CONFLICT_FREE_WAVE",
+        "RECONCILE_EXPIRED_LEASE_BEFORE_RELEASE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "SILENT_OVERLAPPING_REASSIGNMENT"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEDULER_STATE_MATCHES_AUTHORITATIVE_WORK_ITEMS_AGENT_CAPACITY_AND_LEASES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-REPOSITORY_POLICY",
+      "moduleKey": "repositoryPolicy",
+      "moduleClass": "POLICY",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.repositoryPolicy + integrityManifest.repositoryPolicy",
+      "failureDetectors": [
+        "POLICY_BLOB_MISMATCH",
+        "OWNERSHIP_RULE_INVALID",
+        "REPOSITORY_CLASS_POLICY_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_POLICY",
+        "STOP_MUTATION_UNTIL_POLICY_VALID"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_RELAX_POLICY"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "REPOSITORY_POLICY_MATCHES_PINNED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-PACKAGE_REGISTRY",
+      "moduleKey": "packageRegistry",
+      "moduleClass": "REGISTRY",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "pinned package registry module + package source blob identities",
+      "failureDetectors": [
+        "PACKAGE_REGISTRY_BLOB_MISMATCH",
+        "PACKAGE_REF_STALE",
+        "VERSION_BINDING_MISMATCH",
+        "PACKAGE_MISSING"
+      ],
+      "automaticRepairs": [
+        "RELOAD_PINNED_REGISTRY",
+        "READBACK_PACKAGE_SOURCE",
+        "RESTORE_ONLY_EXPECTED_VERSION_AND_BLOB"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "REGISTRY_AND_REFERENCED_PACKAGES_MATCH_PINNED_VERSION_AND_BLOB"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-PROVIDER_GITHUB",
+      "moduleKey": "providerGithub",
+      "moduleClass": "PROVIDER_ADAPTER",
+      "authorityType": "EXTERNAL_PROVIDER_BOUND",
+      "repairability": "REBIND_EXTERNAL_CAPABILITY",
+      "sourceOfTruth": "embedded provider adapter + actual host/provider capability observation",
+      "failureDetectors": [
+        "PROVIDER_TEMPORARILY_UNAVAILABLE",
+        "CAPABILITY_DRIFT",
+        "AUTHORIZATION_REVOKED",
+        "PROVIDER_READBACK_MISMATCH",
+        "STALE_REMOTE_REVISION"
+      ],
+      "automaticRepairs": [
+        "REFRESH_PROVIDER_CAPABILITIES",
+        "REVALIDATE_AUTHORIZATION",
+        "REFRESH_REMOTE_REVISION",
+        "RETRY_IDEMPOTENT_READ",
+        "RECONCILE_UNKNOWN_MUTATION_EFFECT"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "FABRICATE_PROVIDER_RIGHT",
+        "AUTO_ELEVATE_PROVIDER_PERMISSION"
+      ],
+      "retryBudget": 2,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "DECLARED_ADAPTER_CAPABILITIES_AND_ACTUAL_HOST_RIGHTS_ARE_RECONCILED"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-PROVIDER_GITLAB",
+      "moduleKey": "providerGitlab",
+      "moduleClass": "PROVIDER_ADAPTER",
+      "authorityType": "EXTERNAL_PROVIDER_BOUND",
+      "repairability": "REBIND_EXTERNAL_CAPABILITY",
+      "sourceOfTruth": "embedded provider adapter + actual host/provider capability observation",
+      "failureDetectors": [
+        "PROVIDER_TEMPORARILY_UNAVAILABLE",
+        "CAPABILITY_DRIFT",
+        "AUTHORIZATION_REVOKED",
+        "PROVIDER_READBACK_MISMATCH",
+        "STALE_REMOTE_REVISION"
+      ],
+      "automaticRepairs": [
+        "REFRESH_PROVIDER_CAPABILITIES",
+        "REVALIDATE_AUTHORIZATION",
+        "REFRESH_REMOTE_REVISION",
+        "RETRY_IDEMPOTENT_READ",
+        "RECONCILE_UNKNOWN_MUTATION_EFFECT"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "FABRICATE_PROVIDER_RIGHT",
+        "AUTO_ELEVATE_PROVIDER_PERMISSION"
+      ],
+      "retryBudget": 2,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "DECLARED_ADAPTER_CAPABILITIES_AND_ACTUAL_HOST_RIGHTS_ARE_RECONCILED"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-OPERATING_MODEL_SAAS",
+      "moduleKey": "operatingModelSaas",
+      "moduleClass": "OPERATING_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "pinned operating-model package snapshot/blob",
+      "failureDetectors": [
+        "PACKAGE_BLOB_MISMATCH",
+        "ROLE_BINDING_INVALID",
+        "CAPABILITY_MAPPING_INVALID",
+        "MANDATE_RULE_INVALID",
+        "SOD_RULE_INVALID"
+      ],
+      "automaticRepairs": [
+        "RESTORE_PINNED_PACKAGE_BLOB",
+        "REVALIDATE_ROLE_CAPABILITY_BINDINGS",
+        "BLOCK_EXECUTION_ON_MANDATE_OR_SOD_MISMATCH"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_CHANGE_DECISION_RIGHTS",
+        "AUTO_CHANGE_SOD_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "OPERATING_MODEL_EQUALS_PINNED_PACKAGE_AND_BINDINGS_VALIDATE"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-OPERATING_MODEL_BOOK",
+      "moduleKey": "operatingModelBook",
+      "moduleClass": "OPERATING_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "pinned operating-model package snapshot/blob",
+      "failureDetectors": [
+        "PACKAGE_BLOB_MISMATCH",
+        "ROLE_BINDING_INVALID",
+        "CAPABILITY_MAPPING_INVALID",
+        "MANDATE_RULE_INVALID",
+        "SOD_RULE_INVALID"
+      ],
+      "automaticRepairs": [
+        "RESTORE_PINNED_PACKAGE_BLOB",
+        "REVALIDATE_ROLE_CAPABILITY_BINDINGS",
+        "BLOCK_EXECUTION_ON_MANDATE_OR_SOD_MISMATCH"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_CHANGE_DECISION_RIGHTS",
+        "AUTO_CHANGE_SOD_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "OPERATING_MODEL_EQUALS_PINNED_PACKAGE_AND_BINDINGS_VALIDATE"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-FACTORY_SOFTWARE_WEBSITE",
+      "moduleKey": "factorySoftwareWebsite",
+      "moduleClass": "FACTORY",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "pinned factory package snapshot/blob",
+      "failureDetectors": [
+        "PACKAGE_BLOB_MISMATCH",
+        "FLOW_GRAPH_INVALID",
+        "PLANNING_CONTRACT_INVALID",
+        "EVIDENCE_CONTRACT_INVALID",
+        "OUTCOME_MODEL_INVALID"
+      ],
+      "automaticRepairs": [
+        "RESTORE_PINNED_PACKAGE_BLOB",
+        "REVALIDATE_FLOW_GRAPH",
+        "BLOCK_PLANNING_OR_EXECUTION_UNTIL_FACTORY_VALID"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_CHANGE_FACTORY_SEMANTICS"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "FACTORY_EQUALS_PINNED_PACKAGE_AND_FLOW_PLANNING_EVIDENCE_CONTRACTS_VALIDATE"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-FACTORY_BOOK",
+      "moduleKey": "factoryBook",
+      "moduleClass": "FACTORY",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "pinned factory package snapshot/blob",
+      "failureDetectors": [
+        "PACKAGE_BLOB_MISMATCH",
+        "FLOW_GRAPH_INVALID",
+        "PLANNING_CONTRACT_INVALID",
+        "EVIDENCE_CONTRACT_INVALID",
+        "OUTCOME_MODEL_INVALID"
+      ],
+      "automaticRepairs": [
+        "RESTORE_PINNED_PACKAGE_BLOB",
+        "REVALIDATE_FLOW_GRAPH",
+        "BLOCK_PLANNING_OR_EXECUTION_UNTIL_FACTORY_VALID"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_CHANGE_FACTORY_SEMANTICS"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "FACTORY_EQUALS_PINNED_PACKAGE_AND_FLOW_PLANNING_EVIDENCE_CONTRACTS_VALIDATE"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_PACKAGE_MANIFEST",
+      "moduleKey": "schemaPackageManifest",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaPackageManifest + integrityManifest.schemaPackageManifest",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_CONTROL_STATE",
+      "moduleKey": "schemaControlState",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaControlState + integrityManifest.schemaControlState",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_VALUE_STREAM_STATE",
+      "moduleKey": "schemaValueStreamState",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaValueStreamState + integrityManifest.schemaValueStreamState",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_EXECUTION_STATE",
+      "moduleKey": "schemaExecutionState",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaExecutionState + integrityManifest.schemaExecutionState",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_WORK_ITEM",
+      "moduleKey": "schemaWorkItem",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaWorkItem + integrityManifest.schemaWorkItem",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_PROJECT",
+      "moduleKey": "schemaProject",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaProject + integrityManifest.schemaProject",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_BINDINGS",
+      "moduleKey": "schemaBindings",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaBindings + integrityManifest.schemaBindings",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_DECISION_RECORD",
+      "moduleKey": "schemaDecisionRecord",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaDecisionRecord + integrityManifest.schemaDecisionRecord",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_EVIDENCE_RECORD",
+      "moduleKey": "schemaEvidenceRecord",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaEvidenceRecord + integrityManifest.schemaEvidenceRecord",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_INTERACTION_MENU",
+      "moduleKey": "schemaInteractionMenu",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaInteractionMenu + integrityManifest.schemaInteractionMenu",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_SELF_HEALING_RECORD",
+      "moduleKey": "schemaSelfHealingRecord",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaSelfHealingRecord + integrityManifest.schemaSelfHealingRecord",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE",
+      "moduleKey": "schemaModuleRecoveryProfile",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaModuleRecoveryProfile + integrityManifest.schemaModuleRecoveryProfile",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_REGISTRY",
+      "moduleKey": "schemaAgentRegistry",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentRegistry + integrityManifest.schemaAgentRegistry",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_IDENTITY",
+      "moduleKey": "schemaAgentIdentity",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentIdentity + integrityManifest.schemaAgentIdentity",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_INBOX_INDEX",
+      "moduleKey": "schemaAgentInboxIndex",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentInboxIndex + integrityManifest.schemaAgentInboxIndex",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_STATE",
+      "moduleKey": "schemaAgentState",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentState + integrityManifest.schemaAgentState",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_JOB",
+      "moduleKey": "schemaAgentJob",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentJob + integrityManifest.schemaAgentJob",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_JOB_STATE",
+      "moduleKey": "schemaAgentJobState",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentJobState + integrityManifest.schemaAgentJobState",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_RESULT",
+      "moduleKey": "schemaAgentResult",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentResult + integrityManifest.schemaAgentResult",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_SCHEDULER_STATE",
+      "moduleKey": "schemaSchedulerState",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaSchedulerState + integrityManifest.schemaSchedulerState",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_DISPATCH_WAVE",
+      "moduleKey": "schemaDispatchWave",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaDispatchWave + integrityManifest.schemaDispatchWave",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_RESOURCE_LEASE",
+      "moduleKey": "schemaResourceLease",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaResourceLease + integrityManifest.schemaResourceLease",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT",
+        "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-CONFORMANCE",
+      "moduleKey": "conformance",
+      "moduleClass": "CONFORMANCE",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.conformance + integrityManifest.conformance",
+      "failureDetectors": [
+        "CONFORMANCE_BLOB_MISMATCH",
+        "REQUIRED_ASSERTION_MISSING",
+        "ASSERTION_EXPECTATION_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_CONFORMANCE_MODULE",
+        "STOP_RELEASE_IF_REQUIRED_ASSERTION_FAILS"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTO_MARK_FAILED_ASSERTION_PASS"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "ACTIVE_AUTHORITY_STILL_VALID",
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "CONFORMANCE_MODULE_MATCHES_PINNED_BLOB_AND_ALL_REQUIRED_ASSERTIONS_ARE_PRESENT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-HUMAN_DECISION_GATE",
+      "moduleKey": "humanDecisionGate",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.humanDecisionGate + integrityManifest.humanDecisionGate",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_HUMAN_DECISION",
+        "INFER_APPROVAL_OR_AUTHORITY",
+        "RELAX_DECISION_GATE",
+        "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_HUMAN_DECISION_INFERENCE"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_HUMAN_COGNITIVE_LOAD_POLICY",
+      "moduleKey": "schemaHumanCognitiveLoadPolicy",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaHumanCognitiveLoadPolicy + integrityManifest.schemaHumanCognitiveLoadPolicy",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_HUMAN_DECISION",
+        "INFER_APPROVAL_OR_AUTHORITY",
+        "RELAX_DECISION_GATE",
+        "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_HUMAN_DECISION_INFERENCE"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_HUMAN_DECISION_GATE",
+      "moduleKey": "schemaHumanDecisionGate",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaHumanDecisionGate + integrityManifest.schemaHumanDecisionGate",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_HUMAN_DECISION",
+        "INFER_APPROVAL_OR_AUTHORITY",
+        "RELAX_DECISION_GATE",
+        "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_HUMAN_DECISION_INFERENCE"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "HUMAN"
+      }
+    }
+  ]
+}

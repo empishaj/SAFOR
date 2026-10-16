@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.9.0-rc.1**
+Current target: **v0.10.0-rc.1**
 
-Current modular source: **`v0.9.0/`**
+Current modular source: **`v0.10.0/`**
 
 ## Release-candidate gates
 
@@ -17,6 +17,12 @@ Current modular source: **`v0.9.0/`**
 | Factory-bound Planning | PASS |
 | Factory-bound Evidence | PASS |
 | Chat-native HUMAN interface policy | PASS |
+| Phase-aware HUMAN cognitive-load policy | PASS by schema/conformance |
+| HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
+| Unchanged decision reuse | PASS by schema/conformance |
+| HUMAN-domain terminology abstraction | PASS by schema/conformance |
+| Dynamic primary-action labels | PASS by schema/conformance |
+| HUMAN cognitive-load end-to-end acceptance | OPEN |
 | Bounded self-healing | PASS |
 | Module-wide self-healing coverage | PASS by schema/conformance |
 | Exact one-profile-per-module binding | PASS by validator contract |
@@ -47,8 +53,8 @@ Current modular source: **`v0.9.0/`**
 | Conflict-aware serialization acceptance | OPEN |
 | HUMAN-readable + Git-trace result acceptance | OPEN |
 | Agent Workspace end-to-end acceptance | OPEN |
-| Machine-readable validation | PASS on PR #7 validated head |
-| CI validation | PASS on PR #7 validated head |
+| Machine-readable validation | PASS on PR #8 validated head |
+| CI validation | PASS on PR #8 validated head |
 | Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |
