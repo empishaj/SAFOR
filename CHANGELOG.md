@@ -2,6 +2,30 @@
 
 All notable SAFOR product changes are documented here.
 
+## 0.10.0-rc.1 — 2026-10-17
+
+### Added
+- Phase-aware HUMAN Cognitive Load Policy.
+- HUMAN Decision Gate with derive-before-ask semantics.
+- Reuse of unchanged HUMAN decisions and active mandates/identities.
+- HUMAN-domain terminology abstraction.
+- Dynamic domain-specific primary-action labels with `Weiter` fallback.
+- Cognitive-load policy and decision-gate JSON Schemas.
+- Interaction-menu metadata for phase/load/reason/gate outcome.
+- Self-healing failure class SH-19 for HUMAN interaction governance.
+
+### Changed
+- Discovery explicitly permits HIGH necessary HUMAN cognitive load.
+- Scheduling and agent coordination default to VERY_LOW HUMAN load.
+- Execution and Recovery default to LOW, exception-oriented HUMAN interaction.
+- Deterministic K10 Factory/Operating-Model binding no longer asks for redundant approval; K10A handles only exceptional changed/non-standard bindings.
+- Internal job/branch/lease/dispatch/readback/evidence mechanics are not HUMAN decisions.
+- Primary action no longer defaults to “Nächste Runde starten”; the fallback is “Weiter”.
+- Product schema/kernel contract version advanced to 0.10.0.
+
+### Product status
+This version is a **Release Candidate**. HUMAN cognitive-load/communication end-to-end acceptance remains required before GA.
+
 ## 0.9.0-rc.1 — 2026-10-17
 
 ### Added
