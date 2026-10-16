@@ -32,8 +32,16 @@
       "minimum": 0
     },
     "maxParallelJobs": {
-      "type": "integer",
-      "minimum": 1
+      "oneOf": [
+        {
+          "const": "AUTO"
+        },
+        {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 128
+        }
+      ]
     },
     "activeWaveRefs": {
       "type": "array",
