@@ -40,7 +40,23 @@
         "master-state.json",
         "launch-prompt.md",
         "work-contract.json"
-      ]
+      ],
+      "agentMutationPolicy": {
+        "directDefaultBranchWrite": false,
+        "requiredBranchPattern": "safor/job/{jobKey}/{agentKey}",
+        "immutableBaseCommitRequired": true,
+        "allowedPathsMustMatchJobContract": true,
+        "crossJobBranchWrite": false,
+        "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
+        "resultTraceRequired": [
+          "baseCommitSha",
+          "branch",
+          "commitShas",
+          "headCommitSha",
+          "changedPaths",
+          "providerReadbackRef"
+        ]
+      }
     },
     "FACTORY_RUNTIME_CODE_REPOSITORY": {
       "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
