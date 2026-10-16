@@ -224,24 +224,29 @@
       "selfHealingProfileId": "MRP-SCHEMA_EVIDENCE_RECORD"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "c288c40009336e782d96726c6a021002a614ed1c"
+      "sourcePath": "v0.9.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "1fb41f7453b3a609d58dc52950801b29b725fe62",
+      "selfHealingProfileId": "MRP-SCHEMA_INTERACTION_MENU"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.8.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "aa22091a5920f68eb1b7abab6d1611666b277c8f"
+      "sourcePath": "v0.9.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "a560a9f3d5a4c842a7a77ff3f281d639b4e41135",
+      "selfHealingProfileId": "MRP-SCHEMA_SELF_HEALING_RECORD"
     },
     "schemaAgentRegistry": {
-      "sourcePath": "v0.8.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "467cfefbf4c88a235ef9e3a107797f118e4da96a"
+      "sourcePath": "v0.9.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "cb4d66ca7a7a35e1e9fb4fded4b22c44a61e5ae7",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
     },
     "schemaAgentIdentity": {
-      "sourcePath": "v0.8.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "85524530f1c260603f4834737b5d0be645af2c96"
+      "sourcePath": "v0.9.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "accd931140e87dda01adda013d718394505ea771",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
     },
     "schemaAgentState": {
-      "sourcePath": "v0.8.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd"
+      "sourcePath": "v0.9.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "8c6c47e6b9aaac3590806c4864cd62a118f47892",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
     },
     "schemaAgentJob": {
       "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
@@ -260,8 +265,9 @@
       "sourceBlobSha": "168d467fb9c9827470cd06f745184177a562bc2f"
     },
     "schemaAgentInboxIndex": {
-      "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428"
+      "sourcePath": "v0.9.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "b3160cc7bc4d39f2bdcf510d8371bb2e1655d35b",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
     },
     "multiAgentScheduler": {
       "sourcePath": "v0.9.0/multi-agent-scheduler-model.json",
@@ -6867,12 +6873,12 @@
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "c288c40009336e782d96726c6a021002a614ed1c",
+      "sourcePath": "v0.9.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "1fb41f7453b3a609d58dc52950801b29b725fe62",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.8.0",
-        "title": "SAFOR Interaction Menu 0.8.0",
+        "$id": "urn:safor:interaction-menu:0.9.0",
+        "title": "SAFOR Interaction Menu 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6888,7 +6894,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "menuId": {
             "type": "string",
@@ -7041,24 +7047,31 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_INTERACTION_MENU"
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.8.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "aa22091a5920f68eb1b7abab6d1611666b277c8f",
+      "sourcePath": "v0.9.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "a560a9f3d5a4c842a7a77ff3f281d639b4e41135",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.8.0",
-        "title": "SAFOR Self-Healing Record 0.8.0",
+        "$id": "urn:safor:self-healing-record:0.9.0",
+        "title": "SAFOR Self-Healing Record 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
           "repairId",
           "failureClass",
           "failureFingerprint",
+          "moduleKey",
+          "moduleProfileId",
+          "moduleAuthorityType",
+          "moduleRepairability",
+          "moduleSourceRef",
           "subjectRef",
           "status",
+          "profileDecision",
           "proposedAction",
           "authorityBasis",
           "attemptNumber",
@@ -7094,7 +7107,8 @@
               "SUCCEEDED",
               "FAILED",
               "ESCALATED",
-              "CANCELED"
+              "CANCELED",
+              "RECONCILE_REQUIRED"
             ]
           },
           "proposedAction": {
@@ -7154,18 +7168,81 @@
               "string",
               "null"
             ]
+          },
+          "moduleKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "moduleProfileId": {
+            "type": "string",
+            "pattern": "^MRP-[A-Z0-9_-]+$"
+          },
+          "moduleAuthorityType": {
+            "enum": [
+              "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "PINNED_CANONICAL_SOURCE",
+              "DERIVED_RUNTIME_PROJECTION",
+              "EXTERNAL_PROVIDER_BOUND"
+            ]
+          },
+          "moduleRepairability": {
+            "enum": [
+              "IMMUTABLE_VALIDATE_ONLY",
+              "RESTORE_FROM_VERIFIED_SOURCE",
+              "REGENERATE_DERIVED_ONLY",
+              "REBIND_EXTERNAL_CAPABILITY"
+            ]
+          },
+          "moduleSourceRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profileDecision": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "failureClassAction",
+              "profileAllowedActions",
+              "selectedAction",
+              "selectionReason"
+            ],
+            "properties": {
+              "failureClassAction": {
+                "type": "string",
+                "minLength": 1
+              },
+              "profileAllowedActions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "selectedAction": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "selectionReason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_SELF_HEALING_RECORD"
     },
     "schemaAgentRegistry": {
       "key": "schemaAgentRegistry",
-      "sourcePath": "v0.8.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "467cfefbf4c88a235ef9e3a107797f118e4da96a",
+      "sourcePath": "v0.9.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "cb4d66ca7a7a35e1e9fb4fded4b22c44a61e5ae7",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-registry:0.8.0",
-        "title": "SAFOR Agent Registry 0.8.0",
+        "$id": "urn:safor:agent-registry:0.9.0",
+        "title": "SAFOR Agent Registry 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7180,7 +7257,7 @@
             "const": "SAFOR_AGENT_REGISTRY"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -7251,16 +7328,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
     },
     "schemaAgentIdentity": {
       "key": "schemaAgentIdentity",
-      "sourcePath": "v0.8.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "85524530f1c260603f4834737b5d0be645af2c96",
+      "sourcePath": "v0.9.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "accd931140e87dda01adda013d718394505ea771",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-identity:0.8.0",
-        "title": "SAFOR Agent Identity 0.8.0",
+        "$id": "urn:safor:agent-identity:0.9.0",
+        "title": "SAFOR Agent Identity 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7286,7 +7364,7 @@
             "const": "SAFOR_AGENT_IDENTITY"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -7403,16 +7481,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
     },
     "schemaAgentState": {
       "key": "schemaAgentState",
-      "sourcePath": "v0.8.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd",
+      "sourcePath": "v0.9.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "8c6c47e6b9aaac3590806c4864cd62a118f47892",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-state:0.8.0",
-        "title": "SAFOR Agent Runtime State 0.8.0",
+        "$id": "urn:safor:agent-state:0.9.0",
+        "title": "SAFOR Agent Runtime State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7433,7 +7512,7 @@
             "const": "SAFOR_AGENT_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -7630,7 +7709,8 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
@@ -10161,12 +10241,12 @@
     },
     "schemaAgentInboxIndex": {
       "key": "schemaAgentInboxIndex",
-      "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428",
+      "sourcePath": "v0.9.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "b3160cc7bc4d39f2bdcf510d8371bb2e1655d35b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-inbox-index:0.8.0",
-        "title": "SAFOR Agent Inbox Index 0.8.0",
+        "$id": "urn:safor:agent-inbox-index:0.9.0",
+        "title": "SAFOR Agent Inbox Index 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10187,7 +10267,7 @@
             "const": "SAFOR_AGENT_INBOX_INDEX"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10308,7 +10388,8 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
     },
     "multiAgentScheduler": {
       "key": "multiAgentScheduler",
