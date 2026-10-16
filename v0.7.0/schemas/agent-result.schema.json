@@ -20,6 +20,8 @@
     "completionStatus",
     "summary",
     "outputs",
+    "gitTrace",
+    "humanReadableReport",
     "evidenceRefs",
     "providerMutationRefs",
     "acceptanceSelfCheck",
@@ -140,6 +142,52 @@
       "items": {
         "type": "string"
       }
+    },
+    "humanReadableReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "blobSha",
+        "format",
+        "requiredSections"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "const": "MARKDOWN"
+        },
+        "requiredSections": {
+          "type": "array",
+          "minItems": 7,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "OBJECTIVE",
+              "WORK_PERFORMED",
+              "ARTIFACTS_CHANGED",
+              "GIT_TRACE",
+              "VERIFICATION",
+              "RESULT",
+              "RISKS_AND_LIMITS",
+              "OPEN_ITEMS"
+            ]
+          }
+        }
+      }
+    },
+    "gitTrace": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gitTraceEntry"
+      }
     }
   },
   "$defs": {
@@ -159,6 +207,65 @@
             "string",
             "null"
           ]
+        }
+      }
+    },
+    "gitTraceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "branch",
+        "baseCommitSha",
+        "headCommitSha",
+        "commitShas",
+        "changedPaths",
+        "changeRequestRef",
+        "providerReadbackRef"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "baseCommitSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headCommitSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitShas": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "changedPaths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "changeRequestRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "providerReadbackRef": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
