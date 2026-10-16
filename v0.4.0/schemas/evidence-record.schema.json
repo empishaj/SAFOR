@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:saf:evidence-record:0.4.0",
+  "title": "SAF Evidence Record 0.4.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "evidenceId",
+    "evidenceType",
+    "subjectRef",
+    "source",
+    "observedAt",
+    "reference",
+    "integrity",
+    "claims"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAF_EVIDENCE_RECORD"
+    },
+    "schemaVersion": {
+      "const": "0.4.0"
+    },
+    "evidenceId": {
+      "type": "string"
+    },
+    "evidenceType": {
+      "type": "string"
+    },
+    "subjectRef": {
+      "type": "string"
+    },
+    "source": {
+      "type": "string"
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "reference": {
+      "type": "string"
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stableId",
+        "revisionRef"
+      ],
+      "properties": {
+        "stableId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revisionRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
