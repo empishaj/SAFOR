@@ -7,30 +7,30 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 MODULE_PATHS = {
-    "kernel": "v0.4.0/SAFOR-MASTER.json",
-    "initialization": "v0.4.0/initialization-model.json",
-    "interaction": "v0.4.0/interaction-model.json",
-    "selfHealing": "v0.4.0/self-healing-model.json",
-    "repositoryPolicy": "v0.4.0/repository-policy.json",
-    "packageRegistry": "v0.4.0/package-registry.json",
-    "providerGithub": "v0.4.0/providers/github/0.1.0/package.json",
-    "providerGitlab": "v0.4.0/providers/gitlab/0.1.0/package.json",
-    "operatingModelSaas": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-    "operatingModelBook": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-    "factorySoftwareWebsite": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-    "factoryBook": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-    "schemaPackageManifest": "v0.4.0/schemas/package-manifest.schema.json",
-    "schemaControlState": "v0.4.0/schemas/control-state.schema.json",
-    "schemaValueStreamState": "v0.4.0/schemas/value-stream-state.schema.json",
-    "schemaExecutionState": "v0.4.0/schemas/execution-state.schema.json",
-    "schemaWorkItem": "v0.4.0/schemas/work-item.schema.json",
-    "schemaProject": "v0.4.0/schemas/project.schema.json",
-    "schemaBindings": "v0.4.0/schemas/bindings.schema.json",
-    "schemaDecisionRecord": "v0.4.0/schemas/decision-record.schema.json",
-    "schemaEvidenceRecord": "v0.4.0/schemas/evidence-record.schema.json",
-    "schemaInteractionMenu": "v0.4.0/schemas/interaction-menu.schema.json",
-    "schemaSelfHealingRecord": "v0.4.0/schemas/self-healing-record.schema.json",
-    "conformance": "v0.4.0/conformance.json",
+    "kernel": "v0.5.0/SAFOR-MASTER.json",
+    "initialization": "v0.5.0/initialization-model.json",
+    "interaction": "v0.5.0/interaction-model.json",
+    "selfHealing": "v0.5.0/self-healing-model.json",
+    "repositoryPolicy": "v0.5.0/repository-policy.json",
+    "packageRegistry": "v0.5.0/package-registry.json",
+    "providerGithub": "v0.5.0/providers/github/0.1.0/package.json",
+    "providerGitlab": "v0.5.0/providers/gitlab/0.1.0/package.json",
+    "operatingModelSaas": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+    "operatingModelBook": "v0.5.0/packages/operating-models/book-authoring/0.1.0/package.json",
+    "factorySoftwareWebsite": "v0.5.0/packages/factories/software-delivery/1.0.0/package.json",
+    "factoryBook": "v0.5.0/packages/factories/book-production/0.1.0/package.json",
+    "schemaPackageManifest": "v0.5.0/schemas/package-manifest.schema.json",
+    "schemaControlState": "v0.5.0/schemas/control-state.schema.json",
+    "schemaValueStreamState": "v0.5.0/schemas/value-stream-state.schema.json",
+    "schemaExecutionState": "v0.5.0/schemas/execution-state.schema.json",
+    "schemaWorkItem": "v0.5.0/schemas/work-item.schema.json",
+    "schemaProject": "v0.5.0/schemas/project.schema.json",
+    "schemaBindings": "v0.5.0/schemas/bindings.schema.json",
+    "schemaDecisionRecord": "v0.5.0/schemas/decision-record.schema.json",
+    "schemaEvidenceRecord": "v0.5.0/schemas/evidence-record.schema.json",
+    "schemaInteractionMenu": "v0.5.0/schemas/interaction-menu.schema.json",
+    "schemaSelfHealingRecord": "v0.5.0/schemas/self-healing-record.schema.json",
+    "conformance": "v0.5.0/conformance.json",
 }
 
 REFERENCE_RESOLUTION = {
@@ -77,7 +77,7 @@ def build_bundle():
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     return {
         "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "bundleVersion": version,
         "definitionId": "safor-master-complete",
         "productName": "SAFOR",
@@ -161,19 +161,26 @@ def main():
     args = parser.parse_args()
 
     built = build_bundle()
-    output = ROOT / "SAFOR-MASTER-COMPLETE.json"
+    version = built["bundleVersion"]
+    latest_output = ROOT / "SAFOR-MASTER-COMPLETE.json"
+    versioned_output = ROOT / f"SAFOR-MASTER-COMPLETE-v{version}.json"
 
     if args.check:
-        committed = json.loads(output.read_text(encoding="utf-8"))
-        if canonical(committed) != canonical(built):
-            print("SAFOR bundle reproducibility: FAIL")
-            print("Run: python tools/build_bundle.py")
-            raise SystemExit(1)
+        expected = canonical(built)
+        for output in (latest_output, versioned_output):
+            committed = json.loads(output.read_text(encoding="utf-8"))
+            if canonical(committed) != expected:
+                print(f"SAFOR bundle reproducibility: FAIL ({output.name})")
+                print("Run: python tools/build_bundle.py")
+                raise SystemExit(1)
         print("SAFOR bundle reproducibility: PASS")
         return
 
-    output.write_text(json.dumps(built, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
-    print(f"Wrote {output}")
+    payload = json.dumps(built, indent=2, ensure_ascii=False) + "\n"
+    latest_output.write_text(payload, encoding="utf-8")
+    versioned_output.write_text(payload, encoding="utf-8")
+    print(f"Wrote {latest_output}")
+    print(f"Wrote {versioned_output}")
     print(f"Embedded modules: {len(built['embeddedModules'])}")
 
 if __name__ == "__main__":
