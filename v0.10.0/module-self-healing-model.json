@@ -19,7 +19,9 @@
     "Unknown mutation effects reconcile before retry.",
     "Every module repair creates or updates a self-healing record and requires authoritative readback.",
     "Repeated failure fingerprints obey the lower of module-profile and failure-class retry budgets.",
-    "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP."
+    "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP.",
+    "HUMAN interaction governance is fail-closed: if the Decision Gate or Cognitive Load Policy cannot be validated, SAFOR may show only the minimum safe blocker and must not infer approval.",
+    "Recovery may suppress an unnecessary HUMAN question, but may never answer a required HUMAN decision on the HUMAN's behalf."
   ],
   "moduleProfiles": [
     {
@@ -132,11 +134,17 @@
         "MODULE_BLOB_MISMATCH",
         "HUMAN_SURFACE_CONTRACT_INVALID",
         "MENU_MODEL_INVALID",
-        "STATUS_SURFACE_INVALID"
+        "STATUS_SURFACE_INVALID",
+        "COGNITIVE_LOAD_POLICY_INVALID",
+        "HUMAN_LANGUAGE_POLICY_INVALID",
+        "PRIMARY_ACTION_POLICY_INVALID",
+        "UNNECESSARY_HUMAN_DECISION_DETECTED"
       ],
       "automaticRepairs": [
         "RELOAD_VERIFIED_EMBEDDED_MODULE",
-        "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE"
+        "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE",
+        "RESTORE_VERIFIED_INTERACTION_MODEL",
+        "SUPPRESS_DERIVABLE_OR_REPEATED_ASK"
       ],
       "forbiddenRepairs": [
         "INVENT_MISSING_EVIDENCE",
@@ -1983,6 +1991,138 @@
           "AUTHORITATIVE_READBACK_FAILS"
         ],
         "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-HUMAN_DECISION_GATE",
+      "moduleKey": "humanDecisionGate",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.humanDecisionGate + integrityManifest.humanDecisionGate",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_HUMAN_DECISION",
+        "INFER_APPROVAL_OR_AUTHORITY",
+        "RELAX_DECISION_GATE",
+        "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_HUMAN_DECISION_INFERENCE"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_HUMAN_COGNITIVE_LOAD_POLICY",
+      "moduleKey": "schemaHumanCognitiveLoadPolicy",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaHumanCognitiveLoadPolicy + integrityManifest.schemaHumanCognitiveLoadPolicy",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_HUMAN_DECISION",
+        "INFER_APPROVAL_OR_AUTHORITY",
+        "RELAX_DECISION_GATE",
+        "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_HUMAN_DECISION_INFERENCE"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "HUMAN"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_HUMAN_DECISION_GATE",
+      "moduleKey": "schemaHumanDecisionGate",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaHumanDecisionGate + integrityManifest.schemaHumanDecisionGate",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_HUMAN_DECISION",
+        "INFER_APPROVAL_OR_AUTHORITY",
+        "RELAX_DECISION_GATE",
+        "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_HUMAN_DECISION_INFERENCE"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+        ],
+        "target": "HUMAN"
       }
     }
   ]
