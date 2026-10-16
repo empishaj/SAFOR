@@ -8,7 +8,7 @@
 - [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
-- [ ] `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json` is rebuilt from canonical `v0.5.0/` source.
+- [ ] `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json` is rebuilt from canonical `v0.6.0/` source.
 - [ ] `SAFOR-MASTER-COMPLETE.json` exactly matches the versioned release artifact.
 - [ ] All embedded module references resolve.
 - [ ] Runtime memory requirement is exactly `{OWNER}/safor-memory`.
@@ -18,6 +18,11 @@
 - [ ] Book Factory contracts pass.
 - [ ] Self-healing safety invariants pass.
 - [ ] Chat-native-only UI policy passes.
+- [ ] Agent registry/identity/job/state/result schemas validate.
+- [ ] Agent workspace ownership boundaries validate.
+- [ ] MASTER-authoritative agent job lifecycle validates.
+- [ ] Agent result cannot self-accept.
+- [ ] Agent Workspace scenarios F–H in `ACCEPTANCE-TESTS.md` are recorded.
 - [ ] No secrets or credentials exist in release files.
 - [ ] HUMAN has approved any change to license/distribution terms.
 
@@ -25,5 +30,6 @@
 
 - [ ] GitHub blank-chat end-to-end acceptance passes according to `ACCEPTANCE-TESTS.md`.
 - [ ] GitLab blank-chat end-to-end acceptance passes according to `ACCEPTANCE-TESTS.md`.
+- [ ] Agent Workspace end-to-end acceptance passes according to scenarios F–H.
 - [ ] License/distribution decision is explicit.
 - [ ] Public repository slug is final and stable.
