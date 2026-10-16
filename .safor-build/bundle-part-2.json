@@ -1,0 +1,3361 @@
+{
+  "operatingModelBook": {
+    "key": "operatingModelBook",
+    "sourcePath": "v0.10.0/packages/operating-models/book-authoring/0.5.0/package.json",
+    "sourceBlobSha": "912b8ab2f4af7b0c9bab4f83bc6ca1a4102c6c26",
+    "content": {
+      "format": "SAFOR_PACKAGE_MANIFEST",
+      "schemaVersion": "0.10.0",
+      "packageId": "safor.om.book-authoring",
+      "packageKind": "OPERATING_MODEL",
+      "version": "0.5.0",
+      "name": "Book Authoring Reference Operating Model",
+      "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
+      "compatibility": {
+        "kernel": ">=0.10.0 <0.11.0"
+      },
+      "exports": {
+        "capabilities": [
+          "book_intent",
+          "audience_definition",
+          "research",
+          "outline_design",
+          "authoring",
+          "fact_check",
+          "editorial_review",
+          "proofreading",
+          "publication_preparation",
+          "reader_outcome_assessment"
+        ],
+        "authorities": [
+          "book_scope_approval",
+          "book_structure_approval",
+          "publication_approval",
+          "reader_outcome_acceptance"
+        ],
+        "workItemTypes": [],
+        "artifactTypes": [],
+        "providerCapabilities": []
+      },
+      "dependencies": [],
+      "model": {
+        "maturity": "REFERENCE_EXAMPLE",
+        "roles": [
+          {
+            "id": "BOOK_SPONSOR",
+            "unit": "sponsorship",
+            "capabilities": [
+              "book_intent"
+            ],
+            "authorities": [
+              "book_scope_approval"
+            ]
+          },
+          {
+            "id": "AUTHOR",
+            "unit": "authoring",
+            "capabilities": [
+              "authoring",
+              "outline_design"
+            ],
+            "authorities": [
+              "book_structure_approval"
+            ]
+          },
+          {
+            "id": "RESEARCHER",
+            "unit": "research",
+            "capabilities": [
+              "research"
+            ],
+            "authorities": []
+          },
+          {
+            "id": "SUBJECT_MATTER_REVIEWER",
+            "unit": "review",
+            "capabilities": [
+              "fact_check"
+            ],
+            "authorities": []
+          },
+          {
+            "id": "EDITOR",
+            "unit": "editorial",
+            "capabilities": [
+              "editorial_review",
+              "audience_definition"
+            ],
+            "authorities": []
+          },
+          {
+            "id": "PROOFREADER",
+            "unit": "editorial",
+            "capabilities": [
+              "proofreading"
+            ],
+            "authorities": []
+          },
+          {
+            "id": "PUBLISHING_OWNER",
+            "unit": "publishing",
+            "capabilities": [
+              "publication_preparation"
+            ],
+            "authorities": [
+              "publication_approval"
+            ]
+          },
+          {
+            "id": "READER_ANALYST",
+            "unit": "analytics",
+            "capabilities": [
+              "reader_outcome_assessment"
+            ],
+            "authorities": [
+              "reader_outcome_acceptance"
+            ]
+          }
+        ],
+        "capabilityBindings": [
+          {
+            "capabilityId": "book_intent",
+            "eligibleRoles": [
+              "BOOK_SPONSOR",
+              "AUTHOR"
+            ]
+          },
+          {
+            "capabilityId": "audience_definition",
+            "eligibleRoles": [
+              "EDITOR"
+            ]
+          },
+          {
+            "capabilityId": "research",
+            "eligibleRoles": [
+              "RESEARCHER"
+            ]
+          },
+          {
+            "capabilityId": "outline_design",
+            "eligibleRoles": [
+              "AUTHOR"
+            ]
+          },
+          {
+            "capabilityId": "authoring",
+            "eligibleRoles": [
+              "AUTHOR"
+            ]
+          },
+          {
+            "capabilityId": "fact_check",
+            "eligibleRoles": [
+              "SUBJECT_MATTER_REVIEWER"
+            ]
+          },
+          {
+            "capabilityId": "editorial_review",
+            "eligibleRoles": [
+              "EDITOR"
+            ]
+          },
+          {
+            "capabilityId": "proofreading",
+            "eligibleRoles": [
+              "PROOFREADER"
+            ]
+          },
+          {
+            "capabilityId": "publication_preparation",
+            "eligibleRoles": [
+              "PUBLISHING_OWNER"
+            ]
+          },
+          {
+            "capabilityId": "reader_outcome_assessment",
+            "eligibleRoles": [
+              "READER_ANALYST"
+            ]
+          }
+        ],
+        "authorityBindings": [
+          {
+            "authorityId": "book_scope_approval",
+            "eligibleRoles": [
+              "BOOK_SPONSOR"
+            ]
+          },
+          {
+            "authorityId": "book_structure_approval",
+            "eligibleRoles": [
+              "AUTHOR",
+              "BOOK_SPONSOR"
+            ]
+          },
+          {
+            "authorityId": "publication_approval",
+            "eligibleRoles": [
+              "PUBLISHING_OWNER"
+            ]
+          },
+          {
+            "authorityId": "reader_outcome_acceptance",
+            "eligibleRoles": [
+              "READER_ANALYST",
+              "BOOK_SPONSOR"
+            ]
+          }
+        ],
+        "separationOfDuties": [
+          {
+            "id": "SOD-FACT-CHECK",
+            "rule": "When independent fact checking is required, the fact-checking actor must differ from the author of the reviewed content."
+          },
+          {
+            "id": "SOD-PROOF",
+            "rule": "A configured independent proofread must be performed by an actor other than the author of the final manuscript revision."
+          }
+        ]
+      }
+    }
+  },
+  "factorySoftwareWebsite": {
+    "key": "factorySoftwareWebsite",
+    "sourcePath": "v0.10.0/packages/factories/software-delivery/1.4.0/package.json",
+    "sourceBlobSha": "27435979e72ca86faf22e3ee07f0198cddac59b5",
+    "content": {
+      "format": "SAFOR_PACKAGE_MANIFEST",
+      "schemaVersion": "0.10.0",
+      "packageId": "safor.factory.software-delivery",
+      "packageKind": "FACTORY",
+      "version": "1.4.0",
+      "name": "Software Delivery and Outcome Factory",
+      "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
+      "compatibility": {
+        "kernel": ">=0.10.0 <0.11.0"
+      },
+      "exports": {
+        "capabilities": [
+          "business_intent",
+          "scope_definition",
+          "requirement_definition",
+          "solution_design",
+          "code_contribution",
+          "technical_review",
+          "test_evidence",
+          "security_evidence",
+          "release_readiness",
+          "activation_execution",
+          "outcome_assessment"
+        ],
+        "authorities": [
+          "strategic_investment",
+          "product_scope_approval",
+          "architecture_exception_approval",
+          "quality_risk_decision",
+          "production_release_approval",
+          "business_outcome_acceptance"
+        ],
+        "workItemTypes": [
+          "PRODUCT_DEFINITION",
+          "SOLUTION_DESIGN",
+          "IMPLEMENTATION",
+          "TEST",
+          "SECURITY_REVIEW",
+          "RELEASE",
+          "ACTIVATION",
+          "OUTCOME_ASSESSMENT"
+        ],
+        "artifactTypes": [
+          "BUSINESS_INTENT",
+          "REQUIREMENT",
+          "SOLUTION_DESIGN",
+          "CONTRIBUTION",
+          "TEST_EVIDENCE",
+          "SECURITY_EVIDENCE",
+          "RELEASE",
+          "ACTIVATION",
+          "OUTCOME"
+        ],
+        "providerCapabilities": []
+      },
+      "dependencies": [],
+      "model": {
+        "flowGraph": {
+          "nonLinear": true,
+          "nodes": [
+            {
+              "id": "SW-01",
+              "workItemType": "PRODUCT_DEFINITION",
+              "requiresCapabilities": [
+                "business_intent",
+                "scope_definition",
+                "requirement_definition"
+              ],
+              "requiredAuthorities": [
+                "product_scope_approval"
+              ],
+              "produces": [
+                "BUSINESS_INTENT",
+                "REQUIREMENT"
+              ],
+              "dependsOn": []
+            },
+            {
+              "id": "SW-02",
+              "workItemType": "SOLUTION_DESIGN",
+              "requiresCapabilities": [
+                "solution_design"
+              ],
+              "requiredAuthorities": [],
+              "conditionalAuthorities": [
+                {
+                  "when": "ELEVATED_ARCHITECTURE_RISK",
+                  "authorityId": "architecture_exception_approval"
+                }
+              ],
+              "produces": [
+                "SOLUTION_DESIGN"
+              ],
+              "dependsOn": [
+                "SW-01"
+              ]
+            },
+            {
+              "id": "SW-03",
+              "workItemType": "IMPLEMENTATION",
+              "requiresCapabilities": [
+                "code_contribution"
+              ],
+              "review": {
+                "required": true,
+                "reviewCapability": "technical_review",
+                "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+              },
+              "requiredAuthorities": [],
+              "produces": [
+                "CONTRIBUTION"
+              ],
+              "dependsOn": [
+                "SW-02"
+              ]
+            },
+            {
+              "id": "SW-04",
+              "workItemType": "TEST",
+              "requiresCapabilities": [
+                "test_evidence"
+              ],
+              "requiredAuthorities": [],
+              "produces": [
+                "TEST_EVIDENCE"
+              ],
+              "dependsOn": [
+                "SW-03"
+              ]
+            },
+            {
+              "id": "SW-05",
+              "workItemType": "SECURITY_REVIEW",
+              "requiresCapabilities": [
+                "security_evidence"
+              ],
+              "requiredAuthorities": [],
+              "conditionalAuthorities": [
+                {
+                  "when": "CRITICAL_SECURITY_DEVIATION",
+                  "authorityId": "quality_risk_decision"
+                }
+              ],
+              "produces": [
+                "SECURITY_EVIDENCE"
+              ],
+              "dependsOn": [
+                "SW-03"
+              ]
+            },
+            {
+              "id": "SW-06",
+              "workItemType": "RELEASE",
+              "requiresCapabilities": [
+                "release_readiness"
+              ],
+              "requiredAuthorities": [],
+              "conditionalAuthorities": [
+                {
+                  "when": "PRODUCTION_AND_RISK",
+                  "authorityId": "production_release_approval"
+                }
+              ],
+              "produces": [
+                "RELEASE"
+              ],
+              "dependsOn": [
+                "SW-04",
+                "SW-05"
+              ],
+              "joinPolicy": "ALL_DEPENDENCIES_ACCEPTED"
+            },
+            {
+              "id": "SW-07",
+              "workItemType": "ACTIVATION",
+              "requiresCapabilities": [
+                "activation_execution"
+              ],
+              "requiredAuthorities": [],
+              "produces": [
+                "ACTIVATION"
+              ],
+              "dependsOn": [
+                "SW-06"
+              ]
+            },
+            {
+              "id": "SW-08",
+              "workItemType": "OUTCOME_ASSESSMENT",
+              "requiresCapabilities": [
+                "outcome_assessment"
+              ],
+              "requiredAuthorities": [
+                "business_outcome_acceptance"
+              ],
+              "produces": [
+                "OUTCOME"
+              ],
+              "dependsOn": [
+                "SW-07"
+              ]
+            }
+          ]
+        },
+        "reworkPolicy": {
+          "selective": true,
+          "preserveAcceptedUnaffectedWork": true,
+          "defaultMaximumAttempts": 3,
+          "onExhausted": "REPLAN_REQUIRED"
+        },
+        "outcomeModel": {
+          "deliveryTerminalArtifact": "ACTIVATION",
+          "outcomeArtifact": "OUTCOME",
+          "rule": "A delivered or activated product is not evidence that the declared value hypothesis has been achieved."
+        },
+        "discoveryContract": {
+          "creationType": "SOFTWARE_WEBSITE",
+          "purpose": "Understand the user problem, intended value, solution form and minimum useful software/website scope before planning.",
+          "requiredFields": [
+            {
+              "id": "targetUsers",
+              "prompt": "Wer soll die Software oder Website hauptsächlich nutzen?"
+            },
+            {
+              "id": "userProblem",
+              "prompt": "Welches konkrete Problem soll sie lösen?"
+            },
+            {
+              "id": "valueHypothesis",
+              "prompt": "Woran erkennen wir später, dass sie echten Nutzen liefert?"
+            },
+            {
+              "id": "solutionForm",
+              "prompt": "Was soll entstehen?",
+              "options": [
+                "WEBSITE",
+                "WEB_APP",
+                "SERVICE_API",
+                "APPLICATION",
+                "OTHER"
+              ]
+            },
+            {
+              "id": "firstRelease",
+              "prompt": "Was ist die kleinste wirklich nutzbare erste Version?"
+            }
+          ],
+          "completionPredicate": "ALL_REQUIRED_FIELDS_CONFIRMED",
+          "outputArtifactType": "BUSINESS_INTENT"
+        },
+        "planningContract": {
+          "creationType": "SOFTWARE_WEBSITE",
+          "sourceInputs": [
+            "DISCOVERY_RECORD",
+            "BUSINESS_INTENT",
+            "REQUIREMENT"
+          ],
+          "requiredPlanningPerspectives": [
+            "PRODUCT",
+            "ARCHITECTURE",
+            "ENGINEERING",
+            "QUALITY",
+            "SECURITY",
+            "RELEASE",
+            "OUTCOME"
+          ],
+          "deriveWorkItemsFrom": "flowGraph",
+          "requiredForEachWorkItem": [
+            "objective",
+            "requiredCapabilities",
+            "dependencies",
+            "expectedOutputs",
+            "acceptanceCriteria",
+            "evidenceRequirements",
+            "execution",
+            "execution.resourceAccess",
+            "execution.parallelizationDecision"
+          ],
+          "conditionalRules": [
+            {
+              "when": "solutionForm IN [WEBSITE,WEB_APP]",
+              "addPlanningConcerns": [
+                "RESPONSIVE_BEHAVIOR",
+                "ACCESSIBILITY",
+                "FRONTEND_BUILD_AND_DELIVERY"
+              ]
+            }
+          ],
+          "rule": "Planning must be derived only from the confirmed software/website discovery and this factory graph."
+        },
+        "evidenceContract": {
+          "creationType": "SOFTWARE_WEBSITE",
+          "rule": "Evidence is work-item-type specific and must come from provider/artifact readback or another authoritative bound source.",
+          "byWorkItemType": {
+            "PRODUCT_DEFINITION": [
+              "DISCOVERY_RECORD",
+              "SCOPE_DECISION"
+            ],
+            "SOLUTION_DESIGN": [
+              "SOLUTION_DESIGN_ARTIFACT",
+              "DESIGN_REVIEW_OR_EXCEPTION_WHEN_REQUIRED"
+            ],
+            "IMPLEMENTATION": [
+              "CONTRIBUTION_REFERENCE",
+              "INDEPENDENT_TECHNICAL_REVIEW_WHEN_REQUIRED"
+            ],
+            "TEST": [
+              "TEST_RESULT_EVIDENCE"
+            ],
+            "SECURITY_REVIEW": [
+              "SECURITY_REVIEW_EVIDENCE"
+            ],
+            "RELEASE": [
+              "RELEASE_READINESS_EVIDENCE",
+              "REQUIRED_RELEASE_DECISION_WHEN_TRIGGERED"
+            ],
+            "ACTIVATION": [
+              "ACTIVATION_OR_DEPLOYMENT_EVIDENCE"
+            ],
+            "OUTCOME_ASSESSMENT": [
+              "USAGE_OR_OUTCOME_EVIDENCE",
+              "BUSINESS_OUTCOME_DECISION"
+            ]
+          },
+          "conditionalEvidence": [
+            {
+              "when": "solutionForm IN [WEBSITE,WEB_APP]",
+              "require": [
+                "BUILD_EVIDENCE",
+                "RESPONSIVE_VERIFICATION",
+                "ACCESSIBILITY_EVIDENCE"
+              ]
+            }
+          ],
+          "forbiddenSubstitutions": [
+            "ASSISTANT_CLAIM_FOR_PROVIDER_EVIDENCE",
+            "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
+            "DELIVERY_AS_OUTCOME_EVIDENCE"
+          ]
+        },
+        "schedulingContract": {
+          "atomicDispatchOnly": true,
+          "compositeDecompositionRequired": true,
+          "resourceAccessRequired": true,
+          "immutableReadInputsRequired": true,
+          "unknownMutationConflict": "SERIALIZE",
+          "dedicatedGitBranchForMutations": true,
+          "naturalParallelism": [
+            {
+              "after": "SW-03",
+              "nodes": [
+                "SW-04",
+                "SW-05"
+              ],
+              "joinAt": "SW-06"
+            }
+          ],
+          "decompositionRule": "Implementation may be decomposed into ATOMIC child work only when solution design exposes independently acceptable outputs and conservative non-overlapping mutation domains; shared integration is modeled as an explicit downstream work item.",
+          "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan.",
+          "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
+        }
+      }
+    }
+  },
+  "factoryBook": {
+    "key": "factoryBook",
+    "sourcePath": "v0.10.0/packages/factories/book-production/0.5.0/package.json",
+    "sourceBlobSha": "3d2d8f03a40680c98ce7124325d6d313b4ff3e04",
+    "content": {
+      "format": "SAFOR_PACKAGE_MANIFEST",
+      "schemaVersion": "0.10.0",
+      "packageId": "safor.factory.book-production",
+      "packageKind": "FACTORY",
+      "version": "0.5.0",
+      "name": "Book Production and Reader Outcome Factory",
+      "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
+      "compatibility": {
+        "kernel": ">=0.10.0 <0.11.0"
+      },
+      "exports": {
+        "capabilities": [
+          "book_intent",
+          "audience_definition",
+          "research",
+          "outline_design",
+          "authoring",
+          "fact_check",
+          "editorial_review",
+          "proofreading",
+          "publication_preparation",
+          "reader_outcome_assessment"
+        ],
+        "authorities": [
+          "book_scope_approval",
+          "book_structure_approval",
+          "publication_approval",
+          "reader_outcome_acceptance"
+        ],
+        "workItemTypes": [
+          "BOOK_CONCEPT",
+          "RESEARCH",
+          "OUTLINE",
+          "DRAFT",
+          "FACT_CHECK",
+          "EDITORIAL_REVIEW",
+          "PROOFREAD",
+          "PUBLICATION",
+          "OUTCOME_ASSESSMENT"
+        ],
+        "artifactTypes": [
+          "BOOK_INTENT",
+          "AUDIENCE_DEFINITION",
+          "RESEARCH_DOSSIER",
+          "BOOK_CONCEPT",
+          "OUTLINE",
+          "MANUSCRIPT",
+          "FACT_CHECK_EVIDENCE",
+          "EDITORIAL_REVIEW",
+          "PROOF",
+          "PUBLICATION_PACKAGE",
+          "READER_OUTCOME"
+        ],
+        "providerCapabilities": []
+      },
+      "dependencies": [],
+      "model": {
+        "flowGraph": {
+          "nonLinear": true,
+          "nodes": [
+            {
+              "id": "BK-01",
+              "workItemType": "BOOK_CONCEPT",
+              "requiresCapabilities": [
+                "book_intent",
+                "audience_definition"
+              ],
+              "requiredAuthorities": [
+                "book_scope_approval"
+              ],
+              "produces": [
+                "BOOK_INTENT",
+                "AUDIENCE_DEFINITION",
+                "BOOK_CONCEPT"
+              ],
+              "dependsOn": []
+            },
+            {
+              "id": "BK-02",
+              "workItemType": "RESEARCH",
+              "requiresCapabilities": [
+                "research"
+              ],
+              "requiredAuthorities": [],
+              "produces": [
+                "RESEARCH_DOSSIER"
+              ],
+              "dependsOn": [
+                "BK-01"
+              ]
+            },
+            {
+              "id": "BK-03",
+              "workItemType": "OUTLINE",
+              "requiresCapabilities": [
+                "outline_design"
+              ],
+              "requiredAuthorities": [
+                "book_structure_approval"
+              ],
+              "produces": [
+                "OUTLINE"
+              ],
+              "dependsOn": [
+                "BK-01",
+                "BK-02"
+              ]
+            },
+            {
+              "id": "BK-04",
+              "workItemType": "DRAFT",
+              "requiresCapabilities": [
+                "authoring"
+              ],
+              "requiredAuthorities": [],
+              "produces": [
+                "MANUSCRIPT"
+              ],
+              "dependsOn": [
+                "BK-03"
+              ]
+            },
+            {
+              "id": "BK-05",
+              "workItemType": "FACT_CHECK",
+              "requiresCapabilities": [
+                "fact_check"
+              ],
+              "review": {
+                "required": true,
+                "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+              },
+              "requiredAuthorities": [],
+              "produces": [
+                "FACT_CHECK_EVIDENCE"
+              ],
+              "dependsOn": [
+                "BK-04"
+              ]
+            },
+            {
+              "id": "BK-06",
+              "workItemType": "EDITORIAL_REVIEW",
+              "requiresCapabilities": [
+                "editorial_review"
+              ],
+              "review": {
+                "required": true,
+                "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+              },
+              "requiredAuthorities": [],
+              "produces": [
+                "EDITORIAL_REVIEW"
+              ],
+              "dependsOn": [
+                "BK-04"
+              ]
+            },
+            {
+              "id": "BK-07",
+              "workItemType": "PROOFREAD",
+              "requiresCapabilities": [
+                "proofreading"
+              ],
+              "requiredAuthorities": [],
+              "produces": [
+                "PROOF"
+              ],
+              "dependsOn": [
+                "BK-05",
+                "BK-06"
+              ],
+              "joinPolicy": "ALL_DEPENDENCIES_ACCEPTED"
+            },
+            {
+              "id": "BK-08",
+              "workItemType": "PUBLICATION",
+              "requiresCapabilities": [
+                "publication_preparation"
+              ],
+              "requiredAuthorities": [
+                "publication_approval"
+              ],
+              "produces": [
+                "PUBLICATION_PACKAGE"
+              ],
+              "dependsOn": [
+                "BK-07"
+              ]
+            },
+            {
+              "id": "BK-09",
+              "workItemType": "OUTCOME_ASSESSMENT",
+              "requiresCapabilities": [
+                "reader_outcome_assessment"
+              ],
+              "requiredAuthorities": [
+                "reader_outcome_acceptance"
+              ],
+              "produces": [
+                "READER_OUTCOME"
+              ],
+              "dependsOn": [
+                "BK-08"
+              ]
+            }
+          ]
+        },
+        "reworkPolicy": {
+          "selective": true,
+          "preserveAcceptedUnaffectedWork": true,
+          "defaultMaximumAttempts": 3,
+          "onExhausted": "REPLAN_REQUIRED"
+        },
+        "outcomeModel": {
+          "deliveryTerminalArtifact": "PUBLICATION_PACKAGE",
+          "outcomeArtifact": "READER_OUTCOME",
+          "rule": "Publication is delivery. Reader understanding, behavior or other declared reader value requires separate outcome evidence."
+        },
+        "discoveryContract": {
+          "creationType": "BOOK",
+          "purpose": "Understand intended readers, reader need, core promise, evidence standard and minimum coherent book scope before planning.",
+          "requiredFields": [
+            {
+              "id": "targetReaders",
+              "prompt": "Für wen schreibst du dieses Buch?"
+            },
+            {
+              "id": "readerNeed",
+              "prompt": "Was sollen die Leser danach besser verstehen oder können?"
+            },
+            {
+              "id": "corePromise",
+              "prompt": "Was ist die zentrale Aussage oder das Versprechen des Buches?"
+            },
+            {
+              "id": "readerValueHypothesis",
+              "prompt": "Woran erkennen wir später, dass das Buch seinen Lesern nutzt?"
+            },
+            {
+              "id": "evidenceStandard",
+              "prompt": "Welchen Anspruch soll das Buch an Quellen und Nachweise haben?",
+              "options": [
+                "PRACTITIONER",
+                "EVIDENCE_BASED",
+                "SCIENTIFIC"
+              ]
+            },
+            {
+              "id": "minimumPublishableScope",
+              "prompt": "Was ist der kleinste in sich stimmige publizierbare Umfang?"
+            }
+          ],
+          "completionPredicate": "ALL_REQUIRED_FIELDS_CONFIRMED",
+          "outputArtifactType": "BOOK_INTENT"
+        },
+        "planningContract": {
+          "creationType": "BOOK",
+          "sourceInputs": [
+            "DISCOVERY_RECORD",
+            "BOOK_INTENT",
+            "AUDIENCE_DEFINITION"
+          ],
+          "requiredPlanningPerspectives": [
+            "READER_VALUE",
+            "RESEARCH",
+            "STRUCTURE",
+            "AUTHORING",
+            "FACT_CHECK",
+            "EDITORIAL",
+            "PROOF",
+            "PUBLICATION",
+            "OUTCOME"
+          ],
+          "deriveWorkItemsFrom": "flowGraph",
+          "requiredForEachWorkItem": [
+            "objective",
+            "requiredCapabilities",
+            "dependencies",
+            "expectedOutputs",
+            "acceptanceCriteria",
+            "evidenceRequirements",
+            "execution",
+            "execution.resourceAccess",
+            "execution.parallelizationDecision"
+          ],
+          "conditionalRules": [
+            {
+              "when": "evidenceStandard == SCIENTIFIC",
+              "addPlanningConcerns": [
+                "SOURCE_TRACEABILITY",
+                "CLAIM_EVIDENCE_MAPPING",
+                "SCIENTIFIC_REVIEW"
+              ]
+            }
+          ],
+          "rule": "Planning must be derived only from the confirmed book discovery and this factory graph."
+        },
+        "evidenceContract": {
+          "creationType": "BOOK",
+          "rule": "Evidence must demonstrate source quality, manuscript transformation and independent review appropriate to the selected evidence standard.",
+          "byWorkItemType": {
+            "BOOK_CONCEPT": [
+              "BOOK_INTENT",
+              "AUDIENCE_DEFINITION",
+              "BOOK_SCOPE_DECISION"
+            ],
+            "RESEARCH": [
+              "RESEARCH_DOSSIER",
+              "SOURCE_PROVENANCE"
+            ],
+            "OUTLINE": [
+              "OUTLINE_ARTIFACT",
+              "BOOK_STRUCTURE_DECISION"
+            ],
+            "DRAFT": [
+              "MANUSCRIPT_ARTIFACT"
+            ],
+            "FACT_CHECK": [
+              "INDEPENDENT_FACT_CHECK_EVIDENCE"
+            ],
+            "EDITORIAL_REVIEW": [
+              "INDEPENDENT_EDITORIAL_REVIEW"
+            ],
+            "PROOFREAD": [
+              "PROOFREAD_EVIDENCE"
+            ],
+            "PUBLICATION": [
+              "PUBLICATION_PACKAGE",
+              "PUBLICATION_DECISION"
+            ],
+            "OUTCOME_ASSESSMENT": [
+              "READER_FEEDBACK_OR_OUTCOME_EVIDENCE",
+              "READER_OUTCOME_DECISION"
+            ]
+          },
+          "conditionalEvidence": [
+            {
+              "when": "evidenceStandard == SCIENTIFIC",
+              "require": [
+                "CLAIM_TO_SOURCE_TRACEABILITY",
+                "SCIENTIFIC_REVIEW_EVIDENCE"
+              ]
+            }
+          ],
+          "forbiddenSubstitutions": [
+            "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_FACT_CHECK",
+            "UNVERIFIED_SOURCE_LIST_AS_RESEARCH_EVIDENCE",
+            "PUBLICATION_AS_READER_OUTCOME_EVIDENCE"
+          ]
+        },
+        "schedulingContract": {
+          "atomicDispatchOnly": true,
+          "compositeDecompositionRequired": true,
+          "resourceAccessRequired": true,
+          "immutableReadInputsRequired": true,
+          "unknownMutationConflict": "SERIALIZE",
+          "dedicatedGitBranchForMutations": true,
+          "naturalParallelism": [
+            {
+              "after": "BK-04",
+              "nodes": [
+                "BK-05",
+                "BK-06"
+              ],
+              "joinAt": "BK-07"
+            }
+          ],
+          "decompositionRule": "Research, drafting, fact-check or editorial work may be decomposed only along explicit chapter/section/source domains with independent outputs and conservative conflict domains; shared manuscript integration is explicit.",
+          "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan.",
+          "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
+        }
+      }
+    }
+  },
+  "schemaPackageManifest": {
+    "key": "schemaPackageManifest",
+    "sourcePath": "v0.10.0/schemas/package-manifest.schema.json",
+    "sourceBlobSha": "c5e6b01273d899ce9f5a59200e4912340ffe1fe9",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:package-manifest:0.10.0",
+      "title": "SAFOR Package Manifest 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "packageId",
+        "packageKind",
+        "version",
+        "name",
+        "description",
+        "compatibility",
+        "exports",
+        "dependencies",
+        "model"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_PACKAGE_MANIFEST"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "packageId": {
+          "type": "string",
+          "pattern": "^saf\\.(om|factory|provider)\\.[a-z0-9][a-z0-9.-]*$"
+        },
+        "packageKind": {
+          "enum": [
+            "OPERATING_MODEL",
+            "FACTORY",
+            "PROVIDER_ADAPTER"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "compatibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "kernel"
+          ],
+          "properties": {
+            "kernel": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "exports": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "capabilities",
+            "authorities",
+            "workItemTypes",
+            "artifactTypes",
+            "providerCapabilities"
+          ],
+          "properties": {
+            "capabilities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "authorities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "workItemTypes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "artifactTypes": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "providerCapabilities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "packageId",
+              "versionRange"
+            ],
+            "properties": {
+              "packageId": {
+                "type": "string"
+              },
+              "versionRange": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "model": {
+          "type": "object"
+        },
+        "source": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "repository": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "ref": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaControlState": {
+    "key": "schemaControlState",
+    "sourcePath": "v0.10.0/schemas/control-state.schema.json",
+    "sourceBlobSha": "8ce7b025eada4f8d5c8e645d9825a7e0a301e76a",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:control-state:0.10.0",
+      "title": "SAFOR Control State 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "kernelRef",
+        "projectRef",
+        "bindingsRef",
+        "mode",
+        "status",
+        "currentActionId",
+        "stateRevision",
+        "resumeMode",
+        "mandates",
+        "lastTransition",
+        "audit"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_CONTROL_STATE"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "kernelRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "version",
+            "sourceRef"
+          ],
+          "properties": {
+            "version": {
+              "const": "0.10.0"
+            },
+            "sourceRef": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "projectRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projectId",
+            "projectSlug"
+          ],
+          "properties": {
+            "projectId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "projectSlug": {
+              "type": "string",
+              "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+            }
+          }
+        },
+        "bindingsRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "path",
+            "revision"
+          ],
+          "properties": {
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "mode": {
+          "enum": [
+            "BOOTSTRAP",
+            "INITIALIZING",
+            "PLANNING",
+            "AWAITING_AUTHORIZATION",
+            "EXECUTING",
+            "WAITING_OUTCOME",
+            "RECOVERING",
+            "PAUSED",
+            "STOPPED",
+            "COMPLETED"
+          ]
+        },
+        "status": {
+          "enum": [
+            "READY",
+            "RUNNING",
+            "WAITING_HUMAN",
+            "WAITING_EXTERNAL",
+            "RECONCILE_REQUIRED",
+            "BLOCKED",
+            "FAILED",
+            "DONE"
+          ]
+        },
+        "currentActionId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stateRevision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resumeMode": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "mandates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/mandate"
+          }
+        },
+        "lastTransition": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "audit": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "expectedControlHead",
+            "lastVerifiedReadback"
+          ],
+          "properties": {
+            "expectedControlHead": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "lastVerifiedReadback": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        }
+      },
+      "$defs": {
+        "mandate": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "mandateId",
+            "type",
+            "active",
+            "scope",
+            "decisionRef",
+            "issuedAt",
+            "revokedAt"
+          ],
+          "properties": {
+            "mandateId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "scope": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "workItemIds",
+                "capabilities",
+                "objectRefs"
+              ],
+              "properties": {
+                "workItemIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "capabilities": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                },
+                "objectRefs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                }
+              }
+            },
+            "decisionRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "issuedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "revokedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaValueStreamState": {
+    "key": "schemaValueStreamState",
+    "sourcePath": "v0.10.0/schemas/value-stream-state.schema.json",
+    "sourceBlobSha": "3b3d23836eb707da5893cc59bab7484b0adc8fed",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:value-stream-state:0.10.0",
+      "title": "SAFOR Value Stream State 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "projectId",
+        "factoryBinding",
+        "valueStreamId",
+        "revision",
+        "objects",
+        "relations",
+        "workItems",
+        "outcomes"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_VALUE_STREAM_STATE"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "projectId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "factoryBinding": {
+          "$ref": "#/$defs/packageBinding"
+        },
+        "valueStreamId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "objects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/object"
+          }
+        },
+        "relations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/relation"
+          }
+        },
+        "workItems": {
+          "type": "array",
+          "items": {
+            "$ref": "work-item.schema.json"
+          }
+        },
+        "outcomes": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/outcome"
+          }
+        }
+      },
+      "$defs": {
+        "packageBinding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packageId",
+            "version",
+            "snapshotRef"
+          ],
+          "properties": {
+            "packageId": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "snapshotRef": {
+              "type": "string"
+            }
+          }
+        },
+        "object": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "type",
+            "status",
+            "artifactRef"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "description": "Factory-defined domain artifact/business-object type."
+            },
+            "status": {
+              "type": "string"
+            },
+            "artifactRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "relation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "from",
+            "to"
+          ],
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "from": {
+              "type": "string"
+            },
+            "to": {
+              "type": "string"
+            }
+          }
+        },
+        "outcome": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "definition",
+            "status",
+            "evidenceRefs"
+          ],
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "definition": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "NOT_EVALUATED",
+                "VALUE_SUPPORTED",
+                "VALUE_NOT_DEMONSTRATED",
+                "VALUE_UNCLEAR"
+              ]
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaExecutionState": {
+    "key": "schemaExecutionState",
+    "sourcePath": "v0.10.0/schemas/execution-state.schema.json",
+    "sourceBlobSha": "0a734cf43d9d03fd07aedbe0260fa6c5f7498d59",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:execution-state:0.10.0",
+      "title": "SAFOR Execution State 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "projectId",
+        "revision",
+        "actorAssignments",
+        "contracts",
+        "agentJobStateRefs",
+        "schedulerStateRef",
+        "activeDispatchWaveRefs",
+        "resourceLeaseRefs",
+        "runs",
+        "reconciliation",
+        "selfHealing"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_EXECUTION_STATE"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "projectId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "actorAssignments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/assignment"
+          }
+        },
+        "contracts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/contract"
+          }
+        },
+        "runs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/run"
+          }
+        },
+        "reconciliation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reconciliation"
+          }
+        },
+        "selfHealing": {
+          "type": "array",
+          "items": {
+            "$ref": "self-healing-record.schema.json"
+          }
+        },
+        "agentJobStateRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true,
+          "description": "References to MASTER-owned master/jobs/{jobId}.json records. Lifecycle fields are not duplicated here."
+        },
+        "schedulerStateRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "activeDispatchWaveRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "resourceLeaseRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "$defs": {
+        "assignment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "roleId",
+            "actorId",
+            "actorKind",
+            "capabilities"
+          ],
+          "properties": {
+            "roleId": {
+              "type": "string"
+            },
+            "actorId": {
+              "type": "string"
+            },
+            "actorKind": {
+              "enum": [
+                "HUMAN",
+                "AGENT",
+                "SERVICE"
+              ]
+            },
+            "capabilities": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "contract": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "contractId",
+            "workItemId",
+            "performerActorId",
+            "reviewerActorIds",
+            "status",
+            "scope"
+          ],
+          "properties": {
+            "contractId": {
+              "type": "string"
+            },
+            "workItemId": {
+              "type": "string"
+            },
+            "performerActorId": {
+              "type": "string"
+            },
+            "reviewerActorIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "status": {
+              "enum": [
+                "PREPARED",
+                "ASSIGNED",
+                "IN_PROGRESS",
+                "RESULT_RECORDED",
+                "REWORK_REQUESTED",
+                "ACCEPTED",
+                "SUPERSEDED",
+                "CANCELED",
+                "BLOCKED"
+              ]
+            },
+            "scope": {
+              "type": "object"
+            }
+          }
+        },
+        "run": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "runId",
+            "actionId",
+            "operationId",
+            "status",
+            "inputRefs",
+            "outputRefs",
+            "evidenceRefs",
+            "startedAt",
+            "endedAt",
+            "error"
+          ],
+          "properties": {
+            "runId": {
+              "type": "string"
+            },
+            "actionId": {
+              "type": "string"
+            },
+            "operationId": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "INTENT_WRITTEN",
+                "RUNNING",
+                "WAITING_HUMAN",
+                "WAITING_EXTERNAL",
+                "RECONCILE_REQUIRED",
+                "COMPLETED",
+                "BLOCKED",
+                "FAILED",
+                "CANCELED"
+              ]
+            },
+            "inputRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "outputRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "startedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "endedAt": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "error": {
+              "type": [
+                "object",
+                "null"
+              ]
+            }
+          }
+        },
+        "reconciliation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "operationId",
+            "status",
+            "observedRefs"
+          ],
+          "properties": {
+            "operationId": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "OPEN",
+                "RESOLVED_EFFECT_PRESENT",
+                "RESOLVED_EFFECT_ABSENT",
+                "MANUAL_DECISION_REQUIRED"
+              ]
+            },
+            "observedRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaWorkItem": {
+    "key": "schemaWorkItem",
+    "sourcePath": "v0.10.0/schemas/work-item.schema.json",
+    "sourceBlobSha": "9b8f55e009358aa1848ccc0cfd58cc54a623c796",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:work-item:0.10.0",
+      "title": "SAFOR Domain-Agnostic Work Item 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "valueStreamId",
+        "type",
+        "objective",
+        "status",
+        "requiredCapabilities",
+        "authorityRequirements",
+        "inputs",
+        "expectedOutputs",
+        "acceptanceCriteria",
+        "dependencies",
+        "execution",
+        "assignment",
+        "review",
+        "evidenceRequirements",
+        "valueContribution"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+        },
+        "valueStreamId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Factory-defined work-item type. The MASTER kernel must not enumerate domain types."
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "PLANNED",
+            "READY",
+            "ASSIGNED",
+            "IN_PROGRESS",
+            "HANDOFF_READY",
+            "IN_REVIEW",
+            "CHANGES_REQUIRED",
+            "ACCEPTED",
+            "BLOCKED",
+            "CANCELED"
+          ]
+        },
+        "requiredCapabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "authorityRequirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "expectedOutputs": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/ref"
+          }
+        },
+        "acceptanceCriteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "assignment": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "performerActorId",
+            "reviewerActorIds"
+          ],
+          "properties": {
+            "performerActorId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "reviewerActorIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          }
+        },
+        "review": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "required",
+            "independencePolicy",
+            "status",
+            "evidenceRefs"
+          ],
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "independencePolicy": {
+              "type": "string"
+            },
+            "status": {
+              "enum": [
+                "NOT_REQUIRED",
+                "NOT_STARTED",
+                "PENDING",
+                "CHANGES_REQUIRED",
+                "APPROVED"
+              ]
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "evidenceRequirements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "valueContribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "status",
+            "evidenceRefs",
+            "outcomeRefs"
+          ],
+          "properties": {
+            "status": {
+              "enum": [
+                "NOT_DELIVERED",
+                "DELIVERED_CONTRIBUTION"
+              ]
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "outcomeRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "execution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "unit",
+            "parentWorkItemId",
+            "childWorkItemIds",
+            "joinPolicy",
+            "parallelizationDecision",
+            "priority",
+            "readySince",
+            "resourceAccess",
+            "integrationRequired",
+            "integrationWorkItemRef"
+          ],
+          "properties": {
+            "unit": {
+              "enum": [
+                "ATOMIC",
+                "COMPOSITE"
+              ]
+            },
+            "parentWorkItemId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "childWorkItemIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "joinPolicy": {
+              "enum": [
+                "NONE",
+                "ALL_CHILDREN_ACCEPTED"
+              ]
+            },
+            "priority": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "readySince": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "format": "date-time"
+            },
+            "resourceAccess": {
+              "$ref": "#/$defs/resourceAccess"
+            },
+            "integrationRequired": {
+              "type": "boolean"
+            },
+            "integrationWorkItemRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "parallelizationDecision": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "classification",
+                "rationale",
+                "evidenceRefs"
+              ],
+              "properties": {
+                "classification": {
+                  "enum": [
+                    "PARALLEL_CANDIDATE",
+                    "SERIAL_ONLY",
+                    "COMPOSITE_CONTAINER"
+                  ]
+                },
+                "rationale": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "evidenceRefs": {
+                  "type": "array",
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "$defs": {
+        "ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "ref"
+          ],
+          "properties": {
+            "ref": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expectedType": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "resourceAccess": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "readSet",
+            "writeSet",
+            "exclusiveKeys"
+          ],
+          "properties": {
+            "readSet": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/readResource"
+              }
+            },
+            "writeSet": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/writeResource"
+              }
+            },
+            "exclusiveKeys": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "readResource": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository",
+            "path",
+            "immutableRevision"
+          ],
+          "properties": {
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "immutableRevision": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "writeResource": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "repository",
+            "path",
+            "conflictDomain"
+          ],
+          "properties": {
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "conflictDomain": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "execution": {
+                "properties": {
+                  "unit": {
+                    "const": "ATOMIC"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "execution": {
+                "properties": {
+                  "childWorkItemIds": {
+                    "maxItems": 0
+                  },
+                  "joinPolicy": {
+                    "const": "NONE"
+                  },
+                  "parallelizationDecision": {
+                    "properties": {
+                      "classification": {
+                        "enum": [
+                          "PARALLEL_CANDIDATE",
+                          "SERIAL_ONLY"
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "execution": {
+                "properties": {
+                  "unit": {
+                    "const": "COMPOSITE"
+                  }
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "execution": {
+                "properties": {
+                  "childWorkItemIds": {
+                    "minItems": 1
+                  },
+                  "joinPolicy": {
+                    "const": "ALL_CHILDREN_ACCEPTED"
+                  },
+                  "parallelizationDecision": {
+                    "properties": {
+                      "classification": {
+                        "const": "COMPOSITE_CONTAINER"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "schemaProject": {
+    "key": "schemaProject",
+    "sourcePath": "v0.10.0/schemas/project.schema.json",
+    "sourceBlobSha": "19d030ada10936596e5093b5773185f16a08855b",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:project:0.10.0",
+      "title": "SAFOR Project Descriptor 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "projectId",
+        "projectSlug",
+        "title",
+        "owner",
+        "creationType",
+        "goal",
+        "createdAt",
+        "controlRepository",
+        "workRepositories"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_PROJECT"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "projectId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "projectSlug": {
+          "type": "string",
+          "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "goal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "controlRepository": {
+          "$ref": "#/$defs/repositoryRef"
+        },
+        "workRepositories": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/repositoryRef"
+          }
+        },
+        "owner": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "namespace",
+            "stableId"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "minLength": 1
+            },
+            "namespace": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stableId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "displayName": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "creationType": {
+          "enum": [
+            "SOFTWARE_WEBSITE",
+            "BOOK"
+          ]
+        }
+      },
+      "$defs": {
+        "repositoryRef": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "stableId",
+            "repository",
+            "branch",
+            "purpose"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stableId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "branch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaBindings": {
+    "key": "schemaBindings",
+    "sourcePath": "v0.10.0/schemas/bindings.schema.json",
+    "sourceBlobSha": "036f9ca203ba256585ac3a6e242344fffcb6e7f0",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:bindings:0.10.0",
+      "title": "SAFOR Project Bindings 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "revision",
+        "kernel",
+        "operatingModel",
+        "factory",
+        "providerAdapters",
+        "actorAssignments"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_PROJECT_BINDINGS"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "kernel": {
+          "$ref": "#/$defs/binding"
+        },
+        "operatingModel": {
+          "$ref": "#/$defs/binding"
+        },
+        "factory": {
+          "$ref": "#/$defs/binding"
+        },
+        "providerAdapters": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/binding"
+          }
+        },
+        "actorAssignments": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "roleId",
+              "actorId",
+              "actorKind"
+            ],
+            "properties": {
+              "roleId": {
+                "type": "string"
+              },
+              "actorId": {
+                "type": "string"
+              },
+              "actorKind": {
+                "enum": [
+                  "HUMAN",
+                  "AGENT",
+                  "SERVICE"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "$defs": {
+        "binding": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packageId",
+            "version",
+            "sourceRef",
+            "snapshotRef"
+          ],
+          "properties": {
+            "packageId": {
+              "type": "string"
+            },
+            "version": {
+              "type": "string"
+            },
+            "sourceRef": {
+              "type": "string"
+            },
+            "snapshotRef": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  },
+  "schemaDecisionRecord": {
+    "key": "schemaDecisionRecord",
+    "sourcePath": "v0.10.0/schemas/decision-record.schema.json",
+    "sourceBlobSha": "a8452a5a9dbc50f7bae821cbd53859f89bbe861e",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:decision-record:0.10.0",
+      "title": "SAFOR Decision Record 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "decisionId",
+        "decisionType",
+        "authorityId",
+        "actorId",
+        "scope",
+        "revision",
+        "decision",
+        "source",
+        "createdAt",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_DECISION_RECORD"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "decisionId": {
+          "type": "string"
+        },
+        "decisionType": {
+          "type": "string"
+        },
+        "authorityId": {
+          "type": "string"
+        },
+        "actorId": {
+          "type": "string"
+        },
+        "scope": {
+          "type": "object"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "decision": {
+          "type": "string"
+        },
+        "source": {
+          "enum": [
+            "DIRECT_HUMAN_INPUT",
+            "PROVIDER_RECORD",
+            "AUTHORIZED_SERVICE"
+          ]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "schemaEvidenceRecord": {
+    "key": "schemaEvidenceRecord",
+    "sourcePath": "v0.10.0/schemas/evidence-record.schema.json",
+    "sourceBlobSha": "9a79b165fa7468024db44127eb1aee1f75094307",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:evidence-record:0.10.0",
+      "title": "SAFOR Evidence Record 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "evidenceId",
+        "evidenceType",
+        "subjectRef",
+        "source",
+        "observedAt",
+        "reference",
+        "integrity",
+        "claims"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_EVIDENCE_RECORD"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "evidenceId": {
+          "type": "string"
+        },
+        "evidenceType": {
+          "type": "string"
+        },
+        "subjectRef": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reference": {
+          "type": "string"
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stableId",
+            "revisionRef"
+          ],
+          "properties": {
+            "stableId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "revisionRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "schemaInteractionMenu": {
+    "key": "schemaInteractionMenu",
+    "sourcePath": "v0.10.0/schemas/interaction-menu.schema.json",
+    "sourceBlobSha": "d05d780591998d4fe72a586e0b34d3f3416f620a",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:interaction-menu:0.10.0",
+      "title": "SAFOR Interaction Menu 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "menuId",
+        "context",
+        "presentation",
+        "items"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_INTERACTION_MENU"
+        },
+        "schemaVersion": {
+          "const": "0.10.0"
+        },
+        "menuId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "projectId",
+            "projectTitle",
+            "mode",
+            "status",
+            "headline",
+            "summary",
+            "phase",
+            "cognitiveLoadTarget",
+            "interactionReason",
+            "decisionRequired",
+            "technicalDetailExposure",
+            "decisionGateOutcome",
+            "heuristicLoadEstimate",
+            "reusedDecisionRef"
+          ],
+          "properties": {
+            "projectId": {
+              "type": "string"
+            },
+            "projectTitle": {
+              "type": "string"
+            },
+            "mode": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "headline": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 90
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 280
+            },
+            "progressLabel": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 80
+            },
+            "currentWorkLabel": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 100
+            },
+            "phase": {
+              "enum": [
+                "BOOTSTRAP",
+                "DISCOVERY",
+                "PLANNING",
+                "SCHEDULING",
+                "AGENT_COORDINATION",
+                "EXECUTION",
+                "RECOVERY",
+                "OUTCOME",
+                "CLOSING"
+              ]
+            },
+            "cognitiveLoadTarget": {
+              "enum": [
+                "VERY_LOW",
+                "LOW",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            "interactionReason": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                    "HUMAN_CONTROLLED_TARGET_SELECTION",
+                    "MATERIAL_ALTERNATIVE_CHOICE",
+                    "SCOPE_CHANGE_REQUIRED",
+                    "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                    "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                    "IRREVERSIBLE_ACTION_REQUIRED",
+                    "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                    "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                    "RECOVERY_CANNOT_PROCEED_SAFELY",
+                    "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                    "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "decisionRequired": {
+              "type": "boolean"
+            },
+            "technicalDetailExposure": {
+              "enum": [
+                "SUMMARY",
+                "DETAILS_REQUIRED"
+              ]
+            },
+            "decisionGateOutcome": {
+              "enum": [
+                "ALLOW_ASK",
+                "SUPPRESS_DERIVABLE",
+                "REUSE_EXISTING_DECISION",
+                "NOT_APPLICABLE"
+              ]
+            },
+            "heuristicLoadEstimate": {
+              "type": [
+                "integer",
+                "null"
+              ],
+              "minimum": 0,
+              "maximum": 100
+            },
+            "reusedDecisionRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "presentation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "preferredSurface",
+            "fallbackSurface",
+            "visualProfile"
+          ],
+          "properties": {
+            "preferredSurface": {
+              "enum": [
+                "NATIVE_ACTIONS",
+                "NATIVE_SINGLE_SELECT",
+                "NATIVE_MULTI_SELECT",
+                "NATIVE_RICH_CARDS",
+                "NATIVE_MARKDOWN"
+              ]
+            },
+            "fallbackSurface": {
+              "const": "NATIVE_MARKDOWN"
+            },
+            "visualProfile": {
+              "const": "SAFOR_CHAT_NATIVE"
+            }
+          }
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 8,
+          "items": {
+            "$ref": "#/$defs/item"
+          }
+        }
+      },
+      "$defs": {
+        "item": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "id",
+            "label",
+            "intent",
+            "kind",
+            "enabled",
+            "requiresConfirmation",
+            "visibilityRule"
+          ],
+          "properties": {
+            "id": {
+              "type": "string",
+              "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 42
+            },
+            "description": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 120
+            },
+            "intent": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "PRIMARY",
+                "SECONDARY",
+                "UTILITY",
+                "DANGER"
+              ]
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "requiresConfirmation": {
+              "type": "boolean"
+            },
+            "visibilityRule": {
+              "type": "string",
+              "minLength": 1
+            },
+            "badge": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "maxLength": 24
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "context": {
+                "properties": {
+                  "decisionRequired": {
+                    "const": true
+                  }
+                }
+              }
+            },
+            "required": [
+              "context"
+            ]
+          },
+          "then": {
+            "properties": {
+              "context": {
+                "properties": {
+                  "interactionReason": {
+                    "enum": [
+                      "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                      "HUMAN_CONTROLLED_TARGET_SELECTION",
+                      "MATERIAL_ALTERNATIVE_CHOICE",
+                      "SCOPE_CHANGE_REQUIRED",
+                      "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                      "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                      "IRREVERSIBLE_ACTION_REQUIRED",
+                      "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                      "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                      "RECOVERY_CANNOT_PROCEED_SAFELY",
+                      "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                      "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+                    ]
+                  },
+                  "decisionGateOutcome": {
+                    "const": "ALLOW_ASK"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "schemaHumanCognitiveLoadPolicy": {
+    "key": "schemaHumanCognitiveLoadPolicy",
+    "sourcePath": "v0.10.0/schemas/human-cognitive-load-policy.schema.json",
+    "sourceBlobSha": "5dbb8c57e76aa6459a563544acb99d5808361254",
+    "content": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "$id": "urn:safor:human-cognitive-load-policy:0.10.0",
+      "title": "SAFOR HUMAN Cognitive Load Policy 0.10.0",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective",
+        "schemaRef",
+        "principles",
+        "loadLevels",
+        "phaseProfiles",
+        "adaptiveLoadRules",
+        "heuristicLoadEstimate",
+        "questionPolicy"
+      ],
+      "properties": {
+        "objective": {
+          "const": "MAXIMIZE_NECESSARY_HUMAN_CONTRIBUTION_MINIMIZE_EXTRANEOUS_SYSTEM_LOAD"
+        },
+        "schemaRef": {
+          "const": "schemas/human-cognitive-load-policy.schema.json"
+        },
+        "principles": {
+          "type": "object",
+          "minProperties": 9,
+          "additionalProperties": {
+            "type": "boolean"
+          }
+        },
+        "loadLevels": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "VERY_LOW",
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ],
+          "properties": {
+            "VERY_LOW": {
+              "type": "string",
+              "minLength": 1
+            },
+            "LOW": {
+              "type": "string",
+              "minLength": 1
+            },
+            "MEDIUM": {
+              "type": "string",
+              "minLength": 1
+            },
+            "HIGH": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "phaseProfiles": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "BOOTSTRAP",
+            "DISCOVERY",
+            "PLANNING",
+            "SCHEDULING",
+            "AGENT_COORDINATION",
+            "EXECUTION",
+            "RECOVERY",
+            "OUTCOME",
+            "CLOSING"
+          ],
+          "properties": {
+            "BOOTSTRAP": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "DISCOVERY": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "PLANNING": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "SCHEDULING": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "AGENT_COORDINATION": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "EXECUTION": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "RECOVERY": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "OUTCOME": {
+              "$ref": "#/$defs/phaseProfile"
+            },
+            "CLOSING": {
+              "$ref": "#/$defs/phaseProfile"
+            }
+          }
+        },
+        "adaptiveLoadRules": {
+          "type": "object",
+          "minProperties": 8,
+          "additionalProperties": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "heuristicLoadEstimate": {
+          "$ref": "#/$defs/heuristic"
+        },
+        "questionPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "maxNewDecisionContextsPerTurn",
+            "askOnlyMinimumNecessaryQuestion",
+            "decisionReasonMustBeRecorded",
+            "decisionReasonNeedNotBeShownUnlessUseful",
+            "noQuestionWhenAnswerSafelyDerivable",
+            "noQuestionWhenUnchangedDecisionReusable"
+          ],
+          "properties": {
+            "maxNewDecisionContextsPerTurn": {
+              "const": 1
+            },
+            "askOnlyMinimumNecessaryQuestion": {
+              "const": true
+            },
+            "decisionReasonMustBeRecorded": {
+              "const": true
+            },
+            "decisionReasonNeedNotBeShownUnlessUseful": {
+              "const": true
+            },
+            "noQuestionWhenAnswerSafelyDerivable": {
+              "const": true
+            },
+            "noQuestionWhenUnchangedDecisionReusable": {
+              "const": true
+            }
+          }
+        }
+      },
+      "$defs": {
+        "phaseProfile": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "targetLoad",
+            "purpose",
+            "maxNewDecisionsPerTurn",
+            "humanInteractionDefault",
+            "technicalDetailDefault",
+            "temporaryEscalationReasons"
+          ],
+          "properties": {
+            "targetLoad": {
+              "enum": [
+                "VERY_LOW",
+                "LOW",
+                "MEDIUM",
+                "HIGH"
+              ]
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxNewDecisionsPerTurn": {
+              "const": 1
+            },
+            "humanInteractionDefault": {
+              "enum": [
+                "GUIDED",
+                "DIALOGUE",
+                "DECISION_WHEN_NEEDED",
+                "NONE",
+                "EXCEPTION_ONLY",
+                "ESCALATION_ONLY",
+                "SUMMARY"
+              ]
+            },
+            "technicalDetailDefault": {
+              "const": "HIDDEN"
+            },
+            "allowDeepQuestions": {
+              "type": "boolean"
+            },
+            "masterMustRecommendPreferredOption": {
+              "type": "boolean"
+            },
+            "showSummaryBeforeDetail": {
+              "type": "boolean"
+            },
+            "humanContributionRequired": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "temporaryEscalationReasons": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                  "HUMAN_CONTROLLED_TARGET_SELECTION",
+                  "MATERIAL_ALTERNATIVE_CHOICE",
+                  "SCOPE_CHANGE_REQUIRED",
+                  "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                  "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                  "IRREVERSIBLE_ACTION_REQUIRED",
+                  "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                  "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                  "RECOVERY_CANNOT_PROCEED_SAFELY",
+                  "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                  "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+                ]
+              }
+            }
+          }
+        },
+        "factor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "maxPoints"
+          ],
+          "properties": {
+            "maxPoints": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        },
+        "heuristic": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "notPsychometricMeasure",
+            "purpose",
+            "range",
+            "factors",
+            "thresholds",
+            "phaseMaximumWithoutExplicitEscalation"
+          ],
+          "properties": {
+            "notPsychometricMeasure": {
+              "const": true
+            },
+            "purpose": {
+              "type": "string",
+              "minLength": 1
+            },
+            "range": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "min",
+                "max"
+              ],
+              "properties": {
+                "min": {
+                  "const": 0
+                },
+                "max": {
+                  "const": 100
+                }
+              }
+            },
+            "factors": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "decisionComplexity",
+                "newContext",
+                "choiceCount",
+                "contextSwitching",
+                "technicalTerminologyExposure"
+              ],
+              "properties": {
+                "decisionComplexity": {
+                  "$ref": "#/$defs/factor"
+                },
+                "newContext": {
+                  "$ref": "#/$defs/factor"
+                },
+                "choiceCount": {
+                  "$ref": "#/$defs/factor"
+                },
+                "contextSwitching": {
+                  "$ref": "#/$defs/factor"
+                },
+                "technicalTerminologyExposure": {
+                  "$ref": "#/$defs/factor"
+                }
+              }
+            },
+            "thresholds": {
+              "type": "object",
+              "minProperties": 4
+            },
+            "phaseMaximumWithoutExplicitEscalation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "BOOTSTRAP",
+                "DISCOVERY",
+                "PLANNING",
+                "SCHEDULING",
+                "AGENT_COORDINATION",
+                "EXECUTION",
+                "RECOVERY",
+                "OUTCOME",
+                "CLOSING"
+              ],
+              "properties": {
+                "BOOTSTRAP": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "DISCOVERY": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "PLANNING": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "SCHEDULING": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "AGENT_COORDINATION": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "EXECUTION": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "RECOVERY": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "OUTCOME": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                },
+                "CLOSING": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
