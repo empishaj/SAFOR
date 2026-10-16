@@ -1,0 +1,78 @@
+{
+  "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
+  "version": "0.5.0",
+  "policyId": "SAFOR-REPO-BOUNDARY-V3",
+  "denyByDefault": true,
+  "principles": {
+    "memoryIndependentFromWorkProvider": true,
+    "controlPlaneSeparatedFromDomainArtifacts": true,
+    "providerNeutral": true,
+    "projectScopedControl": true,
+    "workerMayNotMutateAuthoritativeMemoryByDefault": true,
+    "packagesReadOnlyAfterPinning": true,
+    "actualProviderRightsOverrideDeclaredIntent": true
+  },
+  "memoryBoundary": {
+    "authoritativeStateLocation": "BOUND_MEMORY_PROVIDER",
+    "versionedRepositoryMemory": {
+      "recommendedRepositoryName": "safor-memory",
+      "exactNameRequired": false,
+      "allowedRoots": [
+        "projects/",
+        "memory.json"
+      ],
+      "rule": "When SAFOR Memory is repository-backed, the physical repository is a storage implementation, not the definition of SAFOR Memory."
+    },
+    "hostFilesystemMemory": {
+      "rule": "A filesystem path is eligible only when durability and resume semantics are proven by the host. Ephemeral scratch storage is forbidden as authoritative Memory."
+    },
+    "noChatOnlyState": true
+  },
+  "workRepository": {
+    "purpose": "Persist domain work artifacts according to the bound Factory.",
+    "forbiddenPrefixes": [
+      "safor-control/",
+      "projects/",
+      "agents/",
+      "contracts/",
+      ".safor/"
+    ],
+    "forbiddenNames": [
+      "SAFOR-MASTER.json",
+      "SAFOR-MASTER-COMPLETE.json",
+      "memory.json",
+      "master-state.json"
+    ],
+    "rule": "Domain work providers and repositories are independent of the Memory provider."
+  },
+  "concurrency": {
+    "expectedMemoryRevisionBeforeWrite": true,
+    "sharedModeRequires": [
+      "memory.shared_access",
+      "memory.compare_and_swap OR memory.lock"
+    ],
+    "conflictOutcome": "RECONCILE_REQUIRED",
+    "blindOverwriteForbidden": true
+  },
+  "reconciliation": {
+    "readCurrentRevisionBeforeWrite": true,
+    "requireAuthoritativeReadback": true,
+    "unknownMutationOutcome": "RECONCILE_REQUIRED",
+    "blockOnUnexpectedHistoryRewrite": true
+  },
+  "selfHealingSafety": {
+    "allowed": "Only verified, bounded, non-destructive repairs within existing authorization.",
+    "forbidden": [
+      "force_push",
+      "history_rewrite",
+      "memory_location_delete",
+      "authoritative_state_delete_without_verified_restore",
+      "gate_bypass",
+      "review_bypass",
+      "mandate_expansion",
+      "invented_evidence"
+    ],
+    "requireReadbackAfterRepair": true,
+    "requireReconciliationBeforeRetryOnUnknownEffect": true
+  }
+}
