@@ -196,7 +196,7 @@
         "parentWorkItemId",
         "childWorkItemIds",
         "joinPolicy",
-        "parallelizable",
+        "parallelizationDecision",
         "priority",
         "readySince",
         "resourceAccess",
@@ -230,9 +230,6 @@
             "ALL_CHILDREN_ACCEPTED"
           ]
         },
-        "parallelizable": {
-          "type": "boolean"
-        },
         "priority": {
           "type": "integer",
           "minimum": 0,
@@ -256,6 +253,36 @@
             "string",
             "null"
           ]
+        },
+        "parallelizationDecision": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "classification",
+            "rationale",
+            "evidenceRefs"
+          ],
+          "properties": {
+            "classification": {
+              "enum": [
+                "PARALLEL_CANDIDATE",
+                "SERIAL_ONLY",
+                "COMPOSITE_CONTAINER"
+              ]
+            },
+            "rationale": {
+              "type": "string",
+              "minLength": 1
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
         }
       }
     }
@@ -357,5 +384,78 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "execution": {
+            "properties": {
+              "unit": {
+                "const": "ATOMIC"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "execution": {
+            "properties": {
+              "childWorkItemIds": {
+                "maxItems": 0
+              },
+              "joinPolicy": {
+                "const": "NONE"
+              },
+              "parallelizationDecision": {
+                "properties": {
+                  "classification": {
+                    "enum": [
+                      "PARALLEL_CANDIDATE",
+                      "SERIAL_ONLY"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "execution": {
+            "properties": {
+              "unit": {
+                "const": "COMPOSITE"
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "execution": {
+            "properties": {
+              "childWorkItemIds": {
+                "minItems": 1
+              },
+              "joinPolicy": {
+                "const": "ALL_CHILDREN_ACCEPTED"
+              },
+              "parallelizationDecision": {
+                "properties": {
+                  "classification": {
+                    "const": "COMPOSITE_CONTAINER"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
