@@ -150,13 +150,18 @@
         "Plastic SCM / Unity Version Control",
         "other compatible provider adapter"
       ],
-      "rule": "Work/SCM provider selection is independent from SAFOR Memory. Offer only providers whose actual host tools satisfy the bound Factory's workspace requirements."
+      "rule": "Work/SCM provider selection is independent from SAFOR Memory. Offer only providers whose actual host tools satisfy the bound Factory's workspace requirements. If the Factory declares workspaceRequirements.required=false, also offer MEMORY_ONLY.",
+      "memoryOnlyOption": {
+        "id": "MEMORY_ONLY",
+        "label": "Nur SAFOR Memory",
+        "when": "BOUND_FACTORY.model.workspaceRequirements.required == false"
+      }
     },
     {
       "id": "INIT-10",
       "operation": "VERIFY_WORK_PROVIDER",
       "title": "Arbeitsumgebung prüfen",
-      "rule": "Verify only the provider capabilities required by the selected Factory and intended operation. Missing optional provider features do not block the whole project."
+      "rule": "If MEMORY_ONLY is selected and allowed by the bound Factory, no external work provider is required. Otherwise verify only the provider capabilities required by the selected Factory and intended operation."
     },
     {
       "id": "INIT-11",
