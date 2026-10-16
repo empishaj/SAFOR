@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.5.0-rc.1 is a **Release Candidate**.
+SAFOR v0.6.0-rc.1 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -20,10 +20,15 @@ Additional Factories are not implicitly supported until they are published, boun
 
 Actual usability depends on the chat host exposing the required provider connection and capabilities.
 
+## Agent runtime boundary
+
+SAFOR can persist agent identities and repository-native jobs, but a normal chat is not assumed to wake automatically when a new inbox job appears. A HUMAN, automation or host-supported activation mechanism must activate the agent runtime. After activation, the job contract comes from the repository rather than HUMAN prompt copying.
+
 ## What SAFOR does not promise
 
 - It cannot create provider permissions that the HUMAN/account does not have.
 - It cannot force a chat host to expose native UI controls.
+- It cannot make a normal chat execute in the background when the host provides no activation mechanism.
 - It cannot guarantee cancellation of an external operation without provider evidence.
 - It does not treat delivery as proof of business/reader outcome.
 - It does not silently repair high-impact or authorization-expanding failures.
