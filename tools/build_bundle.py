@@ -7,7 +7,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 MODULE_PATHS = {
-    "kernel": "v0.4.0/SAF-MASTER.json",
+    "kernel": "v0.4.0/SAFOR-MASTER.json",
     "initialization": "v0.4.0/initialization-model.json",
     "interaction": "v0.4.0/interaction-model.json",
     "selfHealing": "v0.4.0/self-healing-model.json",
