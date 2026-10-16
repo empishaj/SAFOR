@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.7.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.7.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -122,3 +122,58 @@ Present Agent A with an inbox/job or master lifecycle belonging to Agent B.
 - Agent A refuses the claim.
 - Agent A does not mutate Agent B's state/outbox/evidence paths.
 - MASTER lifecycle remains unchanged.
+
+
+## I. Six-agent parallel scheduling
+
+**Preconditions**
+- Six registered ACTIVE chat agents, each with `maxConcurrentJobs = 1`.
+- Scheduler state uses `maxParallelJobs = AUTO`.
+- Six ATOMIC work items are READY at the same checkpoint.
+- All six work items have accepted dependencies, immutable read inputs, active mandates and capability-compatible agents.
+- Their write conflict domains, exclusive keys and job branches are mutually disjoint.
+
+**Expected**
+1. MASTER derives all six as READY scheduling candidates.
+2. MASTER observes six free eligible agent slots.
+3. MASTER creates one dispatch wave containing all six assignments.
+4. MASTER acquires agent-slot/resource/branch leases for all six without overlap.
+5. Each mutating job receives its own `safor/job/{jobKey}/{agentKey}` branch from an immutable base commit.
+6. All six inbox indices/jobs/master job states are written and read back.
+7. No agent receives more than its declared capacity.
+8. All six agents can claim and work concurrently without writing another job's branch or leased conflict domain.
+9. MASTER status reports six active jobs and zero free slots while all six are active.
+10. Results are verified independently; downstream fan-in opens only after required jobs are ACCEPTED.
+
+**Pass condition:** all 10 observations are evidenced from Git/provider state, not assistant narration.
+
+## J. Conflict-aware serialization
+
+Prepare six READY jobs but make two share the same write conflict domain or exclusive key.
+
+**Expected**
+- The conflicting pair is never placed in the same active dispatch wave.
+- At most one receives the overlapping resource lease.
+- The other remains READY/queued with a visible conflict reason.
+- Free agents may still receive other non-conflicting work.
+- Once the first lease is safely released, the second job may enter a later wave.
+
+## K. HUMAN-readable and Git-traceable agent result
+
+For one mutating agent job and one read-only agent job:
+
+**Expected for both jobs**
+1. Agent writes `outbox/{jobId}.result.json`.
+2. Agent writes `outbox/{jobId}.result.md`.
+3. Markdown contains Objective, Work Performed, Artifacts Changed, Git Trace, Verification, Result, Risks and Limits, and Open Items.
+4. Machine JSON pins the Markdown repository, path/ref, blob SHA and control-repository commit SHA.
+5. MASTER reads the Markdown report and verifies the pinned blob/commit before result verification.
+
+**Additional expected for the mutating job**
+6. Result identifies immutable base commit, dedicated job branch, all produced commit SHAs, head commit and changed paths.
+7. PR/MR reference is recorded when one exists.
+8. MASTER reads back every claimed work-repository commit/branch/change request.
+9. Claimed changed paths match provider-observed changes.
+10. The agent never writes directly to the default branch.
+
+**Pass condition:** a HUMAN can understand the result from the Markdown report, while the MASTER can independently verify every material Git claim from provider evidence.

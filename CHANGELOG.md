@@ -2,6 +2,29 @@
 
 All notable SAFOR product changes are documented here.
 
+## 0.7.0-rc.1 — 2026-10-16
+
+### Added
+- Conflict-aware MASTER-owned Multi-Agent Scheduler.
+- ATOMIC vs COMPOSITE work-package execution model with explicit fan-out/fan-in.
+- Agent scheduling capacity and dispatch-enabled state in the Agent Registry.
+- Parallel dispatch waves, resource leases and conservative conflict-domain locking.
+- Dedicated Git job branches for mutating agent work.
+- Mandatory HUMAN-readable Markdown result alongside machine-readable JSON.
+- Provider-verifiable Git trace with base/head commits, result commits, changed paths and readback evidence.
+- Scheduler/HUMAN status surface for agent utilization and blockers.
+- Six-agent parallel scheduling, conflict serialization and HUMAN-result acceptance scenarios.
+
+### Changed
+- Agent work is dispatched only through scheduler-validated waves.
+- Factory planning now requires execution/resource/parallelization declarations.
+- Unknown mutation conflicts are serialized.
+- Downstream fan-in waits for ACCEPTED upstream work.
+- Product schema/kernel contract version advanced to 0.7.0.
+
+### Product status
+This version is a **Release Candidate**. General Availability additionally requires recorded six-agent parallel scheduling and Git-trace/HUMAN-result acceptance.
+
 ## 0.6.0-rc.1 — 2026-10-16
 
 ### Added

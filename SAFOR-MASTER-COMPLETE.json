@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.6.0",
-  "bundleVersion": "0.6.0-rc.1",
+  "schemaVersion": "0.7.0",
+  "bundleVersion": "0.7.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -55,7 +55,9 @@
     "chatUiRule": "Use chat-native UI only.",
     "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
     "selfHealingRule": "Use the embedded conservative self-healing model.",
-    "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative."
+    "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative.",
+    "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
+    "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -73,6 +75,7 @@
     "interaction-model.json": "interaction",
     "self-healing-model.json": "selfHealing",
     "agent-workspace-model.json": "agentWorkspace",
+    "multi-agent-scheduler-model.json": "multiAgentScheduler",
     "repository-policy.json": "repositoryPolicy",
     "package-registry.json": "packageRegistry",
     "schemas/package-manifest.schema.json": "schemaPackageManifest",
@@ -88,157 +91,176 @@
     "schemas/self-healing-record.schema.json": "schemaSelfHealingRecord",
     "schemas/agent-registry.schema.json": "schemaAgentRegistry",
     "schemas/agent-identity.schema.json": "schemaAgentIdentity",
+    "schemas/agent-inbox-index.schema.json": "schemaAgentInboxIndex",
     "schemas/agent-state.schema.json": "schemaAgentState",
     "schemas/agent-job.schema.json": "schemaAgentJob",
     "schemas/agent-job-state.schema.json": "schemaAgentJobState",
     "schemas/agent-result.schema.json": "schemaAgentResult",
-    "providers/github/0.1.0/package.json": "providerGithub",
-    "providers/gitlab/0.1.0/package.json": "providerGitlab",
-    "packages/operating-models/saas-engineering/1.0.0/package.json": "operatingModelSaas",
-    "packages/operating-models/book-authoring/0.1.0/package.json": "operatingModelBook",
-    "packages/factories/software-delivery/1.0.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.1.0/package.json": "factoryBook",
-    "schemas/agent-inbox-index.schema.json": "schemaAgentInboxIndex"
+    "schemas/scheduler-state.schema.json": "schemaSchedulerState",
+    "schemas/dispatch-wave.schema.json": "schemaDispatchWave",
+    "schemas/resource-lease.schema.json": "schemaResourceLease",
+    "providers/github/0.2.0/package.json": "providerGithub",
+    "providers/gitlab/0.2.0/package.json": "providerGitlab",
+    "packages/operating-models/saas-engineering/1.1.0/package.json": "operatingModelSaas",
+    "packages/operating-models/book-authoring/0.2.0/package.json": "operatingModelBook",
+    "packages/factories/software-delivery/1.1.0/package.json": "factorySoftwareWebsite",
+    "packages/factories/book-production/0.2.0/package.json": "factoryBook"
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.6.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "23a0bfd6a78cf5c683e396671a1adc7ad09f3443"
+      "sourcePath": "v0.7.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "4a9e0c476352ebcb0c37dc0342813407fc02b5f6"
     },
     "initialization": {
-      "sourcePath": "v0.6.0/initialization-model.json",
-      "sourceBlobSha": "cb6c50aa9194157630716bf9bc0060d6b590f520"
+      "sourcePath": "v0.7.0/initialization-model.json",
+      "sourceBlobSha": "009b8d1f6b8e13f8fa5b0d2585ec81ea73e6c3c5"
     },
     "interaction": {
-      "sourcePath": "v0.6.0/interaction-model.json",
-      "sourceBlobSha": "85ac648cb632fe2fb06939d8b6e64150ea2a0171"
+      "sourcePath": "v0.7.0/interaction-model.json",
+      "sourceBlobSha": "e2a4dc2e48d5656b4942feae339aaafa0ca61232"
     },
     "selfHealing": {
-      "sourcePath": "v0.6.0/self-healing-model.json",
-      "sourceBlobSha": "ab3e164620d1ed517f8128717045b0ec2159d5f8"
+      "sourcePath": "v0.7.0/self-healing-model.json",
+      "sourceBlobSha": "a778ed5c9f4bd6091394ff4269528654260e06e7"
     },
     "agentWorkspace": {
-      "sourcePath": "v0.6.0/agent-workspace-model.json",
-      "sourceBlobSha": "bc80e35707dcbd7284dc3c7efc4d056b7842919c"
+      "sourcePath": "v0.7.0/agent-workspace-model.json",
+      "sourceBlobSha": "d9ef17a1bf972d3ba7323918e130e3ae30de01a3"
     },
     "repositoryPolicy": {
-      "sourcePath": "v0.6.0/repository-policy.json",
-      "sourceBlobSha": "5bd9be92c22ba11677a17246a83a49270ae72496"
+      "sourcePath": "v0.7.0/repository-policy.json",
+      "sourceBlobSha": "9bf0e13f4bb16898bc86090e12eb0101a303a142"
     },
     "packageRegistry": {
-      "sourcePath": "v0.6.0/package-registry.json",
-      "sourceBlobSha": "2507c6cacbc3eecd192b5d678883512485cb2f4f"
+      "sourcePath": "v0.7.0/package-registry.json",
+      "sourceBlobSha": "e5aa041248cb4cb084699e75c731c785ffba24ee"
     },
     "providerGithub": {
-      "sourcePath": "v0.6.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "1bc4bbd99cb6e1d8a22fddfa12409bacc2d4ac90"
+      "sourcePath": "v0.7.0/providers/github/0.2.0/package.json",
+      "sourceBlobSha": "b4c17d48ec9e0519b320579f046ae34e8f42b0b0"
     },
     "providerGitlab": {
-      "sourcePath": "v0.6.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "6f0a971945ba8d05d27d5e58d014467dada361aa"
+      "sourcePath": "v0.7.0/providers/gitlab/0.2.0/package.json",
+      "sourceBlobSha": "5119df831ca1aec582e08bb49f2fb341b9731f51"
     },
     "operatingModelSaas": {
-      "sourcePath": "v0.6.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "7d9d41e09adc04f98d6d36c02a6d8b0574155753"
+      "sourcePath": "v0.7.0/packages/operating-models/saas-engineering/1.1.0/package.json",
+      "sourceBlobSha": "5cc06de0870cb22a0de4996a096c47f468878c42"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.6.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "681c24d5ddb4a3a3f3d533b9e776c98cd2582992"
+      "sourcePath": "v0.7.0/packages/operating-models/book-authoring/0.2.0/package.json",
+      "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.6.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "4a48ae5952d7716fa352535c7bc4a867f1d9e058"
+      "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
+      "sourceBlobSha": "2d423793e7adb285704c6306a9ec32489486c32c"
     },
     "factoryBook": {
-      "sourcePath": "v0.6.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "d104010dde09f189a78c12da78bbe8ffc45ce58b"
+      "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
+      "sourceBlobSha": "30c6be12010de70b1872ab35c310f97a1a529d2e"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.6.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "d6ad4c7bd8a68b7a52754329f6ccd59cb4655568"
+      "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ec8329099723c10900e63487df2243d664e4d305"
     },
     "schemaControlState": {
-      "sourcePath": "v0.6.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "81faead970521bd10697396417eae443b614784a"
+      "sourcePath": "v0.7.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "fcbaf4b7ec2740e6bbc85da269096b578669c488"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.6.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "afe0a6ca9556c2ebc328c43a81d0709ecf3cfb0e"
+      "sourcePath": "v0.7.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "298e56744b5c0b6f9fa477a29789e874b5e27c4b"
     },
     "schemaExecutionState": {
-      "sourcePath": "v0.6.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "4087a70f01eadbf01c3753567929f62262abc76e"
+      "sourcePath": "v0.7.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "0120585353a5e89840eb51ae82edeef58c7cc41c"
     },
     "schemaWorkItem": {
-      "sourcePath": "v0.6.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "b703a9589a5ae5e199110ef3f592545755ff9803"
+      "sourcePath": "v0.7.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "560e027d2415f6e69fb9d6df34f44f5d367ace72"
     },
     "schemaProject": {
-      "sourcePath": "v0.6.0/schemas/project.schema.json",
-      "sourceBlobSha": "6e18f057c58090d8a9613ea278badfc1e38c262b"
+      "sourcePath": "v0.7.0/schemas/project.schema.json",
+      "sourceBlobSha": "fa183db44f26bdf87dd7e618d2acadb5e8378388"
     },
     "schemaBindings": {
-      "sourcePath": "v0.6.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4e53fee5d362a06f0d7c844e4343111edf46332d"
+      "sourcePath": "v0.7.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "0af973089ac48cfef439daf2181eb8f8c5e0e516"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "v0.6.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "b099d3f56bc410d4cb08265d72ab548e82d32591"
+      "sourcePath": "v0.7.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "552933d4a40781a30815a34887b7ab6e55e71d70"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "v0.6.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "902cafb81b6edbe19c07f84255b8022b3d8fc232"
+      "sourcePath": "v0.7.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "34beb1045371a304527cf6883b2f995c1dadd52b"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.6.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "56e049fef0a2c3dd17afae14f002a8c9cc24c1e3"
+      "sourcePath": "v0.7.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.6.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "0f30daf40b67735ba49d0cd508d3e70085e37728"
+      "sourcePath": "v0.7.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "ffe3f5b700f42f5a402e2db86febe0030ce0d6dc"
     },
     "schemaAgentRegistry": {
-      "sourcePath": "v0.6.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "879a072e3ce918efeba40bfca3d848ef4d792bf1"
+      "sourcePath": "v0.7.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "5defb4380971cba952dd7f1aa54e1369ecad8542"
     },
     "schemaAgentIdentity": {
-      "sourcePath": "v0.6.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "53b09341a0cc490868096863a9fc3df0093c18be"
+      "sourcePath": "v0.7.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "ec0d2ea7d72754c931baebc62d71f0ae4871d9c0"
     },
     "schemaAgentState": {
-      "sourcePath": "v0.6.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "9eeba9b8e43ae5b2a63b3df5033e5f475260291a"
+      "sourcePath": "v0.7.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "66033c46c73e3c450701780ca57b18237b91ecae"
     },
     "schemaAgentJob": {
-      "sourcePath": "v0.6.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "2cbdb6666d215497e14be0740ee453bbf24a460a"
+      "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e"
     },
     "schemaAgentJobState": {
-      "sourcePath": "v0.6.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "c52acf402e58756fa48b1e1bb49171cae6705f13"
+      "sourcePath": "v0.7.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "7387bb034dfe5d2de3a0140b5ae34c279ed87e25"
     },
     "schemaAgentResult": {
-      "sourcePath": "v0.6.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "5b4aaf52e7505fce6f0f46437f0e4968ee24de20"
+      "sourcePath": "v0.7.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "501fa76563a3fb35b7d4f8e9fe7df80eb5011503"
     },
     "conformance": {
-      "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7"
+      "sourcePath": "v0.7.0/conformance.json",
+      "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d"
     },
     "schemaAgentInboxIndex": {
-      "sourcePath": "v0.6.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "bf50a3040f1bc8ab2ed10cc4d2518a474973ed5a"
+      "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "20e93dd158b7737b88c40063d4090139a2a94fbb"
+    },
+    "multiAgentScheduler": {
+      "sourcePath": "v0.7.0/multi-agent-scheduler-model.json",
+      "sourceBlobSha": "894e3791b9f107409f226720de4fdf68060354ae"
+    },
+    "schemaSchedulerState": {
+      "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "052c85a6e5cc67f6db31ac7595ff452bee48fc77"
+    },
+    "schemaDispatchWave": {
+      "sourcePath": "v0.7.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "46cd08135139f390a2ad8c2f6bedc25d1660cbe5"
+    },
+    "schemaResourceLease": {
+      "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.6.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "23a0bfd6a78cf5c683e396671a1adc7ad09f3443",
+      "sourcePath": "v0.7.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "4a9e0c476352ebcb0c37dc0342813407fc02b5f6",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.6.0",
-        "kernelVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
+        "kernelVersion": "0.7.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
         "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -290,7 +312,11 @@
           "repositoryNativeAgentJobs": true,
           "persistentAgentIdentity": true,
           "masterAuthoritativeAgentJobLifecycle": true,
-          "optimisticAgentJobClaiming": true
+          "optimisticAgentJobClaiming": true,
+          "multiAgentScheduling": true,
+          "conflictAwareParallelDispatch": true,
+          "gitIsolatedAgentMutations": true,
+          "humanReadableAgentResults": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -311,6 +337,10 @@
               "responsibility": "Concrete bindings, actors, project state, decisions, evidence and value-stream instance."
             },
             {
+              "id": "MULTI_AGENT_SCHEDULER",
+              "responsibility": "MASTER-owned dependency, capacity, conflict, lease, fan-out/fan-in and parallel dispatch-wave orchestration across multiple agent actors."
+            },
+            {
               "id": "AGENT_WORKSPACE_PROTOCOL",
               "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
             },
@@ -326,7 +356,11 @@
             "PROJECT_INSTANCE maps roles to concrete human or agent actors and pins package versions.",
             "PROVIDER_ADAPTER maps provider-neutral capabilities to provider semantics and actual host tools; unavailable tools remain unavailable.",
             "AGENT_WORKSPACE_PROTOCOL transports work through repository artifacts, never through copied prompts as authority.",
-            "Agent-local runtime state and MASTER job lifecycle are separate authorities and must not overwrite each other."
+            "Agent-local runtime state and MASTER job lifecycle are separate authorities and must not overwrite each other.",
+            "MULTI_AGENT_SCHEDULER may dispatch only ATOMIC READY work whose dependency/join predicates are satisfied.",
+            "Parallel dispatch requires explicit resource declarations, free agent capacity and a conflict-free lease set.",
+            "Mutating agent work uses dedicated job branches; direct default-branch writes are forbidden unless a separately governed non-agent operation explicitly permits them.",
+            "Every agent result has both machine-readable JSON and a Git-persisted HUMAN-readable Markdown report."
           ]
         },
         "packageSystem": {
@@ -371,7 +405,8 @@
             "controlState": "state/control.json",
             "valueStreamState": "state/value-stream.json",
             "executionState": "state/execution.json",
-            "agentRegistry": "agents/index.json"
+            "agentRegistry": "agents/index.json",
+            "schedulerState": "master/scheduler/state.json"
           },
           "directories": [
             "packages/",
@@ -381,7 +416,9 @@
             "work-items/",
             "agents/",
             "audit/",
-            "master/jobs/"
+            "master/jobs/",
+            "master/dispatch-waves/",
+            "master/resource-leases/"
           ],
           "packageSnapshots": {
             "operatingModel": "packages/operating-model.json",
@@ -401,6 +438,12 @@
             "audit": "agents/{agentId}/audit/",
             "masterJobState": "master/jobs/{jobId}.json",
             "inboxIndex": "agents/{agentId}/inbox/index.json"
+          },
+          "scheduler": {
+            "modelRef": "multi-agent-scheduler-model.json",
+            "state": "master/scheduler/state.json",
+            "dispatchWaves": "master/dispatch-waves/",
+            "resourceLeases": "master/resource-leases/"
           }
         },
         "providerCapabilityVocabulary": [
@@ -496,7 +539,10 @@
           "agentJob": "schemas/agent-job.schema.json",
           "agentJobState": "schemas/agent-job-state.schema.json",
           "agentResult": "schemas/agent-result.schema.json",
-          "agentInboxIndex": "schemas/agent-inbox-index.schema.json"
+          "agentInboxIndex": "schemas/agent-inbox-index.schema.json",
+          "schedulerState": "schemas/scheduler-state.schema.json",
+          "dispatchWave": "schemas/dispatch-wave.schema.json",
+          "resourceLease": "schemas/resource-lease.schema.json"
         },
         "controlPlane": {
           "startActionId": "K01",
@@ -535,6 +581,18 @@
                 "P01",
                 "P02",
                 "P03"
+              ]
+            },
+            {
+              "id": "SCHEDULING",
+              "actions": [
+                "S01",
+                "S02",
+                "S03",
+                "S04",
+                "S05",
+                "S06",
+                "S07"
               ]
             },
             {
@@ -714,7 +772,7 @@
             {
               "id": "E03",
               "operation": "DISPATCH_WORK_ITEM",
-              "purpose": "Issue a scoped work contract to the resolved actor. For AGENT actors, dispatch is materialized through the repository-native Agent Workspace Protocol; copied prompts are not authoritative.",
+              "purpose": "Issue a scoped work contract to the resolved actor. AGENT work must be dispatched through an active conflict-checked scheduler wave; copied prompts are not authoritative.",
               "domainNeutral": true,
               "modelRef": "agent-workspace-model.json"
             },
@@ -813,6 +871,55 @@
               "purpose": "Verify result binding, evidence, provider readback, reviews and Factory requirements before MASTER marks the job VERIFIED or ACCEPTED.",
               "domainNeutral": true,
               "modelRef": "agent-workspace-model.json"
+            },
+            {
+              "id": "S01",
+              "operation": "DECOMPOSE_COMPOSITE_WORK",
+              "purpose": "Ensure approved composite work is decomposed into explicit ATOMIC child work items with independent outputs, dependencies, resource declarations and join policy.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
+            },
+            {
+              "id": "S02",
+              "operation": "BUILD_READY_ATOMIC_SET",
+              "purpose": "Derive the authoritative set of READY ATOMIC work whose dependencies, immutable inputs, mandates and guards are satisfied.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
+            },
+            {
+              "id": "S03",
+              "operation": "MATCH_AGENT_CAPACITY",
+              "purpose": "Match READY work to active dispatch-enabled actors with required capabilities, free scheduling slots and satisfiable separation-of-duties constraints.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
+            },
+            {
+              "id": "S04",
+              "operation": "PLAN_CONFLICT_FREE_DISPATCH_WAVE",
+              "purpose": "Select a maximal safe set of assignments whose write conflict domains, exclusive keys and job branches do not conflict and whose total size stays within project and agent capacity.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
+            },
+            {
+              "id": "S05",
+              "operation": "ACQUIRE_RESOURCE_LEASES",
+              "purpose": "Acquire MASTER-owned agent-slot, mutation-domain, exclusive-key and branch leases with optimistic concurrency before dispatch.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
+            },
+            {
+              "id": "S06",
+              "operation": "DISPATCH_PARALLEL_WAVE",
+              "purpose": "Materialize dedicated Git job workspaces and dispatch all successfully leased assignments through the Agent Workspace Protocol, then read back every dispatch artifact.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
+            },
+            {
+              "id": "S07",
+              "operation": "RECONCILE_WAVE_AND_RELEASE_LEASES",
+              "purpose": "Track job terminals, reconcile uncertain effects, release verified leases and unlock downstream fan-in work only from accepted upstream results.",
+              "domainNeutral": true,
+              "modelRef": "multi-agent-scheduler-model.json"
             }
           ],
           "modes": [
@@ -1082,6 +1189,66 @@
           {
             "id": "INV-056",
             "rule": "Agent job discovery must use the fixed MASTER-owned agents/{agentId}/inbox/index.json projection. The index is never authoritative lifecycle state; before claim the agent must read the referenced immutable job contract and MASTER-owned master/jobs/{jobId}.json. Repository directory enumeration is not required for correctness."
+          },
+          {
+            "id": "INV-057",
+            "rule": "Only ATOMIC work items may be dispatched to agents. COMPOSITE work items must first be decomposed into explicit children with a declared join policy."
+          },
+          {
+            "id": "INV-058",
+            "rule": "An agent job may be dispatched only when its authoritative work-item resource declaration is complete and all read inputs are pinned to immutable revisions."
+          },
+          {
+            "id": "INV-059",
+            "rule": "Two concurrently active jobs must not share a write conflict domain, exclusive key or explicit job branch. Any unknown conflict is treated as exclusive and serialized."
+          },
+          {
+            "id": "INV-060",
+            "rule": "The number of concurrently active jobs assigned to an agent must never exceed the maxConcurrentJobs declared in the MASTER-owned agent registry."
+          },
+          {
+            "id": "INV-061",
+            "rule": "MASTER forms dispatch waves only from dependency-ready, capability-compatible, mandate-covered and separation-of-duties-safe ATOMIC work."
+          },
+          {
+            "id": "INV-062",
+            "rule": "All resource leases for a selected assignment must be acquired and read back before the job is treated as dispatched."
+          },
+          {
+            "id": "INV-063",
+            "rule": "Lease expiry or missing agent progress never authorizes silent reassignment. MASTER must reconcile possible external effects before another agent may receive overlapping work."
+          },
+          {
+            "id": "INV-064",
+            "rule": "Every mutating agent job uses a dedicated branch derived from jobId and agentId and may not write the default branch directly."
+          },
+          {
+            "id": "INV-065",
+            "rule": "Parallel branches are integrated only after their job results are VERIFIED and required review/integration gates pass."
+          },
+          {
+            "id": "INV-066",
+            "rule": "Every agent job, including read-only work, must persist a HUMAN-readable Markdown result in the Git-backed control repository and the machine result must pin its blob and commit identity."
+          },
+          {
+            "id": "INV-067",
+            "rule": "Every mutating agent result must report Git base/head commit identities, produced commit SHAs, changed paths and provider readback sufficient for MASTER verification."
+          },
+          {
+            "id": "INV-068",
+            "rule": "A parent or downstream join may become execution-ready only from ACCEPTED upstream children required by its join predicate; RESULT_SUBMITTED or VERIFIED alone is insufficient."
+          },
+          {
+            "id": "INV-069",
+            "rule": "Dispatch-wave records and resource-lease records are MASTER-owned audit artifacts and may not be mutated by agents."
+          },
+          {
+            "id": "INV-070",
+            "rule": "With N free eligible agent slots and at least N mutually conflict-free READY ATOMIC jobs, the scheduler may dispatch up to N jobs in the same wave subject to the project parallelism ceiling."
+          },
+          {
+            "id": "INV-071",
+            "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
           }
         ],
         "evidencePolicy": {
@@ -1139,14 +1306,14 @@
         "compatibility": {
           "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.6.0 schemas."
+          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.7.0 schemas."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.6.0",
+            "root": "v0.7.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1198,16 +1365,17 @@
         },
         "initializationModelRef": "initialization-model.json",
         "selfHealingModelRef": "self-healing-model.json",
-        "agentWorkspaceModelRef": "agent-workspace-model.json"
+        "agentWorkspaceModelRef": "agent-workspace-model.json",
+        "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json"
       }
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.6.0/initialization-model.json",
-      "sourceBlobSha": "cb6c50aa9194157630716bf9bc0060d6b590f520",
+      "sourcePath": "v0.7.0/initialization-model.json",
+      "sourceBlobSha": "009b8d1f6b8e13f8fa5b0d2585ec81ea73e6c3c5",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1495,7 +1663,7 @@
             "id": "INIT-11",
             "operation": "MATERIALIZE_PROJECT_CONTROL",
             "title": "Projekt starten",
-            "rule": "After SETUP_APPROVAL, write and read back the project control structure. Initialization completes only after provider readback succeeds."
+            "rule": "After SETUP_APPROVAL, write and read back the project control structure including agents/index.json and master/scheduler/state.json. Initialization completes only after provider readback succeeds."
           }
         ],
         "repositoryActivityNormalization": {
@@ -1530,7 +1698,8 @@
           "noProgressOnFailure": true,
           "safMemoryReadWriteMandatory": true,
           "safMemoryMissingOutcome": "STOP",
-          "safMemoryAutoCreate": false
+          "safMemoryAutoCreate": false,
+          "schedulerMaterializationRequired": true
         },
         "humanExperience": {
           "buddyMessages": {
@@ -1539,7 +1708,7 @@
             "ownerPrompt": "Unter welchem Owner läuft das Projekt?",
             "projectModePrompt": "Bestehend oder neu?",
             "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
-            "ready": "Alles sitzt. Jetzt können wir das Projekt sauber aufsetzen.",
+            "ready": "Alles sitzt. Projektkontrolle, Agenten-Registry und Scheduler sind sauber vorbereitet.",
             "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
             "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
             "creationTypePrompt": "Was möchtest du erstellen?"
@@ -1584,11 +1753,11 @@
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.6.0/interaction-model.json",
-      "sourceBlobSha": "85ac648cb632fe2fb06939d8b6e64150ea2a0171",
+      "sourcePath": "v0.7.0/interaction-model.json",
+      "sourceBlobSha": "e2a4dc2e48d5656b4942feae339aaafa0ca61232",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -2005,6 +2174,15 @@
                 "NATIVE_CHOICES"
               ],
               "example": "Was möchtest du erstellen?"
+            },
+            "multiAgentProgress": {
+              "structure": [
+                "CAPACITY_SUMMARY",
+                "PARALLEL_WORK",
+                "BLOCKERS",
+                "NEXT_ACTION_OR_MENU"
+              ],
+              "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
             }
           },
           "avoid": {
@@ -2216,16 +2394,44 @@
               }
             ]
           }
+        },
+        "multiAgentStatusExperience": {
+          "title": "Agenten & parallele Arbeit",
+          "defaultSurface": "SUMMARY",
+          "requiredSummaryFields": [
+            "registeredAgentCount",
+            "activeAgentSlots",
+            "freeAgentSlots",
+            "runningJobCount",
+            "readyAtomicWorkCount",
+            "blockedByDependencyCount",
+            "blockedByConflictCount",
+            "activeDispatchWaveCount"
+          ],
+          "runningJobFields": [
+            "agentId",
+            "jobId",
+            "workItemId",
+            "dispatchWaveId",
+            "jobBranch",
+            "humanReadableResultRefWhenSubmitted"
+          ],
+          "rules": [
+            "Prefer aggregate utilization first; expose raw scheduler JSON only through Details.",
+            "Never describe a job as accepted merely because the agent submitted a result.",
+            "When a HUMAN-readable agent report exists, surface its reference as the default result view before raw machine JSON.",
+            "Explain why an apparently free agent did not receive work when the blocker is dependency, capability, SoD, mandate, provider rights or mutation conflict."
+          ]
         }
       }
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.6.0/self-healing-model.json",
-      "sourceBlobSha": "ab3e164620d1ed517f8128717045b0ec2159d5f8",
+      "sourcePath": "v0.7.0/self-healing-model.json",
+      "sourceBlobSha": "a778ed5c9f4bd6091394ff4269528654260e06e7",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2432,11 +2638,11 @@
     },
     "agentWorkspace": {
       "key": "agentWorkspace",
-      "sourcePath": "v0.6.0/agent-workspace-model.json",
-      "sourceBlobSha": "bc80e35707dcbd7284dc3c7efc4d056b7842919c",
+      "sourcePath": "v0.7.0/agent-workspace-model.json",
+      "sourceBlobSha": "d9ef17a1bf972d3ba7323918e130e3ae30de01a3",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
         "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
         "topology": {
@@ -2457,7 +2663,8 @@
           "agentResult": "agents/{agentId}/outbox/{jobId}.result.json",
           "agentEvidenceRoot": "agents/{agentId}/evidence/{jobId}/",
           "masterJobState": "master/jobs/{jobId}.json",
-          "inboxIndex": "agents/{agentId}/inbox/index.json"
+          "inboxIndex": "agents/{agentId}/inbox/index.json",
+          "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md"
         },
         "ownership": {
           "MASTER_ONLY": [
@@ -2470,6 +2677,7 @@
           "AGENT_ONLY": [
             "agents/{agentId}/state.json",
             "agents/{agentId}/outbox/{jobId}.result.json",
+            "agents/{agentId}/outbox/{jobId}.result.md",
             "agents/{agentId}/evidence/{jobId}/",
             "agents/{agentId}/audit/"
           ],
@@ -2519,7 +2727,10 @@
             "job.dispatchState == READY",
             "masterJobState.lifecycleStatus is claimable for the current dispatch (READY or REWORK_READY)",
             "referenced execution mandate is active and covers scope",
-            "actual provider rights cover required operations"
+            "actual provider rights cover required operations",
+            "job.dispatchWaveRef refers to an active MASTER dispatch wave",
+            "all job.resourceLeaseRefs are ACTIVE and assigned to this job/agent",
+            "all mutating gitWorkspaces exist on the declared dedicated branches at the declared immutable base commits"
           ],
           "atomicity": "Claim is written through optimistic concurrency on agents/{agentId}/state.json using the provider-observed current revision/blob identity. Concurrent stale claims must fail and reconcile.",
           "masterObservation": "A claim is not authoritative for orchestration until MASTER reads back the agent state and advances master/jobs/{jobId}.json from READY to CLAIMED."
@@ -2529,21 +2740,50 @@
           "jobChangePolicy": "Changed scope or mandate produces a new dispatchRevision or a superseding job; the agent never silently mutates its inbox contract.",
           "agentMayWriteMasterJobState": false,
           "agentMayExpandScope": false,
-          "agentMustPersistEvidence": true
+          "agentMustPersistEvidence": true,
+          "agentMustPersistHumanReadableResult": true,
+          "gitMutationTraceRequired": true,
+          "directDefaultBranchMutationForbidden": true,
+          "agentMayWriteOnlyDeclaredGitWorkspaces": true,
+          "crossJobBranchMutationForbidden": true,
+          "resourceLeaseRequiredForMutation": true
         },
         "resultProtocol": {
-          "submission": "Agent writes outbox result and referenced evidence, then sets its local state to RESULT_SUBMITTED.",
+          "submission": "Agent writes the machine-readable outbox result, the mandatory HUMAN-readable Markdown result, referenced evidence and Git trace, then sets its local state to RESULT_SUBMITTED.",
           "notAcceptance": "Agent result is a claim of work performed, never authoritative acceptance.",
           "masterVerification": [
             "READ_RESULT",
             "VALIDATE_IDENTITY_AND_JOB_BINDING",
             "VERIFY_CONTRACT_BLOB_IDENTITY",
+            "READ_HUMAN_READABLE_RESULT",
+            "VERIFY_HUMAN_RESULT_BLOB",
+            "VERIFY_GIT_TRACE",
             "READ_REFERENCED_EVIDENCE",
             "READ_BACK_EXTERNAL_MUTATIONS",
             "APPLY_REVIEW_AND_FACTORY_EVIDENCE_REQUIREMENTS",
             "ADVANCE_MASTER_JOB_STATE"
           ],
-          "acceptanceAuthority": "Only MASTER may mark VERIFIED/ACCEPTED after required evidence, review and gates are satisfied."
+          "acceptanceAuthority": "Only MASTER may mark VERIFIED/ACCEPTED after required evidence, review and gates are satisfied.",
+          "humanReadableContract": {
+            "format": "MARKDOWN",
+            "path": "agents/{agentId}/outbox/{jobId}.result.md",
+            "requiredSections": [
+              "OBJECTIVE",
+              "WORK_PERFORMED",
+              "ARTIFACTS_CHANGED",
+              "GIT_TRACE",
+              "VERIFICATION",
+              "RESULT",
+              "RISKS_AND_LIMITS",
+              "OPEN_ITEMS"
+            ],
+            "rule": "Every job produces a HUMAN-readable result, including read-only jobs. The machine JSON must pin the Markdown blob identity."
+          },
+          "gitTraceContract": {
+            "mutatingJobs": "Every repository mutation must be attributable to the job through dedicated branch, immutable base commit, result commit SHA(s), changed paths and provider readback.",
+            "readOnlyJobs": "A read-only job may have an empty work-repository gitTrace, but its HUMAN-readable and machine-readable outbox results still persist in the Git-backed control repository.",
+            "verification": "MASTER reads back every claimed commit/branch/change request before result verification."
+          }
         },
         "lifecycle": {
           "masterStatuses": [
@@ -2609,11 +2849,11 @@
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "v0.6.0/repository-policy.json",
-      "sourceBlobSha": "5bd9be92c22ba11677a17246a83a49270ae72496",
+      "sourcePath": "v0.7.0/repository-policy.json",
+      "sourceBlobSha": "9bf0e13f4bb16898bc86090e12eb0101a303a142",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-        "version": "0.6.0",
+        "version": "0.7.0",
         "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
         "principles": {
@@ -2653,7 +2893,23 @@
               "master-state.json",
               "launch-prompt.md",
               "work-contract.json"
-            ]
+            ],
+            "agentMutationPolicy": {
+              "directDefaultBranchWrite": false,
+              "requiredBranchPattern": "safor/job/{jobKey}/{agentKey}",
+              "immutableBaseCommitRequired": true,
+              "allowedPathsMustMatchJobContract": true,
+              "crossJobBranchWrite": false,
+              "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
+              "resultTraceRequired": [
+                "baseCommitSha",
+                "branch",
+                "commitShas",
+                "headCommitSha",
+                "changedPaths",
+                "providerReadbackRef"
+              ]
+            }
           },
           "FACTORY_RUNTIME_CODE_REPOSITORY": {
             "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
@@ -2671,7 +2927,10 @@
             "work-items/",
             "agents/",
             "audit/",
-            "master/jobs/"
+            "master/jobs/",
+            "master/scheduler/",
+            "master/dispatch-waves/",
+            "master/resource-leases/"
           ],
           "requiredFiles": [
             "project.json",
@@ -2679,7 +2938,8 @@
             "state/control.json",
             "state/value-stream.json",
             "state/execution.json",
-            "agents/index.json"
+            "agents/index.json",
+            "master/scheduler/state.json"
           ]
         },
         "reconciliation": {
@@ -2726,64 +2986,83 @@
             "agents/{agentId}/identity.json",
             "agents/{agentId}/inbox/index.json",
             "agents/{agentId}/inbox/{jobId}.json",
-            "master/jobs/{jobId}.json"
+            "master/jobs/{jobId}.json",
+            "master/scheduler/state.json",
+            "master/dispatch-waves/{waveId}.json",
+            "master/resource-leases/{leaseId}.json"
           ],
           "agentOwned": [
             "agents/{agentId}/state.json",
             "agents/{agentId}/outbox/{jobId}.result.json",
             "agents/{agentId}/evidence/{jobId}/",
-            "agents/{agentId}/audit/"
+            "agents/{agentId}/audit/",
+            "agents/{agentId}/outbox/{jobId}.result.md"
           ],
-          "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts or MASTER job lifecycle artifacts.",
+          "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts, scheduler state, dispatch waves, resource leases or MASTER job lifecycle artifacts.",
           "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant.",
-          "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required."
+          "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required.",
+          "humanReadableResultRule": "Every agent job persists both outbox/{jobId}.result.json and outbox/{jobId}.result.md. The JSON pins the Markdown blob and control-repository commit.",
+          "gitTraceRule": "Every mutating agent job must use only MASTER-declared dedicated job branches, report resulting commit SHAs and changed paths, and provide provider readback evidence. Direct default-branch mutation by an agent is forbidden."
+        },
+        "multiAgentScheduling": {
+          "modelRef": "multi-agent-scheduler-model.json",
+          "masterOwned": [
+            "master/scheduler/state.json",
+            "master/dispatch-waves/{waveId}.json",
+            "master/resource-leases/{leaseId}.json"
+          ],
+          "mutationIsolation": "DEDICATED_JOB_BRANCH_PLUS_CONFLICT_DOMAIN_LEASE",
+          "defaultAgentConcurrentJobs": 1,
+          "unknownConflict": "SERIALIZE",
+          "directAgentDefaultBranchWrite": false,
+          "silentLeaseReassignment": false
         }
       }
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.6.0/package-registry.json",
-      "sourceBlobSha": "2507c6cacbc3eecd192b5d678883512485cb2f4f",
+      "sourcePath": "v0.7.0/package-registry.json",
+      "sourceBlobSha": "e5aa041248cb4cb084699e75c731c785ffba24ee",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.0.0",
-            "path": "packages/operating-models/saas-engineering/1.0.0/package.json"
+            "version": "1.1.0",
+            "path": "packages/operating-models/saas-engineering/1.1.0/package.json"
           },
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.0.0",
-            "path": "packages/factories/software-delivery/1.0.0/package.json"
+            "version": "1.1.0",
+            "path": "packages/factories/software-delivery/1.1.0/package.json"
           },
           {
             "packageId": "safor.om.book-authoring",
             "kind": "OPERATING_MODEL",
-            "version": "0.1.0",
-            "path": "packages/operating-models/book-authoring/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "packages/operating-models/book-authoring/0.2.0/package.json"
           },
           {
             "packageId": "safor.factory.book-production",
             "kind": "FACTORY",
-            "version": "0.1.0",
-            "path": "packages/factories/book-production/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "packages/factories/book-production/0.2.0/package.json"
           },
           {
             "packageId": "safor.provider.github",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.1.0",
-            "path": "providers/github/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "providers/github/0.2.0/package.json"
           },
           {
             "packageId": "safor.provider.gitlab",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.1.0",
-            "path": "providers/gitlab/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "providers/gitlab/0.2.0/package.json"
           }
         ],
         "selectionRule": "The HUMAN must first select a creation profile. Its Factory and compatible Operating Model become mandatory project bindings; the Provider Adapter remains provider-derived. All bindings are validated, pinned and snapshotted.",
@@ -2805,18 +3084,18 @@
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "v0.6.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "1bc4bbd99cb6e1d8a22fddfa12409bacc2d4ac90",
+      "sourcePath": "v0.7.0/providers/github/0.2.0/package.json",
+      "sourceBlobSha": "b4c17d48ec9e0519b320579f046ae34e8f42b0b0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "GitHub Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitHub. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [],
@@ -2955,18 +3234,18 @@
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "v0.6.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "6f0a971945ba8d05d27d5e58d014467dada361aa",
+      "sourcePath": "v0.7.0/providers/gitlab/0.2.0/package.json",
+      "sourceBlobSha": "5119df831ca1aec582e08bb49f2fb341b9731f51",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "GitLab Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [],
@@ -3104,18 +3383,18 @@
     },
     "operatingModelSaas": {
       "key": "operatingModelSaas",
-      "sourcePath": "v0.6.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "7d9d41e09adc04f98d6d36c02a6d8b0574155753",
+      "sourcePath": "v0.7.0/packages/operating-models/saas-engineering/1.1.0/package.json",
+      "sourceBlobSha": "5cc06de0870cb22a0de4996a096c47f468878c42",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "name": "SaaS Engineering Reference Operating Model",
         "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -3421,18 +3700,18 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.6.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "681c24d5ddb4a3a3f3d533b9e776c98cd2582992",
+      "sourcePath": "v0.7.0/packages/operating-models/book-authoring/0.2.0/package.json",
+      "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -3642,18 +3921,18 @@
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.6.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "4a48ae5952d7716fa352535c7bc4a867f1d9e058",
+      "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
+      "sourceBlobSha": "2d423793e7adb285704c6306a9ec32489486c32c",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -3918,7 +4197,10 @@
               "dependencies",
               "expectedOutputs",
               "acceptanceCriteria",
-              "evidenceRequirements"
+              "evidenceRequirements",
+              "execution",
+              "execution.resourceAccess",
+              "execution.parallelizationDecision"
             ],
             "conditionalRules": [
               {
@@ -3981,24 +4263,45 @@
               "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
               "DELIVERY_AS_OUTCOME_EVIDENCE"
             ]
+          },
+          "schedulingContract": {
+            "atomicDispatchOnly": true,
+            "compositeDecompositionRequired": true,
+            "resourceAccessRequired": true,
+            "immutableReadInputsRequired": true,
+            "unknownMutationConflict": "SERIALIZE",
+            "dedicatedGitBranchForMutations": true,
+            "naturalParallelism": [
+              {
+                "after": "SW-03",
+                "nodes": [
+                  "SW-04",
+                  "SW-05"
+                ],
+                "joinAt": "SW-06"
+              }
+            ],
+            "decompositionRule": "Implementation may be decomposed into ATOMIC child work only when solution design exposes independently acceptable outputs and conservative non-overlapping mutation domains; shared integration is modeled as an explicit downstream work item.",
+            "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan.",
+            "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
       }
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.6.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "d104010dde09f189a78c12da78bbe8ffc45ce58b",
+      "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
+      "sourceBlobSha": "30c6be12010de70b1872ab35c310f97a1a529d2e",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -4271,7 +4574,10 @@
               "dependencies",
               "expectedOutputs",
               "acceptanceCriteria",
-              "evidenceRequirements"
+              "evidenceRequirements",
+              "execution",
+              "execution.resourceAccess",
+              "execution.parallelizationDecision"
             ],
             "conditionalRules": [
               {
@@ -4337,18 +4643,39 @@
               "UNVERIFIED_SOURCE_LIST_AS_RESEARCH_EVIDENCE",
               "PUBLICATION_AS_READER_OUTCOME_EVIDENCE"
             ]
+          },
+          "schedulingContract": {
+            "atomicDispatchOnly": true,
+            "compositeDecompositionRequired": true,
+            "resourceAccessRequired": true,
+            "immutableReadInputsRequired": true,
+            "unknownMutationConflict": "SERIALIZE",
+            "dedicatedGitBranchForMutations": true,
+            "naturalParallelism": [
+              {
+                "after": "BK-04",
+                "nodes": [
+                  "BK-05",
+                  "BK-06"
+                ],
+                "joinAt": "BK-07"
+              }
+            ],
+            "decompositionRule": "Research, drafting, fact-check or editorial work may be decomposed only along explicit chapter/section/source domains with independent outputs and conservative conflict domains; shared manuscript integration is explicit.",
+            "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan.",
+            "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
       }
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.6.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "d6ad4c7bd8a68b7a52754329f6ccd59cb4655568",
+      "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ec8329099723c10900e63487df2243d664e4d305",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.6.0",
-        "title": "SAFOR Package Manifest 0.6.0",
+        "$id": "urn:safor:package-manifest:0.7.0",
+        "title": "SAFOR Package Manifest 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4369,7 +4696,7 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "packageId": {
             "type": "string",
@@ -4497,12 +4824,12 @@
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.6.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "81faead970521bd10697396417eae443b614784a",
+      "sourcePath": "v0.7.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "fcbaf4b7ec2740e6bbc85da269096b578669c488",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.6.0",
-        "title": "SAFOR Control State 0.6.0",
+        "$id": "urn:safor:control-state:0.7.0",
+        "title": "SAFOR Control State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4525,7 +4852,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "kernelRef": {
             "type": "object",
@@ -4536,7 +4863,7 @@
             ],
             "properties": {
               "version": {
-                "const": "0.6.0"
+                "const": "0.7.0"
               },
               "sourceRef": {
                 "type": "string",
@@ -4736,12 +5063,12 @@
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.6.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "afe0a6ca9556c2ebc328c43a81d0709ecf3cfb0e",
+      "sourcePath": "v0.7.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "298e56744b5c0b6f9fa477a29789e874b5e27c4b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.6.0",
-        "title": "SAFOR Value Stream State 0.6.0",
+        "$id": "urn:safor:value-stream-state:0.7.0",
+        "title": "SAFOR Value Stream State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4761,7 +5088,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -4909,12 +5236,12 @@
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "v0.6.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "4087a70f01eadbf01c3753567929f62262abc76e",
+      "sourcePath": "v0.7.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "0120585353a5e89840eb51ae82edeef58c7cc41c",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:execution-state:0.6.0",
-        "title": "SAFOR Execution State 0.6.0",
+        "$id": "urn:safor:execution-state:0.7.0",
+        "title": "SAFOR Execution State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4925,6 +5252,9 @@
           "actorAssignments",
           "contracts",
           "agentJobStateRefs",
+          "schedulerStateRef",
+          "activeDispatchWaveRefs",
+          "resourceLeaseRefs",
           "runs",
           "reconciliation",
           "selfHealing"
@@ -4934,7 +5264,7 @@
             "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -4982,6 +5312,26 @@
             },
             "uniqueItems": true,
             "description": "References to MASTER-owned master/jobs/{jobId}.json records. Lifecycle fields are not duplicated here."
+          },
+          "schedulerStateRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "activeDispatchWaveRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "resourceLeaseRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "$defs": {
@@ -5171,12 +5521,12 @@
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "v0.6.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "b703a9589a5ae5e199110ef3f592545755ff9803",
+      "sourcePath": "v0.7.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "560e027d2415f6e69fb9d6df34f44f5d367ace72",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:work-item:0.6.0",
-        "title": "SAFOR Domain-Agnostic Work Item 0.6.0",
+        "$id": "urn:safor:work-item:0.7.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5191,6 +5541,7 @@
           "expectedOutputs",
           "acceptanceCriteria",
           "dependencies",
+          "execution",
           "assignment",
           "review",
           "evidenceRequirements",
@@ -5361,6 +5712,104 @@
                 }
               }
             }
+          },
+          "execution": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "unit",
+              "parentWorkItemId",
+              "childWorkItemIds",
+              "joinPolicy",
+              "parallelizationDecision",
+              "priority",
+              "readySince",
+              "resourceAccess",
+              "integrationRequired",
+              "integrationWorkItemRef"
+            ],
+            "properties": {
+              "unit": {
+                "enum": [
+                  "ATOMIC",
+                  "COMPOSITE"
+                ]
+              },
+              "parentWorkItemId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "childWorkItemIds": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "joinPolicy": {
+                "enum": [
+                  "NONE",
+                  "ALL_CHILDREN_ACCEPTED"
+                ]
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "readySince": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "resourceAccess": {
+                "$ref": "#/$defs/resourceAccess"
+              },
+              "integrationRequired": {
+                "type": "boolean"
+              },
+              "integrationWorkItemRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "parallelizationDecision": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "classification",
+                  "rationale",
+                  "evidenceRefs"
+                ],
+                "properties": {
+                  "classification": {
+                    "enum": [
+                      "PARALLEL_CANDIDATE",
+                      "SERIAL_ONLY",
+                      "COMPOSITE_CONTAINER"
+                    ]
+                  },
+                  "rationale": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "evidenceRefs": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "$defs": {
@@ -5382,18 +5831,168 @@
                 ]
               }
             }
+          },
+          "resourceAccess": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "readSet",
+              "writeSet",
+              "exclusiveKeys"
+            ],
+            "properties": {
+              "readSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/readResource"
+                }
+              },
+              "writeSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/writeResource"
+                }
+              },
+              "exclusiveKeys": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "readResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "immutableRevision"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "immutableRevision": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "writeResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "conflictDomain"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "conflictDomain": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
-        }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "unit": {
+                      "const": "ATOMIC"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "childWorkItemIds": {
+                      "maxItems": 0
+                    },
+                    "joinPolicy": {
+                      "const": "NONE"
+                    },
+                    "parallelizationDecision": {
+                      "properties": {
+                        "classification": {
+                          "enum": [
+                            "PARALLEL_CANDIDATE",
+                            "SERIAL_ONLY"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "unit": {
+                      "const": "COMPOSITE"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "execution": {
+                  "properties": {
+                    "childWorkItemIds": {
+                      "minItems": 1
+                    },
+                    "joinPolicy": {
+                      "const": "ALL_CHILDREN_ACCEPTED"
+                    },
+                    "parallelizationDecision": {
+                      "properties": {
+                        "classification": {
+                          "const": "COMPOSITE_CONTAINER"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "v0.6.0/schemas/project.schema.json",
-      "sourceBlobSha": "6e18f057c58090d8a9613ea278badfc1e38c262b",
+      "sourcePath": "v0.7.0/schemas/project.schema.json",
+      "sourceBlobSha": "fa183db44f26bdf87dd7e618d2acadb5e8378388",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:project:0.6.0",
-        "title": "SAFOR Project Descriptor 0.6.0",
+        "$id": "urn:safor:project:0.7.0",
+        "title": "SAFOR Project Descriptor 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5414,7 +6013,7 @@
             "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -5520,12 +6119,12 @@
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.6.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4e53fee5d362a06f0d7c844e4343111edf46332d",
+      "sourcePath": "v0.7.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "0af973089ac48cfef439daf2181eb8f8c5e0e516",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:bindings:0.6.0",
-        "title": "SAFOR Project Bindings 0.6.0",
+        "$id": "urn:safor:bindings:0.7.0",
+        "title": "SAFOR Project Bindings 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5543,7 +6142,7 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "revision": {
             "type": "integer",
@@ -5623,12 +6222,12 @@
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "v0.6.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "b099d3f56bc410d4cb08265d72ab548e82d32591",
+      "sourcePath": "v0.7.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "552933d4a40781a30815a34887b7ab6e55e71d70",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:decision-record:0.6.0",
-        "title": "SAFOR Decision Record 0.6.0",
+        "$id": "urn:safor:decision-record:0.7.0",
+        "title": "SAFOR Decision Record 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5650,7 +6249,7 @@
             "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "decisionId": {
             "type": "string"
@@ -5696,12 +6295,12 @@
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "v0.6.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "902cafb81b6edbe19c07f84255b8022b3d8fc232",
+      "sourcePath": "v0.7.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "34beb1045371a304527cf6883b2f995c1dadd52b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:evidence-record:0.6.0",
-        "title": "SAFOR Evidence Record 0.6.0",
+        "$id": "urn:safor:evidence-record:0.7.0",
+        "title": "SAFOR Evidence Record 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5721,7 +6320,7 @@
             "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "evidenceId": {
             "type": "string"
@@ -5775,12 +6374,12 @@
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.6.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "56e049fef0a2c3dd17afae14f002a8c9cc24c1e3",
+      "sourcePath": "v0.7.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.6.0",
-        "title": "SAFOR Interaction Menu 0.6.0",
+        "$id": "urn:safor:interaction-menu:0.7.0",
+        "title": "SAFOR Interaction Menu 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5796,7 +6395,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "menuId": {
             "type": "string",
@@ -5953,12 +6552,12 @@
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.6.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "0f30daf40b67735ba49d0cd508d3e70085e37728",
+      "sourcePath": "v0.7.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "ffe3f5b700f42f5a402e2db86febe0030ce0d6dc",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.6.0",
-        "title": "SAFOR Self-Healing Record 0.6.0",
+        "$id": "urn:safor:self-healing-record:0.7.0",
+        "title": "SAFOR Self-Healing Record 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6068,12 +6667,12 @@
     },
     "schemaAgentRegistry": {
       "key": "schemaAgentRegistry",
-      "sourcePath": "v0.6.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "879a072e3ce918efeba40bfca3d848ef4d792bf1",
+      "sourcePath": "v0.7.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "5defb4380971cba952dd7f1aa54e1369ecad8542",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-registry:0.6.0",
-        "title": "SAFOR Agent Registry 0.6.0",
+        "$id": "urn:safor:agent-registry:0.7.0",
+        "title": "SAFOR Agent Registry 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6088,7 +6687,7 @@
             "const": "SAFOR_AGENT_REGISTRY"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6114,7 +6713,8 @@
               "identityRef",
               "workspaceRoot",
               "registeredAt",
-              "registeredBy"
+              "registeredBy",
+              "scheduling"
             ],
             "properties": {
               "agentId": {
@@ -6136,6 +6736,24 @@
               "registeredBy": {
                 "type": "string",
                 "minLength": 1
+              },
+              "scheduling": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dispatchEnabled",
+                  "maxConcurrentJobs"
+                ],
+                "properties": {
+                  "dispatchEnabled": {
+                    "type": "boolean"
+                  },
+                  "maxConcurrentJobs": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 32
+                  }
+                }
               }
             }
           }
@@ -6144,12 +6762,12 @@
     },
     "schemaAgentIdentity": {
       "key": "schemaAgentIdentity",
-      "sourcePath": "v0.6.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "53b09341a0cc490868096863a9fc3df0093c18be",
+      "sourcePath": "v0.7.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "ec0d2ea7d72754c931baebc62d71f0ae4871d9c0",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-identity:0.6.0",
-        "title": "SAFOR Agent Identity 0.6.0",
+        "$id": "urn:safor:agent-identity:0.7.0",
+        "title": "SAFOR Agent Identity 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6175,7 +6793,7 @@
             "const": "SAFOR_AGENT_IDENTITY"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6294,12 +6912,12 @@
     },
     "schemaAgentState": {
       "key": "schemaAgentState",
-      "sourcePath": "v0.6.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "9eeba9b8e43ae5b2a63b3df5033e5f475260291a",
+      "sourcePath": "v0.7.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "66033c46c73e3c450701780ca57b18237b91ecae",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-state:0.6.0",
-        "title": "SAFOR Agent Runtime State 0.6.0",
+        "$id": "urn:safor:agent-state:0.7.0",
+        "title": "SAFOR Agent Runtime State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6320,7 +6938,7 @@
             "const": "SAFOR_AGENT_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6409,6 +7027,8 @@
               "masterJobStateRef",
               "claimId",
               "sessionId",
+              "dispatchWaveRef",
+              "resourceLeaseRefs",
               "phase",
               "claimedAt",
               "startedAt",
@@ -6468,6 +7088,19 @@
                   "string",
                   "null"
                 ]
+              },
+              "dispatchWaveRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "resourceLeaseRefs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           }
@@ -6476,12 +7109,12 @@
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
-      "sourcePath": "v0.6.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "2cbdb6666d215497e14be0740ee453bbf24a460a",
+      "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job:0.6.0",
-        "title": "SAFOR Agent Job Contract 0.6.0",
+        "$id": "urn:safor:agent-job:0.7.0",
+        "title": "SAFOR Agent Job Contract 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6496,6 +7129,8 @@
           "issuedAt",
           "dispatchRevision",
           "dispatchState",
+          "dispatchWaveRef",
+          "resourceLeaseRefs",
           "workItemRef",
           "executionContractRef",
           "mandateRef",
@@ -6503,6 +7138,9 @@
           "inputs",
           "requiredOutputs",
           "evidenceRequirements",
+          "resourceAccessSource",
+          "resourceAccess",
+          "gitWorkspaces",
           "constraints",
           "resultTarget"
         ],
@@ -6511,7 +7149,7 @@
             "const": "SAFOR_AGENT_JOB"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "jobId": {
             "type": "string",
@@ -6652,7 +7290,8 @@
             "additionalProperties": false,
             "required": [
               "resultRef",
-              "evidenceRoot"
+              "evidenceRoot",
+              "humanReadableResultRef"
             ],
             "properties": {
               "resultRef": {
@@ -6662,7 +7301,80 @@
               "evidenceRoot": {
                 "type": "string",
                 "minLength": 1
+              },
+              "humanReadableResultRef": {
+                "type": "string",
+                "minLength": 1
               }
+            }
+          },
+          "resourceAccess": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "readSet",
+              "writeSet",
+              "exclusiveKeys"
+            ],
+            "properties": {
+              "readSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/readResource"
+                }
+              },
+              "writeSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/writeResource"
+                }
+              },
+              "exclusiveKeys": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "description": "Immutable dispatch snapshot of the authoritative work-item resource declaration. It must equal the resourceAccess in resourceAccessSource at dispatch time."
+          },
+          "gitWorkspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/gitWorkspace"
+            }
+          },
+          "resourceAccessSource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemRef",
+              "workItemBlobSha"
+            ],
+            "properties": {
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workItemBlobSha": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "dispatchWaveRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resourceLeaseRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
             }
           }
         },
@@ -6685,18 +7397,111 @@
                 ]
               }
             }
+          },
+          "readResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "immutableRevision"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "immutableRevision": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "writeResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "conflictDomain"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "conflictDomain": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "gitWorkspace": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "baseCommitSha",
+              "branch",
+              "allowedPaths",
+              "mergeAuthority",
+              "jobKey",
+              "agentKey"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "baseCommitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "branch": {
+                "type": "string",
+                "pattern": "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"
+              },
+              "allowedPaths": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mergeAuthority": {
+                "const": "MASTER_OR_EXPLICIT_AUTHORITY"
+              },
+              "jobKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "agentKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              }
+            }
           }
         }
       }
     },
     "schemaAgentJobState": {
       "key": "schemaAgentJobState",
-      "sourcePath": "v0.6.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "c52acf402e58756fa48b1e1bb49171cae6705f13",
+      "sourcePath": "v0.7.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "7387bb034dfe5d2de3a0140b5ae34c279ed87e25",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job-state:0.6.0",
-        "title": "SAFOR MASTER Agent Job State 0.6.0",
+        "$id": "urn:safor:agent-job-state:0.7.0",
+        "title": "SAFOR MASTER Agent Job State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6710,6 +7515,9 @@
           "lifecycleStatus",
           "contractRef",
           "contractBlobSha",
+          "dispatchWaveRef",
+          "resourceLeaseRefs",
+          "gitWorkspaceRefs",
           "agentStateRef",
           "resultRef",
           "evidenceRefs",
@@ -6722,7 +7530,7 @@
             "const": "SAFOR_AGENT_JOB_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6832,6 +7640,27 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "dispatchWaveRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resourceLeaseRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "gitWorkspaceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "$defs": {
@@ -6878,12 +7707,12 @@
     },
     "schemaAgentResult": {
       "key": "schemaAgentResult",
-      "sourcePath": "v0.6.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "5b4aaf52e7505fce6f0f46437f0e4968ee24de20",
+      "sourcePath": "v0.7.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "501fa76563a3fb35b7d4f8e9fe7df80eb5011503",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-result:0.6.0",
-        "title": "SAFOR Agent Result 0.6.0",
+        "$id": "urn:safor:agent-result:0.7.0",
+        "title": "SAFOR Agent Result 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6902,6 +7731,8 @@
           "completionStatus",
           "summary",
           "outputs",
+          "gitTrace",
+          "humanReadableReport",
           "evidenceRefs",
           "providerMutationRefs",
           "acceptanceSelfCheck",
@@ -6912,7 +7743,7 @@
             "const": "SAFOR_AGENT_RESULT"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "resultId": {
             "type": "string",
@@ -7022,6 +7853,63 @@
             "items": {
               "type": "string"
             }
+          },
+          "humanReadableReport": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "ref",
+              "commitSha",
+              "repository",
+              "blobSha",
+              "format",
+              "requiredSections"
+            ],
+            "properties": {
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "format": {
+                "const": "MARKDOWN"
+              },
+              "requiredSections": {
+                "type": "array",
+                "minItems": 8,
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "OBJECTIVE",
+                    "WORK_PERFORMED",
+                    "ARTIFACTS_CHANGED",
+                    "GIT_TRACE",
+                    "VERIFICATION",
+                    "RESULT",
+                    "RISKS_AND_LIMITS",
+                    "OPEN_ITEMS"
+                  ]
+                },
+                "maxItems": 8
+              },
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commitSha": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "gitTrace": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/gitTraceEntry"
+            }
           }
         },
         "$defs": {
@@ -7043,17 +7931,76 @@
                 ]
               }
             }
+          },
+          "gitTraceEntry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "branch",
+              "baseCommitSha",
+              "headCommitSha",
+              "commitShas",
+              "changedPaths",
+              "changeRequestRef",
+              "providerReadbackRef"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "branch": {
+                "type": "string",
+                "minLength": 1
+              },
+              "baseCommitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "headCommitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "commitShas": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "changedPaths": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "changeRequestRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "providerReadbackRef": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7",
+      "sourcePath": "v0.7.0/conformance.json",
+      "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
@@ -7395,23 +8342,128 @@
             "id": "CF-068",
             "statement": "The inbox index is a non-authoritative discoverability projection; an agent must read the referenced immutable job contract and authoritative master/jobs/{jobId}.json before claim.",
             "expected": true
+          },
+          {
+            "id": "CF-069",
+            "statement": "Kernel references a dedicated MASTER-owned multi-agent scheduler model and scheduler state.",
+            "expected": true
+          },
+          {
+            "id": "CF-070",
+            "statement": "Only ATOMIC work items are dispatchable; COMPOSITE work items require explicit child decomposition and join policy.",
+            "expected": true
+          },
+          {
+            "id": "CF-071",
+            "statement": "READY scheduling requires accepted dependencies, immutable read inputs, active mandate and complete resource declarations.",
+            "expected": true
+          },
+          {
+            "id": "CF-072",
+            "statement": "Agent registry declares dispatchEnabled and maxConcurrentJobs; normal chat-agent capacity defaults conceptually to one slot.",
+            "expected": true
+          },
+          {
+            "id": "CF-073",
+            "statement": "Scheduler may use multiple free agent slots in one dispatch wave when mutually conflict-free READY jobs exist.",
+            "expected": true
+          },
+          {
+            "id": "CF-074",
+            "statement": "Concurrent jobs are rejected when write conflict domains or exclusive keys intersect.",
+            "expected": true
+          },
+          {
+            "id": "CF-075",
+            "statement": "Unknown or project-wide mutation conflict is serialized rather than optimistically parallelized.",
+            "expected": true
+          },
+          {
+            "id": "CF-076",
+            "statement": "MASTER-owned resource leases are acquired and read back before an agent job is considered dispatched.",
+            "expected": true
+          },
+          {
+            "id": "CF-077",
+            "statement": "Lease expiry or lost progress causes reconciliation and never silent overlapping reassignment.",
+            "expected": true
+          },
+          {
+            "id": "CF-078",
+            "statement": "Every mutating agent job receives a dedicated Git branch from an immutable base commit.",
+            "expected": true
+          },
+          {
+            "id": "CF-079",
+            "statement": "Agent direct writes to the default branch and cross-job branches are forbidden.",
+            "expected": true
+          },
+          {
+            "id": "CF-080",
+            "statement": "Every mutating agent result includes provider-verifiable Git base/head/commit/path traceability.",
+            "expected": true
+          },
+          {
+            "id": "CF-081",
+            "statement": "Every agent job, including read-only work, persists a HUMAN-readable Markdown result alongside machine JSON.",
+            "expected": true
+          },
+          {
+            "id": "CF-082",
+            "statement": "Machine result pins the HUMAN-readable report by control repository, blob SHA and commit SHA.",
+            "expected": true
+          },
+          {
+            "id": "CF-083",
+            "statement": "Downstream fan-in work becomes READY only from ACCEPTED required upstream work, not from submission alone.",
+            "expected": true
+          },
+          {
+            "id": "CF-084",
+            "statement": "Dispatch-wave and resource-lease records persist the MASTER scheduling decision for audit.",
+            "expected": true
+          },
+          {
+            "id": "CF-085",
+            "statement": "Agent job resource access is an immutable dispatch snapshot pinned to the authoritative work-item blob.",
+            "expected": true
+          },
+          {
+            "id": "CF-086",
+            "statement": "Read inputs used for parallel scheduling are pinned to immutable revisions.",
+            "expected": true
+          },
+          {
+            "id": "CF-087",
+            "statement": "Factory planning contracts require execution/resource/parallelization data and declare natural parallelism where applicable.",
+            "expected": true
+          },
+          {
+            "id": "CF-088",
+            "statement": "HUMAN status experience exposes agent utilization, active jobs and conflict/dependency blockers without requiring raw JSON inspection.",
+            "expected": true
+          },
+          {
+            "id": "CF-089",
+            "statement": "Scheduling dependencies form a DAG; dependency cycles block READY derivation and dispatch.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/agent-workspace-v0.6.0-rc.1",
-          "result": "PASS_PENDING_REVALIDATION_AFTER_DISCOVERY_FIX",
-          "note": "Agent Workspace model now requires deterministic inbox/index.json discovery with authoritative MASTER job-state verification. Fresh CI and empirical Agent Workspace scenarios remain required."
+          "branch": "safor/multi-agent-scheduler-v0.7.0-rc.1",
+          "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
+          "note": "v0.7 multi-agent scheduler, Git-isolated jobs and HUMAN-readable result contracts added. CI and empirical six-agent scheduling acceptance remain required."
         }
       }
     },
     "schemaAgentInboxIndex": {
       "key": "schemaAgentInboxIndex",
-      "sourcePath": "v0.6.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "bf50a3040f1bc8ab2ed10cc4d2518a474973ed5a",
+      "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "20e93dd158b7737b88c40063d4090139a2a94fbb",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-inbox-index:0.6.0",
-        "title": "SAFOR Agent Inbox Index 0.6.0",
+        "$id": "urn:safor:agent-inbox-index:0.7.0",
+        "title": "SAFOR Agent Inbox Index 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7432,7 +8484,7 @@
             "const": "SAFOR_AGENT_INBOX_INDEX"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -7516,6 +8568,511 @@
                 "format": "date-time"
               }
             }
+          }
+        }
+      }
+    },
+    "multiAgentScheduler": {
+      "key": "multiAgentScheduler",
+      "sourcePath": "v0.7.0/multi-agent-scheduler-model.json",
+      "sourceBlobSha": "894e3791b9f107409f226720de4fdf68060354ae",
+      "content": {
+        "format": "SAFOR_MULTI_AGENT_SCHEDULER_MODEL",
+        "schemaVersion": "0.7.0",
+        "id": "SAFOR-CONFLICT-AWARE-MULTI-AGENT-SCHEDULER",
+        "purpose": "MASTER-owned scheduling protocol that decomposes approved work into atomic execution units and dispatches the largest safe parallel wave that fits dependencies, agent capabilities, capacity, separation-of-duties rules and mutation-conflict constraints.",
+        "topology": {
+          "schedulerState": "master/scheduler/state.json",
+          "dispatchWave": "master/dispatch-waves/{waveId}.json",
+          "resourceLease": "master/resource-leases/{leaseId}.json",
+          "masterJobState": "master/jobs/{jobId}.json"
+        },
+        "principles": {
+          "parallelismMustBeProven": true,
+          "atomicUnitsOnlyAreDispatchable": true,
+          "compositeWorkMustBeDecomposed": true,
+          "immutableReadInputsRequired": true,
+          "mutationConflictsBlockParallelDispatch": true,
+          "unknownConflictMeansExclusive": true,
+          "agentCapacityIsExplicit": true,
+          "oneChatAgentSlotByDefault": true,
+          "noAutomaticReassignmentAfterLeaseLoss": true,
+          "masterOwnsSchedulingDecisions": true,
+          "resultSubmissionDoesNotReleaseAcceptanceGates": true
+        },
+        "workDecomposition": {
+          "compositeRule": "A COMPOSITE work item is never dispatched directly. Planning decomposes it into ATOMIC child work items with explicit dependencies, output contracts, resource access and join policy.",
+          "defaultJoinPolicy": "ALL_CHILDREN_ACCEPTED",
+          "parentCompletion": "A parent may advance beyond execution only after the configured child join predicate is satisfied and any required integration/review work is accepted.",
+          "selectiveRework": "Only affected child work items and downstream dependents are reopened; accepted unaffected children remain accepted.",
+          "dependencyGraphRule": "Scheduling dependencies must form an acyclic directed graph. Any cycle is invalid planning state and blocks READY derivation until replanned."
+        },
+        "readinessPredicate": [
+          "workItem.execution.unit == ATOMIC",
+          "workItem.status == READY",
+          "all dependency work items required by the join predicate are ACCEPTED",
+          "all read inputs are bound to immutable provider revisions",
+          "active execution mandate covers the work item and capabilities",
+          "at least one ACTIVE dispatch-enabled actor has all required capabilities",
+          "required reviewer independence can still be satisfied",
+          "resource access declaration is complete"
+        ],
+        "capacityModel": {
+          "agentDefaultMaxConcurrentJobs": 1,
+          "projectParallelismCeiling": "min(explicit maxParallelJobs when configured, otherwise total free eligible agent slots; totalFreeEligibleAgentSlots; countReadyAtomicJobs; conflictFreeSetSize)",
+          "freeSlotCalculation": "maxConcurrentJobs minus nonterminal MASTER job states assigned to that agent",
+          "rule": "Six registered active chat agents with capacity 1 may receive six simultaneous jobs only when at least six READY atomic jobs are mutually conflict-free and capability-compatible.",
+          "defaultProjectMaxParallelJobs": "AUTO"
+        },
+        "conflictModel": {
+          "immutableReadRule": "READ/READ and immutable READ versus WRITE may execute concurrently because the reader is pinned to an immutable revision.",
+          "writeConflictRules": [
+            "Two jobs conflict when their writeSet conflictDomain values intersect.",
+            "Two jobs conflict when their exclusiveKeys intersect.",
+            "Two jobs conflict when either job has UNKNOWN or PROJECT_WIDE write conflict scope.",
+            "Two jobs targeting the same explicit work branch conflict."
+          ],
+          "pathRule": "A conflictDomain must conservatively cover all paths that can be mutated by the job. Narrower path selectors may be used only when the Factory or planner can prove non-overlap.",
+          "safeDefault": "Any ambiguity is treated as conflict and the jobs are serialized."
+        },
+        "assignmentPolicy": {
+          "deterministicOrder": [
+            "priority DESC",
+            "readySince ASC",
+            "workItemId ASC",
+            "agentId ASC"
+          ],
+          "eligibility": [
+            "identity.status == ACTIVE",
+            "registry scheduling.dispatchEnabled == true",
+            "agent has every required capability",
+            "agent has at least one free scheduling slot",
+            "agent is not prohibited by separation-of-duties rules",
+            "actual provider rights cover the proposed job"
+          ],
+          "reuseRule": "Prefer already-registered eligible agents; do not create a new agent identity merely to increase parallelism without HUMAN approval."
+        },
+        "waveAlgorithm": [
+          "LOAD_AUTHORITATIVE_VALUE_STREAM_AND_MASTER_JOB_STATES",
+          "DERIVE_READY_ATOMIC_CANDIDATES",
+          "LOAD_AGENT_REGISTRY_AND_CURRENT_CAPACITY",
+          "FILTER_BY_CAPABILITY_AUTHORITY_AND_SOD",
+          "SORT_DETERMINISTICALLY",
+          "BUILD_MAXIMAL_SAFE_CONFLICT_FREE_SET_WITHIN_CAPACITY",
+          "CREATE_RESOURCE_LEASES_WITH_OPTIMISTIC_CONCURRENCY",
+          "MATERIALIZE_DEDICATED_JOB_BRANCHES_FOR_MUTATING_JOBS",
+          "DISPATCH_AGENT_JOBS",
+          "READ_BACK_INDEX_JOB_STATE_BRANCH_AND_LEASES",
+          "PERSIST_DISPATCH_WAVE"
+        ],
+        "leaseProtocol": {
+          "ownership": "MASTER",
+          "protects": [
+            "AGENT_SLOT",
+            "WRITE_CONFLICT_DOMAIN",
+            "EXCLUSIVE_KEY",
+            "JOB_BRANCH"
+          ],
+          "lifecycle": [
+            "RESERVED",
+            "ACTIVE",
+            "RELEASE_PENDING",
+            "RELEASED",
+            "RECONCILE_REQUIRED"
+          ],
+          "acquisition": "All leases for a dispatch wave must be acquired using current provider revisions before any selected job is treated as successfully dispatched.",
+          "release": "Release only after terminal or explicitly blocked job reconciliation and provider readback.",
+          "expiryRule": "A time/heartbeat expiry never authorizes silent job reassignment. Expiry produces RECONCILE_REQUIRED until MASTER establishes whether the prior agent may still have external effects."
+        },
+        "gitIsolation": {
+          "mutatingJobRule": "Every job with a non-empty writeSet receives one or more dedicated Git workspaces rooted at immutable base commits.",
+          "branchPattern": "safor/job/{jobKey}/{agentKey}",
+          "directMainWriteForbidden": true,
+          "crossJobBranchWriteForbidden": true,
+          "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
+          "integrationRule": "Parallel contribution branches are integrated only after each job result is VERIFIED and required review/integration gates pass.",
+          "branchKeyRule": "jobKey and agentKey are deterministic Git-ref-safe projections of jobId and agentId using only letters, digits, dot, underscore and hyphen; the original IDs remain authoritative in job/result records."
+        },
+        "fanOutFanIn": {
+          "fanOut": "One approved parent may expose multiple READY atomic children; MASTER may dispatch a safe subset or all of them in one wave.",
+          "fanIn": "Downstream join work becomes READY only when its declared dependency/join predicate is satisfied by ACCEPTED upstream work, never merely RESULT_SUBMITTED work."
+        },
+        "observability": {
+          "masterMustKnow": [
+            "registeredAgents",
+            "freeAgentSlots",
+            "readyAtomicWork",
+            "activeJobs",
+            "resourceLeases",
+            "blockedConflicts",
+            "dispatchWaves",
+            "reworkQueue"
+          ],
+          "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
+        }
+      }
+    },
+    "schemaSchedulerState": {
+      "key": "schemaSchedulerState",
+      "sourcePath": "v0.7.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "052c85a6e5cc67f6db31ac7595ff452bee48fc77",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:scheduler-state:0.7.0",
+        "title": "SAFOR Multi-Agent Scheduler State 0.7.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "revision",
+          "maxParallelJobs",
+          "activeWaveRefs",
+          "activeLeaseRefs",
+          "queuedWorkItemRefs",
+          "blockedWork",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_SCHEDULER_STATE"
+          },
+          "schemaVersion": {
+            "const": "0.7.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "maxParallelJobs": {
+            "oneOf": [
+              {
+                "const": "AUTO"
+              },
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 128
+              }
+            ]
+          },
+          "activeWaveRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "activeLeaseRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "queuedWorkItemRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "blockedWork": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/blocked"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "blocked": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemRef",
+              "reasonCode",
+              "conflictingRefs"
+            ],
+            "properties": {
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reasonCode": {
+                "enum": [
+                  "DEPENDENCY",
+                  "NO_ELIGIBLE_AGENT",
+                  "NO_CAPACITY",
+                  "RESOURCE_CONFLICT",
+                  "SOD",
+                  "MANDATE",
+                  "PROVIDER_RIGHTS",
+                  "UNKNOWN_CONFLICT"
+                ]
+              },
+              "conflictingRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemaDispatchWave": {
+      "key": "schemaDispatchWave",
+      "sourcePath": "v0.7.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "46cd08135139f390a2ad8c2f6bedc25d1660cbe5",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:dispatch-wave:0.7.0",
+        "title": "SAFOR Dispatch Wave 0.7.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "waveId",
+          "revision",
+          "status",
+          "candidateWorkItemRefs",
+          "selectedAssignments",
+          "leaseRefs",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_DISPATCH_WAVE"
+          },
+          "schemaVersion": {
+            "const": "0.7.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "waveId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "PLANNED",
+              "LEASING",
+              "DISPATCHING",
+              "RUNNING",
+              "COMPLETED",
+              "BLOCKED",
+              "RECONCILE_REQUIRED"
+            ]
+          },
+          "candidateWorkItemRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "selectedAssignments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/assignment"
+            }
+          },
+          "leaseRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "assignment": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemRef",
+              "jobId",
+              "agentId",
+              "identityRevision",
+              "reason"
+            ],
+            "properties": {
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jobId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "agentId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "identityRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemaResourceLease": {
+      "key": "schemaResourceLease",
+      "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:resource-lease:0.7.0",
+        "title": "SAFOR Multi-Agent Resource Lease 0.7.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "leaseId",
+          "revision",
+          "status",
+          "dispatchWaveRef",
+          "jobId",
+          "agentId",
+          "agentSlot",
+          "writeConflictDomains",
+          "exclusiveKeys",
+          "jobBranches",
+          "acquiredAt",
+          "expiresAt",
+          "releaseEvidenceRefs",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_RESOURCE_LEASE"
+          },
+          "schemaVersion": {
+            "const": "0.7.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "leaseId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "status": {
+            "enum": [
+              "RESERVED",
+              "ACTIVE",
+              "RELEASE_PENDING",
+              "RELEASED",
+              "RECONCILE_REQUIRED"
+            ]
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentSlot": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "writeConflictDomains": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "exclusiveKeys": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "jobBranches": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "acquiredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "releaseEvidenceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dispatchWaveRef": {
+            "type": "string",
+            "minLength": 1
           }
         }
       }

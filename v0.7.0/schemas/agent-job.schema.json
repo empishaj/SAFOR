@@ -1,0 +1,382 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-job:0.7.0",
+  "title": "SAFOR Agent Job Contract 0.7.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "jobId",
+    "projectId",
+    "assignedAgentId",
+    "assignedIdentityRef",
+    "assignedIdentityRevision",
+    "issuedBy",
+    "issuedAt",
+    "dispatchRevision",
+    "dispatchState",
+    "dispatchWaveRef",
+    "resourceLeaseRefs",
+    "workItemRef",
+    "executionContractRef",
+    "mandateRef",
+    "scope",
+    "inputs",
+    "requiredOutputs",
+    "evidenceRequirements",
+    "resourceAccessSource",
+    "resourceAccess",
+    "gitWorkspaces",
+    "constraints",
+    "resultTarget"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_JOB"
+    },
+    "schemaVersion": {
+      "const": "0.7.0"
+    },
+    "jobId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignedAgentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignedIdentityRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignedIdentityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "issuedBy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issuedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dispatchRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "dispatchState": {
+      "const": "READY"
+    },
+    "workItemRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "executionContractRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mandateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "objective",
+        "allowedRepositories",
+        "allowedPaths"
+      ],
+      "properties": {
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "allowedRepositories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "allowedPaths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "inputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "requiredOutputs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "evidenceRequirements": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "constraints": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mayMerge",
+        "mayExpandScope",
+        "mayModifyMasterState",
+        "allowedProviderCapabilities",
+        "maxMutationAttempts"
+      ],
+      "properties": {
+        "mayMerge": {
+          "type": "boolean"
+        },
+        "mayExpandScope": {
+          "const": false
+        },
+        "mayModifyMasterState": {
+          "const": false
+        },
+        "allowedProviderCapabilities": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "maxMutationAttempts": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "resultTarget": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "resultRef",
+        "evidenceRoot",
+        "humanReadableResultRef"
+      ],
+      "properties": {
+        "resultRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "humanReadableResultRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "resourceAccess": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "readSet",
+        "writeSet",
+        "exclusiveKeys"
+      ],
+      "properties": {
+        "readSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/readResource"
+          }
+        },
+        "writeSet": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/writeResource"
+          }
+        },
+        "exclusiveKeys": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "description": "Immutable dispatch snapshot of the authoritative work-item resource declaration. It must equal the resourceAccess in resourceAccessSource at dispatch time."
+    },
+    "gitWorkspaces": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gitWorkspace"
+      }
+    },
+    "resourceAccessSource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workItemRef",
+        "workItemBlobSha"
+      ],
+      "properties": {
+        "workItemRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workItemBlobSha": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "dispatchWaveRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLeaseRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expectedType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "readResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "path",
+        "immutableRevision"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "immutableRevision": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "writeResource": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "path",
+        "conflictDomain"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "conflictDomain": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "gitWorkspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "baseCommitSha",
+        "branch",
+        "allowedPaths",
+        "mergeAuthority",
+        "jobKey",
+        "agentKey"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "baseCommitSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch": {
+          "type": "string",
+          "pattern": "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"
+        },
+        "allowedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "mergeAuthority": {
+          "const": "MASTER_OR_EXPLICIT_AUTHORITY"
+        },
+        "jobKey": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "agentKey": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        }
+      }
+    }
+  }
+}

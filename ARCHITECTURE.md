@@ -12,6 +12,7 @@ SAFOR
 + Provider Adapter
 + Project State
 + Agent Workspace Protocol
++ Multi-Agent Scheduler
 + Evidence
 + HUMAN Authority
 ```
@@ -36,6 +37,9 @@ Binds the selected Factory and Operating Model to concrete actors, repositories,
 ### Agent Workspace Protocol
 Provides repository-native persistent identities and job handoff for agent actors. MASTER writes identity, inbox contracts and authoritative job lifecycle. Agents write only their own runtime state, outbox results, evidence and audit records. HUMAN prompt copying is not authoritative job transport.
 
+### Multi-Agent Scheduler
+Builds conflict-free dispatch waves across multiple agent chats. It decomposes composite work into atomic execution units, matches required capabilities to free agent slots, acquires resource leases, isolates mutating work on dedicated Git branches and releases downstream fan-in only from accepted upstream work.
+
 ## Repository separation
 
 ```text
@@ -55,6 +59,7 @@ empishaj/SAFOR
 BOOTSTRAP
   → DISCOVERY
   → PLANNING
+  → SCHEDULING
   → EXECUTION
   → RECOVERY (when required)
   → OUTCOME
@@ -117,6 +122,7 @@ MASTER
                     │
                     ├─ state.json
                     ├─ outbox/{jobId}.result.json
+                    ├─ outbox/{jobId}.result.md
                     └─ evidence/{jobId}/
                     │
                     ▼
@@ -125,3 +131,14 @@ MASTER
 ```
 
 The agent receives its identity once. Subsequent jobs are retrieved from its repository workspace. Job discovery starts from the fixed MASTER-owned `inbox/index.json` projection; the agent then verifies the referenced immutable job and authoritative `master/jobs/{jobId}.json` state before claim. A normal chat still requires an external HUMAN, automation or host-supported activation trigger; SAFOR does not assume autonomous background wakeup.
+
+
+## Parallel execution safety
+
+Parallelism is explicit, never assumed. The MASTER dispatches only ATOMIC READY work with accepted dependencies, immutable read inputs, available agent capacity and non-overlapping write conflict domains/exclusive keys.
+
+Mutating jobs receive dedicated `safor/job/{jobKey}/{agentKey}` branches from immutable base commits. Agents do not write the default branch or another job's branch.
+
+Each scheduling decision is persisted as a dispatch-wave record and protected by MASTER-owned resource leases. Unknown mutation overlap is serialized. Lease expiry triggers reconciliation rather than silent reassignment.
+
+See [MULTI-AGENT-SCHEDULER.md](MULTI-AGENT-SCHEDULER.md).

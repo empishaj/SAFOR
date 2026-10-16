@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:interaction-menu:0.7.0",
+  "title": "SAFOR Interaction Menu 0.7.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "menuId",
+    "context",
+    "presentation",
+    "items"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_INTERACTION_MENU"
+    },
+    "schemaVersion": {
+      "const": "0.7.0"
+    },
+    "menuId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "projectId",
+        "projectTitle",
+        "mode",
+        "status",
+        "headline",
+        "summary"
+      ],
+      "properties": {
+        "projectId": {
+          "type": "string"
+        },
+        "projectTitle": {
+          "type": "string"
+        },
+        "mode": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "headline": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 90
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 280
+        },
+        "progressLabel": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 80
+        },
+        "currentWorkLabel": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 100
+        }
+      }
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "preferredSurface",
+        "fallbackSurface",
+        "visualProfile"
+      ],
+      "properties": {
+        "preferredSurface": {
+          "enum": [
+            "NATIVE_ACTIONS",
+            "NATIVE_SINGLE_SELECT",
+            "NATIVE_MULTI_SELECT",
+            "NATIVE_RICH_CARDS",
+            "NATIVE_MARKDOWN"
+          ]
+        },
+        "fallbackSurface": {
+          "const": "NATIVE_MARKDOWN"
+        },
+        "visualProfile": {
+          "const": "SAFOR_CHAT_NATIVE"
+        }
+      }
+    },
+    "items": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 8,
+      "items": {
+        "$ref": "#/$defs/item"
+      }
+    }
+  },
+  "$defs": {
+    "item": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "label",
+        "intent",
+        "kind",
+        "enabled",
+        "requiresConfirmation",
+        "visibilityRule"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 42
+        },
+        "description": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 120
+        },
+        "intent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "PRIMARY",
+            "SECONDARY",
+            "UTILITY",
+            "DANGER"
+          ]
+        },
+        "enabled": {
+          "type": "boolean"
+        },
+        "requiresConfirmation": {
+          "type": "boolean"
+        },
+        "visibilityRule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "badge": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 24
+        }
+      }
+    }
+  }
+}

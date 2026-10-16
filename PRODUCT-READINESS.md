@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.6.0-rc.1**
+Current target: **v0.7.0-rc.1**
 
-Current modular source: **`v0.6.0/`**
+Current modular source: **`v0.7.0/`**
 
 ## Release-candidate gates
 
@@ -21,9 +21,19 @@ Current modular source: **`v0.6.0/`**
 | Persistent repository-native agent identity | PASS by schema/conformance |
 | Agent inbox/outbox job protocol | PASS by schema/conformance |
 | MASTER-authoritative agent lifecycle | PASS by schema/conformance |
+| Conflict-aware multi-agent scheduler | PASS by schema/conformance |
+| ATOMIC/COMPOSITE work decomposition | PASS by schema/conformance |
+| Explicit agent scheduling capacity | PASS by schema/conformance |
+| Dispatch waves and resource leases | PASS by schema/conformance |
+| Dedicated Git branches for mutating agent jobs | PASS by schema/conformance |
+| HUMAN-readable agent Markdown results | PASS by schema/conformance |
+| Provider-verifiable agent Git trace | PASS by schema/conformance |
+| Six-agent parallel scheduling acceptance | OPEN |
+| Conflict-aware serialization acceptance | OPEN |
+| HUMAN-readable + Git-trace result acceptance | OPEN |
 | Agent Workspace end-to-end acceptance | OPEN |
-| Machine-readable validation | PASS |
-| CI validation | PASS on validated PR head |
+| Machine-readable validation | PASS on PR #5 validated head |
+| CI validation | PASS on PR #5 validated head |
 | Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |

@@ -1,0 +1,135 @@
+{
+  "format": "SAFOR_MULTI_AGENT_SCHEDULER_MODEL",
+  "schemaVersion": "0.7.0",
+  "id": "SAFOR-CONFLICT-AWARE-MULTI-AGENT-SCHEDULER",
+  "purpose": "MASTER-owned scheduling protocol that decomposes approved work into atomic execution units and dispatches the largest safe parallel wave that fits dependencies, agent capabilities, capacity, separation-of-duties rules and mutation-conflict constraints.",
+  "topology": {
+    "schedulerState": "master/scheduler/state.json",
+    "dispatchWave": "master/dispatch-waves/{waveId}.json",
+    "resourceLease": "master/resource-leases/{leaseId}.json",
+    "masterJobState": "master/jobs/{jobId}.json"
+  },
+  "principles": {
+    "parallelismMustBeProven": true,
+    "atomicUnitsOnlyAreDispatchable": true,
+    "compositeWorkMustBeDecomposed": true,
+    "immutableReadInputsRequired": true,
+    "mutationConflictsBlockParallelDispatch": true,
+    "unknownConflictMeansExclusive": true,
+    "agentCapacityIsExplicit": true,
+    "oneChatAgentSlotByDefault": true,
+    "noAutomaticReassignmentAfterLeaseLoss": true,
+    "masterOwnsSchedulingDecisions": true,
+    "resultSubmissionDoesNotReleaseAcceptanceGates": true
+  },
+  "workDecomposition": {
+    "compositeRule": "A COMPOSITE work item is never dispatched directly. Planning decomposes it into ATOMIC child work items with explicit dependencies, output contracts, resource access and join policy.",
+    "defaultJoinPolicy": "ALL_CHILDREN_ACCEPTED",
+    "parentCompletion": "A parent may advance beyond execution only after the configured child join predicate is satisfied and any required integration/review work is accepted.",
+    "selectiveRework": "Only affected child work items and downstream dependents are reopened; accepted unaffected children remain accepted.",
+    "dependencyGraphRule": "Scheduling dependencies must form an acyclic directed graph. Any cycle is invalid planning state and blocks READY derivation until replanned."
+  },
+  "readinessPredicate": [
+    "workItem.execution.unit == ATOMIC",
+    "workItem.status == READY",
+    "all dependency work items required by the join predicate are ACCEPTED",
+    "all read inputs are bound to immutable provider revisions",
+    "active execution mandate covers the work item and capabilities",
+    "at least one ACTIVE dispatch-enabled actor has all required capabilities",
+    "required reviewer independence can still be satisfied",
+    "resource access declaration is complete"
+  ],
+  "capacityModel": {
+    "agentDefaultMaxConcurrentJobs": 1,
+    "projectParallelismCeiling": "min(explicit maxParallelJobs when configured, otherwise total free eligible agent slots; totalFreeEligibleAgentSlots; countReadyAtomicJobs; conflictFreeSetSize)",
+    "freeSlotCalculation": "maxConcurrentJobs minus nonterminal MASTER job states assigned to that agent",
+    "rule": "Six registered active chat agents with capacity 1 may receive six simultaneous jobs only when at least six READY atomic jobs are mutually conflict-free and capability-compatible.",
+    "defaultProjectMaxParallelJobs": "AUTO"
+  },
+  "conflictModel": {
+    "immutableReadRule": "READ/READ and immutable READ versus WRITE may execute concurrently because the reader is pinned to an immutable revision.",
+    "writeConflictRules": [
+      "Two jobs conflict when their writeSet conflictDomain values intersect.",
+      "Two jobs conflict when their exclusiveKeys intersect.",
+      "Two jobs conflict when either job has UNKNOWN or PROJECT_WIDE write conflict scope.",
+      "Two jobs targeting the same explicit work branch conflict."
+    ],
+    "pathRule": "A conflictDomain must conservatively cover all paths that can be mutated by the job. Narrower path selectors may be used only when the Factory or planner can prove non-overlap.",
+    "safeDefault": "Any ambiguity is treated as conflict and the jobs are serialized."
+  },
+  "assignmentPolicy": {
+    "deterministicOrder": [
+      "priority DESC",
+      "readySince ASC",
+      "workItemId ASC",
+      "agentId ASC"
+    ],
+    "eligibility": [
+      "identity.status == ACTIVE",
+      "registry scheduling.dispatchEnabled == true",
+      "agent has every required capability",
+      "agent has at least one free scheduling slot",
+      "agent is not prohibited by separation-of-duties rules",
+      "actual provider rights cover the proposed job"
+    ],
+    "reuseRule": "Prefer already-registered eligible agents; do not create a new agent identity merely to increase parallelism without HUMAN approval."
+  },
+  "waveAlgorithm": [
+    "LOAD_AUTHORITATIVE_VALUE_STREAM_AND_MASTER_JOB_STATES",
+    "DERIVE_READY_ATOMIC_CANDIDATES",
+    "LOAD_AGENT_REGISTRY_AND_CURRENT_CAPACITY",
+    "FILTER_BY_CAPABILITY_AUTHORITY_AND_SOD",
+    "SORT_DETERMINISTICALLY",
+    "BUILD_MAXIMAL_SAFE_CONFLICT_FREE_SET_WITHIN_CAPACITY",
+    "CREATE_RESOURCE_LEASES_WITH_OPTIMISTIC_CONCURRENCY",
+    "MATERIALIZE_DEDICATED_JOB_BRANCHES_FOR_MUTATING_JOBS",
+    "DISPATCH_AGENT_JOBS",
+    "READ_BACK_INDEX_JOB_STATE_BRANCH_AND_LEASES",
+    "PERSIST_DISPATCH_WAVE"
+  ],
+  "leaseProtocol": {
+    "ownership": "MASTER",
+    "protects": [
+      "AGENT_SLOT",
+      "WRITE_CONFLICT_DOMAIN",
+      "EXCLUSIVE_KEY",
+      "JOB_BRANCH"
+    ],
+    "lifecycle": [
+      "RESERVED",
+      "ACTIVE",
+      "RELEASE_PENDING",
+      "RELEASED",
+      "RECONCILE_REQUIRED"
+    ],
+    "acquisition": "All leases for a dispatch wave must be acquired using current provider revisions before any selected job is treated as successfully dispatched.",
+    "release": "Release only after terminal or explicitly blocked job reconciliation and provider readback.",
+    "expiryRule": "A time/heartbeat expiry never authorizes silent job reassignment. Expiry produces RECONCILE_REQUIRED until MASTER establishes whether the prior agent may still have external effects."
+  },
+  "gitIsolation": {
+    "mutatingJobRule": "Every job with a non-empty writeSet receives one or more dedicated Git workspaces rooted at immutable base commits.",
+    "branchPattern": "safor/job/{jobKey}/{agentKey}",
+    "directMainWriteForbidden": true,
+    "crossJobBranchWriteForbidden": true,
+    "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
+    "integrationRule": "Parallel contribution branches are integrated only after each job result is VERIFIED and required review/integration gates pass.",
+    "branchKeyRule": "jobKey and agentKey are deterministic Git-ref-safe projections of jobId and agentId using only letters, digits, dot, underscore and hyphen; the original IDs remain authoritative in job/result records."
+  },
+  "fanOutFanIn": {
+    "fanOut": "One approved parent may expose multiple READY atomic children; MASTER may dispatch a safe subset or all of them in one wave.",
+    "fanIn": "Downstream join work becomes READY only when its declared dependency/join predicate is satisfied by ACCEPTED upstream work, never merely RESULT_SUBMITTED work."
+  },
+  "observability": {
+    "masterMustKnow": [
+      "registeredAgents",
+      "freeAgentSlots",
+      "readyAtomicWork",
+      "activeJobs",
+      "resourceLeases",
+      "blockedConflicts",
+      "dispatchWaves",
+      "reworkQueue"
+    ],
+    "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
+  }
+}

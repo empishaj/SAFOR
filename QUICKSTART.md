@@ -13,7 +13,7 @@ If `safor-memory` does not already exist or is not writable, SAFOR stops. It nev
 
 ## Start
 
-1. Load `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
+1. Load `SAFOR-MASTER-COMPLETE-v0.7.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
 2. Choose **GitHub** or **GitLab**.
 3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
 4. Choose the owner/namespace.
@@ -59,3 +59,18 @@ The agent is initialized once with:
 After that, the HUMAN does **not** copy full job prompts into the agent chat. On activation the agent loads its identity/state, scans its inbox, verifies an eligible job, claims it with optimistic concurrency, performs only the authorized scope, and writes its result/evidence back to the repository.
 
 See `AGENT-WORKSPACE.md`.
+
+
+## Parallel agent scheduling
+
+SAFOR v0.7 can serve multiple persistent agent chats in parallel. Work is dispatched only as ATOMIC units whose dependencies are accepted, inputs are pinned, required capabilities are available, and mutation/resource domains do not conflict.
+
+With six active chat agents at one scheduling slot each, the MASTER can dispatch up to six mutually conflict-free READY jobs in one wave. Mutating jobs use dedicated `safor/job/{jobKey}/{agentKey}` branches.
+
+Every agent job writes:
+- machine result: `outbox/{jobId}.result.json`
+- HUMAN-readable result: `outbox/{jobId}.result.md`
+
+The Markdown report is the default HUMAN view; mutating results also include verifiable Git base/head commits, result commits and changed paths.
+
+See `MULTI-AGENT-SCHEDULER.md`.
