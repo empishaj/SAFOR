@@ -1,7 +1,7 @@
 {
   "format": "SAF_MASTER_COMPLETE_SINGLE_FILE",
   "schemaVersion": "0.4.0",
-  "bundleVersion": "0.4.0-complete",
+  "bundleVersion": "0.4.0-rc.1",
   "definitionId": "saf-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -94,7 +94,7 @@
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.4.0/SAF-MASTER.json",
-      "sourceBlobSha": "f5583b143e6d47a56c4cb953456dab562e339d29"
+      "sourceBlobSha": "f3aad35a5e6e3e38e7aa5dea579d322e4c50aa62"
     },
     "initialization": {
       "sourcePath": "v0.4.0/initialization-model.json",
@@ -193,7 +193,7 @@
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.4.0/SAF-MASTER.json",
-      "sourceBlobSha": "f5583b143e6d47a56c4cb953456dab562e339d29",
+      "sourceBlobSha": "f3aad35a5e6e3e38e7aa5dea579d322e4c50aa62",
       "content": {
         "format": "SAF_MASTER_BOOTSTRAP",
         "schemaVersion": "0.4.0",
