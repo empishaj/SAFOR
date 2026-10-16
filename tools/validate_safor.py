@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.7.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.8.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -33,7 +33,7 @@ required_modules = {
     "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu",
     "schemaSelfHealingRecord","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
     "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
-    "multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
+    "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
 }
 missing = sorted(required_modules - set(modules))
 if missing:
@@ -90,20 +90,31 @@ for action_id in ("E04","E05"):
         fail(f"{action_id} must bind Factory evidenceContract.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 72)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 86)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 90)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 110)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
 
 agent_model = modules.get("agentWorkspace", {}).get("content", {})
+agent_job_model = modules.get("agentJobContract", {}).get("content", {})
+if agent_job_model.get("authority", {}).get("authoritativeArtifact") != "agents/{agentId}/inbox/{jobId}.json":
+    fail("Canonical job model authoritative path mismatch.")
+if agent_job_model.get("authority", {}).get("humanProjection") != "agents/{agentId}/inbox/{jobId}.md":
+    fail("Canonical job model HUMAN projection path mismatch.")
+if agent_job_model.get("authorizationSemantics", {}).get("jobPermissionIsUpperBound") is not True:
+    fail("Canonical job permissions must be an upper bound only.")
+if agent_job_model.get("humanProjectionContract", {}).get("providerReadbackRequiredBeforeReady") is not True:
+    fail("Canonical job Markdown must be read back before READY.")
 if agent_model.get("topology", {}).get("inboxIndex") != "agents/{agentId}/inbox/index.json":
     fail("Agent Workspace inbox index path mismatch.")
+if agent_model.get("topology", {}).get("jobHumanReadableProjection") != "agents/{agentId}/inbox/{jobId}.md":
+    fail("Agent Workspace HUMAN job path mismatch.")
 discovery = agent_model.get("discoveryProtocol", {})
 if discovery.get("noDirectoryEnumerationRequired") is not True:
     fail("Agent Workspace discovery must not require directory enumeration.")
@@ -120,9 +131,13 @@ if "agents/{agentId}/state.json" not in ownership.get("AGENT_ONLY", []):
     fail("Agent must own only its local runtime state.")
 if agent_model.get("resultProtocol", {}).get("notAcceptance") != "Agent result is a claim of work performed, never authoritative acceptance.":
     fail("Agent result must not be authoritative acceptance.")
-for action_id in ("A01","A02","A03","A04","A05"):
+for action_id in ("A01","A03","A04","A05"):
     if actions.get(action_id, {}).get("modelRef") != "agent-workspace-model.json":
         fail(f"{action_id} must bind agent-workspace-model.json.")
+if actions.get("A02", {}).get("modelRef") != "agent-job-contract-model.json":
+    fail("A02 must bind agent-job-contract-model.json.")
+if actions.get("E03", {}).get("modelRef") != "agent-job-contract-model.json":
+    fail("E03 must bind agent-job-contract-model.json.")
 execution_schema = modules.get("schemaExecutionState", {}).get("content", {})
 if "agentJobStateRefs" not in execution_schema.get("required", []):
     fail("Execution state must reference agent job states.")
@@ -130,9 +145,125 @@ job_state_schema = modules.get("schemaAgentJobState", {}).get("content", {})
 if job_state_schema.get("properties", {}).get("owner", {}).get("const") != "MASTER":
     fail("Agent job state must be MASTER-owned.")
 job_schema = modules.get("schemaAgentJob", {}).get("content", {})
-constraints = job_schema.get("properties", {}).get("constraints", {}).get("properties", {})
-if constraints.get("mayModifyMasterState", {}).get("const") is not False:
-    fail("Agent job contract must forbid agent mutation of MASTER state.")
+job_required = job_schema.get("required", [])
+for field in ("identity","lineage","provenance","assignment","roleContract","skills","task","dependencies","inputs","authorization","workspace","scheduling","outputContract","verificationContract","constraints","humanReadableProjection"):
+    if field not in job_required:
+        fail(f"Canonical agent job missing top-level contract area {field}.")
+
+defs = job_schema.get("$defs", {})
+job_identity = defs.get("jobIdentity", {})
+if job_identity.get("properties", {}).get("immutableAfterDispatch", {}).get("const") is not True:
+    fail("Agent job must be immutable after dispatch.")
+job_id_pattern = job_identity.get("properties", {}).get("jobId", {}).get("pattern", "")
+if "-7" not in job_id_pattern:
+    fail("Agent jobId must require UUIDv7.")
+
+lineage_required = defs.get("lineage", {}).get("required", [])
+for field in ("packageId","packageSequence","workItemId","sequence","supersedesJobId"):
+    if field not in lineage_required:
+        fail(f"Agent job lineage missing {field}.")
+sequence_required = defs.get("sequence", {}).get("required", [])
+for field in ("planSequence","dispatchSequence","attempt","reworkCycle"):
+    if field not in sequence_required:
+        fail(f"Agent job sequence missing {field}.")
+
+provenance_required = defs.get("provenance", {}).get("required", [])
+for field in ("createdAt","issuedAt","createdBy","planningRef","executionStateRef","mandateRef"):
+    if field not in provenance_required:
+        fail(f"Agent job provenance missing {field}.")
+master_prov_required = defs.get("masterProvenance", {}).get("required", [])
+for field in ("masterId","masterVersion","masterRunId","masterStateRevision"):
+    if field not in master_prov_required:
+        fail(f"Agent job MASTER provenance missing {field}.")
+
+assignment_required = defs.get("assignment", {}).get("required", [])
+for field in ("agentId","agentName","identityRevision","identityRef","assignmentReason"):
+    if field not in assignment_required:
+        fail(f"Agent job assignment missing {field}.")
+
+role_required = defs.get("roleContract", {}).get("required", [])
+for field in ("roleId","roleName","roleDefinitionRef","roleDefinitionBlobSha","mission","responsibilities","mustNotActAs","decisionRights","authorityExpansionAllowed"):
+    if field not in role_required:
+        fail(f"Agent job role contract missing {field}.")
+if defs.get("roleContract", {}).get("properties", {}).get("authorityExpansionAllowed", {}).get("const") is not False:
+    fail("Job role contract must forbid authority expansion.")
+
+skill_required = defs.get("skill", {}).get("required", [])
+for field in ("skillId","skillVersion","mandatory","description","executionInstructions","useFor","skillRef","skillBlobSha","requiredLevel"):
+    if field not in skill_required:
+        fail(f"Agent job skill contract missing {field}.")
+if job_schema.get("properties", {}).get("skills", {}).get("minItems") != 1:
+    fail("Every agent job must declare at least one explicit skill.")
+
+input_props = defs.get("input", {}).get("properties", {})
+if input_props.get("mode", {}).get("const") != "READ_ONLY":
+    fail("All canonical job inputs must be READ_ONLY.")
+for field in ("commitSha","blobSha"):
+    if field not in input_props:
+        fail(f"Agent job input missing immutable reference field {field}.")
+
+authorization_required = defs.get("authorization", {}).get("required", [])
+for field in ("authorityBasis","actualProviderRightsMustBeVerified","providerCapabilities","repositoryPermissions","explicitlyForbidden"):
+    if field not in authorization_required:
+        fail(f"Agent job authorization missing {field}.")
+if defs.get("authorization", {}).get("properties", {}).get("actualProviderRightsMustBeVerified", {}).get("const") is not True:
+    fail("Agent job must require actual provider-right verification.")
+repo_permission_required = defs.get("repositoryPermission", {}).get("required", [])
+for field in ("repository","read","write","branchCreate","commit","push","changeRequestCreate","merge","deploy"):
+    if field not in repo_permission_required:
+        fail(f"Repository permission contract missing {field}.")
+
+workspace_required = defs.get("workspace", {}).get("required", [])
+for field in ("resourceAccessSource","readSet","writeSet","exclusiveKeys","gitWorkspaces"):
+    if field not in workspace_required:
+        fail(f"Agent job workspace missing {field}.")
+branch_pattern = defs.get("gitWorkspace", {}).get("properties", {}).get("branch", {}).get("pattern")
+if branch_pattern != "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$":
+    fail("Agent job branch pattern must use Git-ref-safe job/agent keys.")
+if defs.get("gitWorkspace", {}).get("properties", {}).get("directDefaultBranchWrite", {}).get("const") is not False:
+    fail("Agent job must forbid direct default-branch writes.")
+
+scheduling_required = defs.get("scheduling", {}).get("required", [])
+for field in ("dispatchRevision","dispatchState","dispatchWaveRef","resourceLeaseRefs","claimPolicy","claimWindow"):
+    if field not in scheduling_required:
+        fail(f"Agent job scheduling missing {field}.")
+if defs.get("claimWindow", {}).get("properties", {}).get("onExpired", {}).get("const") != "RECONCILE_WITH_MASTER":
+    fail("Expired job claim windows must reconcile with MASTER.")
+
+output_required = defs.get("outputContract", {}).get("required", [])
+for field in ("machineResult","humanReadableResult","evidenceRoot","auditRoot","requiredOutputs","gitTraceRequired"):
+    if field not in output_required:
+        fail(f"Agent job output contract missing {field}.")
+
+verify_required = defs.get("verificationContract", {}).get("required", [])
+for field in ("acceptanceCriteria","evidenceRequirements","review","selfAcceptanceAllowed","acceptanceAuthority"):
+    if field not in verify_required:
+        fail(f"Agent job verification contract missing {field}.")
+if defs.get("verificationContract", {}).get("properties", {}).get("selfAcceptanceAllowed", {}).get("const") is not False:
+    fail("Agent job must forbid self acceptance.")
+if defs.get("verificationContract", {}).get("properties", {}).get("acceptanceAuthority", {}).get("const") != "MASTER":
+    fail("MASTER must own job acceptance authority.")
+
+constraints = defs.get("constraints", {}).get("properties", {})
+for field in ("mayExpandScope","mayModifyMasterState","mayModifyJobContract","mayModifyAgentIdentity","mayModifyInboxIndex","mayModifySchedulerState","mayModifyResourceLease","mayChangeRole","mayDelegate"):
+    if constraints.get(field, {}).get("const") is not False:
+        fail(f"Agent job constraint {field} must be false.")
+
+projection = defs.get("humanReadableProjection", {})
+projection_required = projection.get("required", [])
+for field in ("repository","ref","format","blobSha","authoritative","generatedFromJson","requiredSections","readbackRequiredBeforeReady"):
+    if field not in projection_required:
+        fail(f"Agent job HUMAN projection missing {field}.")
+projection_props = projection.get("properties", {})
+if projection_props.get("authoritative", {}).get("const") is not False:
+    fail("HUMAN job projection must be non-authoritative.")
+if projection_props.get("generatedFromJson", {}).get("const") is not True:
+    fail("HUMAN job projection must be generated from JSON.")
+if projection_props.get("readbackRequiredBeforeReady", {}).get("const") is not True:
+    fail("HUMAN job projection must be read back before READY.")
+projection_sections = defs.get("jobProjectionSections", {})
+if projection_sections.get("minItems") != 14 or projection_sections.get("maxItems") != 14:
+    fail("HUMAN job projection must contain all fourteen required sections.")
 inbox_index_schema = modules.get("schemaAgentInboxIndex", {}).get("content", {})
 if inbox_index_schema.get("properties", {}).get("authoritativeLifecycle", {}).get("const") is not False:
     fail("Agent inbox index schema must be non-authoritative.")
@@ -194,16 +325,6 @@ for field in ("schedulerStateRef","activeDispatchWaveRefs","resourceLeaseRefs"):
     if field not in execution_schema.get("required", []):
         fail(f"Execution state missing scheduler reference {field}.")
 
-for field in ("dispatchWaveRef","resourceLeaseRefs","resourceAccessSource","resourceAccess","gitWorkspaces"):
-    if field not in job_schema.get("required", []):
-        fail(f"Agent job schema missing {field}.")
-branch_pattern = job_schema.get("$defs", {}).get("gitWorkspace", {}).get("properties", {}).get("branch", {}).get("pattern")
-if branch_pattern != "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$":
-    fail("Agent job branch pattern must use Git-ref-safe job/agent keys.")
-result_target_required = job_schema.get("properties", {}).get("resultTarget", {}).get("required", [])
-if "humanReadableResultRef" not in result_target_required:
-    fail("Agent job must require a HUMAN-readable result target.")
-
 for field in ("humanReadableReport","gitTrace"):
     if field not in result_schema.get("required", []):
         fail(f"Agent result schema missing {field}.")
@@ -260,10 +381,10 @@ if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
 if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
     fail("Release manifest latest alias mismatch.")
-if manifest.get("sourceRoot") != "v0.7.0":
-    fail("Release manifest source root must be v0.7.0.")
-if bundle.get("schemaVersion") != "0.7.0":
-    fail("Complete bundle schemaVersion must be 0.7.0.")
+if manifest.get("sourceRoot") != "v0.8.0":
+    fail("Release manifest source root must be v0.8.0.")
+if bundle.get("schemaVersion") != "0.8.0":
+    fail("Complete bundle schemaVersion must be 0.8.0.")
 versioned_bundle = load_json(expected_versioned)
 if versioned_bundle != bundle:
     fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")
@@ -328,3 +449,5 @@ print("- Factory-bound Discovery/Planning/Evidence: verified")
 print("- Multi-agent conflict-aware scheduling: verified")
 print("- Git-isolated agent mutations: verified")
 print("- HUMAN-readable agent results + Git trace: verified")
+print("- Canonical explicit agent jobs: package/sequence/provenance/role/skills/rights/return routes verified")
+print("- HUMAN-readable agent job projection: verified")
