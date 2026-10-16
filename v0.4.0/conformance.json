@@ -1,7 +1,7 @@
 {
-  "format": "SAF_CONFORMANCE_SUITE",
+  "format": "SAFOR_CONFORMANCE_SUITE",
   "schemaVersion": "0.4.0",
-  "purpose": "Declarative architecture checks for the modular SAF MASTER baseline.",
+  "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
   "assertions": [
     {
       "id": "CF-001",
@@ -95,7 +95,7 @@
     },
     {
       "id": "CF-019",
-      "statement": "Direct HUMAN communication uses the SAF_HUMAN_BUDDY profile.",
+      "statement": "Direct HUMAN communication uses the SAFOR_HUMAN_BUDDY profile.",
       "expected": true
     },
     {
@@ -180,7 +180,7 @@
     },
     {
       "id": "CF-036",
-      "statement": "SAF controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
+      "statement": "SAFOR controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
       "expected": true
     },
     {
@@ -225,7 +225,7 @@
     },
     {
       "id": "CF-045",
-      "statement": "When automatic recovery is unsafe or exhausted, SAF escalates concisely to the HUMAN with the smallest required action.",
+      "statement": "When automatic recovery is unsafe or exhausted, SAFOR escalates concisely to the HUMAN with the smallest required action.",
       "expected": true
     },
     {
@@ -240,7 +240,7 @@
     },
     {
       "id": "CF-048",
-      "statement": "SAF never auto-creates safor-memory or substitutes another control repository in this baseline.",
+      "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
       "expected": true
     },
     {
