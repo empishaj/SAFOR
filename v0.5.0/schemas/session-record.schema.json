@@ -1,0 +1,126 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:session-record:0.5.0",
+  "title": "SAFOR Session Record 0.5.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "sessionId",
+    "projectId",
+    "actorId",
+    "actorKind",
+    "host",
+    "llm",
+    "baseMemoryRevision",
+    "startedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_SESSION_RECORD"
+    },
+    "schemaVersion": {
+      "const": "0.5.0"
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actorId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actorKind": {
+      "enum": [
+        "HUMAN",
+        "AGENT",
+        "SERVICE"
+      ]
+    },
+    "host": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "product"
+      ],
+      "properties": {
+        "product": {
+          "type": "string",
+          "minLength": 1
+        },
+        "instanceRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "llm": {
+      "$ref": "#/$defs/llm"
+    },
+    "baseMemoryRevision": {
+      "type": [
+        "string",
+        "integer",
+        "null"
+      ]
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "endedAt": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "llm": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "used",
+        "observability"
+      ],
+      "properties": {
+        "used": {
+          "type": "boolean"
+        },
+        "observability": {
+          "enum": [
+            "OBSERVED",
+            "PARTIALLY_OBSERVED",
+            "NOT_EXPOSED"
+          ]
+        },
+        "provider": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "model": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "modelVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}
