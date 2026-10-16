@@ -5,7 +5,7 @@
   "assertions": [
     {
       "id": "CF-001",
-      "statement": "SAF-MASTER.json is the single portable bootstrap entrypoint.",
+      "statement": "SAFOR-MASTER.json is the single portable bootstrap entrypoint.",
       "expected": true
     },
     {
@@ -125,7 +125,7 @@
     },
     {
       "id": "CF-025",
-      "statement": "Loading SAF-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
+      "statement": "Loading SAFOR-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
       "expected": true
     },
     {
