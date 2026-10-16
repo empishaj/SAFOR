@@ -1,7 +1,7 @@
 {
   "format": "SAF_SELF_HEALING_MODEL",
   "schemaVersion": "0.4.0",
-  "id": "SAF-CONSERVATIVE-SELF-HEALING",
+  "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
   "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
   "principles": {
     "conservativeByDefault": true,
