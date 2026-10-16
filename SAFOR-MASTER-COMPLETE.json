@@ -14,7 +14,7 @@
       "CANONICAL_REPOSITORY_FALLBACK"
     ],
     "embeddedModulesAuthoritativeForBootstrap": true,
-    "canonicalRepository": "empishaj/SAFOR.",
+    "canonicalRepository": "empishaj/SAFOR",
     "canonicalBranch": "main",
     "absoluteRuntimePrerequisite": {
       "repositoryPattern": "{selectedOwner}/safor-memory",
@@ -57,7 +57,7 @@
     "selfHealingRule": "Use the embedded conservative self-healing model."
   },
   "productRepository": {
-    "repository": "empishaj/SAFOR.",
+    "repository": "empishaj/SAFOR",
     "role": "CANONICAL_SAFOR_PRODUCT_REPOSITORY",
     "independentFromHumanProjectContext": true
   },
@@ -974,7 +974,7 @@
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
-            "repository": "empishaj/SAFOR.",
+            "repository": "empishaj/SAFOR",
             "root": "v0.4.0",
             "registry": "package-registry.json"
           },
