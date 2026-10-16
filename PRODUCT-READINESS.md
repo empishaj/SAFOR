@@ -17,8 +17,8 @@ Current target: **v0.5.0-rc.1**
 | Plastic/Unity Version Control provider contract | PASS |
 | Host filesystem Memory contract | PASS |
 | Factory-specific Discovery/Planning/Evidence | PASS |
-| Reproducible single-file build | PENDING CI |
-| v0.5 validator | PENDING CI |
+| Reproducible single-file build | PASS · run 38931573636 |
+| v0.5 validator | PASS · run 38931573636 |
 
 ## Empirical RC gates
 
