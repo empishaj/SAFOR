@@ -1,0 +1,217 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.5.0",
+  "packageId": "safor.om.book-authoring",
+  "packageKind": "OPERATING_MODEL",
+  "version": "0.1.0",
+  "name": "Book Authoring Reference Operating Model",
+  "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
+  "compatibility": {
+    "kernel": ">=0.5.0 <0.6.0"
+  },
+  "exports": {
+    "capabilities": [
+      "book_intent",
+      "audience_definition",
+      "research",
+      "outline_design",
+      "authoring",
+      "fact_check",
+      "editorial_review",
+      "proofreading",
+      "publication_preparation",
+      "reader_outcome_assessment"
+    ],
+    "authorities": [
+      "book_scope_approval",
+      "book_structure_approval",
+      "publication_approval",
+      "reader_outcome_acceptance"
+    ],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "providerCapabilities": [],
+    "memoryCapabilities": []
+  },
+  "dependencies": [],
+  "model": {
+    "maturity": "REFERENCE_EXAMPLE",
+    "roles": [
+      {
+        "id": "BOOK_SPONSOR",
+        "unit": "sponsorship",
+        "capabilities": [
+          "book_intent"
+        ],
+        "authorities": [
+          "book_scope_approval"
+        ]
+      },
+      {
+        "id": "AUTHOR",
+        "unit": "authoring",
+        "capabilities": [
+          "authoring",
+          "outline_design"
+        ],
+        "authorities": [
+          "book_structure_approval"
+        ]
+      },
+      {
+        "id": "RESEARCHER",
+        "unit": "research",
+        "capabilities": [
+          "research"
+        ],
+        "authorities": []
+      },
+      {
+        "id": "SUBJECT_MATTER_REVIEWER",
+        "unit": "review",
+        "capabilities": [
+          "fact_check"
+        ],
+        "authorities": []
+      },
+      {
+        "id": "EDITOR",
+        "unit": "editorial",
+        "capabilities": [
+          "editorial_review",
+          "audience_definition"
+        ],
+        "authorities": []
+      },
+      {
+        "id": "PROOFREADER",
+        "unit": "editorial",
+        "capabilities": [
+          "proofreading"
+        ],
+        "authorities": []
+      },
+      {
+        "id": "PUBLISHING_OWNER",
+        "unit": "publishing",
+        "capabilities": [
+          "publication_preparation"
+        ],
+        "authorities": [
+          "publication_approval"
+        ]
+      },
+      {
+        "id": "READER_ANALYST",
+        "unit": "analytics",
+        "capabilities": [
+          "reader_outcome_assessment"
+        ],
+        "authorities": [
+          "reader_outcome_acceptance"
+        ]
+      }
+    ],
+    "capabilityBindings": [
+      {
+        "capabilityId": "book_intent",
+        "eligibleRoles": [
+          "BOOK_SPONSOR",
+          "AUTHOR"
+        ]
+      },
+      {
+        "capabilityId": "audience_definition",
+        "eligibleRoles": [
+          "EDITOR"
+        ]
+      },
+      {
+        "capabilityId": "research",
+        "eligibleRoles": [
+          "RESEARCHER"
+        ]
+      },
+      {
+        "capabilityId": "outline_design",
+        "eligibleRoles": [
+          "AUTHOR"
+        ]
+      },
+      {
+        "capabilityId": "authoring",
+        "eligibleRoles": [
+          "AUTHOR"
+        ]
+      },
+      {
+        "capabilityId": "fact_check",
+        "eligibleRoles": [
+          "SUBJECT_MATTER_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "editorial_review",
+        "eligibleRoles": [
+          "EDITOR"
+        ]
+      },
+      {
+        "capabilityId": "proofreading",
+        "eligibleRoles": [
+          "PROOFREADER"
+        ]
+      },
+      {
+        "capabilityId": "publication_preparation",
+        "eligibleRoles": [
+          "PUBLISHING_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "reader_outcome_assessment",
+        "eligibleRoles": [
+          "READER_ANALYST"
+        ]
+      }
+    ],
+    "authorityBindings": [
+      {
+        "authorityId": "book_scope_approval",
+        "eligibleRoles": [
+          "BOOK_SPONSOR"
+        ]
+      },
+      {
+        "authorityId": "book_structure_approval",
+        "eligibleRoles": [
+          "AUTHOR",
+          "BOOK_SPONSOR"
+        ]
+      },
+      {
+        "authorityId": "publication_approval",
+        "eligibleRoles": [
+          "PUBLISHING_OWNER"
+        ]
+      },
+      {
+        "authorityId": "reader_outcome_acceptance",
+        "eligibleRoles": [
+          "READER_ANALYST",
+          "BOOK_SPONSOR"
+        ]
+      }
+    ],
+    "separationOfDuties": [
+      {
+        "id": "SOD-FACT-CHECK",
+        "rule": "When independent fact checking is required, the fact-checking actor must differ from the author of the reviewed content."
+      },
+      {
+        "id": "SOD-PROOF",
+        "rule": "A configured independent proofread must be performed by an actor other than the author of the final manuscript revision."
+      }
+    ]
+  }
+}
