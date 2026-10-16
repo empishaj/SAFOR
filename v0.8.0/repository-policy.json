@@ -133,6 +133,7 @@
       "agents/{agentId}/identity.json",
       "agents/{agentId}/inbox/index.json",
       "agents/{agentId}/inbox/{jobId}.json",
+      "agents/{agentId}/inbox/{jobId}.md",
       "master/jobs/{jobId}.json",
       "master/scheduler/state.json",
       "master/dispatch-waves/{waveId}.json",
@@ -145,11 +146,14 @@
       "agents/{agentId}/audit/",
       "agents/{agentId}/outbox/{jobId}.result.md"
     ],
-    "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts, scheduler state, dispatch waves, resource leases or MASTER job lifecycle artifacts.",
+    "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, canonical job JSON, HUMAN job Markdown, scheduler state, dispatch waves, resource leases or MASTER job lifecycle artifacts.",
     "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant.",
     "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required.",
     "humanReadableResultRule": "Every agent job persists both outbox/{jobId}.result.json and outbox/{jobId}.result.md. The JSON pins the Markdown blob and control-repository commit.",
-    "gitTraceRule": "Every mutating agent job must use only MASTER-declared dedicated job branches, report resulting commit SHAs and changed paths, and provide provider readback evidence. Direct default-branch mutation by an agent is forbidden."
+    "gitTraceRule": "Every mutating agent job must use only MASTER-declared dedicated job branches, report resulting commit SHAs and changed paths, and provide provider readback evidence. Direct default-branch mutation by an agent is forbidden.",
+    "humanReadableJobRule": "MASTER creates agents/{agentId}/inbox/{jobId}.md as a non-authoritative projection of the immutable JSON job contract. JSON pins the Markdown blob identity. Both artifacts require provider readback before the job is exposed as READY.",
+    "jobAuthorizationRule": "Repository/provider permissions declared in a job are maximum permitted scope only. Actual host/provider rights and active mandate/policy must independently allow every operation.",
+    "returnRouteRule": "Job outputContract fixes machine result, HUMAN result, evidence and audit destinations before dispatch; ad-hoc return paths are forbidden."
   },
   "multiAgentScheduling": {
     "modelRef": "multi-agent-scheduler-model.json",
@@ -163,5 +167,15 @@
     "unknownConflict": "SERIALIZE",
     "directAgentDefaultBranchWrite": false,
     "silentLeaseReassignment": false
+  },
+  "canonicalJobContract": {
+    "modelRef": "agent-job-contract-model.json",
+    "jsonPath": "agents/{agentId}/inbox/{jobId}.json",
+    "humanPath": "agents/{agentId}/inbox/{jobId}.md",
+    "jsonAuthoritative": true,
+    "markdownAuthoritative": false,
+    "immutableAfterDispatch": true,
+    "providerReadbackBeforeReady": true,
+    "agentMutationForbidden": true
   }
 }
