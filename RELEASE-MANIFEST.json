@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.7.0-rc.1",
+  "version": "0.8.0-rc.1",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
-  "sourceRoot": "v0.7.0",
-  "distributable": "SAFOR-MASTER-COMPLETE-v0.7.0-rc.1.json",
+  "sourceRoot": "v0.8.0",
+  "distributable": "SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json",
   "latestAlias": "SAFOR-MASTER-COMPLETE.json",
-  "previousVersion": "0.6.0-rc.1",
+  "previousVersion": "0.7.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -24,7 +24,14 @@
     "RESOURCE_LEASES_AND_AGENT_CAPACITY",
     "GIT_ISOLATED_AGENT_MUTATIONS",
     "HUMAN_READABLE_AGENT_RESULTS",
-    "PROVIDER_VERIFIABLE_AGENT_GIT_TRACE"
+    "PROVIDER_VERIFIABLE_AGENT_GIT_TRACE",
+    "CANONICAL_EXPLICIT_AGENT_JOB_CONTRACT",
+    "PACKAGE_AND_SEQUENCE_JOB_LINEAGE",
+    "MASTER_JOB_PROVENANCE",
+    "EXPLICIT_ROLE_AND_VERSIONED_SKILL_BINDING",
+    "GRANULAR_JOB_AUTHORIZATION",
+    "FIXED_JOB_RETURN_ROUTES",
+    "HUMAN_READABLE_AGENT_JOB_PROJECTION"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -34,6 +41,7 @@
     "GITLAB_END_TO_END_ACCEPTANCE",
     "AGENT_WORKSPACE_END_TO_END_ACCEPTANCE",
     "SIX_AGENT_PARALLEL_SCHEDULING_ACCEPTANCE",
-    "AGENT_GIT_TRACE_AND_HUMAN_RESULT_ACCEPTANCE"
+    "AGENT_GIT_TRACE_AND_HUMAN_RESULT_ACCEPTANCE",
+    "EXPLICIT_AGENT_JOB_CONTRACT_END_TO_END_ACCEPTANCE"
   ]
 }

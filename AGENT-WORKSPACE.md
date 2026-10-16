@@ -1,6 +1,6 @@
 # SAFOR Agent Workspace Protocol
 
-SAFOR v0.7 uses repository-native coordination for persistent agent chats.
+SAFOR v0.8 uses repository-native coordination for persistent agent chats.
 
 ## Goal
 
@@ -19,7 +19,8 @@ projects/{projectSlug}/
 │       ├── state.json
 │       ├── inbox/
 │       │   ├── index.json
-│       │   └── {jobId}.json
+│       │   ├── {jobId}.json
+│       │   └── {jobId}.md
 │       ├── outbox/
 │       │   ├── {jobId}.result.json
 │       │   └── {jobId}.result.md
@@ -38,6 +39,7 @@ projects/{projectSlug}/
 - `agents/{agentId}/identity.json`
 - `agents/{agentId}/inbox/index.json` — non-authoritative job discovery projection
 - `agents/{agentId}/inbox/{jobId}.json`
+- `agents/{agentId}/inbox/{jobId}.md` — HUMAN-readable non-authoritative job projection
 - `master/jobs/{jobId}.json`
 
 ### AGENT-owned
@@ -159,8 +161,15 @@ The MASTER verifies these Git claims before VERIFIED/ACCEPTED.
 
 ## Parallel scheduling
 
-Agent work is not dispatched merely because an inbox exists. SAFOR v0.7 routes agent jobs through the conflict-aware Multi-Agent Scheduler.
+Agent work is not dispatched merely because an inbox exists. SAFOR v0.8 routes agent jobs through the conflict-aware Multi-Agent Scheduler.
 
 The scheduler verifies dependency readiness, capability match, free agent slots, separation of duties, immutable read inputs and resource conflicts before dispatch. Mutating jobs receive dedicated `safor/job/{jobKey}/{agentKey}` branches.
 
 See [MULTI-AGENT-SCHEDULER.md](MULTI-AGENT-SCHEDULER.md).
+
+
+## Canonical job contract
+
+Every dispatch uses the v0.8 canonical Agent Job Contract. The JSON is authoritative and explicitly binds package/sequence lineage, MASTER provenance, target identity, role, versioned skills, task scope, immutable inputs, granular authorization, resource/Git workspace, dispatch wave/leases, result/evidence/audit return paths, acceptance criteria, review and stop conditions.
+
+MASTER also renders `inbox/{jobId}.md`. Its blob SHA is pinned in the JSON. Both artifacts are provider-read back before the job is exposed as READY.

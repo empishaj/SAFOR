@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.7.0-rc.1**
+Current target: **v0.8.0-rc.1**
 
-Current modular source: **`v0.7.0/`**
+Current modular source: **`v0.8.0/`**
 
 ## Release-candidate gates
 
@@ -21,6 +21,15 @@ Current modular source: **`v0.7.0/`**
 | Persistent repository-native agent identity | PASS by schema/conformance |
 | Agent inbox/outbox job protocol | PASS by schema/conformance |
 | MASTER-authoritative agent lifecycle | PASS by schema/conformance |
+| Canonical explicit agent job contract | PASS by schema/conformance |
+| Package/work-item/sequence job lineage | PASS by schema/conformance |
+| MASTER job provenance/timestamps | PASS by schema/conformance |
+| Explicit per-job role binding | PASS by schema/conformance |
+| Explicit versioned skill contract | PASS by schema/conformance |
+| Granular job authorization | PASS by schema/conformance |
+| Fixed result/evidence/audit return routes | PASS by schema/conformance |
+| HUMAN-readable job Markdown projection | PASS by schema/conformance |
+| Explicit Job Contract end-to-end acceptance | OPEN |
 | Conflict-aware multi-agent scheduler | PASS by schema/conformance |
 | ATOMIC/COMPOSITE work decomposition | PASS by schema/conformance |
 | Explicit agent scheduling capacity | PASS by schema/conformance |
@@ -32,8 +41,8 @@ Current modular source: **`v0.7.0/`**
 | Conflict-aware serialization acceptance | OPEN |
 | HUMAN-readable + Git-trace result acceptance | OPEN |
 | Agent Workspace end-to-end acceptance | OPEN |
-| Machine-readable validation | PASS on PR #5 validated head |
-| CI validation | PASS on PR #5 validated head |
+| Machine-readable validation | PASS on PR #6 validated head |
+| CI validation | PASS on PR #6 validated head |
 | Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |

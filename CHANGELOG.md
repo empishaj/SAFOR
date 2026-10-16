@@ -2,6 +2,31 @@
 
 All notable SAFOR product changes are documented here.
 
+## 0.8.0-rc.1 — 2026-10-17
+
+### Added
+- Canonical hierarchical Agent Job Contract.
+- UUIDv7 job identity plus separate HUMAN/Git-safe job key.
+- Package/work-item lineage with plan/package/dispatch/attempt/rework sequence.
+- MASTER creation provenance and timestamps.
+- Explicit per-job role contract.
+- Explicit versioned skill descriptions and execution instructions with immutable provenance.
+- Immutable read-only inputs.
+- Granular provider/repository/branch/write/merge/deploy permission contract.
+- Fixed result, HUMAN-report, evidence and audit return paths.
+- Mandatory HUMAN-readable `inbox/{jobId}.md` projection paired with authoritative JSON.
+- Explicit verification/review/acceptance and stop-condition contracts.
+
+### Changed
+- Agent jobs are no longer flat scope/permission records; they are self-describing execution contracts.
+- MASTER writes and reads back job JSON and job Markdown before READY.
+- Persistent agent identity no longer implicitly determines job role or skills.
+- Rework receives a new jobId and retains supersession lineage.
+- Product schema/kernel contract version advanced to 0.8.0.
+
+### Product status
+This version is a **Release Candidate**. Canonical explicit Job Contract end-to-end acceptance is required before GA.
+
 ## 0.7.0-rc.1 — 2026-10-16
 
 ### Added
