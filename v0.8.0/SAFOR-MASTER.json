@@ -1058,6 +1058,10 @@
     {
       "id": "INV-085",
       "rule": "MASTER acceptance evaluates the explicit verificationContract from the job; result submission and agent self-check never constitute acceptance."
+    },
+    {
+      "id": "INV-086",
+      "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
     }
   ],
   "evidencePolicy": {
