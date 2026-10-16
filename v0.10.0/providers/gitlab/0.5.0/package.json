@@ -1,0 +1,144 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.10.0",
+  "packageId": "safor.provider.gitlab",
+  "packageKind": "PROVIDER_ADAPTER",
+  "version": "0.5.0",
+  "name": "GitLab Provider Adapter Contract",
+  "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
+  "compatibility": {
+    "kernel": ">=0.10.0 <0.11.0"
+  },
+  "exports": {
+    "capabilities": [],
+    "authorities": [],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "providerCapabilities": [
+      "provider.identity.read",
+      "provider.namespace.list",
+      "provider.repository.list",
+      "provider.repository.read",
+      "provider.repository.create",
+      "provider.artifact.read",
+      "provider.artifact.write",
+      "provider.history.read",
+      "provider.branch.read",
+      "provider.branch.write",
+      "provider.change_request.read",
+      "provider.change_request.write",
+      "provider.change_request.merge",
+      "provider.checks.read",
+      "provider.issue.read",
+      "provider.issue.write"
+    ]
+  },
+  "dependencies": [],
+  "model": {
+    "providerId": "gitlab",
+    "terminology": {
+      "changeRequest": "merge_request",
+      "repository": "project_repository",
+      "branch": "branch",
+      "issue": "issue",
+      "checks": "pipelines_or_jobs"
+    },
+    "capabilitySemantics": [
+      {
+        "capability": "provider.identity.read",
+        "providerOperation": "read_authenticated_identity"
+      },
+      {
+        "capability": "provider.repository.list",
+        "providerOperation": "list_projects_for_selected_namespace_with_last_activity_metadata"
+      },
+      {
+        "capability": "provider.namespace.list",
+        "providerOperation": "list_authenticated_user_and_accessible_group_namespaces"
+      },
+      {
+        "capability": "provider.repository.read",
+        "providerOperation": "read_project_repository_metadata_and_stable_id"
+      },
+      {
+        "capability": "provider.repository.create",
+        "providerOperation": "create_project_repository_after_explicit_authorization"
+      },
+      {
+        "capability": "provider.artifact.read",
+        "providerOperation": "read_repository_file_at_ref"
+      },
+      {
+        "capability": "provider.artifact.write",
+        "providerOperation": "write_repository_file_with_revision_control"
+      },
+      {
+        "capability": "provider.history.read",
+        "providerOperation": "read_commit_history_or_revision"
+      },
+      {
+        "capability": "provider.branch.read",
+        "providerOperation": "read_branch_or_ref"
+      },
+      {
+        "capability": "provider.branch.write",
+        "providerOperation": "create_or_update_branch_with_expected_revision_when_supported"
+      },
+      {
+        "capability": "provider.change_request.read",
+        "providerOperation": "read_merge_request_and_review_evidence"
+      },
+      {
+        "capability": "provider.change_request.write",
+        "providerOperation": "create_or_update_merge_request"
+      },
+      {
+        "capability": "provider.change_request.merge",
+        "providerOperation": "merge_merge_request_when_authorized_and_checks_allow"
+      },
+      {
+        "capability": "provider.checks.read",
+        "providerOperation": "read_pipeline_or_job_evidence"
+      },
+      {
+        "capability": "provider.issue.read",
+        "providerOperation": "read_issue"
+      },
+      {
+        "capability": "provider.issue.write",
+        "providerOperation": "create_or_update_issue"
+      }
+    ],
+    "runtimeBinding": {
+      "strategy": "DISCOVER_ACTUAL_HOST_TOOLS",
+      "rule": "Never treat this manifest as proof that a host exposes a GitLab tool or that the authenticated account has a permission."
+    },
+    "writeSafety": {
+      "readCurrentRevisionBeforeWrite": true,
+      "readbackAfterWrite": true,
+      "unknownOutcome": "RECONCILE_REQUIRED"
+    },
+    "initializationSupport": {
+      "ownerResolution": {
+        "personalNamespace": "authenticated_user_namespace",
+        "organizationNamespaces": "accessible_groups_or_subgroups",
+        "stableIdentity": "namespace_or_group_id"
+      },
+      "permissionVerification": {
+        "baseline": "Prove project metadata read plus repository file write and branch write through actual host/provider capabilities.",
+        "ownerScoped": "After namespace selection, verify projects can be listed and target projects can be read/written.",
+        "newProject": "Project/repository creation capability is additionally required for NEW mode."
+      },
+      "recentRepositoryDiscovery": {
+        "activityWindowDays": 7,
+        "fields": [
+          "last_activity_at"
+        ],
+        "normalizedField": "lastActivityAt",
+        "rule": "Use last_activity_at as the provider activity timestamp.",
+        "fallback": "latest_default_branch_commit_at",
+        "sort": "lastActivityAt DESC"
+      }
+    }
+  }
+}
