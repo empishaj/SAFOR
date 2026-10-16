@@ -11,6 +11,7 @@ SAFOR
 + Factory
 + Provider Adapter
 + Project State
++ Agent Workspace Protocol
 + Evidence
 + HUMAN Authority
 ```
@@ -31,6 +32,9 @@ Maps provider-neutral capabilities onto the actual GitHub/GitLab tools exposed b
 
 ### Project Instance
 Binds the selected Factory and Operating Model to concrete actors, repositories, state, decisions and evidence.
+
+### Agent Workspace Protocol
+Provides repository-native persistent identities and job handoff for agent actors. MASTER writes identity, inbox contracts and authoritative job lifecycle. Agents write only their own runtime state, outbox results, evidence and audit records. HUMAN prompt copying is not authoritative job transport.
 
 ## Repository separation
 
@@ -95,3 +99,28 @@ Self-healing cannot expand mandates, bypass HUMAN gates/reviews, force-push, rew
 ## HUMAN interface
 
 SAFOR uses chat-native UI only. It may use native buttons, selects, cards and Markdown exposed by the host. It does not inject custom HTML/CSS/JavaScript UI.
+
+
+## Repository-native agent execution
+
+```text
+MASTER
+  │
+  ├─ agents/index.json
+  ├─ agents/{agentId}/identity.json
+  ├─ agents/{agentId}/inbox/{jobId}.json
+  └─ master/jobs/{jobId}.json
+                    │
+                    ▼
+                AGENT CHAT
+                    │
+                    ├─ state.json
+                    ├─ outbox/{jobId}.result.json
+                    └─ evidence/{jobId}/
+                    │
+                    ▼
+                  MASTER
+          verifies result + evidence
+```
+
+The agent receives its identity once. Subsequent jobs are retrieved from its repository workspace. A normal chat still requires an external HUMAN, automation or host-supported activation trigger; SAFOR does not assume autonomous background wakeup.
