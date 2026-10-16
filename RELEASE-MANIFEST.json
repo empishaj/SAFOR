@@ -5,7 +5,7 @@
   "expansion": "Systemic AI Factory Orchestration Runtime",
   "version": "0.4.0-rc.1",
   "status": "RELEASE_CANDIDATE",
-  "canonicalRepository": "empishaj/SAFOR.",
+  "canonicalRepository": "empishaj/SAFOR",
   "distributable": "SAFOR-MASTER-COMPLETE.json",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
@@ -14,7 +14,6 @@
   ],
   "validationCommand": "python tools/validate_safor.py",
   "gaBlockers": [
-    "RENAME_PRODUCT_REPOSITORY_TO_SAFOR_WITHOUT_TRAILING_DOT",
     "HUMAN_LICENSE_DECISION",
     "GITHUB_END_TO_END_ACCEPTANCE",
     "GITLAB_END_TO_END_ACCEPTANCE"
