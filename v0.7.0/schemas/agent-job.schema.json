@@ -339,7 +339,9 @@
         "baseCommitSha",
         "branch",
         "allowedPaths",
-        "mergeAuthority"
+        "mergeAuthority",
+        "jobKey",
+        "agentKey"
       ],
       "properties": {
         "repository": {
@@ -352,7 +354,7 @@
         },
         "branch": {
           "type": "string",
-          "pattern": "^safor/job/[A-Za-z0-9._:-]+/[A-Za-z0-9._:-]+$"
+          "pattern": "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"
         },
         "allowedPaths": {
           "type": "array",
@@ -365,6 +367,14 @@
         },
         "mergeAuthority": {
           "const": "MASTER_OR_EXPLICIT_AUTHORITY"
+        },
+        "jobKey": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+        },
+        "agentKey": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
         }
       }
     }
