@@ -657,11 +657,121 @@
       "id": "CF-131",
       "statement": "Initialization begins with INIT-00 and STOPs if exact module-profile coverage or recovery-control integrity cannot be proven.",
       "expected": true
+    },
+    {
+      "id": "CF-132",
+      "statement": "The Interaction Model contains a schema-bound humanCognitiveLoadPolicy with explicit phase profiles for BOOTSTRAP, DISCOVERY, PLANNING, SCHEDULING, AGENT_COORDINATION, EXECUTION, RECOVERY, OUTCOME and CLOSING.",
+      "expected": true
+    },
+    {
+      "id": "CF-133",
+      "statement": "DISCOVERY target HUMAN load is HIGH while SCHEDULING and AGENT_COORDINATION target VERY_LOW, EXECUTION/RECOVERY target LOW, and OUTCOME target MEDIUM.",
+      "expected": true
+    },
+    {
+      "id": "CF-134",
+      "statement": "Every phase profile limits new HUMAN decision contexts to one per turn and hides technical detail by default.",
+      "expected": true
+    },
+    {
+      "id": "CF-135",
+      "statement": "The Cognitive Load Policy requires derive-before-ask and reuse of unchanged decisions.",
+      "expected": true
+    },
+    {
+      "id": "CF-136",
+      "statement": "The heuristic load estimate explicitly declares that it is not a psychometric measurement instrument and spans 0–100 with phase maxima.",
+      "expected": true
+    },
+    {
+      "id": "CF-137",
+      "statement": "The HUMAN Decision Gate defaults to DO_NOT_ASK and allows HUMAN interaction only for enumerated legitimate reasons.",
+      "expected": true
+    },
+    {
+      "id": "CF-138",
+      "statement": "The HUMAN Decision Gate explicitly forbids delegating job IDs, deterministic agent selection, branch creation, leases, dispatch waves, readbacks, evidence collection, recovery-profile selection and internal transitions to HUMAN.",
+      "expected": true
+    },
+    {
+      "id": "CF-139",
+      "statement": "Unchanged active HUMAN decisions with the same scope and materially unchanged bound inputs are reused and not requested again.",
+      "expected": true
+    },
+    {
+      "id": "CF-140",
+      "statement": "Normal K10 creation-profile binding is deterministic and has no unconditional HUMAN decision; K10A exists only for non-standard, changed or conflicting bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-141",
+      "statement": "Discovery questions are Decision-Gate governed but may retain HIGH cognitive load for non-derivable HUMAN intent/domain knowledge.",
+      "expected": true
+    },
+    {
+      "id": "CF-142",
+      "statement": "After plan approval, default HUMAN load falls to LOW/VERY_LOW unless a legitimate material escalation reason applies.",
+      "expected": true
+    },
+    {
+      "id": "CF-143",
+      "statement": "Execution and Recovery use exception-oriented HUMAN interaction instead of requiring confirmations for successful internal transitions.",
+      "expected": true
+    },
+    {
+      "id": "CF-144",
+      "statement": "Persistent agent identities and existing execution mandates are reused within unchanged scope without repeated HUMAN approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-145",
+      "statement": "The default HUMAN language policy hides internal SAFOR terms/technical IDs and provides HUMAN-domain mappings.",
+      "expected": true
+    },
+    {
+      "id": "CF-146",
+      "statement": "Primary actions use dynamic domain labels and fallback to 'Weiter'; internal action IDs are forbidden default HUMAN labels.",
+      "expected": true
+    },
+    {
+      "id": "CF-147",
+      "statement": "Interaction menu state requires phase, cognitive-load target, decision reason, gate outcome and heuristic load metadata.",
+      "expected": true
+    },
+    {
+      "id": "CF-148",
+      "statement": "A decision-required interaction menu must carry a legitimate interactionReason and ALLOW_ASK gate outcome.",
+      "expected": true
+    },
+    {
+      "id": "CF-149",
+      "statement": "The HUMAN Decision Gate and Cognitive Load Policy have dedicated JSON Schemas and kernel references.",
+      "expected": true
+    },
+    {
+      "id": "CF-150",
+      "statement": "HUMAN interaction governance has module self-healing profiles and failure class SH-19.",
+      "expected": true
+    },
+    {
+      "id": "CF-151",
+      "statement": "If interaction governance is invalid, SAFOR suppresses nonessential questions/fails closed and never infers HUMAN approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-152",
+      "statement": "SUMMARY communication answers what happened, project meaning, whether HUMAN action is required and what happens next, while technical evidence remains behind Details.",
+      "expected": true
+    },
+    {
+      "id": "CF-153",
+      "statement": "Every explicit kernel HUMAN-decision action carries a humanInteractionContract with gate ref, phase, legitimate reason, load target, one-decision limit and derive/reuse semantics.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
-    "branch": "safor/module-self-healing-v0.10.0-rc.1",
+    "branch": "safor/human-cognitive-load-v0.10.0-rc.1",
     "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-    "note": "Module-wide profile-constrained self-healing added for every embedded module. CI and module-recovery end-to-end acceptance remain required."
+    "note": "Phase-aware HUMAN cognitive-load governance and derive-before-ask Decision Gate implemented. Machine validation and cognitive-load acceptance remain required."
   }
 }
