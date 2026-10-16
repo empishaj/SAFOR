@@ -32,7 +32,15 @@
         "mode",
         "status",
         "headline",
-        "summary"
+        "summary",
+        "phase",
+        "cognitiveLoadTarget",
+        "interactionReason",
+        "decisionRequired",
+        "technicalDetailExposure",
+        "decisionGateOutcome",
+        "heuristicLoadEstimate",
+        "reusedDecisionRef"
       ],
       "properties": {
         "projectId": {
@@ -70,6 +78,81 @@
             "null"
           ],
           "maxLength": 100
+        },
+        "phase": {
+          "enum": [
+            "BOOTSTRAP",
+            "DISCOVERY",
+            "PLANNING",
+            "SCHEDULING",
+            "AGENT_COORDINATION",
+            "EXECUTION",
+            "RECOVERY",
+            "OUTCOME",
+            "CLOSING"
+          ]
+        },
+        "cognitiveLoadTarget": {
+          "enum": [
+            "VERY_LOW",
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "interactionReason": {
+          "anyOf": [
+            {
+              "enum": [
+                "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                "HUMAN_CONTROLLED_TARGET_SELECTION",
+                "MATERIAL_ALTERNATIVE_CHOICE",
+                "SCOPE_CHANGE_REQUIRED",
+                "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                "IRREVERSIBLE_ACTION_REQUIRED",
+                "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                "RECOVERY_CANNOT_PROCEED_SAFELY",
+                "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+              ]
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "decisionRequired": {
+          "type": "boolean"
+        },
+        "technicalDetailExposure": {
+          "enum": [
+            "SUMMARY",
+            "DETAILS_REQUIRED"
+          ]
+        },
+        "decisionGateOutcome": {
+          "enum": [
+            "ALLOW_ASK",
+            "SUPPRESS_DERIVABLE",
+            "REUSE_EXISTING_DECISION",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "heuristicLoadEstimate": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0,
+          "maximum": 100
+        },
+        "reusedDecisionRef": {
+          "type": [
+            "string",
+            "null"
+          ]
         }
       }
     },
@@ -169,5 +252,50 @@
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "context": {
+            "properties": {
+              "decisionRequired": {
+                "const": true
+              }
+            }
+          }
+        },
+        "required": [
+          "context"
+        ]
+      },
+      "then": {
+        "properties": {
+          "context": {
+            "properties": {
+              "interactionReason": {
+                "enum": [
+                  "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                  "HUMAN_CONTROLLED_TARGET_SELECTION",
+                  "MATERIAL_ALTERNATIVE_CHOICE",
+                  "SCOPE_CHANGE_REQUIRED",
+                  "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                  "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                  "IRREVERSIBLE_ACTION_REQUIRED",
+                  "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                  "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                  "RECOVERY_CANNOT_PROCEED_SAFELY",
+                  "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                  "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+                ]
+              },
+              "decisionGateOutcome": {
+                "const": "ALLOW_ASK"
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }
