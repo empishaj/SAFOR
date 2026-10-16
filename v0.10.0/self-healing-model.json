@@ -243,6 +243,19 @@
       "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
       "defaultRetryBudget": 0,
       "requiresHuman": true
+    },
+    {
+      "id": "SH-19",
+      "name": "HUMAN_INTERACTION_GOVERNANCE_FAILURE",
+      "examples": [
+        "human decision gate invalid",
+        "cognitive-load policy invalid",
+        "unnecessary repeated approval detected",
+        "technical interaction surface violates phase load target"
+      ],
+      "automaticRepair": "RESTORE_VERIFIED_INTERACTION_GOVERNANCE_OR_SUPPRESS_NONESSENTIAL_ASK",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "ONLY_MINIMUM_SAFE_BLOCKER_IF_GOVERNANCE_CANNOT_BE_RESTORED"
     }
   ],
   "eligibilityRules": [
@@ -258,7 +271,9 @@
     "A module profile marked IMMUTABLE_VALIDATE_ONLY may never be semantically rewritten automatically.",
     "A module profile marked REGENERATE_DERIVED_ONLY may mutate only declared derived artifacts, never its authoritative source.",
     "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
-    "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates."
+    "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates.",
+    "Interaction recovery may simplify or suppress a nonessential question, but may never infer a HUMAN decision, approval, risk acceptance or new authority.",
+    "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate."
   ],
   "forbiddenAutomaticRepairs": [
     "FORCE_PUSH",
@@ -278,7 +293,9 @@
     "AUTO_COERCE_AUTHORITATIVE_STATE_TO_PASS_SCHEMA",
     "AUTO_ELEVATE_PROVIDER_PERMISSION",
     "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
-    "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS"
+    "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS",
+    "INFER_HUMAN_APPROVAL_DURING_INTERACTION_RECOVERY",
+    "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE"
   ],
   "retryPolicy": {
     "key": "failureFingerprint",
