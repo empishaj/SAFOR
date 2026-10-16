@@ -119,28 +119,28 @@
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.9.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "171db014314878b7f3864cc2f93000a3a0e8c1b8",
+      "sourcePath": "v0.10.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "6439c4141d38040baa8530461ca0364aff87d818",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
-      "sourcePath": "v0.9.0/initialization-model.json",
-      "sourceBlobSha": "4338106c6be0abb3db15a45a4407b1dee42e38a8",
+      "sourcePath": "v0.10.0/initialization-model.json",
+      "sourceBlobSha": "0235ad42b011812c8a262d0f5e9c9e7414f2d8bd",
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
-      "sourcePath": "v0.9.0/interaction-model.json",
-      "sourceBlobSha": "a2d7e0b926dda7bc890f4dfdc38d68751169a8e1",
+      "sourcePath": "v0.10.0/interaction-model.json",
+      "sourceBlobSha": "4d881f7adb833bcf3422c4cdde90e8671e571a6b",
       "selfHealingProfileId": "MRP-INTERACTION"
     },
     "selfHealing": {
-      "sourcePath": "v0.9.0/self-healing-model.json",
-      "sourceBlobSha": "2f2a39bc0603544da9b18e9d346f278b921b3abd",
+      "sourcePath": "v0.10.0/self-healing-model.json",
+      "sourceBlobSha": "15af978aad1de0dd7125b03bc9aa00d143a3e2bb",
       "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "agentWorkspace": {
-      "sourcePath": "v0.9.0/agent-workspace-model.json",
-      "sourceBlobSha": "8514e1f07f5eb56adf9e97ef887d4b90f57b1ed4",
+      "sourcePath": "v0.10.0/agent-workspace-model.json",
+      "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
       "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "repositoryPolicy": {
@@ -304,8 +304,8 @@
       "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
     },
     "moduleSelfHealing": {
-      "sourcePath": "v0.9.0/module-self-healing-model.json",
-      "sourceBlobSha": "c12510b30d4768b6c62bc655988748af53510a7c",
+      "sourcePath": "v0.10.0/module-self-healing-model.json",
+      "sourceBlobSha": "cef17aecc1f3d278f2d9ed998d81ecf6927b2b4d",
       "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
     },
     "schemaModuleRecoveryProfile": {
@@ -332,12 +332,12 @@
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.9.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "171db014314878b7f3864cc2f93000a3a0e8c1b8",
+      "sourcePath": "v0.10.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "6439c4141d38040baa8530461ca0364aff87d818",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.9.0",
-        "kernelVersion": "0.9.0",
+        "schemaVersion": "0.10.0",
+        "kernelVersion": "0.10.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
         "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -401,7 +401,14 @@
           "moduleWideSelfHealing": true,
           "exactRecoveryProfileCoverage": true,
           "failClosedRecoveryControl": true,
-          "noSemanticAutoRewrite": true
+          "noSemanticAutoRewrite": true,
+          "phaseAwareHumanCognitiveLoad": true,
+          "humanDecisionGateRequired": true,
+          "deriveBeforeAsk": true,
+          "reuseUnchangedHumanDecisions": true,
+          "postDiscoveryLoadReduction": true,
+          "humanDomainLanguageDefault": true,
+          "humanAsDecisionMakerNotWorkflowOperator": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -434,6 +441,10 @@
               "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
             },
             {
+              "id": "HUMAN_INTERACTION_GOVERNANCE",
+              "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction and dynamic primary-action labeling."
+            },
+            {
               "id": "MODULE_SELF_HEALING",
               "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
             },
@@ -461,7 +472,12 @@
             "Every embedded module must resolve to exactly one valid module recovery profile.",
             "SELF_HEALING executes only the intersection of failure-class policy, module recovery profile, active authority and actual provider rights.",
             "Authoritative immutable modules are never heuristically rewritten; derived artifacts may be regenerated only from verified authoritative sources.",
-            "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops."
+            "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops.",
+            "Every proposed HUMAN question or approval passes the HUMAN Decision Gate before presentation.",
+            "A derivable or unchanged previously approved decision must not be delegated back to the HUMAN.",
+            "High HUMAN cognitive load is legitimate in Discovery when acquiring non-derivable intent/domain knowledge; after plan approval default HUMAN load decreases to LOW/VERY_LOW except for material decisions, new authority, risk, irreversible action, recovery escalation or outcome judgment.",
+            "Scheduling, job IDs, leases, dispatch waves, readback, evidence collection and deterministic agent coordination are internal SAFOR responsibilities.",
+            "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required."
           ]
         },
         "packageSystem": {
@@ -644,7 +660,9 @@
           "schedulerState": "schemas/scheduler-state.schema.json",
           "dispatchWave": "schemas/dispatch-wave.schema.json",
           "resourceLease": "schemas/resource-lease.schema.json",
-          "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json"
+          "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json",
+          "humanCognitiveLoadPolicy": "schemas/human-cognitive-load-policy.schema.json",
+          "humanDecisionGate": "schemas/human-decision-gate.schema.json"
         },
         "controlPlane": {
           "startActionId": "K00",
@@ -663,6 +681,7 @@
                 "K08",
                 "K09",
                 "K10",
+                "K10A",
                 "K11"
               ]
             },
@@ -755,7 +774,17 @@
               "purpose": "Ask the HUMAN to select GitHub or GitLab.",
               "domainNeutral": true,
               "humanDecision": "PROVIDER_SELECTION",
-              "modelRef": "initialization-model.json#sequence/INIT-01"
+              "modelRef": "initialization-model.json#sequence/INIT-01",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "K02",
@@ -770,7 +799,17 @@
               "purpose": "Let the HUMAN select the owner namespace.",
               "domainNeutral": true,
               "humanDecision": "OWNER_SELECTION",
-              "modelRef": "initialization-model.json#sequence/INIT-03"
+              "modelRef": "initialization-model.json#sequence/INIT-03",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "K04",
@@ -792,7 +831,17 @@
               "purpose": "Require Software / Website or Buch. This fixes Factory and compatible Operating Model.",
               "domainNeutral": true,
               "humanDecision": "CREATION_TYPE_SELECTION",
-              "modelRef": "initialization-model.json#sequence/INIT-06"
+              "modelRef": "initialization-model.json#sequence/INIT-06",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "K07",
@@ -800,7 +849,17 @@
               "purpose": "Ask whether to use an existing project or start a new project.",
               "domainNeutral": true,
               "humanDecision": "PROJECT_MODE_SELECTION",
-              "modelRef": "initialization-model.json#sequence/INIT-07"
+              "modelRef": "initialization-model.json#sequence/INIT-07",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "K08",
@@ -808,7 +867,17 @@
               "purpose": "Select an existing recent repository or define a new project.",
               "domainNeutral": true,
               "humanDecision": "PROJECT_SELECTION",
-              "modelRef": "initialization-model.json#sequence/INIT-08A|INIT-08B"
+              "modelRef": "initialization-model.json#sequence/INIT-08A|INIT-08B",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "K09",
@@ -819,11 +888,30 @@
             },
             {
               "id": "K10",
-              "operation": "CONFIRM_CREATION_PROFILE_BINDINGS",
-              "purpose": "Confirm Provider Adapter plus Factory and Operating Model determined by creation type.",
+              "operation": "RESOLVE_CREATION_PROFILE_BINDINGS",
+              "purpose": "Resolve Provider Adapter plus Factory and Operating Model predetermined by the approved creation type. Present a short summary; do not request redundant approval when the binding is deterministic and unchanged.",
+              "domainNeutral": true,
+              "modelRef": "initialization-model.json#sequence/INIT-10",
+              "humanDecisionWhen": "ONLY_IF_NON_STANDARD_CHANGED_OR_CONFLICTING_BINDING_REQUIRES_HUMAN_CHOICE"
+            },
+            {
+              "id": "K10A",
+              "operation": "APPROVE_NON_STANDARD_OR_CHANGED_BINDING",
+              "purpose": "Request HUMAN approval only when the resolved package binding materially differs from the already approved creation profile or an existing pinned binding.",
               "domainNeutral": true,
               "humanDecision": "PACKAGE_BINDING_APPROVAL",
-              "modelRef": "initialization-model.json#sequence/INIT-10"
+              "modelRef": "human-decision-gate-model.json",
+              "executeWhen": "K10 detected a non-standard, changed or conflicting binding that cannot be safely derived/reused.",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "MATERIAL_ALTERNATIVE_CHOICE",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "K11",
@@ -831,7 +919,17 @@
               "purpose": "After SETUP_APPROVAL, write project control to safor-memory and verify by provider readback.",
               "domainNeutral": true,
               "humanDecision": "SETUP_APPROVAL",
-              "modelRef": "initialization-model.json#sequence/INIT-11"
+              "modelRef": "initialization-model.json#sequence/INIT-11",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
             },
             {
               "id": "R01",
@@ -844,7 +942,17 @@
               "operation": "CAPTURE_FACTORY_INTENT",
               "purpose": "Run Discovery strictly from the bound Factory discoveryContract selected by the HUMAN creation type.",
               "domainNeutral": true,
-              "modelRef": "BOUND_FACTORY.model.discoveryContract"
+              "modelRef": "BOUND_FACTORY.model.discoveryContract",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "DISCOVERY",
+                "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                "targetLoad": "HIGH",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "rule": "Deep sequential questioning is allowed only for information the Factory requires and SAFOR cannot safely derive from approved state/evidence."
+              }
             },
             {
               "id": "P01",
@@ -864,14 +972,36 @@
               "operation": "APPROVE_PLAN",
               "purpose": "Persist explicit approval of the instantiated plan; plan approval is not execution authorization.",
               "domainNeutral": true,
-              "humanDecision": "PLAN_APPROVAL"
+              "humanDecision": "PLAN_APPROVAL",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "PLANNING",
+                "reason": "MATERIAL_ALTERNATIVE_CHOICE",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              },
+              "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active."
             },
             {
               "id": "E01",
               "operation": "REQUEST_EXECUTION_MANDATE",
               "purpose": "Create an explicit, scoped execution mandate for selected work items/capabilities.",
               "domainNeutral": true,
-              "humanDecision": "EXECUTION_MANDATE"
+              "humanDecision": "EXECUTION_MANDATE",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "EXECUTION",
+                "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              },
+              "decisionReuseRule": "Do not request a new execution mandate when an active unrevoked mandate already covers the same work, capabilities and materially unchanged bound inputs. Prefer one safely scoped batch mandate over repeated equivalent approvals."
             },
             {
               "id": "E02",
@@ -910,7 +1040,16 @@
               "id": "O01",
               "operation": "ASSESS_OUTCOMES",
               "purpose": "Evaluate declared business/reader/organizational outcomes only when the factory defines measurable outcome nodes and evidence.",
-              "domainNeutral": true
+              "domainNeutral": true,
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "OUTCOME",
+                "reason": "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true
+              }
             },
             {
               "id": "C01",
@@ -952,7 +1091,19 @@
               "purpose": "Create or explicitly revise a persistent agent identity and workspace after HUMAN approval; identity is reused across jobs.",
               "domainNeutral": true,
               "humanDecision": "AGENT_IDENTITY_APPROVAL",
-              "modelRef": "agent-workspace-model.json"
+              "modelRef": "agent-workspace-model.json",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "AGENT_COORDINATION",
+                "reason": "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              },
+              "humanDecisionWhen": "FIRST_IDENTITY_CREATION_OR_IMMUTABLE_IDENTITY_OR_AUTHORITY_CHANGE",
+              "reuseRule": "Reuse an unchanged ACTIVE persistent agent identity without HUMAN reapproval."
             },
             {
               "id": "A02",
@@ -1073,6 +1224,22 @@
             "success": "RETURN_TO_LAST_VERIFIED_CHECKPOINT",
             "escalation": "WAITING_HUMAN",
             "rule": "Automatic repair is permitted only within existing authorization and configured repair/retry budgets."
+          },
+          "crossCuttingGuards": {
+            "humanDecisionGate": {
+              "modelRef": "human-decision-gate-model.json",
+              "interactionPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+              "appliesBefore": "EVERY_HUMAN_QUESTION_APPROVAL_OR_CHOICE",
+              "defaultOutcome": "DO_NOT_ASK",
+              "requiredEvaluationOrder": [
+                "DERIVE_FROM_APPROVED_STATE_POLICY_AND_EVIDENCE",
+                "REUSE_UNCHANGED_ACTIVE_DECISION",
+                "RESOLVE_LEGITIMATE_HUMAN_REASON",
+                "CHECK_PHASE_LOAD_TARGET",
+                "TRANSLATE_TO_HUMAN_DOMAIN_LANGUAGE",
+                "PRESENT_ONE_DECISION_CONTEXT"
+              ]
+            }
           }
         },
         "invariants": [
@@ -1495,6 +1662,66 @@
           {
             "id": "INV-105",
             "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
+          },
+          {
+            "id": "INV-106",
+            "rule": "Every proposed HUMAN question or approval is evaluated by human-decision-gate-model.json before presentation and records exactly one legitimate interaction reason."
+          },
+          {
+            "id": "INV-107",
+            "rule": "High HUMAN cognitive load is permitted in DISCOVERY when required to acquire non-derivable HUMAN intent, context, priorities or value judgments; technical/system-generated load remains minimized."
+          },
+          {
+            "id": "INV-108",
+            "rule": "After PLAN_APPROVAL, default HUMAN load is LOW or VERY_LOW. Temporary escalation requires an explicit legitimate reason such as scope/authority change, material risk, irreversible action, goal conflict, recovery escalation or outcome judgment."
+          },
+          {
+            "id": "INV-109",
+            "rule": "A HUMAN question is forbidden when its answer can be safely derived from approved state, policy and authoritative evidence."
+          },
+          {
+            "id": "INV-110",
+            "rule": "An unchanged, unrevoked prior HUMAN decision with the same scope and materially unchanged bound inputs is reused and must not be requested again."
+          },
+          {
+            "id": "INV-111",
+            "rule": "Scheduling, deterministic agent selection, job IDs, Git branch naming, resource leases, dispatch waves, readbacks, evidence collection, internal transitions and recovery-profile selection must not be delegated to HUMAN."
+          },
+          {
+            "id": "INV-112",
+            "rule": "Normal creation-profile binding does not require a second HUMAN approval when Factory, Operating Model and Provider Adapter are deterministically resolved from the approved creation type and unchanged pinned versions."
+          },
+          {
+            "id": "INV-113",
+            "rule": "Every HUMAN-facing turn contains at most one new decision context; multiple technical sub-decisions are consolidated by MASTER before presentation."
+          },
+          {
+            "id": "INV-114",
+            "rule": "Default SUMMARY communication hides technical IDs and internal terms and explains what happened, project meaning, whether HUMAN action is required and what happens next."
+          },
+          {
+            "id": "INV-115",
+            "rule": "Primary-action labels are domain-specific and dynamic where possible; internal action IDs or orchestration terms are never default HUMAN labels. Fallback label is 'Weiter'."
+          },
+          {
+            "id": "INV-116",
+            "rule": "The heuristic cognitive-load score is an internal governance heuristic, not a psychometric measurement, and may not be presented as a validated scientific measure."
+          },
+          {
+            "id": "INV-117",
+            "rule": "DISCOVERY may ask deep sequential questions, but still only one decision context per turn and only for information SAFOR cannot safely derive."
+          },
+          {
+            "id": "INV-118",
+            "rule": "Execution and Recovery communicate by exception: successful authorized internal operations do not require HUMAN confirmations merely to acknowledge technical state transitions."
+          },
+          {
+            "id": "INV-119",
+            "rule": "Existing active execution mandates and persistent agent identities are reused within unchanged scope rather than repeatedly reauthorized."
+          },
+          {
+            "id": "INV-120",
+            "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored."
           }
         ],
         "evidencePolicy": {
@@ -1552,14 +1779,14 @@
         "compatibility": {
           "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.9.0 schemas."
+          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.10.0 schemas."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.9.0",
+            "root": "v0.10.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1606,7 +1833,11 @@
             "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
             "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
             "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",
-            "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it."
+            "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it.",
+            "Before asking the HUMAN anything, attempt safe derivation/reuse and evaluate the HUMAN Decision Gate.",
+            "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
+            "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
+            "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval."
           ]
         },
         "initializationModelRef": "initialization-model.json",
@@ -1614,17 +1845,18 @@
         "agentWorkspaceModelRef": "agent-workspace-model.json",
         "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
         "agentJobContractModelRef": "agent-job-contract-model.json",
-        "moduleSelfHealingModelRef": "module-self-healing-model.json"
+        "moduleSelfHealingModelRef": "module-self-healing-model.json",
+        "humanDecisionGateModelRef": "human-decision-gate-model.json"
       },
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.9.0/initialization-model.json",
-      "sourceBlobSha": "4338106c6be0abb3db15a45a4407b1dee42e38a8",
+      "sourcePath": "v0.10.0/initialization-model.json",
+      "sourceBlobSha": "0235ad42b011812c8a262d0f5e9c9e7414f2d8bd",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.9.0",
+        "schemaVersion": "0.10.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1728,7 +1960,7 @@
             "id": "INIT-03",
             "operation": "SELECT_OWNER_NAMESPACE",
             "humanDecision": "OWNER_SELECTION",
-            "title": "Unter welchem Owner läuft das Projekt?",
+            "title": "Projektort auswählen",
             "source": "provider.namespace.list",
             "optionRules": [
               "Include the authenticated personal namespace when available.",
@@ -1743,12 +1975,13 @@
                 "id": "SHOW_MORE_OWNERS",
                 "label": "Mehr anzeigen"
               }
-            }
+            },
+            "humanPrompt": "Wo liegt dein Projekt?"
           },
           {
             "id": "INIT-04",
             "operation": "VERIFY_OWNER_ACCESS",
-            "title": "Owner-Zugriff prüfen",
+            "title": "Zugriff auf Projektort prüfen",
             "requires": [
               "provider.repository.list",
               "provider.repository.read",
@@ -1762,12 +1995,12 @@
               }
             ],
             "rule": "Re-verify access in the selected owner namespace because organization/group policy may be stricter than account-level access.",
-            "failMessage": "Für diesen Owner fehlen mir noch die nötigen Lese-/Schreibrechte. Bitte gib sie frei oder wähle einen anderen Owner."
+            "failMessage": "Hier fehlen noch die nötigen Lese- oder Schreibrechte. Bitte gib sie frei oder wähle einen anderen Projektort."
           },
           {
             "id": "INIT-05",
             "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
-            "title": "SAFOR Memory prüfen",
+            "title": "SAFOR-Arbeitsbereich prüfen",
             "requires": [
               "provider.repository.read",
               "provider.artifact.read",
@@ -1784,7 +2017,8 @@
               "CONTINUE_WITH_READ_ONLY_SAFOR_MEMORY",
               "ASK_FOR_PASSWORD",
               "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT"
-            ]
+            ],
+            "humanSummaryName": "SAFOR-Arbeitsbereich"
           },
           {
             "id": "INIT-06",
@@ -1922,9 +2156,11 @@
           },
           {
             "id": "INIT-10",
-            "operation": "RESOLVE_PROJECT_PACKAGES",
-            "title": "Arbeitsmodell auswählen",
-            "rule": "Resolve the Provider Adapter and bind the Factory/Operating Model predetermined by CREATION_TYPE_SELECTION. HUMAN confirms the proposed bindings; do not silently substitute a different Factory."
+            "operation": "RESOLVE_CREATION_PROFILE_BINDINGS",
+            "title": "Passendes Arbeitsmodell vorbereiten",
+            "rule": "Resolve Provider Adapter and bind the Factory/Operating Model predetermined by CREATION_TYPE_SELECTION. Do not ask for a second approval when the resolved binding exactly matches the approved creation profile and unchanged pinned versions.",
+            "humanDecisionDefault": false,
+            "askHumanOnlyWhen": "RESOLVED_BINDING_DIFFERS_FROM_APPROVED_CREATION_PROFILE_OR_EXISTING_PINNED_BINDING"
           },
           {
             "id": "INIT-11",
@@ -1972,16 +2208,22 @@
           "buddyMessages": {
             "providerPrompt": "Wo möchtest du arbeiten?",
             "accessPassed": "Passt. Zugriff ist da.",
-            "ownerPrompt": "Unter welchem Owner läuft das Projekt?",
+            "ownerPrompt": "Wo liegt dein Projekt?",
             "projectModePrompt": "Bestehend oder neu?",
             "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
-            "ready": "Alles sitzt. Projektkontrolle, Agenten-Registry und Scheduler sind sauber vorbereitet.",
-            "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
+            "ready": "Alles bereit. Der Projektstand kann gespeichert und die Arbeit vorbereitet werden.",
+            "safMemoryPassed": "Alles bereit. Der SAFOR-Arbeitsbereich ist beschreibbar.",
             "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
             "creationTypePrompt": "Was möchtest du erstellen?"
           },
           "keepTechnicalDetailsBehind": "DETAILS",
-          "menusPreferred": true
+          "menusPreferred": true,
+          "cognitiveLoadRules": [
+            "Initialization may require MEDIUM load because HUMAN-controlled environment choices are not derivable.",
+            "Ask one decision at a time.",
+            "Do not expose internal package/binding mechanics on the default surface.",
+            "Do not ask for a second approval when a binding is deterministic from an already approved creation type."
+          ]
         },
         "absolutePrerequisites": {
           "safMemoryRepository": {
@@ -2015,17 +2257,19 @@
             }
           ],
           "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
-        }
+        },
+        "humanDecisionGateModelRef": "human-decision-gate-model.json",
+        "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
       },
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.9.0/interaction-model.json",
-      "sourceBlobSha": "a2d7e0b926dda7bc890f4dfdc38d68751169a8e1",
+      "sourcePath": "v0.10.0/interaction-model.json",
+      "sourceBlobSha": "4d881f7adb833bcf3422c4cdde90e8671e571a6b",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.9.0",
+        "schemaVersion": "0.10.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -2101,7 +2345,7 @@
           "id": "SAFOR_ROUND",
           "definition": "A user-visible orchestration cycle that begins from a verified stable checkpoint and advances only through already-authorized, guard-satisfied operations until the next user-relevant checkpoint.",
           "startIntent": "NEXT_ROUND",
-          "primaryLabel": "Nächste Runde starten",
+          "primaryLabel": "Weiter",
           "stopAtAny": [
             "NEW_HUMAN_DECISION_REQUIRED",
             "NEW_OR_EXPANDED_AUTHORIZATION_REQUIRED",
@@ -2164,7 +2408,7 @@
           "standardActions": [
             {
               "id": "NEXT_ROUND",
-              "label": "Nächste Runde starten",
+              "label": "Weiter",
               "intent": "NEXT_ROUND",
               "kind": "PRIMARY",
               "requiresConfirmation": false,
@@ -2267,8 +2511,12 @@
             "Show the decision in user language before internal authority IDs.",
             "Offer only valid outcomes declared by the bound Operating Model or Factory.",
             "Explain the material consequence of each choice in one short sentence.",
-            "No default selection for irreversible or risk-accepting decisions."
-          ]
+            "No default selection for irreversible or risk-accepting decisions.",
+            "Before asking, evaluate the HUMAN Decision Gate and suppress questions whose answer is safely derivable or covered by an unchanged prior decision.",
+            "Record one legitimate interactionReason for every required HUMAN decision.",
+            "After plan approval, default to LOW or VERY_LOW HUMAN load outside material decisions, authority expansion, risk, irreversible action or outcome judgment."
+          ],
+          "gateRef": "human-decision-gate-model.json"
         },
         "fallbackRendering": {
           "useWhen": "NO_NATIVE_BUTTON_OR_SELECT_CAPABILITY",
@@ -2277,7 +2525,7 @@
             "**SAFOR · Projekt**",
             "Sieht gut aus. Wir können weitermachen.",
             "",
-            "1. Nächste Runde starten",
+            "1. Weiter",
             "2. Vorschläge ansehen",
             "3. Projektstatus",
             "4. Details"
@@ -2303,7 +2551,10 @@
             "repeatKnownContext": false,
             "narrateInternalOperations": false,
             "exposeTechnicalIdsOnlyWhenUsefulOrRequested": false,
-            "menuAfterMessageWhenApplicable": true
+            "menuAfterMessageWhenApplicable": true,
+            "cognitiveLoadPolicyRequired": true,
+            "deriveBeforeAsk": true,
+            "reuseUnchangedDecisions": true
           },
           "responseBudgets": {
             "acknowledgement": {
@@ -2450,7 +2701,7 @@
                 "BLOCKERS",
                 "NEXT_ACTION_OR_MENU"
               ],
-              "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
+              "example": "4 von 6 Agenten arbeiten. Ein weiterer Auftrag kann parallel starten. Zwei Aufgaben warten noch auf Ergebnisse anderer Arbeiten."
             },
             "moduleHealing": {
               "structure": [
@@ -2461,7 +2712,7 @@
                 "CURRENT_SAFE_STATE",
                 "NEXT_ACTION_IF_ANY"
               ],
-              "example": "Das Scheduler-Modul hatte einen veralteten READY-Stand. SAFOR hat ausschließlich die ableitbare Sicht neu berechnet und per Readback verifiziert. Der autoritative Work-Item-State blieb unverändert."
+              "example": "SAFOR hat einen veralteten Arbeitsstand erkannt und automatisch korrigiert. Die eigentlichen Aufgaben und Ergebnisse wurden nicht verändert. Der Projektstand ist wieder konsistent."
             }
           },
           "avoid": {
@@ -2530,7 +2781,7 @@
             },
             {
               "id": "OWNER",
-              "prompt": "Unter welchem Owner läuft das Projekt?",
+              "prompt": "Wo liegt dein Projekt?",
               "preferredSurface": "NATIVE_SINGLE_SELECT",
               "dynamicOptions": "PROVIDER_NAMESPACES",
               "maxVisibleOptions": 8,
@@ -2538,7 +2789,7 @@
             },
             {
               "id": "SAFOR_MEMORY",
-              "prompt": "Ich prüfe jetzt `safor-memory`.",
+              "prompt": "Ich prüfe den SAFOR-Arbeitsbereich.",
               "preferredSurface": "NATIVE_MARKDOWN",
               "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
               "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAFOR danach erneut.",
@@ -2616,7 +2867,8 @@
             "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
             "Repository menu defaults to the previous 7 days; the HUMAN may explicitly request all repositories.",
             "Keep choices clickable when the host supports native controls.",
-            "Use only chat-native UI surfaces."
+            "Use only chat-native UI surfaces.",
+            "Use HUMAN domain language on the default surface; keep Owner/Factory/Operating Model/Provider/READY/Readback and similar internal terms behind Details unless materially required."
           ]
         },
         "nativeUiPolicy": {
@@ -2730,17 +2982,288 @@
             "When automatic repair is forbidden, explain the exact authority/semantic boundary and the smallest HUMAN action required.",
             "Keep raw repair records behind Details unless needed for a decision."
           ]
+        },
+        "humanDecisionGateModelRef": "human-decision-gate-model.json",
+        "humanCognitiveLoadPolicy": {
+          "objective": "MAXIMIZE_NECESSARY_HUMAN_CONTRIBUTION_MINIMIZE_EXTRANEOUS_SYSTEM_LOAD",
+          "schemaRef": "schemas/human-cognitive-load-policy.schema.json",
+          "principles": {
+            "highLoadAllowedWhenHumanKnowledgeIsRequired": true,
+            "extraneousTechnicalLoadAlwaysMinimized": true,
+            "loadMustDecreaseAsContextBecomesKnown": true,
+            "humanIsDecisionMakerNotWorkflowOperator": true,
+            "progressiveDisclosureRequired": true,
+            "oneDecisionContextAtATime": true,
+            "deriveBeforeAsk": true,
+            "noRepeatedUnchangedApproval": true,
+            "domainLanguageFirst": true
+          },
+          "loadLevels": {
+            "VERY_LOW": "Nur materieller Status oder eine sehr leichte Aktion.",
+            "LOW": "Eine begrenzte Entscheidung oder Ausnahme mit wenig neuem Kontext.",
+            "MEDIUM": "Bedeutende Plan-, Freigabe-, Ziel- oder Trade-off-Entscheidung.",
+            "HIGH": "Substanzieller HUMAN-Beitrag zu nicht ableitbarem Intent, Domänenwissen, Prioritäten oder Werturteilen."
+          },
+          "phaseProfiles": {
+            "BOOTSTRAP": {
+              "targetLoad": "MEDIUM",
+              "purpose": "HUMAN-kontrollierte Umgebung und Projektkontext festlegen.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "GUIDED",
+              "technicalDetailDefault": "HIDDEN",
+              "temporaryEscalationReasons": [
+                "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                "HUMAN_CONTROLLED_TARGET_SELECTION",
+                "NEW_OR_EXPANDED_AUTHORITY_REQUIRED"
+              ]
+            },
+            "DISCOVERY": {
+              "targetLoad": "HIGH",
+              "purpose": "Nicht ableitbares HUMAN-Wissen erwerben.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "DIALOGUE",
+              "technicalDetailDefault": "HIDDEN",
+              "allowDeepQuestions": true,
+              "humanContributionRequired": [
+                "GOAL",
+                "PROBLEM",
+                "TARGET_USERS",
+                "VALUE_HYPOTHESIS",
+                "SCOPE_BOUNDARIES",
+                "PRIORITIES",
+                "MATERIAL_CONSTRAINTS"
+              ],
+              "temporaryEscalationReasons": [
+                "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                "MATERIAL_ALTERNATIVE_CHOICE"
+              ]
+            },
+            "PLANNING": {
+              "targetLoad": "MEDIUM",
+              "purpose": "Interpretation, Plan und materielle Trade-offs validieren.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "DECISION_WHEN_NEEDED",
+              "technicalDetailDefault": "HIDDEN",
+              "masterMustRecommendPreferredOption": true,
+              "showSummaryBeforeDetail": true,
+              "temporaryEscalationReasons": [
+                "MATERIAL_ALTERNATIVE_CHOICE",
+                "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                "MATERIAL_RISK_ACCEPTANCE_REQUIRED"
+              ]
+            },
+            "SCHEDULING": {
+              "targetLoad": "VERY_LOW",
+              "purpose": "MASTER absorbiert interne Orchestrierung.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "NONE",
+              "technicalDetailDefault": "HIDDEN",
+              "temporaryEscalationReasons": [
+                "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                "RECOVERY_CANNOT_PROCEED_SAFELY"
+              ]
+            },
+            "AGENT_COORDINATION": {
+              "targetLoad": "VERY_LOW",
+              "purpose": "MASTER koordiniert Agenten ohne HUMAN-Mikromanagement.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "NONE",
+              "technicalDetailDefault": "HIDDEN",
+              "temporaryEscalationReasons": [
+                "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+                "NEW_OR_EXPANDED_AUTHORITY_REQUIRED"
+              ]
+            },
+            "EXECUTION": {
+              "targetLoad": "LOW",
+              "purpose": "HUMAN informiert halten, SAFOR führt autorisierte Arbeit aus.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "EXCEPTION_ONLY",
+              "technicalDetailDefault": "HIDDEN",
+              "temporaryEscalationReasons": [
+                "SCOPE_CHANGE_REQUIRED",
+                "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                "IRREVERSIBLE_ACTION_REQUIRED",
+                "GOAL_CONFLICT_REQUIRES_PRIORITY"
+              ]
+            },
+            "RECOVERY": {
+              "targetLoad": "LOW",
+              "purpose": "Sicher automatisch reparieren, HUMAN nur an definierten Eskalationsgrenzen einbeziehen.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "ESCALATION_ONLY",
+              "technicalDetailDefault": "HIDDEN",
+              "temporaryEscalationReasons": [
+                "RECOVERY_CANNOT_PROCEED_SAFELY",
+                "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                "NEW_OR_EXPANDED_AUTHORITY_REQUIRED"
+              ]
+            },
+            "OUTCOME": {
+              "targetLoad": "MEDIUM",
+              "purpose": "HUMAN bewertet Wert und Geschäftsbedeutung.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "DECISION_WHEN_NEEDED",
+              "technicalDetailDefault": "HIDDEN",
+              "humanContributionRequired": [
+                "VALUE_JUDGMENT",
+                "BUSINESS_OUTCOME_ACCEPTANCE"
+              ],
+              "temporaryEscalationReasons": [
+                "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                "BUSINESS_OR_PRODUCT_DECISION_REQUIRED"
+              ]
+            },
+            "CLOSING": {
+              "targetLoad": "LOW",
+              "purpose": "Verifiziertes Ergebnis, Restrisiken und nächsten sinnvollen Schritt verdichten.",
+              "maxNewDecisionsPerTurn": 1,
+              "humanInteractionDefault": "SUMMARY",
+              "technicalDetailDefault": "HIDDEN",
+              "temporaryEscalationReasons": [
+                "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                "IRREVERSIBLE_ACTION_REQUIRED"
+              ]
+            }
+          },
+          "adaptiveLoadRules": {
+            "whenContextConfidenceIncreases": "REDUCE_HUMAN_LOAD",
+            "whenDecisionPatternAlreadyApproved": "REUSE_DECISION_IF_SCOPE_AND_BOUND_INPUTS_UNCHANGED",
+            "whenExistingMandateCoversAction": "DO_NOT_REASK",
+            "whenPreferenceAlreadyKnown": "REUSE_UNLESS_MATERIAL_CHANGE",
+            "whenNoMaterialChange": "DO_NOT_REPEAT_CONTEXT",
+            "whenNewMaterialRiskAppears": "TEMPORARILY_INCREASE_LOAD",
+            "whenGoalAmbiguityIncreases": "TEMPORARILY_INCREASE_LOAD",
+            "afterPlanApproval": "DEFAULT_EXECUTION_LOAD_LOW",
+            "afterExecutionMandate": "ABSORB_INTERNAL_ORCHESTRATION"
+          },
+          "heuristicLoadEstimate": {
+            "notPsychometricMeasure": true,
+            "purpose": "Interne Governance-Heuristik zur Erkennung vermeidbarer Interaktionskomplexität; kein validiertes psychologisches Messinstrument.",
+            "range": {
+              "min": 0,
+              "max": 100
+            },
+            "factors": {
+              "decisionComplexity": {
+                "maxPoints": 30
+              },
+              "newContext": {
+                "maxPoints": 20
+              },
+              "choiceCount": {
+                "maxPoints": 10
+              },
+              "contextSwitching": {
+                "maxPoints": 15
+              },
+              "technicalTerminologyExposure": {
+                "maxPoints": 25
+              }
+            },
+            "thresholds": {
+              "VERY_LOW": {
+                "min": 0,
+                "max": 20
+              },
+              "LOW": {
+                "min": 21,
+                "max": 40
+              },
+              "MEDIUM": {
+                "min": 41,
+                "max": 70
+              },
+              "HIGH": {
+                "min": 71,
+                "max": 100
+              }
+            },
+            "phaseMaximumWithoutExplicitEscalation": {
+              "BOOTSTRAP": 70,
+              "DISCOVERY": 100,
+              "PLANNING": 70,
+              "SCHEDULING": 20,
+              "AGENT_COORDINATION": 20,
+              "EXECUTION": 40,
+              "RECOVERY": 40,
+              "OUTCOME": 70,
+              "CLOSING": 40
+            }
+          },
+          "questionPolicy": {
+            "maxNewDecisionContextsPerTurn": 1,
+            "askOnlyMinimumNecessaryQuestion": true,
+            "decisionReasonMustBeRecorded": true,
+            "decisionReasonNeedNotBeShownUnlessUseful": true,
+            "noQuestionWhenAnswerSafelyDerivable": true,
+            "noQuestionWhenUnchangedDecisionReusable": true
+          }
+        },
+        "humanLanguagePolicy": {
+          "defaultVocabulary": "HUMAN_DOMAIN_LANGUAGE",
+          "technicalIdsHiddenByDefault": true,
+          "internalTermsHiddenByDefault": [
+            "DISPATCH_WAVE",
+            "RESOURCE_LEASE",
+            "READY",
+            "CLAIMED",
+            "PROVIDER_READBACK",
+            "WORK_ITEM",
+            "FAILURE_FINGERPRINT",
+            "MODULE_RECOVERY_PROFILE",
+            "EXECUTION_MANDATE",
+            "CONFLICT_DOMAIN",
+            "AGENT_SLOT"
+          ],
+          "humanTerms": {
+            "WORK_ITEM": "Aufgabe",
+            "DISPATCH": "starten oder zuweisen",
+            "RESOURCE_LEASE": "reservierter Arbeitsbereich",
+            "READY": "bereit",
+            "PROVIDER_READBACK": "Git-Stand geprüft",
+            "RECONCILE_REQUIRED": "Zustand muss zuerst geprüft werden",
+            "EXECUTION_MANDATE": "Freigabe",
+            "AGENT_SLOT": "verfügbarer Agent",
+            "CONFLICT_DOMAIN": "gemeinsam genutzter Arbeitsbereich"
+          },
+          "showInternalTermWhen": [
+            "HUMAN_REQUESTS_DETAILS",
+            "TECHNICAL_DECISION_REQUIRES_TERM",
+            "AUDIT_OR_DEBUG_CONTEXT"
+          ],
+          "summaryRule": "Erkläre standardmäßig: Was ist passiert? Was bedeutet es fürs Projekt? Muss der HUMAN etwas tun? Was passiert als Nächstes?"
+        },
+        "primaryActionPolicy": {
+          "labelMode": "DOMAIN_SPECIFIC_DYNAMIC",
+          "fallbackLabel": "Weiter",
+          "examples": {
+            "PLAN_READY": "Plan prüfen",
+            "EXECUTION_READY": "Arbeit starten",
+            "REVIEW_READY": "Review starten",
+            "REWORK_READY": "Nacharbeit starten",
+            "NEXT_PACKAGE_READY": "Mit nächster Aufgabe weitermachen",
+            "OUTCOME_READY": "Ergebnis bewerten"
+          },
+          "forbiddenDefaultLabels": [
+            "NEXT_ROUND",
+            "E03",
+            "DISPATCH_WORK_ITEM",
+            "EXECUTE_TRANSITION"
+          ],
+          "rule": "Interne Intent-IDs bestimmen nie das HUMAN-Label, wenn eine konkrete fachliche Aktion benannt werden kann."
         }
       },
       "selfHealingProfileId": "MRP-INTERACTION"
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.9.0/self-healing-model.json",
-      "sourceBlobSha": "2f2a39bc0603544da9b18e9d346f278b921b3abd",
+      "sourcePath": "v0.10.0/self-healing-model.json",
+      "sourceBlobSha": "15af978aad1de0dd7125b03bc9aa00d143a3e2bb",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.9.0",
+        "schemaVersion": "0.10.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2983,6 +3506,19 @@
             "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
             "defaultRetryBudget": 0,
             "requiresHuman": true
+          },
+          {
+            "id": "SH-19",
+            "name": "HUMAN_INTERACTION_GOVERNANCE_FAILURE",
+            "examples": [
+              "human decision gate invalid",
+              "cognitive-load policy invalid",
+              "unnecessary repeated approval detected",
+              "technical interaction surface violates phase load target"
+            ],
+            "automaticRepair": "RESTORE_VERIFIED_INTERACTION_GOVERNANCE_OR_SUPPRESS_NONESSENTIAL_ASK",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "ONLY_MINIMUM_SAFE_BLOCKER_IF_GOVERNANCE_CANNOT_BE_RESTORED"
           }
         ],
         "eligibilityRules": [
@@ -2998,7 +3534,9 @@
           "A module profile marked IMMUTABLE_VALIDATE_ONLY may never be semantically rewritten automatically.",
           "A module profile marked REGENERATE_DERIVED_ONLY may mutate only declared derived artifacts, never its authoritative source.",
           "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
-          "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates."
+          "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates.",
+          "Interaction recovery may simplify or suppress a nonessential question, but may never infer a HUMAN decision, approval, risk acceptance or new authority.",
+          "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -3018,7 +3556,9 @@
           "AUTO_COERCE_AUTHORITATIVE_STATE_TO_PASS_SCHEMA",
           "AUTO_ELEVATE_PROVIDER_PERMISSION",
           "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
-          "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS"
+          "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS",
+          "INFER_HUMAN_APPROVAL_DURING_INTERACTION_RECOVERY",
+          "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -3095,11 +3635,11 @@
     },
     "agentWorkspace": {
       "key": "agentWorkspace",
-      "sourcePath": "v0.9.0/agent-workspace-model.json",
-      "sourceBlobSha": "8514e1f07f5eb56adf9e97ef887d4b90f57b1ed4",
+      "sourcePath": "v0.10.0/agent-workspace-model.json",
+      "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-        "schemaVersion": "0.9.0",
+        "schemaVersion": "0.10.0",
         "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
         "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
         "topology": {
@@ -11159,11 +11699,11 @@
     },
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
-      "sourcePath": "v0.9.0/module-self-healing-model.json",
-      "sourceBlobSha": "c12510b30d4768b6c62bc655988748af53510a7c",
+      "sourcePath": "v0.10.0/module-self-healing-model.json",
+      "sourceBlobSha": "cef17aecc1f3d278f2d9ed998d81ecf6927b2b4d",
       "content": {
         "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
-        "schemaVersion": "0.9.0",
+        "schemaVersion": "0.10.0",
         "id": "SAFOR-MODULE-WIDE-SELF-HEALING",
         "purpose": "Provide one explicit, bounded recovery profile for every embedded SAFOR module so failures are detected and repaired according to module authority, derivability and risk without semantic invention.",
         "coverageContract": {
@@ -11182,7 +11722,9 @@
           "Unknown mutation effects reconcile before retry.",
           "Every module repair creates or updates a self-healing record and requires authoritative readback.",
           "Repeated failure fingerprints obey the lower of module-profile and failure-class retry budgets.",
-          "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP."
+          "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP.",
+          "HUMAN interaction governance is fail-closed: if the Decision Gate or Cognitive Load Policy cannot be validated, SAFOR may show only the minimum safe blocker and must not infer approval.",
+          "Recovery may suppress an unnecessary HUMAN question, but may never answer a required HUMAN decision on the HUMAN's behalf."
         ],
         "moduleProfiles": [
           {
@@ -11295,11 +11837,17 @@
               "MODULE_BLOB_MISMATCH",
               "HUMAN_SURFACE_CONTRACT_INVALID",
               "MENU_MODEL_INVALID",
-              "STATUS_SURFACE_INVALID"
+              "STATUS_SURFACE_INVALID",
+              "COGNITIVE_LOAD_POLICY_INVALID",
+              "HUMAN_LANGUAGE_POLICY_INVALID",
+              "PRIMARY_ACTION_POLICY_INVALID",
+              "UNNECESSARY_HUMAN_DECISION_DETECTED"
             ],
             "automaticRepairs": [
               "RELOAD_VERIFIED_EMBEDDED_MODULE",
-              "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE"
+              "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE",
+              "RESTORE_VERIFIED_INTERACTION_MODEL",
+              "SUPPRESS_DERIVABLE_OR_REPEATED_ASK"
             ],
             "forbiddenRepairs": [
               "INVENT_MISSING_EVIDENCE",
@@ -13146,6 +13694,138 @@
                 "AUTHORITATIVE_READBACK_FAILS"
               ],
               "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-HUMAN_DECISION_GATE",
+            "moduleKey": "humanDecisionGate",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.humanDecisionGate + integrityManifest.humanDecisionGate",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_HUMAN_DECISION",
+              "INFER_APPROVAL_OR_AUTHORITY",
+              "RELAX_DECISION_GATE",
+              "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_HUMAN_DECISION_INFERENCE"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_HUMAN_COGNITIVE_LOAD_POLICY",
+            "moduleKey": "schemaHumanCognitiveLoadPolicy",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaHumanCognitiveLoadPolicy + integrityManifest.schemaHumanCognitiveLoadPolicy",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_HUMAN_DECISION",
+              "INFER_APPROVAL_OR_AUTHORITY",
+              "RELAX_DECISION_GATE",
+              "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_HUMAN_DECISION_INFERENCE"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_HUMAN_DECISION_GATE",
+            "moduleKey": "schemaHumanDecisionGate",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaHumanDecisionGate + integrityManifest.schemaHumanDecisionGate",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "HUMAN_INTERACTION_GOVERNANCE_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "SUPPRESS_NONESSENTIAL_HUMAN_ASK_UNTIL_VERIFIED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_HUMAN_DECISION",
+              "INFER_APPROVAL_OR_AUTHORITY",
+              "RELAX_DECISION_GATE",
+              "ACCEPT_UNVERIFIED_INTERACTION_POLICY"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_HUMAN_DECISION_INFERENCE"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "INTERACTION_GOVERNANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+              ],
+              "target": "HUMAN"
             }
           }
         ]
