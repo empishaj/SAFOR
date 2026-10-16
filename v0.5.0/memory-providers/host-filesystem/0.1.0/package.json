@@ -1,0 +1,38 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.5.0",
+  "packageId": "safor.memory.host-filesystem",
+  "packageKind": "MEMORY_PROVIDER_ADAPTER",
+  "version": "0.1.0",
+  "name": "Host Filesystem Memory Adapter",
+  "description": "SAFOR Memory adapter for a host-provided persistent filesystem or mounted volume.",
+  "compatibility": {
+    "kernel": ">=0.5.0 <0.6.0"
+  },
+  "exports": {
+    "capabilities": [],
+    "authorities": [],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "providerCapabilities": [],
+    "memoryCapabilities": [
+      "memory.identity.read",
+      "memory.object.list",
+      "memory.object.read",
+      "memory.object.write",
+      "memory.revision.read",
+      "memory.durability.prove",
+      "memory.resume.prove"
+    ]
+  },
+  "dependencies": [],
+  "model": {
+    "providerType": "HOST_FILESYSTEM",
+    "eligibilityRule": "The host must explicitly expose a persistent path or mounted storage and SAFOR must prove it can reopen the same stable location after session boundaries. Ephemeral scratch space is ineligible.",
+    "defaultCollaborationMode": "PERSONAL",
+    "sharedTeamEligibility": "Only when the host additionally proves memory.shared_access and either memory.compare_and_swap or memory.lock.",
+    "revisionStrategy": "Use a durable SAFOR revision metadata record and atomic replacement/locking semantics exposed by the host.",
+    "creationRequiresExplicitHumanApproval": true,
+    "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once."
+  }
+}
