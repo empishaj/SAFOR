@@ -90,13 +90,13 @@ for action_id in ("E04","E05"):
         fail(f"{action_id} must bind Factory evidenceContract.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 71)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 72)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 89)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 90)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -157,6 +157,8 @@ if scheduler.get("conflictModel", {}).get("safeDefault") != "Any ambiguity is tr
     fail("Unknown scheduler conflicts must serialize.")
 if scheduler.get("gitIsolation", {}).get("directMainWriteForbidden") is not True:
     fail("Agent mutating jobs must forbid direct default-branch writes.")
+if "acyclic directed graph" not in scheduler.get("workDecomposition", {}).get("dependencyGraphRule", ""):
+    fail("Multi-agent scheduler must require an acyclic dependency graph.")
 if "RECONCILE_REQUIRED" not in scheduler.get("leaseProtocol", {}).get("expiryRule", ""):
     fail("Lease expiry must require reconciliation before reassignment.")
 for action_id in ("S01","S02","S03","S04","S05","S06","S07"):
@@ -171,6 +173,14 @@ if execution_props.get("unit", {}).get("enum") != ["ATOMIC","COMPOSITE"]:
     fail("Work item execution unit must support ATOMIC and COMPOSITE.")
 if "resourceAccess" not in execution_props:
     fail("Work items must declare scheduling resource access.")
+parallel_decision = execution_props.get("parallelizationDecision", {})
+if not parallel_decision:
+    fail("Work items must declare an evidence-backed parallelizationDecision.")
+class_enum = parallel_decision.get("properties", {}).get("classification", {}).get("enum", [])
+if class_enum != ["PARALLEL_CANDIDATE","SERIAL_ONLY","COMPOSITE_CONTAINER"]:
+    fail("Work-item parallelization classification contract mismatch.")
+if len(work_schema.get("allOf", [])) < 2:
+    fail("Work-item schema must constrain ATOMIC and COMPOSITE execution forms.")
 
 registry_schema = modules.get("schemaAgentRegistry", {}).get("content", {})
 agent_entry = registry_schema.get("$defs", {}).get("agentEntry", {})
@@ -223,9 +233,11 @@ for module_name in ("factorySoftwareWebsite","factoryBook"):
     if sched_contract.get("resourceAccessRequired") is not True:
         fail(f"{module_name} must require resource access declarations.")
     req = model.get("planningContract", {}).get("requiredForEachWorkItem", [])
-    for field in ("execution","resourceAccess","parallelizationDecision"):
+    for field in ("execution","execution.resourceAccess","execution.parallelizationDecision"):
         if field not in req:
             fail(f"{module_name} planning contract missing {field}.")
+    if "acyclic directed graph" not in sched_contract.get("dependencyGraphRule", ""):
+        fail(f"{module_name} scheduling contract must require an acyclic dependency graph.")
 
 interaction = modules.get("interaction", {}).get("content", {})
 if "multiAgentStatusExperience" not in interaction:
