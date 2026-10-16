@@ -1,0 +1,271 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-job-state:0.10.0",
+  "title": "SAFOR MASTER Agent Job State 0.10.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "jobId",
+    "assignedAgentId",
+    "jobKey",
+    "packageId",
+    "packageSequence",
+    "workItemId",
+    "planSequence",
+    "dispatchSequence",
+    "attempt",
+    "reworkCycle",
+    "roleId",
+    "assignedIdentityRevision",
+    "contractRevision",
+    "humanJobRef",
+    "humanJobBlobSha",
+    "owner",
+    "revision",
+    "lifecycleStatus",
+    "contractRef",
+    "contractBlobSha",
+    "dispatchWaveRef",
+    "resourceLeaseRefs",
+    "gitWorkspaceRefs",
+    "agentStateRef",
+    "resultRef",
+    "evidenceRefs",
+    "verification",
+    "transitionHistory",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_JOB_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.10.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignedAgentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "owner": {
+      "const": "MASTER"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "lifecycleStatus": {
+      "enum": [
+        "READY",
+        "CLAIMED",
+        "RUNNING",
+        "RESULT_SUBMITTED",
+        "VERIFIED",
+        "ACCEPTED",
+        "REJECTED",
+        "REWORK_READY",
+        "BLOCKED",
+        "CANCELED",
+        "SUPERSEDED"
+      ]
+    },
+    "contractRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "contractBlobSha": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentStateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resultRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "verifiedAt",
+        "observedRefs",
+        "reason"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "NOT_STARTED",
+            "PENDING",
+            "PASS",
+            "FAIL"
+          ]
+        },
+        "verifiedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "observedRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "reason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "transitionHistory": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/transition"
+      }
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dispatchWaveRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "resourceLeaseRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "gitWorkspaceRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "jobKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packageId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packageSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "workItemId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "planSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "dispatchSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "reworkCycle": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "roleId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignedIdentityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "contractRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "humanJobRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "humanJobBlobSha": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "from",
+        "to",
+        "at",
+        "actorId",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "from": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "to": {
+          "type": "string",
+          "minLength": 1
+        },
+        "at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "actorId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    }
+  }
+}
