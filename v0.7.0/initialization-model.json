@@ -288,7 +288,7 @@
       "id": "INIT-11",
       "operation": "MATERIALIZE_PROJECT_CONTROL",
       "title": "Projekt starten",
-      "rule": "After SETUP_APPROVAL, write and read back the project control structure. Initialization completes only after provider readback succeeds."
+      "rule": "After SETUP_APPROVAL, write and read back the project control structure including agents/index.json and master/scheduler/state.json. Initialization completes only after provider readback succeeds."
     }
   ],
   "repositoryActivityNormalization": {
@@ -323,7 +323,8 @@
     "noProgressOnFailure": true,
     "safMemoryReadWriteMandatory": true,
     "safMemoryMissingOutcome": "STOP",
-    "safMemoryAutoCreate": false
+    "safMemoryAutoCreate": false,
+    "schedulerMaterializationRequired": true
   },
   "humanExperience": {
     "buddyMessages": {
@@ -332,7 +333,7 @@
       "ownerPrompt": "Unter welchem Owner läuft das Projekt?",
       "projectModePrompt": "Bestehend oder neu?",
       "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
-      "ready": "Alles sitzt. Jetzt können wir das Projekt sauber aufsetzen.",
+      "ready": "Alles sitzt. Projektkontrolle, Agenten-Registry und Scheduler sind sauber vorbereitet.",
       "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
       "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
       "creationTypePrompt": "Was möchtest du erstellen?"
