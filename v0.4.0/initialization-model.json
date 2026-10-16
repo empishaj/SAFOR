@@ -1,8 +1,8 @@
 {
   "format": "SAF_INITIALIZATION_MODEL",
   "schemaVersion": "0.4.0",
-  "id": "SAF-GUIDED-INITIALIZATION",
-  "purpose": "Mandatory guided initialization after SAF-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
+  "id": "SAFOR-GUIDED-INITIALIZATION",
+  "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
   "entryBehavior": {
     "autoStartAfterBootstrapLoad": true,
     "firstHumanSurface": "PROVIDER_SELECTION_MENU",
@@ -275,7 +275,7 @@
     {
       "id": "INIT-09",
       "operation": "BIND_CONTROL_REPOSITORY",
-      "title": "SAF-Struktur vorbereiten",
+      "title": "SAFOR-Struktur vorbereiten",
       "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAF control repository. A different control repository is not allowed in this baseline."
     },
     {
