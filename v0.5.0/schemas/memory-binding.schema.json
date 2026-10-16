@@ -77,7 +77,7 @@
         },
         "providerType": {
           "enum": [
-            "GIT_REPOSITORY",
+            "VERSIONED_REPOSITORY",
             "HOST_FILESYSTEM",
             "CUSTOM"
           ]
