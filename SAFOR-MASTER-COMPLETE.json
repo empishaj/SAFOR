@@ -1,8 +1,8 @@
 {
-  "format": "SAF_MASTER_COMPLETE_SINGLE_FILE",
+  "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
   "schemaVersion": "0.4.0",
   "bundleVersion": "0.4.0-rc.1",
-  "definitionId": "saf-master-complete",
+  "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
   "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat.",
@@ -29,11 +29,11 @@
       "VERIFY_PROVIDER_READ_WRITE_ACCESS",
       "SELECT_OWNER_NAMESPACE",
       "VERIFY_OWNER_ACCESS",
-      "VERIFY_REQUIRED_SAF_MEMORY",
+      "VERIFY_REQUIRED_SAFOR_MEMORY",
       "SELECT_CREATION_TYPE",
       "SELECT_PROJECT_MODE",
       "SELECT_OR_DEFINE_PROJECT",
-      "BIND_REQUIRED_SAF_MEMORY",
+      "BIND_REQUIRED_SAFOR_MEMORY",
       "CONFIRM_CREATION_PROFILE_BINDINGS",
       "MATERIALIZE_PROJECT_CONTROL"
     ],
@@ -94,113 +94,113 @@
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.4.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "8fcc6e79bcbbb8429f22d257dfe38b9d577119ab"
+      "sourceBlobSha": "50467cc10733b15ef67c7a1d481eaaa77afa1507"
     },
     "initialization": {
       "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "c38794bb5ae928f0f677ae2f71ed8df19c15698b"
+      "sourceBlobSha": "c8c9d0be9724e6c5901b944e03cbd32ac4b68ca1"
     },
     "interaction": {
       "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "df67acd40a2ab8c04d854c4691437f833eeb9734"
+      "sourceBlobSha": "04912584b13ba341d44bec6e79e85e474b95fb90"
     },
     "selfHealing": {
       "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "fd405a5eed5c9110d74004f6fa030e39ca7e20f8"
+      "sourceBlobSha": "8fefc1a92dbec84aa9bb42aae6c552b4cfe3a3b3"
     },
     "repositoryPolicy": {
       "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "a9d2fb7500fb0ccb21175e1f9366b011270ed82e"
+      "sourceBlobSha": "46826fd746eddbdbf7d99648f1142af368724672"
     },
     "packageRegistry": {
       "sourcePath": "v0.4.0/package-registry.json",
-      "sourceBlobSha": "c391dc9c830339c348c8ee858c61f5857d29e777"
+      "sourceBlobSha": "f8ee0b75924af114a9b9ecf0825fe242503edd64"
     },
     "providerGithub": {
       "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "881e88536c6117ed99bac0c33c8aac420910cbf4"
+      "sourceBlobSha": "6b109d6604008f3cc325daf95d639a5b5f2103ca"
     },
     "providerGitlab": {
       "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "8a7f02a7367a359d22bb2d8720a8d6f8443d2608"
+      "sourceBlobSha": "b3a8948103a8bb49c19a21d6168f52b17847ce69"
     },
     "operatingModelSaas": {
       "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "4c27c7a89fa51145882c563a93fc63efee39b3ae"
+      "sourceBlobSha": "e4b7d65390df0ddbc9a6f780072c1ecd6ce9f572"
     },
     "operatingModelBook": {
       "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "eee167495ca60e971b2526b10f3187538f68318b"
+      "sourceBlobSha": "9fd198d8520069380aad54357bf42c5795bc1f4a"
     },
     "factorySoftwareWebsite": {
       "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "e30f56cc2d7382ae07ab4ed3b9e8b2c557e7127a"
+      "sourceBlobSha": "f09e3aa819930ae0855da544f92973694198a689"
     },
     "factoryBook": {
       "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "347b8f1abb3dbe84fe14b962f109301399507a40"
+      "sourceBlobSha": "201d1a91d80527d500e4ee43faa6d75e35de1ec3"
     },
     "schemaPackageManifest": {
       "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "fded3f85a4e10c748fb48212476f2960bb009664"
+      "sourceBlobSha": "bd05d11b8020414759ab68b2bfc9caae972f5ceb"
     },
     "schemaControlState": {
       "sourcePath": "v0.4.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "07c8e561574da5a8316b0a4c6ba5a6254cb02cd5"
+      "sourceBlobSha": "d036dd138629694036ca9f49d6ccfc240a18b30c"
     },
     "schemaValueStreamState": {
       "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "8e557b2ecbaad40d6b13047ae3679b16d90fd2df"
+      "sourceBlobSha": "a273aa7f6a4a79b197f5d398383321d012e7c019"
     },
     "schemaExecutionState": {
       "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "3e39db4fedcf6ef59a0765bbbafc916f5d6e1333"
+      "sourceBlobSha": "b20e6170c9dd66d24a12c27f46545994989aa384"
     },
     "schemaWorkItem": {
       "sourcePath": "v0.4.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "23f3bea85448d26df771686d1fe25cad3cd4a0cc"
+      "sourceBlobSha": "cf36ff77d844511ecab1924c7daed44ce3ff48f1"
     },
     "schemaProject": {
       "sourcePath": "v0.4.0/schemas/project.schema.json",
-      "sourceBlobSha": "0bddb70576fad1bace7ede9b069a4424829e498a"
+      "sourceBlobSha": "3e08045c943922b61afdcb632f3e93246264df2e"
     },
     "schemaBindings": {
       "sourcePath": "v0.4.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "2a6ab5dd7f30c8d8e4792f8479824b17c9191b13"
+      "sourceBlobSha": "4317e4cb8efcd6780c32301b3b6bbb5ba4f6966b"
     },
     "schemaDecisionRecord": {
       "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "b7a2e88dbacb9c98f3b33bb098e7fe7f9ab1ebcd"
+      "sourceBlobSha": "27a47aa2192fb208d04d5a846f070e3534b9b434"
     },
     "schemaEvidenceRecord": {
       "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "ecd5418e3fdafed68abaffc8c0a66352f32f802f"
+      "sourceBlobSha": "aa7882e9ad1a72c5e89cf7226586e1b912e64ddd"
     },
     "schemaInteractionMenu": {
       "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "c34ce556d8d7cfdaa5b4a0223107976b8a1b6c91"
+      "sourceBlobSha": "1c1d070d6956fca7f5e4256515e41984e517f14a"
     },
     "schemaSelfHealingRecord": {
       "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "5cdd731e1b6138db7042e1b71c01370d32aea751"
+      "sourceBlobSha": "6150f6386fe4b98a31a9f5efeb27a061c3a61821"
     },
     "conformance": {
       "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "81fe1c452bc5570c7c7792ba7a5da1d771034d73"
+      "sourceBlobSha": "68f1251204d3ad1a67c61f3b8a4327b76a3e19f6"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.4.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "8fcc6e79bcbbb8429f22d257dfe38b9d577119ab",
+      "sourceBlobSha": "50467cc10733b15ef67c7a1d481eaaa77afa1507",
       "content": {
-        "format": "SAF_MASTER_BOOTSTRAP",
+        "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.4.0",
         "kernelVersion": "0.4.0",
-        "definitionId": "saf-master-kernel",
+        "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-        "purpose": "Portable, domain-agnostic SAF bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
+        "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
         "bootstrapContract": {
           "singleFileEntry": true,
           "entryFile": "SAFOR-MASTER.json",
@@ -527,7 +527,7 @@
             },
             {
               "id": "K05",
-              "operation": "VERIFY_REQUIRED_SAF_MEMORY",
+              "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
               "purpose": "Require `{selectedOwner}/safor-memory` to pre-exist with proven read/write access; otherwise STOP.",
               "domainNeutral": true,
               "modelRef": "initialization-model.json#sequence/INIT-05"
@@ -558,7 +558,7 @@
             },
             {
               "id": "K09",
-              "operation": "BIND_REQUIRED_SAF_MEMORY",
+              "operation": "BIND_REQUIRED_SAFOR_MEMORY",
               "purpose": "Bind the verified `{selectedOwner}/safor-memory` as mandatory control repository.",
               "domainNeutral": true,
               "modelRef": "initialization-model.json#sequence/INIT-09"
@@ -705,7 +705,7 @@
             "COMPLETED"
           ],
           "interactionLoop": {
-            "stableCheckpointBehavior": "Present the current SAF action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
+            "stableCheckpointBehavior": "Present the current SAFOR action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
             "defaultPrimaryIntent": "NEXT_ROUND",
             "roundDefinitionRef": "interaction-model.json#roundSemantics",
             "menuPolicyRef": "interaction-model.json#menuPolicy",
@@ -826,7 +826,7 @@
           },
           {
             "id": "INV-023",
-            "rule": "If mandatory read/write access is missing or unproven, SAF enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAF never asks for a password or personal access token in chat."
+            "rule": "If mandatory read/write access is missing or unproven, SAFOR enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAFOR never asks for a password or personal access token in chat."
           },
           {
             "id": "INV-024",
@@ -850,11 +850,11 @@
           },
           {
             "id": "INV-029",
-            "rule": "SAF controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
+            "rule": "SAFOR controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
           },
           {
             "id": "INV-030",
-            "rule": "If native buttons or select controls are unavailable, SAF falls back only to native chat Markdown/plain text choices, never to a custom external interface."
+            "rule": "If native buttons or select controls are unavailable, SAFOR falls back only to native chat Markdown/plain text choices, never to a custom external interface."
           },
           {
             "id": "INV-031",
@@ -878,15 +878,15 @@
           },
           {
             "id": "INV-036",
-            "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAF reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
+            "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAFOR reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
           },
           {
             "id": "INV-037",
-            "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAF transitions to STOP and performs no project discovery, selection, planning or execution."
+            "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAFOR transitions to STOP and performs no project discovery, selection, planning or execution."
           },
           {
             "id": "INV-038",
-            "rule": "SAF must never auto-create safor-memory or silently substitute another control repository in this baseline."
+            "rule": "SAFOR must never auto-create safor-memory or silently substitute another control repository in this baseline."
           },
           {
             "id": "INV-039",
@@ -956,7 +956,7 @@
             "effect": "Explain current state/action without advancing the workflow."
           },
           "NEXT_ROUND": {
-            "effect": "Start one SAF round from the verified current checkpoint. Advance only through already-authorized and guard-satisfied operations, stop at the next user-relevant checkpoint, then present the refreshed menu."
+            "effect": "Start one SAFOR round from the verified current checkpoint. Advance only through already-authorized and guard-satisfied operations, stop at the next user-relevant checkpoint, then present the refreshed menu."
           },
           "VIEW_RECOMMENDATIONS": {
             "effect": "Rank up to three currently feasible recommendations using the interaction model. Do not persist or execute a recommendation until the user selects an action."
@@ -966,7 +966,7 @@
           }
         },
         "compatibility": {
-          "sourceBaseline": "factory/saf-master/v0.3.0",
+          "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
           "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
         },
@@ -1015,8 +1015,8 @@
             "If the HUMAN requests depth, switch to expanded detail without sacrificing accuracy.",
             "During initialization ask only one decision at a time: provider, owner, project mode, then repository/project identity.",
             "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
-            "Use only chat-native UI. Never propose or require a separate SAF web interface.",
-            "When self-healing escalates, tell the HUMAN briefly what failed, what SAF already tried, whether the current state is safe, and the smallest next action required.",
+            "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
+            "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
             "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
             "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
             "Do not ask Discovery questions until creation type and its Factory binding are confirmed."
@@ -1029,9 +1029,9 @@
     "initialization": {
       "key": "initialization",
       "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "c38794bb5ae928f0f677ae2f71ed8df19c15698b",
+      "sourceBlobSha": "c8c9d0be9724e6c5901b944e03cbd32ac4b68ca1",
       "content": {
-        "format": "SAF_INITIALIZATION_MODEL",
+        "format": "SAFOR_INITIALIZATION_MODEL",
         "schemaVersion": "0.4.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
@@ -1039,7 +1039,7 @@
           "autoStartAfterBootstrapLoad": true,
           "firstHumanSurface": "PROVIDER_SELECTION_MENU",
           "noProjectWorkBeforeComplete": true,
-          "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAF_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
+          "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAFOR_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
         },
         "sequence": [
           {
@@ -1053,12 +1053,12 @@
                 {
                   "id": "GITHUB",
                   "label": "GitHub",
-                  "providerPackageId": "saf.provider.github"
+                  "providerPackageId": "safor.provider.github"
                 },
                 {
                   "id": "GITLAB",
                   "label": "GitLab",
-                  "providerPackageId": "saf.provider.gitlab"
+                  "providerPackageId": "safor.provider.gitlab"
                 }
               ]
             },
@@ -1082,7 +1082,7 @@
             "passOutcome": "PROVIDER_ACCESS_VERIFIED",
             "failOutcome": "WAITING_HUMAN_PROVIDER_ACCESS",
             "rule": "Verify actual host/provider capabilities. Declarations in JSON are never proof of access.",
-            "humanBlockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAF nicht starten.",
+            "humanBlockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
             "blockerMenu": [
               {
                 "id": "ACCESS_DONE",
@@ -1156,7 +1156,7 @@
           },
           {
             "id": "INIT-05",
-            "operation": "VERIFY_REQUIRED_SAF_MEMORY",
+            "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
             "title": "SAFOR Memory prüfen",
             "requires": [
               "provider.repository.read",
@@ -1164,14 +1164,14 @@
               "provider.artifact.write"
             ],
             "target": "{selectedOwner}/safor-memory",
-            "passOutcome": "SAF_MEMORY_VERIFIED",
+            "passOutcome": "SAFOR_MEMORY_VERIFIED",
             "failOutcome": "STOP",
-            "rule": "The repository `{selectedOwner}/safor-memory` must already exist and actual read/write access must be proven. SAF never creates this repository automatically.",
-            "stopMessage": "Stopp. Unter diesem Owner fehlt ein nutzbares `safor-memory` oder die Lese-/Schreibrechte reichen nicht. Bitte richte `safor-memory` ein und starte SAF danach erneut.",
+            "rule": "The repository `{selectedOwner}/safor-memory` must already exist and actual read/write access must be proven. SAFOR never creates this repository automatically.",
+            "stopMessage": "Stopp. Unter diesem Owner fehlt ein nutzbares `safor-memory` oder die Lese-/Schreibrechte reichen nicht. Bitte richte `safor-memory` ein und starte SAFOR danach erneut.",
             "prohibited": [
-              "AUTO_CREATE_SAF_MEMORY",
-              "CONTINUE_WITHOUT_SAF_MEMORY",
-              "CONTINUE_WITH_READ_ONLY_SAF_MEMORY",
+              "AUTO_CREATE_SAFOR_MEMORY",
+              "CONTINUE_WITHOUT_SAFOR_MEMORY",
+              "CONTINUE_WITH_READ_ONLY_SAFOR_MEMORY",
               "ASK_FOR_PASSWORD",
               "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT"
             ]
@@ -1187,14 +1187,14 @@
                 {
                   "id": "SOFTWARE_WEBSITE",
                   "label": "Software / Website",
-                  "factoryPackageId": "saf.factory.software-delivery",
-                  "operatingModelPackageId": "saf.om.saas-engineering"
+                  "factoryPackageId": "safor.factory.software-delivery",
+                  "operatingModelPackageId": "safor.om.saas-engineering"
                 },
                 {
                   "id": "BOOK",
                   "label": "Buch",
-                  "factoryPackageId": "saf.factory.book-production",
-                  "operatingModelPackageId": "saf.om.book-authoring"
+                  "factoryPackageId": "safor.factory.book-production",
+                  "operatingModelPackageId": "safor.om.book-authoring"
                 }
               ]
             },
@@ -1308,7 +1308,7 @@
             "id": "INIT-09",
             "operation": "BIND_CONTROL_REPOSITORY",
             "title": "SAFOR-Struktur vorbereiten",
-            "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAF control repository. A different control repository is not allowed in this baseline."
+            "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAFOR control repository. A different control repository is not allowed in this baseline."
           },
           {
             "id": "INIT-10",
@@ -1348,7 +1348,7 @@
         "permissionSemantics": {
           "baselineReadWriteIsMandatory": true,
           "leastPrivilegeStillApplies": true,
-          "explanation": "SAF requires proven read/write access for its control and project workflow. Additional provider capabilities are requested only when the selected Factory or operation needs them.",
+          "explanation": "SAFOR requires proven read/write access for its control and project workflow. Additional provider capabilities are requested only when the selected Factory or operation needs them.",
           "mandatoryBeforeOwnerSelection": true,
           "ownerScopedRecheck": true,
           "newProjectAdditionalCapability": "provider.repository.create",
@@ -1366,7 +1366,7 @@
             "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
             "ready": "Alles sitzt. Jetzt können wir das Projekt sauber aufsetzen.",
             "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
-            "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAF nicht arbeiten.",
+            "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
             "creationTypePrompt": "Was möchtest du erstellen?"
           },
           "keepTechnicalDetailsBehind": "DETAILS",
@@ -1382,8 +1382,8 @@
             "mustBeWritable": true,
             "autoCreateForbidden": true,
             "failureOutcome": "STOP",
-            "humanMessage": "Für SAF brauchst du unter diesem Owner zwingend ein Repository namens `safor-memory` mit Lese- und Schreibrechten. Bitte richte es ein und starte SAF danach erneut.",
-            "rule": "Missing repository, unreadable repository or unproven write access is a hard initialization STOP. SAF must not create safor-memory automatically and must not continue to creation-type or project selection."
+            "humanMessage": "Für SAFOR brauchst du unter diesem Owner zwingend ein Repository namens `safor-memory` mit Lese- und Schreibrechten. Bitte richte es ein und starte SAFOR danach erneut.",
+            "rule": "Missing repository, unreadable repository or unproven write access is a hard initialization STOP. SAFOR must not create safor-memory automatically and must not continue to creation-type or project selection."
           }
         },
         "creationTypes": {
@@ -1393,14 +1393,14 @@
             {
               "id": "SOFTWARE_WEBSITE",
               "label": "Software / Website",
-              "factoryPackageId": "saf.factory.software-delivery",
-              "operatingModelPackageId": "saf.om.saas-engineering"
+              "factoryPackageId": "safor.factory.software-delivery",
+              "operatingModelPackageId": "safor.om.saas-engineering"
             },
             {
               "id": "BOOK",
               "label": "Buch",
-              "factoryPackageId": "saf.factory.book-production",
-              "operatingModelPackageId": "saf.om.book-authoring"
+              "factoryPackageId": "safor.factory.book-production",
+              "operatingModelPackageId": "safor.om.book-authoring"
             }
           ],
           "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
@@ -1410,9 +1410,9 @@
     "interaction": {
       "key": "interaction",
       "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "df67acd40a2ab8c04d854c4691437f833eeb9734",
+      "sourceBlobSha": "04912584b13ba341d44bec6e79e85e474b95fb90",
       "content": {
-        "format": "SAF_INTERACTION_MODEL",
+        "format": "SAFOR_INTERACTION_MODEL",
         "schemaVersion": "0.4.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
@@ -1447,12 +1447,12 @@
           "rule": "Use only chat-native interaction capabilities actually exposed by the host. Never create or require custom HTML/CSS/JS UI."
         },
         "visualProfile": {
-          "id": "SAF_CHAT_NATIVE",
+          "id": "SAFOR_CHAT_NATIVE",
           "character": "Native chat experience: concise, warm, professional and easy to scan. Visual styling is owned entirely by the chat host.",
           "brand": {
-            "label": "SAF",
+            "label": "SAFOR",
             "productLabel": "Systemic AI Factory",
-            "headerPattern": "SAF  •  {projectTitle}",
+            "headerPattern": "SAFOR  •  {projectTitle}",
             "statusPattern": "{modeLabel}  ·  {statusLabel}"
           },
           "hierarchy": [
@@ -1486,7 +1486,7 @@
           }
         },
         "roundSemantics": {
-          "id": "SAF_ROUND",
+          "id": "SAFOR_ROUND",
           "definition": "A user-visible orchestration cycle that begins from a verified stable checkpoint and advances only through already-authorized, guard-satisfied operations until the next user-relevant checkpoint.",
           "startIntent": "NEXT_ROUND",
           "primaryLabel": "Nächste Runde starten",
@@ -1662,7 +1662,7 @@
           "useWhen": "NO_NATIVE_BUTTON_OR_SELECT_CAPABILITY",
           "behavior": "Use only native chat Markdown/plain text. Present a short numbered or bulleted list that the HUMAN can answer by label or number.",
           "sample": [
-            "**SAF · Projekt**",
+            "**SAFOR · Projekt**",
             "Sieht gut aus. Wir können weitermachen.",
             "",
             "1. Nächste Runde starten",
@@ -1672,7 +1672,7 @@
           ]
         },
         "humanCommunication": {
-          "id": "SAF_HUMAN_BUDDY",
+          "id": "SAFOR_HUMAN_BUDDY",
           "purpose": "Make every direct HUMAN interaction concise, clear, warm, encouraging and action-oriented while keeping technical rigor and honesty.",
           "relationship": "TRUSTED_PROJECT_BUDDY",
           "priorityOrder": [
@@ -1822,7 +1822,7 @@
                 "STOP",
                 "REQUIRED_FIX"
               ],
-              "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAF danach neu."
+              "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAFOR danach neu."
             },
             "creationType": {
               "structure": [
@@ -1877,7 +1877,7 @@
             {
               "id": "ACCESS",
               "successMessage": "Passt. Zugriff ist da.",
-              "blockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAF nicht starten.",
+              "blockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
               "actions": [
                 {
                   "label": "Erledigt",
@@ -1905,11 +1905,11 @@
               "overflowLabel": "Mehr anzeigen"
             },
             {
-              "id": "SAF_MEMORY",
+              "id": "SAFOR_MEMORY",
               "prompt": "Ich prüfe jetzt `safor-memory`.",
               "preferredSurface": "NATIVE_MARKDOWN",
               "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
-              "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAF nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAF danach erneut.",
+              "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAFOR danach erneut.",
               "failureBehavior": "STOP",
               "actions": [
                 {
@@ -1978,7 +1978,7 @@
           ],
           "interactionRules": [
             "Ask exactly one initialization decision at a time.",
-            "Do not continue after SAF_MEMORY failure; the run is STOPPED.",
+            "Do not continue after SAFOR_MEMORY failure; the run is STOPPED.",
             "Creation type is mandatory and must be selected before project mode.",
             "Use only the selected Factory for later Discovery, Planning and domain Evidence.",
             "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
@@ -1990,7 +1990,7 @@
         "nativeUiPolicy": {
           "mode": "CHAT_NATIVE_UI_ONLY",
           "hostOwnsVisualStyling": true,
-          "rule": "SAF may use only interaction surfaces natively exposed by the current chat host. SAF must not create, inject or require a separate web UI.",
+          "rule": "SAFOR may use only interaction surfaces natively exposed by the current chat host. SAFOR must not create, inject or require a separate web UI.",
           "allowed": [
             "interaction.action_buttons",
             "interaction.single_select",
@@ -2009,12 +2009,12 @@
             "FORCED_BUTTON_COLORS",
             "EXTERNAL_UI_SHELL"
           ],
-          "stylingBoundary": "Button colors, dropdown appearance, typography, spacing, hover states and native component styling are controlled by the chat host. SAF controls semantics, labels, ordering and hierarchy only.",
+          "stylingBoundary": "Button colors, dropdown appearance, typography, spacing, hover states and native component styling are controlled by the chat host. SAFOR controls semantics, labels, ordering and hierarchy only.",
           "fallback": "If the host exposes no native buttons/select controls, use native chat Markdown/plain text lists. Never emulate a separate UI."
         },
         "selfHealingExperience": {
           "hiddenWhenAutomaticAndSuccessful": true,
-          "successRule": "Do not narrate internal repair mechanics unless they materially affected the HUMAN's project. At most mention that SAF recovered and continued.",
+          "successRule": "Do not narrate internal repair mechanics unless they materially affected the HUMAN's project. At most mention that SAFOR recovered and continued.",
           "escalation": {
             "title": "Ich brauche kurz deine Hilfe",
             "messagePattern": "{whatFailed}. Ich habe {whatTried}. {safeState}.",
@@ -2047,9 +2047,9 @@
     "selfHealing": {
       "key": "selfHealing",
       "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "fd405a5eed5c9110d74004f6fa030e39ca7e20f8",
+      "sourceBlobSha": "8fefc1a92dbec84aa9bb42aae6c552b4cfe3a3b3",
       "content": {
-        "format": "SAF_SELF_HEALING_MODEL",
+        "format": "SAFOR_SELF_HEALING_MODEL",
         "schemaVersion": "0.4.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
@@ -2251,16 +2251,16 @@
             "REPAIR_WOULD_EXPAND_SCOPE_OR_AUTHORITY",
             "HIGH_IMPACT_OR_IRREVERSIBLE_EFFECT"
           ],
-          "messageStyle": "Concise: what failed, what SAF tried, current safe state, and the smallest HUMAN decision/action needed."
+          "messageStyle": "Concise: what failed, what SAFOR tried, current safe state, and the smallest HUMAN decision/action needed."
         }
       }
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
       "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "a9d2fb7500fb0ccb21175e1f9366b011270ed82e",
+      "sourceBlobSha": "46826fd746eddbdbf7d99648f1142af368724672",
       "content": {
-        "kind": "SAF_REPOSITORY_BOUNDARY_POLICY",
+        "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
         "version": "0.4.0",
         "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
@@ -2274,7 +2274,7 @@
         },
         "repositoryClasses": {
           "CONTROL_REPOSITORY": {
-            "purpose": "Persist SAF project bindings, control/value-stream/execution states, decisions, evidence, package snapshots and audit records.",
+            "purpose": "Persist SAFOR project bindings, control/value-stream/execution states, decisions, evidence, package snapshots and audit records.",
             "allowedRoots": [
               "projects/",
               "factory/"
@@ -2288,7 +2288,7 @@
             "purpose": "Persist domain work artifacts such as source code, manuscripts, research outputs, designs or other factory-defined deliverables.",
             "forbiddenPrefixes": [
               "factory/",
-              "saf-master/",
+              "safor-master/",
               "control-plane/",
               "projects/",
               "agents/",
@@ -2303,7 +2303,7 @@
             ]
           },
           "FACTORY_RUNTIME_CODE_REPOSITORY": {
-            "purpose": "Optional dedicated implementation repository for executable SAF runtime/adapters.",
+            "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
             "status": "UNBOUND_BY_DEFAULT"
           }
         },
@@ -2362,51 +2362,51 @@
             "WRITE"
           ],
           "onMissingOrInsufficientAccess": "STOP",
-          "rule": "SAF may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
+          "rule": "SAFOR may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
         }
       }
     },
     "packageRegistry": {
       "key": "packageRegistry",
       "sourcePath": "v0.4.0/package-registry.json",
-      "sourceBlobSha": "c391dc9c830339c348c8ee858c61f5857d29e777",
+      "sourceBlobSha": "f8ee0b75924af114a9b9ecf0825fe242503edd64",
       "content": {
-        "format": "SAF_PACKAGE_REGISTRY",
+        "format": "SAFOR_PACKAGE_REGISTRY",
         "schemaVersion": "0.4.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
-            "packageId": "saf.om.saas-engineering",
+            "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
             "version": "1.0.0",
             "path": "packages/operating-models/saas-engineering/1.0.0/package.json"
           },
           {
-            "packageId": "saf.factory.software-delivery",
+            "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
             "version": "1.0.0",
             "path": "packages/factories/software-delivery/1.0.0/package.json"
           },
           {
-            "packageId": "saf.om.book-authoring",
+            "packageId": "safor.om.book-authoring",
             "kind": "OPERATING_MODEL",
             "version": "0.1.0",
             "path": "packages/operating-models/book-authoring/0.1.0/package.json"
           },
           {
-            "packageId": "saf.factory.book-production",
+            "packageId": "safor.factory.book-production",
             "kind": "FACTORY",
             "version": "0.1.0",
             "path": "packages/factories/book-production/0.1.0/package.json"
           },
           {
-            "packageId": "saf.provider.github",
+            "packageId": "safor.provider.github",
             "kind": "PROVIDER_ADAPTER",
             "version": "0.1.0",
             "path": "providers/github/0.1.0/package.json"
           },
           {
-            "packageId": "saf.provider.gitlab",
+            "packageId": "safor.provider.gitlab",
             "kind": "PROVIDER_ADAPTER",
             "version": "0.1.0",
             "path": "providers/gitlab/0.1.0/package.json"
@@ -2417,14 +2417,14 @@
           {
             "creationType": "SOFTWARE_WEBSITE",
             "label": "Software / Website",
-            "factoryPackageId": "saf.factory.software-delivery",
-            "operatingModelPackageId": "saf.om.saas-engineering"
+            "factoryPackageId": "safor.factory.software-delivery",
+            "operatingModelPackageId": "safor.om.saas-engineering"
           },
           {
             "creationType": "BOOK",
             "label": "Buch",
-            "factoryPackageId": "saf.factory.book-production",
-            "operatingModelPackageId": "saf.om.book-authoring"
+            "factoryPackageId": "safor.factory.book-production",
+            "operatingModelPackageId": "safor.om.book-authoring"
           }
         ]
       }
@@ -2432,11 +2432,11 @@
     "providerGithub": {
       "key": "providerGithub",
       "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "881e88536c6117ed99bac0c33c8aac420910cbf4",
+      "sourceBlobSha": "6b109d6604008f3cc325daf95d639a5b5f2103ca",
       "content": {
-        "format": "SAF_PACKAGE_MANIFEST",
+        "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.4.0",
-        "packageId": "saf.provider.github",
+        "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
         "version": "0.1.0",
         "name": "GitHub Provider Adapter Contract",
@@ -2582,11 +2582,11 @@
     "providerGitlab": {
       "key": "providerGitlab",
       "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "8a7f02a7367a359d22bb2d8720a8d6f8443d2608",
+      "sourceBlobSha": "b3a8948103a8bb49c19a21d6168f52b17847ce69",
       "content": {
-        "format": "SAF_PACKAGE_MANIFEST",
+        "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.4.0",
-        "packageId": "saf.provider.gitlab",
+        "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
         "version": "0.1.0",
         "name": "GitLab Provider Adapter Contract",
@@ -2731,11 +2731,11 @@
     "operatingModelSaas": {
       "key": "operatingModelSaas",
       "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "4c27c7a89fa51145882c563a93fc63efee39b3ae",
+      "sourceBlobSha": "e4b7d65390df0ddbc9a6f780072c1ecd6ce9f572",
       "content": {
-        "format": "SAF_PACKAGE_MANIFEST",
+        "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.4.0",
-        "packageId": "saf.om.saas-engineering",
+        "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
         "version": "1.0.0",
         "name": "SaaS Engineering Reference Operating Model",
@@ -3048,11 +3048,11 @@
     "operatingModelBook": {
       "key": "operatingModelBook",
       "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "eee167495ca60e971b2526b10f3187538f68318b",
+      "sourceBlobSha": "9fd198d8520069380aad54357bf42c5795bc1f4a",
       "content": {
-        "format": "SAF_PACKAGE_MANIFEST",
+        "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.4.0",
-        "packageId": "saf.om.book-authoring",
+        "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
         "version": "0.1.0",
         "name": "Book Authoring Reference Operating Model",
@@ -3269,11 +3269,11 @@
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
       "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "e30f56cc2d7382ae07ab4ed3b9e8b2c557e7127a",
+      "sourceBlobSha": "f09e3aa819930ae0855da544f92973694198a689",
       "content": {
-        "format": "SAF_PACKAGE_MANIFEST",
+        "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.4.0",
-        "packageId": "saf.factory.software-delivery",
+        "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
         "version": "1.0.0",
         "name": "Software Delivery and Outcome Factory",
@@ -3614,15 +3614,15 @@
     "factoryBook": {
       "key": "factoryBook",
       "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "347b8f1abb3dbe84fe14b962f109301399507a40",
+      "sourceBlobSha": "201d1a91d80527d500e4ee43faa6d75e35de1ec3",
       "content": {
-        "format": "SAF_PACKAGE_MANIFEST",
+        "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.4.0",
-        "packageId": "saf.factory.book-production",
+        "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
         "version": "0.1.0",
         "name": "Book Production and Reader Outcome Factory",
-        "description": "Reference book-creation factory proving that the SAF MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
+        "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
           "kernel": ">=0.4.0 <0.5.0"
         },
@@ -3970,11 +3970,11 @@
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
       "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "fded3f85a4e10c748fb48212476f2960bb009664",
+      "sourceBlobSha": "bd05d11b8020414759ab68b2bfc9caae972f5ceb",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:package-manifest:0.4.0",
-        "title": "SAF Package Manifest 0.4.0",
+        "$id": "urn:safor:package-manifest:0.4.0",
+        "title": "SAFOR Package Manifest 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -3992,7 +3992,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_PACKAGE_MANIFEST"
+            "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -4124,11 +4124,11 @@
     "schemaControlState": {
       "key": "schemaControlState",
       "sourcePath": "v0.4.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "07c8e561574da5a8316b0a4c6ba5a6254cb02cd5",
+      "sourceBlobSha": "d036dd138629694036ca9f49d6ccfc240a18b30c",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:control-state:0.4.0",
-        "title": "SAF Control State 0.4.0",
+        "$id": "urn:safor:control-state:0.4.0",
+        "title": "SAFOR Control State 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4148,7 +4148,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_CONTROL_STATE"
+            "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -4363,11 +4363,11 @@
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
       "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "8e557b2ecbaad40d6b13047ae3679b16d90fd2df",
+      "sourceBlobSha": "a273aa7f6a4a79b197f5d398383321d012e7c019",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:value-stream-state:0.4.0",
-        "title": "SAF Value Stream State 0.4.0",
+        "$id": "urn:safor:value-stream-state:0.4.0",
+        "title": "SAFOR Value Stream State 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4384,7 +4384,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_VALUE_STREAM_STATE"
+            "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -4536,11 +4536,11 @@
     "schemaExecutionState": {
       "key": "schemaExecutionState",
       "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "3e39db4fedcf6ef59a0765bbbafc916f5d6e1333",
+      "sourceBlobSha": "b20e6170c9dd66d24a12c27f46545994989aa384",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:execution-state:0.4.0",
-        "title": "SAF Execution State 0.4.0",
+        "$id": "urn:safor:execution-state:0.4.0",
+        "title": "SAFOR Execution State 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4556,7 +4556,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_EXECUTION_STATE"
+            "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -4788,11 +4788,11 @@
     "schemaWorkItem": {
       "key": "schemaWorkItem",
       "sourcePath": "v0.4.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "23f3bea85448d26df771686d1fe25cad3cd4a0cc",
+      "sourceBlobSha": "cf36ff77d844511ecab1924c7daed44ce3ff48f1",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:work-item:0.4.0",
-        "title": "SAF Domain-Agnostic Work Item 0.4.0",
+        "$id": "urn:safor:work-item:0.4.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5005,11 +5005,11 @@
     "schemaProject": {
       "key": "schemaProject",
       "sourcePath": "v0.4.0/schemas/project.schema.json",
-      "sourceBlobSha": "0bddb70576fad1bace7ede9b069a4424829e498a",
+      "sourceBlobSha": "3e08045c943922b61afdcb632f3e93246264df2e",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:project:0.4.0",
-        "title": "SAF Project Descriptor 0.4.0",
+        "$id": "urn:safor:project:0.4.0",
+        "title": "SAFOR Project Descriptor 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5027,7 +5027,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_PROJECT"
+            "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -5137,11 +5137,11 @@
     "schemaBindings": {
       "key": "schemaBindings",
       "sourcePath": "v0.4.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "2a6ab5dd7f30c8d8e4792f8479824b17c9191b13",
+      "sourceBlobSha": "4317e4cb8efcd6780c32301b3b6bbb5ba4f6966b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:bindings:0.4.0",
-        "title": "SAF Project Bindings 0.4.0",
+        "$id": "urn:safor:bindings:0.4.0",
+        "title": "SAFOR Project Bindings 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5156,7 +5156,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_PROJECT_BINDINGS"
+            "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -5240,11 +5240,11 @@
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
       "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "b7a2e88dbacb9c98f3b33bb098e7fe7f9ab1ebcd",
+      "sourceBlobSha": "27a47aa2192fb208d04d5a846f070e3534b9b434",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:decision-record:0.4.0",
-        "title": "SAF Decision Record 0.4.0",
+        "$id": "urn:safor:decision-record:0.4.0",
+        "title": "SAFOR Decision Record 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5263,7 +5263,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_DECISION_RECORD"
+            "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -5313,11 +5313,11 @@
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
       "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "ecd5418e3fdafed68abaffc8c0a66352f32f802f",
+      "sourceBlobSha": "aa7882e9ad1a72c5e89cf7226586e1b912e64ddd",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:evidence-record:0.4.0",
-        "title": "SAF Evidence Record 0.4.0",
+        "$id": "urn:safor:evidence-record:0.4.0",
+        "title": "SAFOR Evidence Record 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5334,7 +5334,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_EVIDENCE_RECORD"
+            "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -5392,11 +5392,11 @@
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
       "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "c34ce556d8d7cfdaa5b4a0223107976b8a1b6c91",
+      "sourceBlobSha": "1c1d070d6956fca7f5e4256515e41984e517f14a",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:interaction-menu:0.4.0",
-        "title": "SAF Interaction Menu 0.4.0",
+        "$id": "urn:safor:interaction-menu:0.4.0",
+        "title": "SAFOR Interaction Menu 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5409,7 +5409,7 @@
         ],
         "properties": {
           "format": {
-            "const": "SAF_INTERACTION_MENU"
+            "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
             "const": "0.4.0"
@@ -5490,7 +5490,7 @@
                 "const": "NATIVE_MARKDOWN"
               },
               "visualProfile": {
-                "const": "SAF_CHAT_NATIVE"
+                "const": "SAFOR_CHAT_NATIVE"
               }
             }
           },
@@ -5570,11 +5570,11 @@
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
       "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "5cdd731e1b6138db7042e1b71c01370d32aea751",
+      "sourceBlobSha": "6150f6386fe4b98a31a9f5efeb27a061c3a61821",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:saf:self-healing-record:0.4.0",
-        "title": "SAF Self-Healing Record 0.4.0",
+        "$id": "urn:safor:self-healing-record:0.4.0",
+        "title": "SAFOR Self-Healing Record 0.4.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5685,11 +5685,11 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "81fe1c452bc5570c7c7792ba7a5da1d771034d73",
+      "sourceBlobSha": "68f1251204d3ad1a67c61f3b8a4327b76a3e19f6",
       "content": {
-        "format": "SAF_CONFORMANCE_SUITE",
+        "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.4.0",
-        "purpose": "Declarative architecture checks for the modular SAF MASTER baseline.",
+        "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
             "id": "CF-001",
@@ -5783,7 +5783,7 @@
           },
           {
             "id": "CF-019",
-            "statement": "Direct HUMAN communication uses the SAF_HUMAN_BUDDY profile.",
+            "statement": "Direct HUMAN communication uses the SAFOR_HUMAN_BUDDY profile.",
             "expected": true
           },
           {
@@ -5868,7 +5868,7 @@
           },
           {
             "id": "CF-036",
-            "statement": "SAF controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
+            "statement": "SAFOR controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
             "expected": true
           },
           {
@@ -5913,7 +5913,7 @@
           },
           {
             "id": "CF-045",
-            "statement": "When automatic recovery is unsafe or exhausted, SAF escalates concisely to the HUMAN with the smallest required action.",
+            "statement": "When automatic recovery is unsafe or exhausted, SAFOR escalates concisely to the HUMAN with the smallest required action.",
             "expected": true
           },
           {
@@ -5928,7 +5928,7 @@
           },
           {
             "id": "CF-048",
-            "statement": "SAF never auto-creates safor-memory or substitutes another control repository in this baseline.",
+            "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
             "expected": true
           },
           {
