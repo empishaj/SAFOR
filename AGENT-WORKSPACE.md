@@ -1,6 +1,6 @@
 # SAFOR Agent Workspace Protocol
 
-SAFOR v0.6 introduces repository-native coordination for persistent agent chats.
+SAFOR v0.7 uses repository-native coordination for persistent agent chats.
 
 ## Goal
 
@@ -21,7 +21,8 @@ projects/{projectSlug}/
 │       │   ├── index.json
 │       │   └── {jobId}.json
 │       ├── outbox/
-│       │   └── {jobId}.result.json
+│       │   ├── {jobId}.result.json
+│       │   └── {jobId}.result.md
 │       ├── evidence/
 │       │   └── {jobId}/
 │       └── audit/
@@ -133,3 +134,33 @@ Only the MASTER may mark a job VERIFIED or ACCEPTED after:
 A normal chat does not automatically wake when a repository file changes. SAFOR therefore requires an external activation trigger: HUMAN, automation or a host-supported agent trigger.
 
 The activation instruction can be minimal: **check workspace**. The job content itself remains in the repository.
+
+
+## HUMAN-readable result
+
+Every job writes a machine-readable result and a HUMAN-readable Markdown report.
+
+The Markdown report is the default HUMAN result view and must contain:
+- Objective
+- Work Performed
+- Artifacts Changed
+- Git Trace
+- Verification
+- Result
+- Risks and Limits
+- Open Items
+
+The JSON result pins the Markdown report by control repository, ref/path, blob SHA and commit SHA.
+
+For mutating jobs, the result also reports the dedicated work branch, immutable base commit, all produced commit SHAs, head commit, changed paths, PR/MR reference when present, and provider readback evidence.
+
+The MASTER verifies these Git claims before VERIFIED/ACCEPTED.
+
+
+## Parallel scheduling
+
+Agent work is not dispatched merely because an inbox exists. SAFOR v0.7 routes agent jobs through the conflict-aware Multi-Agent Scheduler.
+
+The scheduler verifies dependency readiness, capability match, free agent slots, separation of duties, immutable read inputs and resource conflicts before dispatch. Mutating jobs receive dedicated `safor/job/{jobKey}/{agentKey}` branches.
+
+See [MULTI-AGENT-SCHEDULER.md](MULTI-AGENT-SCHEDULER.md).
