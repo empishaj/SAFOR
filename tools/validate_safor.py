@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.4.0/SAF-MASTER.json")
+modular_master = load_json("v0.4.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAF_MASTER_COMPLETE_SINGLE_FILE":
