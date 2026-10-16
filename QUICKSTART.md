@@ -1,47 +1,62 @@
-# SAFOR Quickstart
-
-SAFOR is loaded as one self-contained JSON file and then guides the HUMAN through a controlled project bootstrap.
+# SAFOR Quickstart — v0.5
 
 ## Prerequisites
 
-- A supported chat host with an available GitHub or GitLab connection.
-- A HUMAN-controlled owner/namespace.
-- A repository named exactly `safor-memory` under that owner.
-- Proven read **and** write access to `{OWNER}/safor-memory`.
+You need a compatible chat host that can expose at least one **durable Memory option**.
 
-If `safor-memory` does not already exist or is not writable, SAFOR stops. It never creates that repository automatically.
+A valid Memory option must prove:
 
-## Start
+- read,
+- write,
+- revision identity,
+- durability,
+- ability to reopen the same state in a future session.
 
-1. Load `SAFOR-MASTER-COMPLETE.json` into a new compatible chat.
-2. Choose **GitHub** or **GitLab**.
-3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
-4. Choose the owner/namespace.
-5. SAFOR verifies `{OWNER}/safor-memory`.
-6. Choose exactly one creation type:
+GitHub or GitLab are optional implementations, not prerequisites.
+
+## Bootstrap
+
+1. Upload only `SAFOR-MASTER-COMPLETE.json`.
+2. SAFOR asks: **Wo soll dein SAFOR Memory liegen?**
+3. Choose one eligible Memory option.
+4. Approve ownership: HUMAN or organization.
+5. Choose collaboration mode:
+   - **Personal**
+   - **Shared Team**
+6. SAFOR verifies Memory. Shared Team also requires shared access plus CAS/lock style concurrency.
+7. Choose what you want to create:
    - **Software / Website**
    - **Buch**
-7. Choose **existing project** or **new project**.
-8. Confirm the resolved Factory, Operating Model and Provider Adapter.
-9. Approve project materialization.
-10. Continue through the chat-native action menu.
+8. SAFOR resolves the Factory and Operating Model.
+9. Choose a work provider only if the Factory requires one.
+10. Select or create the concrete project/workspace.
+11. Approve setup.
+12. SAFOR persists project state, registers the session and reads it back.
 
-## Factory binding
+## Examples
 
-The HUMAN-selected creation type remains authoritative:
+### Software with GitHub
+- Memory: persistent filesystem
+- Work provider: GitHub
+- Valid: yes, if filesystem persistence is proven.
 
-- Software / Website → Software Delivery Factory + SaaS Engineering Operating Model.
-- Buch → Book Production Factory + Book Authoring Operating Model.
+### Software with Plastic SCM
+- Memory: versioned repository
+- Work provider: Plastic SCM / Unity Version Control
+- Valid: yes, if the host exposes a compatible Plastic connector.
 
-Discovery, Planning and domain Evidence always come from that same Factory. SAFOR must not mix contracts across Factories.
+### Book
+- Memory: versioned repository or persistent filesystem
+- Work provider: optional
+- A book may run in **Memory-only** mode.
 
-## Runtime memory vs product source
+## Fresh chat
 
-- Product source: `empishaj/SAFOR`
-- Project runtime/control memory: `{OWNER}/safor-memory`
+A new chat must be able to:
 
-These repositories serve different purposes and must not be conflated.
+1. connect to the same Memory,
+2. load project/package state,
+3. register a new session,
+4. continue without the previous chat transcript.
 
-## Safety
-
-Do not paste passwords, PATs, private keys or other credentials into chat. Provider rights must be observed through the actual connected provider.
+If this cannot be done, the Memory provider is not eligible.
