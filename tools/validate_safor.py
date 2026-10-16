@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.6.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.7.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -32,7 +32,8 @@ required_modules = {
     "schemaValueStreamState","schemaExecutionState","schemaWorkItem","schemaProject",
     "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu",
     "schemaSelfHealingRecord","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
-    "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult","conformance"
+    "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
+    "multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
 }
 missing = sorted(required_modules - set(modules))
 if missing:
@@ -89,13 +90,13 @@ for action_id in ("E04","E05"):
         fail(f"{action_id} must bind Factory evidenceContract.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in ("INV-037","INV-038","INV-039","INV-040","INV-041","INV-042","INV-043","INV-044","INV-045","INV-046","INV-047","INV-048","INV-049","INV-050","INV-051","INV-052","INV-053","INV-054","INV-055","INV-056"):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 71)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in ("CF-046","CF-047","CF-048","CF-049","CF-050","CF-051","CF-052","CF-053","CF-054","CF-055","CF-056","CF-057","CF-058","CF-059","CF-060","CF-061","CF-062","CF-063","CF-064","CF-065","CF-066","CF-067","CF-068"):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 89)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -147,6 +148,87 @@ result_schema = modules.get("schemaAgentResult", {}).get("content", {})
 if "completionStatus" not in result_schema.get("required", []):
     fail("Agent result schema missing completionStatus.")
 
+scheduler = modules.get("multiAgentScheduler", {}).get("content", {})
+if scheduler.get("capacityModel", {}).get("agentDefaultMaxConcurrentJobs") != 1:
+    fail("Default chat-agent scheduler capacity must be one job.")
+if scheduler.get("conflictModel", {}).get("safeDefault") != "Any ambiguity is treated as conflict and the jobs are serialized.":
+    fail("Unknown scheduler conflicts must serialize.")
+if scheduler.get("gitIsolation", {}).get("directMainWriteForbidden") is not True:
+    fail("Agent mutating jobs must forbid direct default-branch writes.")
+if "RECONCILE_REQUIRED" not in scheduler.get("leaseProtocol", {}).get("expiryRule", ""):
+    fail("Lease expiry must require reconciliation before reassignment.")
+for action_id in ("S01","S02","S03","S04","S05","S06","S07"):
+    if actions.get(action_id, {}).get("modelRef") != "multi-agent-scheduler-model.json":
+        fail(f"{action_id} must bind multi-agent-scheduler-model.json.")
+
+work_schema = modules.get("schemaWorkItem", {}).get("content", {})
+if "execution" not in work_schema.get("required", []):
+    fail("Work items must include execution scheduling metadata.")
+execution_props = work_schema.get("properties", {}).get("execution", {}).get("properties", {})
+if execution_props.get("unit", {}).get("enum") != ["ATOMIC","COMPOSITE"]:
+    fail("Work item execution unit must support ATOMIC and COMPOSITE.")
+if "resourceAccess" not in execution_props:
+    fail("Work items must declare scheduling resource access.")
+
+registry_schema = modules.get("schemaAgentRegistry", {}).get("content", {})
+agent_entry = registry_schema.get("$defs", {}).get("agentEntry", {})
+if "scheduling" not in agent_entry.get("required", []):
+    fail("Agent registry must declare scheduling capacity.")
+sched_props = agent_entry.get("properties", {}).get("scheduling", {}).get("properties", {})
+if "dispatchEnabled" not in sched_props or "maxConcurrentJobs" not in sched_props:
+    fail("Agent registry scheduling requires dispatchEnabled and maxConcurrentJobs.")
+
+for field in ("schedulerStateRef","activeDispatchWaveRefs","resourceLeaseRefs"):
+    if field not in execution_schema.get("required", []):
+        fail(f"Execution state missing scheduler reference {field}.")
+
+for field in ("dispatchWaveRef","resourceLeaseRefs","resourceAccessSource","resourceAccess","gitWorkspaces"):
+    if field not in job_schema.get("required", []):
+        fail(f"Agent job schema missing {field}.")
+branch_pattern = job_schema.get("$defs", {}).get("gitWorkspace", {}).get("properties", {}).get("branch", {}).get("pattern")
+if branch_pattern != "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$":
+    fail("Agent job branch pattern must use Git-ref-safe job/agent keys.")
+result_target_required = job_schema.get("properties", {}).get("resultTarget", {}).get("required", [])
+if "humanReadableResultRef" not in result_target_required:
+    fail("Agent job must require a HUMAN-readable result target.")
+
+for field in ("humanReadableReport","gitTrace"):
+    if field not in result_schema.get("required", []):
+        fail(f"Agent result schema missing {field}.")
+human_report_required = result_schema.get("properties", {}).get("humanReadableReport", {}).get("required", [])
+for field in ("repository","ref","commitSha","blobSha","format","requiredSections"):
+    if field not in human_report_required:
+        fail(f"HUMAN-readable result report missing {field}.")
+git_trace_entry = result_schema.get("$defs", {}).get("gitTraceEntry", {}).get("required", [])
+for field in ("repository","branch","baseCommitSha","headCommitSha","commitShas","changedPaths","providerReadbackRef"):
+    if field not in git_trace_entry:
+        fail(f"Git trace entry missing {field}.")
+
+if agent_model.get("topology", {}).get("agentHumanReadableResult") != "agents/{agentId}/outbox/{jobId}.result.md":
+    fail("Agent Workspace must define the HUMAN-readable result path.")
+if "agents/{agentId}/outbox/{jobId}.result.md" not in ownership.get("AGENT_ONLY", []):
+    fail("Agent must own its HUMAN-readable result report path.")
+
+for module_name in ("factorySoftwareWebsite","factoryBook"):
+    model = modules.get(module_name, {}).get("content", {}).get("model", {})
+    sched_contract = model.get("schedulingContract", {})
+    if sched_contract.get("atomicDispatchOnly") is not True:
+        fail(f"{module_name} must require atomic dispatch.")
+    if sched_contract.get("resourceAccessRequired") is not True:
+        fail(f"{module_name} must require resource access declarations.")
+    req = model.get("planningContract", {}).get("requiredForEachWorkItem", [])
+    for field in ("execution","resourceAccess","parallelizationDecision"):
+        if field not in req:
+            fail(f"{module_name} planning contract missing {field}.")
+
+interaction = modules.get("interaction", {}).get("content", {})
+if "multiAgentStatusExperience" not in interaction:
+    fail("Interaction model must expose multi-agent utilization/status.")
+
+for schema_name in ("schemaSchedulerState","schemaDispatchWave","schemaResourceLease"):
+    if not modules.get(schema_name, {}).get("content"):
+        fail(f"Missing scheduler schema module {schema_name}.")
+
 if manifest.get("version") != version:
     fail("RELEASE-MANIFEST.json version must match VERSION.")
 if bundle.get("bundleVersion") != version:
@@ -160,10 +242,10 @@ if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
 if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
     fail("Release manifest latest alias mismatch.")
-if manifest.get("sourceRoot") != "v0.6.0":
-    fail("Release manifest source root must be v0.6.0.")
-if bundle.get("schemaVersion") != "0.6.0":
-    fail("Complete bundle schemaVersion must be 0.6.0.")
+if manifest.get("sourceRoot") != "v0.7.0":
+    fail("Release manifest source root must be v0.7.0.")
+if bundle.get("schemaVersion") != "0.7.0":
+    fail("Complete bundle schemaVersion must be 0.7.0.")
 versioned_bundle = load_json(expected_versioned)
 if versioned_bundle != bundle:
     fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")
@@ -225,3 +307,6 @@ print("- canonical product repo: empishaj/SAFOR")
 print("- runtime memory: {selectedOwner}/safor-memory")
 print("- creation types: SOFTWARE_WEBSITE, BOOK")
 print("- Factory-bound Discovery/Planning/Evidence: verified")
+print("- Multi-agent conflict-aware scheduling: verified")
+print("- Git-isolated agent mutations: verified")
+print("- HUMAN-readable agent results + Git trace: verified")
