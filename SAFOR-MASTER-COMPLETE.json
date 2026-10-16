@@ -150,28 +150,28 @@
       "sourceBlobSha": "fa695a7256439845e13bf686dd036133a5695525"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.7.0/packages/operating-models/book-authoring/0.2.0/package.json",
-      "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187"
+      "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
+      "sourceBlobSha": "2c8b0e2db432bc34260cb13c852971ac910d3c4d"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
-      "sourceBlobSha": "2d423793e7adb285704c6306a9ec32489486c32c"
+      "sourcePath": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
+      "sourceBlobSha": "d4c767316294beb99056cabec439c080f02550f2"
     },
     "factoryBook": {
-      "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
-      "sourceBlobSha": "30c6be12010de70b1872ab35c310f97a1a529d2e"
+      "sourcePath": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
+      "sourceBlobSha": "4478dca330443bc4f16268b5439b4a2ed97c6ea3"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "ec8329099723c10900e63487df2243d664e4d305"
+      "sourcePath": "v0.8.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "80ef74814cfc082a4530a3b27f284e91c2a345bd"
     },
     "schemaControlState": {
-      "sourcePath": "v0.7.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "fcbaf4b7ec2740e6bbc85da269096b578669c488"
+      "sourcePath": "v0.8.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "dd1ca6daf7c279b8090d614a34fa6d38e9e19cc1"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.7.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "298e56744b5c0b6f9fa477a29789e874b5e27c4b"
+      "sourcePath": "v0.8.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "9551e370b6d64e8a27b908408739e962c0b514b9"
     },
     "schemaExecutionState": {
       "sourcePath": "v0.7.0/schemas/execution-state.schema.json",
@@ -3830,18 +3830,18 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.7.0/packages/operating-models/book-authoring/0.2.0/package.json",
-      "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187",
+      "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
+      "sourceBlobSha": "2c8b0e2db432bc34260cb13c852971ac910d3c4d",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
-        "version": "0.2.0",
+        "version": "0.3.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.7.0 <0.8.0"
+          "kernel": ">=0.8.0 <0.9.0"
         },
         "exports": {
           "capabilities": [
@@ -4051,18 +4051,18 @@
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
-      "sourceBlobSha": "2d423793e7adb285704c6306a9ec32489486c32c",
+      "sourcePath": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
+      "sourceBlobSha": "d4c767316294beb99056cabec439c080f02550f2",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
-        "version": "1.1.0",
+        "version": "1.2.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.7.0 <0.8.0"
+          "kernel": ">=0.8.0 <0.9.0"
         },
         "exports": {
           "capabilities": [
@@ -4420,18 +4420,18 @@
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
-      "sourceBlobSha": "30c6be12010de70b1872ab35c310f97a1a529d2e",
+      "sourcePath": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
+      "sourceBlobSha": "4478dca330443bc4f16268b5439b4a2ed97c6ea3",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
-        "version": "0.2.0",
+        "version": "0.3.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.7.0 <0.8.0"
+          "kernel": ">=0.8.0 <0.9.0"
         },
         "exports": {
           "capabilities": [
@@ -4800,12 +4800,12 @@
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "ec8329099723c10900e63487df2243d664e4d305",
+      "sourcePath": "v0.8.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "80ef74814cfc082a4530a3b27f284e91c2a345bd",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.7.0",
-        "title": "SAFOR Package Manifest 0.7.0",
+        "$id": "urn:safor:package-manifest:0.8.0",
+        "title": "SAFOR Package Manifest 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4826,7 +4826,7 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "packageId": {
             "type": "string",
@@ -4954,12 +4954,12 @@
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.7.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "fcbaf4b7ec2740e6bbc85da269096b578669c488",
+      "sourcePath": "v0.8.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "dd1ca6daf7c279b8090d614a34fa6d38e9e19cc1",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.7.0",
-        "title": "SAFOR Control State 0.7.0",
+        "$id": "urn:safor:control-state:0.8.0",
+        "title": "SAFOR Control State 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4982,7 +4982,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "kernelRef": {
             "type": "object",
@@ -4993,7 +4993,7 @@
             ],
             "properties": {
               "version": {
-                "const": "0.7.0"
+                "const": "0.8.0"
               },
               "sourceRef": {
                 "type": "string",
@@ -5193,12 +5193,12 @@
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.7.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "298e56744b5c0b6f9fa477a29789e874b5e27c4b",
+      "sourcePath": "v0.8.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "9551e370b6d64e8a27b908408739e962c0b514b9",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.7.0",
-        "title": "SAFOR Value Stream State 0.7.0",
+        "$id": "urn:safor:value-stream-state:0.8.0",
+        "title": "SAFOR Value Stream State 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5218,7 +5218,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
