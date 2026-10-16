@@ -7,49 +7,52 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 MODULE_PATHS = {
-    "kernel": "v0.8.0/SAFOR-MASTER.json",
-    "initialization": "v0.8.0/initialization-model.json",
-    "interaction": "v0.8.0/interaction-model.json",
-    "selfHealing": "v0.8.0/self-healing-model.json",
-    "agentWorkspace": "v0.8.0/agent-workspace-model.json",
-    "agentJobContract": "v0.8.0/agent-job-contract-model.json",
-    "multiAgentScheduler": "v0.8.0/multi-agent-scheduler-model.json",
-    "repositoryPolicy": "v0.8.0/repository-policy.json",
-    "packageRegistry": "v0.8.0/package-registry.json",
-    "providerGithub": "v0.8.0/providers/github/0.3.0/package.json",
-    "providerGitlab": "v0.8.0/providers/gitlab/0.3.0/package.json",
-    "operatingModelSaas": "v0.8.0/packages/operating-models/saas-engineering/1.2.0/package.json",
-    "operatingModelBook": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
-    "factorySoftwareWebsite": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
-    "factoryBook": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
-    "schemaPackageManifest": "v0.8.0/schemas/package-manifest.schema.json",
-    "schemaControlState": "v0.8.0/schemas/control-state.schema.json",
-    "schemaValueStreamState": "v0.8.0/schemas/value-stream-state.schema.json",
-    "schemaExecutionState": "v0.8.0/schemas/execution-state.schema.json",
-    "schemaWorkItem": "v0.8.0/schemas/work-item.schema.json",
-    "schemaProject": "v0.8.0/schemas/project.schema.json",
-    "schemaBindings": "v0.8.0/schemas/bindings.schema.json",
-    "schemaDecisionRecord": "v0.8.0/schemas/decision-record.schema.json",
-    "schemaEvidenceRecord": "v0.8.0/schemas/evidence-record.schema.json",
-    "schemaInteractionMenu": "v0.8.0/schemas/interaction-menu.schema.json",
-    "schemaSelfHealingRecord": "v0.8.0/schemas/self-healing-record.schema.json",
-    "schemaAgentRegistry": "v0.8.0/schemas/agent-registry.schema.json",
-    "schemaAgentIdentity": "v0.8.0/schemas/agent-identity.schema.json",
-    "schemaAgentInboxIndex": "v0.8.0/schemas/agent-inbox-index.schema.json",
-    "schemaAgentState": "v0.8.0/schemas/agent-state.schema.json",
-    "schemaAgentJob": "v0.8.0/schemas/agent-job.schema.json",
-    "schemaAgentJobState": "v0.8.0/schemas/agent-job-state.schema.json",
-    "schemaAgentResult": "v0.8.0/schemas/agent-result.schema.json",
-    "schemaSchedulerState": "v0.8.0/schemas/scheduler-state.schema.json",
-    "schemaDispatchWave": "v0.8.0/schemas/dispatch-wave.schema.json",
-    "schemaResourceLease": "v0.8.0/schemas/resource-lease.schema.json",
-    "conformance": "v0.8.0/conformance.json",
+    "kernel": "v0.9.0/SAFOR-MASTER.json",
+    "initialization": "v0.9.0/initialization-model.json",
+    "interaction": "v0.9.0/interaction-model.json",
+    "selfHealing": "v0.9.0/self-healing-model.json",
+    "moduleSelfHealing": "v0.9.0/module-self-healing-model.json",
+    "agentWorkspace": "v0.9.0/agent-workspace-model.json",
+    "agentJobContract": "v0.9.0/agent-job-contract-model.json",
+    "multiAgentScheduler": "v0.9.0/multi-agent-scheduler-model.json",
+    "repositoryPolicy": "v0.9.0/repository-policy.json",
+    "packageRegistry": "v0.9.0/package-registry.json",
+    "providerGithub": "v0.9.0/providers/github/0.4.0/package.json",
+    "providerGitlab": "v0.9.0/providers/gitlab/0.4.0/package.json",
+    "operatingModelSaas": "v0.9.0/packages/operating-models/saas-engineering/1.3.0/package.json",
+    "operatingModelBook": "v0.9.0/packages/operating-models/book-authoring/0.4.0/package.json",
+    "factorySoftwareWebsite": "v0.9.0/packages/factories/software-delivery/1.3.0/package.json",
+    "factoryBook": "v0.9.0/packages/factories/book-production/0.4.0/package.json",
+    "schemaPackageManifest": "v0.9.0/schemas/package-manifest.schema.json",
+    "schemaControlState": "v0.9.0/schemas/control-state.schema.json",
+    "schemaValueStreamState": "v0.9.0/schemas/value-stream-state.schema.json",
+    "schemaExecutionState": "v0.9.0/schemas/execution-state.schema.json",
+    "schemaWorkItem": "v0.9.0/schemas/work-item.schema.json",
+    "schemaProject": "v0.9.0/schemas/project.schema.json",
+    "schemaBindings": "v0.9.0/schemas/bindings.schema.json",
+    "schemaDecisionRecord": "v0.9.0/schemas/decision-record.schema.json",
+    "schemaEvidenceRecord": "v0.9.0/schemas/evidence-record.schema.json",
+    "schemaInteractionMenu": "v0.9.0/schemas/interaction-menu.schema.json",
+    "schemaSelfHealingRecord": "v0.9.0/schemas/self-healing-record.schema.json",
+    "schemaModuleRecoveryProfile": "v0.9.0/schemas/module-recovery-profile.schema.json",
+    "schemaAgentRegistry": "v0.9.0/schemas/agent-registry.schema.json",
+    "schemaAgentIdentity": "v0.9.0/schemas/agent-identity.schema.json",
+    "schemaAgentInboxIndex": "v0.9.0/schemas/agent-inbox-index.schema.json",
+    "schemaAgentState": "v0.9.0/schemas/agent-state.schema.json",
+    "schemaAgentJob": "v0.9.0/schemas/agent-job.schema.json",
+    "schemaAgentJobState": "v0.9.0/schemas/agent-job-state.schema.json",
+    "schemaAgentResult": "v0.9.0/schemas/agent-result.schema.json",
+    "schemaSchedulerState": "v0.9.0/schemas/scheduler-state.schema.json",
+    "schemaDispatchWave": "v0.9.0/schemas/dispatch-wave.schema.json",
+    "schemaResourceLease": "v0.9.0/schemas/resource-lease.schema.json",
+    "conformance": "v0.9.0/conformance.json",
 }
 
 REFERENCE_RESOLUTION = {
     "initialization-model.json": "initialization",
     "interaction-model.json": "interaction",
     "self-healing-model.json": "selfHealing",
+    "module-self-healing-model.json": "moduleSelfHealing",
     "agent-workspace-model.json": "agentWorkspace",
     "agent-job-contract-model.json": "agentJobContract",
     "multi-agent-scheduler-model.json": "multiAgentScheduler",
@@ -66,6 +69,7 @@ REFERENCE_RESOLUTION = {
     "schemas/evidence-record.schema.json": "schemaEvidenceRecord",
     "schemas/interaction-menu.schema.json": "schemaInteractionMenu",
     "schemas/self-healing-record.schema.json": "schemaSelfHealingRecord",
+    "schemas/module-recovery-profile.schema.json": "schemaModuleRecoveryProfile",
     "schemas/agent-registry.schema.json": "schemaAgentRegistry",
     "schemas/agent-identity.schema.json": "schemaAgentIdentity",
     "schemas/agent-inbox-index.schema.json": "schemaAgentInboxIndex",
@@ -76,12 +80,12 @@ REFERENCE_RESOLUTION = {
     "schemas/scheduler-state.schema.json": "schemaSchedulerState",
     "schemas/dispatch-wave.schema.json": "schemaDispatchWave",
     "schemas/resource-lease.schema.json": "schemaResourceLease",
-    "providers/github/0.3.0/package.json": "providerGithub",
-    "providers/gitlab/0.3.0/package.json": "providerGitlab",
-    "packages/operating-models/saas-engineering/1.2.0/package.json": "operatingModelSaas",
-    "packages/operating-models/book-authoring/0.3.0/package.json": "operatingModelBook",
-    "packages/factories/software-delivery/1.2.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.3.0/package.json": "factoryBook",
+    "providers/github/0.4.0/package.json": "providerGithub",
+    "providers/gitlab/0.4.0/package.json": "providerGitlab",
+    "packages/operating-models/saas-engineering/1.3.0/package.json": "operatingModelSaas",
+    "packages/operating-models/book-authoring/0.4.0/package.json": "operatingModelBook",
+    "packages/factories/software-delivery/1.3.0/package.json": "factorySoftwareWebsite",
+    "packages/factories/book-production/0.4.0/package.json": "factoryBook",
 }
 
 def git_blob_sha(data: bytes) -> str:
@@ -100,10 +104,21 @@ def load_module(key: str, rel_path: str):
 
 def build_bundle():
     modules = {key: load_module(key, path) for key, path in MODULE_PATHS.items()}
+    recovery_profiles = {
+        p["moduleKey"]: p
+        for p in modules["moduleSelfHealing"]["content"]["moduleProfiles"]
+    }
+    module_keys = set(modules)
+    if set(recovery_profiles) != module_keys:
+        missing = sorted(module_keys - set(recovery_profiles))
+        extra = sorted(set(recovery_profiles) - module_keys)
+        raise ValueError(f"Module recovery coverage mismatch: missing={missing}, extra={extra}")
+    for key, module in modules.items():
+        module["selfHealingProfileId"] = recovery_profiles[key]["profileId"]
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     return {
         "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "bundleVersion": version,
         "definitionId": "safor-master-complete",
         "productName": "SAFOR",
@@ -155,6 +170,7 @@ def build_bundle():
             "chatUiRule": "Use chat-native UI only.",
             "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
             "selfHealingRule": "Use the embedded conservative self-healing model.",
+            "moduleSelfHealingRule": "Every embedded module must resolve to exactly one embedded recovery profile. Repairs are constrained by module authority/repairability, failure-class policy, active authority and actual provider rights.",
             "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative.",
             "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection.",
             "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
@@ -176,6 +192,7 @@ def build_bundle():
             key: {
                 "sourcePath": module["sourcePath"],
                 "sourceBlobSha": module["sourceBlobSha"],
+                "selfHealingProfileId": module["selfHealingProfileId"],
             }
             for key, module in modules.items()
         },
