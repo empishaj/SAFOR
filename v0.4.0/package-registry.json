@@ -1,0 +1,58 @@
+{
+  "format": "SAF_PACKAGE_REGISTRY",
+  "schemaVersion": "0.4.0",
+  "status": "REFERENCE_REGISTRY",
+  "packages": [
+    {
+      "packageId": "saf.om.saas-engineering",
+      "kind": "OPERATING_MODEL",
+      "version": "1.0.0",
+      "path": "packages/operating-models/saas-engineering/1.0.0/package.json"
+    },
+    {
+      "packageId": "saf.factory.software-delivery",
+      "kind": "FACTORY",
+      "version": "1.0.0",
+      "path": "packages/factories/software-delivery/1.0.0/package.json"
+    },
+    {
+      "packageId": "saf.om.book-authoring",
+      "kind": "OPERATING_MODEL",
+      "version": "0.1.0",
+      "path": "packages/operating-models/book-authoring/0.1.0/package.json"
+    },
+    {
+      "packageId": "saf.factory.book-production",
+      "kind": "FACTORY",
+      "version": "0.1.0",
+      "path": "packages/factories/book-production/0.1.0/package.json"
+    },
+    {
+      "packageId": "saf.provider.github",
+      "kind": "PROVIDER_ADAPTER",
+      "version": "0.1.0",
+      "path": "providers/github/0.1.0/package.json"
+    },
+    {
+      "packageId": "saf.provider.gitlab",
+      "kind": "PROVIDER_ADAPTER",
+      "version": "0.1.0",
+      "path": "providers/gitlab/0.1.0/package.json"
+    }
+  ],
+  "selectionRule": "The HUMAN must first select a creation profile. Its Factory and compatible Operating Model become mandatory project bindings; the Provider Adapter remains provider-derived. All bindings are validated, pinned and snapshotted.",
+  "creationProfiles": [
+    {
+      "creationType": "SOFTWARE_WEBSITE",
+      "label": "Software / Website",
+      "factoryPackageId": "saf.factory.software-delivery",
+      "operatingModelPackageId": "saf.om.saas-engineering"
+    },
+    {
+      "creationType": "BOOK",
+      "label": "Buch",
+      "factoryPackageId": "saf.factory.book-production",
+      "operatingModelPackageId": "saf.om.book-authoring"
+    }
+  ]
+}
