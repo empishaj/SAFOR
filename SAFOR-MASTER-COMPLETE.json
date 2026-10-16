@@ -198,24 +198,24 @@
       "sourceBlobSha": "be9cb51ed593adbc10ee184775a464c4c80b7d5b"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.7.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59"
+      "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "c288c40009336e782d96726c6a021002a614ed1c"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.7.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "ffe3f5b700f42f5a402e2db86febe0030ce0d6dc"
+      "sourcePath": "v0.8.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "aa22091a5920f68eb1b7abab6d1611666b277c8f"
     },
     "schemaAgentRegistry": {
-      "sourcePath": "v0.7.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "5defb4380971cba952dd7f1aa54e1369ecad8542"
+      "sourcePath": "v0.8.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "467cfefbf4c88a235ef9e3a107797f118e4da96a"
     },
     "schemaAgentIdentity": {
-      "sourcePath": "v0.7.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "ec0d2ea7d72754c931baebc62d71f0ae4871d9c0"
+      "sourcePath": "v0.8.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "85524530f1c260603f4834737b5d0be645af2c96"
     },
     "schemaAgentState": {
-      "sourcePath": "v0.7.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "66033c46c73e3c450701780ca57b18237b91ecae"
+      "sourcePath": "v0.8.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd"
     },
     "schemaAgentJob": {
       "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
@@ -234,8 +234,8 @@
       "sourceBlobSha": "79ab6a843dbe9e8f8979b8875e7edbe9f1953e9d"
     },
     "schemaAgentInboxIndex": {
-      "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "20e93dd158b7737b88c40063d4090139a2a94fbb"
+      "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428"
     },
     "multiAgentScheduler": {
       "sourcePath": "v0.8.0/multi-agent-scheduler-model.json",
@@ -6504,12 +6504,12 @@
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.7.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59",
+      "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "c288c40009336e782d96726c6a021002a614ed1c",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.7.0",
-        "title": "SAFOR Interaction Menu 0.7.0",
+        "$id": "urn:safor:interaction-menu:0.8.0",
+        "title": "SAFOR Interaction Menu 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6525,7 +6525,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "menuId": {
             "type": "string",
@@ -6682,12 +6682,12 @@
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.7.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "ffe3f5b700f42f5a402e2db86febe0030ce0d6dc",
+      "sourcePath": "v0.8.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "aa22091a5920f68eb1b7abab6d1611666b277c8f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.7.0",
-        "title": "SAFOR Self-Healing Record 0.7.0",
+        "$id": "urn:safor:self-healing-record:0.8.0",
+        "title": "SAFOR Self-Healing Record 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6797,12 +6797,12 @@
     },
     "schemaAgentRegistry": {
       "key": "schemaAgentRegistry",
-      "sourcePath": "v0.7.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "5defb4380971cba952dd7f1aa54e1369ecad8542",
+      "sourcePath": "v0.8.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "467cfefbf4c88a235ef9e3a107797f118e4da96a",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-registry:0.7.0",
-        "title": "SAFOR Agent Registry 0.7.0",
+        "$id": "urn:safor:agent-registry:0.8.0",
+        "title": "SAFOR Agent Registry 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6817,7 +6817,7 @@
             "const": "SAFOR_AGENT_REGISTRY"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -6892,12 +6892,12 @@
     },
     "schemaAgentIdentity": {
       "key": "schemaAgentIdentity",
-      "sourcePath": "v0.7.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "ec0d2ea7d72754c931baebc62d71f0ae4871d9c0",
+      "sourcePath": "v0.8.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "85524530f1c260603f4834737b5d0be645af2c96",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-identity:0.7.0",
-        "title": "SAFOR Agent Identity 0.7.0",
+        "$id": "urn:safor:agent-identity:0.8.0",
+        "title": "SAFOR Agent Identity 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6923,7 +6923,7 @@
             "const": "SAFOR_AGENT_IDENTITY"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -7016,19 +7016,21 @@
               },
               "onActivation": {
                 "type": "array",
-                "minItems": 7,
+                "minItems": 10,
                 "items": {
                   "enum": [
                     "LOAD_IDENTITY",
                     "LOAD_AGENT_STATE",
                     "LOAD_INBOX_INDEX",
                     "SELECT_DISCOVERABLE_JOB",
-                    "READ_JOB_CONTRACT",
+                    "READ_AUTHORITATIVE_JOB_JSON",
+                    "VERIFY_JOB_JSON_BLOB",
+                    "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
                     "READ_MASTER_JOB_STATE",
-                    "VERIFY_ELIGIBLE_JOB",
+                    "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
                     "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
-                    "EXECUTE_CLAIMED_JOB",
-                    "SUBMIT_RESULT"
+                    "EXECUTE_ONLY_CLAIMED_JOB",
+                    "SUBMIT_RESULT_AND_EVIDENCE"
                   ]
                 }
               },
@@ -7042,12 +7044,12 @@
     },
     "schemaAgentState": {
       "key": "schemaAgentState",
-      "sourcePath": "v0.7.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "66033c46c73e3c450701780ca57b18237b91ecae",
+      "sourcePath": "v0.8.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-state:0.7.0",
-        "title": "SAFOR Agent Runtime State 0.7.0",
+        "$id": "urn:safor:agent-state:0.8.0",
+        "title": "SAFOR Agent Runtime State 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7068,7 +7070,7 @@
             "const": "SAFOR_AGENT_STATE"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -7152,6 +7154,12 @@
             "additionalProperties": false,
             "required": [
               "jobId",
+              "jobKey",
+              "packageId",
+              "workItemId",
+              "roleId",
+              "humanJobRef",
+              "observedHumanJobBlobSha",
               "contractRef",
               "observedContractBlobSha",
               "masterJobStateRef",
@@ -7231,6 +7239,30 @@
                   "type": "string",
                   "minLength": 1
                 }
+              },
+              "jobKey": {
+                "type": "string",
+                "minLength": 1
+              },
+              "packageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workItemId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "roleId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "humanJobRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observedHumanJobBlobSha": {
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -8588,12 +8620,12 @@
     },
     "schemaAgentInboxIndex": {
       "key": "schemaAgentInboxIndex",
-      "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "20e93dd158b7737b88c40063d4090139a2a94fbb",
+      "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-inbox-index:0.7.0",
-        "title": "SAFOR Agent Inbox Index 0.7.0",
+        "$id": "urn:safor:agent-inbox-index:0.8.0",
+        "title": "SAFOR Agent Inbox Index 0.8.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -8614,7 +8646,7 @@
             "const": "SAFOR_AGENT_INBOX_INDEX"
           },
           "schemaVersion": {
-            "const": "0.7.0"
+            "const": "0.8.0"
           },
           "projectId": {
             "type": "string",
@@ -8663,7 +8695,14 @@
               "masterJobStateRef",
               "dispatchRevision",
               "discoverabilityState",
-              "queuedAt"
+              "queuedAt",
+              "humanJobRef",
+              "humanJobBlobSha",
+              "packageId",
+              "workItemId",
+              "planSequence",
+              "dispatchSequence",
+              "roleId"
             ],
             "properties": {
               "jobId": {
@@ -8696,6 +8735,34 @@
               "queuedAt": {
                 "type": "string",
                 "format": "date-time"
+              },
+              "humanJobRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "humanJobBlobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "packageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workItemId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "planSequence": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "dispatchSequence": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "roleId": {
+                "type": "string",
+                "minLength": 1
               }
             }
           }
