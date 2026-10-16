@@ -1,0 +1,284 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-result:0.10.0",
+  "title": "SAFOR Agent Result 0.10.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "resultId",
+    "jobId",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "jobContractRef",
+    "observedJobContractBlobSha",
+    "claimId",
+    "sessionId",
+    "submittedAt",
+    "completionStatus",
+    "summary",
+    "outputs",
+    "gitTrace",
+    "humanReadableReport",
+    "evidenceRefs",
+    "providerMutationRefs",
+    "acceptanceSelfCheck",
+    "blockers"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_RESULT"
+    },
+    "schemaVersion": {
+      "const": "0.10.0"
+    },
+    "resultId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "jobContractRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observedJobContractBlobSha": {
+      "type": "string",
+      "minLength": 1
+    },
+    "claimId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "submittedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completionStatus": {
+      "enum": [
+        "COMPLETED",
+        "BLOCKED",
+        "FAILED",
+        "CANCELED"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outputs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/ref"
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "providerMutationRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "acceptanceSelfCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "passedChecks",
+        "failedChecks",
+        "notes"
+      ],
+      "properties": {
+        "passedChecks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "failedChecks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "humanReadableReport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "commitSha",
+        "repository",
+        "blobSha",
+        "format",
+        "requiredSections"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "format": {
+          "const": "MARKDOWN"
+        },
+        "requiredSections": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "OBJECTIVE",
+              "WORK_PERFORMED",
+              "ARTIFACTS_CHANGED",
+              "GIT_TRACE",
+              "VERIFICATION",
+              "RESULT",
+              "RISKS_AND_LIMITS",
+              "OPEN_ITEMS"
+            ]
+          },
+          "maxItems": 8
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitSha": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "gitTrace": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/gitTraceEntry"
+      }
+    }
+  },
+  "$defs": {
+    "ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "expectedType": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "gitTraceEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "branch",
+        "baseCommitSha",
+        "headCommitSha",
+        "commitShas",
+        "changedPaths",
+        "changeRequestRef",
+        "providerReadbackRef"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "branch": {
+          "type": "string",
+          "minLength": 1
+        },
+        "baseCommitSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headCommitSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "commitShas": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "changedPaths": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "changeRequestRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "providerReadbackRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
