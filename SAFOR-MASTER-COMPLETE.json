@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.4.0",
-  "bundleVersion": "0.4.0-rc.1",
+  "schemaVersion": "0.5.0",
+  "bundleVersion": "0.5.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -93,111 +93,111 @@
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.4.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "50467cc10733b15ef67c7a1d481eaaa77afa1507"
+      "sourcePath": "v0.5.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "2a0f884e77428f71cc889ff0d68b573819093754"
     },
     "initialization": {
-      "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "c8c9d0be9724e6c5901b944e03cbd32ac4b68ca1"
+      "sourcePath": "v0.5.0/initialization-model.json",
+      "sourceBlobSha": "283941e58a8799d540ffec50e75a0e48db91a16a"
     },
     "interaction": {
-      "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "04912584b13ba341d44bec6e79e85e474b95fb90"
+      "sourcePath": "v0.5.0/interaction-model.json",
+      "sourceBlobSha": "80d06e9771071b9af59569042a8d22be48026727"
     },
     "selfHealing": {
-      "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "8fefc1a92dbec84aa9bb42aae6c552b4cfe3a3b3"
+      "sourcePath": "v0.5.0/self-healing-model.json",
+      "sourceBlobSha": "08c5be332f5a42954ba45b45f65094252720c811"
     },
     "repositoryPolicy": {
-      "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "46826fd746eddbdbf7d99648f1142af368724672"
+      "sourcePath": "v0.5.0/repository-policy.json",
+      "sourceBlobSha": "28312795791c87b97a39252010f9efcb0608f55c"
     },
     "packageRegistry": {
-      "sourcePath": "v0.4.0/package-registry.json",
-      "sourceBlobSha": "f8ee0b75924af114a9b9ecf0825fe242503edd64"
+      "sourcePath": "v0.5.0/package-registry.json",
+      "sourceBlobSha": "330f274e536b0ecc299282c9d36d95f274c03d5a"
     },
     "providerGithub": {
-      "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "6b109d6604008f3cc325daf95d639a5b5f2103ca"
+      "sourcePath": "v0.5.0/providers/github/0.1.0/package.json",
+      "sourceBlobSha": "bb7086cce83df16a0bfe7c9e5151b99028f65927"
     },
     "providerGitlab": {
-      "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "b3a8948103a8bb49c19a21d6168f52b17847ce69"
+      "sourcePath": "v0.5.0/providers/gitlab/0.1.0/package.json",
+      "sourceBlobSha": "7a302e44755b08808c7222c3cd6d0bc78dfa5e02"
     },
     "operatingModelSaas": {
-      "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "e4b7d65390df0ddbc9a6f780072c1ecd6ce9f572"
+      "sourcePath": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+      "sourceBlobSha": "aa98f5f0edf93d9c834981658e6f740ff5ac109c"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "9fd198d8520069380aad54357bf42c5795bc1f4a"
+      "sourcePath": "v0.5.0/packages/operating-models/book-authoring/0.1.0/package.json",
+      "sourceBlobSha": "3e7a06159e7427a32f95af7b84fa8213c144b272"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "f09e3aa819930ae0855da544f92973694198a689"
+      "sourcePath": "v0.5.0/packages/factories/software-delivery/1.0.0/package.json",
+      "sourceBlobSha": "8e974aa5dc0ab36c48bf2ad79c8abbdd67256ae5"
     },
     "factoryBook": {
-      "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "201d1a91d80527d500e4ee43faa6d75e35de1ec3"
+      "sourcePath": "v0.5.0/packages/factories/book-production/0.1.0/package.json",
+      "sourceBlobSha": "831d1a61fcc786ea19c1d51743f2e01c5bd58ab3"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "bd05d11b8020414759ab68b2bfc9caae972f5ceb"
+      "sourcePath": "v0.5.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "4ff8979965aa44cdd5ccfb450f19fc724234a3a2"
     },
     "schemaControlState": {
-      "sourcePath": "v0.4.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "d036dd138629694036ca9f49d6ccfc240a18b30c"
+      "sourcePath": "v0.5.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "c34d31bf659035d8500dad7994baf49e5e993ef7"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "a273aa7f6a4a79b197f5d398383321d012e7c019"
+      "sourcePath": "v0.5.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "fba75e68a96fbac2d4694885976c452bed2c7f11"
     },
     "schemaExecutionState": {
-      "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "b20e6170c9dd66d24a12c27f46545994989aa384"
+      "sourcePath": "v0.5.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "dfce9d0c5e71152f23dfece1f3a9d0566f37131d"
     },
     "schemaWorkItem": {
-      "sourcePath": "v0.4.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "cf36ff77d844511ecab1924c7daed44ce3ff48f1"
+      "sourcePath": "v0.5.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "2838e5b1185cc5c650a8dd39330fd8f66aa52216"
     },
     "schemaProject": {
-      "sourcePath": "v0.4.0/schemas/project.schema.json",
-      "sourceBlobSha": "3e08045c943922b61afdcb632f3e93246264df2e"
+      "sourcePath": "v0.5.0/schemas/project.schema.json",
+      "sourceBlobSha": "4f644bc2393137b532fcaa0b1ae3638516d7ab9f"
     },
     "schemaBindings": {
-      "sourcePath": "v0.4.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4317e4cb8efcd6780c32301b3b6bbb5ba4f6966b"
+      "sourcePath": "v0.5.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "462e0806f34351e8779882999672ba41b66ec36b"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "27a47aa2192fb208d04d5a846f070e3534b9b434"
+      "sourcePath": "v0.5.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "b99951fadd91d298155018141667dd722c191755"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "aa7882e9ad1a72c5e89cf7226586e1b912e64ddd"
+      "sourcePath": "v0.5.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "2346d1d2144c6cc5eb45ceb234b54b3a226fc771"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "1c1d070d6956fca7f5e4256515e41984e517f14a"
+      "sourcePath": "v0.5.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "9ac24cadf990eb0548472a5ea8a69fb3d28f0fdb"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "6150f6386fe4b98a31a9f5efeb27a061c3a61821"
+      "sourcePath": "v0.5.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "2ba73add97a5003dc89b4223303bb8adc0a9e7dd"
     },
     "conformance": {
-      "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "68f1251204d3ad1a67c61f3b8a4327b76a3e19f6"
+      "sourcePath": "v0.5.0/conformance.json",
+      "sourceBlobSha": "2b63b4222afafe1898f0e1363b612ea894b40c2e"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.4.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "50467cc10733b15ef67c7a1d481eaaa77afa1507",
+      "sourcePath": "v0.5.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "2a0f884e77428f71cc889ff0d68b573819093754",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.4.0",
-        "kernelVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
+        "kernelVersion": "0.5.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
         "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -968,14 +968,14 @@
         "compatibility": {
           "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
+          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.5.0 schemas."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.4.0",
+            "root": "v0.5.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1028,11 +1028,11 @@
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.4.0/initialization-model.json",
-      "sourceBlobSha": "c8c9d0be9724e6c5901b944e03cbd32ac4b68ca1",
+      "sourcePath": "v0.5.0/initialization-model.json",
+      "sourceBlobSha": "283941e58a8799d540ffec50e75a0e48db91a16a",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1409,11 +1409,11 @@
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.4.0/interaction-model.json",
-      "sourceBlobSha": "04912584b13ba341d44bec6e79e85e474b95fb90",
+      "sourcePath": "v0.5.0/interaction-model.json",
+      "sourceBlobSha": "80d06e9771071b9af59569042a8d22be48026727",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -2046,11 +2046,11 @@
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.4.0/self-healing-model.json",
-      "sourceBlobSha": "8fefc1a92dbec84aa9bb42aae6c552b4cfe3a3b3",
+      "sourcePath": "v0.5.0/self-healing-model.json",
+      "sourceBlobSha": "08c5be332f5a42954ba45b45f65094252720c811",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2257,11 +2257,11 @@
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "v0.4.0/repository-policy.json",
-      "sourceBlobSha": "46826fd746eddbdbf7d99648f1142af368724672",
+      "sourcePath": "v0.5.0/repository-policy.json",
+      "sourceBlobSha": "28312795791c87b97a39252010f9efcb0608f55c",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-        "version": "0.4.0",
+        "version": "0.5.0",
         "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
         "principles": {
@@ -2368,11 +2368,11 @@
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.4.0/package-registry.json",
-      "sourceBlobSha": "f8ee0b75924af114a9b9ecf0825fe242503edd64",
+      "sourcePath": "v0.5.0/package-registry.json",
+      "sourceBlobSha": "330f274e536b0ecc299282c9d36d95f274c03d5a",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
@@ -2431,18 +2431,18 @@
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "v0.4.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "6b109d6604008f3cc325daf95d639a5b5f2103ca",
+      "sourcePath": "v0.5.0/providers/github/0.1.0/package.json",
+      "sourceBlobSha": "bb7086cce83df16a0bfe7c9e5151b99028f65927",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
         "version": "0.1.0",
         "name": "GitHub Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitHub. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [],
@@ -2581,18 +2581,18 @@
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "v0.4.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "b3a8948103a8bb49c19a21d6168f52b17847ce69",
+      "sourcePath": "v0.5.0/providers/gitlab/0.1.0/package.json",
+      "sourceBlobSha": "7a302e44755b08808c7222c3cd6d0bc78dfa5e02",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
         "version": "0.1.0",
         "name": "GitLab Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [],
@@ -2730,18 +2730,18 @@
     },
     "operatingModelSaas": {
       "key": "operatingModelSaas",
-      "sourcePath": "v0.4.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "e4b7d65390df0ddbc9a6f780072c1ecd6ce9f572",
+      "sourcePath": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
+      "sourceBlobSha": "aa98f5f0edf93d9c834981658e6f740ff5ac109c",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
         "version": "1.0.0",
         "name": "SaaS Engineering Reference Operating Model",
         "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3047,18 +3047,18 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.4.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "9fd198d8520069380aad54357bf42c5795bc1f4a",
+      "sourcePath": "v0.5.0/packages/operating-models/book-authoring/0.1.0/package.json",
+      "sourceBlobSha": "3e7a06159e7427a32f95af7b84fa8213c144b272",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
         "version": "0.1.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3268,18 +3268,18 @@
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.4.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "f09e3aa819930ae0855da544f92973694198a689",
+      "sourcePath": "v0.5.0/packages/factories/software-delivery/1.0.0/package.json",
+      "sourceBlobSha": "8e974aa5dc0ab36c48bf2ad79c8abbdd67256ae5",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
         "version": "1.0.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3613,18 +3613,18 @@
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.4.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "201d1a91d80527d500e4ee43faa6d75e35de1ec3",
+      "sourcePath": "v0.5.0/packages/factories/book-production/0.1.0/package.json",
+      "sourceBlobSha": "831d1a61fcc786ea19c1d51743f2e01c5bd58ab3",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
         "version": "0.1.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.4.0 <0.5.0"
+          "kernel": ">=0.5.0 <0.6.0"
         },
         "exports": {
           "capabilities": [
@@ -3969,12 +3969,12 @@
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.4.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "bd05d11b8020414759ab68b2bfc9caae972f5ceb",
+      "sourcePath": "v0.5.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "4ff8979965aa44cdd5ccfb450f19fc724234a3a2",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.4.0",
-        "title": "SAFOR Package Manifest 0.4.0",
+        "$id": "urn:safor:package-manifest:0.5.0",
+        "title": "SAFOR Package Manifest 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -3995,7 +3995,7 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "packageId": {
             "type": "string",
@@ -4123,12 +4123,12 @@
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.4.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "d036dd138629694036ca9f49d6ccfc240a18b30c",
+      "sourcePath": "v0.5.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "c34d31bf659035d8500dad7994baf49e5e993ef7",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.4.0",
-        "title": "SAFOR Control State 0.4.0",
+        "$id": "urn:safor:control-state:0.5.0",
+        "title": "SAFOR Control State 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4151,7 +4151,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "kernelRef": {
             "type": "object",
@@ -4162,7 +4162,7 @@
             ],
             "properties": {
               "version": {
-                "const": "0.4.0"
+                "const": "0.5.0"
               },
               "sourceRef": {
                 "type": "string",
@@ -4362,12 +4362,12 @@
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.4.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "a273aa7f6a4a79b197f5d398383321d012e7c019",
+      "sourcePath": "v0.5.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "fba75e68a96fbac2d4694885976c452bed2c7f11",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.4.0",
-        "title": "SAFOR Value Stream State 0.4.0",
+        "$id": "urn:safor:value-stream-state:0.5.0",
+        "title": "SAFOR Value Stream State 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4387,7 +4387,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "projectId": {
             "type": "string",
@@ -4535,12 +4535,12 @@
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "v0.4.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "b20e6170c9dd66d24a12c27f46545994989aa384",
+      "sourcePath": "v0.5.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "dfce9d0c5e71152f23dfece1f3a9d0566f37131d",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:execution-state:0.4.0",
-        "title": "SAFOR Execution State 0.4.0",
+        "$id": "urn:safor:execution-state:0.5.0",
+        "title": "SAFOR Execution State 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4559,7 +4559,7 @@
             "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "projectId": {
             "type": "string",
@@ -4787,12 +4787,12 @@
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "v0.4.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "cf36ff77d844511ecab1924c7daed44ce3ff48f1",
+      "sourcePath": "v0.5.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "2838e5b1185cc5c650a8dd39330fd8f66aa52216",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:work-item:0.4.0",
-        "title": "SAFOR Domain-Agnostic Work Item 0.4.0",
+        "$id": "urn:safor:work-item:0.5.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5004,12 +5004,12 @@
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "v0.4.0/schemas/project.schema.json",
-      "sourceBlobSha": "3e08045c943922b61afdcb632f3e93246264df2e",
+      "sourcePath": "v0.5.0/schemas/project.schema.json",
+      "sourceBlobSha": "4f644bc2393137b532fcaa0b1ae3638516d7ab9f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:project:0.4.0",
-        "title": "SAFOR Project Descriptor 0.4.0",
+        "$id": "urn:safor:project:0.5.0",
+        "title": "SAFOR Project Descriptor 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5030,7 +5030,7 @@
             "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "projectId": {
             "type": "string",
@@ -5136,12 +5136,12 @@
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.4.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4317e4cb8efcd6780c32301b3b6bbb5ba4f6966b",
+      "sourcePath": "v0.5.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "462e0806f34351e8779882999672ba41b66ec36b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:bindings:0.4.0",
-        "title": "SAFOR Project Bindings 0.4.0",
+        "$id": "urn:safor:bindings:0.5.0",
+        "title": "SAFOR Project Bindings 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5159,7 +5159,7 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "revision": {
             "type": "integer",
@@ -5239,12 +5239,12 @@
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "v0.4.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "27a47aa2192fb208d04d5a846f070e3534b9b434",
+      "sourcePath": "v0.5.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "b99951fadd91d298155018141667dd722c191755",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:decision-record:0.4.0",
-        "title": "SAFOR Decision Record 0.4.0",
+        "$id": "urn:safor:decision-record:0.5.0",
+        "title": "SAFOR Decision Record 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5266,7 +5266,7 @@
             "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "decisionId": {
             "type": "string"
@@ -5312,12 +5312,12 @@
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "v0.4.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "aa7882e9ad1a72c5e89cf7226586e1b912e64ddd",
+      "sourcePath": "v0.5.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "2346d1d2144c6cc5eb45ceb234b54b3a226fc771",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:evidence-record:0.4.0",
-        "title": "SAFOR Evidence Record 0.4.0",
+        "$id": "urn:safor:evidence-record:0.5.0",
+        "title": "SAFOR Evidence Record 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5337,7 +5337,7 @@
             "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "evidenceId": {
             "type": "string"
@@ -5391,12 +5391,12 @@
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.4.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "1c1d070d6956fca7f5e4256515e41984e517f14a",
+      "sourcePath": "v0.5.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "9ac24cadf990eb0548472a5ea8a69fb3d28f0fdb",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.4.0",
-        "title": "SAFOR Interaction Menu 0.4.0",
+        "$id": "urn:safor:interaction-menu:0.5.0",
+        "title": "SAFOR Interaction Menu 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5412,7 +5412,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.4.0"
+            "const": "0.5.0"
           },
           "menuId": {
             "type": "string",
@@ -5569,12 +5569,12 @@
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.4.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "6150f6386fe4b98a31a9f5efeb27a061c3a61821",
+      "sourcePath": "v0.5.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "2ba73add97a5003dc89b4223303bb8adc0a9e7dd",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.4.0",
-        "title": "SAFOR Self-Healing Record 0.4.0",
+        "$id": "urn:safor:self-healing-record:0.5.0",
+        "title": "SAFOR Self-Healing Record 0.5.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5684,11 +5684,11 @@
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.4.0/conformance.json",
-      "sourceBlobSha": "68f1251204d3ad1a67c61f3b8a4327b76a3e19f6",
+      "sourcePath": "v0.5.0/conformance.json",
+      "sourceBlobSha": "2b63b4222afafe1898f0e1363b612ea894b40c2e",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.4.0",
+        "schemaVersion": "0.5.0",
         "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
@@ -5968,7 +5968,7 @@
           }
         ],
         "lastManualVerification": {
-          "branch": "saf/master-v0.4.0",
+          "branch": "safor/v0.5.0-rc.1",
           "result": "PASS",
           "note": "Provider readback verified mandatory pre-existing writable safor-memory, hard STOP on missing access, mandatory Software/Website vs Book selection, deterministic Factory/Operating Model mapping, and Factory-bound Discovery, Planning and Evidence contracts."
         }

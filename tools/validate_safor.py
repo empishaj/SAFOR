@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.4.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.5.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -103,11 +103,21 @@ if manifest.get("version") != version:
 if bundle.get("bundleVersion") != version:
     fail("Complete bundle version must match VERSION.")
 if manifest.get("status") != "RELEASE_CANDIDATE":
-    fail("v0.4.0-rc.1 must declare RELEASE_CANDIDATE status.")
+    fail("The current release candidate must declare RELEASE_CANDIDATE status.")
 if manifest.get("canonicalRepository") != "empishaj/SAFOR":
     fail("Release manifest canonical repository mismatch.")
-if manifest.get("distributable") != "SAFOR-MASTER-COMPLETE.json":
+expected_versioned = f"SAFOR-MASTER-COMPLETE-v{version}.json"
+if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
+if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
+    fail("Release manifest latest alias mismatch.")
+if manifest.get("sourceRoot") != "v0.5.0":
+    fail("Release manifest source root must be v0.5.0.")
+if bundle.get("schemaVersion") != "0.5.0":
+    fail("Complete bundle schemaVersion must be 0.5.0.")
+versioned_bundle = load_json(expected_versioned)
+if versioned_bundle != bundle:
+    fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")
 
 if modular_master.get("distribution", {}).get("canonicalSource", {}).get("repository") != "empishaj/SAFOR":
     fail("Modular master canonical repository mismatch.")
