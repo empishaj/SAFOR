@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.9.0",
-  "bundleVersion": "0.9.0-rc.1",
+  "schemaVersion": "0.10.0",
+  "bundleVersion": "0.10.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -35,7 +35,7 @@
       "SELECT_PROJECT_MODE",
       "SELECT_OR_DEFINE_PROJECT",
       "BIND_REQUIRED_SAFOR_MEMORY",
-      "CONFIRM_CREATION_PROFILE_BINDINGS",
+      "RESOLVE_CREATION_PROFILE_BINDINGS",
       "MATERIALIZE_PROJECT_CONTROL"
     ],
     "mandatoryCreationTypes": [
@@ -60,7 +60,9 @@
     "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
     "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
     "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection.",
-    "moduleSelfHealingRule": "Every embedded module must resolve to exactly one embedded recovery profile. Repairs are constrained by module authority/repairability, failure-class policy, active authority and actual provider rights."
+    "moduleSelfHealingRule": "Every embedded module must resolve to exactly one embedded recovery profile. Repairs are constrained by module authority/repairability, failure-class policy, active authority and actual provider rights.",
+    "humanCognitiveLoadRule": "Use the embedded phase-aware HUMAN Cognitive Load Policy: high load is acceptable for non-derivable Discovery knowledge, then reduce routine HUMAN load after planning; derive/reuse before asking.",
+    "humanDecisionGateRule": "Every HUMAN question or approval passes the embedded Decision Gate. Deterministic internal orchestration and unchanged prior approvals must not be delegated back to the HUMAN."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -110,7 +112,10 @@
     "packages/operating-models/saas-engineering/1.3.0/package.json": "operatingModelSaas",
     "packages/operating-models/book-authoring/0.4.0/package.json": "operatingModelBook",
     "packages/factories/software-delivery/1.3.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.4.0/package.json": "factoryBook"
+    "packages/factories/book-production/0.4.0/package.json": "factoryBook",
+    "human-decision-gate-model.json": "humanDecisionGate",
+    "schemas/human-cognitive-load-policy.schema.json": "schemaHumanCognitiveLoadPolicy",
+    "schemas/human-decision-gate.schema.json": "schemaHumanDecisionGate"
   },
   "integrityManifest": {
     "kernel": {
@@ -307,6 +312,21 @@
       "sourcePath": "v0.9.0/schemas/module-recovery-profile.schema.json",
       "sourceBlobSha": "8c2d066c5f12581e29e4100dc8ca33203914a0e6",
       "selfHealingProfileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE"
+    },
+    "humanDecisionGate": {
+      "sourcePath": "v0.10.0/human-decision-gate-model.json",
+      "sourceBlobSha": "212eab209d0c8f4c906bd762e040a6a960e24d8e",
+      "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
+    },
+    "schemaHumanCognitiveLoadPolicy": {
+      "sourcePath": "v0.10.0/schemas/human-cognitive-load-policy.schema.json",
+      "sourceBlobSha": "5dbb8c57e76aa6459a563544acb99d5808361254",
+      "selfHealingProfileId": "MRP-SCHEMA_HUMAN_COGNITIVE_LOAD_POLICY"
+    },
+    "schemaHumanDecisionGate": {
+      "sourcePath": "v0.10.0/schemas/human-decision-gate.schema.json",
+      "sourceBlobSha": "7ff846e2d1ae5f7ad116e97bff9868445da8e805",
+      "selfHealingProfileId": "MRP-SCHEMA_HUMAN_DECISION_GATE"
     }
   },
   "embeddedModules": {
@@ -13289,6 +13309,689 @@
         }
       },
       "selfHealingProfileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE"
+    },
+    "humanDecisionGate": {
+      "key": "humanDecisionGate",
+      "sourcePath": "v0.10.0/human-decision-gate-model.json",
+      "sourceBlobSha": "212eab209d0c8f4c906bd762e040a6a960e24d8e",
+      "content": {
+        "format": "SAFOR_HUMAN_DECISION_GATE_MODEL",
+        "schemaVersion": "0.10.0",
+        "id": "SAFOR-HUMAN-DECISION-GATE",
+        "purpose": "Prevent SAFOR from delegating deterministic internal orchestration to the HUMAN while preserving HUMAN authority for intent, target, material tradeoff, scope, risk, irreversible action, governance and outcome decisions.",
+        "schemaRef": "schemas/human-decision-gate.schema.json",
+        "cognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+        "defaultDecision": "DO_NOT_ASK",
+        "legitimateReasons": [
+          {
+            "id": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "HUMAN_CONTROLLED_TARGET_SELECTION",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "MATERIAL_ALTERNATIVE_CHOICE",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "SCOPE_CHANGE_REQUIRED",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "IRREVERSIBLE_ACTION_REQUIRED",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "GOAL_CONFLICT_REQUIRES_PRIORITY",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "RECOVERY_CANNOT_PROCEED_SAFELY",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+            "requiresRecordedRationale": true
+          },
+          {
+            "id": "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+            "requiresRecordedRationale": true
+          }
+        ],
+        "mustNotAskHumanFor": [
+          "JOB_ID_GENERATION",
+          "AGENT_SELECTION_WHEN_DETERMINISTIC",
+          "BRANCH_CREATION",
+          "RESOURCE_LEASE_MANAGEMENT",
+          "DISPATCH_WAVE_PLANNING",
+          "READBACK_VERIFICATION",
+          "EVIDENCE_COLLECTION",
+          "RECOVERY_PROFILE_SELECTION",
+          "DERIVED_ARTIFACT_REGENERATION",
+          "INTERNAL_STATE_TRANSITIONS",
+          "TECHNICAL_IDENTIFIER_SELECTION",
+          "FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE"
+        ],
+        "evaluationAlgorithm": [
+          "CLASSIFY_CURRENT_PHASE",
+          "IDENTIFY_PROPOSED_HUMAN_QUESTION_OR_APPROVAL",
+          "ATTEMPT_SAFE_DERIVATION_FROM_APPROVED_STATE_POLICY_AND_AUTHORITATIVE_EVIDENCE",
+          "CHECK_FOR_UNCHANGED_PRIOR_DECISION_WITH_SAME_SCOPE_AND_BOUND_INPUTS",
+          "RESOLVE_ONE_LEGITIMATE_HUMAN_INVOLVEMENT_REASON",
+          "REJECT_IF_REASON_IS_INTERNAL_ORCHESTRATION_ONLY",
+          "COMPUTE_HEURISTIC_LOAD_ESTIMATE",
+          "APPLY_PHASE_LOAD_TARGET_AND_TEMPORARY_ESCALATION_RULES",
+          "TRANSLATE_INTERNAL_TERMS_TO_HUMAN_DOMAIN_LANGUAGE",
+          "REDUCE_TO_ONE_DECISION_CONTEXT_AND_MINIMUM_NECESSARY_CHOICES",
+          "ALLOW_ASK_OR_SUPPRESS_OR_REUSE"
+        ],
+        "outcomes": [
+          "ALLOW_ASK",
+          "SUPPRESS_DERIVABLE",
+          "REUSE_EXISTING_DECISION",
+          "BLOCK_INVALID_HUMAN_DELEGATION"
+        ],
+        "askPredicate": "ALLOW_ASK only when one legitimate reason applies, the answer cannot be safely derived or reused, and the question is the minimum necessary HUMAN contribution.",
+        "decisionReusePolicy": {
+          "reuseWhen": [
+            "SAME_DECISION_TYPE",
+            "SAME_SCOPE",
+            "SAME_BOUND_INPUT_REVISIONS",
+            "NO_MATERIAL_RISK_CHANGE",
+            "DECISION_NOT_REVOKED"
+          ],
+          "reaskWhen": [
+            "SCOPE_CHANGED",
+            "BOUND_INPUT_REVISION_CHANGED_MATERIALLY",
+            "MATERIAL_RISK_CHANGED",
+            "DECISION_REVOKED",
+            "AUTHORITY_EXPANSION_REQUIRED"
+          ],
+          "unchangedApprovalRepetitionForbidden": true
+        },
+        "latePhasePolicy": {
+          "afterPlanApprovalDefault": "DO_NOT_ASK_UNLESS_LEGITIMATE_REASON",
+          "afterExecutionMandateDefault": "ABSORB_INTERNAL_ORCHESTRATION",
+          "schedulingDefault": "NO_HUMAN_INTERACTION",
+          "agentCoordinationDefault": "NO_HUMAN_INTERACTION",
+          "executionDefault": "EXCEPTION_ONLY",
+          "recoveryDefault": "ESCALATION_ONLY"
+        },
+        "interactionRecordRequiredFields": [
+          "phase",
+          "interactionReason",
+          "decisionRequired",
+          "targetLoad",
+          "heuristicLoadEstimate",
+          "technicalDetailExposure",
+          "gateOutcome",
+          "reusedDecisionRef"
+        ]
+      },
+      "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
+    },
+    "schemaHumanCognitiveLoadPolicy": {
+      "key": "schemaHumanCognitiveLoadPolicy",
+      "sourcePath": "v0.10.0/schemas/human-cognitive-load-policy.schema.json",
+      "sourceBlobSha": "5dbb8c57e76aa6459a563544acb99d5808361254",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:human-cognitive-load-policy:0.10.0",
+        "title": "SAFOR HUMAN Cognitive Load Policy 0.10.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "objective",
+          "schemaRef",
+          "principles",
+          "loadLevels",
+          "phaseProfiles",
+          "adaptiveLoadRules",
+          "heuristicLoadEstimate",
+          "questionPolicy"
+        ],
+        "properties": {
+          "objective": {
+            "const": "MAXIMIZE_NECESSARY_HUMAN_CONTRIBUTION_MINIMIZE_EXTRANEOUS_SYSTEM_LOAD"
+          },
+          "schemaRef": {
+            "const": "schemas/human-cognitive-load-policy.schema.json"
+          },
+          "principles": {
+            "type": "object",
+            "minProperties": 9,
+            "additionalProperties": {
+              "type": "boolean"
+            }
+          },
+          "loadLevels": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "VERY_LOW",
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ],
+            "properties": {
+              "VERY_LOW": {
+                "type": "string",
+                "minLength": 1
+              },
+              "LOW": {
+                "type": "string",
+                "minLength": 1
+              },
+              "MEDIUM": {
+                "type": "string",
+                "minLength": 1
+              },
+              "HIGH": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "phaseProfiles": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "BOOTSTRAP",
+              "DISCOVERY",
+              "PLANNING",
+              "SCHEDULING",
+              "AGENT_COORDINATION",
+              "EXECUTION",
+              "RECOVERY",
+              "OUTCOME",
+              "CLOSING"
+            ],
+            "properties": {
+              "BOOTSTRAP": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "DISCOVERY": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "PLANNING": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "SCHEDULING": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "AGENT_COORDINATION": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "EXECUTION": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "RECOVERY": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "OUTCOME": {
+                "$ref": "#/$defs/phaseProfile"
+              },
+              "CLOSING": {
+                "$ref": "#/$defs/phaseProfile"
+              }
+            }
+          },
+          "adaptiveLoadRules": {
+            "type": "object",
+            "minProperties": 8,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "heuristicLoadEstimate": {
+            "$ref": "#/$defs/heuristic"
+          },
+          "questionPolicy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "maxNewDecisionContextsPerTurn",
+              "askOnlyMinimumNecessaryQuestion",
+              "decisionReasonMustBeRecorded",
+              "decisionReasonNeedNotBeShownUnlessUseful",
+              "noQuestionWhenAnswerSafelyDerivable",
+              "noQuestionWhenUnchangedDecisionReusable"
+            ],
+            "properties": {
+              "maxNewDecisionContextsPerTurn": {
+                "const": 1
+              },
+              "askOnlyMinimumNecessaryQuestion": {
+                "const": true
+              },
+              "decisionReasonMustBeRecorded": {
+                "const": true
+              },
+              "decisionReasonNeedNotBeShownUnlessUseful": {
+                "const": true
+              },
+              "noQuestionWhenAnswerSafelyDerivable": {
+                "const": true
+              },
+              "noQuestionWhenUnchangedDecisionReusable": {
+                "const": true
+              }
+            }
+          }
+        },
+        "$defs": {
+          "phaseProfile": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "targetLoad",
+              "purpose",
+              "maxNewDecisionsPerTurn",
+              "humanInteractionDefault",
+              "technicalDetailDefault",
+              "temporaryEscalationReasons"
+            ],
+            "properties": {
+              "targetLoad": {
+                "enum": [
+                  "VERY_LOW",
+                  "LOW",
+                  "MEDIUM",
+                  "HIGH"
+                ]
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxNewDecisionsPerTurn": {
+                "const": 1
+              },
+              "humanInteractionDefault": {
+                "enum": [
+                  "GUIDED",
+                  "DIALOGUE",
+                  "DECISION_WHEN_NEEDED",
+                  "NONE",
+                  "EXCEPTION_ONLY",
+                  "ESCALATION_ONLY",
+                  "SUMMARY"
+                ]
+              },
+              "technicalDetailDefault": {
+                "const": "HIDDEN"
+              },
+              "allowDeepQuestions": {
+                "type": "boolean"
+              },
+              "masterMustRecommendPreferredOption": {
+                "type": "boolean"
+              },
+              "showSummaryBeforeDetail": {
+                "type": "boolean"
+              },
+              "humanContributionRequired": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "temporaryEscalationReasons": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "enum": [
+                    "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                    "HUMAN_CONTROLLED_TARGET_SELECTION",
+                    "MATERIAL_ALTERNATIVE_CHOICE",
+                    "SCOPE_CHANGE_REQUIRED",
+                    "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                    "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                    "IRREVERSIBLE_ACTION_REQUIRED",
+                    "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                    "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                    "RECOVERY_CANNOT_PROCEED_SAFELY",
+                    "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                    "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+                  ]
+                }
+              }
+            }
+          },
+          "factor": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "maxPoints"
+            ],
+            "properties": {
+              "maxPoints": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              }
+            }
+          },
+          "heuristic": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "notPsychometricMeasure",
+              "purpose",
+              "range",
+              "factors",
+              "thresholds",
+              "phaseMaximumWithoutExplicitEscalation"
+            ],
+            "properties": {
+              "notPsychometricMeasure": {
+                "const": true
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "range": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "min",
+                  "max"
+                ],
+                "properties": {
+                  "min": {
+                    "const": 0
+                  },
+                  "max": {
+                    "const": 100
+                  }
+                }
+              },
+              "factors": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "decisionComplexity",
+                  "newContext",
+                  "choiceCount",
+                  "contextSwitching",
+                  "technicalTerminologyExposure"
+                ],
+                "properties": {
+                  "decisionComplexity": {
+                    "$ref": "#/$defs/factor"
+                  },
+                  "newContext": {
+                    "$ref": "#/$defs/factor"
+                  },
+                  "choiceCount": {
+                    "$ref": "#/$defs/factor"
+                  },
+                  "contextSwitching": {
+                    "$ref": "#/$defs/factor"
+                  },
+                  "technicalTerminologyExposure": {
+                    "$ref": "#/$defs/factor"
+                  }
+                }
+              },
+              "thresholds": {
+                "type": "object",
+                "minProperties": 4
+              },
+              "phaseMaximumWithoutExplicitEscalation": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "BOOTSTRAP",
+                  "DISCOVERY",
+                  "PLANNING",
+                  "SCHEDULING",
+                  "AGENT_COORDINATION",
+                  "EXECUTION",
+                  "RECOVERY",
+                  "OUTCOME",
+                  "CLOSING"
+                ],
+                "properties": {
+                  "BOOTSTRAP": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "DISCOVERY": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "PLANNING": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "SCHEDULING": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "AGENT_COORDINATION": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "EXECUTION": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "RECOVERY": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "OUTCOME": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "CLOSING": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 100
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_HUMAN_COGNITIVE_LOAD_POLICY"
+    },
+    "schemaHumanDecisionGate": {
+      "key": "schemaHumanDecisionGate",
+      "sourcePath": "v0.10.0/schemas/human-decision-gate.schema.json",
+      "sourceBlobSha": "7ff846e2d1ae5f7ad116e97bff9868445da8e805",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:human-decision-gate:0.10.0",
+        "title": "SAFOR HUMAN Decision Gate Model 0.10.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "id",
+          "purpose",
+          "schemaRef",
+          "cognitiveLoadPolicyRef",
+          "defaultDecision",
+          "legitimateReasons",
+          "mustNotAskHumanFor",
+          "evaluationAlgorithm",
+          "outcomes",
+          "askPredicate",
+          "decisionReusePolicy",
+          "latePhasePolicy",
+          "interactionRecordRequiredFields"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_HUMAN_DECISION_GATE_MODEL"
+          },
+          "schemaVersion": {
+            "const": "0.10.0"
+          },
+          "id": {
+            "const": "SAFOR-HUMAN-DECISION-GATE"
+          },
+          "purpose": {
+            "type": "string",
+            "minLength": 1
+          },
+          "schemaRef": {
+            "const": "schemas/human-decision-gate.schema.json"
+          },
+          "cognitiveLoadPolicyRef": {
+            "const": "interaction-model.json#humanCognitiveLoadPolicy"
+          },
+          "defaultDecision": {
+            "const": "DO_NOT_ASK"
+          },
+          "legitimateReasons": {
+            "type": "array",
+            "minItems": 12,
+            "maxItems": 12,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "requiresRecordedRationale"
+              ],
+              "properties": {
+                "id": {
+                  "enum": [
+                    "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                    "HUMAN_CONTROLLED_TARGET_SELECTION",
+                    "MATERIAL_ALTERNATIVE_CHOICE",
+                    "SCOPE_CHANGE_REQUIRED",
+                    "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+                    "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+                    "IRREVERSIBLE_ACTION_REQUIRED",
+                    "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+                    "GOAL_CONFLICT_REQUIRES_PRIORITY",
+                    "RECOVERY_CANNOT_PROCEED_SAFELY",
+                    "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+                    "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+                  ]
+                },
+                "requiresRecordedRationale": {
+                  "const": true
+                }
+              }
+            }
+          },
+          "mustNotAskHumanFor": {
+            "type": "array",
+            "minItems": 10,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "evaluationAlgorithm": {
+            "type": "array",
+            "minItems": 10,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "outcomes": {
+            "type": "array",
+            "minItems": 4,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "ALLOW_ASK",
+                "SUPPRESS_DERIVABLE",
+                "REUSE_EXISTING_DECISION",
+                "BLOCK_INVALID_HUMAN_DELEGATION"
+              ]
+            }
+          },
+          "askPredicate": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decisionReusePolicy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "reuseWhen",
+              "reaskWhen",
+              "unchangedApprovalRepetitionForbidden"
+            ],
+            "properties": {
+              "reuseWhen": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "reaskWhen": {
+                "type": "array",
+                "minItems": 4,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "unchangedApprovalRepetitionForbidden": {
+                "const": true
+              }
+            }
+          },
+          "latePhasePolicy": {
+            "type": "object",
+            "minProperties": 6,
+            "additionalProperties": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "interactionRecordRequiredFields": {
+            "type": "array",
+            "minItems": 8,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_HUMAN_DECISION_GATE"
     }
   }
 }
