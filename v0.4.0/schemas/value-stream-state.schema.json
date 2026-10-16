@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:saf:value-stream-state:0.4.0",
-  "title": "SAF Value Stream State 0.4.0",
+  "$id": "urn:safor:value-stream-state:0.4.0",
+  "title": "SAFOR Value Stream State 0.4.0",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -18,7 +18,7 @@
   ],
   "properties": {
     "format": {
-      "const": "SAF_VALUE_STREAM_STATE"
+      "const": "SAFOR_VALUE_STREAM_STATE"
     },
     "schemaVersion": {
       "const": "0.4.0"
