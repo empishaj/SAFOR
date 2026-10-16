@@ -417,6 +417,15 @@
           "NATIVE_CHOICES"
         ],
         "example": "Was möchtest du erstellen?"
+      },
+      "multiAgentProgress": {
+        "structure": [
+          "CAPACITY_SUMMARY",
+          "PARALLEL_WORK",
+          "BLOCKERS",
+          "NEXT_ACTION_OR_MENU"
+        ],
+        "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
       }
     },
     "avoid": {
@@ -628,5 +637,33 @@
         }
       ]
     }
+  },
+  "multiAgentStatusExperience": {
+    "title": "Agenten & parallele Arbeit",
+    "defaultSurface": "SUMMARY",
+    "requiredSummaryFields": [
+      "registeredAgentCount",
+      "activeAgentSlots",
+      "freeAgentSlots",
+      "runningJobCount",
+      "readyAtomicWorkCount",
+      "blockedByDependencyCount",
+      "blockedByConflictCount",
+      "activeDispatchWaveCount"
+    ],
+    "runningJobFields": [
+      "agentId",
+      "jobId",
+      "workItemId",
+      "dispatchWaveId",
+      "jobBranch",
+      "humanReadableResultRefWhenSubmitted"
+    ],
+    "rules": [
+      "Prefer aggregate utilization first; expose raw scheduler JSON only through Details.",
+      "Never describe a job as accepted merely because the agent submitted a result.",
+      "When a HUMAN-readable agent report exists, surface its reference as the default result view before raw machine JSON.",
+      "Explain why an apparently free agent did not receive work when the blocker is dependency, capability, SoD, mandate, provider rights or mutation conflict."
+    ]
   }
 }
