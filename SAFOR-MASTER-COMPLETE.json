@@ -152,28 +152,28 @@
       "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.6.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "4a48ae5952d7716fa352535c7bc4a867f1d9e058"
+      "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
+      "sourceBlobSha": "491cbc52545b0ccbf76a4a8dc02832b589eb44a4"
     },
     "factoryBook": {
-      "sourcePath": "v0.6.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "d104010dde09f189a78c12da78bbe8ffc45ce58b"
+      "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
+      "sourceBlobSha": "f04cfc48238abaa4ccc0b4d2f739015955e74731"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.6.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "d6ad4c7bd8a68b7a52754329f6ccd59cb4655568"
+      "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ec8329099723c10900e63487df2243d664e4d305"
     },
     "schemaControlState": {
-      "sourcePath": "v0.6.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "81faead970521bd10697396417eae443b614784a"
+      "sourcePath": "v0.7.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "fcbaf4b7ec2740e6bbc85da269096b578669c488"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.6.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "afe0a6ca9556c2ebc328c43a81d0709ecf3cfb0e"
+      "sourcePath": "v0.7.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "298e56744b5c0b6f9fa477a29789e874b5e27c4b"
     },
     "schemaExecutionState": {
-      "sourcePath": "v0.6.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "4087a70f01eadbf01c3753567929f62262abc76e"
+      "sourcePath": "v0.7.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "0120585353a5e89840eb51ae82edeef58c7cc41c"
     },
     "schemaWorkItem": {
       "sourcePath": "v0.6.0/schemas/work-item.schema.json",
@@ -3905,18 +3905,18 @@
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.6.0/packages/factories/software-delivery/1.0.0/package.json",
-      "sourceBlobSha": "4a48ae5952d7716fa352535c7bc4a867f1d9e058",
+      "sourcePath": "v0.7.0/packages/factories/software-delivery/1.1.0/package.json",
+      "sourceBlobSha": "491cbc52545b0ccbf76a4a8dc02832b589eb44a4",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -4181,7 +4181,10 @@
               "dependencies",
               "expectedOutputs",
               "acceptanceCriteria",
-              "evidenceRequirements"
+              "evidenceRequirements",
+              "execution",
+              "resourceAccess",
+              "parallelizationDecision"
             ],
             "conditionalRules": [
               {
@@ -4244,24 +4247,44 @@
               "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
               "DELIVERY_AS_OUTCOME_EVIDENCE"
             ]
+          },
+          "schedulingContract": {
+            "atomicDispatchOnly": true,
+            "compositeDecompositionRequired": true,
+            "resourceAccessRequired": true,
+            "immutableReadInputsRequired": true,
+            "unknownMutationConflict": "SERIALIZE",
+            "dedicatedGitBranchForMutations": true,
+            "naturalParallelism": [
+              {
+                "after": "SW-03",
+                "nodes": [
+                  "SW-04",
+                  "SW-05"
+                ],
+                "joinAt": "SW-06"
+              }
+            ],
+            "decompositionRule": "Implementation may be decomposed into ATOMIC child work only when solution design exposes independently acceptable outputs and conservative non-overlapping mutation domains; shared integration is modeled as an explicit downstream work item.",
+            "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan."
           }
         }
       }
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.6.0/packages/factories/book-production/0.1.0/package.json",
-      "sourceBlobSha": "d104010dde09f189a78c12da78bbe8ffc45ce58b",
+      "sourcePath": "v0.7.0/packages/factories/book-production/0.2.0/package.json",
+      "sourceBlobSha": "f04cfc48238abaa4ccc0b4d2f739015955e74731",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -4534,7 +4557,10 @@
               "dependencies",
               "expectedOutputs",
               "acceptanceCriteria",
-              "evidenceRequirements"
+              "evidenceRequirements",
+              "execution",
+              "resourceAccess",
+              "parallelizationDecision"
             ],
             "conditionalRules": [
               {
@@ -4600,18 +4626,38 @@
               "UNVERIFIED_SOURCE_LIST_AS_RESEARCH_EVIDENCE",
               "PUBLICATION_AS_READER_OUTCOME_EVIDENCE"
             ]
+          },
+          "schedulingContract": {
+            "atomicDispatchOnly": true,
+            "compositeDecompositionRequired": true,
+            "resourceAccessRequired": true,
+            "immutableReadInputsRequired": true,
+            "unknownMutationConflict": "SERIALIZE",
+            "dedicatedGitBranchForMutations": true,
+            "naturalParallelism": [
+              {
+                "after": "BK-04",
+                "nodes": [
+                  "BK-05",
+                  "BK-06"
+                ],
+                "joinAt": "BK-07"
+              }
+            ],
+            "decompositionRule": "Research, drafting, fact-check or editorial work may be decomposed only along explicit chapter/section/source domains with independent outputs and conservative conflict domains; shared manuscript integration is explicit.",
+            "integrationRule": "Proof/publication work waits for ACCEPTED dependencies and any explicit manuscript-integration work required by the plan."
           }
         }
       }
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.6.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "d6ad4c7bd8a68b7a52754329f6ccd59cb4655568",
+      "sourcePath": "v0.7.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ec8329099723c10900e63487df2243d664e4d305",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.6.0",
-        "title": "SAFOR Package Manifest 0.6.0",
+        "$id": "urn:safor:package-manifest:0.7.0",
+        "title": "SAFOR Package Manifest 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4632,7 +4678,7 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "packageId": {
             "type": "string",
@@ -4760,12 +4806,12 @@
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.6.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "81faead970521bd10697396417eae443b614784a",
+      "sourcePath": "v0.7.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "fcbaf4b7ec2740e6bbc85da269096b578669c488",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.6.0",
-        "title": "SAFOR Control State 0.6.0",
+        "$id": "urn:safor:control-state:0.7.0",
+        "title": "SAFOR Control State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4788,7 +4834,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "kernelRef": {
             "type": "object",
@@ -4799,7 +4845,7 @@
             ],
             "properties": {
               "version": {
-                "const": "0.6.0"
+                "const": "0.7.0"
               },
               "sourceRef": {
                 "type": "string",
@@ -4999,12 +5045,12 @@
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.6.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "afe0a6ca9556c2ebc328c43a81d0709ecf3cfb0e",
+      "sourcePath": "v0.7.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "298e56744b5c0b6f9fa477a29789e874b5e27c4b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.6.0",
-        "title": "SAFOR Value Stream State 0.6.0",
+        "$id": "urn:safor:value-stream-state:0.7.0",
+        "title": "SAFOR Value Stream State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5024,7 +5070,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -5172,12 +5218,12 @@
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "v0.6.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "4087a70f01eadbf01c3753567929f62262abc76e",
+      "sourcePath": "v0.7.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "0120585353a5e89840eb51ae82edeef58c7cc41c",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:execution-state:0.6.0",
-        "title": "SAFOR Execution State 0.6.0",
+        "$id": "urn:safor:execution-state:0.7.0",
+        "title": "SAFOR Execution State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5188,6 +5234,9 @@
           "actorAssignments",
           "contracts",
           "agentJobStateRefs",
+          "schedulerStateRef",
+          "activeDispatchWaveRefs",
+          "resourceLeaseRefs",
           "runs",
           "reconciliation",
           "selfHealing"
@@ -5197,7 +5246,7 @@
             "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -5245,6 +5294,26 @@
             },
             "uniqueItems": true,
             "description": "References to MASTER-owned master/jobs/{jobId}.json records. Lifecycle fields are not duplicated here."
+          },
+          "schedulerStateRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "activeDispatchWaveRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "resourceLeaseRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
           }
         },
         "$defs": {
