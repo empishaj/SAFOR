@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-registry:0.8.0",
+  "title": "SAFOR Agent Registry 0.8.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "revision",
+    "agents"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_REGISTRY"
+    },
+    "schemaVersion": {
+      "const": "0.8.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/agentEntry"
+      }
+    }
+  },
+  "$defs": {
+    "agentEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agentId",
+        "identityRef",
+        "workspaceRoot",
+        "registeredAt",
+        "registeredBy",
+        "scheduling"
+      ],
+      "properties": {
+        "agentId": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+        },
+        "identityRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workspaceRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "registeredBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scheduling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dispatchEnabled",
+            "maxConcurrentJobs"
+          ],
+          "properties": {
+            "dispatchEnabled": {
+              "type": "boolean"
+            },
+            "maxConcurrentJobs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            }
+          }
+        }
+      }
+    }
+  }
+}
