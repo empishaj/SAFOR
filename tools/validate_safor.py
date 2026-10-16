@@ -151,6 +151,8 @@ if "completionStatus" not in result_schema.get("required", []):
 scheduler = modules.get("multiAgentScheduler", {}).get("content", {})
 if scheduler.get("capacityModel", {}).get("agentDefaultMaxConcurrentJobs") != 1:
     fail("Default chat-agent scheduler capacity must be one job.")
+if scheduler.get("capacityModel", {}).get("defaultProjectMaxParallelJobs") != "AUTO":
+    fail("Default project parallelism ceiling must be AUTO.")
 if scheduler.get("conflictModel", {}).get("safeDefault") != "Any ambiguity is treated as conflict and the jobs are serialized.":
     fail("Unknown scheduler conflicts must serialize.")
 if scheduler.get("gitIsolation", {}).get("directMainWriteForbidden") is not True:
@@ -195,10 +197,14 @@ if "humanReadableResultRef" not in result_target_required:
 for field in ("humanReadableReport","gitTrace"):
     if field not in result_schema.get("required", []):
         fail(f"Agent result schema missing {field}.")
-human_report_required = result_schema.get("properties", {}).get("humanReadableReport", {}).get("required", [])
+human_report = result_schema.get("properties", {}).get("humanReadableReport", {})
+human_report_required = human_report.get("required", [])
 for field in ("repository","ref","commitSha","blobSha","format","requiredSections"):
     if field not in human_report_required:
         fail(f"HUMAN-readable result report missing {field}.")
+sections = human_report.get("properties", {}).get("requiredSections", {})
+if sections.get("minItems") != 8 or sections.get("maxItems") != 8:
+    fail("HUMAN-readable result requiredSections must contain all eight required sections.")
 git_trace_entry = result_schema.get("$defs", {}).get("gitTraceEntry", {}).get("required", [])
 for field in ("repository","branch","baseCommitSha","headCommitSha","commitShas","changedPaths","providerReadbackRef"):
     if field not in git_trace_entry:
