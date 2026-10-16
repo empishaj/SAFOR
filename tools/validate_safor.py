@@ -151,6 +151,16 @@ for module_name, expected_type in factory_expectations.items():
 
 kernel = modules.get("kernel", {}).get("content", {})
 actions = {a.get("id"): a for a in kernel.get("controlPlane", {}).get("actions", [])}
+if kernel.get("controlPlane", {}).get("startActionId") != "K00":
+    fail("Kernel startActionId must be K00 module-recovery preflight.")
+if actions.get("K00", {}).get("modelRef") != "module-self-healing-model.json":
+    fail("K00 must bind module-self-healing-model.json.")
+initialization = modules.get("initialization", {}).get("content", {})
+sequence = initialization.get("sequence", [])
+if not sequence or sequence[0].get("id") != "INIT-00":
+    fail("Initialization must begin with INIT-00 module-recovery preflight.")
+if sequence and sequence[0].get("failOutcome") != "STOP":
+    fail("INIT-00 recovery preflight must fail closed to STOP.")
 if actions.get("D01", {}).get("modelRef") != "BOUND_FACTORY.model.discoveryContract":
     fail("D01 must bind Factory discoveryContract.")
 if actions.get("P01", {}).get("modelRef") != "BOUND_FACTORY.model.planningContract":
@@ -172,13 +182,13 @@ if kernel.get("schemas", {}).get("moduleRecoveryProfile") != "schemas/module-rec
     fail("Kernel must reference module recovery profile schema.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 104)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 106)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 130)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 132)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
