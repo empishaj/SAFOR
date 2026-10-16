@@ -8,7 +8,7 @@
 - [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
-- [ ] `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json` is rebuilt from canonical `v0.9.0/` source.
+- [ ] `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json` is rebuilt from canonical `v0.10.0/` source.
 - [ ] `SAFOR-MASTER-COMPLETE.json` exactly matches the versioned release artifact.
 - [ ] All embedded module references resolve.
 - [ ] Runtime memory requirement is exactly `{OWNER}/safor-memory`.
@@ -28,6 +28,17 @@
 - [ ] Self-healing controls fail closed when their own integrity cannot be proven.
 - [ ] Module-aware repair records include profile decision and verification evidence.
 - [ ] Chat-native-only UI policy passes.
+- [ ] HUMAN Cognitive Load Policy validates for all lifecycle phases.
+- [ ] HUMAN Decision Gate defaults to DO_NOT_ASK and exposes only legitimate HUMAN reasons.
+- [ ] Discovery permits HIGH necessary load while post-plan Scheduling/Agent Coordination default VERY_LOW and Execution/Recovery default LOW.
+- [ ] Every HUMAN decision action carries an explicit interaction reason/load contract.
+- [ ] SAFOR derives from approved state/evidence before asking.
+- [ ] Unchanged decisions, mandates and persistent identities are reused without redundant approval.
+- [ ] Deterministic K10 package binding requires no second approval; K10A is exceptional only.
+- [ ] Internal job/branch/lease/dispatch/readback/evidence mechanics are never delegated to HUMAN.
+- [ ] Default SUMMARY uses HUMAN-domain language and hides internal IDs/terms.
+- [ ] Primary action labels are domain-specific; fallback is `Weiter`.
+- [ ] Cognitive-load score is explicitly treated as a non-psychometric governance heuristic.
 - [ ] Agent registry/identity/job/state/result schemas validate.
 - [ ] Agent workspace ownership boundaries validate.
 - [ ] MASTER-authoritative agent job lifecycle validates.
@@ -53,6 +64,7 @@
 - [ ] Acceptance scenarios I–K are recorded.
 - [ ] Canonical explicit Job Contract scenario L is recorded.
 - [ ] Module-wide Self-Healing scenario M is recorded.
+- [ ] HUMAN Cognitive Load scenario N is recorded.
 - [ ] No secrets or credentials exist in release files.
 - [ ] HUMAN has approved any change to license/distribution terms.
 
@@ -64,5 +76,6 @@
 - [ ] Six-agent scheduling, conflict serialization and HUMAN-readable/Git-trace acceptance pass according to scenarios I–K.
 - [ ] Canonical explicit Job Contract acceptance passes according to scenario L.
 - [ ] Module-wide Self-Healing acceptance passes according to scenario M.
+- [ ] HUMAN Cognitive Load/communication acceptance passes according to scenario N.
 - [ ] License/distribution decision is explicit.
 - [ ] Public repository slug is final and stable.
