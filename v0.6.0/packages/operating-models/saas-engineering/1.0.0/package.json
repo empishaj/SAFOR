@@ -1,0 +1,312 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.6.0",
+  "packageId": "safor.om.saas-engineering",
+  "packageKind": "OPERATING_MODEL",
+  "version": "1.0.0",
+  "name": "SaaS Engineering Reference Operating Model",
+  "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
+  "compatibility": {
+    "kernel": ">=0.6.0 <0.7.0"
+  },
+  "exports": {
+    "capabilities": [
+      "business_intent",
+      "scope_definition",
+      "requirement_definition",
+      "solution_design",
+      "code_contribution",
+      "technical_review",
+      "test_evidence",
+      "security_evidence",
+      "release_readiness",
+      "activation_execution",
+      "outcome_assessment"
+    ],
+    "authorities": [
+      "strategic_investment",
+      "product_scope_approval",
+      "architecture_exception_approval",
+      "quality_risk_decision",
+      "production_release_approval",
+      "business_outcome_acceptance"
+    ],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "providerCapabilities": []
+  },
+  "dependencies": [],
+  "model": {
+    "maturity": "RESEARCH_REFERENCE_NOT_ORGANIZATION_APPROVED",
+    "roles": [
+      {
+        "id": "BUSINESS_SPONSOR",
+        "unit": "business",
+        "capabilities": [
+          "business_intent"
+        ],
+        "authorities": [
+          "strategic_investment"
+        ]
+      },
+      {
+        "id": "PRODUCT_OWNER",
+        "unit": "product",
+        "capabilities": [
+          "scope_definition",
+          "requirement_definition"
+        ],
+        "authorities": [
+          "product_scope_approval"
+        ]
+      },
+      {
+        "id": "ARCHITECT",
+        "unit": "engineering",
+        "capabilities": [
+          "solution_design",
+          "technical_review"
+        ],
+        "authorities": [
+          "architecture_exception_approval"
+        ]
+      },
+      {
+        "id": "DEVELOPER",
+        "unit": "engineering",
+        "capabilities": [
+          "code_contribution",
+          "technical_review"
+        ],
+        "authorities": []
+      },
+      {
+        "id": "QA_ENGINEER",
+        "unit": "quality",
+        "capabilities": [
+          "test_evidence"
+        ],
+        "authorities": [
+          "quality_risk_decision"
+        ]
+      },
+      {
+        "id": "SECURITY_REVIEWER",
+        "unit": "security",
+        "capabilities": [
+          "security_evidence"
+        ],
+        "authorities": [
+          "quality_risk_decision"
+        ]
+      },
+      {
+        "id": "RELEASE_OWNER",
+        "unit": "operations",
+        "capabilities": [
+          "release_readiness",
+          "activation_execution"
+        ],
+        "authorities": [
+          "production_release_approval"
+        ]
+      },
+      {
+        "id": "PRODUCT_ANALYST",
+        "unit": "product",
+        "capabilities": [
+          "outcome_assessment"
+        ],
+        "authorities": [
+          "business_outcome_acceptance"
+        ]
+      }
+    ],
+    "capabilityBindings": [
+      {
+        "capabilityId": "business_intent",
+        "eligibleRoles": [
+          "BUSINESS_SPONSOR"
+        ]
+      },
+      {
+        "capabilityId": "scope_definition",
+        "eligibleRoles": [
+          "PRODUCT_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "requirement_definition",
+        "eligibleRoles": [
+          "PRODUCT_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "solution_design",
+        "eligibleRoles": [
+          "ARCHITECT"
+        ]
+      },
+      {
+        "capabilityId": "code_contribution",
+        "eligibleRoles": [
+          "DEVELOPER"
+        ]
+      },
+      {
+        "capabilityId": "technical_review",
+        "eligibleRoles": [
+          "ARCHITECT",
+          "DEVELOPER"
+        ]
+      },
+      {
+        "capabilityId": "test_evidence",
+        "eligibleRoles": [
+          "QA_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "security_evidence",
+        "eligibleRoles": [
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "release_readiness",
+        "eligibleRoles": [
+          "RELEASE_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "activation_execution",
+        "eligibleRoles": [
+          "RELEASE_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "outcome_assessment",
+        "eligibleRoles": [
+          "PRODUCT_ANALYST"
+        ]
+      }
+    ],
+    "authorityBindings": [
+      {
+        "authorityId": "strategic_investment",
+        "eligibleRoles": [
+          "BUSINESS_SPONSOR"
+        ]
+      },
+      {
+        "authorityId": "product_scope_approval",
+        "eligibleRoles": [
+          "PRODUCT_OWNER"
+        ]
+      },
+      {
+        "authorityId": "architecture_exception_approval",
+        "eligibleRoles": [
+          "ARCHITECT"
+        ]
+      },
+      {
+        "authorityId": "quality_risk_decision",
+        "eligibleRoles": [
+          "QA_ENGINEER",
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "authorityId": "production_release_approval",
+        "eligibleRoles": [
+          "RELEASE_OWNER"
+        ]
+      },
+      {
+        "authorityId": "business_outcome_acceptance",
+        "eligibleRoles": [
+          "PRODUCT_ANALYST",
+          "BUSINESS_SPONSOR"
+        ]
+      }
+    ],
+    "humanGates": [
+      {
+        "id": "HG-0",
+        "authorityId": "strategic_investment",
+        "trigger": "STRATEGIC_THRESHOLD",
+        "outcomes": [
+          "APPROVE",
+          "REJECT",
+          "REFRAME"
+        ]
+      },
+      {
+        "id": "HG-1",
+        "authorityId": "product_scope_approval",
+        "trigger": "PRODUCT_SCOPE_DECISION",
+        "outcomes": [
+          "ACCEPT_SCOPE",
+          "CLARIFY",
+          "STOP"
+        ]
+      },
+      {
+        "id": "HG-2",
+        "authorityId": "architecture_exception_approval",
+        "trigger": "ELEVATED_ARCHITECTURE_RISK",
+        "outcomes": [
+          "ACCEPT_DESIGN",
+          "CHANGES_REQUIRED",
+          "ESCALATE"
+        ]
+      },
+      {
+        "id": "HG-3",
+        "authorityId": "quality_risk_decision",
+        "trigger": "CRITICAL_QUALITY_OR_SECURITY_DEVIATION",
+        "outcomes": [
+          "REWORK",
+          "RISK_DECISION",
+          "BLOCK"
+        ]
+      },
+      {
+        "id": "HG-4",
+        "authorityId": "production_release_approval",
+        "trigger": "PRODUCTION_AND_RISK",
+        "outcomes": [
+          "AUTHORIZE",
+          "HOLD",
+          "ROLLBACK_PLAN_REQUIRED"
+        ]
+      },
+      {
+        "id": "HG-5",
+        "authorityId": "business_outcome_acceptance",
+        "trigger": "OUTCOME_ASSESSMENT",
+        "outcomes": [
+          "ACCEPT_VALUE",
+          "ITERATE",
+          "ABANDON"
+        ]
+      }
+    ],
+    "separationOfDuties": [
+      {
+        "id": "SOD-TECH-REVIEW",
+        "rule": "When a factory work item requires independent technical review, the approving reviewer actor must differ from the contribution author actor."
+      },
+      {
+        "id": "SOD-SECURITY",
+        "rule": "Security evidence may not be substituted by the implementation author's self-attestation when independent security review is required."
+      }
+    ]
+  },
+  "source": {
+    "repository": "empishaj/Systemische-KI-Integration-in-SaaS-Organisationen",
+    "path": "derived from planning/Value-Creation-Stream-Metamodell.md and planning/KI-Fabrik-Referenzkonzept.md",
+    "ref": "778d47ff4169c2b85de2d17b0be9a4fb03340fee"
+  }
+}

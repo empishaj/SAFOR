@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.5.0-rc.1**
+Current target: **v0.6.0-rc.1**
 
-Current modular source: **`v0.5.0/`**
+Current modular source: **`v0.6.0/`**
 
 ## Release-candidate gates
 
@@ -18,6 +18,10 @@ Current modular source: **`v0.5.0/`**
 | Factory-bound Evidence | PASS |
 | Chat-native HUMAN interface policy | PASS |
 | Bounded self-healing | PASS |
+| Persistent repository-native agent identity | PASS by schema/conformance |
+| Agent inbox/outbox job protocol | PASS by schema/conformance |
+| MASTER-authoritative agent lifecycle | PASS by schema/conformance |
+| Agent Workspace end-to-end acceptance | OPEN |
 | Machine-readable validation | PASS |
 | CI validation | PASS on validated PR head |
 | Product repository slug without trailing punctuation | PASS |

@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -74,3 +74,51 @@ For every test:
 - PASS/FAIL decision.
 
 Do not mark GA until GitHub and GitLab happy-path plus safety scenarios are independently recorded as PASS.
+
+
+## F. Repository-native Agent Workspace
+
+**Preconditions**
+- A project is initialized in writable `safor-memory`.
+- An AGENT actor is resolved by the Operating Model.
+- The HUMAN approves initial agent identity creation.
+- An active execution mandate covers the assigned work.
+
+**Expected**
+1. MASTER creates/updates `agents/index.json`.
+2. MASTER creates `agents/{agentId}/identity.json` and the agent workspace directories.
+3. The agent chat is bootstrapped once with control repository, project ID and agent ID.
+4. MASTER writes an immutable job contract to `agents/{agentId}/inbox/{jobId}.json`.
+5. MASTER writes authoritative lifecycle state to `master/jobs/{jobId}.json` with READY status.
+6. MASTER updates the fixed non-authoritative projection `agents/{agentId}/inbox/index.json`.
+7. The HUMAN does not copy the full job contract into the agent chat.
+8. On external activation, the agent loads identity/state and reads the fixed inbox index without requiring repository directory enumeration.
+9. The agent reads the referenced immutable job contract, verifies its blob identity and then reads the authoritative MASTER job state.
+10. The agent rejects stale index entries or jobs assigned to another identity/revision.
+11. The agent claims the eligible job using optimistic concurrency on its own `state.json`.
+12. MASTER reads back the claim before advancing authoritative lifecycle to CLAIMED/RUNNING.
+13. The agent performs only job/mandate scope and writes evidence under its own evidence root.
+14. The agent writes `outbox/{jobId}.result.json` and sets local state to RESULT_SUBMITTED.
+15. The agent does not mark its own job VERIFIED or ACCEPTED.
+16. MASTER reads the result, validates job/identity binding, evidence, reviews and provider mutations.
+17. MASTER alone advances `master/jobs/{jobId}.json` to VERIFIED/ACCEPTED when all requirements pass.
+
+**Pass condition:** all 17 observations are evidenced.
+
+## G. Agent claim collision
+
+Activate two runtimes with the same agent identity against the same READY job.
+
+**Expected**
+- Exactly one optimistic-concurrency claim succeeds.
+- The stale claimant detects the revision/blob conflict and reconciles.
+- No duplicate execution is treated as authorized.
+
+## H. Cross-agent isolation
+
+Present Agent A with an inbox/job or master lifecycle belonging to Agent B.
+
+**Expected**
+- Agent A refuses the claim.
+- Agent A does not mutate Agent B's state/outbox/evidence paths.
+- MASTER lifecycle remains unchanged.

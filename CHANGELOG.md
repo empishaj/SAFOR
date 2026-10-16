@@ -2,6 +2,28 @@
 
 All notable SAFOR product changes are documented here.
 
+## 0.6.0-rc.1 — 2026-10-16
+
+### Added
+- Repository-native Agent Workspace Protocol.
+- Persistent agent identity initialized once per agent/project.
+- MASTER-owned agent registry, identity, deterministic inbox index, inbox job contracts and authoritative job lifecycle.
+- AGENT-owned runtime state, outbox results, evidence and audit workspace.
+- Immutable agent job contracts with explicit scope, mandate, output and evidence requirements.
+- Optimistic-concurrency job claiming to prevent duplicate concurrent claims.
+- MASTER verification of agent results before VERIFIED/ACCEPTED.
+- Explicit external-activation rule: normal chats are not assumed to wake themselves when a job appears.
+- Seven dedicated agent schemas plus the agent workspace model.
+
+### Changed
+- Agent job discovery uses the fixed `agents/{agentId}/inbox/index.json` projection; the authoritative MASTER job state is always re-read before claim, so directory enumeration is not required.
+- Agent work is transported through `safor-memory` rather than HUMAN-copied job prompts.
+- Execution state references MASTER-owned agent job lifecycle records without duplicating lifecycle authority.
+- Product schema/kernel contract version advanced to 0.6.0.
+
+### Product status
+This version is a **Release Candidate**. General Availability still requires the explicit licensing decision and recorded GitHub, GitLab and Agent Workspace end-to-end acceptance.
+
 ## 0.5.0-rc.1 — 2026-10-16
 
 ### Changed

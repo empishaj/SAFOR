@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.5.0-rc.1 — Release Candidate**
+> Current maturity: **v0.6.0-rc.1 — Release Candidate**
 
 ## Start here
 
@@ -25,15 +25,16 @@ These concerns are intentionally separate.
 
 ## Distribution
 
-- `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json` — immutable-name release-candidate distribution.
+- `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json` — immutable-name release-candidate distribution.
 - `SAFOR-MASTER-COMPLETE.json` — latest release-candidate alias.
-- `v0.5.0/` — current modular source baseline.
-- `v0.4.0/` — retained historical source baseline.
+- `v0.6.0/` — current modular source baseline with repository-native Agent Workspace Protocol.
+- `v0.5.0/` and `v0.4.0/` — retained historical source baselines.
 
 ## Product documentation
 
 - [Quickstart](QUICKSTART.md)
 - [Architecture](ARCHITECTURE.md)
+- [Agent Workspace Protocol](AGENT-WORKSPACE.md)
 - [Security](SECURITY.md)
 - [Support & boundaries](SUPPORT.md)
 - [Product readiness](PRODUCT-READINESS.md)

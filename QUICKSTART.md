@@ -13,7 +13,7 @@ If `safor-memory` does not already exist or is not writable, SAFOR stops. It nev
 
 ## Start
 
-1. Load `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
+1. Load `SAFOR-MASTER-COMPLETE-v0.6.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
 2. Choose **GitHub** or **GitLab**.
 3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
 4. Choose the owner/namespace.
@@ -45,3 +45,17 @@ These repositories serve different purposes and must not be conflated.
 ## Safety
 
 Do not paste passwords, PATs, private keys or other credentials into chat. Provider rights must be observed through the actual connected provider.
+
+
+## Persistent agent chats
+
+When an Operating Model resolves work to an AGENT actor, SAFOR can create a persistent agent workspace in `safor-memory`.
+
+The agent is initialized once with:
+- control repository,
+- project ID,
+- agent ID.
+
+After that, the HUMAN does **not** copy full job prompts into the agent chat. On activation the agent loads its identity/state, scans its inbox, verifies an eligible job, claims it with optimistic concurrency, performs only the authorized scope, and writes its result/evidence back to the repository.
+
+See `AGENT-WORKSPACE.md`.

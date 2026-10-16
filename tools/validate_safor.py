@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.5.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.6.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -31,7 +31,8 @@ required_modules = {
     "factorySoftwareWebsite","factoryBook","schemaPackageManifest","schemaControlState",
     "schemaValueStreamState","schemaExecutionState","schemaWorkItem","schemaProject",
     "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu",
-    "schemaSelfHealingRecord","conformance"
+    "schemaSelfHealingRecord","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
+    "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult","conformance"
 }
 missing = sorted(required_modules - set(modules))
 if missing:
@@ -88,15 +89,63 @@ for action_id in ("E04","E05"):
         fail(f"{action_id} must bind Factory evidenceContract.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in ("INV-037","INV-038","INV-039","INV-040","INV-041","INV-042","INV-043","INV-044"):
+for inv in ("INV-037","INV-038","INV-039","INV-040","INV-041","INV-042","INV-043","INV-044","INV-045","INV-046","INV-047","INV-048","INV-049","INV-050","INV-051","INV-052","INV-053","INV-054","INV-055","INV-056"):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in ("CF-046","CF-047","CF-048","CF-049","CF-050","CF-051","CF-052","CF-053","CF-054","CF-055"):
+for cf in ("CF-046","CF-047","CF-048","CF-049","CF-050","CF-051","CF-052","CF-053","CF-054","CF-055","CF-056","CF-057","CF-058","CF-059","CF-060","CF-061","CF-062","CF-063","CF-064","CF-065","CF-066","CF-067","CF-068"):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
+
+
+agent_model = modules.get("agentWorkspace", {}).get("content", {})
+if agent_model.get("topology", {}).get("inboxIndex") != "agents/{agentId}/inbox/index.json":
+    fail("Agent Workspace inbox index path mismatch.")
+discovery = agent_model.get("discoveryProtocol", {})
+if discovery.get("noDirectoryEnumerationRequired") is not True:
+    fail("Agent Workspace discovery must not require directory enumeration.")
+if discovery.get("authority") != "NON_AUTHORITATIVE_DISCOVERABILITY_PROJECTION":
+    fail("Agent inbox index must be a non-authoritative discovery projection.")
+if agent_model.get("activationContract", {}).get("backgroundWakeupAssumed") is not False:
+    fail("Agent Workspace must not assume background wakeup.")
+if "copy" not in agent_model.get("activationContract", {}).get("promptTransportRule", "").lower():
+    fail("Agent Workspace must explicitly forbid HUMAN job-prompt transport as authority.")
+ownership = agent_model.get("ownership", {})
+if "master/jobs/{jobId}.json" not in ownership.get("MASTER_ONLY", []):
+    fail("MASTER must own authoritative agent job lifecycle.")
+if "agents/{agentId}/state.json" not in ownership.get("AGENT_ONLY", []):
+    fail("Agent must own only its local runtime state.")
+if agent_model.get("resultProtocol", {}).get("notAcceptance") != "Agent result is a claim of work performed, never authoritative acceptance.":
+    fail("Agent result must not be authoritative acceptance.")
+for action_id in ("A01","A02","A03","A04","A05"):
+    if actions.get(action_id, {}).get("modelRef") != "agent-workspace-model.json":
+        fail(f"{action_id} must bind agent-workspace-model.json.")
+execution_schema = modules.get("schemaExecutionState", {}).get("content", {})
+if "agentJobStateRefs" not in execution_schema.get("required", []):
+    fail("Execution state must reference agent job states.")
+job_state_schema = modules.get("schemaAgentJobState", {}).get("content", {})
+if job_state_schema.get("properties", {}).get("owner", {}).get("const") != "MASTER":
+    fail("Agent job state must be MASTER-owned.")
+job_schema = modules.get("schemaAgentJob", {}).get("content", {})
+constraints = job_schema.get("properties", {}).get("constraints", {}).get("properties", {})
+if constraints.get("mayModifyMasterState", {}).get("const") is not False:
+    fail("Agent job contract must forbid agent mutation of MASTER state.")
+inbox_index_schema = modules.get("schemaAgentInboxIndex", {}).get("content", {})
+if inbox_index_schema.get("properties", {}).get("authoritativeLifecycle", {}).get("const") is not False:
+    fail("Agent inbox index schema must be non-authoritative.")
+if inbox_index_schema.get("properties", {}).get("verificationRule", {}).get("const") != "READ_MASTER_JOB_STATE_BEFORE_CLAIM":
+    fail("Agent inbox index must require MASTER job-state verification before claim.")
+identity_schema = modules.get("schemaAgentIdentity", {}).get("content", {})
+activation_enums = identity_schema.get("properties", {}).get("activationContract", {}).get("properties", {}).get("onActivation", {}).get("items", {}).get("enum", [])
+if "LOAD_INBOX_INDEX" not in activation_enums or "READ_MASTER_JOB_STATE" not in activation_enums:
+    fail("Agent identity activation must load the inbox index and MASTER job state.")
+if "SCAN_INBOX" in activation_enums:
+    fail("Agent identity activation must not depend on repository inbox scanning.")
+result_schema = modules.get("schemaAgentResult", {}).get("content", {})
+if "completionStatus" not in result_schema.get("required", []):
+    fail("Agent result schema missing completionStatus.")
 
 if manifest.get("version") != version:
     fail("RELEASE-MANIFEST.json version must match VERSION.")
@@ -111,10 +160,10 @@ if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
 if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
     fail("Release manifest latest alias mismatch.")
-if manifest.get("sourceRoot") != "v0.5.0":
-    fail("Release manifest source root must be v0.5.0.")
-if bundle.get("schemaVersion") != "0.5.0":
-    fail("Complete bundle schemaVersion must be 0.5.0.")
+if manifest.get("sourceRoot") != "v0.6.0":
+    fail("Release manifest source root must be v0.6.0.")
+if bundle.get("schemaVersion") != "0.6.0":
+    fail("Complete bundle schemaVersion must be 0.6.0.")
 versioned_bundle = load_json(expected_versioned)
 if versioned_bundle != bundle:
     fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")

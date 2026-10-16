@@ -1,0 +1,206 @@
+{
+  "format": "SAFOR_SELF_HEALING_MODEL",
+  "schemaVersion": "0.6.0",
+  "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
+  "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
+  "principles": {
+    "conservativeByDefault": true,
+    "evidenceDriven": true,
+    "repairWithinExistingAuthorityOnly": true,
+    "verifyEveryRepair": true,
+    "immutableFailureHistory": true,
+    "boundedRetries": true,
+    "noSilentScopeExpansion": true,
+    "noHumanDecisionInference": true,
+    "noGateBypass": true,
+    "noForcePush": true,
+    "noDestructiveDeleteByDefault": true
+  },
+  "lifecycle": [
+    "DETECT",
+    "CLASSIFY",
+    "CHECK_REPAIR_ELIGIBILITY",
+    "PLAN_REPAIR",
+    "EXECUTE_REPAIR",
+    "VERIFY_REPAIR",
+    "RESUME_OR_ESCALATE"
+  ],
+  "failureClasses": [
+    {
+      "id": "SH-01",
+      "name": "TRANSIENT_PROVIDER_ERROR",
+      "examples": [
+        "temporary provider error",
+        "rate-limit recovery after provider indicates retry is allowed",
+        "temporary transport failure"
+      ],
+      "automaticRepair": "RETRY_SAME_IDEMPOTENT_OPERATION",
+      "defaultRetryBudget": 2,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-02",
+      "name": "READBACK_MISMATCH_OR_UNKNOWN_EFFECT",
+      "examples": [
+        "write response returned but final state is unclear",
+        "provider timeout after mutation"
+      ],
+      "automaticRepair": "RECONCILE_BEFORE_ANY_RETRY",
+      "defaultRetryBudget": 0,
+      "requiresReconciliation": true
+    },
+    {
+      "id": "SH-03",
+      "name": "STALE_REVISION_CONFLICT",
+      "examples": [
+        "expected branch head changed",
+        "optimistic-lock conflict"
+      ],
+      "automaticRepair": "REFRESH_STATE_AND_REEVALUATE",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-04",
+      "name": "MISSING_DERIVABLE_CONTROL_ARTIFACT",
+      "examples": [
+        "missing generated index",
+        "missing derived non-authoritative projection"
+      ],
+      "automaticRepair": "REGENERATE_FROM_AUTHORITATIVE_SOURCES",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-05",
+      "name": "WORK_RESULT_NEEDS_REWORK",
+      "examples": [
+        "review requests changes",
+        "acceptance criterion not satisfied"
+      ],
+      "automaticRepair": "ROUTE_TO_EXISTING_REWORK_PATH",
+      "defaultRetryBudget": 0,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-06",
+      "name": "MISSING_PERMISSION_OR_TOOL",
+      "examples": [
+        "write permission revoked",
+        "required provider tool unavailable"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-07",
+      "name": "POLICY_OR_GUARD_VIOLATION",
+      "examples": [
+        "operation outside mandate",
+        "human gate required",
+        "separation-of-duties violation"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-08",
+      "name": "STATE_OR_SCHEMA_CORRUPTION",
+      "examples": [
+        "authoritative state invalid",
+        "binding integrity failure",
+        "schema mismatch"
+      ],
+      "automaticRepair": "RESTORE_ONLY_FROM_VERIFIED_PRIOR_OR_AUTHORITATIVE_SOURCE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_RESTORE_IS_NOT_UNAMBIGUOUS"
+    },
+    {
+      "id": "SH-09",
+      "name": "RETRY_BUDGET_EXHAUSTED",
+      "examples": [
+        "same recoverable failure repeats beyond budget"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    }
+  ],
+  "eligibilityRules": [
+    "The repair must stay inside the currently active mandate and bound package policies.",
+    "The repair must not create a new business, product, risk or governance decision.",
+    "The repair must be idempotent or have an explicit reconciliation/compensation strategy.",
+    "Required provider capabilities and rights must be proven immediately before repair.",
+    "The authoritative pre-repair state must be captured or referenced.",
+    "A repair must define success evidence before it runs.",
+    "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry."
+  ],
+  "forbiddenAutomaticRepairs": [
+    "FORCE_PUSH",
+    "HISTORY_REWRITE",
+    "DELETE_REPOSITORY",
+    "DELETE_AUTHORITATIVE_STATE_WITHOUT_VERIFIED_RESTORE",
+    "BYPASS_REQUIRED_REVIEW",
+    "BYPASS_HUMAN_GATE",
+    "EXPAND_EXECUTION_MANDATE",
+    "ACCEPT_RISK_FOR_HUMAN",
+    "MERGE_WITH_FAILED_REQUIRED_CHECKS",
+    "CHANGE_OPERATING_MODEL_OR_FACTORY_BINDING",
+    "CHANGE_SECURITY_OR_COMPLIANCE_POLICY",
+    "INVENT_MISSING_EVIDENCE"
+  ],
+  "retryPolicy": {
+    "key": "failureFingerprint",
+    "exponentialBackoffConcept": true,
+    "hostSchedulingRequiredForDelayedRetry": true,
+    "defaultImmediateRetries": 0,
+    "maximumAutomaticAttemptsAcrossSameFingerprint": 2,
+    "resetOnlyWhen": "MATERIAL_INPUT_OR_EXTERNAL_STATE_CHANGED",
+    "rule": "Retry count is bounded by the lower of the failure-class budget and any operation-specific budget."
+  },
+  "repairPlanRequiredFields": [
+    "repairId",
+    "failureClass",
+    "failureFingerprint",
+    "subjectRef",
+    "proposedAction",
+    "authorityBasis",
+    "preStateRefs",
+    "successEvidenceRequirements",
+    "attemptNumber"
+  ],
+  "verification": {
+    "successRequires": [
+      "AUTHORITATIVE_READBACK",
+      "EXPECTED_STATE_MATCH",
+      "NO_NEW_GUARD_VIOLATION",
+      "REPAIR_RECORD_PERSISTED"
+    ],
+    "onSuccess": "RESUME_FROM_VERIFIED_CHECKPOINT",
+    "onFailure": "RECLASSIFY_OR_ESCALATE",
+    "neverInferSuccessFrom": "ASSISTANT_TEXT_OR_INTENT"
+  },
+  "rollback": {
+    "useWhen": "REPAIR_CREATED_A_REVERSIBLE_EFFECT_AND_VERIFICATION_FAILED",
+    "requirements": [
+      "Rollback action was authorized before execution or is an explicit compensation allowed by the same mandate.",
+      "Rollback target is unambiguous.",
+      "Rollback can be verified through authoritative readback."
+    ],
+    "otherwise": "STOP_AND_ESCALATE"
+  },
+  "escalation": {
+    "toHumanWhen": [
+      "REQUIRES_HUMAN_DECISION",
+      "PERMISSION_OR_TOOL_MISSING",
+      "POLICY_OR_GUARD_VIOLATION",
+      "RETRY_BUDGET_EXHAUSTED",
+      "AMBIGUOUS_RESTORE_OR_ROLLBACK",
+      "REPAIR_WOULD_EXPAND_SCOPE_OR_AUTHORITY",
+      "HIGH_IMPACT_OR_IRREVERSIBLE_EFFECT"
+    ],
+    "messageStyle": "Concise: what failed, what SAFOR tried, current safe state, and the smallest HUMAN decision/action needed."
+  }
+}
