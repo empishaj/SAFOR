@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:saf:decision-record:0.4.0",
-  "title": "SAF Decision Record 0.4.0",
+  "$id": "urn:safor:decision-record:0.4.0",
+  "title": "SAFOR Decision Record 0.4.0",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -20,7 +20,7 @@
   ],
   "properties": {
     "format": {
-      "const": "SAF_DECISION_RECORD"
+      "const": "SAFOR_DECISION_RECORD"
     },
     "schemaVersion": {
       "const": "0.4.0"

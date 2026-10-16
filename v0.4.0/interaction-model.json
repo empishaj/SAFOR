@@ -1,8 +1,8 @@
 {
-  "format": "SAF_INTERACTION_MODEL",
+  "format": "SAFOR_INTERACTION_MODEL",
   "schemaVersion": "0.4.0",
-  "id": "SAF-INTERACTION-EXECUTIVE-CONSOLE",
-  "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAF-guided project primarily by selecting actions instead of composing commands.",
+  "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
+  "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
   "principles": {
     "menuFirst": true,
     "onePrimaryAction": true,
@@ -34,12 +34,12 @@
     "rule": "Use only chat-native interaction capabilities actually exposed by the host. Never create or require custom HTML/CSS/JS UI."
   },
   "visualProfile": {
-    "id": "SAF_CHAT_NATIVE",
+    "id": "SAFOR_CHAT_NATIVE",
     "character": "Native chat experience: concise, warm, professional and easy to scan. Visual styling is owned entirely by the chat host.",
     "brand": {
-      "label": "SAF",
+      "label": "SAFOR",
       "productLabel": "Systemic AI Factory",
-      "headerPattern": "SAF  •  {projectTitle}",
+      "headerPattern": "SAFOR  •  {projectTitle}",
       "statusPattern": "{modeLabel}  ·  {statusLabel}"
     },
     "hierarchy": [
@@ -73,7 +73,7 @@
     }
   },
   "roundSemantics": {
-    "id": "SAF_ROUND",
+    "id": "SAFOR_ROUND",
     "definition": "A user-visible orchestration cycle that begins from a verified stable checkpoint and advances only through already-authorized, guard-satisfied operations until the next user-relevant checkpoint.",
     "startIntent": "NEXT_ROUND",
     "primaryLabel": "Nächste Runde starten",
@@ -249,7 +249,7 @@
     "useWhen": "NO_NATIVE_BUTTON_OR_SELECT_CAPABILITY",
     "behavior": "Use only native chat Markdown/plain text. Present a short numbered or bulleted list that the HUMAN can answer by label or number.",
     "sample": [
-      "**SAF · Projekt**",
+      "**SAFOR · Projekt**",
       "Sieht gut aus. Wir können weitermachen.",
       "",
       "1. Nächste Runde starten",
@@ -259,7 +259,7 @@
     ]
   },
   "humanCommunication": {
-    "id": "SAF_HUMAN_BUDDY",
+    "id": "SAFOR_HUMAN_BUDDY",
     "purpose": "Make every direct HUMAN interaction concise, clear, warm, encouraging and action-oriented while keeping technical rigor and honesty.",
     "relationship": "TRUSTED_PROJECT_BUDDY",
     "priorityOrder": [
@@ -409,7 +409,7 @@
           "STOP",
           "REQUIRED_FIX"
         ],
-        "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAF danach neu."
+        "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAFOR danach neu."
       },
       "creationType": {
         "structure": [
@@ -444,7 +444,7 @@
   },
   "initializationExperience": {
     "modelRef": "initialization-model.json",
-    "behavior": "Start automatically after SAF-MASTER load and guide the HUMAN one decision at a time.",
+    "behavior": "Start automatically after SAFOR-MASTER load and guide the HUMAN one decision at a time.",
     "steps": [
       {
         "id": "PROVIDER",
@@ -464,7 +464,7 @@
       {
         "id": "ACCESS",
         "successMessage": "Passt. Zugriff ist da.",
-        "blockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAF nicht starten.",
+        "blockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
         "actions": [
           {
             "label": "Erledigt",
@@ -492,11 +492,11 @@
         "overflowLabel": "Mehr anzeigen"
       },
       {
-        "id": "SAF_MEMORY",
+        "id": "SAFOR_MEMORY",
         "prompt": "Ich prüfe jetzt `safor-memory`.",
         "preferredSurface": "NATIVE_MARKDOWN",
         "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
-        "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAF nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAF danach erneut.",
+        "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAFOR danach erneut.",
         "failureBehavior": "STOP",
         "actions": [
           {
@@ -565,7 +565,7 @@
     ],
     "interactionRules": [
       "Ask exactly one initialization decision at a time.",
-      "Do not continue after SAF_MEMORY failure; the run is STOPPED.",
+      "Do not continue after SAFOR_MEMORY failure; the run is STOPPED.",
       "Creation type is mandatory and must be selected before project mode.",
       "Use only the selected Factory for later Discovery, Planning and domain Evidence.",
       "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
@@ -577,7 +577,7 @@
   "nativeUiPolicy": {
     "mode": "CHAT_NATIVE_UI_ONLY",
     "hostOwnsVisualStyling": true,
-    "rule": "SAF may use only interaction surfaces natively exposed by the current chat host. SAF must not create, inject or require a separate web UI.",
+    "rule": "SAFOR may use only interaction surfaces natively exposed by the current chat host. SAFOR must not create, inject or require a separate web UI.",
     "allowed": [
       "interaction.action_buttons",
       "interaction.single_select",
@@ -596,12 +596,12 @@
       "FORCED_BUTTON_COLORS",
       "EXTERNAL_UI_SHELL"
     ],
-    "stylingBoundary": "Button colors, dropdown appearance, typography, spacing, hover states and native component styling are controlled by the chat host. SAF controls semantics, labels, ordering and hierarchy only.",
+    "stylingBoundary": "Button colors, dropdown appearance, typography, spacing, hover states and native component styling are controlled by the chat host. SAFOR controls semantics, labels, ordering and hierarchy only.",
     "fallback": "If the host exposes no native buttons/select controls, use native chat Markdown/plain text lists. Never emulate a separate UI."
   },
   "selfHealingExperience": {
     "hiddenWhenAutomaticAndSuccessful": true,
-    "successRule": "Do not narrate internal repair mechanics unless they materially affected the HUMAN's project. At most mention that SAF recovered and continued.",
+    "successRule": "Do not narrate internal repair mechanics unless they materially affected the HUMAN's project. At most mention that SAFOR recovered and continued.",
     "escalation": {
       "title": "Ich brauche kurz deine Hilfe",
       "messagePattern": "{whatFailed}. Ich habe {whatTried}. {safeState}.",

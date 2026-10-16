@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:saf:evidence-record:0.4.0",
-  "title": "SAF Evidence Record 0.4.0",
+  "$id": "urn:safor:evidence-record:0.4.0",
+  "title": "SAFOR Evidence Record 0.4.0",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -18,7 +18,7 @@
   ],
   "properties": {
     "format": {
-      "const": "SAF_EVIDENCE_RECORD"
+      "const": "SAFOR_EVIDENCE_RECORD"
     },
     "schemaVersion": {
       "const": "0.4.0"

@@ -1,7 +1,7 @@
 {
-  "format": "SAF_PACKAGE_MANIFEST",
+  "format": "SAFOR_PACKAGE_MANIFEST",
   "schemaVersion": "0.4.0",
-  "packageId": "saf.factory.software-delivery",
+  "packageId": "safor.factory.software-delivery",
   "packageKind": "FACTORY",
   "version": "1.0.0",
   "name": "Software Delivery and Outcome Factory",
