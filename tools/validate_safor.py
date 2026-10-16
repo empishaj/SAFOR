@@ -19,6 +19,7 @@ def load_json(path):
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
 modular_master = load_json("v0.4.0/SAF-MASTER.json")
+version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAF_MASTER_COMPLETE_SINGLE_FILE":
     fail("Complete bundle format is invalid.")
@@ -97,6 +98,12 @@ for cf in ("CF-046","CF-047","CF-048","CF-049","CF-050","CF-051","CF-052","CF-05
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
+if manifest.get("version") != version:
+    fail("RELEASE-MANIFEST.json version must match VERSION.")
+if bundle.get("bundleVersion") != version:
+    fail("Complete bundle version must match VERSION.")
+if manifest.get("status") != "RELEASE_CANDIDATE":
+    fail("v0.4.0-rc.1 must declare RELEASE_CANDIDATE status.")
 if manifest.get("canonicalRepository") != "empishaj/SAFOR":
     fail("Release manifest canonical repository mismatch.")
 if manifest.get("distributable") != "SAFOR-MASTER-COMPLETE.json":
