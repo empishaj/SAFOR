@@ -1,7 +1,7 @@
 {
-  "format": "SAF_PACKAGE_MANIFEST",
+  "format": "SAFOR_PACKAGE_MANIFEST",
   "schemaVersion": "0.4.0",
-  "packageId": "saf.om.book-authoring",
+  "packageId": "safor.om.book-authoring",
   "packageKind": "OPERATING_MODEL",
   "version": "0.1.0",
   "name": "Book Authoring Reference Operating Model",
