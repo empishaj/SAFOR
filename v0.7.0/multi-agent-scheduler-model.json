@@ -26,7 +26,8 @@
     "compositeRule": "A COMPOSITE work item is never dispatched directly. Planning decomposes it into ATOMIC child work items with explicit dependencies, output contracts, resource access and join policy.",
     "defaultJoinPolicy": "ALL_CHILDREN_ACCEPTED",
     "parentCompletion": "A parent may advance beyond execution only after the configured child join predicate is satisfied and any required integration/review work is accepted.",
-    "selectiveRework": "Only affected child work items and downstream dependents are reopened; accepted unaffected children remain accepted."
+    "selectiveRework": "Only affected child work items and downstream dependents are reopened; accepted unaffected children remain accepted.",
+    "dependencyGraphRule": "Scheduling dependencies must form an acyclic directed graph. Any cycle is invalid planning state and blocks READY derivation until replanned."
   },
   "readinessPredicate": [
     "workItem.execution.unit == ATOMIC",
