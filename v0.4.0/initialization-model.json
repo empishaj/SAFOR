@@ -1,5 +1,5 @@
 {
-  "format": "SAF_INITIALIZATION_MODEL",
+  "format": "SAFOR_INITIALIZATION_MODEL",
   "schemaVersion": "0.4.0",
   "id": "SAFOR-GUIDED-INITIALIZATION",
   "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
@@ -7,7 +7,7 @@
     "autoStartAfterBootstrapLoad": true,
     "firstHumanSurface": "PROVIDER_SELECTION_MENU",
     "noProjectWorkBeforeComplete": true,
-    "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAF_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
+    "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAFOR_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
   },
   "sequence": [
     {
@@ -21,12 +21,12 @@
           {
             "id": "GITHUB",
             "label": "GitHub",
-            "providerPackageId": "saf.provider.github"
+            "providerPackageId": "safor.provider.github"
           },
           {
             "id": "GITLAB",
             "label": "GitLab",
-            "providerPackageId": "saf.provider.gitlab"
+            "providerPackageId": "safor.provider.gitlab"
           }
         ]
       },
@@ -50,7 +50,7 @@
       "passOutcome": "PROVIDER_ACCESS_VERIFIED",
       "failOutcome": "WAITING_HUMAN_PROVIDER_ACCESS",
       "rule": "Verify actual host/provider capabilities. Declarations in JSON are never proof of access.",
-      "humanBlockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAF nicht starten.",
+      "humanBlockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
       "blockerMenu": [
         {
           "id": "ACCESS_DONE",
@@ -124,7 +124,7 @@
     },
     {
       "id": "INIT-05",
-      "operation": "VERIFY_REQUIRED_SAF_MEMORY",
+      "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
       "title": "SAFOR Memory prüfen",
       "requires": [
         "provider.repository.read",
@@ -132,14 +132,14 @@
         "provider.artifact.write"
       ],
       "target": "{selectedOwner}/safor-memory",
-      "passOutcome": "SAF_MEMORY_VERIFIED",
+      "passOutcome": "SAFOR_MEMORY_VERIFIED",
       "failOutcome": "STOP",
-      "rule": "The repository `{selectedOwner}/safor-memory` must already exist and actual read/write access must be proven. SAF never creates this repository automatically.",
-      "stopMessage": "Stopp. Unter diesem Owner fehlt ein nutzbares `safor-memory` oder die Lese-/Schreibrechte reichen nicht. Bitte richte `safor-memory` ein und starte SAF danach erneut.",
+      "rule": "The repository `{selectedOwner}/safor-memory` must already exist and actual read/write access must be proven. SAFOR never creates this repository automatically.",
+      "stopMessage": "Stopp. Unter diesem Owner fehlt ein nutzbares `safor-memory` oder die Lese-/Schreibrechte reichen nicht. Bitte richte `safor-memory` ein und starte SAFOR danach erneut.",
       "prohibited": [
-        "AUTO_CREATE_SAF_MEMORY",
-        "CONTINUE_WITHOUT_SAF_MEMORY",
-        "CONTINUE_WITH_READ_ONLY_SAF_MEMORY",
+        "AUTO_CREATE_SAFOR_MEMORY",
+        "CONTINUE_WITHOUT_SAFOR_MEMORY",
+        "CONTINUE_WITH_READ_ONLY_SAFOR_MEMORY",
         "ASK_FOR_PASSWORD",
         "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT"
       ]
@@ -155,14 +155,14 @@
           {
             "id": "SOFTWARE_WEBSITE",
             "label": "Software / Website",
-            "factoryPackageId": "saf.factory.software-delivery",
-            "operatingModelPackageId": "saf.om.saas-engineering"
+            "factoryPackageId": "safor.factory.software-delivery",
+            "operatingModelPackageId": "safor.om.saas-engineering"
           },
           {
             "id": "BOOK",
             "label": "Buch",
-            "factoryPackageId": "saf.factory.book-production",
-            "operatingModelPackageId": "saf.om.book-authoring"
+            "factoryPackageId": "safor.factory.book-production",
+            "operatingModelPackageId": "safor.om.book-authoring"
           }
         ]
       },
@@ -276,7 +276,7 @@
       "id": "INIT-09",
       "operation": "BIND_CONTROL_REPOSITORY",
       "title": "SAFOR-Struktur vorbereiten",
-      "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAF control repository. A different control repository is not allowed in this baseline."
+      "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAFOR control repository. A different control repository is not allowed in this baseline."
     },
     {
       "id": "INIT-10",
@@ -316,7 +316,7 @@
   "permissionSemantics": {
     "baselineReadWriteIsMandatory": true,
     "leastPrivilegeStillApplies": true,
-    "explanation": "SAF requires proven read/write access for its control and project workflow. Additional provider capabilities are requested only when the selected Factory or operation needs them.",
+    "explanation": "SAFOR requires proven read/write access for its control and project workflow. Additional provider capabilities are requested only when the selected Factory or operation needs them.",
     "mandatoryBeforeOwnerSelection": true,
     "ownerScopedRecheck": true,
     "newProjectAdditionalCapability": "provider.repository.create",
@@ -334,7 +334,7 @@
       "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
       "ready": "Alles sitzt. Jetzt können wir das Projekt sauber aufsetzen.",
       "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
-      "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAF nicht arbeiten.",
+      "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
       "creationTypePrompt": "Was möchtest du erstellen?"
     },
     "keepTechnicalDetailsBehind": "DETAILS",
@@ -350,8 +350,8 @@
       "mustBeWritable": true,
       "autoCreateForbidden": true,
       "failureOutcome": "STOP",
-      "humanMessage": "Für SAF brauchst du unter diesem Owner zwingend ein Repository namens `safor-memory` mit Lese- und Schreibrechten. Bitte richte es ein und starte SAF danach erneut.",
-      "rule": "Missing repository, unreadable repository or unproven write access is a hard initialization STOP. SAF must not create safor-memory automatically and must not continue to creation-type or project selection."
+      "humanMessage": "Für SAFOR brauchst du unter diesem Owner zwingend ein Repository namens `safor-memory` mit Lese- und Schreibrechten. Bitte richte es ein und starte SAFOR danach erneut.",
+      "rule": "Missing repository, unreadable repository or unproven write access is a hard initialization STOP. SAFOR must not create safor-memory automatically and must not continue to creation-type or project selection."
     }
   },
   "creationTypes": {
@@ -361,14 +361,14 @@
       {
         "id": "SOFTWARE_WEBSITE",
         "label": "Software / Website",
-        "factoryPackageId": "saf.factory.software-delivery",
-        "operatingModelPackageId": "saf.om.saas-engineering"
+        "factoryPackageId": "safor.factory.software-delivery",
+        "operatingModelPackageId": "safor.om.saas-engineering"
       },
       {
         "id": "BOOK",
         "label": "Buch",
-        "factoryPackageId": "saf.factory.book-production",
-        "operatingModelPackageId": "saf.om.book-authoring"
+        "factoryPackageId": "safor.factory.book-production",
+        "operatingModelPackageId": "safor.om.book-authoring"
       }
     ],
     "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
