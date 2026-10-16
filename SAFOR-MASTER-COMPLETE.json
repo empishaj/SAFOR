@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.8.0",
-  "bundleVersion": "0.8.0-rc.1",
+  "schemaVersion": "0.9.0",
+  "bundleVersion": "0.9.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -25,6 +25,7 @@
       "onFailure": "STOP"
     },
     "initializationOrder": [
+      "VERIFY_MODULE_RECOVERY_BASELINE",
       "SELECT_PROVIDER",
       "VERIFY_PROVIDER_READ_WRITE_ACCESS",
       "SELECT_OWNER_NAMESPACE",
@@ -58,7 +59,8 @@
     "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative.",
     "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
     "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
-    "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection."
+    "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection.",
+    "moduleSelfHealingRule": "Every embedded module must resolve to exactly one embedded recovery profile. Repairs are constrained by module authority/repairability, failure-class policy, active authority and actual provider rights."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -75,6 +77,7 @@
     "initialization-model.json": "initialization",
     "interaction-model.json": "interaction",
     "self-healing-model.json": "selfHealing",
+    "module-self-healing-model.json": "moduleSelfHealing",
     "agent-workspace-model.json": "agentWorkspace",
     "agent-job-contract-model.json": "agentJobContract",
     "multi-agent-scheduler-model.json": "multiAgentScheduler",
@@ -91,6 +94,7 @@
     "schemas/evidence-record.schema.json": "schemaEvidenceRecord",
     "schemas/interaction-menu.schema.json": "schemaInteractionMenu",
     "schemas/self-healing-record.schema.json": "schemaSelfHealingRecord",
+    "schemas/module-recovery-profile.schema.json": "schemaModuleRecoveryProfile",
     "schemas/agent-registry.schema.json": "schemaAgentRegistry",
     "schemas/agent-identity.schema.json": "schemaAgentIdentity",
     "schemas/agent-inbox-index.schema.json": "schemaAgentInboxIndex",
@@ -101,172 +105,219 @@
     "schemas/scheduler-state.schema.json": "schemaSchedulerState",
     "schemas/dispatch-wave.schema.json": "schemaDispatchWave",
     "schemas/resource-lease.schema.json": "schemaResourceLease",
-    "providers/github/0.3.0/package.json": "providerGithub",
-    "providers/gitlab/0.3.0/package.json": "providerGitlab",
-    "packages/operating-models/saas-engineering/1.2.0/package.json": "operatingModelSaas",
-    "packages/operating-models/book-authoring/0.3.0/package.json": "operatingModelBook",
-    "packages/factories/software-delivery/1.2.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.3.0/package.json": "factoryBook"
+    "providers/github/0.4.0/package.json": "providerGithub",
+    "providers/gitlab/0.4.0/package.json": "providerGitlab",
+    "packages/operating-models/saas-engineering/1.3.0/package.json": "operatingModelSaas",
+    "packages/operating-models/book-authoring/0.4.0/package.json": "operatingModelBook",
+    "packages/factories/software-delivery/1.3.0/package.json": "factorySoftwareWebsite",
+    "packages/factories/book-production/0.4.0/package.json": "factoryBook"
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.8.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "9d64fd4554e37942475cbbd37498b82c968f1fb1"
+      "sourcePath": "v0.9.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "171db014314878b7f3864cc2f93000a3a0e8c1b8",
+      "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
-      "sourcePath": "v0.8.0/initialization-model.json",
-      "sourceBlobSha": "d940f68ea6a2e39a7654a4cb3e78ca164a4c80e3"
+      "sourcePath": "v0.9.0/initialization-model.json",
+      "sourceBlobSha": "4338106c6be0abb3db15a45a4407b1dee42e38a8",
+      "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
-      "sourcePath": "v0.8.0/interaction-model.json",
-      "sourceBlobSha": "eb68d146dd5f912f69f9f73a90af1a1679190399"
+      "sourcePath": "v0.9.0/interaction-model.json",
+      "sourceBlobSha": "a2d7e0b926dda7bc890f4dfdc38d68751169a8e1",
+      "selfHealingProfileId": "MRP-INTERACTION"
     },
     "selfHealing": {
-      "sourcePath": "v0.8.0/self-healing-model.json",
-      "sourceBlobSha": "d438ef05b731e935c610c58d60ec637c066064fe"
+      "sourcePath": "v0.9.0/self-healing-model.json",
+      "sourceBlobSha": "2f2a39bc0603544da9b18e9d346f278b921b3abd",
+      "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "agentWorkspace": {
-      "sourcePath": "v0.8.0/agent-workspace-model.json",
-      "sourceBlobSha": "9223332109778a869b05ac518dea98cf80d8bd24"
+      "sourcePath": "v0.9.0/agent-workspace-model.json",
+      "sourceBlobSha": "8514e1f07f5eb56adf9e97ef887d4b90f57b1ed4",
+      "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "repositoryPolicy": {
-      "sourcePath": "v0.8.0/repository-policy.json",
-      "sourceBlobSha": "2f1d516150a3e13339ca6604398e8eefe07aeb3e"
+      "sourcePath": "v0.9.0/repository-policy.json",
+      "sourceBlobSha": "32c302f6947dfbacf83902b77bc3f8a2becaf5e0",
+      "selfHealingProfileId": "MRP-REPOSITORY_POLICY"
     },
     "packageRegistry": {
-      "sourcePath": "v0.8.0/package-registry.json",
-      "sourceBlobSha": "69bdf69c9477d1bb6824076151f35c2151058600"
+      "sourcePath": "v0.9.0/package-registry.json",
+      "sourceBlobSha": "4c43a96b874fd3541d1a39715577efc8701a3cdf",
+      "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
     "providerGithub": {
-      "sourcePath": "v0.8.0/providers/github/0.3.0/package.json",
-      "sourceBlobSha": "294445187acfeb7f12a03549d3c870b5ade68199"
+      "sourcePath": "v0.9.0/providers/github/0.4.0/package.json",
+      "sourceBlobSha": "baa99f6f3044961e13619863dbe5812d7457a03c",
+      "selfHealingProfileId": "MRP-PROVIDER_GITHUB"
     },
     "providerGitlab": {
-      "sourcePath": "v0.8.0/providers/gitlab/0.3.0/package.json",
-      "sourceBlobSha": "7659b2a19c590f297a31eb3e56dd9127b83fc2b6"
+      "sourcePath": "v0.9.0/providers/gitlab/0.4.0/package.json",
+      "sourceBlobSha": "877adb02f89dc79a67a515530ff69d0967f758db",
+      "selfHealingProfileId": "MRP-PROVIDER_GITLAB"
     },
     "operatingModelSaas": {
-      "sourcePath": "v0.8.0/packages/operating-models/saas-engineering/1.2.0/package.json",
-      "sourceBlobSha": "fa695a7256439845e13bf686dd036133a5695525"
+      "sourcePath": "v0.9.0/packages/operating-models/saas-engineering/1.3.0/package.json",
+      "sourceBlobSha": "9666be8c08c31ee742a0917b83133c81346ed2f0",
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_SAAS"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
-      "sourceBlobSha": "2c8b0e2db432bc34260cb13c852971ac910d3c4d"
+      "sourcePath": "v0.9.0/packages/operating-models/book-authoring/0.4.0/package.json",
+      "sourceBlobSha": "de3a2a6c5575456527b7659535578e58f6e7a455",
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_BOOK"
     },
     "factorySoftwareWebsite": {
-      "sourcePath": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
-      "sourceBlobSha": "d4c767316294beb99056cabec439c080f02550f2"
+      "sourcePath": "v0.9.0/packages/factories/software-delivery/1.3.0/package.json",
+      "sourceBlobSha": "2544dbdb3a5e89bba94266719074225ea4cb52b0",
+      "selfHealingProfileId": "MRP-FACTORY_SOFTWARE_WEBSITE"
     },
     "factoryBook": {
-      "sourcePath": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
-      "sourceBlobSha": "4478dca330443bc4f16268b5439b4a2ed97c6ea3"
+      "sourcePath": "v0.9.0/packages/factories/book-production/0.4.0/package.json",
+      "sourceBlobSha": "9843e50a91d2bcdd859ee49995d2b90b57889bae",
+      "selfHealingProfileId": "MRP-FACTORY_BOOK"
     },
     "schemaPackageManifest": {
-      "sourcePath": "v0.8.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "80ef74814cfc082a4530a3b27f284e91c2a345bd"
+      "sourcePath": "v0.9.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ef998a267fba1242f269dddbb40d1682374b1245",
+      "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_MANIFEST"
     },
     "schemaControlState": {
-      "sourcePath": "v0.8.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "dd1ca6daf7c279b8090d614a34fa6d38e9e19cc1"
+      "sourcePath": "v0.9.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "da087c05a1e0d11ec8682e57d2a9dbf73260537a",
+      "selfHealingProfileId": "MRP-SCHEMA_CONTROL_STATE"
     },
     "schemaValueStreamState": {
-      "sourcePath": "v0.8.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "9551e370b6d64e8a27b908408739e962c0b514b9"
+      "sourcePath": "v0.9.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "5983bc6fd6689249a3beaf7306f48bfa56c0ea33",
+      "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
     },
     "schemaExecutionState": {
-      "sourcePath": "v0.8.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "30168388fa199bcaba5ee8fb64fd4d5c6abe37ab"
+      "sourcePath": "v0.9.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "19c2fb9fe5cae6fc2390af668c0d65a9e942e049",
+      "selfHealingProfileId": "MRP-SCHEMA_EXECUTION_STATE"
     },
     "schemaWorkItem": {
-      "sourcePath": "v0.8.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "3888f537eac32d391a0bd07345d7673d21cda426"
+      "sourcePath": "v0.9.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "c4ddd4b2cdd30342a57626546324982ca67d05f1",
+      "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
     },
     "schemaProject": {
-      "sourcePath": "v0.8.0/schemas/project.schema.json",
-      "sourceBlobSha": "95e00b62074361e0e44a446b403ba86499b32b28"
+      "sourcePath": "v0.9.0/schemas/project.schema.json",
+      "sourceBlobSha": "0b72fe7d057cc978bafeae109e0cbc0eb09aaa98",
+      "selfHealingProfileId": "MRP-SCHEMA_PROJECT"
     },
     "schemaBindings": {
-      "sourcePath": "v0.8.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "9671d2fcfbbe6e7557e949ade5ce7efb869ef28f"
+      "sourcePath": "v0.9.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "ff95ae299eb2b8e126d88de75a6d3baced831b1f",
+      "selfHealingProfileId": "MRP-SCHEMA_BINDINGS"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "v0.8.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "28ddbecc83e14b13e2bf01578ce89da3f03b1fe1"
+      "sourcePath": "v0.9.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "24811ff3d982618b25c787cb929da804a7625f09",
+      "selfHealingProfileId": "MRP-SCHEMA_DECISION_RECORD"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "v0.8.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "be9cb51ed593adbc10ee184775a464c4c80b7d5b"
+      "sourcePath": "v0.9.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "09f6d4e462bed76c27e543cfc36337350d6a80da",
+      "selfHealingProfileId": "MRP-SCHEMA_EVIDENCE_RECORD"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "c288c40009336e782d96726c6a021002a614ed1c"
+      "sourcePath": "v0.9.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "1fb41f7453b3a609d58dc52950801b29b725fe62",
+      "selfHealingProfileId": "MRP-SCHEMA_INTERACTION_MENU"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.8.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "aa22091a5920f68eb1b7abab6d1611666b277c8f"
+      "sourcePath": "v0.9.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "a560a9f3d5a4c842a7a77ff3f281d639b4e41135",
+      "selfHealingProfileId": "MRP-SCHEMA_SELF_HEALING_RECORD"
     },
     "schemaAgentRegistry": {
-      "sourcePath": "v0.8.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "467cfefbf4c88a235ef9e3a107797f118e4da96a"
+      "sourcePath": "v0.9.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "cb4d66ca7a7a35e1e9fb4fded4b22c44a61e5ae7",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
     },
     "schemaAgentIdentity": {
-      "sourcePath": "v0.8.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "85524530f1c260603f4834737b5d0be645af2c96"
+      "sourcePath": "v0.9.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "accd931140e87dda01adda013d718394505ea771",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
     },
     "schemaAgentState": {
-      "sourcePath": "v0.8.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd"
+      "sourcePath": "v0.9.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "8c6c47e6b9aaac3590806c4864cd62a118f47892",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
     },
     "schemaAgentJob": {
-      "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "542876ff2846d4451f37df7a6ad14669adef082c"
+      "sourcePath": "v0.9.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "56e0a1b173d0e4a7e31ccf970cad333e69b67de6",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
     },
     "schemaAgentJobState": {
-      "sourcePath": "v0.8.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "1ba42eb60f706356ee73e8b79790aca2eaa617a6"
+      "sourcePath": "v0.9.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "39c9abf55d1e9264948a962d7e7a9a05dc5559da",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
     },
     "schemaAgentResult": {
-      "sourcePath": "v0.8.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501"
+      "sourcePath": "v0.9.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "1122fdc91a8065c3e1aa1f55688091cf93ce8e94",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
     },
     "conformance": {
-      "sourcePath": "v0.8.0/conformance.json",
-      "sourceBlobSha": "168d467fb9c9827470cd06f745184177a562bc2f"
+      "sourcePath": "v0.9.0/conformance.json",
+      "sourceBlobSha": "6cc2ca1f7ef73749aad680fa5ee6a09bd13c6ef2",
+      "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "schemaAgentInboxIndex": {
-      "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428"
+      "sourcePath": "v0.9.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "b3160cc7bc4d39f2bdcf510d8371bb2e1655d35b",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
     },
     "multiAgentScheduler": {
-      "sourcePath": "v0.8.0/multi-agent-scheduler-model.json",
-      "sourceBlobSha": "f8dd23326796bef109bfef6fc07d4737cec6bd2d"
+      "sourcePath": "v0.9.0/multi-agent-scheduler-model.json",
+      "sourceBlobSha": "82179183ee4c4036ab7f45144a8ebc561f9c73ac",
+      "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
     },
     "schemaSchedulerState": {
-      "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
-      "sourceBlobSha": "3acc33caec14f1e66465620244a536a22e536478"
+      "sourcePath": "v0.9.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "639799d514414e4fdaecc4a0e761fc39adcb3ee0",
+      "selfHealingProfileId": "MRP-SCHEMA_SCHEDULER_STATE"
     },
     "schemaDispatchWave": {
-      "sourcePath": "v0.8.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "bf3e86b4289c6a7549152572cfc68693073d4170"
+      "sourcePath": "v0.9.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "e924a0ef8b6b825c8a5743dc84d54dd517602075",
+      "selfHealingProfileId": "MRP-SCHEMA_DISPATCH_WAVE"
     },
     "schemaResourceLease": {
-      "sourcePath": "v0.8.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d"
+      "sourcePath": "v0.9.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "1474979d2ab006feed7d14394839149dccc4c30e",
+      "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
     },
     "agentJobContract": {
-      "sourcePath": "v0.8.0/agent-job-contract-model.json",
-      "sourceBlobSha": "97aa4b704ba77fd2557c285de62dc1fcde4b02ec"
+      "sourcePath": "v0.9.0/agent-job-contract-model.json",
+      "sourceBlobSha": "b88317a8d2c6b86985e281c953a3793eecfc88e7",
+      "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
+    },
+    "moduleSelfHealing": {
+      "sourcePath": "v0.9.0/module-self-healing-model.json",
+      "sourceBlobSha": "c12510b30d4768b6c62bc655988748af53510a7c",
+      "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
+    },
+    "schemaModuleRecoveryProfile": {
+      "sourcePath": "v0.9.0/schemas/module-recovery-profile.schema.json",
+      "sourceBlobSha": "8c2d066c5f12581e29e4100dc8ca33203914a0e6",
+      "selfHealingProfileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.8.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "9d64fd4554e37942475cbbd37498b82c968f1fb1",
+      "sourcePath": "v0.9.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "171db014314878b7f3864cc2f93000a3a0e8c1b8",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.8.0",
-        "kernelVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
+        "kernelVersion": "0.9.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
         "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -326,7 +377,11 @@
           "canonicalExplicitAgentJobContract": true,
           "explicitRoleAndSkillBindingPerJob": true,
           "humanReadableAgentJobProjection": true,
-          "explicitJobAuthorizationAndReturnRoutes": true
+          "explicitJobAuthorizationAndReturnRoutes": true,
+          "moduleWideSelfHealing": true,
+          "exactRecoveryProfileCoverage": true,
+          "failClosedRecoveryControl": true,
+          "noSemanticAutoRewrite": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -359,6 +414,10 @@
               "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
             },
             {
+              "id": "MODULE_SELF_HEALING",
+              "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
+            },
+            {
               "id": "PROVIDER_ADAPTER",
               "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
             }
@@ -378,7 +437,11 @@
             "AGENT_JOB_CONTRACT JSON is authoritative; the paired Markdown job view is a derived HUMAN-readable projection.",
             "Every dispatched agent job explicitly binds the role the agent must assume and every mandatory versioned skill it must apply.",
             "Job permissions are an upper bound only and never create provider rights.",
-            "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve."
+            "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve.",
+            "Every embedded module must resolve to exactly one valid module recovery profile.",
+            "SELF_HEALING executes only the intersection of failure-class policy, module recovery profile, active authority and actual provider rights.",
+            "Authoritative immutable modules are never heuristically rewritten; derived artifacts may be regenerated only from verified authoritative sources.",
+            "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops."
           ]
         },
         "packageSystem": {
@@ -560,14 +623,16 @@
           "agentInboxIndex": "schemas/agent-inbox-index.schema.json",
           "schedulerState": "schemas/scheduler-state.schema.json",
           "dispatchWave": "schemas/dispatch-wave.schema.json",
-          "resourceLease": "schemas/resource-lease.schema.json"
+          "resourceLease": "schemas/resource-lease.schema.json",
+          "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json"
         },
         "controlPlane": {
-          "startActionId": "K01",
+          "startActionId": "K00",
           "phases": [
             {
               "id": "BOOTSTRAP",
               "actions": [
+                "K00",
                 "K01",
                 "K02",
                 "K03",
@@ -657,6 +722,13 @@
             }
           ],
           "actions": [
+            {
+              "id": "K00",
+              "operation": "VERIFY_MODULE_RECOVERY_BASELINE",
+              "purpose": "Before provider or project work, verify exact embedded-module/recovery-profile coverage and fail-closed integrity of the recovery-control modules.",
+              "domainNeutral": true,
+              "modelRef": "module-self-healing-model.json"
+            },
             {
               "id": "K01",
               "operation": "SELECT_PROVIDER",
@@ -828,31 +900,31 @@
             },
             {
               "id": "H01",
-              "operation": "DETECT_AND_CLASSIFY_FAILURE",
-              "purpose": "Detect a recoverable failure, derive its failure fingerprint and classify it using the bound self-healing model.",
+              "operation": "DETECT_CLASSIFY_AND_RESOLVE_MODULE_FAILURE",
+              "purpose": "Detect failure, derive fingerprint, classify it, resolve the affected embedded module and load its unique module recovery profile.",
               "domainNeutral": true,
-              "modelRef": "self-healing-model.json"
+              "modelRef": "module-self-healing-model.json"
             },
             {
               "id": "H02",
-              "operation": "CHECK_AND_PLAN_REPAIR",
-              "purpose": "Verify repair eligibility, current mandate, provider capabilities, retry budget and required success evidence before any repair mutation.",
+              "operation": "CHECK_AND_PLAN_PROFILE_CONSTRAINED_REPAIR",
+              "purpose": "Intersect failure-class repair policy with module profile repairability, active mandate/policy, retry budget and actual provider rights before any mutation.",
               "domainNeutral": true,
               "modelRef": "self-healing-model.json"
             },
             {
               "id": "H03",
-              "operation": "EXECUTE_BOUNDED_REPAIR",
-              "purpose": "Execute only a pre-authorized, non-destructive repair allowed by the self-healing model. Unknown external effects reconcile before retry.",
+              "operation": "EXECUTE_PROFILE_CONSTRAINED_REPAIR",
+              "purpose": "Execute only the repair allowed by the resolved module profile: validate/restore verified source, regenerate declared derived artifacts, or rebind external capabilities. Semantic invention is forbidden.",
               "domainNeutral": true,
-              "modelRef": "self-healing-model.json"
+              "modelRef": "module-self-healing-model.json"
             },
             {
               "id": "H04",
-              "operation": "VERIFY_REPAIR_AND_RESUME",
-              "purpose": "Read back authoritative state, verify expected recovery evidence and either resume from the last verified checkpoint or escalate to the HUMAN.",
+              "operation": "VERIFY_MODULE_REPAIR_AND_RESUME",
+              "purpose": "Provider-readback the repaired module/artifact, revalidate profile/integrity expectations, persist the module-aware repair record and resume only from a verified checkpoint.",
               "domainNeutral": true,
-              "modelRef": "self-healing-model.json"
+              "modelRef": "module-self-healing-model.json"
             },
             {
               "id": "A01",
@@ -1327,6 +1399,82 @@
           {
             "id": "INV-086",
             "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
+          },
+          {
+            "id": "INV-087",
+            "rule": "Every embedded SAFOR module must have exactly one valid recovery profile in module-self-healing-model.json; unprofiled or multiply-profiled modules invalidate the distribution."
+          },
+          {
+            "id": "INV-088",
+            "rule": "Each embedded module and integrity-manifest entry must reference its exact recovery profile ID."
+          },
+          {
+            "id": "INV-089",
+            "rule": "A module repair action is executable only when allowed by the failure class, the resolved module recovery profile, current SAFOR authority/policy and actual provider rights."
+          },
+          {
+            "id": "INV-090",
+            "rule": "IMMUTABLE_VALIDATE_ONLY modules may never be semantically rewritten by automatic recovery; SAFOR may only verify/reload the expected pinned blob or stop/escalate."
+          },
+          {
+            "id": "INV-091",
+            "rule": "RESTORE_FROM_VERIFIED_SOURCE modules may be restored only from a source whose expected version/blob identity is independently verified."
+          },
+          {
+            "id": "INV-092",
+            "rule": "REGENERATE_DERIVED_ONLY modules may mutate only declared derived artifacts and must preserve their authoritative source unchanged."
+          },
+          {
+            "id": "INV-093",
+            "rule": "REBIND_EXTERNAL_CAPABILITY recovery may refresh/reobserve provider capabilities but must never grant, fabricate or elevate provider permissions."
+          },
+          {
+            "id": "INV-094",
+            "rule": "Unknown external effects always reconcile before retry or lease/resource reuse, regardless of the module profile."
+          },
+          {
+            "id": "INV-095",
+            "rule": "Every module repair persists moduleKey, moduleProfileId, authority type, repairability, pre-state references, selected repair action and verification evidence."
+          },
+          {
+            "id": "INV-096",
+            "rule": "Repair success requires authoritative readback plus the module-profile success predicate; assistant narration or intended action is never evidence of recovery."
+          },
+          {
+            "id": "INV-097",
+            "rule": "The self-healing model, module-self-healing model and recovery-profile schema are fail-closed recovery controls. If their expected integrity cannot be proven, automatic recovery stops."
+          },
+          {
+            "id": "INV-098",
+            "rule": "Canonical agent job recovery may regenerate job.md or other declared projections from valid job.json, but may never automatically rewrite a dispatched authoritative job.json to change role, skill, scope, input or authorization semantics."
+          },
+          {
+            "id": "INV-099",
+            "rule": "Factory and Operating Model recovery may restore pinned package blobs and revalidate bindings, but may never automatically alter workflow semantics, decision rights, mandates or separation-of-duties policy."
+          },
+          {
+            "id": "INV-100",
+            "rule": "Schema recovery may restore the expected schema and revalidate subjects; an authoritative subject must never be automatically coerced merely to satisfy schema validation."
+          },
+          {
+            "id": "INV-101",
+            "rule": "Scheduler recovery may rebuild derived READY/capacity/wave views, but resource lease expiry or uncertain job effects require reconciliation before reassignment."
+          },
+          {
+            "id": "INV-102",
+            "rule": "Provider-adapter recovery may retry idempotent reads, refresh revisions and rebind observed capabilities; missing required rights remain a blocker or HUMAN escalation."
+          },
+          {
+            "id": "INV-103",
+            "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS."
+          },
+          {
+            "id": "INV-104",
+            "rule": "K00 module-recovery preflight runs before provider/project actions. Failure to prove exact module-profile coverage or recovery-control integrity causes STOP before external work."
+          },
+          {
+            "id": "INV-105",
+            "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
           }
         ],
         "evidencePolicy": {
@@ -1384,14 +1532,14 @@
         "compatibility": {
           "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.8.0 schemas."
+          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.9.0 schemas."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.8.0",
+            "root": "v0.9.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1445,16 +1593,18 @@
         "selfHealingModelRef": "self-healing-model.json",
         "agentWorkspaceModelRef": "agent-workspace-model.json",
         "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
-        "agentJobContractModelRef": "agent-job-contract-model.json"
-      }
+        "agentJobContractModelRef": "agent-job-contract-model.json",
+        "moduleSelfHealingModelRef": "module-self-healing-model.json"
+      },
+      "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.8.0/initialization-model.json",
-      "sourceBlobSha": "d940f68ea6a2e39a7654a4cb3e78ca164a4c80e3",
+      "sourcePath": "v0.9.0/initialization-model.json",
+      "sourceBlobSha": "4338106c6be0abb3db15a45a4407b1dee42e38a8",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1464,6 +1614,24 @@
           "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAFOR_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
         },
         "sequence": [
+          {
+            "id": "INIT-00",
+            "operation": "VERIFY_EMBEDDED_MODULE_RECOVERY_BASELINE",
+            "title": "SAFOR Runtime prüfen",
+            "requiresProvider": false,
+            "passOutcome": "MODULE_RECOVERY_BASELINE_VERIFIED",
+            "failOutcome": "STOP",
+            "checks": [
+              "EMBEDDED_MODULE_KEYS_MATCH_RECOVERY_PROFILE_KEYS_EXACTLY",
+              "ONE_UNIQUE_PROFILE_PER_MODULE",
+              "MODULE_AND_INTEGRITY_MANIFEST_PROFILE_IDS_MATCH",
+              "SELF_HEALING_CONTROL_MODULES_PRESENT_AND_STRUCTURALLY_VALID",
+              "REFERENCE_RESOLUTION_TARGETS_EXIST",
+              "KERNEL_SCHEMA_AND_BUNDLE_VERSIONS_AGREE"
+            ],
+            "rule": "Run before any provider/project operation. If recovery-control integrity or exact profile coverage cannot be proven, fail closed and do not attempt heuristic self-repair.",
+            "selfHealingRef": "module-self-healing-model.json"
+          },
           {
             "id": "INIT-01",
             "operation": "SELECT_PROVIDER",
@@ -1828,15 +1996,16 @@
           ],
           "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.8.0/interaction-model.json",
-      "sourceBlobSha": "eb68d146dd5f912f69f9f73a90af1a1679190399",
+      "sourcePath": "v0.9.0/interaction-model.json",
+      "sourceBlobSha": "a2d7e0b926dda7bc890f4dfdc38d68751169a8e1",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -2262,6 +2431,17 @@
                 "NEXT_ACTION_OR_MENU"
               ],
               "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
+            },
+            "moduleHealing": {
+              "structure": [
+                "AFFECTED_MODULE",
+                "FAILURE_CLASS",
+                "RECOVERY_ACTION",
+                "VERIFICATION",
+                "CURRENT_SAFE_STATE",
+                "NEXT_ACTION_IF_ANY"
+              ],
+              "example": "Das Scheduler-Modul hatte einen veralteten READY-Stand. SAFOR hat ausschließlich die ableitbare Sicht neu berechnet und per Readback verifiziert. Der autoritative Work-Item-State blieb unverändert."
             }
           },
           "avoid": {
@@ -2501,16 +2681,46 @@
             "When a HUMAN-readable agent report exists, surface its reference as the default result view before raw machine JSON.",
             "Explain why an apparently free agent did not receive work when the blocker is dependency, capability, SoD, mandate, provider rights or mutation conflict."
           ]
+        },
+        "moduleSelfHealingExperience": {
+          "title": "Modulgesundheit & Selbstheilung",
+          "defaultSurface": "SUMMARY",
+          "statusFields": [
+            "moduleKey",
+            "profileId",
+            "healthStatus",
+            "lastFailureClass",
+            "repairStatus",
+            "repairability",
+            "lastVerifiedAt",
+            "evidenceRefs"
+          ],
+          "healthStatuses": [
+            "HEALTHY",
+            "DEGRADED",
+            "REPAIRING",
+            "RECONCILE_REQUIRED",
+            "BLOCKED",
+            "UNKNOWN"
+          ],
+          "humanRules": [
+            "Lead with affected module and current safe state.",
+            "State whether SAFOR repaired, restored, regenerated, rebound, reconciled or deliberately refused automatic repair.",
+            "Never describe a module as healthy until the profile success predicate passed authoritative readback.",
+            "When automatic repair is forbidden, explain the exact authority/semantic boundary and the smallest HUMAN action required.",
+            "Keep raw repair records behind Details unless needed for a decision."
+          ]
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-INTERACTION"
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.8.0/self-healing-model.json",
-      "sourceBlobSha": "d438ef05b731e935c610c58d60ec637c066064fe",
+      "sourcePath": "v0.9.0/self-healing-model.json",
+      "sourceBlobSha": "2f2a39bc0603544da9b18e9d346f278b921b3abd",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2524,11 +2734,18 @@
           "noHumanDecisionInference": true,
           "noGateBypass": true,
           "noForcePush": true,
-          "noDestructiveDeleteByDefault": true
+          "noDestructiveDeleteByDefault": true,
+          "moduleProfileRequired": true,
+          "exactModuleCoverageRequired": true,
+          "failClosedOnRecoveryControlFailure": true,
+          "derivedOnlyRegeneration": true,
+          "noSemanticAutoRewrite": true
         },
         "lifecycle": [
           "DETECT",
           "CLASSIFY",
+          "RESOLVE_SUBJECT_MODULE",
+          "LOAD_MODULE_RECOVERY_PROFILE",
           "CHECK_REPAIR_ELIGIBILITY",
           "PLAN_REPAIR",
           "EXECUTE_REPAIR",
@@ -2636,6 +2853,116 @@
             "automaticRepair": "NONE",
             "defaultRetryBudget": 0,
             "requiresHuman": true
+          },
+          {
+            "id": "SH-10",
+            "name": "MODULE_INTEGRITY_OR_COVERAGE_FAILURE",
+            "examples": [
+              "embedded module blob differs from integrity manifest",
+              "module lacks recovery profile",
+              "duplicate recovery profile"
+            ],
+            "automaticRepair": "RELOAD_EXPECTED_MODULE_OR_STOP_IF_PROFILE_COVERAGE_INVALID",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": false
+          },
+          {
+            "id": "SH-11",
+            "name": "JOB_CONTRACT_BINDING_FAILURE",
+            "examples": [
+              "job role binding mismatch",
+              "skill source/blob mismatch",
+              "authorization/return-route mismatch",
+              "immutable input mismatch"
+            ],
+            "automaticRepair": "BLOCK_JOB_AND_REBUILD_ONLY_BEFORE_DISPATCH_OR_CREATE_SUPERSEDING_JOB",
+            "defaultRetryBudget": 0,
+            "requiresHuman": "WHEN_SEMANTICS_OR_AUTHORITY_WOULD_CHANGE"
+          },
+          {
+            "id": "SH-12",
+            "name": "DERIVED_PROJECTION_FAILURE",
+            "examples": [
+              "job.md missing or blob mismatch",
+              "inbox index missing/stale",
+              "derived status projection missing"
+            ],
+            "automaticRepair": "REGENERATE_FROM_VERIFIED_AUTHORITATIVE_SOURCE",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": false
+          },
+          {
+            "id": "SH-13",
+            "name": "PACKAGE_OR_MODEL_BINDING_FAILURE",
+            "examples": [
+              "factory/operating-model package blob mismatch",
+              "registry binding points to unexpected version",
+              "model reference unresolved"
+            ],
+            "automaticRepair": "RESTORE_EXPECTED_PINNED_PACKAGE_OR_BLOCK",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": false
+          },
+          {
+            "id": "SH-14",
+            "name": "PROVIDER_CAPABILITY_DRIFT",
+            "examples": [
+              "provider permission revoked",
+              "host tool unavailable",
+              "declared adapter capability no longer observable"
+            ],
+            "automaticRepair": "REFRESH_AND_REBIND_ACTUAL_CAPABILITIES_WITHOUT_ELEVATION",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_REQUIRED_CAPABILITY_REMAINS_MISSING"
+          },
+          {
+            "id": "SH-15",
+            "name": "SCHEDULER_LEASE_OR_CAPACITY_FAILURE",
+            "examples": [
+              "agent slot count drift",
+              "resource lease conflict",
+              "expired lease with uncertain external effect",
+              "stale ready set"
+            ],
+            "automaticRepair": "RECOMPUTE_DERIVED_SCHEDULER_STATE_AND_RECONCILE_UNCERTAIN_EFFECTS",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": "WHEN_EXTERNAL_EFFECTS_ARE_UNCERTAIN"
+          },
+          {
+            "id": "SH-16",
+            "name": "SCHEMA_VALIDATION_FAILURE",
+            "examples": [
+              "schema module invalid",
+              "subject does not validate",
+              "schema version mismatch"
+            ],
+            "automaticRepair": "RESTORE_SCHEMA_OR_REGENERATE_ONLY_DERIVED_SUBJECT",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_AUTHORITATIVE_SUBJECT_WOULD_REQUIRE_SEMANTIC_CHANGE"
+          },
+          {
+            "id": "SH-17",
+            "name": "OPERATING_MODEL_OR_FACTORY_SEMANTIC_MISMATCH",
+            "examples": [
+              "role/authority mapping inconsistent",
+              "flow graph invalid",
+              "evidence/planning contract mismatch"
+            ],
+            "automaticRepair": "RESTORE_PINNED_PACKAGE_OR_BLOCK",
+            "defaultRetryBudget": 0,
+            "requiresHuman": "WHEN_PINNED_SOURCE_ITSELF_IS_INVALID_OR_CHANGE_IS_REQUIRED"
+          },
+          {
+            "id": "SH-18",
+            "name": "SELF_HEALING_CONTROL_FAILURE",
+            "examples": [
+              "self-healing model invalid",
+              "module recovery profile model invalid",
+              "recovery recursion guard triggered"
+            ],
+            "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
+            "defaultRetryBudget": 0,
+            "requiresHuman": true
           }
         ],
         "eligibilityRules": [
@@ -2645,7 +2972,13 @@
           "Required provider capabilities and rights must be proven immediately before repair.",
           "The authoritative pre-repair state must be captured or referenced.",
           "A repair must define success evidence before it runs.",
-          "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry."
+          "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry.",
+          "The subject module must resolve to exactly one module recovery profile before any automatic repair.",
+          "The repair action must be allowed by both the failure class and the resolved module recovery profile.",
+          "A module profile marked IMMUTABLE_VALIDATE_ONLY may never be semantically rewritten automatically.",
+          "A module profile marked REGENERATE_DERIVED_ONLY may mutate only declared derived artifacts, never its authoritative source.",
+          "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
+          "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -2659,7 +2992,13 @@
           "MERGE_WITH_FAILED_REQUIRED_CHECKS",
           "CHANGE_OPERATING_MODEL_OR_FACTORY_BINDING",
           "CHANGE_SECURITY_OR_COMPLIANCE_POLICY",
-          "INVENT_MISSING_EVIDENCE"
+          "INVENT_MISSING_EVIDENCE",
+          "AUTO_REWRITE_AUTHORITATIVE_JOB_CONTRACT",
+          "AUTO_CHANGE_FACTORY_OR_OPERATING_MODEL_SEMANTICS",
+          "AUTO_COERCE_AUTHORITATIVE_STATE_TO_PASS_SCHEMA",
+          "AUTO_ELEVATE_PROVIDER_PERMISSION",
+          "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
+          "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -2674,6 +3013,10 @@
           "repairId",
           "failureClass",
           "failureFingerprint",
+          "moduleKey",
+          "moduleProfileId",
+          "moduleAuthorityType",
+          "moduleRepairability",
           "subjectRef",
           "proposedAction",
           "authorityBasis",
@@ -2683,6 +3026,7 @@
         ],
         "verification": {
           "successRequires": [
+            "MODULE_PROFILE_STILL_MATCHES_SUBJECT_MODULE",
             "AUTHORITATIVE_READBACK",
             "EXPECTED_STATE_MATCH",
             "NO_NEW_GUARD_VIOLATION",
@@ -2712,16 +3056,30 @@
             "HIGH_IMPACT_OR_IRREVERSIBLE_EFFECT"
           ],
           "messageStyle": "Concise: what failed, what SAFOR tried, current safe state, and the smallest HUMAN decision/action needed."
+        },
+        "moduleRecoveryModelRef": "module-self-healing-model.json",
+        "moduleRecoveryDispatch": {
+          "resolveOrder": [
+            "SUBJECT_EXPLICIT_MODULE_KEY",
+            "MASTER_ACTION_MODEL_REF_TO_MODULE_KEY",
+            "SCHEMA_OR_PACKAGE_REFERENCE_TO_MODULE_KEY",
+            "BUNDLE_INTEGRITY_MANIFEST_PATH_TO_MODULE_KEY"
+          ],
+          "noMatch": "STOP_AND_ESCALATE",
+          "multipleMatches": "STOP_AND_ESCALATE",
+          "actionIntersectionRule": "EXECUTABLE_REPAIR = failureClass.automaticRepair INTERSECT moduleProfile.automaticRepairs INTERSECT currentAuthority/providerRights",
+          "noAllowedAction": "ESCALATE_WITHOUT_MUTATION"
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "agentWorkspace": {
       "key": "agentWorkspace",
-      "sourcePath": "v0.8.0/agent-workspace-model.json",
-      "sourceBlobSha": "9223332109778a869b05ac518dea98cf80d8bd24",
+      "sourcePath": "v0.9.0/agent-workspace-model.json",
+      "sourceBlobSha": "8514e1f07f5eb56adf9e97ef887d4b90f57b1ed4",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
         "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
         "topology": {
@@ -2961,15 +3319,16 @@
           ],
           "publicationRule": "MASTER writes JSON and Markdown, verifies both by provider readback, then and only then marks the job READY and exposes it through inbox/index.json."
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "v0.8.0/repository-policy.json",
-      "sourceBlobSha": "2f1d516150a3e13339ca6604398e8eefe07aeb3e",
+      "sourcePath": "v0.9.0/repository-policy.json",
+      "sourceBlobSha": "32c302f6947dfbacf83902b77bc3f8a2becaf5e0",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-        "version": "0.8.0",
+        "version": "0.9.0",
         "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
         "principles": {
@@ -3147,52 +3506,53 @@
           "providerReadbackBeforeReady": true,
           "agentMutationForbidden": true
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-REPOSITORY_POLICY"
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.8.0/package-registry.json",
-      "sourceBlobSha": "69bdf69c9477d1bb6824076151f35c2151058600",
+      "sourcePath": "v0.9.0/package-registry.json",
+      "sourceBlobSha": "4c43a96b874fd3541d1a39715577efc8701a3cdf",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.2.0",
-            "path": "packages/operating-models/saas-engineering/1.2.0/package.json"
+            "version": "1.3.0",
+            "path": "packages/operating-models/saas-engineering/1.3.0/package.json"
           },
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.2.0",
-            "path": "packages/factories/software-delivery/1.2.0/package.json"
+            "version": "1.3.0",
+            "path": "packages/factories/software-delivery/1.3.0/package.json"
           },
           {
             "packageId": "safor.om.book-authoring",
             "kind": "OPERATING_MODEL",
-            "version": "0.3.0",
-            "path": "packages/operating-models/book-authoring/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "packages/operating-models/book-authoring/0.4.0/package.json"
           },
           {
             "packageId": "safor.factory.book-production",
             "kind": "FACTORY",
-            "version": "0.3.0",
-            "path": "packages/factories/book-production/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "packages/factories/book-production/0.4.0/package.json"
           },
           {
             "packageId": "safor.provider.github",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.3.0",
-            "path": "providers/github/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "providers/github/0.4.0/package.json"
           },
           {
             "packageId": "safor.provider.gitlab",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.3.0",
-            "path": "providers/gitlab/0.3.0/package.json"
+            "version": "0.4.0",
+            "path": "providers/gitlab/0.4.0/package.json"
           }
         ],
         "selectionRule": "The HUMAN must first select a creation profile. Its Factory and compatible Operating Model become mandatory project bindings; the Provider Adapter remains provider-derived. All bindings are validated, pinned and snapshotted.",
@@ -3210,22 +3570,23 @@
             "operatingModelPackageId": "safor.om.book-authoring"
           }
         ]
-      }
+      },
+      "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "v0.8.0/providers/github/0.3.0/package.json",
-      "sourceBlobSha": "294445187acfeb7f12a03549d3c870b5ade68199",
+      "sourcePath": "v0.9.0/providers/github/0.4.0/package.json",
+      "sourceBlobSha": "baa99f6f3044961e13619863dbe5812d7457a03c",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "GitHub Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitHub. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [],
@@ -3360,22 +3721,23 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-PROVIDER_GITHUB"
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "v0.8.0/providers/gitlab/0.3.0/package.json",
-      "sourceBlobSha": "7659b2a19c590f297a31eb3e56dd9127b83fc2b6",
+      "sourcePath": "v0.9.0/providers/gitlab/0.4.0/package.json",
+      "sourceBlobSha": "877adb02f89dc79a67a515530ff69d0967f758db",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "GitLab Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [],
@@ -3509,22 +3871,23 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-PROVIDER_GITLAB"
     },
     "operatingModelSaas": {
       "key": "operatingModelSaas",
-      "sourcePath": "v0.8.0/packages/operating-models/saas-engineering/1.2.0/package.json",
-      "sourceBlobSha": "fa695a7256439845e13bf686dd036133a5695525",
+      "sourcePath": "v0.9.0/packages/operating-models/saas-engineering/1.3.0/package.json",
+      "sourceBlobSha": "9666be8c08c31ee742a0917b83133c81346ed2f0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "name": "SaaS Engineering Reference Operating Model",
         "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -3826,22 +4189,23 @@
           "path": "derived from planning/Value-Creation-Stream-Metamodell.md and planning/KI-Fabrik-Referenzkonzept.md",
           "ref": "778d47ff4169c2b85de2d17b0be9a4fb03340fee"
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_SAAS"
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.8.0/packages/operating-models/book-authoring/0.3.0/package.json",
-      "sourceBlobSha": "2c8b0e2db432bc34260cb13c852971ac910d3c4d",
+      "sourcePath": "v0.9.0/packages/operating-models/book-authoring/0.4.0/package.json",
+      "sourceBlobSha": "de3a2a6c5575456527b7659535578e58f6e7a455",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -4047,22 +4411,23 @@
             }
           ]
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-OPERATING_MODEL_BOOK"
     },
     "factorySoftwareWebsite": {
       "key": "factorySoftwareWebsite",
-      "sourcePath": "v0.8.0/packages/factories/software-delivery/1.2.0/package.json",
-      "sourceBlobSha": "d4c767316294beb99056cabec439c080f02550f2",
+      "sourcePath": "v0.9.0/packages/factories/software-delivery/1.3.0/package.json",
+      "sourceBlobSha": "2544dbdb3a5e89bba94266719074225ea4cb52b0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.factory.software-delivery",
         "packageKind": "FACTORY",
-        "version": "1.2.0",
+        "version": "1.3.0",
         "name": "Software Delivery and Outcome Factory",
         "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -4416,22 +4781,23 @@
             "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-FACTORY_SOFTWARE_WEBSITE"
     },
     "factoryBook": {
       "key": "factoryBook",
-      "sourcePath": "v0.8.0/packages/factories/book-production/0.3.0/package.json",
-      "sourceBlobSha": "4478dca330443bc4f16268b5439b4a2ed97c6ea3",
+      "sourcePath": "v0.9.0/packages/factories/book-production/0.4.0/package.json",
+      "sourceBlobSha": "9843e50a91d2bcdd859ee49995d2b90b57889bae",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "packageId": "safor.factory.book-production",
         "packageKind": "FACTORY",
-        "version": "0.3.0",
+        "version": "0.4.0",
         "name": "Book Production and Reader Outcome Factory",
         "description": "Reference book-creation factory proving that the SAFOR MASTER kernel can orchestrate a non-software domain without changing kernel semantics.",
         "compatibility": {
-          "kernel": ">=0.8.0 <0.9.0"
+          "kernel": ">=0.9.0 <0.10.0"
         },
         "exports": {
           "capabilities": [
@@ -4796,16 +5162,17 @@
             "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-FACTORY_BOOK"
     },
     "schemaPackageManifest": {
       "key": "schemaPackageManifest",
-      "sourcePath": "v0.8.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "80ef74814cfc082a4530a3b27f284e91c2a345bd",
+      "sourcePath": "v0.9.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "ef998a267fba1242f269dddbb40d1682374b1245",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:package-manifest:0.8.0",
-        "title": "SAFOR Package Manifest 0.8.0",
+        "$id": "urn:safor:package-manifest:0.9.0",
+        "title": "SAFOR Package Manifest 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4826,7 +5193,7 @@
             "const": "SAFOR_PACKAGE_MANIFEST"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "packageId": {
             "type": "string",
@@ -4950,16 +5317,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_MANIFEST"
     },
     "schemaControlState": {
       "key": "schemaControlState",
-      "sourcePath": "v0.8.0/schemas/control-state.schema.json",
-      "sourceBlobSha": "dd1ca6daf7c279b8090d614a34fa6d38e9e19cc1",
+      "sourcePath": "v0.9.0/schemas/control-state.schema.json",
+      "sourceBlobSha": "da087c05a1e0d11ec8682e57d2a9dbf73260537a",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:control-state:0.8.0",
-        "title": "SAFOR Control State 0.8.0",
+        "$id": "urn:safor:control-state:0.9.0",
+        "title": "SAFOR Control State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -4982,7 +5350,7 @@
             "const": "SAFOR_CONTROL_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "kernelRef": {
             "type": "object",
@@ -4993,7 +5361,7 @@
             ],
             "properties": {
               "version": {
-                "const": "0.8.0"
+                "const": "0.9.0"
               },
               "sourceRef": {
                 "type": "string",
@@ -5189,16 +5557,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_CONTROL_STATE"
     },
     "schemaValueStreamState": {
       "key": "schemaValueStreamState",
-      "sourcePath": "v0.8.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "9551e370b6d64e8a27b908408739e962c0b514b9",
+      "sourcePath": "v0.9.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "5983bc6fd6689249a3beaf7306f48bfa56c0ea33",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:value-stream-state:0.8.0",
-        "title": "SAFOR Value Stream State 0.8.0",
+        "$id": "urn:safor:value-stream-state:0.9.0",
+        "title": "SAFOR Value Stream State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5218,7 +5587,7 @@
             "const": "SAFOR_VALUE_STREAM_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -5362,16 +5731,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
     },
     "schemaExecutionState": {
       "key": "schemaExecutionState",
-      "sourcePath": "v0.8.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "30168388fa199bcaba5ee8fb64fd4d5c6abe37ab",
+      "sourcePath": "v0.9.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "19c2fb9fe5cae6fc2390af668c0d65a9e942e049",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:execution-state:0.8.0",
-        "title": "SAFOR Execution State 0.8.0",
+        "$id": "urn:safor:execution-state:0.9.0",
+        "title": "SAFOR Execution State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5394,7 +5764,7 @@
             "const": "SAFOR_EXECUTION_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -5647,16 +6017,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_EXECUTION_STATE"
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "v0.8.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "3888f537eac32d391a0bd07345d7673d21cda426",
+      "sourcePath": "v0.9.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "c4ddd4b2cdd30342a57626546324982ca67d05f1",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:work-item:0.8.0",
-        "title": "SAFOR Domain-Agnostic Work Item 0.8.0",
+        "$id": "urn:safor:work-item:0.9.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6113,16 +6484,17 @@
             }
           }
         ]
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "v0.8.0/schemas/project.schema.json",
-      "sourceBlobSha": "95e00b62074361e0e44a446b403ba86499b32b28",
+      "sourcePath": "v0.9.0/schemas/project.schema.json",
+      "sourceBlobSha": "0b72fe7d057cc978bafeae109e0cbc0eb09aaa98",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:project:0.8.0",
-        "title": "SAFOR Project Descriptor 0.8.0",
+        "$id": "urn:safor:project:0.9.0",
+        "title": "SAFOR Project Descriptor 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6143,7 +6515,7 @@
             "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -6245,16 +6617,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_PROJECT"
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.8.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "9671d2fcfbbe6e7557e949ade5ce7efb869ef28f",
+      "sourcePath": "v0.9.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "ff95ae299eb2b8e126d88de75a6d3baced831b1f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:bindings:0.8.0",
-        "title": "SAFOR Project Bindings 0.8.0",
+        "$id": "urn:safor:bindings:0.9.0",
+        "title": "SAFOR Project Bindings 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6272,7 +6645,7 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "revision": {
             "type": "integer",
@@ -6348,16 +6721,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_BINDINGS"
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "v0.8.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "28ddbecc83e14b13e2bf01578ce89da3f03b1fe1",
+      "sourcePath": "v0.9.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "24811ff3d982618b25c787cb929da804a7625f09",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:decision-record:0.8.0",
-        "title": "SAFOR Decision Record 0.8.0",
+        "$id": "urn:safor:decision-record:0.9.0",
+        "title": "SAFOR Decision Record 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6379,7 +6753,7 @@
             "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "decisionId": {
             "type": "string"
@@ -6421,16 +6795,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_DECISION_RECORD"
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "v0.8.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "be9cb51ed593adbc10ee184775a464c4c80b7d5b",
+      "sourcePath": "v0.9.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "09f6d4e462bed76c27e543cfc36337350d6a80da",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:evidence-record:0.8.0",
-        "title": "SAFOR Evidence Record 0.8.0",
+        "$id": "urn:safor:evidence-record:0.9.0",
+        "title": "SAFOR Evidence Record 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6450,7 +6825,7 @@
             "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "evidenceId": {
             "type": "string"
@@ -6500,16 +6875,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_EVIDENCE_RECORD"
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.8.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "c288c40009336e782d96726c6a021002a614ed1c",
+      "sourcePath": "v0.9.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "1fb41f7453b3a609d58dc52950801b29b725fe62",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.8.0",
-        "title": "SAFOR Interaction Menu 0.8.0",
+        "$id": "urn:safor:interaction-menu:0.9.0",
+        "title": "SAFOR Interaction Menu 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6525,7 +6901,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "menuId": {
             "type": "string",
@@ -6678,24 +7054,31 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_INTERACTION_MENU"
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.8.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "aa22091a5920f68eb1b7abab6d1611666b277c8f",
+      "sourcePath": "v0.9.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "a560a9f3d5a4c842a7a77ff3f281d639b4e41135",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.8.0",
-        "title": "SAFOR Self-Healing Record 0.8.0",
+        "$id": "urn:safor:self-healing-record:0.9.0",
+        "title": "SAFOR Self-Healing Record 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
           "repairId",
           "failureClass",
           "failureFingerprint",
+          "moduleKey",
+          "moduleProfileId",
+          "moduleAuthorityType",
+          "moduleRepairability",
+          "moduleSourceRef",
           "subjectRef",
           "status",
+          "profileDecision",
           "proposedAction",
           "authorityBasis",
           "attemptNumber",
@@ -6731,7 +7114,8 @@
               "SUCCEEDED",
               "FAILED",
               "ESCALATED",
-              "CANCELED"
+              "CANCELED",
+              "RECONCILE_REQUIRED"
             ]
           },
           "proposedAction": {
@@ -6791,18 +7175,81 @@
               "string",
               "null"
             ]
+          },
+          "moduleKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "moduleProfileId": {
+            "type": "string",
+            "pattern": "^MRP-[A-Z0-9_-]+$"
+          },
+          "moduleAuthorityType": {
+            "enum": [
+              "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "PINNED_CANONICAL_SOURCE",
+              "DERIVED_RUNTIME_PROJECTION",
+              "EXTERNAL_PROVIDER_BOUND"
+            ]
+          },
+          "moduleRepairability": {
+            "enum": [
+              "IMMUTABLE_VALIDATE_ONLY",
+              "RESTORE_FROM_VERIFIED_SOURCE",
+              "REGENERATE_DERIVED_ONLY",
+              "REBIND_EXTERNAL_CAPABILITY"
+            ]
+          },
+          "moduleSourceRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "profileDecision": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "failureClassAction",
+              "profileAllowedActions",
+              "selectedAction",
+              "selectionReason"
+            ],
+            "properties": {
+              "failureClassAction": {
+                "type": "string",
+                "minLength": 1
+              },
+              "profileAllowedActions": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "uniqueItems": true
+              },
+              "selectedAction": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "selectionReason": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_SELF_HEALING_RECORD"
     },
     "schemaAgentRegistry": {
       "key": "schemaAgentRegistry",
-      "sourcePath": "v0.8.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "467cfefbf4c88a235ef9e3a107797f118e4da96a",
+      "sourcePath": "v0.9.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "cb4d66ca7a7a35e1e9fb4fded4b22c44a61e5ae7",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-registry:0.8.0",
-        "title": "SAFOR Agent Registry 0.8.0",
+        "$id": "urn:safor:agent-registry:0.9.0",
+        "title": "SAFOR Agent Registry 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6817,7 +7264,7 @@
             "const": "SAFOR_AGENT_REGISTRY"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -6888,16 +7335,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
     },
     "schemaAgentIdentity": {
       "key": "schemaAgentIdentity",
-      "sourcePath": "v0.8.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "85524530f1c260603f4834737b5d0be645af2c96",
+      "sourcePath": "v0.9.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "accd931140e87dda01adda013d718394505ea771",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-identity:0.8.0",
-        "title": "SAFOR Agent Identity 0.8.0",
+        "$id": "urn:safor:agent-identity:0.9.0",
+        "title": "SAFOR Agent Identity 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6923,7 +7371,7 @@
             "const": "SAFOR_AGENT_IDENTITY"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -7040,16 +7488,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
     },
     "schemaAgentState": {
       "key": "schemaAgentState",
-      "sourcePath": "v0.8.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "a2fb1aa732d24cca93fbce68138b972e4467bcbd",
+      "sourcePath": "v0.9.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "8c6c47e6b9aaac3590806c4864cd62a118f47892",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-state:0.8.0",
-        "title": "SAFOR Agent Runtime State 0.8.0",
+        "$id": "urn:safor:agent-state:0.9.0",
+        "title": "SAFOR Agent Runtime State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7070,7 +7519,7 @@
             "const": "SAFOR_AGENT_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -7267,16 +7716,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
-      "sourcePath": "v0.8.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "542876ff2846d4451f37df7a6ad14669adef082c",
+      "sourcePath": "v0.9.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "56e0a1b173d0e4a7e31ccf970cad333e69b67de6",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job:0.8.0",
-        "title": "SAFOR Canonical Agent Job Contract 0.8.0",
+        "$id": "urn:safor:agent-job:0.9.0",
+        "title": "SAFOR Canonical Agent Job Contract 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7304,7 +7754,7 @@
             "const": "SAFOR_AGENT_JOB"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "identity": {
             "$ref": "#/$defs/jobIdentity"
@@ -8662,16 +9112,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
     },
     "schemaAgentJobState": {
       "key": "schemaAgentJobState",
-      "sourcePath": "v0.8.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "1ba42eb60f706356ee73e8b79790aca2eaa617a6",
+      "sourcePath": "v0.9.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "39c9abf55d1e9264948a962d7e7a9a05dc5559da",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job-state:0.8.0",
-        "title": "SAFOR MASTER Agent Job State 0.8.0",
+        "$id": "urn:safor:agent-job-state:0.9.0",
+        "title": "SAFOR MASTER Agent Job State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -8713,7 +9164,7 @@
             "const": "SAFOR_AGENT_JOB_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -8938,16 +9389,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
     },
     "schemaAgentResult": {
       "key": "schemaAgentResult",
-      "sourcePath": "v0.8.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "dbf045469e084a260504b649ad35562009b2b501",
+      "sourcePath": "v0.9.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "1122fdc91a8065c3e1aa1f55688091cf93ce8e94",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-result:0.8.0",
-        "title": "SAFOR Agent Result 0.8.0",
+        "$id": "urn:safor:agent-result:0.9.0",
+        "title": "SAFOR Agent Result 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -8978,7 +9430,7 @@
             "const": "SAFOR_AGENT_RESULT"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "resultId": {
             "type": "string",
@@ -9227,15 +9679,16 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.8.0/conformance.json",
-      "sourceBlobSha": "168d467fb9c9827470cd06f745184177a562bc2f",
+      "sourcePath": "v0.9.0/conformance.json",
+      "sourceBlobSha": "6cc2ca1f7ef73749aad680fa5ee6a09bd13c6ef2",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
@@ -9787,23 +10240,129 @@
             "id": "CF-110",
             "statement": "Job skills are self-contained for execution but retain authoritative immutable provenance through skillRef + skillBlobSha; MASTER may not invent skill provenance.",
             "expected": true
+          },
+          {
+            "id": "CF-111",
+            "statement": "Every embedded SAFOR module has exactly one recovery profile and every recovery profile targets exactly one embedded module.",
+            "expected": true
+          },
+          {
+            "id": "CF-112",
+            "statement": "Every embedded module and its integrity-manifest entry carry the same selfHealingProfileId.",
+            "expected": true
+          },
+          {
+            "id": "CF-113",
+            "statement": "Every module recovery profile contains authority type, repairability, failure detectors, allowed/forbidden repairs, retry budget, verification and escalation.",
+            "expected": true
+          },
+          {
+            "id": "CF-114",
+            "statement": "Automatic repair is constrained by the intersection of failure-class policy, module profile, active authority and actual provider rights.",
+            "expected": true
+          },
+          {
+            "id": "CF-115",
+            "statement": "IMMUTABLE_VALIDATE_ONLY modules are never semantically rewritten automatically.",
+            "expected": true
+          },
+          {
+            "id": "CF-116",
+            "statement": "RESTORE_FROM_VERIFIED_SOURCE modules restore only expected version/blob identities from verified sources.",
+            "expected": true
+          },
+          {
+            "id": "CF-117",
+            "statement": "REGENERATE_DERIVED_ONLY modules mutate only derived artifacts and preserve authoritative sources.",
+            "expected": true
+          },
+          {
+            "id": "CF-118",
+            "statement": "REBIND_EXTERNAL_CAPABILITY recovery may refresh observations but never grant or elevate provider permissions.",
+            "expected": true
+          },
+          {
+            "id": "CF-119",
+            "statement": "Self-healing control modules fail closed when their own integrity/profile coverage cannot be proven.",
+            "expected": true
+          },
+          {
+            "id": "CF-120",
+            "statement": "Self-healing records persist module key/profile/authority/repairability plus the selected profile-constrained repair decision.",
+            "expected": true
+          },
+          {
+            "id": "CF-121",
+            "statement": "Canonical job recovery may regenerate job Markdown/index projections but never silently rewrite dispatched authoritative job semantics.",
+            "expected": true
+          },
+          {
+            "id": "CF-122",
+            "statement": "Scheduler recovery rebuilds only derived readiness/capacity/waves and reconciles uncertain leases/effects before reuse.",
+            "expected": true
+          },
+          {
+            "id": "CF-123",
+            "statement": "Factory and Operating Model recovery restores pinned blobs and validates bindings without automatic semantic or authority changes.",
+            "expected": true
+          },
+          {
+            "id": "CF-124",
+            "statement": "Schema recovery may restore schemas and regenerate only explicitly derived subjects; authoritative subjects are never coerced merely to validate.",
+            "expected": true
+          },
+          {
+            "id": "CF-125",
+            "statement": "Provider adapter recovery refreshes/rebinds observed capabilities and rights without fabricating missing permissions.",
+            "expected": true
+          },
+          {
+            "id": "CF-126",
+            "statement": "Conformance recovery is validate-only; failed assertions are never automatically marked PASS.",
+            "expected": true
+          },
+          {
+            "id": "CF-127",
+            "statement": "Unknown external mutation effects enter reconciliation before retry regardless of module profile.",
+            "expected": true
+          },
+          {
+            "id": "CF-128",
+            "statement": "Every successful module repair requires authoritative readback, expected-state match and persisted repair evidence.",
+            "expected": true
+          },
+          {
+            "id": "CF-129",
+            "statement": "Failure taxonomy includes dedicated module integrity, job binding, derived projection, package/model, provider drift, scheduler, schema, semantic-model and recovery-control classes SH-10 through SH-18.",
+            "expected": true
+          },
+          {
+            "id": "CF-130",
+            "statement": "K00 module-recovery preflight is the first kernel action and runs before provider/project operations.",
+            "expected": true
+          },
+          {
+            "id": "CF-131",
+            "statement": "Initialization begins with INIT-00 and STOPs if exact module-profile coverage or recovery-control integrity cannot be proven.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/job-contract-v0.8.0-rc.1",
+          "branch": "safor/module-self-healing-v0.9.0-rc.1",
           "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "Canonical v0.8 explicit job contract with package/sequence provenance, role, skills, granular rights, fixed return routes and HUMAN job projection added. CI and empirical dispatch acceptance remain required."
+          "note": "Module-wide profile-constrained self-healing added for every embedded module. CI and module-recovery end-to-end acceptance remain required."
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "schemaAgentInboxIndex": {
       "key": "schemaAgentInboxIndex",
-      "sourcePath": "v0.8.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "a72f1dfa6d2f7007b3e09da7186b9caead183428",
+      "sourcePath": "v0.9.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "b3160cc7bc4d39f2bdcf510d8371bb2e1655d35b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-inbox-index:0.8.0",
-        "title": "SAFOR Agent Inbox Index 0.8.0",
+        "$id": "urn:safor:agent-inbox-index:0.9.0",
+        "title": "SAFOR Agent Inbox Index 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9824,7 +10383,7 @@
             "const": "SAFOR_AGENT_INBOX_INDEX"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -9945,15 +10504,16 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
     },
     "multiAgentScheduler": {
       "key": "multiAgentScheduler",
-      "sourcePath": "v0.8.0/multi-agent-scheduler-model.json",
-      "sourceBlobSha": "f8dd23326796bef109bfef6fc07d4737cec6bd2d",
+      "sourcePath": "v0.9.0/multi-agent-scheduler-model.json",
+      "sourceBlobSha": "82179183ee4c4036ab7f45144a8ebc561f9c73ac",
       "content": {
         "format": "SAFOR_MULTI_AGENT_SCHEDULER_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-CONFLICT-AWARE-MULTI-AGENT-SCHEDULER",
         "purpose": "MASTER-owned scheduling protocol that decomposes approved work into atomic execution units and dispatches the largest safe parallel wave that fits dependencies, agent capabilities, capacity, separation-of-duties rules and mutation-conflict constraints.",
         "topology": {
@@ -10107,16 +10667,17 @@
           "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
         },
         "jobContractModelRef": "agent-job-contract-model.json"
-      }
+      },
+      "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
     },
     "schemaSchedulerState": {
       "key": "schemaSchedulerState",
-      "sourcePath": "v0.8.0/schemas/scheduler-state.schema.json",
-      "sourceBlobSha": "3acc33caec14f1e66465620244a536a22e536478",
+      "sourcePath": "v0.9.0/schemas/scheduler-state.schema.json",
+      "sourceBlobSha": "639799d514414e4fdaecc4a0e761fc39adcb3ee0",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:scheduler-state:0.8.0",
-        "title": "SAFOR Multi-Agent Scheduler State 0.8.0",
+        "$id": "urn:safor:scheduler-state:0.9.0",
+        "title": "SAFOR Multi-Agent Scheduler State 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10136,7 +10697,7 @@
             "const": "SAFOR_SCHEDULER_STATE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10228,16 +10789,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_SCHEDULER_STATE"
     },
     "schemaDispatchWave": {
       "key": "schemaDispatchWave",
-      "sourcePath": "v0.8.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "bf3e86b4289c6a7549152572cfc68693073d4170",
+      "sourcePath": "v0.9.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "e924a0ef8b6b825c8a5743dc84d54dd517602075",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:dispatch-wave:0.8.0",
-        "title": "SAFOR Dispatch Wave 0.8.0",
+        "$id": "urn:safor:dispatch-wave:0.9.0",
+        "title": "SAFOR Dispatch Wave 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10258,7 +10820,7 @@
             "const": "SAFOR_DISPATCH_WAVE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10349,16 +10911,17 @@
             }
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_DISPATCH_WAVE"
     },
     "schemaResourceLease": {
       "key": "schemaResourceLease",
-      "sourcePath": "v0.8.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d",
+      "sourcePath": "v0.9.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "1474979d2ab006feed7d14394839149dccc4c30e",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:resource-lease:0.8.0",
-        "title": "SAFOR Multi-Agent Resource Lease 0.8.0",
+        "$id": "urn:safor:resource-lease:0.9.0",
+        "title": "SAFOR Multi-Agent Resource Lease 0.9.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -10385,7 +10948,7 @@
             "const": "SAFOR_RESOURCE_LEASE"
           },
           "schemaVersion": {
-            "const": "0.8.0"
+            "const": "0.9.0"
           },
           "projectId": {
             "type": "string",
@@ -10472,15 +11035,16 @@
             "minLength": 1
           }
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
     },
     "agentJobContract": {
       "key": "agentJobContract",
-      "sourcePath": "v0.8.0/agent-job-contract-model.json",
-      "sourceBlobSha": "97aa4b704ba77fd2557c285de62dc1fcde4b02ec",
+      "sourcePath": "v0.9.0/agent-job-contract-model.json",
+      "sourceBlobSha": "b88317a8d2c6b86985e281c953a3793eecfc88e7",
       "content": {
         "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT",
         "purpose": "Define the immutable, self-describing execution contract issued by MASTER to one persistent agent identity, plus its mandatory HUMAN-readable Markdown projection.",
         "authority": {
@@ -10570,7 +11134,2161 @@
           "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB",
           "directAgentMutationForbidden": true
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
+    },
+    "moduleSelfHealing": {
+      "key": "moduleSelfHealing",
+      "sourcePath": "v0.9.0/module-self-healing-model.json",
+      "sourceBlobSha": "c12510b30d4768b6c62bc655988748af53510a7c",
+      "content": {
+        "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
+        "schemaVersion": "0.9.0",
+        "id": "SAFOR-MODULE-WIDE-SELF-HEALING",
+        "purpose": "Provide one explicit, bounded recovery profile for every embedded SAFOR module so failures are detected and repaired according to module authority, derivability and risk without semantic invention.",
+        "coverageContract": {
+          "exactCoverageRequired": true,
+          "oneProfilePerEmbeddedModule": true,
+          "noUnprofiledEmbeddedModules": true,
+          "noProfilesForUnknownModuleKeys": true,
+          "profileSchemaRef": "schemas/module-recovery-profile.schema.json",
+          "evaluatedAgainst": "SAFOR complete bundle embeddedModules keys"
+        },
+        "globalRules": [
+          "Repair never changes business/product/governance semantics unless a separate HUMAN-governed change creates a new authoritative artifact.",
+          "Authoritative immutable artifacts are validated/restored from verified sources, not heuristically rewritten.",
+          "Derived artifacts may be regenerated only from verified authoritative sources.",
+          "External provider capability failures are rebound/revalidated; permissions are never fabricated or elevated.",
+          "Unknown mutation effects reconcile before retry.",
+          "Every module repair creates or updates a self-healing record and requires authoritative readback.",
+          "Repeated failure fingerprints obey the lower of module-profile and failure-class retry budgets.",
+          "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP."
+        ],
+        "moduleProfiles": [
+          {
+            "profileId": "MRP-KERNEL",
+            "moduleKey": "kernel",
+            "moduleClass": "KERNEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.kernel + integrityManifest.kernel",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "KERNEL_INVARIANT_MISSING",
+              "CONTROL_ACTION_MODEL_REF_INVALID",
+              "KERNEL_SCHEMA_VERSION_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "COMPARE_WITH_PINNED_CANONICAL_SOURCE",
+              "STOP_IF_EXPECTED_BLOB_CANNOT_BE_PROVEN"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_REWRITE_KERNEL_SEMANTICS"
+            ],
+            "retryBudget": 0,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "KERNEL_BLOB_AND_INVARIANTS_MATCH_EXPECTED_DISTRIBUTION"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-INITIALIZATION",
+            "moduleKey": "initialization",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.initialization + integrityManifest.initialization",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "INITIALIZATION_SEQUENCE_BROKEN",
+              "MANDATORY_GATE_MISSING",
+              "INVALID_INIT_MODEL_REF"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "RESTORE_FROM_EXPECTED_PINNED_BLOB",
+              "RESTART_FROM_LAST_VERIFIED_INIT_CHECKPOINT"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "INITIALIZATION_MODEL_MATCHES_PINNED_BLOB_AND_MANDATORY_GATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-INTERACTION",
+            "moduleKey": "interaction",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.interaction + integrityManifest.interaction",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "HUMAN_SURFACE_CONTRACT_INVALID",
+              "MENU_MODEL_INVALID",
+              "STATUS_SURFACE_INVALID"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "INTERACTION_MODEL_VALID_AND_NO_CONTROL_STATE_MUTATION_OCCURRED"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SELF_HEALING",
+            "moduleKey": "selfHealing",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.selfHealing + integrityManifest.selfHealing",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "FAILURE_CLASS_UNKNOWN",
+              "REPAIR_POLICY_INVALID",
+              "SELF_HEALING_RECURSION_GUARD_TRIGGERED"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "STOP_AUTOMATIC_REPAIR_AND_ESCALATE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "SELF_MODIFY_REPAIR_POLICY"
+            ],
+            "retryBudget": 0,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SELF_HEALING_MODEL_MATCHES_PINNED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-MODULE_SELF_HEALING",
+            "moduleKey": "moduleSelfHealing",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.moduleSelfHealing + integrityManifest.moduleSelfHealing",
+            "failureDetectors": [
+              "MODULE_PROFILE_COVERAGE_GAP",
+              "MODULE_PROFILE_DUPLICATE",
+              "PROFILE_SCHEMA_INVALID",
+              "PROFILE_BLOB_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "RECOMPUTE_COVERAGE_REPORT_WITHOUT_MUTATING_PROFILES",
+              "STOP_IF_ANY_EMBEDDED_MODULE_LACKS_PROFILE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_GENERATE_SEMANTIC_RECOVERY_PROFILE"
+            ],
+            "retryBudget": 0,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "EVERY_EMBEDDED_MODULE_HAS_EXACTLY_ONE_VALID_RECOVERY_PROFILE"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-AGENT_WORKSPACE",
+            "moduleKey": "agentWorkspace",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "REGENERATE_DERIVED_ONLY",
+            "sourceOfTruth": "authoritative agent identity/job/master-job artifacts + embeddedModules.agentWorkspace",
+            "failureDetectors": [
+              "INBOX_INDEX_MISSING_OR_STALE",
+              "AGENT_STATE_STALE_REVISION",
+              "CLAIM_BINDING_MISMATCH",
+              "WORKSPACE_DERIVED_ARTIFACT_MISSING"
+            ],
+            "automaticRepairs": [
+              "REGENERATE_INBOX_INDEX_FROM_MASTER_JOB_STATE",
+              "REFRESH_AGENT_STATE_AND_REEVALUATE_CLAIM",
+              "RECREATE_MISSING_DERIVED_WORKSPACE_ARTIFACT"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DERIVED_WORKSPACE_ARTIFACTS_MATCH_AUTHORITATIVE_AGENT_AND_MASTER_JOB_STATE"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-AGENT_JOB_CONTRACT",
+            "moduleKey": "agentJobContract",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "REGENERATE_DERIVED_ONLY",
+            "sourceOfTruth": "authoritative inbox/{jobId}.json + pinned role/skill/input sources",
+            "failureDetectors": [
+              "JOB_JSON_INVALID",
+              "JOB_HUMAN_PROJECTION_MISSING",
+              "JOB_HUMAN_PROJECTION_BLOB_MISMATCH",
+              "JOB_ROLE_BINDING_MISMATCH",
+              "JOB_SKILL_SOURCE_MISMATCH",
+              "JOB_AUTHORIZATION_MISMATCH",
+              "JOB_RETURN_ROUTE_INVALID"
+            ],
+            "automaticRepairs": [
+              "RENDER_JOB_MARKDOWN_FROM_VALID_JOB_JSON",
+              "RECOMPUTE_AND_VERIFY_JOB_MARKDOWN_BLOB",
+              "BLOCK_JOB_ON_ROLE_SKILL_AUTHORIZATION_OR_INPUT_MISMATCH",
+              "CREATE_SUPERSEDING_JOB_FOR_SEMANTIC_CHANGE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_MUTATE_DISPATCHED_JOB_JSON",
+              "AUTO_CHANGE_ROLE_OR_SKILL",
+              "AUTO_EXPAND_JOB_AUTHORIZATION"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "JOB_JSON_UNCHANGED_AND_VALID_AND_JOB_MARKDOWN_MATCHES_PINNED_PROJECTION"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-MULTI_AGENT_SCHEDULER",
+            "moduleKey": "multiAgentScheduler",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "REGENERATE_DERIVED_ONLY",
+            "sourceOfTruth": "accepted work-item DAG + agent registry + master/jobs + active resource leases",
+            "failureDetectors": [
+              "READY_SET_STALE",
+              "AGENT_CAPACITY_DRIFT",
+              "RESOURCE_LEASE_CONFLICT",
+              "DEPENDENCY_CYCLE",
+              "DISPATCH_WAVE_DERIVATION_MISMATCH",
+              "LEASE_EXPIRY_WITH_UNKNOWN_EFFECT"
+            ],
+            "automaticRepairs": [
+              "REBUILD_READY_SET",
+              "RECOMPUTE_AGENT_CAPACITY",
+              "REPLAN_CONFLICT_FREE_WAVE",
+              "RECONCILE_EXPIRED_LEASE_BEFORE_RELEASE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "SILENT_OVERLAPPING_REASSIGNMENT"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEDULER_STATE_MATCHES_AUTHORITATIVE_WORK_ITEMS_AGENT_CAPACITY_AND_LEASES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-REPOSITORY_POLICY",
+            "moduleKey": "repositoryPolicy",
+            "moduleClass": "POLICY",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.repositoryPolicy + integrityManifest.repositoryPolicy",
+            "failureDetectors": [
+              "POLICY_BLOB_MISMATCH",
+              "OWNERSHIP_RULE_INVALID",
+              "REPOSITORY_CLASS_POLICY_INVALID"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_POLICY",
+              "STOP_MUTATION_UNTIL_POLICY_VALID"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_RELAX_POLICY"
+            ],
+            "retryBudget": 0,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "REPOSITORY_POLICY_MATCHES_PINNED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-PACKAGE_REGISTRY",
+            "moduleKey": "packageRegistry",
+            "moduleClass": "REGISTRY",
+            "authorityType": "PINNED_CANONICAL_SOURCE",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "pinned package registry module + package source blob identities",
+            "failureDetectors": [
+              "PACKAGE_REGISTRY_BLOB_MISMATCH",
+              "PACKAGE_REF_STALE",
+              "VERSION_BINDING_MISMATCH",
+              "PACKAGE_MISSING"
+            ],
+            "automaticRepairs": [
+              "RELOAD_PINNED_REGISTRY",
+              "READBACK_PACKAGE_SOURCE",
+              "RESTORE_ONLY_EXPECTED_VERSION_AND_BLOB"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "REGISTRY_AND_REFERENCED_PACKAGES_MATCH_PINNED_VERSION_AND_BLOB"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-PROVIDER_GITHUB",
+            "moduleKey": "providerGithub",
+            "moduleClass": "PROVIDER_ADAPTER",
+            "authorityType": "EXTERNAL_PROVIDER_BOUND",
+            "repairability": "REBIND_EXTERNAL_CAPABILITY",
+            "sourceOfTruth": "embedded provider adapter + actual host/provider capability observation",
+            "failureDetectors": [
+              "PROVIDER_TEMPORARILY_UNAVAILABLE",
+              "CAPABILITY_DRIFT",
+              "AUTHORIZATION_REVOKED",
+              "PROVIDER_READBACK_MISMATCH",
+              "STALE_REMOTE_REVISION"
+            ],
+            "automaticRepairs": [
+              "REFRESH_PROVIDER_CAPABILITIES",
+              "REVALIDATE_AUTHORIZATION",
+              "REFRESH_REMOTE_REVISION",
+              "RETRY_IDEMPOTENT_READ",
+              "RECONCILE_UNKNOWN_MUTATION_EFFECT"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "FABRICATE_PROVIDER_RIGHT",
+              "AUTO_ELEVATE_PROVIDER_PERMISSION"
+            ],
+            "retryBudget": 2,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DECLARED_ADAPTER_CAPABILITIES_AND_ACTUAL_HOST_RIGHTS_ARE_RECONCILED"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-PROVIDER_GITLAB",
+            "moduleKey": "providerGitlab",
+            "moduleClass": "PROVIDER_ADAPTER",
+            "authorityType": "EXTERNAL_PROVIDER_BOUND",
+            "repairability": "REBIND_EXTERNAL_CAPABILITY",
+            "sourceOfTruth": "embedded provider adapter + actual host/provider capability observation",
+            "failureDetectors": [
+              "PROVIDER_TEMPORARILY_UNAVAILABLE",
+              "CAPABILITY_DRIFT",
+              "AUTHORIZATION_REVOKED",
+              "PROVIDER_READBACK_MISMATCH",
+              "STALE_REMOTE_REVISION"
+            ],
+            "automaticRepairs": [
+              "REFRESH_PROVIDER_CAPABILITIES",
+              "REVALIDATE_AUTHORIZATION",
+              "REFRESH_REMOTE_REVISION",
+              "RETRY_IDEMPOTENT_READ",
+              "RECONCILE_UNKNOWN_MUTATION_EFFECT"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "FABRICATE_PROVIDER_RIGHT",
+              "AUTO_ELEVATE_PROVIDER_PERMISSION"
+            ],
+            "retryBudget": 2,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DECLARED_ADAPTER_CAPABILITIES_AND_ACTUAL_HOST_RIGHTS_ARE_RECONCILED"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-OPERATING_MODEL_SAAS",
+            "moduleKey": "operatingModelSaas",
+            "moduleClass": "OPERATING_MODEL",
+            "authorityType": "PINNED_CANONICAL_SOURCE",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "pinned operating-model package snapshot/blob",
+            "failureDetectors": [
+              "PACKAGE_BLOB_MISMATCH",
+              "ROLE_BINDING_INVALID",
+              "CAPABILITY_MAPPING_INVALID",
+              "MANDATE_RULE_INVALID",
+              "SOD_RULE_INVALID"
+            ],
+            "automaticRepairs": [
+              "RESTORE_PINNED_PACKAGE_BLOB",
+              "REVALIDATE_ROLE_CAPABILITY_BINDINGS",
+              "BLOCK_EXECUTION_ON_MANDATE_OR_SOD_MISMATCH"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_CHANGE_DECISION_RIGHTS",
+              "AUTO_CHANGE_SOD_POLICY"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "OPERATING_MODEL_EQUALS_PINNED_PACKAGE_AND_BINDINGS_VALIDATE"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-OPERATING_MODEL_BOOK",
+            "moduleKey": "operatingModelBook",
+            "moduleClass": "OPERATING_MODEL",
+            "authorityType": "PINNED_CANONICAL_SOURCE",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "pinned operating-model package snapshot/blob",
+            "failureDetectors": [
+              "PACKAGE_BLOB_MISMATCH",
+              "ROLE_BINDING_INVALID",
+              "CAPABILITY_MAPPING_INVALID",
+              "MANDATE_RULE_INVALID",
+              "SOD_RULE_INVALID"
+            ],
+            "automaticRepairs": [
+              "RESTORE_PINNED_PACKAGE_BLOB",
+              "REVALIDATE_ROLE_CAPABILITY_BINDINGS",
+              "BLOCK_EXECUTION_ON_MANDATE_OR_SOD_MISMATCH"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_CHANGE_DECISION_RIGHTS",
+              "AUTO_CHANGE_SOD_POLICY"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "OPERATING_MODEL_EQUALS_PINNED_PACKAGE_AND_BINDINGS_VALIDATE"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-FACTORY_SOFTWARE_WEBSITE",
+            "moduleKey": "factorySoftwareWebsite",
+            "moduleClass": "FACTORY",
+            "authorityType": "PINNED_CANONICAL_SOURCE",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "pinned factory package snapshot/blob",
+            "failureDetectors": [
+              "PACKAGE_BLOB_MISMATCH",
+              "FLOW_GRAPH_INVALID",
+              "PLANNING_CONTRACT_INVALID",
+              "EVIDENCE_CONTRACT_INVALID",
+              "OUTCOME_MODEL_INVALID"
+            ],
+            "automaticRepairs": [
+              "RESTORE_PINNED_PACKAGE_BLOB",
+              "REVALIDATE_FLOW_GRAPH",
+              "BLOCK_PLANNING_OR_EXECUTION_UNTIL_FACTORY_VALID"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_CHANGE_FACTORY_SEMANTICS"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "FACTORY_EQUALS_PINNED_PACKAGE_AND_FLOW_PLANNING_EVIDENCE_CONTRACTS_VALIDATE"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-FACTORY_BOOK",
+            "moduleKey": "factoryBook",
+            "moduleClass": "FACTORY",
+            "authorityType": "PINNED_CANONICAL_SOURCE",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "pinned factory package snapshot/blob",
+            "failureDetectors": [
+              "PACKAGE_BLOB_MISMATCH",
+              "FLOW_GRAPH_INVALID",
+              "PLANNING_CONTRACT_INVALID",
+              "EVIDENCE_CONTRACT_INVALID",
+              "OUTCOME_MODEL_INVALID"
+            ],
+            "automaticRepairs": [
+              "RESTORE_PINNED_PACKAGE_BLOB",
+              "REVALIDATE_FLOW_GRAPH",
+              "BLOCK_PLANNING_OR_EXECUTION_UNTIL_FACTORY_VALID"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_CHANGE_FACTORY_SEMANTICS"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "FACTORY_EQUALS_PINNED_PACKAGE_AND_FLOW_PLANNING_EVIDENCE_CONTRACTS_VALIDATE"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_PACKAGE_MANIFEST",
+            "moduleKey": "schemaPackageManifest",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaPackageManifest + integrityManifest.schemaPackageManifest",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_CONTROL_STATE",
+            "moduleKey": "schemaControlState",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaControlState + integrityManifest.schemaControlState",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_VALUE_STREAM_STATE",
+            "moduleKey": "schemaValueStreamState",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaValueStreamState + integrityManifest.schemaValueStreamState",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_EXECUTION_STATE",
+            "moduleKey": "schemaExecutionState",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaExecutionState + integrityManifest.schemaExecutionState",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_WORK_ITEM",
+            "moduleKey": "schemaWorkItem",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaWorkItem + integrityManifest.schemaWorkItem",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_PROJECT",
+            "moduleKey": "schemaProject",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaProject + integrityManifest.schemaProject",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_BINDINGS",
+            "moduleKey": "schemaBindings",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaBindings + integrityManifest.schemaBindings",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_DECISION_RECORD",
+            "moduleKey": "schemaDecisionRecord",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaDecisionRecord + integrityManifest.schemaDecisionRecord",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_EVIDENCE_RECORD",
+            "moduleKey": "schemaEvidenceRecord",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaEvidenceRecord + integrityManifest.schemaEvidenceRecord",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_INTERACTION_MENU",
+            "moduleKey": "schemaInteractionMenu",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaInteractionMenu + integrityManifest.schemaInteractionMenu",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_SELF_HEALING_RECORD",
+            "moduleKey": "schemaSelfHealingRecord",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaSelfHealingRecord + integrityManifest.schemaSelfHealingRecord",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE",
+            "moduleKey": "schemaModuleRecoveryProfile",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaModuleRecoveryProfile + integrityManifest.schemaModuleRecoveryProfile",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_REGISTRY",
+            "moduleKey": "schemaAgentRegistry",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentRegistry + integrityManifest.schemaAgentRegistry",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_IDENTITY",
+            "moduleKey": "schemaAgentIdentity",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentIdentity + integrityManifest.schemaAgentIdentity",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_INBOX_INDEX",
+            "moduleKey": "schemaAgentInboxIndex",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentInboxIndex + integrityManifest.schemaAgentInboxIndex",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_STATE",
+            "moduleKey": "schemaAgentState",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentState + integrityManifest.schemaAgentState",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_JOB",
+            "moduleKey": "schemaAgentJob",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentJob + integrityManifest.schemaAgentJob",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_JOB_STATE",
+            "moduleKey": "schemaAgentJobState",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentJobState + integrityManifest.schemaAgentJobState",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_RESULT",
+            "moduleKey": "schemaAgentResult",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentResult + integrityManifest.schemaAgentResult",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_SCHEDULER_STATE",
+            "moduleKey": "schemaSchedulerState",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaSchedulerState + integrityManifest.schemaSchedulerState",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_DISPATCH_WAVE",
+            "moduleKey": "schemaDispatchWave",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaDispatchWave + integrityManifest.schemaDispatchWave",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_RESOURCE_LEASE",
+            "moduleKey": "schemaResourceLease",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaResourceLease + integrityManifest.schemaResourceLease",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-CONFORMANCE",
+            "moduleKey": "conformance",
+            "moduleClass": "CONFORMANCE",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.conformance + integrityManifest.conformance",
+            "failureDetectors": [
+              "CONFORMANCE_BLOB_MISMATCH",
+              "REQUIRED_ASSERTION_MISSING",
+              "ASSERTION_EXPECTATION_INVALID"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_CONFORMANCE_MODULE",
+              "STOP_RELEASE_IF_REQUIRED_ASSERTION_FAILS"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_MARK_FAILED_ASSERTION_PASS"
+            ],
+            "retryBudget": 0,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "CONFORMANCE_MODULE_MATCHES_PINNED_BLOB_AND_ALL_REQUIRED_ASSERTIONS_ARE_PRESENT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          }
+        ]
+      },
+      "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
+    },
+    "schemaModuleRecoveryProfile": {
+      "key": "schemaModuleRecoveryProfile",
+      "sourcePath": "v0.9.0/schemas/module-recovery-profile.schema.json",
+      "sourceBlobSha": "8c2d066c5f12581e29e4100dc8ca33203914a0e6",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:module-recovery-profile:0.9.0",
+        "title": "SAFOR Module Recovery Profile 0.9.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profileId",
+          "moduleKey",
+          "moduleClass",
+          "authorityType",
+          "repairability",
+          "failureDetectors",
+          "automaticRepairs",
+          "forbiddenRepairs",
+          "retryBudget",
+          "verification",
+          "escalation"
+        ],
+        "properties": {
+          "profileId": {
+            "type": "string",
+            "pattern": "^MRP-[A-Z0-9_-]+$"
+          },
+          "moduleKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "moduleClass": {
+            "enum": [
+              "KERNEL",
+              "RUNTIME_MODEL",
+              "POLICY",
+              "REGISTRY",
+              "PROVIDER_ADAPTER",
+              "OPERATING_MODEL",
+              "FACTORY",
+              "SCHEMA",
+              "CONFORMANCE"
+            ]
+          },
+          "authorityType": {
+            "enum": [
+              "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "PINNED_CANONICAL_SOURCE",
+              "DERIVED_RUNTIME_PROJECTION",
+              "EXTERNAL_PROVIDER_BOUND"
+            ]
+          },
+          "repairability": {
+            "enum": [
+              "IMMUTABLE_VALIDATE_ONLY",
+              "RESTORE_FROM_VERIFIED_SOURCE",
+              "REGENERATE_DERIVED_ONLY",
+              "REBIND_EXTERNAL_CAPABILITY"
+            ]
+          },
+          "sourceOfTruth": {
+            "type": "string",
+            "minLength": 1
+          },
+          "failureDetectors": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "automaticRepairs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "forbiddenRepairs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "retryBudget": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+          },
+          "preconditions": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "verification": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "requiredEvidence",
+              "successPredicate"
+            ],
+            "properties": {
+              "requiredEvidence": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "successPredicate": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "escalation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "when",
+              "target"
+            ],
+            "properties": {
+              "when": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "target": {
+                "enum": [
+                  "MASTER",
+                  "HUMAN",
+                  "STOP"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE"
     }
   }
 }

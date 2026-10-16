@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -206,3 +206,50 @@ For one mutating agent job and one read-only agent job:
 17. Rework creates a new jobId and records supersession lineage; the historical jobId is not reused.
 
 **Pass condition:** all 17 observations are evidenced from repository/provider state and the HUMAN can understand the complete assignment from `job.md` without relying on chat history.
+
+
+## M. Module-wide Self-Healing
+
+**Preconditions**
+- Load the exact v0.9 release bundle.
+- Confirm the embedded module set and module recovery profiles are intact.
+- Use a disposable project/control environment for mutation tests.
+
+**Expected coverage**
+1. The bundle contains exactly one recovery profile for every embedded module key.
+2. Every embedded module and integrity-manifest entry references the same profile ID.
+3. No recovery profile targets an unknown module.
+
+**Validate-only test**
+4. Simulate integrity failure for an immutable control module such as Kernel/Conformance.
+5. SAFOR does not rewrite semantics; it reloads/verifies the expected pinned module or STOPs/escalates.
+
+**Verified-restore test**
+6. Simulate a pinned Factory/Operating Model/Registry module mismatch.
+7. SAFOR restores only the expected version/blob from verified source and revalidates bindings.
+8. SAFOR does not alter workflow semantics, decision rights or SoD rules.
+
+**Derived-regeneration test**
+9. Remove/corrupt a derived artifact such as agent inbox index or HUMAN job projection while the authoritative source remains intact.
+10. SAFOR regenerates only the derived artifact from the authoritative source.
+11. Provider readback verifies the regenerated artifact and the authoritative source remains byte-identical.
+
+**External-rebind test**
+12. Simulate Provider capability drift or revoked permission.
+13. SAFOR refreshes/reobserves actual capabilities and never fabricates/elevates rights.
+14. If required rights remain unavailable, work remains blocked or escalates to HUMAN.
+
+**Scheduler/job safety**
+15. Simulate stale scheduler READY/capacity view; SAFOR recomputes derived scheduling state.
+16. Simulate expired lease with uncertain external effect; SAFOR enters reconciliation before reuse/reassignment.
+17. Simulate invalid dispatched job role/skill/authorization; SAFOR does not rewrite job.json and instead blocks/supersedes through governed flow.
+
+**Recovery-control fail-closed**
+18. Simulate invalid self-healing or module-recovery control integrity.
+19. SAFOR performs no heuristic self-modification and STOPs/escalates.
+
+**Repair evidence**
+20. Every repair record contains moduleKey, moduleProfileId, authority type, repairability, pre-state refs, profile decision, selected action and evidence.
+21. No repair is marked SUCCEEDED before authoritative readback satisfies the profile success predicate.
+
+**Pass condition:** all 21 observations are evidenced from repository/provider state. No authoritative semantic artifact is silently rewritten and no permission is inferred or elevated.

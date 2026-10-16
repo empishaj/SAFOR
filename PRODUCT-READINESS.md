@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.8.0-rc.1**
+Current target: **v0.9.0-rc.1**
 
-Current modular source: **`v0.8.0/`**
+Current modular source: **`v0.9.0/`**
 
 ## Release-candidate gates
 
@@ -18,6 +18,12 @@ Current modular source: **`v0.8.0/`**
 | Factory-bound Evidence | PASS |
 | Chat-native HUMAN interface policy | PASS |
 | Bounded self-healing | PASS |
+| Module-wide self-healing coverage | PASS by schema/conformance |
+| Exact one-profile-per-module binding | PASS by validator contract |
+| Profile-constrained recovery modes | PASS by schema/conformance |
+| Fail-closed recovery-control integrity | PASS by schema/conformance |
+| Module-aware repair records | PASS by schema/conformance |
+| Module-wide Self-Healing end-to-end acceptance | OPEN |
 | Persistent repository-native agent identity | PASS by schema/conformance |
 | Agent inbox/outbox job protocol | PASS by schema/conformance |
 | MASTER-authoritative agent lifecycle | PASS by schema/conformance |
@@ -41,8 +47,8 @@ Current modular source: **`v0.8.0/`**
 | Conflict-aware serialization acceptance | OPEN |
 | HUMAN-readable + Git-trace result acceptance | OPEN |
 | Agent Workspace end-to-end acceptance | OPEN |
-| Machine-readable validation | PASS on PR #6 validated head |
-| CI validation | PASS on PR #6 validated head |
+| Machine-readable validation | PASS on PR #7 validated head |
+| CI validation | PASS on PR #7 validated head |
 | Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |

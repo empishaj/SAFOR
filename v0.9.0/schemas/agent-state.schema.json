@@ -1,0 +1,222 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-state:0.9.0",
+  "title": "SAFOR Agent Runtime State 0.9.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "revision",
+    "runtimeStatus",
+    "session",
+    "currentJob",
+    "lastResultRef",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.9.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "runtimeStatus": {
+      "enum": [
+        "IDLE",
+        "CLAIMED",
+        "RUNNING",
+        "RESULT_SUBMITTED",
+        "BLOCKED",
+        "PAUSED",
+        "REVOKED"
+      ]
+    },
+    "session": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/session"
+        }
+      ]
+    },
+    "currentJob": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/currentJob"
+        }
+      ]
+    },
+    "lastResultRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sessionId",
+        "activatedAt"
+      ],
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "activatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "currentJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "jobKey",
+        "packageId",
+        "workItemId",
+        "roleId",
+        "humanJobRef",
+        "observedHumanJobBlobSha",
+        "contractRef",
+        "observedContractBlobSha",
+        "masterJobStateRef",
+        "claimId",
+        "sessionId",
+        "dispatchWaveRef",
+        "resourceLeaseRefs",
+        "phase",
+        "claimedAt",
+        "startedAt",
+        "lastCheckpointAt",
+        "resultRef"
+      ],
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contractRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observedContractBlobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "masterJobStateRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "claimId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sessionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "enum": [
+            "CLAIMED",
+            "RUNNING",
+            "RESULT_SUBMITTED",
+            "BLOCKED"
+          ]
+        },
+        "claimedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "startedAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "lastCheckpointAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "resultRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "dispatchWaveRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "resourceLeaseRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "jobKey": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workItemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "roleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "humanJobRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observedHumanJobBlobSha": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

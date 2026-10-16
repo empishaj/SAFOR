@@ -1,0 +1,353 @@
+{
+  "format": "SAFOR_SELF_HEALING_MODEL",
+  "schemaVersion": "0.9.0",
+  "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
+  "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
+  "principles": {
+    "conservativeByDefault": true,
+    "evidenceDriven": true,
+    "repairWithinExistingAuthorityOnly": true,
+    "verifyEveryRepair": true,
+    "immutableFailureHistory": true,
+    "boundedRetries": true,
+    "noSilentScopeExpansion": true,
+    "noHumanDecisionInference": true,
+    "noGateBypass": true,
+    "noForcePush": true,
+    "noDestructiveDeleteByDefault": true,
+    "moduleProfileRequired": true,
+    "exactModuleCoverageRequired": true,
+    "failClosedOnRecoveryControlFailure": true,
+    "derivedOnlyRegeneration": true,
+    "noSemanticAutoRewrite": true
+  },
+  "lifecycle": [
+    "DETECT",
+    "CLASSIFY",
+    "RESOLVE_SUBJECT_MODULE",
+    "LOAD_MODULE_RECOVERY_PROFILE",
+    "CHECK_REPAIR_ELIGIBILITY",
+    "PLAN_REPAIR",
+    "EXECUTE_REPAIR",
+    "VERIFY_REPAIR",
+    "RESUME_OR_ESCALATE"
+  ],
+  "failureClasses": [
+    {
+      "id": "SH-01",
+      "name": "TRANSIENT_PROVIDER_ERROR",
+      "examples": [
+        "temporary provider error",
+        "rate-limit recovery after provider indicates retry is allowed",
+        "temporary transport failure"
+      ],
+      "automaticRepair": "RETRY_SAME_IDEMPOTENT_OPERATION",
+      "defaultRetryBudget": 2,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-02",
+      "name": "READBACK_MISMATCH_OR_UNKNOWN_EFFECT",
+      "examples": [
+        "write response returned but final state is unclear",
+        "provider timeout after mutation"
+      ],
+      "automaticRepair": "RECONCILE_BEFORE_ANY_RETRY",
+      "defaultRetryBudget": 0,
+      "requiresReconciliation": true
+    },
+    {
+      "id": "SH-03",
+      "name": "STALE_REVISION_CONFLICT",
+      "examples": [
+        "expected branch head changed",
+        "optimistic-lock conflict"
+      ],
+      "automaticRepair": "REFRESH_STATE_AND_REEVALUATE",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-04",
+      "name": "MISSING_DERIVABLE_CONTROL_ARTIFACT",
+      "examples": [
+        "missing generated index",
+        "missing derived non-authoritative projection"
+      ],
+      "automaticRepair": "REGENERATE_FROM_AUTHORITATIVE_SOURCES",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-05",
+      "name": "WORK_RESULT_NEEDS_REWORK",
+      "examples": [
+        "review requests changes",
+        "acceptance criterion not satisfied"
+      ],
+      "automaticRepair": "ROUTE_TO_EXISTING_REWORK_PATH",
+      "defaultRetryBudget": 0,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-06",
+      "name": "MISSING_PERMISSION_OR_TOOL",
+      "examples": [
+        "write permission revoked",
+        "required provider tool unavailable"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-07",
+      "name": "POLICY_OR_GUARD_VIOLATION",
+      "examples": [
+        "operation outside mandate",
+        "human gate required",
+        "separation-of-duties violation"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-08",
+      "name": "STATE_OR_SCHEMA_CORRUPTION",
+      "examples": [
+        "authoritative state invalid",
+        "binding integrity failure",
+        "schema mismatch"
+      ],
+      "automaticRepair": "RESTORE_ONLY_FROM_VERIFIED_PRIOR_OR_AUTHORITATIVE_SOURCE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_RESTORE_IS_NOT_UNAMBIGUOUS"
+    },
+    {
+      "id": "SH-09",
+      "name": "RETRY_BUDGET_EXHAUSTED",
+      "examples": [
+        "same recoverable failure repeats beyond budget"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-10",
+      "name": "MODULE_INTEGRITY_OR_COVERAGE_FAILURE",
+      "examples": [
+        "embedded module blob differs from integrity manifest",
+        "module lacks recovery profile",
+        "duplicate recovery profile"
+      ],
+      "automaticRepair": "RELOAD_EXPECTED_MODULE_OR_STOP_IF_PROFILE_COVERAGE_INVALID",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-11",
+      "name": "JOB_CONTRACT_BINDING_FAILURE",
+      "examples": [
+        "job role binding mismatch",
+        "skill source/blob mismatch",
+        "authorization/return-route mismatch",
+        "immutable input mismatch"
+      ],
+      "automaticRepair": "BLOCK_JOB_AND_REBUILD_ONLY_BEFORE_DISPATCH_OR_CREATE_SUPERSEDING_JOB",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_SEMANTICS_OR_AUTHORITY_WOULD_CHANGE"
+    },
+    {
+      "id": "SH-12",
+      "name": "DERIVED_PROJECTION_FAILURE",
+      "examples": [
+        "job.md missing or blob mismatch",
+        "inbox index missing/stale",
+        "derived status projection missing"
+      ],
+      "automaticRepair": "REGENERATE_FROM_VERIFIED_AUTHORITATIVE_SOURCE",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-13",
+      "name": "PACKAGE_OR_MODEL_BINDING_FAILURE",
+      "examples": [
+        "factory/operating-model package blob mismatch",
+        "registry binding points to unexpected version",
+        "model reference unresolved"
+      ],
+      "automaticRepair": "RESTORE_EXPECTED_PINNED_PACKAGE_OR_BLOCK",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-14",
+      "name": "PROVIDER_CAPABILITY_DRIFT",
+      "examples": [
+        "provider permission revoked",
+        "host tool unavailable",
+        "declared adapter capability no longer observable"
+      ],
+      "automaticRepair": "REFRESH_AND_REBIND_ACTUAL_CAPABILITIES_WITHOUT_ELEVATION",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_REQUIRED_CAPABILITY_REMAINS_MISSING"
+    },
+    {
+      "id": "SH-15",
+      "name": "SCHEDULER_LEASE_OR_CAPACITY_FAILURE",
+      "examples": [
+        "agent slot count drift",
+        "resource lease conflict",
+        "expired lease with uncertain external effect",
+        "stale ready set"
+      ],
+      "automaticRepair": "RECOMPUTE_DERIVED_SCHEDULER_STATE_AND_RECONCILE_UNCERTAIN_EFFECTS",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": "WHEN_EXTERNAL_EFFECTS_ARE_UNCERTAIN"
+    },
+    {
+      "id": "SH-16",
+      "name": "SCHEMA_VALIDATION_FAILURE",
+      "examples": [
+        "schema module invalid",
+        "subject does not validate",
+        "schema version mismatch"
+      ],
+      "automaticRepair": "RESTORE_SCHEMA_OR_REGENERATE_ONLY_DERIVED_SUBJECT",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_AUTHORITATIVE_SUBJECT_WOULD_REQUIRE_SEMANTIC_CHANGE"
+    },
+    {
+      "id": "SH-17",
+      "name": "OPERATING_MODEL_OR_FACTORY_SEMANTIC_MISMATCH",
+      "examples": [
+        "role/authority mapping inconsistent",
+        "flow graph invalid",
+        "evidence/planning contract mismatch"
+      ],
+      "automaticRepair": "RESTORE_PINNED_PACKAGE_OR_BLOCK",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_PINNED_SOURCE_ITSELF_IS_INVALID_OR_CHANGE_IS_REQUIRED"
+    },
+    {
+      "id": "SH-18",
+      "name": "SELF_HEALING_CONTROL_FAILURE",
+      "examples": [
+        "self-healing model invalid",
+        "module recovery profile model invalid",
+        "recovery recursion guard triggered"
+      ],
+      "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    }
+  ],
+  "eligibilityRules": [
+    "The repair must stay inside the currently active mandate and bound package policies.",
+    "The repair must not create a new business, product, risk or governance decision.",
+    "The repair must be idempotent or have an explicit reconciliation/compensation strategy.",
+    "Required provider capabilities and rights must be proven immediately before repair.",
+    "The authoritative pre-repair state must be captured or referenced.",
+    "A repair must define success evidence before it runs.",
+    "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry.",
+    "The subject module must resolve to exactly one module recovery profile before any automatic repair.",
+    "The repair action must be allowed by both the failure class and the resolved module recovery profile.",
+    "A module profile marked IMMUTABLE_VALIDATE_ONLY may never be semantically rewritten automatically.",
+    "A module profile marked REGENERATE_DERIVED_ONLY may mutate only declared derived artifacts, never its authoritative source.",
+    "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
+    "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates."
+  ],
+  "forbiddenAutomaticRepairs": [
+    "FORCE_PUSH",
+    "HISTORY_REWRITE",
+    "DELETE_REPOSITORY",
+    "DELETE_AUTHORITATIVE_STATE_WITHOUT_VERIFIED_RESTORE",
+    "BYPASS_REQUIRED_REVIEW",
+    "BYPASS_HUMAN_GATE",
+    "EXPAND_EXECUTION_MANDATE",
+    "ACCEPT_RISK_FOR_HUMAN",
+    "MERGE_WITH_FAILED_REQUIRED_CHECKS",
+    "CHANGE_OPERATING_MODEL_OR_FACTORY_BINDING",
+    "CHANGE_SECURITY_OR_COMPLIANCE_POLICY",
+    "INVENT_MISSING_EVIDENCE",
+    "AUTO_REWRITE_AUTHORITATIVE_JOB_CONTRACT",
+    "AUTO_CHANGE_FACTORY_OR_OPERATING_MODEL_SEMANTICS",
+    "AUTO_COERCE_AUTHORITATIVE_STATE_TO_PASS_SCHEMA",
+    "AUTO_ELEVATE_PROVIDER_PERMISSION",
+    "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
+    "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS"
+  ],
+  "retryPolicy": {
+    "key": "failureFingerprint",
+    "exponentialBackoffConcept": true,
+    "hostSchedulingRequiredForDelayedRetry": true,
+    "defaultImmediateRetries": 0,
+    "maximumAutomaticAttemptsAcrossSameFingerprint": 2,
+    "resetOnlyWhen": "MATERIAL_INPUT_OR_EXTERNAL_STATE_CHANGED",
+    "rule": "Retry count is bounded by the lower of the failure-class budget and any operation-specific budget."
+  },
+  "repairPlanRequiredFields": [
+    "repairId",
+    "failureClass",
+    "failureFingerprint",
+    "moduleKey",
+    "moduleProfileId",
+    "moduleAuthorityType",
+    "moduleRepairability",
+    "subjectRef",
+    "proposedAction",
+    "authorityBasis",
+    "preStateRefs",
+    "successEvidenceRequirements",
+    "attemptNumber"
+  ],
+  "verification": {
+    "successRequires": [
+      "MODULE_PROFILE_STILL_MATCHES_SUBJECT_MODULE",
+      "AUTHORITATIVE_READBACK",
+      "EXPECTED_STATE_MATCH",
+      "NO_NEW_GUARD_VIOLATION",
+      "REPAIR_RECORD_PERSISTED"
+    ],
+    "onSuccess": "RESUME_FROM_VERIFIED_CHECKPOINT",
+    "onFailure": "RECLASSIFY_OR_ESCALATE",
+    "neverInferSuccessFrom": "ASSISTANT_TEXT_OR_INTENT"
+  },
+  "rollback": {
+    "useWhen": "REPAIR_CREATED_A_REVERSIBLE_EFFECT_AND_VERIFICATION_FAILED",
+    "requirements": [
+      "Rollback action was authorized before execution or is an explicit compensation allowed by the same mandate.",
+      "Rollback target is unambiguous.",
+      "Rollback can be verified through authoritative readback."
+    ],
+    "otherwise": "STOP_AND_ESCALATE"
+  },
+  "escalation": {
+    "toHumanWhen": [
+      "REQUIRES_HUMAN_DECISION",
+      "PERMISSION_OR_TOOL_MISSING",
+      "POLICY_OR_GUARD_VIOLATION",
+      "RETRY_BUDGET_EXHAUSTED",
+      "AMBIGUOUS_RESTORE_OR_ROLLBACK",
+      "REPAIR_WOULD_EXPAND_SCOPE_OR_AUTHORITY",
+      "HIGH_IMPACT_OR_IRREVERSIBLE_EFFECT"
+    ],
+    "messageStyle": "Concise: what failed, what SAFOR tried, current safe state, and the smallest HUMAN decision/action needed."
+  },
+  "moduleRecoveryModelRef": "module-self-healing-model.json",
+  "moduleRecoveryDispatch": {
+    "resolveOrder": [
+      "SUBJECT_EXPLICIT_MODULE_KEY",
+      "MASTER_ACTION_MODEL_REF_TO_MODULE_KEY",
+      "SCHEMA_OR_PACKAGE_REFERENCE_TO_MODULE_KEY",
+      "BUNDLE_INTEGRITY_MANIFEST_PATH_TO_MODULE_KEY"
+    ],
+    "noMatch": "STOP_AND_ESCALATE",
+    "multipleMatches": "STOP_AND_ESCALATE",
+    "actionIntersectionRule": "EXECUTABLE_REPAIR = failureClass.automaticRepair INTERSECT moduleProfile.automaticRepairs INTERSECT currentAuthority/providerRights",
+    "noAllowedAction": "ESCALATE_WITHOUT_MUTATION"
+  }
+}

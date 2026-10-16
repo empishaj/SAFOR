@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:dispatch-wave:0.9.0",
+  "title": "SAFOR Dispatch Wave 0.9.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "waveId",
+    "revision",
+    "status",
+    "candidateWorkItemRefs",
+    "selectedAssignments",
+    "leaseRefs",
+    "createdAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_DISPATCH_WAVE"
+    },
+    "schemaVersion": {
+      "const": "0.9.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "waveId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "status": {
+      "enum": [
+        "PLANNED",
+        "LEASING",
+        "DISPATCHING",
+        "RUNNING",
+        "COMPLETED",
+        "BLOCKED",
+        "RECONCILE_REQUIRED"
+      ]
+    },
+    "candidateWorkItemRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "selectedAssignments": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/assignment"
+      }
+    },
+    "leaseRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "assignment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "workItemRef",
+        "jobId",
+        "agentId",
+        "identityRevision",
+        "reason"
+      ],
+      "properties": {
+        "workItemRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jobId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agentId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identityRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

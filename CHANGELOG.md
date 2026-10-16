@@ -2,6 +2,26 @@
 
 All notable SAFOR product changes are documented here.
 
+## 0.9.0-rc.1 — 2026-10-17
+
+### Added
+- Module-wide Self-Healing with exact one-profile-per-embedded-module coverage.
+- Module Recovery Profile schema.
+- Recovery modes for immutable validation, verified restore, derived regeneration and external capability rebinding.
+- Dedicated module-aware failure classes SH-10 through SH-18.
+- Module/profile/authority/repairability fields in repair records.
+- Fail-closed recovery for self-healing control modules.
+- HUMAN module-health/recovery status surface.
+
+### Changed
+- Every embedded module and integrity-manifest entry is bound to a `selfHealingProfileId`.
+- Automatic repair is now the intersection of failure class, module profile, current authority/policy and actual provider rights.
+- Job, Scheduler, Package, Provider, Factory, Operating Model, Schema and Conformance recovery now have explicit safety boundaries.
+- Product schema/kernel contract version advanced to 0.9.0.
+
+### Product status
+This version is a **Release Candidate**. Module-wide Self-Healing end-to-end acceptance is required before GA.
+
 ## 0.8.0-rc.1 — 2026-10-17
 
 ### Added
