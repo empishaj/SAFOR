@@ -1,6 +1,6 @@
 # SAFOR Module-wide Self-Healing
 
-SAFOR v0.9 extends conservative self-healing to every embedded module.
+SAFOR v0.10 includes conservative self-healing to every embedded module.
 
 ## Core rule
 
