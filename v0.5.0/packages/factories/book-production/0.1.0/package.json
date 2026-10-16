@@ -352,6 +352,17 @@
       "required": true,
       "schemaRef": "schemas/output-record.schema.json",
       "rule": "Every persisted factory output must have a SAFOR output provenance record. LLM/provider/model/version values may only be recorded when actually exposed by the host."
+    },
+    "workspaceRequirements": {
+      "required": false,
+      "minimumProviderCapabilities": [],
+      "optionalExternalProviderCapabilities": [
+        "provider.artifact.read",
+        "provider.artifact.write",
+        "provider.history.read"
+      ],
+      "memoryOnlyAllowed": true,
+      "rule": "Book work may remain entirely inside SAFOR Memory when the HUMAN chooses that mode, or use an external versioned workspace when available."
     }
   }
 }
