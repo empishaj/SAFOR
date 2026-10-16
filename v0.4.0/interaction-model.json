@@ -1,8 +1,8 @@
 {
   "format": "SAF_INTERACTION_MODEL",
   "schemaVersion": "0.4.0",
-  "id": "SAF-INTERACTION-EXECUTIVE-CONSOLE",
-  "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAF-guided project primarily by selecting actions instead of composing commands.",
+  "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
+  "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
   "principles": {
     "menuFirst": true,
     "onePrimaryAction": true,
@@ -444,7 +444,7 @@
   },
   "initializationExperience": {
     "modelRef": "initialization-model.json",
-    "behavior": "Start automatically after SAF-MASTER load and guide the HUMAN one decision at a time.",
+    "behavior": "Start automatically after SAFOR-MASTER load and guide the HUMAN one decision at a time.",
     "steps": [
       {
         "id": "PROVIDER",
