@@ -17,7 +17,7 @@ Current target: **v0.4.0-rc.1**
 | Chat-native HUMAN interface policy | PASS |
 | Bounded self-healing | PASS |
 | Machine-readable validation | PASS |
-| CI validation | PASS when workflow is green |
+| CI validation | PASS on validated PR head |
 | Product repository slug without trailing punctuation | PASS |
 | Explicit distribution/license decision | OPEN |
 | GitHub end-to-end blank-chat acceptance run | OPEN |
@@ -26,6 +26,10 @@ Current target: **v0.4.0-rc.1**
 ## Maturity meaning
 
 **Release Candidate** means the architecture and distribution are internally coherent and machine-checkable. It does not mean every supported host/provider path has been empirically acceptance-tested.
+
+## Acceptance evidence
+
+The required GitHub/GitLab scenarios are defined in `ACCEPTANCE-TESTS.md` and must be retained with release evidence.
 
 ## General Availability definition
 
