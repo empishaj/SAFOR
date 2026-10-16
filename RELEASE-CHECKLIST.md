@@ -8,7 +8,7 @@
 - [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
-- [ ] `SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json` is rebuilt from canonical `v0.8.0/` source.
+- [ ] `SAFOR-MASTER-COMPLETE-v0.9.0-rc.1.json` is rebuilt from canonical `v0.9.0/` source.
 - [ ] `SAFOR-MASTER-COMPLETE.json` exactly matches the versioned release artifact.
 - [ ] All embedded module references resolve.
 - [ ] Runtime memory requirement is exactly `{OWNER}/safor-memory`.
@@ -17,6 +17,16 @@
 - [ ] Software/Website Factory contracts pass.
 - [ ] Book Factory contracts pass.
 - [ ] Self-healing safety invariants pass.
+- [ ] Every embedded module has exactly one recovery profile.
+- [ ] No recovery profile targets an unknown module key.
+- [ ] Every embedded module and integrity-manifest entry carries the matching selfHealingProfileId.
+- [ ] All module recovery profiles validate against the recovery-profile schema.
+- [ ] IMMUTABLE_VALIDATE_ONLY profiles cannot auto-rewrite semantics.
+- [ ] RESTORE_FROM_VERIFIED_SOURCE profiles require expected version/blob evidence.
+- [ ] REGENERATE_DERIVED_ONLY profiles mutate only declared derived artifacts.
+- [ ] REBIND_EXTERNAL_CAPABILITY profiles never elevate provider rights.
+- [ ] Self-healing controls fail closed when their own integrity cannot be proven.
+- [ ] Module-aware repair records include profile decision and verification evidence.
 - [ ] Chat-native-only UI policy passes.
 - [ ] Agent registry/identity/job/state/result schemas validate.
 - [ ] Agent workspace ownership boundaries validate.
@@ -42,6 +52,7 @@
 - [ ] Mutating results include provider-verifiable Git trace.
 - [ ] Acceptance scenarios I–K are recorded.
 - [ ] Canonical explicit Job Contract scenario L is recorded.
+- [ ] Module-wide Self-Healing scenario M is recorded.
 - [ ] No secrets or credentials exist in release files.
 - [ ] HUMAN has approved any change to license/distribution terms.
 
@@ -52,5 +63,6 @@
 - [ ] Agent Workspace end-to-end acceptance passes according to scenarios F–H.
 - [ ] Six-agent scheduling, conflict serialization and HUMAN-readable/Git-trace acceptance pass according to scenarios I–K.
 - [ ] Canonical explicit Job Contract acceptance passes according to scenario L.
+- [ ] Module-wide Self-Healing acceptance passes according to scenario M.
 - [ ] License/distribution decision is explicit.
 - [ ] Public repository slug is final and stable.
