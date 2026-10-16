@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.7.0",
-  "bundleVersion": "0.7.0-rc.1",
+  "schemaVersion": "0.8.0",
+  "bundleVersion": "0.8.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -57,7 +57,8 @@
     "selfHealingRule": "Use the embedded conservative self-healing model.",
     "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative.",
     "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
-    "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability."
+    "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
+    "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -75,6 +76,7 @@
     "interaction-model.json": "interaction",
     "self-healing-model.json": "selfHealing",
     "agent-workspace-model.json": "agentWorkspace",
+    "agent-job-contract-model.json": "agentJobContract",
     "multi-agent-scheduler-model.json": "multiAgentScheduler",
     "repository-policy.json": "repositoryPolicy",
     "package-registry.json": "packageRegistry",
@@ -99,33 +101,33 @@
     "schemas/scheduler-state.schema.json": "schemaSchedulerState",
     "schemas/dispatch-wave.schema.json": "schemaDispatchWave",
     "schemas/resource-lease.schema.json": "schemaResourceLease",
-    "providers/github/0.2.0/package.json": "providerGithub",
-    "providers/gitlab/0.2.0/package.json": "providerGitlab",
-    "packages/operating-models/saas-engineering/1.1.0/package.json": "operatingModelSaas",
-    "packages/operating-models/book-authoring/0.2.0/package.json": "operatingModelBook",
-    "packages/factories/software-delivery/1.1.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.2.0/package.json": "factoryBook"
+    "providers/github/0.3.0/package.json": "providerGithub",
+    "providers/gitlab/0.3.0/package.json": "providerGitlab",
+    "packages/operating-models/saas-engineering/1.2.0/package.json": "operatingModelSaas",
+    "packages/operating-models/book-authoring/0.3.0/package.json": "operatingModelBook",
+    "packages/factories/software-delivery/1.2.0/package.json": "factorySoftwareWebsite",
+    "packages/factories/book-production/0.3.0/package.json": "factoryBook"
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.7.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "4a9e0c476352ebcb0c37dc0342813407fc02b5f6"
+      "sourcePath": "v0.8.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "9d64fd4554e37942475cbbd37498b82c968f1fb1"
     },
     "initialization": {
-      "sourcePath": "v0.7.0/initialization-model.json",
-      "sourceBlobSha": "009b8d1f6b8e13f8fa5b0d2585ec81ea73e6c3c5"
+      "sourcePath": "v0.8.0/initialization-model.json",
+      "sourceBlobSha": "d940f68ea6a2e39a7654a4cb3e78ca164a4c80e3"
     },
     "interaction": {
-      "sourcePath": "v0.7.0/interaction-model.json",
-      "sourceBlobSha": "e2a4dc2e48d5656b4942feae339aaafa0ca61232"
+      "sourcePath": "v0.8.0/interaction-model.json",
+      "sourceBlobSha": "eb68d146dd5f912f69f9f73a90af1a1679190399"
     },
     "selfHealing": {
-      "sourcePath": "v0.7.0/self-healing-model.json",
-      "sourceBlobSha": "a778ed5c9f4bd6091394ff4269528654260e06e7"
+      "sourcePath": "v0.8.0/self-healing-model.json",
+      "sourceBlobSha": "d438ef05b731e935c610c58d60ec637c066064fe"
     },
     "agentWorkspace": {
-      "sourcePath": "v0.7.0/agent-workspace-model.json",
-      "sourceBlobSha": "d9ef17a1bf972d3ba7323918e130e3ae30de01a3"
+      "sourcePath": "v0.8.0/agent-workspace-model.json",
+      "sourceBlobSha": "9223332109778a869b05ac518dea98cf80d8bd24"
     },
     "repositoryPolicy": {
       "sourcePath": "v0.7.0/repository-policy.json",
@@ -250,17 +252,21 @@
     "schemaResourceLease": {
       "sourcePath": "v0.7.0/schemas/resource-lease.schema.json",
       "sourceBlobSha": "3b7a7fcec5f43f69225cabc95cfdc7ba37c58414"
+    },
+    "agentJobContract": {
+      "sourcePath": "v0.8.0/agent-job-contract-model.json",
+      "sourceBlobSha": "97aa4b704ba77fd2557c285de62dc1fcde4b02ec"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.7.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "4a9e0c476352ebcb0c37dc0342813407fc02b5f6",
+      "sourcePath": "v0.8.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "9d64fd4554e37942475cbbd37498b82c968f1fb1",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.7.0",
-        "kernelVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
+        "kernelVersion": "0.8.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
         "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -316,7 +322,11 @@
           "multiAgentScheduling": true,
           "conflictAwareParallelDispatch": true,
           "gitIsolatedAgentMutations": true,
-          "humanReadableAgentResults": true
+          "humanReadableAgentResults": true,
+          "canonicalExplicitAgentJobContract": true,
+          "explicitRoleAndSkillBindingPerJob": true,
+          "humanReadableAgentJobProjection": true,
+          "explicitJobAuthorizationAndReturnRoutes": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -341,6 +351,10 @@
               "responsibility": "MASTER-owned dependency, capacity, conflict, lease, fan-out/fan-in and parallel dispatch-wave orchestration across multiple agent actors."
             },
             {
+              "id": "AGENT_JOB_CONTRACT",
+              "responsibility": "Immutable, self-describing MASTER-issued execution contract binding job identity, package lineage, MASTER provenance, agent/role/skills, scope, immutable inputs, authorization, workspace, scheduling, output routes and verification."
+            },
+            {
               "id": "AGENT_WORKSPACE_PROTOCOL",
               "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
             },
@@ -360,7 +374,11 @@
             "MULTI_AGENT_SCHEDULER may dispatch only ATOMIC READY work whose dependency/join predicates are satisfied.",
             "Parallel dispatch requires explicit resource declarations, free agent capacity and a conflict-free lease set.",
             "Mutating agent work uses dedicated job branches; direct default-branch writes are forbidden unless a separately governed non-agent operation explicitly permits them.",
-            "Every agent result has both machine-readable JSON and a Git-persisted HUMAN-readable Markdown report."
+            "Every agent result has both machine-readable JSON and a Git-persisted HUMAN-readable Markdown report.",
+            "AGENT_JOB_CONTRACT JSON is authoritative; the paired Markdown job view is a derived HUMAN-readable projection.",
+            "Every dispatched agent job explicitly binds the role the agent must assume and every mandatory versioned skill it must apply.",
+            "Job permissions are an upper bound only and never create provider rights.",
+            "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve."
           ]
         },
         "packageSystem": {
@@ -772,9 +790,9 @@
             {
               "id": "E03",
               "operation": "DISPATCH_WORK_ITEM",
-              "purpose": "Issue a scoped work contract to the resolved actor. AGENT work must be dispatched through an active conflict-checked scheduler wave; copied prompts are not authoritative.",
+              "purpose": "Issue a scoped execution contract to the resolved actor. AGENT work must be materialized through the canonical Agent Job Contract and an active conflict-checked scheduler wave; copied prompts are not authoritative.",
               "domainNeutral": true,
-              "modelRef": "agent-workspace-model.json"
+              "modelRef": "agent-job-contract-model.json"
             },
             {
               "id": "E04",
@@ -846,10 +864,10 @@
             },
             {
               "id": "A02",
-              "operation": "DISPATCH_AGENT_JOB",
-              "purpose": "Write an immutable agent job contract into the assigned agent inbox, update the fixed MASTER-owned inbox index projection, and create MASTER-owned job lifecycle state after an active mandate covers the work.",
+              "operation": "MATERIALIZE_AND_DISPATCH_AGENT_JOB",
+              "purpose": "Create the canonical immutable job contract with explicit package/sequence lineage, MASTER provenance, assigned identity, role, skills, immutable inputs, granular authorization, workspace, scheduling, output return routes and verification requirements; render the HUMAN-readable job Markdown, read back both, then publish the job as READY.",
               "domainNeutral": true,
-              "modelRef": "agent-workspace-model.json"
+              "modelRef": "agent-job-contract-model.json"
             },
             {
               "id": "A03",
@@ -910,7 +928,7 @@
             {
               "id": "S06",
               "operation": "DISPATCH_PARALLEL_WAVE",
-              "purpose": "Materialize dedicated Git job workspaces and dispatch all successfully leased assignments through the Agent Workspace Protocol, then read back every dispatch artifact.",
+              "purpose": "Materialize dedicated Git job workspaces, canonical JSON+Markdown job contracts and dispatch all successfully leased assignments through the Agent Workspace Protocol; read back every dispatch artifact before READY.",
               "domainNeutral": true,
               "modelRef": "multi-agent-scheduler-model.json"
             },
@@ -1249,6 +1267,66 @@
           {
             "id": "INV-071",
             "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
+          },
+          {
+            "id": "INV-072",
+            "rule": "Every agent job has a globally unique immutable jobId, a HUMAN/Git-safe jobKey, packageId, workItemId and explicit plan/package/dispatch/attempt/rework sequence lineage."
+          },
+          {
+            "id": "INV-073",
+            "rule": "Every agent job records MASTER creation provenance including createdAt, issuedAt, masterId, masterVersion, masterRunId and masterStateRevision."
+          },
+          {
+            "id": "INV-074",
+            "rule": "Every agent job explicitly binds the target agentId and identityRevision plus the roleId/role definition the agent must assume for that job."
+          },
+          {
+            "id": "INV-075",
+            "rule": "Every mandatory job skill is explicit, versioned, described, includes execution instructions and is pinned to an immutable skill source/blob identity."
+          },
+          {
+            "id": "INV-076",
+            "rule": "All job inputs are read-only and pinned to immutable repository commit identities; path-scoped inputs pin blob identity when applicable."
+          },
+          {
+            "id": "INV-077",
+            "rule": "Job authorization explicitly separates provider capabilities and repository read/write/branch/commit/push/change-request/merge/deploy permissions. JSON authorization is only an upper bound and never grants provider rights."
+          },
+          {
+            "id": "INV-078",
+            "rule": "Every job declares machine result, HUMAN-readable result, evidence root and audit root before execution. The agent must not choose ad-hoc return locations."
+          },
+          {
+            "id": "INV-079",
+            "rule": "The canonical job JSON is authoritative and immutable after dispatch. Any scope, role, mandatory-skill or authorization expansion requires a new governed job/dispatch."
+          },
+          {
+            "id": "INV-080",
+            "rule": "Every canonical job has a MASTER-generated HUMAN-readable inbox/{jobId}.md projection whose blob SHA is pinned by the JSON contract and whose content may not expand the JSON contract."
+          },
+          {
+            "id": "INV-081",
+            "rule": "A job may become READY or enter inbox/index.json only after MASTER writes and provider-readbacks both job JSON and job Markdown and validates their binding."
+          },
+          {
+            "id": "INV-082",
+            "rule": "Rework never reuses a historical jobId. A new attempt receives a new jobId and may reference the superseded job through lineage."
+          },
+          {
+            "id": "INV-083",
+            "rule": "An agent must stop when mandate, identity revision, job supersession, resource lease, allowed write scope or required provider rights no longer satisfy the explicit job contract."
+          },
+          {
+            "id": "INV-084",
+            "rule": "The assigned agent may not change its job role, substitute a mandatory skill, delegate the job, mutate the job contract or expand its own authorization."
+          },
+          {
+            "id": "INV-085",
+            "rule": "MASTER acceptance evaluates the explicit verificationContract from the job; result submission and agent self-check never constitute acceptance."
+          },
+          {
+            "id": "INV-086",
+            "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
           }
         ],
         "evidencePolicy": {
@@ -1306,14 +1384,14 @@
         "compatibility": {
           "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.7.0 schemas."
+          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.8.0 schemas."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.7.0",
+            "root": "v0.8.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1366,16 +1444,17 @@
         "initializationModelRef": "initialization-model.json",
         "selfHealingModelRef": "self-healing-model.json",
         "agentWorkspaceModelRef": "agent-workspace-model.json",
-        "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json"
+        "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
+        "agentJobContractModelRef": "agent-job-contract-model.json"
       }
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.7.0/initialization-model.json",
-      "sourceBlobSha": "009b8d1f6b8e13f8fa5b0d2585ec81ea73e6c3c5",
+      "sourcePath": "v0.8.0/initialization-model.json",
+      "sourceBlobSha": "d940f68ea6a2e39a7654a4cb3e78ca164a4c80e3",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1753,11 +1832,11 @@
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.7.0/interaction-model.json",
-      "sourceBlobSha": "e2a4dc2e48d5656b4942feae339aaafa0ca61232",
+      "sourcePath": "v0.8.0/interaction-model.json",
+      "sourceBlobSha": "eb68d146dd5f912f69f9f73a90af1a1679190399",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -2427,11 +2506,11 @@
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.7.0/self-healing-model.json",
-      "sourceBlobSha": "a778ed5c9f4bd6091394ff4269528654260e06e7",
+      "sourcePath": "v0.8.0/self-healing-model.json",
+      "sourceBlobSha": "d438ef05b731e935c610c58d60ec637c066064fe",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2638,11 +2717,11 @@
     },
     "agentWorkspace": {
       "key": "agentWorkspace",
-      "sourcePath": "v0.7.0/agent-workspace-model.json",
-      "sourceBlobSha": "d9ef17a1bf972d3ba7323918e130e3ae30de01a3",
+      "sourcePath": "v0.8.0/agent-workspace-model.json",
+      "sourceBlobSha": "9223332109778a869b05ac518dea98cf80d8bd24",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-        "schemaVersion": "0.7.0",
+        "schemaVersion": "0.8.0",
         "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
         "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
         "topology": {
@@ -2664,7 +2743,8 @@
           "agentEvidenceRoot": "agents/{agentId}/evidence/{jobId}/",
           "masterJobState": "master/jobs/{jobId}.json",
           "inboxIndex": "agents/{agentId}/inbox/index.json",
-          "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md"
+          "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md",
+          "jobHumanReadableProjection": "agents/{agentId}/inbox/{jobId}.md"
         },
         "ownership": {
           "MASTER_ONLY": [
@@ -2672,6 +2752,7 @@
             "agents/{agentId}/identity.json",
             "agents/{agentId}/inbox/index.json",
             "agents/{agentId}/inbox/{jobId}.json",
+            "agents/{agentId}/inbox/{jobId}.md",
             "master/jobs/{jobId}.json"
           ],
           "AGENT_ONLY": [
@@ -2709,9 +2790,11 @@
             "LOAD_AGENT_STATE",
             "LOAD_INBOX_INDEX",
             "SELECT_DISCOVERABLE_JOB",
-            "READ_JOB_CONTRACT",
+            "READ_AUTHORITATIVE_JOB_JSON",
+            "VERIFY_JOB_JSON_BLOB",
+            "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
             "READ_MASTER_JOB_STATE",
-            "VERIFY_JOB_ASSIGNMENT_AND_MANDATE",
+            "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
             "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
             "EXECUTE_ONLY_CLAIMED_JOB",
             "SUBMIT_RESULT_AND_EVIDENCE"
@@ -2722,15 +2805,19 @@
           "eligibleWhen": [
             "job is discoverable through the current MASTER-owned inbox index",
             "identity.status == ACTIVE",
-            "job.assignedAgentId == identity.agentId",
-            "job.assignedIdentityRevision == identity.identityRevision",
-            "job.dispatchState == READY",
+            "job.assignment.agentId == identity.agentId",
+            "job.assignment.identityRevision == identity.identityRevision",
+            "job.identity.immutableAfterDispatch == true",
+            "job.scheduling.dispatchState == READY",
             "masterJobState.lifecycleStatus is claimable for the current dispatch (READY or REWORK_READY)",
-            "referenced execution mandate is active and covers scope",
-            "actual provider rights cover required operations",
-            "job.dispatchWaveRef refers to an active MASTER dispatch wave",
-            "all job.resourceLeaseRefs are ACTIVE and assigned to this job/agent",
-            "all mutating gitWorkspaces exist on the declared dedicated branches at the declared immutable base commits"
+            "job.provenance.mandateRef and job.authorization.authorityBasis.mandateRef resolve to the same active mandate",
+            "actual provider rights cover every operation allowed by job.authorization",
+            "job.scheduling.dispatchWaveRef refers to an active MASTER dispatch wave",
+            "all job.scheduling.resourceLeaseRefs are ACTIVE and assigned to this job/agent",
+            "all mutating job.workspace.gitWorkspaces exist on the declared dedicated branches at declared immutable base commits",
+            "all mandatory job.skills are readable at their pinned blob identities",
+            "job.roleContract role is compatible with the persistent identity and current assignment",
+            "job.humanReadableProjection blob matches provider readback"
           ],
           "atomicity": "Claim is written through optimistic concurrency on agents/{agentId}/state.json using the provider-observed current revision/blob identity. Concurrent stale claims must fail and reconcile.",
           "masterObservation": "A claim is not authoritative for orchestration until MASTER reads back the agent state and advances master/jobs/{jobId}.json from READY to CLAIMED."
@@ -2746,7 +2833,11 @@
           "directDefaultBranchMutationForbidden": true,
           "agentMayWriteOnlyDeclaredGitWorkspaces": true,
           "crossJobBranchMutationForbidden": true,
-          "resourceLeaseRequiredForMutation": true
+          "resourceLeaseRequiredForMutation": true,
+          "roleSwitchForbidden": true,
+          "skillSubstitutionForbiddenWithoutContractChange": true,
+          "authorizationRule": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW",
+          "jobHumanProjectionRule": "The Markdown job view is derived from the authoritative JSON and may not expand scope, role, skills, authorization or outputs."
         },
         "resultProtocol": {
           "submission": "Agent writes the machine-readable outbox result, the mandatory HUMAN-readable Markdown result, referenced evidence and Git trace, then sets its local state to RESULT_SUBMITTED.",
@@ -2838,12 +2929,37 @@
           "mandatoryVerification": [
             "READ_REFERENCED_JOB_CONTRACT",
             "VERIFY_JOB_BLOB_SHA",
+            "VERIFY_HUMAN_JOB_REF_AND_BLOB_SHA",
             "READ_MASTER_JOB_STATE",
             "VERIFY_MASTER_LIFECYCLE_IS_CLAIMABLE",
             "VERIFY_IDENTITY_AND_DISPATCH_REVISION"
           ],
           "staleIndexRule": "The index is only a discovery projection. If an entry conflicts with the job contract or MASTER job state, the authoritative artifacts win and the agent must not claim from the stale entry.",
           "updateRule": "MASTER updates the index with revision-controlled writes and provider readback whenever jobs become discoverable, withdrawn, superseded or accepted."
+        },
+        "jobContractModelRef": "agent-job-contract-model.json",
+        "humanJobContract": {
+          "format": "MARKDOWN",
+          "path": "agents/{agentId}/inbox/{jobId}.md",
+          "authority": "NON_AUTHORITATIVE_PROJECTION",
+          "generatedFrom": "agents/{agentId}/inbox/{jobId}.json",
+          "requiredSections": [
+            "JOB_IDENTITY",
+            "PACKAGE_AND_SEQUENCE",
+            "MASTER_PROVENANCE",
+            "ASSIGNMENT",
+            "ROLE",
+            "SKILLS",
+            "TASK",
+            "DEPENDENCIES_AND_INPUTS",
+            "AUTHORIZATION",
+            "WORKSPACE_AND_GIT",
+            "SCHEDULING",
+            "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
+            "VERIFICATION_AND_REVIEW",
+            "CONSTRAINTS_AND_STOP_CONDITIONS"
+          ],
+          "publicationRule": "MASTER writes JSON and Markdown, verifies both by provider readback, then and only then marks the job READY and exposes it through inbox/index.json."
         }
       }
     },
@@ -9074,6 +9190,104 @@
             "type": "string",
             "minLength": 1
           }
+        }
+      }
+    },
+    "agentJobContract": {
+      "key": "agentJobContract",
+      "sourcePath": "v0.8.0/agent-job-contract-model.json",
+      "sourceBlobSha": "97aa4b704ba77fd2557c285de62dc1fcde4b02ec",
+      "content": {
+        "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
+        "schemaVersion": "0.8.0",
+        "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT",
+        "purpose": "Define the immutable, self-describing execution contract issued by MASTER to one persistent agent identity, plus its mandatory HUMAN-readable Markdown projection.",
+        "authority": {
+          "authoritativeArtifact": "agents/{agentId}/inbox/{jobId}.json",
+          "humanProjection": "agents/{agentId}/inbox/{jobId}.md",
+          "rule": "The JSON contract is authoritative. The Markdown file is a derived HUMAN-readable projection and may never override or expand the JSON contract."
+        },
+        "creationProtocol": [
+          "DERIVE_JOB_FROM_APPROVED_ATOMIC_WORK_ITEM",
+          "ALLOCATE_GLOBALLY_UNIQUE_JOB_ID_AND_HUMAN_JOB_KEY",
+          "BIND_PACKAGE_WORK_ITEM_AND_SEQUENCE_LINEAGE",
+          "CAPTURE_MASTER_PROVENANCE_AND_TIMESTAMP",
+          "BIND_AGENT_IDENTITY_REVISION",
+          "BIND_EXPLICIT_ROLE_CONTRACT",
+          "BIND_VERSIONED_SKILL_CONTRACTS",
+          "PIN_IMMUTABLE_INPUTS",
+          "SNAPSHOT_AUTHORIZATION_RESOURCE_ACCESS_AND_GIT_WORKSPACES",
+          "BIND_DISPATCH_WAVE_AND_RESOURCE_LEASES",
+          "DECLARE_MACHINE_HUMAN_EVIDENCE_AND_AUDIT_RETURN_TARGETS",
+          "DECLARE_ACCEPTANCE_REVIEW_AND_EVIDENCE_REQUIREMENTS",
+          "RENDER_HUMAN_JOB_MARKDOWN",
+          "COMPUTE_HUMAN_PROJECTION_BLOB_SHA",
+          "WRITE_JSON_AND_MARKDOWN",
+          "PROVIDER_READBACK_BOTH_ARTIFACTS",
+          "ONLY_THEN_MARK_MASTER_JOB_READY_AND_PUBLISH_INBOX_INDEX"
+        ],
+        "identifierContract": {
+          "jobId": "UUIDv7 preferred and required by the v0.8 schema for time-ordered globally unique job identity.",
+          "jobKey": "Deterministic HUMAN/Git-safe operational key. It is not the authoritative identity.",
+          "packageId": "Stable identifier of the originating approved work package.",
+          "workItemId": "Stable identifier of the atomic execution unit.",
+          "sequenceDimensions": [
+            "planSequence",
+            "packageSequence",
+            "dispatchSequence",
+            "attempt",
+            "reworkCycle"
+          ],
+          "noReuse": "A rework attempt receives a new jobId. Historical job IDs are never reused."
+        },
+        "roleAndSkillContract": {
+          "roleMeaning": "The role defines who the agent must act as for this job: mission, responsibilities, decision boundaries and prohibited role substitutions.",
+          "skillMeaning": "Skills define how the assigned role performs the job. Every mandatory skill is versioned, described and pinned to an immutable source reference.",
+          "noImplicitRole": "The assigned role must be present in the job even when it also exists in the persistent agent identity.",
+          "noImplicitSkill": "A required skill may not exist only in chat memory; it must be explicit in the job contract.",
+          "skillSourceRule": "MASTER may bind only skills resolved from authoritative project/package artifacts or other HUMAN-approved immutable sources. It must not invent a skill source or fabricate skill evidence.",
+          "skillSelfContainedRule": "The job repeats the skill description and execution instructions so the agent can execute without relying on hidden chat memory, while skillRef + skillBlobSha retain provenance."
+        },
+        "authorizationSemantics": {
+          "jobPermissionIsUpperBound": true,
+          "actualProviderRightsRemainAuthoritative": true,
+          "executionPredicate": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW",
+          "noJsonPermissionGrant": true,
+          "repositoryRightsAreExplicit": true,
+          "pathRightsAreExplicit": true,
+          "branchRightsAreExplicit": true,
+          "mergeDeployRightsAreExplicit": true
+        },
+        "humanProjectionContract": {
+          "format": "MARKDOWN",
+          "requiredSections": [
+            "JOB_IDENTITY",
+            "PACKAGE_AND_SEQUENCE",
+            "MASTER_PROVENANCE",
+            "ASSIGNMENT",
+            "ROLE",
+            "SKILLS",
+            "TASK",
+            "DEPENDENCIES_AND_INPUTS",
+            "AUTHORIZATION",
+            "WORKSPACE_AND_GIT",
+            "SCHEDULING",
+            "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
+            "VERIFICATION_AND_REVIEW",
+            "CONSTRAINTS_AND_STOP_CONDITIONS"
+          ],
+          "generatedOnly": true,
+          "mustMatchJson": true,
+          "jsonPinsMarkdownBlob": true,
+          "providerReadbackRequiredBeforeReady": true
+        },
+        "immutability": {
+          "afterDispatch": true,
+          "scopeChange": "NEW_DISPATCH_REVISION_OR_SUPERSEDING_JOB",
+          "roleChange": "NEW_JOB",
+          "skillChange": "NEW_JOB_OR_PRE_DISPATCH_REBUILD",
+          "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB",
+          "directAgentMutationForbidden": true
         }
       }
     }
