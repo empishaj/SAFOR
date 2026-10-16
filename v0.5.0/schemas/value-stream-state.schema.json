@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:value-stream-state:0.4.0",
+  "title": "SAFOR Value Stream State 0.4.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "factoryBinding",
+    "valueStreamId",
+    "revision",
+    "objects",
+    "relations",
+    "workItems",
+    "outcomes"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_VALUE_STREAM_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.4.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "factoryBinding": {
+      "$ref": "#/$defs/packageBinding"
+    },
+    "valueStreamId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/object"
+      }
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/relation"
+      }
+    },
+    "workItems": {
+      "type": "array",
+      "items": {
+        "$ref": "work-item.schema.json"
+      }
+    },
+    "outcomes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/outcome"
+      }
+    }
+  },
+  "$defs": {
+    "packageBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "version",
+        "snapshotRef"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string"
+        },
+        "version": {
+          "type": "string"
+        },
+        "snapshotRef": {
+          "type": "string"
+        }
+      }
+    },
+    "object": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "type",
+        "status",
+        "artifactRef"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "type": {
+          "type": "string",
+          "description": "Factory-defined domain artifact/business-object type."
+        },
+        "status": {
+          "type": "string"
+        },
+        "artifactRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "relation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "from",
+        "to"
+      ],
+      "properties": {
+        "type": {
+          "type": "string"
+        },
+        "from": {
+          "type": "string"
+        },
+        "to": {
+          "type": "string"
+        }
+      }
+    },
+    "outcome": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "definition",
+        "status",
+        "evidenceRefs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "definition": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "NOT_EVALUATED",
+            "VALUE_SUPPORTED",
+            "VALUE_NOT_DEMONSTRATED",
+            "VALUE_UNCLEAR"
+          ]
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
