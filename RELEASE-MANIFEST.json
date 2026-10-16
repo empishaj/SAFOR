@@ -3,15 +3,19 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.4.0-rc.1",
+  "version": "0.5.0-rc.1",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
-  "distributable": "SAFOR-MASTER-COMPLETE.json",
+  "sourceRoot": "v0.5.0",
+  "distributable": "SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json",
+  "latestAlias": "SAFOR-MASTER-COMPLETE.json",
+  "previousVersion": "0.4.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
     "BOOK"
   ],
+  "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
   "gaBlockers": [
     "HUMAN_LICENSE_DECISION",
