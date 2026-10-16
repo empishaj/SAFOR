@@ -61,7 +61,11 @@
     "canonicalExplicitAgentJobContract": true,
     "explicitRoleAndSkillBindingPerJob": true,
     "humanReadableAgentJobProjection": true,
-    "explicitJobAuthorizationAndReturnRoutes": true
+    "explicitJobAuthorizationAndReturnRoutes": true,
+    "moduleWideSelfHealing": true,
+    "exactRecoveryProfileCoverage": true,
+    "failClosedRecoveryControl": true,
+    "noSemanticAutoRewrite": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -94,6 +98,10 @@
         "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
       },
       {
+        "id": "MODULE_SELF_HEALING",
+        "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
+      },
+      {
         "id": "PROVIDER_ADAPTER",
         "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
       }
@@ -113,7 +121,11 @@
       "AGENT_JOB_CONTRACT JSON is authoritative; the paired Markdown job view is a derived HUMAN-readable projection.",
       "Every dispatched agent job explicitly binds the role the agent must assume and every mandatory versioned skill it must apply.",
       "Job permissions are an upper bound only and never create provider rights.",
-      "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve."
+      "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve.",
+      "Every embedded module must resolve to exactly one valid module recovery profile.",
+      "SELF_HEALING executes only the intersection of failure-class policy, module recovery profile, active authority and actual provider rights.",
+      "Authoritative immutable modules are never heuristically rewritten; derived artifacts may be regenerated only from verified authoritative sources.",
+      "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops."
     ]
   },
   "packageSystem": {
@@ -295,7 +307,8 @@
     "agentInboxIndex": "schemas/agent-inbox-index.schema.json",
     "schedulerState": "schemas/scheduler-state.schema.json",
     "dispatchWave": "schemas/dispatch-wave.schema.json",
-    "resourceLease": "schemas/resource-lease.schema.json"
+    "resourceLease": "schemas/resource-lease.schema.json",
+    "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json"
   },
   "controlPlane": {
     "startActionId": "K01",
@@ -563,31 +576,31 @@
       },
       {
         "id": "H01",
-        "operation": "DETECT_AND_CLASSIFY_FAILURE",
-        "purpose": "Detect a recoverable failure, derive its failure fingerprint and classify it using the bound self-healing model.",
+        "operation": "DETECT_CLASSIFY_AND_RESOLVE_MODULE_FAILURE",
+        "purpose": "Detect failure, derive fingerprint, classify it, resolve the affected embedded module and load its unique module recovery profile.",
         "domainNeutral": true,
-        "modelRef": "self-healing-model.json"
+        "modelRef": "module-self-healing-model.json"
       },
       {
         "id": "H02",
-        "operation": "CHECK_AND_PLAN_REPAIR",
-        "purpose": "Verify repair eligibility, current mandate, provider capabilities, retry budget and required success evidence before any repair mutation.",
+        "operation": "CHECK_AND_PLAN_PROFILE_CONSTRAINED_REPAIR",
+        "purpose": "Intersect failure-class repair policy with module profile repairability, active mandate/policy, retry budget and actual provider rights before any mutation.",
         "domainNeutral": true,
         "modelRef": "self-healing-model.json"
       },
       {
         "id": "H03",
-        "operation": "EXECUTE_BOUNDED_REPAIR",
-        "purpose": "Execute only a pre-authorized, non-destructive repair allowed by the self-healing model. Unknown external effects reconcile before retry.",
+        "operation": "EXECUTE_PROFILE_CONSTRAINED_REPAIR",
+        "purpose": "Execute only the repair allowed by the resolved module profile: validate/restore verified source, regenerate declared derived artifacts, or rebind external capabilities. Semantic invention is forbidden.",
         "domainNeutral": true,
-        "modelRef": "self-healing-model.json"
+        "modelRef": "module-self-healing-model.json"
       },
       {
         "id": "H04",
-        "operation": "VERIFY_REPAIR_AND_RESUME",
-        "purpose": "Read back authoritative state, verify expected recovery evidence and either resume from the last verified checkpoint or escalate to the HUMAN.",
+        "operation": "VERIFY_MODULE_REPAIR_AND_RESUME",
+        "purpose": "Provider-readback the repaired module/artifact, revalidate profile/integrity expectations, persist the module-aware repair record and resume only from a verified checkpoint.",
         "domainNeutral": true,
-        "modelRef": "self-healing-model.json"
+        "modelRef": "module-self-healing-model.json"
       },
       {
         "id": "A01",
@@ -1062,6 +1075,74 @@
     {
       "id": "INV-086",
       "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
+    },
+    {
+      "id": "INV-087",
+      "rule": "Every embedded SAFOR module must have exactly one valid recovery profile in module-self-healing-model.json; unprofiled or multiply-profiled modules invalidate the distribution."
+    },
+    {
+      "id": "INV-088",
+      "rule": "Each embedded module and integrity-manifest entry must reference its exact recovery profile ID."
+    },
+    {
+      "id": "INV-089",
+      "rule": "A module repair action is executable only when allowed by the failure class, the resolved module recovery profile, current SAFOR authority/policy and actual provider rights."
+    },
+    {
+      "id": "INV-090",
+      "rule": "IMMUTABLE_VALIDATE_ONLY modules may never be semantically rewritten by automatic recovery; SAFOR may only verify/reload the expected pinned blob or stop/escalate."
+    },
+    {
+      "id": "INV-091",
+      "rule": "RESTORE_FROM_VERIFIED_SOURCE modules may be restored only from a source whose expected version/blob identity is independently verified."
+    },
+    {
+      "id": "INV-092",
+      "rule": "REGENERATE_DERIVED_ONLY modules may mutate only declared derived artifacts and must preserve their authoritative source unchanged."
+    },
+    {
+      "id": "INV-093",
+      "rule": "REBIND_EXTERNAL_CAPABILITY recovery may refresh/reobserve provider capabilities but must never grant, fabricate or elevate provider permissions."
+    },
+    {
+      "id": "INV-094",
+      "rule": "Unknown external effects always reconcile before retry or lease/resource reuse, regardless of the module profile."
+    },
+    {
+      "id": "INV-095",
+      "rule": "Every module repair persists moduleKey, moduleProfileId, authority type, repairability, pre-state references, selected repair action and verification evidence."
+    },
+    {
+      "id": "INV-096",
+      "rule": "Repair success requires authoritative readback plus the module-profile success predicate; assistant narration or intended action is never evidence of recovery."
+    },
+    {
+      "id": "INV-097",
+      "rule": "The self-healing model, module-self-healing model and recovery-profile schema are fail-closed recovery controls. If their expected integrity cannot be proven, automatic recovery stops."
+    },
+    {
+      "id": "INV-098",
+      "rule": "Canonical agent job recovery may regenerate job.md or other declared projections from valid job.json, but may never automatically rewrite a dispatched authoritative job.json to change role, skill, scope, input or authorization semantics."
+    },
+    {
+      "id": "INV-099",
+      "rule": "Factory and Operating Model recovery may restore pinned package blobs and revalidate bindings, but may never automatically alter workflow semantics, decision rights, mandates or separation-of-duties policy."
+    },
+    {
+      "id": "INV-100",
+      "rule": "Schema recovery may restore the expected schema and revalidate subjects; an authoritative subject must never be automatically coerced merely to satisfy schema validation."
+    },
+    {
+      "id": "INV-101",
+      "rule": "Scheduler recovery may rebuild derived READY/capacity/wave views, but resource lease expiry or uncertain job effects require reconciliation before reassignment."
+    },
+    {
+      "id": "INV-102",
+      "rule": "Provider-adapter recovery may retry idempotent reads, refresh revisions and rebind observed capabilities; missing required rights remain a blocker or HUMAN escalation."
+    },
+    {
+      "id": "INV-103",
+      "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS."
     }
   ],
   "evidencePolicy": {
@@ -1180,5 +1261,6 @@
   "selfHealingModelRef": "self-healing-model.json",
   "agentWorkspaceModelRef": "agent-workspace-model.json",
   "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
-  "agentJobContractModelRef": "agent-job-contract-model.json"
+  "agentJobContractModelRef": "agent-job-contract-model.json",
+  "moduleSelfHealingModelRef": "module-self-healing-model.json"
 }
