@@ -8,7 +8,8 @@
 - [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
-- [ ] `SAFOR-MASTER-COMPLETE.json` is rebuilt from canonical `empishaj/SAFOR` source.
+- [ ] `SAFOR-MASTER-COMPLETE-v0.5.0-rc.1.json` is rebuilt from canonical `v0.5.0/` source.
+- [ ] `SAFOR-MASTER-COMPLETE.json` exactly matches the versioned release artifact.
 - [ ] All embedded module references resolve.
 - [ ] Runtime memory requirement is exactly `{OWNER}/safor-memory`.
 - [ ] Missing/read-only `safor-memory` still results in STOP.
