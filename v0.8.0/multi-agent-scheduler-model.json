@@ -72,7 +72,25 @@
       "agent is not prohibited by separation-of-duties rules",
       "actual provider rights cover the proposed job"
     ],
-    "reuseRule": "Prefer already-registered eligible agents; do not create a new agent identity merely to increase parallelism without HUMAN approval."
+    "reuseRule": "Prefer already-registered eligible agents; do not create a new agent identity merely to increase parallelism without HUMAN approval.",
+    "jobMaterializationRequirements": [
+      "globally unique UUIDv7 jobId",
+      "package/work-item/sequence lineage",
+      "MASTER provenance and timestamps",
+      "agent identity revision",
+      "explicit role contract",
+      "versioned mandatory skills with immutable refs",
+      "immutable inputs",
+      "granular authorization",
+      "resource snapshot and dedicated Git workspaces",
+      "dispatch wave/resource leases",
+      "predeclared result/evidence/audit return routes",
+      "verification/review contract",
+      "HUMAN-readable Markdown job projection"
+    ],
+    "roleBindingRule": "Scheduler assignment is incomplete until the canonical job explicitly binds the roleId the selected agent must assume. Persistent agent identity alone is insufficient.",
+    "skillBindingRule": "Every mandatory skill required for execution is explicitly embedded as a versioned, described, immutable-reference skill contract in the job.",
+    "returnRouteRule": "All result, HUMAN report, evidence and audit destinations are fixed before dispatch."
   },
   "waveAlgorithm": [
     "LOAD_AUTHORITATIVE_VALUE_STREAM_AND_MASTER_JOB_STATES",
@@ -83,7 +101,10 @@
     "BUILD_MAXIMAL_SAFE_CONFLICT_FREE_SET_WITHIN_CAPACITY",
     "CREATE_RESOURCE_LEASES_WITH_OPTIMISTIC_CONCURRENCY",
     "MATERIALIZE_DEDICATED_JOB_BRANCHES_FOR_MUTATING_JOBS",
-    "DISPATCH_AGENT_JOBS",
+    "BUILD_CANONICAL_JOB_JSON_FROM_WORK_ITEM_ROLE_SKILLS_RIGHTS_AND_RETURN_CONTRACT",
+    "RENDER_HUMAN_JOB_MARKDOWN_AND_PIN_BLOB",
+    "WRITE_AND_READBACK_JSON_AND_MARKDOWN",
+    "DISPATCH_AGENT_JOBS_AND_UPDATE_INBOX_INDEX",
     "READ_BACK_INDEX_JOB_STATE_BRANCH_AND_LEASES",
     "PERSIST_DISPATCH_WAVE"
   ],
@@ -131,5 +152,6 @@
       "reworkQueue"
     ],
     "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
-  }
+  },
+  "jobContractModelRef": "agent-job-contract-model.json"
 }
