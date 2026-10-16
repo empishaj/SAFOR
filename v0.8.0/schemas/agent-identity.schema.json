@@ -120,19 +120,21 @@
         },
         "onActivation": {
           "type": "array",
-          "minItems": 7,
+          "minItems": 10,
           "items": {
             "enum": [
               "LOAD_IDENTITY",
               "LOAD_AGENT_STATE",
               "LOAD_INBOX_INDEX",
               "SELECT_DISCOVERABLE_JOB",
-              "READ_JOB_CONTRACT",
+              "READ_AUTHORITATIVE_JOB_JSON",
+              "VERIFY_JOB_JSON_BLOB",
+              "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
               "READ_MASTER_JOB_STATE",
-              "VERIFY_ELIGIBLE_JOB",
+              "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
               "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
-              "EXECUTE_CLAIMED_JOB",
-              "SUBMIT_RESULT"
+              "EXECUTE_ONLY_CLAIMED_JOB",
+              "SUBMIT_RESULT_AND_EVIDENCE"
             ]
           }
         },
