@@ -97,12 +97,13 @@
     "packages/operating-models/saas-engineering/1.0.0/package.json": "operatingModelSaas",
     "packages/operating-models/book-authoring/0.1.0/package.json": "operatingModelBook",
     "packages/factories/software-delivery/1.0.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.1.0/package.json": "factoryBook"
+    "packages/factories/book-production/0.1.0/package.json": "factoryBook",
+    "schemas/agent-inbox-index.schema.json": "schemaAgentInboxIndex"
   },
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.6.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "0a755ad6751737d1ef46352eb5c86642d0b0b30f"
+      "sourceBlobSha": "23a0bfd6a78cf5c683e396671a1adc7ad09f3443"
     },
     "initialization": {
       "sourcePath": "v0.6.0/initialization-model.json",
@@ -118,11 +119,11 @@
     },
     "agentWorkspace": {
       "sourcePath": "v0.6.0/agent-workspace-model.json",
-      "sourceBlobSha": "7c9bb66cb72b5a0cc0a4bfd7c3604e14c60b5a59"
+      "sourceBlobSha": "bc80e35707dcbd7284dc3c7efc4d056b7842919c"
     },
     "repositoryPolicy": {
       "sourcePath": "v0.6.0/repository-policy.json",
-      "sourceBlobSha": "8da8af31d3dc778dbdbfceae53549787b5054a5d"
+      "sourceBlobSha": "5bd9be92c22ba11677a17246a83a49270ae72496"
     },
     "packageRegistry": {
       "sourcePath": "v0.6.0/package-registry.json",
@@ -202,7 +203,7 @@
     },
     "schemaAgentIdentity": {
       "sourcePath": "v0.6.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "cab29047828b301ba12460015b83609f238550e4"
+      "sourceBlobSha": "53b09341a0cc490868096863a9fc3df0093c18be"
     },
     "schemaAgentState": {
       "sourcePath": "v0.6.0/schemas/agent-state.schema.json",
@@ -222,14 +223,18 @@
     },
     "conformance": {
       "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "2e9b265a28ef7d109be43f6193a0815cbb95bd7f"
+      "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7"
+    },
+    "schemaAgentInboxIndex": {
+      "sourcePath": "v0.6.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "bf50a3040f1bc8ab2ed10cc4d2518a474973ed5a"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.6.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "0a755ad6751737d1ef46352eb5c86642d0b0b30f",
+      "sourceBlobSha": "23a0bfd6a78cf5c683e396671a1adc7ad09f3443",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.6.0",
@@ -394,7 +399,8 @@
             "outbox": "agents/{agentId}/outbox/",
             "evidence": "agents/{agentId}/evidence/",
             "audit": "agents/{agentId}/audit/",
-            "masterJobState": "master/jobs/{jobId}.json"
+            "masterJobState": "master/jobs/{jobId}.json",
+            "inboxIndex": "agents/{agentId}/inbox/index.json"
           }
         },
         "providerCapabilityVocabulary": [
@@ -489,7 +495,8 @@
           "agentState": "schemas/agent-state.schema.json",
           "agentJob": "schemas/agent-job.schema.json",
           "agentJobState": "schemas/agent-job-state.schema.json",
-          "agentResult": "schemas/agent-result.schema.json"
+          "agentResult": "schemas/agent-result.schema.json",
+          "agentInboxIndex": "schemas/agent-inbox-index.schema.json"
         },
         "controlPlane": {
           "startActionId": "K01",
@@ -782,7 +789,7 @@
             {
               "id": "A02",
               "operation": "DISPATCH_AGENT_JOB",
-              "purpose": "Write an immutable agent job contract into the assigned agent inbox and create MASTER-owned job lifecycle state after an active mandate covers the work.",
+              "purpose": "Write an immutable agent job contract into the assigned agent inbox, update the fixed MASTER-owned inbox index projection, and create MASTER-owned job lifecycle state after an active mandate covers the work.",
               "domainNeutral": true,
               "modelRef": "agent-workspace-model.json"
             },
@@ -1034,7 +1041,7 @@
           },
           {
             "id": "INV-046",
-            "rule": "Agent identity, agent registry, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them."
+            "rule": "Agent identity, agent registry, agent inbox index, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them."
           },
           {
             "id": "INV-047",
@@ -1071,6 +1078,10 @@
           {
             "id": "INV-055",
             "rule": "A reviewer requirement continues to enforce separation of duties across agent identities; the performing agent may not approve its own contribution unless an explicit exception authority permits it."
+          },
+          {
+            "id": "INV-056",
+            "rule": "Agent job discovery must use the fixed MASTER-owned agents/{agentId}/inbox/index.json projection. The index is never authoritative lifecycle state; before claim the agent must read the referenced immutable job contract and MASTER-owned master/jobs/{jobId}.json. Repository directory enumeration is not required for correctness."
           }
         ],
         "evidencePolicy": {
@@ -2422,7 +2433,7 @@
     "agentWorkspace": {
       "key": "agentWorkspace",
       "sourcePath": "v0.6.0/agent-workspace-model.json",
-      "sourceBlobSha": "7c9bb66cb72b5a0cc0a4bfd7c3604e14c60b5a59",
+      "sourceBlobSha": "bc80e35707dcbd7284dc3c7efc4d056b7842919c",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
         "schemaVersion": "0.6.0",
@@ -2445,12 +2456,14 @@
           "jobContract": "agents/{agentId}/inbox/{jobId}.json",
           "agentResult": "agents/{agentId}/outbox/{jobId}.result.json",
           "agentEvidenceRoot": "agents/{agentId}/evidence/{jobId}/",
-          "masterJobState": "master/jobs/{jobId}.json"
+          "masterJobState": "master/jobs/{jobId}.json",
+          "inboxIndex": "agents/{agentId}/inbox/index.json"
         },
         "ownership": {
           "MASTER_ONLY": [
             "agents/index.json",
             "agents/{agentId}/identity.json",
+            "agents/{agentId}/inbox/index.json",
             "agents/{agentId}/inbox/{jobId}.json",
             "master/jobs/{jobId}.json"
           ],
@@ -2486,7 +2499,9 @@
             "LOAD_IDENTITY",
             "VERIFY_IDENTITY_STATUS_ACTIVE",
             "LOAD_AGENT_STATE",
-            "SCAN_INBOX",
+            "LOAD_INBOX_INDEX",
+            "SELECT_DISCOVERABLE_JOB",
+            "READ_JOB_CONTRACT",
             "READ_MASTER_JOB_STATE",
             "VERIFY_JOB_ASSIGNMENT_AND_MANDATE",
             "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
@@ -2497,11 +2512,12 @@
         },
         "claimProtocol": {
           "eligibleWhen": [
+            "job is discoverable through the current MASTER-owned inbox index",
             "identity.status == ACTIVE",
             "job.assignedAgentId == identity.agentId",
             "job.assignedIdentityRevision == identity.identityRevision",
             "job.dispatchState == READY",
-            "masterJobState.lifecycleStatus == READY",
+            "masterJobState.lifecycleStatus is claimable for the current dispatch (READY or REWORK_READY)",
             "referenced execution mandate is active and covers scope",
             "actual provider rights cover required operations"
           ],
@@ -2571,13 +2587,30 @@
           "noSelfAcceptance": true,
           "noAutomaticJobReassignment": true,
           "noAutomaticIdentityMutation": true
+        },
+        "discoveryProtocol": {
+          "indexRef": "agents/{agentId}/inbox/index.json",
+          "purpose": "Provide a deterministic fixed read target for job discovery so an agent never depends on repository directory enumeration or HUMAN prompt transport.",
+          "authority": "NON_AUTHORITATIVE_DISCOVERABILITY_PROJECTION",
+          "masterOwned": true,
+          "noDirectoryEnumerationRequired": true,
+          "entrySelection": "Read entries in stored order and consider only AVAILABLE or REWORK_AVAILABLE entries for the active identity revision.",
+          "mandatoryVerification": [
+            "READ_REFERENCED_JOB_CONTRACT",
+            "VERIFY_JOB_BLOB_SHA",
+            "READ_MASTER_JOB_STATE",
+            "VERIFY_MASTER_LIFECYCLE_IS_CLAIMABLE",
+            "VERIFY_IDENTITY_AND_DISPATCH_REVISION"
+          ],
+          "staleIndexRule": "The index is only a discovery projection. If an entry conflicts with the job contract or MASTER job state, the authoritative artifacts win and the agent must not claim from the stale entry.",
+          "updateRule": "MASTER updates the index with revision-controlled writes and provider readback whenever jobs become discoverable, withdrawn, superseded or accepted."
         }
       }
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
       "sourcePath": "v0.6.0/repository-policy.json",
-      "sourceBlobSha": "8da8af31d3dc778dbdbfceae53549787b5054a5d",
+      "sourceBlobSha": "5bd9be92c22ba11677a17246a83a49270ae72496",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
         "version": "0.6.0",
@@ -2691,6 +2724,7 @@
           "masterOwned": [
             "agents/index.json",
             "agents/{agentId}/identity.json",
+            "agents/{agentId}/inbox/index.json",
             "agents/{agentId}/inbox/{jobId}.json",
             "master/jobs/{jobId}.json"
           ],
@@ -2700,8 +2734,9 @@
             "agents/{agentId}/evidence/{jobId}/",
             "agents/{agentId}/audit/"
           ],
-          "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox or MASTER job lifecycle artifacts.",
-          "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant."
+          "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts or MASTER job lifecycle artifacts.",
+          "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant.",
+          "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required."
         }
       }
     },
@@ -6110,7 +6145,7 @@
     "schemaAgentIdentity": {
       "key": "schemaAgentIdentity",
       "sourcePath": "v0.6.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "cab29047828b301ba12460015b83609f238550e4",
+      "sourceBlobSha": "53b09341a0cc490868096863a9fc3df0093c18be",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "urn:safor:agent-identity:0.6.0",
@@ -6233,12 +6268,15 @@
               },
               "onActivation": {
                 "type": "array",
-                "minItems": 5,
+                "minItems": 7,
                 "items": {
                   "enum": [
                     "LOAD_IDENTITY",
                     "LOAD_AGENT_STATE",
-                    "SCAN_INBOX",
+                    "LOAD_INBOX_INDEX",
+                    "SELECT_DISCOVERABLE_JOB",
+                    "READ_JOB_CONTRACT",
+                    "READ_MASTER_JOB_STATE",
                     "VERIFY_ELIGIBLE_JOB",
                     "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
                     "EXECUTE_CLAIMED_JOB",
@@ -7012,7 +7050,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.6.0/conformance.json",
-      "sourceBlobSha": "2e9b265a28ef7d109be43f6193a0815cbb95bd7f",
+      "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.6.0",
@@ -7347,12 +7385,138 @@
             "id": "CF-066",
             "statement": "Execution state references agent job states without duplicating their authoritative lifecycle fields.",
             "expected": true
+          },
+          {
+            "id": "CF-067",
+            "statement": "Every persistent agent has a fixed MASTER-owned inbox index at agents/{agentId}/inbox/index.json so job discovery never depends on repository directory enumeration or HUMAN prompt transport.",
+            "expected": true
+          },
+          {
+            "id": "CF-068",
+            "statement": "The inbox index is a non-authoritative discoverability projection; an agent must read the referenced immutable job contract and authoritative master/jobs/{jobId}.json before claim.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
           "branch": "safor/agent-workspace-v0.6.0-rc.1",
-          "result": "CI_PASS_E2E_PENDING",
-          "note": "Machine validation for the repository-native Agent Workspace Protocol passes. Scenarios F-H in ACCEPTANCE-TESTS.md remain required as empirical end-to-end acceptance before GA."
+          "result": "PASS_PENDING_REVALIDATION_AFTER_DISCOVERY_FIX",
+          "note": "Agent Workspace model now requires deterministic inbox/index.json discovery with authoritative MASTER job-state verification. Fresh CI and empirical Agent Workspace scenarios remain required."
+        }
+      }
+    },
+    "schemaAgentInboxIndex": {
+      "key": "schemaAgentInboxIndex",
+      "sourcePath": "v0.6.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "bf50a3040f1bc8ab2ed10cc4d2518a474973ed5a",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "urn:safor:agent-inbox-index:0.6.0",
+        "title": "SAFOR Agent Inbox Index 0.6.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "agentId",
+          "identityRevision",
+          "revision",
+          "authoritativeLifecycle",
+          "sourceOfTruth",
+          "verificationRule",
+          "entries",
+          "updatedAt"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_INBOX_INDEX"
+          },
+          "schemaVersion": {
+            "const": "0.6.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identityRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "authoritativeLifecycle": {
+            "const": false
+          },
+          "sourceOfTruth": {
+            "const": "master/jobs/{jobId}.json"
+          },
+          "verificationRule": {
+            "const": "READ_MASTER_JOB_STATE_BEFORE_CLAIM"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/entry"
+            }
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "$defs": {
+          "entry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "jobId",
+              "jobRef",
+              "jobBlobSha",
+              "masterJobStateRef",
+              "dispatchRevision",
+              "discoverabilityState",
+              "queuedAt"
+            ],
+            "properties": {
+              "jobId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jobRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jobBlobSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "masterJobStateRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "dispatchRevision": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "discoverabilityState": {
+                "enum": [
+                  "AVAILABLE",
+                  "REWORK_AVAILABLE",
+                  "WITHDRAWN"
+                ]
+              },
+              "queuedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
         }
       }
     }
