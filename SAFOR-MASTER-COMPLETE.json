@@ -176,28 +176,28 @@
       "sourceBlobSha": "0120585353a5e89840eb51ae82edeef58c7cc41c"
     },
     "schemaWorkItem": {
-      "sourcePath": "v0.6.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "b703a9589a5ae5e199110ef3f592545755ff9803"
+      "sourcePath": "v0.7.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "f40322c9ab58409202edafe318e0acbfbeea9b99"
     },
     "schemaProject": {
-      "sourcePath": "v0.6.0/schemas/project.schema.json",
-      "sourceBlobSha": "6e18f057c58090d8a9613ea278badfc1e38c262b"
+      "sourcePath": "v0.7.0/schemas/project.schema.json",
+      "sourceBlobSha": "fa183db44f26bdf87dd7e618d2acadb5e8378388"
     },
     "schemaBindings": {
-      "sourcePath": "v0.6.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4e53fee5d362a06f0d7c844e4343111edf46332d"
+      "sourcePath": "v0.7.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "0af973089ac48cfef439daf2181eb8f8c5e0e516"
     },
     "schemaDecisionRecord": {
-      "sourcePath": "v0.6.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "b099d3f56bc410d4cb08265d72ab548e82d32591"
+      "sourcePath": "v0.7.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "552933d4a40781a30815a34887b7ab6e55e71d70"
     },
     "schemaEvidenceRecord": {
-      "sourcePath": "v0.6.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "902cafb81b6edbe19c07f84255b8022b3d8fc232"
+      "sourcePath": "v0.7.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "34beb1045371a304527cf6883b2f995c1dadd52b"
     },
     "schemaInteractionMenu": {
-      "sourcePath": "v0.6.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "56e049fef0a2c3dd17afae14f002a8c9cc24c1e3"
+      "sourcePath": "v0.7.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59"
     },
     "schemaSelfHealingRecord": {
       "sourcePath": "v0.6.0/schemas/self-healing-record.schema.json",
@@ -5503,12 +5503,12 @@
     },
     "schemaWorkItem": {
       "key": "schemaWorkItem",
-      "sourcePath": "v0.6.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "b703a9589a5ae5e199110ef3f592545755ff9803",
+      "sourcePath": "v0.7.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "f40322c9ab58409202edafe318e0acbfbeea9b99",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:work-item:0.6.0",
-        "title": "SAFOR Domain-Agnostic Work Item 0.6.0",
+        "$id": "urn:safor:work-item:0.7.0",
+        "title": "SAFOR Domain-Agnostic Work Item 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5523,6 +5523,7 @@
           "expectedOutputs",
           "acceptanceCriteria",
           "dependencies",
+          "execution",
           "assignment",
           "review",
           "evidenceRequirements",
@@ -5693,6 +5694,77 @@
                 }
               }
             }
+          },
+          "execution": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "unit",
+              "parentWorkItemId",
+              "childWorkItemIds",
+              "joinPolicy",
+              "parallelizable",
+              "priority",
+              "readySince",
+              "resourceAccess",
+              "integrationRequired",
+              "integrationWorkItemRef"
+            ],
+            "properties": {
+              "unit": {
+                "enum": [
+                  "ATOMIC",
+                  "COMPOSITE"
+                ]
+              },
+              "parentWorkItemId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "childWorkItemIds": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "joinPolicy": {
+                "enum": [
+                  "NONE",
+                  "ALL_CHILDREN_ACCEPTED"
+                ]
+              },
+              "parallelizable": {
+                "type": "boolean"
+              },
+              "priority": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 100
+              },
+              "readySince": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time"
+              },
+              "resourceAccess": {
+                "$ref": "#/$defs/resourceAccess"
+              },
+              "integrationRequired": {
+                "type": "boolean"
+              },
+              "integrationWorkItemRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
           }
         },
         "$defs": {
@@ -5714,18 +5786,95 @@
                 ]
               }
             }
+          },
+          "resourceAccess": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "readSet",
+              "writeSet",
+              "exclusiveKeys"
+            ],
+            "properties": {
+              "readSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/readResource"
+                }
+              },
+              "writeSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/writeResource"
+                }
+              },
+              "exclusiveKeys": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "readResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "immutableRevision"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "immutableRevision": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "writeResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "conflictDomain"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "conflictDomain": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
           }
         }
       }
     },
     "schemaProject": {
       "key": "schemaProject",
-      "sourcePath": "v0.6.0/schemas/project.schema.json",
-      "sourceBlobSha": "6e18f057c58090d8a9613ea278badfc1e38c262b",
+      "sourcePath": "v0.7.0/schemas/project.schema.json",
+      "sourceBlobSha": "fa183db44f26bdf87dd7e618d2acadb5e8378388",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:project:0.6.0",
-        "title": "SAFOR Project Descriptor 0.6.0",
+        "$id": "urn:safor:project:0.7.0",
+        "title": "SAFOR Project Descriptor 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5746,7 +5895,7 @@
             "const": "SAFOR_PROJECT"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -5852,12 +6001,12 @@
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.6.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "4e53fee5d362a06f0d7c844e4343111edf46332d",
+      "sourcePath": "v0.7.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "0af973089ac48cfef439daf2181eb8f8c5e0e516",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:bindings:0.6.0",
-        "title": "SAFOR Project Bindings 0.6.0",
+        "$id": "urn:safor:bindings:0.7.0",
+        "title": "SAFOR Project Bindings 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5875,7 +6024,7 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "revision": {
             "type": "integer",
@@ -5955,12 +6104,12 @@
     },
     "schemaDecisionRecord": {
       "key": "schemaDecisionRecord",
-      "sourcePath": "v0.6.0/schemas/decision-record.schema.json",
-      "sourceBlobSha": "b099d3f56bc410d4cb08265d72ab548e82d32591",
+      "sourcePath": "v0.7.0/schemas/decision-record.schema.json",
+      "sourceBlobSha": "552933d4a40781a30815a34887b7ab6e55e71d70",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:decision-record:0.6.0",
-        "title": "SAFOR Decision Record 0.6.0",
+        "$id": "urn:safor:decision-record:0.7.0",
+        "title": "SAFOR Decision Record 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -5982,7 +6131,7 @@
             "const": "SAFOR_DECISION_RECORD"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "decisionId": {
             "type": "string"
@@ -6028,12 +6177,12 @@
     },
     "schemaEvidenceRecord": {
       "key": "schemaEvidenceRecord",
-      "sourcePath": "v0.6.0/schemas/evidence-record.schema.json",
-      "sourceBlobSha": "902cafb81b6edbe19c07f84255b8022b3d8fc232",
+      "sourcePath": "v0.7.0/schemas/evidence-record.schema.json",
+      "sourceBlobSha": "34beb1045371a304527cf6883b2f995c1dadd52b",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:evidence-record:0.6.0",
-        "title": "SAFOR Evidence Record 0.6.0",
+        "$id": "urn:safor:evidence-record:0.7.0",
+        "title": "SAFOR Evidence Record 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6053,7 +6202,7 @@
             "const": "SAFOR_EVIDENCE_RECORD"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "evidenceId": {
             "type": "string"
@@ -6107,12 +6256,12 @@
     },
     "schemaInteractionMenu": {
       "key": "schemaInteractionMenu",
-      "sourcePath": "v0.6.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "56e049fef0a2c3dd17afae14f002a8c9cc24c1e3",
+      "sourcePath": "v0.7.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:interaction-menu:0.6.0",
-        "title": "SAFOR Interaction Menu 0.6.0",
+        "$id": "urn:safor:interaction-menu:0.7.0",
+        "title": "SAFOR Interaction Menu 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6128,7 +6277,7 @@
             "const": "SAFOR_INTERACTION_MENU"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "menuId": {
             "type": "string",
