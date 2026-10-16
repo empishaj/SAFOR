@@ -10,6 +10,19 @@
     "projectId",
     "jobId",
     "assignedAgentId",
+    "jobKey",
+    "packageId",
+    "packageSequence",
+    "workItemId",
+    "planSequence",
+    "dispatchSequence",
+    "attempt",
+    "reworkCycle",
+    "roleId",
+    "assignedIdentityRevision",
+    "contractRevision",
+    "humanJobRef",
+    "humanJobBlobSha",
     "owner",
     "revision",
     "lifecycleStatus",
@@ -161,6 +174,58 @@
         "type": "string",
         "minLength": 1
       }
+    },
+    "jobKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packageId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packageSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "workItemId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "planSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "dispatchSequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "attempt": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "reworkCycle": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "roleId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assignedIdentityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "contractRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "humanJobRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "humanJobBlobSha": {
+      "type": "string",
+      "minLength": 1
     }
   },
   "$defs": {
