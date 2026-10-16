@@ -3,7 +3,7 @@
   "part": 1,
   "modules": {
     "v0.5.0/SAFOR-MASTER.json": {
-      "sha": "b582d0baa92ef934040b9461e4cc4f47767ed471",
+      "sha": "e209524cad3d4965445540e151ed58ce434df064",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.5.0",
@@ -868,9 +868,9 @@
           }
         },
         "compatibility": {
-          "sourceBaseline": "factory/safor-master/v0.3.0",
+          "sourceBaseline": "v0.4.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
+          "v04ProjectMigration": "Existing v0.4.0 projects require an explicit Memory-binding migration because v0.5.0 separates Memory Provider from Work Provider and adds session/output provenance."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
