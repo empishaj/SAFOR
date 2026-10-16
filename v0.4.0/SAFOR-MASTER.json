@@ -1,10 +1,10 @@
 {
-  "format": "SAF_MASTER_BOOTSTRAP",
+  "format": "SAFOR_MASTER_BOOTSTRAP",
   "schemaVersion": "0.4.0",
   "kernelVersion": "0.4.0",
-  "definitionId": "saf-master-kernel",
+  "definitionId": "safor-master-kernel",
   "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-  "purpose": "Portable, domain-agnostic SAF bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
+  "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
   "bootstrapContract": {
     "singleFileEntry": true,
     "entryFile": "SAFOR-MASTER.json",
@@ -331,7 +331,7 @@
       },
       {
         "id": "K05",
-        "operation": "VERIFY_REQUIRED_SAF_MEMORY",
+        "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
         "purpose": "Require `{selectedOwner}/safor-memory` to pre-exist with proven read/write access; otherwise STOP.",
         "domainNeutral": true,
         "modelRef": "initialization-model.json#sequence/INIT-05"
@@ -362,7 +362,7 @@
       },
       {
         "id": "K09",
-        "operation": "BIND_REQUIRED_SAF_MEMORY",
+        "operation": "BIND_REQUIRED_SAFOR_MEMORY",
         "purpose": "Bind the verified `{selectedOwner}/safor-memory` as mandatory control repository.",
         "domainNeutral": true,
         "modelRef": "initialization-model.json#sequence/INIT-09"
@@ -509,7 +509,7 @@
       "COMPLETED"
     ],
     "interactionLoop": {
-      "stableCheckpointBehavior": "Present the current SAF action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
+      "stableCheckpointBehavior": "Present the current SAFOR action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
       "defaultPrimaryIntent": "NEXT_ROUND",
       "roundDefinitionRef": "interaction-model.json#roundSemantics",
       "menuPolicyRef": "interaction-model.json#menuPolicy",
@@ -630,7 +630,7 @@
     },
     {
       "id": "INV-023",
-      "rule": "If mandatory read/write access is missing or unproven, SAF enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAF never asks for a password or personal access token in chat."
+      "rule": "If mandatory read/write access is missing or unproven, SAFOR enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAFOR never asks for a password or personal access token in chat."
     },
     {
       "id": "INV-024",
@@ -654,11 +654,11 @@
     },
     {
       "id": "INV-029",
-      "rule": "SAF controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
+      "rule": "SAFOR controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
     },
     {
       "id": "INV-030",
-      "rule": "If native buttons or select controls are unavailable, SAF falls back only to native chat Markdown/plain text choices, never to a custom external interface."
+      "rule": "If native buttons or select controls are unavailable, SAFOR falls back only to native chat Markdown/plain text choices, never to a custom external interface."
     },
     {
       "id": "INV-031",
@@ -682,15 +682,15 @@
     },
     {
       "id": "INV-036",
-      "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAF reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
+      "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAFOR reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
     },
     {
       "id": "INV-037",
-      "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAF transitions to STOP and performs no project discovery, selection, planning or execution."
+      "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAFOR transitions to STOP and performs no project discovery, selection, planning or execution."
     },
     {
       "id": "INV-038",
-      "rule": "SAF must never auto-create safor-memory or silently substitute another control repository in this baseline."
+      "rule": "SAFOR must never auto-create safor-memory or silently substitute another control repository in this baseline."
     },
     {
       "id": "INV-039",
@@ -760,7 +760,7 @@
       "effect": "Explain current state/action without advancing the workflow."
     },
     "NEXT_ROUND": {
-      "effect": "Start one SAF round from the verified current checkpoint. Advance only through already-authorized and guard-satisfied operations, stop at the next user-relevant checkpoint, then present the refreshed menu."
+      "effect": "Start one SAFOR round from the verified current checkpoint. Advance only through already-authorized and guard-satisfied operations, stop at the next user-relevant checkpoint, then present the refreshed menu."
     },
     "VIEW_RECOMMENDATIONS": {
       "effect": "Rank up to three currently feasible recommendations using the interaction model. Do not persist or execute a recommendation until the user selects an action."
@@ -770,7 +770,7 @@
     }
   },
   "compatibility": {
-    "sourceBaseline": "factory/saf-master/v0.3.0",
+    "sourceBaseline": "factory/safor-master/v0.3.0",
     "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
     "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
   },
@@ -819,8 +819,8 @@
       "If the HUMAN requests depth, switch to expanded detail without sacrificing accuracy.",
       "During initialization ask only one decision at a time: provider, owner, project mode, then repository/project identity.",
       "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
-      "Use only chat-native UI. Never propose or require a separate SAF web interface.",
-      "When self-healing escalates, tell the HUMAN briefly what failed, what SAF already tried, whether the current state is safe, and the smallest next action required.",
+      "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
+      "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
       "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
       "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
       "Do not ask Discovery questions until creation type and its Factory binding are confirmed."
