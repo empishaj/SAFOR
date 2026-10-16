@@ -71,7 +71,14 @@
         "masterJobStateRef",
         "dispatchRevision",
         "discoverabilityState",
-        "queuedAt"
+        "queuedAt",
+        "humanJobRef",
+        "humanJobBlobSha",
+        "packageId",
+        "workItemId",
+        "planSequence",
+        "dispatchSequence",
+        "roleId"
       ],
       "properties": {
         "jobId": {
@@ -104,6 +111,34 @@
         "queuedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "humanJobRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "humanJobBlobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workItemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planSequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dispatchSequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "roleId": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
