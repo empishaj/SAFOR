@@ -341,6 +341,22 @@
       "required": true,
       "schemaRef": "schemas/output-record.schema.json",
       "rule": "Every persisted factory output must have a SAFOR output provenance record. LLM/provider/model/version values may only be recorded when actually exposed by the host."
+    },
+    "workspaceRequirements": {
+      "required": true,
+      "minimumProviderCapabilities": [
+        "provider.artifact.read",
+        "provider.artifact.write",
+        "provider.history.read"
+      ],
+      "preferredCapabilities": [
+        "provider.branch.read",
+        "provider.branch.write",
+        "provider.change_request.read",
+        "provider.change_request.write",
+        "provider.checks.read"
+      ],
+      "rule": "Software/Website work requires a versioned work provider. Review, issue and CI capabilities are optional unless a work item explicitly requires them."
     }
   }
 }
