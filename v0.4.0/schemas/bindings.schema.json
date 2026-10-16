@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:saf:bindings:0.4.0",
-  "title": "SAF Project Bindings 0.4.0",
+  "$id": "urn:safor:bindings:0.4.0",
+  "title": "SAFOR Project Bindings 0.4.0",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -16,7 +16,7 @@
   ],
   "properties": {
     "format": {
-      "const": "SAF_PROJECT_BINDINGS"
+      "const": "SAFOR_PROJECT_BINDINGS"
     },
     "schemaVersion": {
       "const": "0.4.0"
