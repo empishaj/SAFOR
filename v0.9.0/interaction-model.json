@@ -426,6 +426,17 @@
           "NEXT_ACTION_OR_MENU"
         ],
         "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
+      },
+      "moduleHealing": {
+        "structure": [
+          "AFFECTED_MODULE",
+          "FAILURE_CLASS",
+          "RECOVERY_ACTION",
+          "VERIFICATION",
+          "CURRENT_SAFE_STATE",
+          "NEXT_ACTION_IF_ANY"
+        ],
+        "example": "Das Scheduler-Modul hatte einen veralteten READY-Stand. SAFOR hat ausschließlich die ableitbare Sicht neu berechnet und per Readback verifiziert. Der autoritative Work-Item-State blieb unverändert."
       }
     },
     "avoid": {
@@ -664,6 +675,35 @@
       "Never describe a job as accepted merely because the agent submitted a result.",
       "When a HUMAN-readable agent report exists, surface its reference as the default result view before raw machine JSON.",
       "Explain why an apparently free agent did not receive work when the blocker is dependency, capability, SoD, mandate, provider rights or mutation conflict."
+    ]
+  },
+  "moduleSelfHealingExperience": {
+    "title": "Modulgesundheit & Selbstheilung",
+    "defaultSurface": "SUMMARY",
+    "statusFields": [
+      "moduleKey",
+      "profileId",
+      "healthStatus",
+      "lastFailureClass",
+      "repairStatus",
+      "repairability",
+      "lastVerifiedAt",
+      "evidenceRefs"
+    ],
+    "healthStatuses": [
+      "HEALTHY",
+      "DEGRADED",
+      "REPAIRING",
+      "RECONCILE_REQUIRED",
+      "BLOCKED",
+      "UNKNOWN"
+    ],
+    "humanRules": [
+      "Lead with affected module and current safe state.",
+      "State whether SAFOR repaired, restored, regenerated, rebound, reconciled or deliberately refused automatic repair.",
+      "Never describe a module as healthy until the profile success predicate passed authoritative readback.",
+      "When automatic repair is forbidden, explain the exact authority/semantic boundary and the smallest HUMAN action required.",
+      "Keep raw repair records behind Details unless needed for a decision."
     ]
   }
 }
