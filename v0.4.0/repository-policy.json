@@ -1,5 +1,5 @@
 {
-  "kind": "SAF_REPOSITORY_BOUNDARY_POLICY",
+  "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
   "version": "0.4.0",
   "policyId": "SAFOR-REPO-BOUNDARY-V2",
   "denyByDefault": true,
@@ -13,7 +13,7 @@
   },
   "repositoryClasses": {
     "CONTROL_REPOSITORY": {
-      "purpose": "Persist SAF project bindings, control/value-stream/execution states, decisions, evidence, package snapshots and audit records.",
+      "purpose": "Persist SAFOR project bindings, control/value-stream/execution states, decisions, evidence, package snapshots and audit records.",
       "allowedRoots": [
         "projects/",
         "factory/"
@@ -27,7 +27,7 @@
       "purpose": "Persist domain work artifacts such as source code, manuscripts, research outputs, designs or other factory-defined deliverables.",
       "forbiddenPrefixes": [
         "factory/",
-        "saf-master/",
+        "safor-master/",
         "control-plane/",
         "projects/",
         "agents/",
@@ -42,7 +42,7 @@
       ]
     },
     "FACTORY_RUNTIME_CODE_REPOSITORY": {
-      "purpose": "Optional dedicated implementation repository for executable SAF runtime/adapters.",
+      "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
       "status": "UNBOUND_BY_DEFAULT"
     }
   },
@@ -101,6 +101,6 @@
       "WRITE"
     ],
     "onMissingOrInsufficientAccess": "STOP",
-    "rule": "SAF may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
+    "rule": "SAFOR may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
   }
 }
