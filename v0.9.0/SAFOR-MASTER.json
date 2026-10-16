@@ -311,11 +311,12 @@
     "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json"
   },
   "controlPlane": {
-    "startActionId": "K01",
+    "startActionId": "K00",
     "phases": [
       {
         "id": "BOOTSTRAP",
         "actions": [
+          "K00",
           "K01",
           "K02",
           "K03",
@@ -405,6 +406,13 @@
       }
     ],
     "actions": [
+      {
+        "id": "K00",
+        "operation": "VERIFY_MODULE_RECOVERY_BASELINE",
+        "purpose": "Before provider or project work, verify exact embedded-module/recovery-profile coverage and fail-closed integrity of the recovery-control modules.",
+        "domainNeutral": true,
+        "modelRef": "module-self-healing-model.json"
+      },
       {
         "id": "K01",
         "operation": "SELECT_PROVIDER",
@@ -1143,6 +1151,14 @@
     {
       "id": "INV-103",
       "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS."
+    },
+    {
+      "id": "INV-104",
+      "rule": "K00 module-recovery preflight runs before provider/project actions. Failure to prove exact module-profile coverage or recovery-control integrity causes STOP before external work."
+    },
+    {
+      "id": "INV-105",
+      "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
     }
   ],
   "evidencePolicy": {
