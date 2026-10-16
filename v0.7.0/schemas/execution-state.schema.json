@@ -12,6 +12,9 @@
     "actorAssignments",
     "contracts",
     "agentJobStateRefs",
+    "schedulerStateRef",
+    "activeDispatchWaveRefs",
+    "resourceLeaseRefs",
     "runs",
     "reconciliation",
     "selfHealing"
@@ -69,6 +72,26 @@
       },
       "uniqueItems": true,
       "description": "References to MASTER-owned master/jobs/{jobId}.json records. Lifecycle fields are not duplicated here."
+    },
+    "schedulerStateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "activeDispatchWaveRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "resourceLeaseRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
     }
   },
   "$defs": {
