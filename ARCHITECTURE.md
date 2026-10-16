@@ -14,6 +14,7 @@ SAFOR
 + Agent Job Contract
 + Agent Workspace Protocol
 + Multi-Agent Scheduler
++ Module Self-Healing
 + Evidence
 + HUMAN Authority
 ```
@@ -28,6 +29,9 @@ Defines roles, capabilities, mandates, decision rights, gates and separation of 
 
 ### Factory
 Defines domain-specific Discovery, Planning, value-stream transformations, acceptance requirements, Evidence and outcome logic.
+
+### Module Self-Healing
+Assigns exactly one recovery profile to every embedded module. Profiles define authority type, repairability, detectors, allowed/forbidden repairs, retry budget, verification and escalation. Recovery is fail-closed when recovery-control integrity cannot be proven.
 
 ### Provider Adapter
 Maps provider-neutral capabilities onto the actual GitHub/GitLab tools exposed by the host.
@@ -147,3 +151,18 @@ Mutating jobs receive dedicated `safor/job/{jobKey}/{agentKey}` branches from im
 Each scheduling decision is persisted as a dispatch-wave record and protected by MASTER-owned resource leases. Unknown mutation overlap is serialized. Lease expiry triggers reconciliation rather than silent reassignment.
 
 See [MULTI-AGENT-SCHEDULER.md](MULTI-AGENT-SCHEDULER.md).
+
+
+## Module-wide recovery safety
+
+Every embedded module is bound to one recovery profile in `module-self-healing-model.json`.
+
+Automatic repair is the intersection of:
+1. failure-class policy,
+2. module recovery profile,
+3. current SAFOR authority/policy,
+4. actual provider rights.
+
+Authoritative semantics are never guessed or silently rewritten. Derived projections may be regenerated only from verified authoritative sources. Unknown mutation effects reconcile before retry.
+
+See [MODULE-SELF-HEALING.md](MODULE-SELF-HEALING.md).
