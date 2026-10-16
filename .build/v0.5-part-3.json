@@ -3,7 +3,7 @@
   "part": 3,
   "modules": {
     "v0.5.0/memory-providers/host-filesystem/0.1.0/package.json": {
-      "sha": "786e04d9426eb2d62f9c9fd6400d4ac9472326a2",
+      "sha": "d8dc5000fad4ebdfdb963f237932aad8c6248990",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.5.0",
@@ -39,7 +39,9 @@
           "sharedTeamEligibility": "Only when the host additionally proves memory.shared_access and either memory.compare_and_swap or memory.lock.",
           "revisionStrategy": "Use a durable SAFOR revision metadata record and atomic replacement/locking semantics exposed by the host.",
           "creationRequiresExplicitHumanApproval": true,
-          "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once."
+          "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once.",
+          "persistenceProofRequired": true,
+          "persistenceProof": "The host must prove the same stable location survives session boundaries and can be reopened before it becomes authoritative SAFOR Memory."
         }
       }
     },
