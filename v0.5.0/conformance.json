@@ -1,0 +1,337 @@
+{
+  "format": "SAFOR_CONFORMANCE_SUITE",
+  "schemaVersion": "0.5.0",
+  "purpose": "Declarative architecture checks for SAFOR v0.5.0 provider-neutral Memory, multi-session collaboration and output provenance.",
+  "assertions": [
+    {
+      "id": "CF-001",
+      "statement": "SAFOR-MASTER.json is the single portable bootstrap entrypoint.",
+      "expected": true
+    },
+    {
+      "id": "CF-002",
+      "statement": "Kernel requires OPERATING_MODEL, FACTORY and PROVIDER_ADAPTER bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-003",
+      "statement": "Factory packages reference capabilities/authorities but contain no roleId bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-004",
+      "statement": "Every capability required by the software factory is exported by the SaaS engineering operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-005",
+      "statement": "Every authority required by the software factory is exported by the SaaS engineering operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-006",
+      "statement": "Every capability required by the book factory is exported by the book authoring operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-007",
+      "statement": "Every authority required by the book factory is exported by the book authoring operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-008",
+      "statement": "Provider adapters export only capabilities known to the kernel provider capability vocabulary.",
+      "expected": true
+    },
+    {
+      "id": "CF-009",
+      "statement": "Global schemas contain no safomwebsite-specific migration constant.",
+      "expected": true
+    },
+    {
+      "id": "CF-010",
+      "statement": "Work-item type is a factory-defined string and is not a kernel domain enum.",
+      "expected": true
+    },
+    {
+      "id": "CF-011",
+      "statement": "Control, value-stream and execution states are separate aggregates.",
+      "expected": true
+    },
+    {
+      "id": "CF-012",
+      "statement": "Delivery completion is distinct from outcome validation.",
+      "expected": true
+    },
+    {
+      "id": "CF-013",
+      "statement": "Kernel references a dedicated interaction model and interaction-menu schema.",
+      "expected": true
+    },
+    {
+      "id": "CF-014",
+      "statement": "A state-aware menu is required at user-relevant stable checkpoints.",
+      "expected": true
+    },
+    {
+      "id": "CF-015",
+      "statement": "NEXT_ROUND is bounded by existing authorization and stops before any new human decision or authority expansion.",
+      "expected": true
+    },
+    {
+      "id": "CF-016",
+      "statement": "Native clickable actions are preferred only when the host actually exposes a supported interaction capability.",
+      "expected": true
+    },
+    {
+      "id": "CF-017",
+      "statement": "Recommendations are advisory until explicitly selected and are ranked from current state/evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-018",
+      "statement": "Danger actions are visually separated and require confirmation.",
+      "expected": true
+    },
+    {
+      "id": "CF-019",
+      "statement": "Direct HUMAN communication uses the SAFOR_HUMAN_BUDDY profile.",
+      "expected": true
+    },
+    {
+      "id": "CF-020",
+      "statement": "Routine checkpoint communication is concise by default and governed by explicit response budgets.",
+      "expected": true
+    },
+    {
+      "id": "CF-021",
+      "statement": "HUMAN messages lead with the useful result, decision or next action instead of tool/process narration.",
+      "expected": true
+    },
+    {
+      "id": "CF-022",
+      "statement": "Technical state and evidence detail are progressively disclosed through Details unless immediately necessary.",
+      "expected": true
+    },
+    {
+      "id": "CF-023",
+      "statement": "Encouragement is specific and evidence-grounded; generic praise, exaggeration and emotional manipulation are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-024",
+      "statement": "Expanded detail remains available whenever the HUMAN requests it or material risk requires it.",
+      "expected": true
+    },
+    {
+      "id": "CF-025",
+      "statement": "Loading SAFOR-MASTER starts guided initialization by discovering eligible Memory providers, not by hard-coding GitHub/GitLab.",
+      "expected": true
+    },
+    {
+      "id": "CF-026",
+      "statement": "Creation type and project work are blocked until a Memory provider proves durable read/write/revision/resume capabilities.",
+      "expected": true
+    },
+    {
+      "id": "CF-027",
+      "statement": "Missing GitHub/GitLab alone is not a blocker; absence of any eligible durable Memory provider causes STOP without requesting credentials in chat.",
+      "expected": true
+    },
+    {
+      "id": "CF-028",
+      "statement": "The HUMAN explicitly selects or approves the Memory provider and physical owner (HUMAN or ORGANIZATION).",
+      "expected": true
+    },
+    {
+      "id": "CF-029",
+      "statement": "The HUMAN explicitly selects PERSONAL or SHARED_TEAM collaboration mode.",
+      "expected": true
+    },
+    {
+      "id": "CF-030",
+      "statement": "SHARED_TEAM requires shared access plus compare-and-swap or lock style concurrency.",
+      "expected": true
+    },
+    {
+      "id": "CF-031",
+      "statement": "Memory provider selection is independent from work/SCM provider selection.",
+      "expected": true
+    },
+    {
+      "id": "CF-032",
+      "statement": "Creation of a new Memory location requires explicit HUMAN approval and actual create capability.",
+      "expected": true
+    },
+    {
+      "id": "CF-033",
+      "statement": "Project state persists a Memory binding with owner, provider, stable location, verified capabilities and concurrency strategy.",
+      "expected": true
+    },
+    {
+      "id": "CF-034",
+      "statement": "All HUMAN interaction is restricted to chat-native UI surfaces exposed by the host.",
+      "expected": true
+    },
+    {
+      "id": "CF-035",
+      "statement": "Custom web UI, HTML, CSS, JavaScript UI shells, iframes and forced color theming are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-036",
+      "statement": "SAFOR controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
+      "expected": true
+    },
+    {
+      "id": "CF-037",
+      "statement": "When native buttons/selects are unavailable, fallback is native Markdown/plain text only.",
+      "expected": true
+    },
+    {
+      "id": "CF-038",
+      "statement": "Kernel references a conservative self-healing model and repair-record schema.",
+      "expected": true
+    },
+    {
+      "id": "CF-039",
+      "statement": "Self-healing has explicit detect, classify, plan, execute and verify stages.",
+      "expected": true
+    },
+    {
+      "id": "CF-040",
+      "statement": "Automatic repairs are limited to existing authorization and proven provider capabilities.",
+      "expected": true
+    },
+    {
+      "id": "CF-041",
+      "statement": "Retries are bounded by failure-class and operation budgets; unknown mutation effects reconcile before retry.",
+      "expected": true
+    },
+    {
+      "id": "CF-042",
+      "statement": "Every repair requires authoritative readback before success and persists an immutable repair record.",
+      "expected": true
+    },
+    {
+      "id": "CF-043",
+      "statement": "Human gates, reviews, mandates and policy guards cannot be bypassed by self-healing.",
+      "expected": true
+    },
+    {
+      "id": "CF-044",
+      "statement": "Force-push, history rewrite, destructive repository deletion and invented evidence are forbidden automatic repairs.",
+      "expected": true
+    },
+    {
+      "id": "CF-045",
+      "statement": "When automatic recovery is unsafe or exhausted, SAFOR escalates concisely to the HUMAN with the smallest required action.",
+      "expected": true
+    },
+    {
+      "id": "CF-046",
+      "statement": "SAFOR Memory is provider-neutral and may be backed by a versioned repository, durable host filesystem or compliant custom provider.",
+      "expected": true
+    },
+    {
+      "id": "CF-047",
+      "statement": "A one-time successful write is not sufficient; Memory durability and resume semantics must be proven.",
+      "expected": true
+    },
+    {
+      "id": "CF-048",
+      "statement": "No authoritative project state required later may exist only in chat context.",
+      "expected": true
+    },
+    {
+      "id": "CF-049",
+      "statement": "The HUMAN must explicitly choose exactly one creation type: SOFTWARE_WEBSITE or BOOK.",
+      "expected": true
+    },
+    {
+      "id": "CF-050",
+      "statement": "Creation type deterministically selects the compatible Factory and Operating Model pair.",
+      "expected": true
+    },
+    {
+      "id": "CF-051",
+      "statement": "Software/Website and Book factories each define their own discoveryContract, planningContract and evidenceContract.",
+      "expected": true
+    },
+    {
+      "id": "CF-052",
+      "statement": "D01 Discovery resolves only the bound Factory discoveryContract.",
+      "expected": true
+    },
+    {
+      "id": "CF-053",
+      "statement": "P01 Planning resolves only the same bound Factory planningContract and confirmed Discovery.",
+      "expected": true
+    },
+    {
+      "id": "CF-054",
+      "statement": "E04/E05 persist output provenance and evaluate domain evidence only against the same bound Factory evidenceContract.",
+      "expected": true
+    },
+    {
+      "id": "CF-055",
+      "statement": "Project descriptor persists creationType and Memory binding reference and remains consistent with pinned package bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-056",
+      "statement": "Every persisted Factory output has a SAFOR output provenance record containing producer/session identity, Memory revision and pinned SAFOR/Factory/Operating-Model versions.",
+      "expected": true
+    },
+    {
+      "id": "CF-057",
+      "statement": "LLM provider/model/version provenance records only host-observed values; unavailable values remain null with NOT_EXPOSED rather than being guessed.",
+      "expected": true
+    },
+    {
+      "id": "CF-058",
+      "statement": "A fresh session can rehydrate project state from SAFOR Memory and pinned packages without prior chat history.",
+      "expected": true
+    },
+    {
+      "id": "CF-059",
+      "statement": "Generic Git and Plastic SCM / Unity Version Control are modeled as optional capability-based work-provider adapters; tool availability is never inferred from the manifest.",
+      "expected": true
+    },
+    {
+      "id": "CF-060",
+      "statement": "Host-filesystem Memory is eligible only when the host proves persistence and resume semantics; ephemeral scratch storage is rejected.",
+      "expected": true
+    },
+    {
+      "id": "CF-061",
+      "statement": "Software/Website requires a versioned work provider while Book may use Memory-only mode when the HUMAN chooses it.",
+      "expected": true
+    },
+    {
+      "id": "CF-062",
+      "statement": "Every active HUMAN/agent/service session is registered with session identity, host/LLM observability and base Memory revision.",
+      "expected": true
+    },
+    {
+      "id": "CF-063",
+      "statement": "Shared Memory revision conflicts enter RECONCILE_REQUIRED and cannot overwrite unseen state.",
+      "expected": true
+    },
+    {
+      "id": "CF-064",
+      "statement": "The package system supports MEMORY_PROVIDER_ADAPTER as an independent package kind and requires one bound Memory provider for every project.",
+      "expected": true
+    },
+    {
+      "id": "CF-065",
+      "statement": "Memory or work provider product names never count as proof of capabilities; actual host/provider evidence is required.",
+      "expected": true
+    }
+  ],
+  "lastManualVerification": {
+    "branch": "safor/memory-provider-v0.5.0",
+    "result": "PENDING",
+    "note": "v0.5.0 provider-neutral Memory conformance defined; automated and end-to-end verification pending."
+  }
+}
