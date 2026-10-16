@@ -1,76 +1,116 @@
-# End-to-End Acceptance Tests
+# SAFOR v0.5 End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE.json`.
+Run every scenario in a fresh chat using the exact release artifact.
 
-## A. GitHub — happy path
+## A — Versioned Memory + independent work provider
 
-**Preconditions**
-- GitHub connector available.
-- Selected owner contains a pre-existing writable `safor-memory`.
-- Selected owner has at least one writable project repository.
+Example:
+- Memory: GitHub/GitLab/generic versioned repository
+- Work provider: a different GitHub/GitLab/Generic Git/Plastic workspace
 
-**Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE.json`.
-2. SAFOR starts initialization without requiring a separate prompt.
-3. HUMAN selects GitHub.
-4. SAFOR proves baseline read/write capabilities.
-5. HUMAN selects owner.
-6. SAFOR verifies `{OWNER}/safor-memory`.
-7. HUMAN must choose **Software / Website** or **Buch**.
-8. HUMAN chooses existing/new project.
-9. Existing mode shows eligible recently active repositories.
-10. Package bindings match the selected creation type.
-11. Discovery questions come only from the selected Factory.
-12. Planning derives only from that Factory.
-13. Execution Evidence uses only that Factory's evidence contract.
-14. A permitted write is read back before completion is claimed.
-15. Project state is persisted in `safor-memory`.
+Expected:
+1. Memory is selected before the work provider.
+2. SAFOR proves durable read/write/revision/resume semantics.
+3. Memory and work provider bindings remain distinct.
+4. Factory selection occurs after Memory is ready.
+5. Software/Website requires a versioned work provider.
+6. All authoritative state is persisted to Memory.
 
-**Pass condition:** all 15 observations are evidenced.
+## B — Persistent host filesystem Memory
 
-## B. GitHub — missing memory STOP
+Run only when the host exposes persistent storage.
 
-**Precondition:** selected owner has no `safor-memory`, or it is read-only.
+Expected:
+- SAFOR does not accept ephemeral scratch space.
+- It proves the same stable location can be reopened.
+- Personal mode works with revision tracking.
+- Shared Team is offered only if shared access plus CAS/lock can be proven.
 
-**Expected**
-- SAFOR says STOP clearly.
-- SAFOR does not auto-create `safor-memory`.
-- SAFOR does not continue to creation type, project selection, Discovery, Planning or Execution.
+## C — No eligible Memory
 
-## C. Factory separation
+Precondition: no durable read/write/resume-capable storage is available.
 
-Run twice:
-- Software / Website
-- Buch
+Expected:
+- SAFOR stops.
+- Missing GitHub/GitLab is not named as the reason unless that was the selected provider.
+- SAFOR does not continue to Factory selection.
+- No credentials are requested in chat.
 
-**Expected**
-- Software/Website uses software discovery/planning/evidence contracts.
-- Buch uses book discovery/planning/evidence contracts.
-- No cross-Factory question, work-item contract or domain Evidence is substituted.
+## D — Memory location creation
 
-## D. Self-healing
+Precondition: selected Memory provider supports creating a location.
 
-Induce a recoverable stale-revision or transient provider failure.
+Expected:
+- SAFOR proposes the location identity/scope.
+- Creation occurs only after explicit HUMAN approval.
+- The created location is read back and bound.
+- No silent creation.
 
-**Expected**
-- SAFOR classifies the failure.
-- Retry stays inside existing authority and budget.
-- Unknown mutation effects reconcile before retry.
-- Recovery success requires authoritative readback.
-- Unsafe/exhausted recovery escalates to HUMAN.
+## E — Shared Team / two sessions
 
-## E. GitLab
+Start two independent chats against the same Memory.
 
-Repeat A–D with the GitLab provider adapter.
+Expected:
+1. Each registers a unique session ID and base Memory revision.
+2. Session A persists a state change.
+3. Session B attempts a write from its stale revision.
+4. SAFOR returns `RECONCILE_REQUIRED`.
+5. Session B reloads current Memory before proceeding.
+6. No unseen state is overwritten.
 
-## Evidence to retain
+## F — Fresh-chat resume
 
-For every test:
-- release bundle blob/commit identity,
-- chat transcript,
-- provider target stable IDs,
-- mutation/readback references,
-- final SAFOR state,
-- PASS/FAIL decision.
+1. Complete Discovery or Planning in Chat A.
+2. Close Chat A.
+3. Start Chat B without providing Chat A's transcript.
+4. Connect to the same Memory.
 
-Do not mark GA until GitHub and GitLab happy-path plus safety scenarios are independently recorded as PASS.
+Expected:
+- Project, bindings, Factory, Operating Model, decisions and current state are reconstructed.
+- A new session is registered.
+- Work can continue from the correct checkpoint.
+
+## G — Output provenance
+
+Create at least one Factory output with an LLM.
+
+Expected output record:
+- actor/role,
+- session ID,
+- Memory revision,
+- SAFOR/kernel version,
+- Factory package/version,
+- Operating Model package/version,
+- LLM provider/model/version when exposed by the host,
+- `NOT_EXPOSED` + null values when exact model identity is unavailable.
+
+SAFOR must never guess the model.
+
+## H — Software provider diversity
+
+Run the Software/Website Factory with:
+- GitHub or GitLab,
+- Generic/self-hosted Git when connector exists,
+- Plastic SCM / Unity Version Control when connector exists.
+
+Expected:
+- only actual exposed capabilities are used;
+- unavailable pull-request/issues/checks features are not simulated;
+- provider-specific terminology does not leak into the Factory contract.
+
+## I — Book Memory-only mode
+
+Expected:
+- Book Factory can proceed without an external work provider when HUMAN selects Memory-only.
+- Discovery, Planning and Evidence remain Book-specific.
+
+## Evidence retained per run
+
+- release commit/bundle SHA,
+- Memory provider/binding,
+- work-provider binding if any,
+- session IDs,
+- Memory revisions,
+- output provenance records,
+- provider readback references,
+- final PASS/FAIL decision.
