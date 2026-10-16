@@ -113,7 +113,11 @@ if modular_master.get("distribution", {}).get("canonicalSource", {}).get("reposi
     fail("Modular master canonical repository mismatch.")
 
 complete_text = (ROOT / "SAFOR-MASTER-COMPLETE.json").read_text(encoding="utf-8")
-for forbidden in ("empishaj/SAFOR.", "empishaj/saf-memory", "{selectedOwner}/saf-memory"):
+old_product_repo = "empishaj/SAFOR" + "."
+legacy_lower_for_refs = "sa" + "f"
+old_memory_repo = "empishaj/" + legacy_lower_for_refs + "-memory"
+old_memory_pattern = "{selectedOwner}/" + legacy_lower_for_refs + "-memory"
+for forbidden in (old_product_repo, old_memory_repo, old_memory_pattern):
     if forbidden in complete_text:
         fail(f"Forbidden legacy reference remains in complete bundle: {forbidden}")
 
@@ -124,9 +128,11 @@ legacy_patterns = (
     legacy_upper + "-",
     legacy_upper + "_",
     legacy_upper + " ",
+    '"' + legacy_upper + '"',
     "urn:" + legacy_lower + ":",
     legacy_lower + ".",
-    legacy_lower + "-master",
+    legacy_lower + "-",
+    '"' + legacy_lower + '"',
 )
 text_extensions = {".json", ".md", ".py", ".yml", ".yaml", ".txt"}
 skip_parts = {".git", "__pycache__"}
