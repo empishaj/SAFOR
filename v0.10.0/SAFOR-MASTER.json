@@ -65,7 +65,14 @@
     "moduleWideSelfHealing": true,
     "exactRecoveryProfileCoverage": true,
     "failClosedRecoveryControl": true,
-    "noSemanticAutoRewrite": true
+    "noSemanticAutoRewrite": true,
+    "phaseAwareHumanCognitiveLoad": true,
+    "humanDecisionGateRequired": true,
+    "deriveBeforeAsk": true,
+    "reuseUnchangedHumanDecisions": true,
+    "postDiscoveryLoadReduction": true,
+    "humanDomainLanguageDefault": true,
+    "humanAsDecisionMakerNotWorkflowOperator": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -98,6 +105,10 @@
         "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
       },
       {
+        "id": "HUMAN_INTERACTION_GOVERNANCE",
+        "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction and dynamic primary-action labeling."
+      },
+      {
         "id": "MODULE_SELF_HEALING",
         "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
       },
@@ -125,7 +136,12 @@
       "Every embedded module must resolve to exactly one valid module recovery profile.",
       "SELF_HEALING executes only the intersection of failure-class policy, module recovery profile, active authority and actual provider rights.",
       "Authoritative immutable modules are never heuristically rewritten; derived artifacts may be regenerated only from verified authoritative sources.",
-      "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops."
+      "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops.",
+      "Every proposed HUMAN question or approval passes the HUMAN Decision Gate before presentation.",
+      "A derivable or unchanged previously approved decision must not be delegated back to the HUMAN.",
+      "High HUMAN cognitive load is legitimate in Discovery when acquiring non-derivable intent/domain knowledge; after plan approval default HUMAN load decreases to LOW/VERY_LOW except for material decisions, new authority, risk, irreversible action, recovery escalation or outcome judgment.",
+      "Scheduling, job IDs, leases, dispatch waves, readback, evidence collection and deterministic agent coordination are internal SAFOR responsibilities.",
+      "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required."
     ]
   },
   "packageSystem": {
@@ -308,7 +324,9 @@
     "schedulerState": "schemas/scheduler-state.schema.json",
     "dispatchWave": "schemas/dispatch-wave.schema.json",
     "resourceLease": "schemas/resource-lease.schema.json",
-    "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json"
+    "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json",
+    "humanCognitiveLoadPolicy": "schemas/human-cognitive-load-policy.schema.json",
+    "humanDecisionGate": "schemas/human-decision-gate.schema.json"
   },
   "controlPlane": {
     "startActionId": "K00",
@@ -327,6 +345,7 @@
           "K08",
           "K09",
           "K10",
+          "K10A",
           "K11"
         ]
       },
@@ -419,7 +438,17 @@
         "purpose": "Ask the HUMAN to select GitHub or GitLab.",
         "domainNeutral": true,
         "humanDecision": "PROVIDER_SELECTION",
-        "modelRef": "initialization-model.json#sequence/INIT-01"
+        "modelRef": "initialization-model.json#sequence/INIT-01",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K02",
@@ -434,7 +463,17 @@
         "purpose": "Let the HUMAN select the owner namespace.",
         "domainNeutral": true,
         "humanDecision": "OWNER_SELECTION",
-        "modelRef": "initialization-model.json#sequence/INIT-03"
+        "modelRef": "initialization-model.json#sequence/INIT-03",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K04",
@@ -456,7 +495,17 @@
         "purpose": "Require Software / Website or Buch. This fixes Factory and compatible Operating Model.",
         "domainNeutral": true,
         "humanDecision": "CREATION_TYPE_SELECTION",
-        "modelRef": "initialization-model.json#sequence/INIT-06"
+        "modelRef": "initialization-model.json#sequence/INIT-06",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K07",
@@ -464,7 +513,17 @@
         "purpose": "Ask whether to use an existing project or start a new project.",
         "domainNeutral": true,
         "humanDecision": "PROJECT_MODE_SELECTION",
-        "modelRef": "initialization-model.json#sequence/INIT-07"
+        "modelRef": "initialization-model.json#sequence/INIT-07",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K08",
@@ -472,7 +531,17 @@
         "purpose": "Select an existing recent repository or define a new project.",
         "domainNeutral": true,
         "humanDecision": "PROJECT_SELECTION",
-        "modelRef": "initialization-model.json#sequence/INIT-08A|INIT-08B"
+        "modelRef": "initialization-model.json#sequence/INIT-08A|INIT-08B",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K09",
@@ -483,11 +552,30 @@
       },
       {
         "id": "K10",
-        "operation": "CONFIRM_CREATION_PROFILE_BINDINGS",
-        "purpose": "Confirm Provider Adapter plus Factory and Operating Model determined by creation type.",
+        "operation": "RESOLVE_CREATION_PROFILE_BINDINGS",
+        "purpose": "Resolve Provider Adapter plus Factory and Operating Model predetermined by the approved creation type. Present a short summary; do not request redundant approval when the binding is deterministic and unchanged.",
+        "domainNeutral": true,
+        "modelRef": "initialization-model.json#sequence/INIT-10",
+        "humanDecisionWhen": "ONLY_IF_NON_STANDARD_CHANGED_OR_CONFLICTING_BINDING_REQUIRES_HUMAN_CHOICE"
+      },
+      {
+        "id": "K10A",
+        "operation": "APPROVE_NON_STANDARD_OR_CHANGED_BINDING",
+        "purpose": "Request HUMAN approval only when the resolved package binding materially differs from the already approved creation profile or an existing pinned binding.",
         "domainNeutral": true,
         "humanDecision": "PACKAGE_BINDING_APPROVAL",
-        "modelRef": "initialization-model.json#sequence/INIT-10"
+        "modelRef": "human-decision-gate-model.json",
+        "executeWhen": "K10 detected a non-standard, changed or conflicting binding that cannot be safely derived/reused.",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "MATERIAL_ALTERNATIVE_CHOICE",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K11",
@@ -495,7 +583,17 @@
         "purpose": "After SETUP_APPROVAL, write project control to safor-memory and verify by provider readback.",
         "domainNeutral": true,
         "humanDecision": "SETUP_APPROVAL",
-        "modelRef": "initialization-model.json#sequence/INIT-11"
+        "modelRef": "initialization-model.json#sequence/INIT-11",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "R01",
@@ -508,7 +606,17 @@
         "operation": "CAPTURE_FACTORY_INTENT",
         "purpose": "Run Discovery strictly from the bound Factory discoveryContract selected by the HUMAN creation type.",
         "domainNeutral": true,
-        "modelRef": "BOUND_FACTORY.model.discoveryContract"
+        "modelRef": "BOUND_FACTORY.model.discoveryContract",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "DISCOVERY",
+          "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "targetLoad": "HIGH",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "rule": "Deep sequential questioning is allowed only for information the Factory requires and SAFOR cannot safely derive from approved state/evidence."
+        }
       },
       {
         "id": "P01",
@@ -528,14 +636,36 @@
         "operation": "APPROVE_PLAN",
         "purpose": "Persist explicit approval of the instantiated plan; plan approval is not execution authorization.",
         "domainNeutral": true,
-        "humanDecision": "PLAN_APPROVAL"
+        "humanDecision": "PLAN_APPROVAL",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "PLANNING",
+          "reason": "MATERIAL_ALTERNATIVE_CHOICE",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        },
+        "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active."
       },
       {
         "id": "E01",
         "operation": "REQUEST_EXECUTION_MANDATE",
         "purpose": "Create an explicit, scoped execution mandate for selected work items/capabilities.",
         "domainNeutral": true,
-        "humanDecision": "EXECUTION_MANDATE"
+        "humanDecision": "EXECUTION_MANDATE",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "EXECUTION",
+          "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        },
+        "decisionReuseRule": "Do not request a new execution mandate when an active unrevoked mandate already covers the same work, capabilities and materially unchanged bound inputs. Prefer one safely scoped batch mandate over repeated equivalent approvals."
       },
       {
         "id": "E02",
@@ -574,7 +704,16 @@
         "id": "O01",
         "operation": "ASSESS_OUTCOMES",
         "purpose": "Evaluate declared business/reader/organizational outcomes only when the factory defines measurable outcome nodes and evidence.",
-        "domainNeutral": true
+        "domainNeutral": true,
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "OUTCOME",
+          "reason": "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true
+        }
       },
       {
         "id": "C01",
@@ -616,7 +755,19 @@
         "purpose": "Create or explicitly revise a persistent agent identity and workspace after HUMAN approval; identity is reused across jobs.",
         "domainNeutral": true,
         "humanDecision": "AGENT_IDENTITY_APPROVAL",
-        "modelRef": "agent-workspace-model.json"
+        "modelRef": "agent-workspace-model.json",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "AGENT_COORDINATION",
+          "reason": "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        },
+        "humanDecisionWhen": "FIRST_IDENTITY_CREATION_OR_IMMUTABLE_IDENTITY_OR_AUTHORITY_CHANGE",
+        "reuseRule": "Reuse an unchanged ACTIVE persistent agent identity without HUMAN reapproval."
       },
       {
         "id": "A02",
@@ -737,6 +888,22 @@
       "success": "RETURN_TO_LAST_VERIFIED_CHECKPOINT",
       "escalation": "WAITING_HUMAN",
       "rule": "Automatic repair is permitted only within existing authorization and configured repair/retry budgets."
+    },
+    "crossCuttingGuards": {
+      "humanDecisionGate": {
+        "modelRef": "human-decision-gate-model.json",
+        "interactionPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+        "appliesBefore": "EVERY_HUMAN_QUESTION_APPROVAL_OR_CHOICE",
+        "defaultOutcome": "DO_NOT_ASK",
+        "requiredEvaluationOrder": [
+          "DERIVE_FROM_APPROVED_STATE_POLICY_AND_EVIDENCE",
+          "REUSE_UNCHANGED_ACTIVE_DECISION",
+          "RESOLVE_LEGITIMATE_HUMAN_REASON",
+          "CHECK_PHASE_LOAD_TARGET",
+          "TRANSLATE_TO_HUMAN_DOMAIN_LANGUAGE",
+          "PRESENT_ONE_DECISION_CONTEXT"
+        ]
+      }
     }
   },
   "invariants": [
@@ -1159,6 +1326,66 @@
     {
       "id": "INV-105",
       "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
+    },
+    {
+      "id": "INV-106",
+      "rule": "Every proposed HUMAN question or approval is evaluated by human-decision-gate-model.json before presentation and records exactly one legitimate interaction reason."
+    },
+    {
+      "id": "INV-107",
+      "rule": "High HUMAN cognitive load is permitted in DISCOVERY when required to acquire non-derivable HUMAN intent, context, priorities or value judgments; technical/system-generated load remains minimized."
+    },
+    {
+      "id": "INV-108",
+      "rule": "After PLAN_APPROVAL, default HUMAN load is LOW or VERY_LOW. Temporary escalation requires an explicit legitimate reason such as scope/authority change, material risk, irreversible action, goal conflict, recovery escalation or outcome judgment."
+    },
+    {
+      "id": "INV-109",
+      "rule": "A HUMAN question is forbidden when its answer can be safely derived from approved state, policy and authoritative evidence."
+    },
+    {
+      "id": "INV-110",
+      "rule": "An unchanged, unrevoked prior HUMAN decision with the same scope and materially unchanged bound inputs is reused and must not be requested again."
+    },
+    {
+      "id": "INV-111",
+      "rule": "Scheduling, deterministic agent selection, job IDs, Git branch naming, resource leases, dispatch waves, readbacks, evidence collection, internal transitions and recovery-profile selection must not be delegated to HUMAN."
+    },
+    {
+      "id": "INV-112",
+      "rule": "Normal creation-profile binding does not require a second HUMAN approval when Factory, Operating Model and Provider Adapter are deterministically resolved from the approved creation type and unchanged pinned versions."
+    },
+    {
+      "id": "INV-113",
+      "rule": "Every HUMAN-facing turn contains at most one new decision context; multiple technical sub-decisions are consolidated by MASTER before presentation."
+    },
+    {
+      "id": "INV-114",
+      "rule": "Default SUMMARY communication hides technical IDs and internal terms and explains what happened, project meaning, whether HUMAN action is required and what happens next."
+    },
+    {
+      "id": "INV-115",
+      "rule": "Primary-action labels are domain-specific and dynamic where possible; internal action IDs or orchestration terms are never default HUMAN labels. Fallback label is 'Weiter'."
+    },
+    {
+      "id": "INV-116",
+      "rule": "The heuristic cognitive-load score is an internal governance heuristic, not a psychometric measurement, and may not be presented as a validated scientific measure."
+    },
+    {
+      "id": "INV-117",
+      "rule": "DISCOVERY may ask deep sequential questions, but still only one decision context per turn and only for information SAFOR cannot safely derive."
+    },
+    {
+      "id": "INV-118",
+      "rule": "Execution and Recovery communicate by exception: successful authorized internal operations do not require HUMAN confirmations merely to acknowledge technical state transitions."
+    },
+    {
+      "id": "INV-119",
+      "rule": "Existing active execution mandates and persistent agent identities are reused within unchanged scope rather than repeatedly reauthorized."
+    },
+    {
+      "id": "INV-120",
+      "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored."
     }
   ],
   "evidencePolicy": {
@@ -1270,7 +1497,11 @@
       "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
       "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
       "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",
-      "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it."
+      "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it.",
+      "Before asking the HUMAN anything, attempt safe derivation/reuse and evaluate the HUMAN Decision Gate.",
+      "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
+      "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
+      "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval."
     ]
   },
   "initializationModelRef": "initialization-model.json",
@@ -1278,5 +1509,6 @@
   "agentWorkspaceModelRef": "agent-workspace-model.json",
   "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
   "agentJobContractModelRef": "agent-job-contract-model.json",
-  "moduleSelfHealingModelRef": "module-self-healing-model.json"
+  "moduleSelfHealingModelRef": "module-self-healing-model.json",
+  "humanDecisionGateModelRef": "human-decision-gate-model.json"
 }
