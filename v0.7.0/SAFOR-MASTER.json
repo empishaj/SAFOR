@@ -986,6 +986,10 @@
     {
       "id": "INV-070",
       "rule": "With N free eligible agent slots and at least N mutually conflict-free READY ATOMIC jobs, the scheduler may dispatch up to N jobs in the same wave subject to the project parallelism ceiling."
+    },
+    {
+      "id": "INV-071",
+      "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
     }
   ],
   "evidencePolicy": {
