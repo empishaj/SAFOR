@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_BOOTSTRAP",
-  "schemaVersion": "0.4.0",
-  "kernelVersion": "0.4.0",
+  "schemaVersion": "0.5.0",
+  "kernelVersion": "0.5.0",
   "definitionId": "safor-master-kernel",
   "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
   "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -772,14 +772,14 @@
   "compatibility": {
     "sourceBaseline": "factory/safor-master/v0.3.0",
     "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-    "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
+    "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.5.0 schemas."
   },
   "repositoryPolicyRef": "repository-policy.json",
   "packageRegistryRef": "package-registry.json",
   "distribution": {
     "canonicalSource": {
       "repository": "empishaj/SAFOR",
-      "root": "v0.4.0",
+      "root": "v0.5.0",
       "registry": "package-registry.json"
     },
     "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",

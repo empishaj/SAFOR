@@ -1,13 +1,13 @@
 {
   "format": "SAFOR_PACKAGE_MANIFEST",
-  "schemaVersion": "0.4.0",
+  "schemaVersion": "0.5.0",
   "packageId": "safor.om.saas-engineering",
   "packageKind": "OPERATING_MODEL",
   "version": "1.0.0",
   "name": "SaaS Engineering Reference Operating Model",
   "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
   "compatibility": {
-    "kernel": ">=0.4.0 <0.5.0"
+    "kernel": ">=0.5.0 <0.6.0"
   },
   "exports": {
     "capabilities": [

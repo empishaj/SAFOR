@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:safor:interaction-menu:0.4.0",
-  "title": "SAFOR Interaction Menu 0.4.0",
+  "$id": "urn:safor:interaction-menu:0.5.0",
+  "title": "SAFOR Interaction Menu 0.5.0",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -17,7 +17,7 @@
       "const": "SAFOR_INTERACTION_MENU"
     },
     "schemaVersion": {
-      "const": "0.4.0"
+      "const": "0.5.0"
     },
     "menuId": {
       "type": "string",

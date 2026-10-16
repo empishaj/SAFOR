@@ -1,13 +1,13 @@
 {
   "format": "SAFOR_PACKAGE_MANIFEST",
-  "schemaVersion": "0.4.0",
+  "schemaVersion": "0.5.0",
   "packageId": "safor.factory.software-delivery",
   "packageKind": "FACTORY",
   "version": "1.0.0",
   "name": "Software Delivery and Outcome Factory",
   "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
   "compatibility": {
-    "kernel": ">=0.4.0 <0.5.0"
+    "kernel": ">=0.5.0 <0.6.0"
   },
   "exports": {
     "capabilities": [
