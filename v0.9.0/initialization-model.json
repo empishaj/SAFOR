@@ -11,6 +11,24 @@
   },
   "sequence": [
     {
+      "id": "INIT-00",
+      "operation": "VERIFY_EMBEDDED_MODULE_RECOVERY_BASELINE",
+      "title": "SAFOR Runtime prüfen",
+      "requiresProvider": false,
+      "passOutcome": "MODULE_RECOVERY_BASELINE_VERIFIED",
+      "failOutcome": "STOP",
+      "checks": [
+        "EMBEDDED_MODULE_KEYS_MATCH_RECOVERY_PROFILE_KEYS_EXACTLY",
+        "ONE_UNIQUE_PROFILE_PER_MODULE",
+        "MODULE_AND_INTEGRITY_MANIFEST_PROFILE_IDS_MATCH",
+        "SELF_HEALING_CONTROL_MODULES_PRESENT_AND_STRUCTURALLY_VALID",
+        "REFERENCE_RESOLUTION_TARGETS_EXIST",
+        "KERNEL_SCHEMA_AND_BUNDLE_VERSIONS_AGREE"
+      ],
+      "rule": "Run before any provider/project operation. If recovery-control integrity or exact profile coverage cannot be proven, fail closed and do not attempt heuristic self-repair.",
+      "selfHealingRef": "module-self-healing-model.json"
+    },
+    {
       "id": "INIT-01",
       "operation": "SELECT_PROVIDER",
       "humanDecision": "PROVIDER_SELECTION",
