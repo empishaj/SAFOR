@@ -1,0 +1,167 @@
+{
+  "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
+  "version": "0.8.0",
+  "policyId": "SAFOR-REPO-BOUNDARY-V2",
+  "denyByDefault": true,
+  "principles": {
+    "controlPlaneSeparatedFromWorkArtifacts": true,
+    "providerNeutral": true,
+    "projectScopedControl": true,
+    "workerMayNotMutateControlStateByDefault": true,
+    "packagesAreReadOnlyAfterProjectPinning": true,
+    "actualProviderRightsOverrideDeclaredIntent": true,
+    "agentWorkspaceOwnershipSeparated": true
+  },
+  "repositoryClasses": {
+    "CONTROL_REPOSITORY": {
+      "purpose": "Persist SAFOR project bindings, control/value-stream/execution states, decisions, evidence, package snapshots, repository-native agent workspaces, MASTER job lifecycle and audit records.",
+      "allowedRoots": [
+        "projects/",
+        "factory/"
+      ],
+      "forbiddenContentClasses": [
+        "DOMAIN_EXECUTABLE_ARTIFACT"
+      ],
+      "requiredName": "safor-memory"
+    },
+    "WORK_REPOSITORY": {
+      "purpose": "Persist domain work artifacts such as source code, manuscripts, research outputs, designs or other factory-defined deliverables.",
+      "forbiddenPrefixes": [
+        "factory/",
+        "safor-master/",
+        "control-plane/",
+        "projects/",
+        "agents/",
+        "contracts/",
+        ".saf/"
+      ],
+      "forbiddenNames": [
+        "SAFOR-MASTER.json",
+        "master-state.json",
+        "launch-prompt.md",
+        "work-contract.json"
+      ],
+      "agentMutationPolicy": {
+        "directDefaultBranchWrite": false,
+        "requiredBranchPattern": "safor/job/{jobKey}/{agentKey}",
+        "immutableBaseCommitRequired": true,
+        "allowedPathsMustMatchJobContract": true,
+        "crossJobBranchWrite": false,
+        "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
+        "resultTraceRequired": [
+          "baseCommitSha",
+          "branch",
+          "commitShas",
+          "headCommitSha",
+          "changedPaths",
+          "providerReadbackRef"
+        ]
+      }
+    },
+    "FACTORY_RUNTIME_CODE_REPOSITORY": {
+      "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
+      "status": "UNBOUND_BY_DEFAULT"
+    }
+  },
+  "projectControlLayout": {
+    "root": "projects/{projectSlug}/",
+    "permittedPrefixes": [
+      "packages/",
+      "state/",
+      "decisions/",
+      "evidence/",
+      "artifacts/",
+      "work-items/",
+      "agents/",
+      "audit/",
+      "master/jobs/",
+      "master/scheduler/",
+      "master/dispatch-waves/",
+      "master/resource-leases/"
+    ],
+    "requiredFiles": [
+      "project.json",
+      "bindings.json",
+      "state/control.json",
+      "state/value-stream.json",
+      "state/execution.json",
+      "agents/index.json",
+      "master/scheduler/state.json"
+    ]
+  },
+  "reconciliation": {
+    "readCurrentProviderRevisionBeforeWrite": true,
+    "compareExpectedRevision": true,
+    "requireProviderReadback": true,
+    "unknownMutationOutcome": "RECONCILE_REQUIRED",
+    "blockOnUnexpectedHistoryRewrite": true
+  },
+  "note": "Domain work artifact classes are defined by the bound FACTORY package. This policy intentionally contains no software-specific source/test/config taxonomy.",
+  "selfHealingSafety": {
+    "allowed": "Only verified, bounded, non-destructive repairs within existing authorization.",
+    "forbidden": [
+      "force_push",
+      "history_rewrite",
+      "repository_delete",
+      "authoritative_state_delete_without_verified_restore",
+      "gate_bypass",
+      "review_bypass",
+      "mandate_expansion",
+      "invented_evidence"
+    ],
+    "requireReadbackAfterRepair": true,
+    "requireReconciliationBeforeRetryOnUnknownEffect": true
+  },
+  "controlRepositoryRequirement": {
+    "mandatory": true,
+    "exactName": "safor-memory",
+    "locationPattern": "{selectedOwner}/safor-memory",
+    "mustPreExist": true,
+    "autoCreate": false,
+    "visibility": "PRIVATE_RECOMMENDED_AND_POLICY_COMPLIANT",
+    "accessRequired": [
+      "READ",
+      "WRITE"
+    ],
+    "onMissingOrInsufficientAccess": "STOP",
+    "rule": "SAFOR may not initialize, select a project, bind packages or execute work unless `{selectedOwner}/safor-memory` exists and read/write access is proven."
+  },
+  "agentWorkspaceOwnership": {
+    "modelRef": "agent-workspace-model.json",
+    "masterOwned": [
+      "agents/index.json",
+      "agents/{agentId}/identity.json",
+      "agents/{agentId}/inbox/index.json",
+      "agents/{agentId}/inbox/{jobId}.json",
+      "master/jobs/{jobId}.json",
+      "master/scheduler/state.json",
+      "master/dispatch-waves/{waveId}.json",
+      "master/resource-leases/{leaseId}.json"
+    ],
+    "agentOwned": [
+      "agents/{agentId}/state.json",
+      "agents/{agentId}/outbox/{jobId}.result.json",
+      "agents/{agentId}/evidence/{jobId}/",
+      "agents/{agentId}/audit/",
+      "agents/{agentId}/outbox/{jobId}.result.md"
+    ],
+    "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts, scheduler state, dispatch waves, resource leases or MASTER job lifecycle artifacts.",
+    "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant.",
+    "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required.",
+    "humanReadableResultRule": "Every agent job persists both outbox/{jobId}.result.json and outbox/{jobId}.result.md. The JSON pins the Markdown blob and control-repository commit.",
+    "gitTraceRule": "Every mutating agent job must use only MASTER-declared dedicated job branches, report resulting commit SHAs and changed paths, and provide provider readback evidence. Direct default-branch mutation by an agent is forbidden."
+  },
+  "multiAgentScheduling": {
+    "modelRef": "multi-agent-scheduler-model.json",
+    "masterOwned": [
+      "master/scheduler/state.json",
+      "master/dispatch-waves/{waveId}.json",
+      "master/resource-leases/{leaseId}.json"
+    ],
+    "mutationIsolation": "DEDICATED_JOB_BRANCH_PLUS_CONFLICT_DOMAIN_LEASE",
+    "defaultAgentConcurrentJobs": 1,
+    "unknownConflict": "SERIALIZE",
+    "directAgentDefaultBranchWrite": false,
+    "silentLeaseReassignment": false
+  }
+}
