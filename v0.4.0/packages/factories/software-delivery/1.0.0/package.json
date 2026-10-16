@@ -1,0 +1,340 @@
+{
+  "format": "SAF_PACKAGE_MANIFEST",
+  "schemaVersion": "0.4.0",
+  "packageId": "saf.factory.software-delivery",
+  "packageKind": "FACTORY",
+  "version": "1.0.0",
+  "name": "Software Delivery and Outcome Factory",
+  "description": "Provider-neutral software value-creation factory from product intent through delivery, activation and outcome assessment. The factory requests abstract capabilities and authorities and contains no role IDs.",
+  "compatibility": {
+    "kernel": ">=0.4.0 <0.5.0"
+  },
+  "exports": {
+    "capabilities": [
+      "business_intent",
+      "scope_definition",
+      "requirement_definition",
+      "solution_design",
+      "code_contribution",
+      "technical_review",
+      "test_evidence",
+      "security_evidence",
+      "release_readiness",
+      "activation_execution",
+      "outcome_assessment"
+    ],
+    "authorities": [
+      "strategic_investment",
+      "product_scope_approval",
+      "architecture_exception_approval",
+      "quality_risk_decision",
+      "production_release_approval",
+      "business_outcome_acceptance"
+    ],
+    "workItemTypes": [
+      "PRODUCT_DEFINITION",
+      "SOLUTION_DESIGN",
+      "IMPLEMENTATION",
+      "TEST",
+      "SECURITY_REVIEW",
+      "RELEASE",
+      "ACTIVATION",
+      "OUTCOME_ASSESSMENT"
+    ],
+    "artifactTypes": [
+      "BUSINESS_INTENT",
+      "REQUIREMENT",
+      "SOLUTION_DESIGN",
+      "CONTRIBUTION",
+      "TEST_EVIDENCE",
+      "SECURITY_EVIDENCE",
+      "RELEASE",
+      "ACTIVATION",
+      "OUTCOME"
+    ],
+    "providerCapabilities": []
+  },
+  "dependencies": [],
+  "model": {
+    "flowGraph": {
+      "nonLinear": true,
+      "nodes": [
+        {
+          "id": "SW-01",
+          "workItemType": "PRODUCT_DEFINITION",
+          "requiresCapabilities": [
+            "business_intent",
+            "scope_definition",
+            "requirement_definition"
+          ],
+          "requiredAuthorities": [
+            "product_scope_approval"
+          ],
+          "produces": [
+            "BUSINESS_INTENT",
+            "REQUIREMENT"
+          ],
+          "dependsOn": []
+        },
+        {
+          "id": "SW-02",
+          "workItemType": "SOLUTION_DESIGN",
+          "requiresCapabilities": [
+            "solution_design"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "ELEVATED_ARCHITECTURE_RISK",
+              "authorityId": "architecture_exception_approval"
+            }
+          ],
+          "produces": [
+            "SOLUTION_DESIGN"
+          ],
+          "dependsOn": [
+            "SW-01"
+          ]
+        },
+        {
+          "id": "SW-03",
+          "workItemType": "IMPLEMENTATION",
+          "requiresCapabilities": [
+            "code_contribution"
+          ],
+          "review": {
+            "required": true,
+            "reviewCapability": "technical_review",
+            "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+          },
+          "requiredAuthorities": [],
+          "produces": [
+            "CONTRIBUTION"
+          ],
+          "dependsOn": [
+            "SW-02"
+          ]
+        },
+        {
+          "id": "SW-04",
+          "workItemType": "TEST",
+          "requiresCapabilities": [
+            "test_evidence"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "TEST_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-03"
+          ]
+        },
+        {
+          "id": "SW-05",
+          "workItemType": "SECURITY_REVIEW",
+          "requiresCapabilities": [
+            "security_evidence"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "CRITICAL_SECURITY_DEVIATION",
+              "authorityId": "quality_risk_decision"
+            }
+          ],
+          "produces": [
+            "SECURITY_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-03"
+          ]
+        },
+        {
+          "id": "SW-06",
+          "workItemType": "RELEASE",
+          "requiresCapabilities": [
+            "release_readiness"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "PRODUCTION_AND_RISK",
+              "authorityId": "production_release_approval"
+            }
+          ],
+          "produces": [
+            "RELEASE"
+          ],
+          "dependsOn": [
+            "SW-04",
+            "SW-05"
+          ],
+          "joinPolicy": "ALL_DEPENDENCIES_ACCEPTED"
+        },
+        {
+          "id": "SW-07",
+          "workItemType": "ACTIVATION",
+          "requiresCapabilities": [
+            "activation_execution"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "ACTIVATION"
+          ],
+          "dependsOn": [
+            "SW-06"
+          ]
+        },
+        {
+          "id": "SW-08",
+          "workItemType": "OUTCOME_ASSESSMENT",
+          "requiresCapabilities": [
+            "outcome_assessment"
+          ],
+          "requiredAuthorities": [
+            "business_outcome_acceptance"
+          ],
+          "produces": [
+            "OUTCOME"
+          ],
+          "dependsOn": [
+            "SW-07"
+          ]
+        }
+      ]
+    },
+    "reworkPolicy": {
+      "selective": true,
+      "preserveAcceptedUnaffectedWork": true,
+      "defaultMaximumAttempts": 3,
+      "onExhausted": "REPLAN_REQUIRED"
+    },
+    "outcomeModel": {
+      "deliveryTerminalArtifact": "ACTIVATION",
+      "outcomeArtifact": "OUTCOME",
+      "rule": "A delivered or activated product is not evidence that the declared value hypothesis has been achieved."
+    },
+    "discoveryContract": {
+      "creationType": "SOFTWARE_WEBSITE",
+      "purpose": "Understand the user problem, intended value, solution form and minimum useful software/website scope before planning.",
+      "requiredFields": [
+        {
+          "id": "targetUsers",
+          "prompt": "Wer soll die Software oder Website hauptsächlich nutzen?"
+        },
+        {
+          "id": "userProblem",
+          "prompt": "Welches konkrete Problem soll sie lösen?"
+        },
+        {
+          "id": "valueHypothesis",
+          "prompt": "Woran erkennen wir später, dass sie echten Nutzen liefert?"
+        },
+        {
+          "id": "solutionForm",
+          "prompt": "Was soll entstehen?",
+          "options": [
+            "WEBSITE",
+            "WEB_APP",
+            "SERVICE_API",
+            "APPLICATION",
+            "OTHER"
+          ]
+        },
+        {
+          "id": "firstRelease",
+          "prompt": "Was ist die kleinste wirklich nutzbare erste Version?"
+        }
+      ],
+      "completionPredicate": "ALL_REQUIRED_FIELDS_CONFIRMED",
+      "outputArtifactType": "BUSINESS_INTENT"
+    },
+    "planningContract": {
+      "creationType": "SOFTWARE_WEBSITE",
+      "sourceInputs": [
+        "DISCOVERY_RECORD",
+        "BUSINESS_INTENT",
+        "REQUIREMENT"
+      ],
+      "requiredPlanningPerspectives": [
+        "PRODUCT",
+        "ARCHITECTURE",
+        "ENGINEERING",
+        "QUALITY",
+        "SECURITY",
+        "RELEASE",
+        "OUTCOME"
+      ],
+      "deriveWorkItemsFrom": "flowGraph",
+      "requiredForEachWorkItem": [
+        "objective",
+        "requiredCapabilities",
+        "dependencies",
+        "expectedOutputs",
+        "acceptanceCriteria",
+        "evidenceRequirements"
+      ],
+      "conditionalRules": [
+        {
+          "when": "solutionForm IN [WEBSITE,WEB_APP]",
+          "addPlanningConcerns": [
+            "RESPONSIVE_BEHAVIOR",
+            "ACCESSIBILITY",
+            "FRONTEND_BUILD_AND_DELIVERY"
+          ]
+        }
+      ],
+      "rule": "Planning must be derived only from the confirmed software/website discovery and this factory graph."
+    },
+    "evidenceContract": {
+      "creationType": "SOFTWARE_WEBSITE",
+      "rule": "Evidence is work-item-type specific and must come from provider/artifact readback or another authoritative bound source.",
+      "byWorkItemType": {
+        "PRODUCT_DEFINITION": [
+          "DISCOVERY_RECORD",
+          "SCOPE_DECISION"
+        ],
+        "SOLUTION_DESIGN": [
+          "SOLUTION_DESIGN_ARTIFACT",
+          "DESIGN_REVIEW_OR_EXCEPTION_WHEN_REQUIRED"
+        ],
+        "IMPLEMENTATION": [
+          "CONTRIBUTION_REFERENCE",
+          "INDEPENDENT_TECHNICAL_REVIEW_WHEN_REQUIRED"
+        ],
+        "TEST": [
+          "TEST_RESULT_EVIDENCE"
+        ],
+        "SECURITY_REVIEW": [
+          "SECURITY_REVIEW_EVIDENCE"
+        ],
+        "RELEASE": [
+          "RELEASE_READINESS_EVIDENCE",
+          "REQUIRED_RELEASE_DECISION_WHEN_TRIGGERED"
+        ],
+        "ACTIVATION": [
+          "ACTIVATION_OR_DEPLOYMENT_EVIDENCE"
+        ],
+        "OUTCOME_ASSESSMENT": [
+          "USAGE_OR_OUTCOME_EVIDENCE",
+          "BUSINESS_OUTCOME_DECISION"
+        ]
+      },
+      "conditionalEvidence": [
+        {
+          "when": "solutionForm IN [WEBSITE,WEB_APP]",
+          "require": [
+            "BUILD_EVIDENCE",
+            "RESPONSIVE_VERIFICATION",
+            "ACCESSIBILITY_EVIDENCE"
+          ]
+        }
+      ],
+      "forbiddenSubstitutions": [
+        "ASSISTANT_CLAIM_FOR_PROVIDER_EVIDENCE",
+        "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
+        "DELIVERY_AS_OUTCOME_EVIDENCE"
+      ]
+    }
+  }
+}
