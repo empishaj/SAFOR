@@ -200,24 +200,24 @@
       "sourceBlobSha": "848ff210daf9ca9e1e54272d0374c4ce090abd59"
     },
     "schemaSelfHealingRecord": {
-      "sourcePath": "v0.6.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "0f30daf40b67735ba49d0cd508d3e70085e37728"
+      "sourcePath": "v0.7.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "ffe3f5b700f42f5a402e2db86febe0030ce0d6dc"
     },
     "schemaAgentRegistry": {
-      "sourcePath": "v0.6.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "879a072e3ce918efeba40bfca3d848ef4d792bf1"
+      "sourcePath": "v0.7.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "5defb4380971cba952dd7f1aa54e1369ecad8542"
     },
     "schemaAgentIdentity": {
-      "sourcePath": "v0.6.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "53b09341a0cc490868096863a9fc3df0093c18be"
+      "sourcePath": "v0.7.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "ec0d2ea7d72754c931baebc62d71f0ae4871d9c0"
     },
     "schemaAgentState": {
-      "sourcePath": "v0.6.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "9eeba9b8e43ae5b2a63b3df5033e5f475260291a"
+      "sourcePath": "v0.7.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "66033c46c73e3c450701780ca57b18237b91ecae"
     },
     "schemaAgentJob": {
-      "sourcePath": "v0.6.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "2cbdb6666d215497e14be0740ee453bbf24a460a"
+      "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e"
     },
     "schemaAgentJobState": {
       "sourcePath": "v0.6.0/schemas/agent-job-state.schema.json",
@@ -232,8 +232,8 @@
       "sourceBlobSha": "bcadb98e0348f8fd83be3c63e58b0b0a0ca6b1f7"
     },
     "schemaAgentInboxIndex": {
-      "sourcePath": "v0.6.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "bf50a3040f1bc8ab2ed10cc4d2518a474973ed5a"
+      "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "20e93dd158b7737b88c40063d4090139a2a94fbb"
     },
     "multiAgentScheduler": {
       "sourcePath": "v0.7.0/multi-agent-scheduler-model.json",
@@ -6434,12 +6434,12 @@
     },
     "schemaSelfHealingRecord": {
       "key": "schemaSelfHealingRecord",
-      "sourcePath": "v0.6.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "0f30daf40b67735ba49d0cd508d3e70085e37728",
+      "sourcePath": "v0.7.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "ffe3f5b700f42f5a402e2db86febe0030ce0d6dc",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:self-healing-record:0.6.0",
-        "title": "SAFOR Self-Healing Record 0.6.0",
+        "$id": "urn:safor:self-healing-record:0.7.0",
+        "title": "SAFOR Self-Healing Record 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6549,12 +6549,12 @@
     },
     "schemaAgentRegistry": {
       "key": "schemaAgentRegistry",
-      "sourcePath": "v0.6.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "879a072e3ce918efeba40bfca3d848ef4d792bf1",
+      "sourcePath": "v0.7.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "5defb4380971cba952dd7f1aa54e1369ecad8542",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-registry:0.6.0",
-        "title": "SAFOR Agent Registry 0.6.0",
+        "$id": "urn:safor:agent-registry:0.7.0",
+        "title": "SAFOR Agent Registry 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6569,7 +6569,7 @@
             "const": "SAFOR_AGENT_REGISTRY"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6595,7 +6595,8 @@
               "identityRef",
               "workspaceRoot",
               "registeredAt",
-              "registeredBy"
+              "registeredBy",
+              "scheduling"
             ],
             "properties": {
               "agentId": {
@@ -6617,6 +6618,24 @@
               "registeredBy": {
                 "type": "string",
                 "minLength": 1
+              },
+              "scheduling": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "dispatchEnabled",
+                  "maxConcurrentJobs"
+                ],
+                "properties": {
+                  "dispatchEnabled": {
+                    "type": "boolean"
+                  },
+                  "maxConcurrentJobs": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 32
+                  }
+                }
               }
             }
           }
@@ -6625,12 +6644,12 @@
     },
     "schemaAgentIdentity": {
       "key": "schemaAgentIdentity",
-      "sourcePath": "v0.6.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "53b09341a0cc490868096863a9fc3df0093c18be",
+      "sourcePath": "v0.7.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "ec0d2ea7d72754c931baebc62d71f0ae4871d9c0",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-identity:0.6.0",
-        "title": "SAFOR Agent Identity 0.6.0",
+        "$id": "urn:safor:agent-identity:0.7.0",
+        "title": "SAFOR Agent Identity 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6656,7 +6675,7 @@
             "const": "SAFOR_AGENT_IDENTITY"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6775,12 +6794,12 @@
     },
     "schemaAgentState": {
       "key": "schemaAgentState",
-      "sourcePath": "v0.6.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "9eeba9b8e43ae5b2a63b3df5033e5f475260291a",
+      "sourcePath": "v0.7.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "66033c46c73e3c450701780ca57b18237b91ecae",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-state:0.6.0",
-        "title": "SAFOR Agent Runtime State 0.6.0",
+        "$id": "urn:safor:agent-state:0.7.0",
+        "title": "SAFOR Agent Runtime State 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6801,7 +6820,7 @@
             "const": "SAFOR_AGENT_STATE"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
@@ -6890,6 +6909,8 @@
               "masterJobStateRef",
               "claimId",
               "sessionId",
+              "dispatchWaveRef",
+              "resourceLeaseRefs",
               "phase",
               "claimedAt",
               "startedAt",
@@ -6949,6 +6970,19 @@
                   "string",
                   "null"
                 ]
+              },
+              "dispatchWaveRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "resourceLeaseRefs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
               }
             }
           }
@@ -6957,12 +6991,12 @@
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
-      "sourcePath": "v0.6.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "2cbdb6666d215497e14be0740ee453bbf24a460a",
+      "sourcePath": "v0.7.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "967ae12c157dd77d86c9d70c3d8836268856d96e",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job:0.6.0",
-        "title": "SAFOR Agent Job Contract 0.6.0",
+        "$id": "urn:safor:agent-job:0.7.0",
+        "title": "SAFOR Agent Job Contract 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -6977,6 +7011,8 @@
           "issuedAt",
           "dispatchRevision",
           "dispatchState",
+          "dispatchWaveRef",
+          "resourceLeaseRefs",
           "workItemRef",
           "executionContractRef",
           "mandateRef",
@@ -6984,6 +7020,9 @@
           "inputs",
           "requiredOutputs",
           "evidenceRequirements",
+          "resourceAccessSource",
+          "resourceAccess",
+          "gitWorkspaces",
           "constraints",
           "resultTarget"
         ],
@@ -6992,7 +7031,7 @@
             "const": "SAFOR_AGENT_JOB"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "jobId": {
             "type": "string",
@@ -7133,7 +7172,8 @@
             "additionalProperties": false,
             "required": [
               "resultRef",
-              "evidenceRoot"
+              "evidenceRoot",
+              "humanReadableResultRef"
             ],
             "properties": {
               "resultRef": {
@@ -7143,7 +7183,80 @@
               "evidenceRoot": {
                 "type": "string",
                 "minLength": 1
+              },
+              "humanReadableResultRef": {
+                "type": "string",
+                "minLength": 1
               }
+            }
+          },
+          "resourceAccess": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "readSet",
+              "writeSet",
+              "exclusiveKeys"
+            ],
+            "properties": {
+              "readSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/readResource"
+                }
+              },
+              "writeSet": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/writeResource"
+                }
+              },
+              "exclusiveKeys": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "description": "Immutable dispatch snapshot of the authoritative work-item resource declaration. It must equal the resourceAccess in resourceAccessSource at dispatch time."
+          },
+          "gitWorkspaces": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/gitWorkspace"
+            }
+          },
+          "resourceAccessSource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "workItemRef",
+              "workItemBlobSha"
+            ],
+            "properties": {
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workItemBlobSha": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "dispatchWaveRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resourceLeaseRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
             }
           }
         },
@@ -7164,6 +7277,99 @@
                   "string",
                   "null"
                 ]
+              }
+            }
+          },
+          "readResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "immutableRevision"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "immutableRevision": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "writeResource": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "path",
+              "conflictDomain"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "conflictDomain": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "gitWorkspace": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "repository",
+              "baseCommitSha",
+              "branch",
+              "allowedPaths",
+              "mergeAuthority",
+              "jobKey",
+              "agentKey"
+            ],
+            "properties": {
+              "repository": {
+                "type": "string",
+                "minLength": 1
+              },
+              "baseCommitSha": {
+                "type": "string",
+                "minLength": 1
+              },
+              "branch": {
+                "type": "string",
+                "pattern": "^safor/job/[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$"
+              },
+              "allowedPaths": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mergeAuthority": {
+                "const": "MASTER_OR_EXPLICIT_AUTHORITY"
+              },
+              "jobKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
+              },
+              "agentKey": {
+                "type": "string",
+                "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"
               }
             }
           }
@@ -7887,12 +8093,12 @@
     },
     "schemaAgentInboxIndex": {
       "key": "schemaAgentInboxIndex",
-      "sourcePath": "v0.6.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "bf50a3040f1bc8ab2ed10cc4d2518a474973ed5a",
+      "sourcePath": "v0.7.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "20e93dd158b7737b88c40063d4090139a2a94fbb",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-inbox-index:0.6.0",
-        "title": "SAFOR Agent Inbox Index 0.6.0",
+        "$id": "urn:safor:agent-inbox-index:0.7.0",
+        "title": "SAFOR Agent Inbox Index 0.7.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -7913,7 +8119,7 @@
             "const": "SAFOR_AGENT_INBOX_INDEX"
           },
           "schemaVersion": {
-            "const": "0.6.0"
+            "const": "0.7.0"
           },
           "projectId": {
             "type": "string",
