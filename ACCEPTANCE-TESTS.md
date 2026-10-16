@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.7.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.7.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.8.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -177,3 +177,32 @@ For one mutating agent job and one read-only agent job:
 10. The agent never writes directly to the default branch.
 
 **Pass condition:** a HUMAN can understand the result from the Markdown report, while the MASTER can independently verify every material Git claim from provider evidence.
+
+
+## L. Canonical explicit Agent Job Contract
+
+**Preconditions**
+- One ATOMIC work item is READY and covered by an active mandate.
+- An ACTIVE persistent agent identity and an explicit role assignment exist.
+- All required skill sources, inputs and repository/provider rights can be resolved.
+
+**Expected**
+1. MASTER allocates a new UUIDv7 `jobId` and separate HUMAN/Git-safe `jobKey`.
+2. Job JSON records packageId, workItemId, packageSequence, planSequence, dispatchSequence, attempt and reworkCycle.
+3. Job JSON records `createdAt`, `issuedAt`, MASTER ID/version/run/state revision.
+4. Job binds agentId, identityRevision and explicit roleId/role definition.
+5. Every mandatory skill includes version, description, execution instructions, use, immutable skillRef and skillBlobSha.
+6. Every input is READ_ONLY and pinned to immutable commit identity.
+7. Authorization explicitly declares provider bounds and repository read/write/branch/commit/push/change-request/merge/deploy permissions.
+8. Workspace binds authoritative work-item resource snapshot, read/write sets, conflict domains, exclusive keys and dedicated Git workspace.
+9. Scheduling binds dispatch revision/wave, active resource leases and claim/reconciliation rules.
+10. Output contract fixes machine result, HUMAN result, evidence root and audit root before execution.
+11. Verification contract explicitly contains acceptance criteria, evidence requirements, review/SoD and MASTER acceptance authority.
+12. MASTER generates `inbox/{jobId}.md` containing all fourteen HUMAN-readable contract sections.
+13. Job JSON pins the Markdown blob SHA and declares it non-authoritative.
+14. MASTER provider-readbacks both JSON and Markdown before setting master job state READY and adding it to inbox/index.
+15. Agent rejects any role/identity/skill/mandate/right mismatch before claim.
+16. Agent cannot mutate job JSON/Markdown, change role, substitute a mandatory skill, expand scope/rights, delegate or self-accept.
+17. Rework creates a new jobId and records supersession lineage; the historical jobId is not reused.
+
+**Pass condition:** all 17 observations are evidenced from repository/provider state and the HUMAN can understand the complete assignment from `job.md` without relying on chat history.
