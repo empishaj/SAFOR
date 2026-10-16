@@ -128,7 +128,7 @@
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.5.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "b582d0baa92ef934040b9461e4cc4f47767ed471"
+      "sourceBlobSha": "e209524cad3d4965445540e151ed58ce434df064"
     },
     "initialization": {
       "sourcePath": "v0.5.0/initialization-model.json",
@@ -176,7 +176,7 @@
     },
     "memoryHostFilesystem": {
       "sourcePath": "v0.5.0/memory-providers/host-filesystem/0.1.0/package.json",
-      "sourceBlobSha": "786e04d9426eb2d62f9c9fd6400d4ac9472326a2"
+      "sourceBlobSha": "d8dc5000fad4ebdfdb963f237932aad8c6248990"
     },
     "operatingModelSaas": {
       "sourcePath": "v0.5.0/packages/operating-models/saas-engineering/1.0.0/package.json",
@@ -259,7 +259,7 @@
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.5.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "b582d0baa92ef934040b9461e4cc4f47767ed471",
+      "sourceBlobSha": "e209524cad3d4965445540e151ed58ce434df064",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.5.0",
@@ -1124,9 +1124,9 @@
           }
         },
         "compatibility": {
-          "sourceBaseline": "factory/safor-master/v0.3.0",
+          "sourceBaseline": "v0.4.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.4.0 schemas."
+          "v04ProjectMigration": "Existing v0.4.0 projects require an explicit Memory-binding migration because v0.5.0 separates Memory Provider from Work Provider and adds session/output provenance."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
@@ -3103,7 +3103,7 @@
     "memoryHostFilesystem": {
       "key": "memoryHostFilesystem",
       "sourcePath": "v0.5.0/memory-providers/host-filesystem/0.1.0/package.json",
-      "sourceBlobSha": "786e04d9426eb2d62f9c9fd6400d4ac9472326a2",
+      "sourceBlobSha": "d8dc5000fad4ebdfdb963f237932aad8c6248990",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.5.0",
@@ -3139,7 +3139,9 @@
           "sharedTeamEligibility": "Only when the host additionally proves memory.shared_access and either memory.compare_and_swap or memory.lock.",
           "revisionStrategy": "Use a durable SAFOR revision metadata record and atomic replacement/locking semantics exposed by the host.",
           "creationRequiresExplicitHumanApproval": true,
-          "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once."
+          "forbiddenAssumption": "A local path is not durable merely because a file write succeeded once.",
+          "persistenceProofRequired": true,
+          "persistenceProof": "The host must prove the same stable location survives session boundaries and can be reopened before it becomes authoritative SAFOR Memory."
         }
       }
     },
