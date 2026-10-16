@@ -168,7 +168,7 @@
         },
         "requiredSections": {
           "type": "array",
-          "minItems": 7,
+          "minItems": 8,
           "uniqueItems": true,
           "items": {
             "enum": [
@@ -181,7 +181,8 @@
               "RISKS_AND_LIMITS",
               "OPEN_ITEMS"
             ]
-          }
+          },
+          "maxItems": 8
         },
         "repository": {
           "type": "string",
