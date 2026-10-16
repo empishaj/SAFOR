@@ -647,6 +647,16 @@
       "id": "CF-129",
       "statement": "Failure taxonomy includes dedicated module integrity, job binding, derived projection, package/model, provider drift, scheduler, schema, semantic-model and recovery-control classes SH-10 through SH-18.",
       "expected": true
+    },
+    {
+      "id": "CF-130",
+      "statement": "K00 module-recovery preflight is the first kernel action and runs before provider/project operations.",
+      "expected": true
+    },
+    {
+      "id": "CF-131",
+      "statement": "Initialization begins with INIT-00 and STOPs if exact module-profile coverage or recovery-control integrity cannot be proven.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
