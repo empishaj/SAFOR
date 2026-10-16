@@ -128,28 +128,28 @@
       "sourceBlobSha": "d9ef17a1bf972d3ba7323918e130e3ae30de01a3"
     },
     "repositoryPolicy": {
-      "sourcePath": "v0.6.0/repository-policy.json",
-      "sourceBlobSha": "5bd9be92c22ba11677a17246a83a49270ae72496"
+      "sourcePath": "v0.7.0/repository-policy.json",
+      "sourceBlobSha": "9bf0e13f4bb16898bc86090e12eb0101a303a142"
     },
     "packageRegistry": {
-      "sourcePath": "v0.6.0/package-registry.json",
-      "sourceBlobSha": "2507c6cacbc3eecd192b5d678883512485cb2f4f"
+      "sourcePath": "v0.7.0/package-registry.json",
+      "sourceBlobSha": "e5aa041248cb4cb084699e75c731c785ffba24ee"
     },
     "providerGithub": {
-      "sourcePath": "v0.6.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "1bc4bbd99cb6e1d8a22fddfa12409bacc2d4ac90"
+      "sourcePath": "v0.7.0/providers/github/0.2.0/package.json",
+      "sourceBlobSha": "b4c17d48ec9e0519b320579f046ae34e8f42b0b0"
     },
     "providerGitlab": {
-      "sourcePath": "v0.6.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "6f0a971945ba8d05d27d5e58d014467dada361aa"
+      "sourcePath": "v0.7.0/providers/gitlab/0.2.0/package.json",
+      "sourceBlobSha": "5119df831ca1aec582e08bb49f2fb341b9731f51"
     },
     "operatingModelSaas": {
-      "sourcePath": "v0.6.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "7d9d41e09adc04f98d6d36c02a6d8b0574155753"
+      "sourcePath": "v0.7.0/packages/operating-models/saas-engineering/1.1.0/package.json",
+      "sourceBlobSha": "5cc06de0870cb22a0de4996a096c47f468878c42"
     },
     "operatingModelBook": {
-      "sourcePath": "v0.6.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "681c24d5ddb4a3a3f3d533b9e776c98cd2582992"
+      "sourcePath": "v0.7.0/packages/operating-models/book-authoring/0.2.0/package.json",
+      "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187"
     },
     "factorySoftwareWebsite": {
       "sourcePath": "v0.6.0/packages/factories/software-delivery/1.0.0/package.json",
@@ -2833,11 +2833,11 @@
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
-      "sourcePath": "v0.6.0/repository-policy.json",
-      "sourceBlobSha": "5bd9be92c22ba11677a17246a83a49270ae72496",
+      "sourcePath": "v0.7.0/repository-policy.json",
+      "sourceBlobSha": "9bf0e13f4bb16898bc86090e12eb0101a303a142",
       "content": {
         "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-        "version": "0.6.0",
+        "version": "0.7.0",
         "policyId": "SAFOR-REPO-BOUNDARY-V2",
         "denyByDefault": true,
         "principles": {
@@ -2877,7 +2877,23 @@
               "master-state.json",
               "launch-prompt.md",
               "work-contract.json"
-            ]
+            ],
+            "agentMutationPolicy": {
+              "directDefaultBranchWrite": false,
+              "requiredBranchPattern": "safor/job/{jobKey}/{agentKey}",
+              "immutableBaseCommitRequired": true,
+              "allowedPathsMustMatchJobContract": true,
+              "crossJobBranchWrite": false,
+              "mergeAuthority": "MASTER_OR_EXPLICIT_AUTHORITY",
+              "resultTraceRequired": [
+                "baseCommitSha",
+                "branch",
+                "commitShas",
+                "headCommitSha",
+                "changedPaths",
+                "providerReadbackRef"
+              ]
+            }
           },
           "FACTORY_RUNTIME_CODE_REPOSITORY": {
             "purpose": "Optional dedicated implementation repository for executable SAFOR runtime/adapters.",
@@ -2895,7 +2911,10 @@
             "work-items/",
             "agents/",
             "audit/",
-            "master/jobs/"
+            "master/jobs/",
+            "master/scheduler/",
+            "master/dispatch-waves/",
+            "master/resource-leases/"
           ],
           "requiredFiles": [
             "project.json",
@@ -2903,7 +2922,8 @@
             "state/control.json",
             "state/value-stream.json",
             "state/execution.json",
-            "agents/index.json"
+            "agents/index.json",
+            "master/scheduler/state.json"
           ]
         },
         "reconciliation": {
@@ -2950,64 +2970,83 @@
             "agents/{agentId}/identity.json",
             "agents/{agentId}/inbox/index.json",
             "agents/{agentId}/inbox/{jobId}.json",
-            "master/jobs/{jobId}.json"
+            "master/jobs/{jobId}.json",
+            "master/scheduler/state.json",
+            "master/dispatch-waves/{waveId}.json",
+            "master/resource-leases/{leaseId}.json"
           ],
           "agentOwned": [
             "agents/{agentId}/state.json",
             "agents/{agentId}/outbox/{jobId}.result.json",
             "agents/{agentId}/evidence/{jobId}/",
-            "agents/{agentId}/audit/"
+            "agents/{agentId}/audit/",
+            "agents/{agentId}/outbox/{jobId}.result.md"
           ],
-          "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts or MASTER job lifecycle artifacts.",
+          "rule": "Agent protocol writes are restricted to the agent's own state/outbox/evidence/audit workspace. Agents may not mutate registry, identity, inbox index, inbox job contracts, scheduler state, dispatch waves, resource leases or MASTER job lifecycle artifacts.",
           "actualRightsRule": "Provider-observed permissions remain authoritative; workspace ownership is a SAFOR policy boundary, not a credential or permission grant.",
-          "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required."
+          "discoveryRule": "MASTER maintains agents/{agentId}/inbox/index.json as a non-authoritative discoverability projection. Agents read that fixed path, then verify the referenced job contract and master/jobs/{jobId}.json before claim; directory enumeration is not required.",
+          "humanReadableResultRule": "Every agent job persists both outbox/{jobId}.result.json and outbox/{jobId}.result.md. The JSON pins the Markdown blob and control-repository commit.",
+          "gitTraceRule": "Every mutating agent job must use only MASTER-declared dedicated job branches, report resulting commit SHAs and changed paths, and provide provider readback evidence. Direct default-branch mutation by an agent is forbidden."
+        },
+        "multiAgentScheduling": {
+          "modelRef": "multi-agent-scheduler-model.json",
+          "masterOwned": [
+            "master/scheduler/state.json",
+            "master/dispatch-waves/{waveId}.json",
+            "master/resource-leases/{leaseId}.json"
+          ],
+          "mutationIsolation": "DEDICATED_JOB_BRANCH_PLUS_CONFLICT_DOMAIN_LEASE",
+          "defaultAgentConcurrentJobs": 1,
+          "unknownConflict": "SERIALIZE",
+          "directAgentDefaultBranchWrite": false,
+          "silentLeaseReassignment": false
         }
       }
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.6.0/package-registry.json",
-      "sourceBlobSha": "2507c6cacbc3eecd192b5d678883512485cb2f4f",
+      "sourcePath": "v0.7.0/package-registry.json",
+      "sourceBlobSha": "e5aa041248cb4cb084699e75c731c785ffba24ee",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "status": "REFERENCE_REGISTRY",
         "packages": [
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.0.0",
-            "path": "packages/operating-models/saas-engineering/1.0.0/package.json"
+            "version": "1.1.0",
+            "path": "packages/operating-models/saas-engineering/1.1.0/package.json"
           },
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.0.0",
-            "path": "packages/factories/software-delivery/1.0.0/package.json"
+            "version": "1.1.0",
+            "path": "packages/factories/software-delivery/1.1.0/package.json"
           },
           {
             "packageId": "safor.om.book-authoring",
             "kind": "OPERATING_MODEL",
-            "version": "0.1.0",
-            "path": "packages/operating-models/book-authoring/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "packages/operating-models/book-authoring/0.2.0/package.json"
           },
           {
             "packageId": "safor.factory.book-production",
             "kind": "FACTORY",
-            "version": "0.1.0",
-            "path": "packages/factories/book-production/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "packages/factories/book-production/0.2.0/package.json"
           },
           {
             "packageId": "safor.provider.github",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.1.0",
-            "path": "providers/github/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "providers/github/0.2.0/package.json"
           },
           {
             "packageId": "safor.provider.gitlab",
             "kind": "PROVIDER_ADAPTER",
-            "version": "0.1.0",
-            "path": "providers/gitlab/0.1.0/package.json"
+            "version": "0.2.0",
+            "path": "providers/gitlab/0.2.0/package.json"
           }
         ],
         "selectionRule": "The HUMAN must first select a creation profile. Its Factory and compatible Operating Model become mandatory project bindings; the Provider Adapter remains provider-derived. All bindings are validated, pinned and snapshotted.",
@@ -3029,18 +3068,18 @@
     },
     "providerGithub": {
       "key": "providerGithub",
-      "sourcePath": "v0.6.0/providers/github/0.1.0/package.json",
-      "sourceBlobSha": "1bc4bbd99cb6e1d8a22fddfa12409bacc2d4ac90",
+      "sourcePath": "v0.7.0/providers/github/0.2.0/package.json",
+      "sourceBlobSha": "b4c17d48ec9e0519b320579f046ae34e8f42b0b0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.provider.github",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "GitHub Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitHub. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [],
@@ -3179,18 +3218,18 @@
     },
     "providerGitlab": {
       "key": "providerGitlab",
-      "sourcePath": "v0.6.0/providers/gitlab/0.1.0/package.json",
-      "sourceBlobSha": "6f0a971945ba8d05d27d5e58d014467dada361aa",
+      "sourcePath": "v0.7.0/providers/gitlab/0.2.0/package.json",
+      "sourceBlobSha": "5119df831ca1aec582e08bb49f2fb341b9731f51",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.provider.gitlab",
         "packageKind": "PROVIDER_ADAPTER",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "GitLab Provider Adapter Contract",
         "description": "Provider-neutral capability mapping for GitLab. The adapter declares semantics only; actual host tool names and permissions are discovered at runtime.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [],
@@ -3328,18 +3367,18 @@
     },
     "operatingModelSaas": {
       "key": "operatingModelSaas",
-      "sourcePath": "v0.6.0/packages/operating-models/saas-engineering/1.0.0/package.json",
-      "sourceBlobSha": "7d9d41e09adc04f98d6d36c02a6d8b0574155753",
+      "sourcePath": "v0.7.0/packages/operating-models/saas-engineering/1.1.0/package.json",
+      "sourceBlobSha": "5cc06de0870cb22a0de4996a096c47f468878c42",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.om.saas-engineering",
         "packageKind": "OPERATING_MODEL",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "name": "SaaS Engineering Reference Operating Model",
         "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization. It intentionally defines no value-stream ordering.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
@@ -3645,18 +3684,18 @@
     },
     "operatingModelBook": {
       "key": "operatingModelBook",
-      "sourcePath": "v0.6.0/packages/operating-models/book-authoring/0.1.0/package.json",
-      "sourceBlobSha": "681c24d5ddb4a3a3f3d533b9e776c98cd2582992",
+      "sourcePath": "v0.7.0/packages/operating-models/book-authoring/0.2.0/package.json",
+      "sourceBlobSha": "07c75143775adb82597d7e42a812612905c21187",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
-        "schemaVersion": "0.6.0",
+        "schemaVersion": "0.7.0",
         "packageId": "safor.om.book-authoring",
         "packageKind": "OPERATING_MODEL",
-        "version": "0.1.0",
+        "version": "0.2.0",
         "name": "Book Authoring Reference Operating Model",
         "description": "Reference organization for creating a non-fiction or professional book. It maps capabilities and authorities to roles but does not prescribe chapter or publication flow.",
         "compatibility": {
-          "kernel": ">=0.6.0 <0.7.0"
+          "kernel": ">=0.7.0 <0.8.0"
         },
         "exports": {
           "capabilities": [
