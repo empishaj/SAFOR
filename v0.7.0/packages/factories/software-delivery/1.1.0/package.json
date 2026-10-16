@@ -274,8 +274,8 @@
         "acceptanceCriteria",
         "evidenceRequirements",
         "execution",
-        "resourceAccess",
-        "parallelizationDecision"
+        "execution.resourceAccess",
+        "execution.parallelizationDecision"
       ],
       "conditionalRules": [
         {
@@ -357,7 +357,8 @@
         }
       ],
       "decompositionRule": "Implementation may be decomposed into ATOMIC child work only when solution design exposes independently acceptable outputs and conservative non-overlapping mutation domains; shared integration is modeled as an explicit downstream work item.",
-      "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan."
+      "integrationRule": "Release/integration work waits for ACCEPTED dependencies and any explicit integration child required by the plan.",
+      "dependencyGraphRule": "Work-item dependency relations used for scheduling must form an acyclic directed graph; cycles are invalid planning state and block dispatch."
     }
   }
 }
