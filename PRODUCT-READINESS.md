@@ -1,6 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.4.0-rc.1**
+Current target: **v0.5.0-rc.1**
+
+Current modular source: **`v0.5.0/`**
 
 ## Release-candidate gates
 
