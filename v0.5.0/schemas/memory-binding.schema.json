@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:memory-binding:0.5.0",
+  "title": "SAFOR Memory Binding 0.5.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "memoryId",
+    "mode",
+    "owner",
+    "provider",
+    "location",
+    "verifiedCapabilities",
+    "concurrency",
+    "lastVerifiedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_MEMORY_BINDING"
+    },
+    "schemaVersion": {
+      "const": "0.5.0"
+    },
+    "memoryId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "PERSONAL",
+        "SHARED_TEAM"
+      ]
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ownerKind",
+        "ownerRef"
+      ],
+      "properties": {
+        "ownerKind": {
+          "enum": [
+            "HUMAN",
+            "ORGANIZATION"
+          ]
+        },
+        "ownerRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "provider": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "version",
+        "providerType"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "pattern": "^safor\\.memory\\."
+        },
+        "version": {
+          "type": "string"
+        },
+        "providerType": {
+          "enum": [
+            "GIT_REPOSITORY",
+            "HOST_FILESYSTEM",
+            "CUSTOM"
+          ]
+        }
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": [
+        "stableRef"
+      ],
+      "properties": {
+        "stableRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "verifiedCapabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "concurrency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "strategy",
+        "revisionRef"
+      ],
+      "properties": {
+        "strategy": {
+          "enum": [
+            "COMPARE_AND_SWAP",
+            "LOCK",
+            "SINGLE_WRITER"
+          ]
+        },
+        "revisionRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lockRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "lastVerifiedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}
