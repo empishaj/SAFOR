@@ -76,10 +76,10 @@ def build_bundle():
     modules = {key: load_module(key, path) for key, path in MODULE_PATHS.items()}
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     return {
-        "format": "SAF_MASTER_COMPLETE_SINGLE_FILE",
+        "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
         "schemaVersion": "0.4.0",
         "bundleVersion": version,
-        "definitionId": "saf-master-complete",
+        "definitionId": "safor-master-complete",
         "productName": "SAFOR",
         "productExpansion": "Systemic AI Factory Orchestration Runtime",
         "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat.",
@@ -103,11 +103,11 @@ def build_bundle():
                 "VERIFY_PROVIDER_READ_WRITE_ACCESS",
                 "SELECT_OWNER_NAMESPACE",
                 "VERIFY_OWNER_ACCESS",
-                "VERIFY_REQUIRED_SAF_MEMORY",
+                "VERIFY_REQUIRED_SAFOR_MEMORY",
                 "SELECT_CREATION_TYPE",
                 "SELECT_PROJECT_MODE",
                 "SELECT_OR_DEFINE_PROJECT",
-                "BIND_REQUIRED_SAF_MEMORY",
+                "BIND_REQUIRED_SAFOR_MEMORY",
                 "CONFIRM_CREATION_PROFILE_BINDINGS",
                 "MATERIALIZE_PROJECT_CONTROL",
             ],
