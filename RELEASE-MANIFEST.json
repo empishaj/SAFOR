@@ -3,7 +3,7 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.4.0-rc.1",
+  "version": "0.5.0-rc.1",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "distributable": "SAFOR-MASTER-COMPLETE.json",
@@ -14,8 +14,21 @@
   ],
   "validationCommand": "python tools/validate_safor.py",
   "gaBlockers": [
-    "HUMAN_LICENSE_DECISION",
-    "GITHUB_END_TO_END_ACCEPTANCE",
-    "GITLAB_END_TO_END_ACCEPTANCE"
-  ]
+    "GITHUB_VERSIONED_MEMORY_END_TO_END_ACCEPTANCE",
+    "HOST_FILESYSTEM_MEMORY_END_TO_END_ACCEPTANCE_WHEN_HOST_SUPPORTS_IT",
+    "SHARED_TEAM_MULTI_SESSION_ACCEPTANCE",
+    "FRESH_CHAT_RESUME_ACCEPTANCE",
+    "HUMAN_LICENSE_DECISION"
+  ],
+  "runtimeMemory": {
+    "providerNeutral": true,
+    "physicalOwner": "HUMAN_OR_ORGANIZATION",
+    "requiredCapabilities": [
+      "memory.object.read",
+      "memory.object.write",
+      "memory.revision.read",
+      "memory.durability.prove",
+      "memory.resume.prove"
+    ]
+  }
 }
