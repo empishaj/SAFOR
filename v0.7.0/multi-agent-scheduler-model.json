@@ -40,9 +40,10 @@
   ],
   "capacityModel": {
     "agentDefaultMaxConcurrentJobs": 1,
-    "projectParallelismCeiling": "min(schedulerState.maxParallelJobs, totalFreeEligibleAgentSlots, countReadyAtomicJobs)",
+    "projectParallelismCeiling": "min(explicit maxParallelJobs when configured, otherwise total free eligible agent slots; totalFreeEligibleAgentSlots; countReadyAtomicJobs; conflictFreeSetSize)",
     "freeSlotCalculation": "maxConcurrentJobs minus nonterminal MASTER job states assigned to that agent",
-    "rule": "Six registered active chat agents with capacity 1 may receive six simultaneous jobs only when at least six READY atomic jobs are mutually conflict-free and capability-compatible."
+    "rule": "Six registered active chat agents with capacity 1 may receive six simultaneous jobs only when at least six READY atomic jobs are mutually conflict-free and capability-compatible.",
+    "defaultProjectMaxParallelJobs": "AUTO"
   },
   "conflictModel": {
     "immutableReadRule": "READ/READ and immutable READ versus WRITE may execute concurrently because the reader is pinned to an immutable revision.",
