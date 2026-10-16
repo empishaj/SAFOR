@@ -1,7 +1,7 @@
 {
   "kind": "SAF_REPOSITORY_BOUNDARY_POLICY",
   "version": "0.4.0",
-  "policyId": "SAF-REPO-BOUNDARY-V2",
+  "policyId": "SAFOR-REPO-BOUNDARY-V2",
   "denyByDefault": true,
   "principles": {
     "controlPlaneSeparatedFromWorkArtifacts": true,
@@ -35,7 +35,7 @@
         ".saf/"
       ],
       "forbiddenNames": [
-        "SAF-MASTER.json",
+        "SAFOR-MASTER.json",
         "master-state.json",
         "launch-prompt.md",
         "work-contract.json"
