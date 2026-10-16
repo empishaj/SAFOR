@@ -558,8 +558,10 @@
           "GitHub",
           "GitLab",
           "Generic Git",
-          "Plastic SCM / Unity Version Control"
-        ]
+          "Plastic SCM / Unity Version Control",
+          "Nur SAFOR Memory (wenn Factory erlaubt)"
+        ],
+        "optionalWhen": "BOUND_FACTORY.model.workspaceRequirements.required == false"
       },
       {
         "id": "PROJECT",
