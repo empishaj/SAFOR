@@ -1,0 +1,216 @@
+{
+  "format": "SAFOR_INITIALIZATION_MODEL",
+  "schemaVersion": "0.5.0",
+  "id": "SAFOR-GUIDED-INITIALIZATION",
+  "purpose": "Guide a HUMAN from an uploaded SAFOR bundle to a durable, resumable project without coupling SAFOR Memory to a specific source-control product.",
+  "completionPredicate": "MEMORY_VERIFIED_AND_SESSION_REGISTERED_AND_CREATION_TYPE_SELECTED_AND_REQUIRED_WORKSPACE_BOUND_AND_PACKAGES_PINNED_AND_PROJECT_STATE_READBACK_VERIFIED",
+  "stopRule": "STOP only when a mandatory capability cannot be proven or the HUMAN declines a required authorization. Missing GitHub/GitLab alone is never a STOP reason.",
+  "sequence": [
+    {
+      "id": "INIT-01",
+      "operation": "DISCOVER_MEMORY_PROVIDER_OPTIONS",
+      "title": "Wo soll dein SAFOR Memory liegen?",
+      "source": "ACTUAL_HOST_AND_CONNECTED_PROVIDER_CAPABILITIES",
+      "rule": "Discover only memory providers that can plausibly satisfy SAFOR Memory capabilities. Do not assume a provider is usable because its product is named or connected.",
+      "candidates": [
+        {
+          "providerType": "VERSIONED_REPOSITORY",
+          "examples": [
+            "GitHub",
+            "GitLab",
+            "generic/self-hosted Git",
+            "Plastic SCM / Unity Version Control when a compatible connector exposes equivalent artifact/revision semantics"
+          ]
+        },
+        {
+          "providerType": "HOST_FILESYSTEM",
+          "examples": [
+            "persistent local filesystem",
+            "mounted team volume"
+          ],
+          "eligibility": "Host must explicitly expose durable storage."
+        },
+        {
+          "providerType": "CUSTOM",
+          "examples": [
+            "organization-specific adapter"
+          ],
+          "eligibility": "Must implement MEMORY_PROVIDER_ADAPTER contract."
+        }
+      ]
+    },
+    {
+      "id": "INIT-02",
+      "operation": "SELECT_MEMORY_PROVIDER",
+      "humanDecision": "MEMORY_PROVIDER_SELECTION",
+      "title": "Welches Memory möchtest du verwenden?",
+      "rule": "The HUMAN explicitly selects or approves one discovered memory provider. There is no silent default."
+    },
+    {
+      "id": "INIT-03",
+      "operation": "VERIFY_MEMORY_PROVIDER",
+      "title": "Memory prüfen",
+      "requires": [
+        "memory.object.read",
+        "memory.object.write",
+        "memory.revision.read",
+        "memory.durability.prove",
+        "memory.resume.prove"
+      ],
+      "rule": "Prove durable read/write/revision/resume semantics using actual host/provider evidence. A successful one-time file write is insufficient proof of persistence.",
+      "whenLocationMissing": {
+        "action": "PROPOSE_MEMORY_CREATION",
+        "requiresHumanApproval": true,
+        "requiresCapability": "PROVIDER_OR_HOST_CREATE_LOCATION_WHEN_NEEDED",
+        "rule": "SAFOR may create a memory location only after the HUMAN approves its identity and scope. No silent creation."
+      },
+      "failureOutcome": "STOP",
+      "stopMessage": "Stopp. Ich habe noch keinen Speicher, den ich dauerhaft lesen, schreiben und in einer neuen Sitzung wiederfinden kann."
+    },
+    {
+      "id": "INIT-04",
+      "operation": "SELECT_MEMORY_OWNER",
+      "humanDecision": "MEMORY_OWNER_SELECTION",
+      "title": "Wem gehört dieses Memory?",
+      "options": [
+        "HUMAN",
+        "ORGANIZATION"
+      ],
+      "rule": "The physical memory is controlled by the HUMAN or organization. SAFOR and the LLM receive access only."
+    },
+    {
+      "id": "INIT-05",
+      "operation": "SELECT_COLLABORATION_MODE",
+      "humanDecision": "COLLABORATION_MODE_SELECTION",
+      "title": "Arbeitest du allein oder gemeinsam?",
+      "options": [
+        {
+          "id": "PERSONAL",
+          "label": "Persönlich"
+        },
+        {
+          "id": "SHARED_TEAM",
+          "label": "Gemeinsam im Team"
+        }
+      ]
+    },
+    {
+      "id": "INIT-06",
+      "operation": "VERIFY_COLLABORATION_SAFETY",
+      "title": "Gemeinsames Arbeiten absichern",
+      "rules": [
+        "PERSONAL requires the mandatory memory baseline and may use SINGLE_WRITER concurrency.",
+        "SHARED_TEAM additionally requires memory.shared_access and either memory.compare_and_swap or memory.lock.",
+        "If shared multi-writer safety cannot be proven, SHARED_TEAM is blocked; SAFOR may offer PERSONAL instead."
+      ]
+    },
+    {
+      "id": "INIT-07",
+      "operation": "BIND_AND_INITIALIZE_MEMORY_ROOT",
+      "title": "SAFOR Memory verbinden",
+      "artifacts": [
+        "memory.json"
+      ],
+      "rule": "Bind the stable memory location, persist ownership/provider/concurrency metadata and read it back. The location name is provider-specific; `safor-memory` is a recommendation for repository-backed memory, not a universal requirement."
+    },
+    {
+      "id": "INIT-08",
+      "operation": "SELECT_CREATION_TYPE",
+      "humanDecision": "CREATION_TYPE_SELECTION",
+      "title": "Was möchtest du erstellen?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "SOFTWARE_WEBSITE",
+            "label": "Software / Website",
+            "factoryPackageId": "safor.factory.software-delivery",
+            "operatingModelPackageId": "safor.om.saas-engineering"
+          },
+          {
+            "id": "BOOK",
+            "label": "Buch",
+            "factoryPackageId": "safor.factory.book-production",
+            "operatingModelPackageId": "safor.om.book-authoring"
+          }
+        ]
+      },
+      "rule": "Exactly one creation type is mandatory. The selected Factory controls Discovery, Planning, Evidence and outcome semantics."
+    },
+    {
+      "id": "INIT-09",
+      "operation": "DISCOVER_AND_SELECT_WORK_PROVIDER",
+      "humanDecision": "WORK_PROVIDER_SELECTION",
+      "title": "Wo liegen die Arbeitsartefakte?",
+      "source": "BOUND_FACTORY_WORKSPACE_REQUIREMENTS_PLUS_ACTUAL_HOST_CAPABILITIES",
+      "providerExamples": [
+        "GitHub",
+        "GitLab",
+        "generic/self-hosted Git",
+        "Plastic SCM / Unity Version Control",
+        "other compatible provider adapter"
+      ],
+      "rule": "Work/SCM provider selection is independent from SAFOR Memory. Offer only providers whose actual host tools satisfy the bound Factory's workspace requirements."
+    },
+    {
+      "id": "INIT-10",
+      "operation": "VERIFY_WORK_PROVIDER",
+      "title": "Arbeitsumgebung prüfen",
+      "rule": "Verify only the provider capabilities required by the selected Factory and intended operation. Missing optional provider features do not block the whole project."
+    },
+    {
+      "id": "INIT-11",
+      "operation": "SELECT_OR_DEFINE_PROJECT",
+      "humanDecision": "PROJECT_SELECTION",
+      "title": "Welches Projekt?",
+      "modes": [
+        "EXISTING",
+        "NEW"
+      ],
+      "existingRule": "List eligible workspaces from the selected work provider, using provider-specific activity metadata when available.",
+      "newRule": "Creation requires explicit HUMAN confirmation plus actual create capability. Never create before confirmation."
+    },
+    {
+      "id": "INIT-12",
+      "operation": "RESOLVE_AND_CONFIRM_PACKAGES",
+      "humanDecision": "PACKAGE_BINDING_APPROVAL",
+      "title": "Arbeitsmodell bestätigen",
+      "rule": "Pin MEMORY_PROVIDER_ADAPTER, FACTORY, OPERATING_MODEL and required PROVIDER_ADAPTER packages. Creation type determines Factory/Operating Model; memory and work providers remain independently selected."
+    },
+    {
+      "id": "INIT-13",
+      "operation": "MATERIALIZE_PROJECT_AND_REGISTER_SESSION",
+      "humanDecision": "SETUP_APPROVAL",
+      "title": "Projekt starten",
+      "rule": "After explicit setup approval, persist project descriptor, bindings, memory binding and initial state in SAFOR Memory, register the current session and read everything back before initialization completes."
+    }
+  ],
+  "memoryOptionRendering": {
+    "labelPattern": "{providerLabel}",
+    "descriptionPattern": "{locationType} · {collaborationCapability}",
+    "details": [
+      "stableLocation",
+      "verifiedCapabilities",
+      "ownershipOptions",
+      "sharedTeamEligibility"
+    ]
+  },
+  "workProviderActivityNormalization": {
+    "purpose": "Normalize optional recent-workspace discovery across SCM providers.",
+    "rule": "Use provider-native activity metadata when available. Lack of a normalized activity timestamp must not make an otherwise valid work provider unusable."
+  },
+  "identityAndSecrets": {
+    "neverRequest": [
+      "PASSWORD",
+      "PERSONAL_ACCESS_TOKEN_IN_CHAT",
+      "PRIVATE_KEY_IN_CHAT",
+      "RECOVERY_CODE"
+    ],
+    "rule": "Use host/provider connection mechanisms. Actual permissions are evidence, not declarations in JSON."
+  },
+  "stateAuthority": {
+    "chatContext": "NON_AUTHORITATIVE_CACHE",
+    "memory": "AUTHORITATIVE_PROJECT_STATE",
+    "rule": "Every decision or state change required by a later step must be persisted to SAFOR Memory before the later step may rely on it."
+  }
+}
