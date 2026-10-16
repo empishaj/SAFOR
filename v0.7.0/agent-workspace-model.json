@@ -85,7 +85,10 @@
       "job.dispatchState == READY",
       "masterJobState.lifecycleStatus is claimable for the current dispatch (READY or REWORK_READY)",
       "referenced execution mandate is active and covers scope",
-      "actual provider rights cover required operations"
+      "actual provider rights cover required operations",
+      "job.dispatchWaveRef refers to an active MASTER dispatch wave",
+      "all job.resourceLeaseRefs are ACTIVE and assigned to this job/agent",
+      "all mutating gitWorkspaces exist on the declared dedicated branches at the declared immutable base commits"
     ],
     "atomicity": "Claim is written through optimistic concurrency on agents/{agentId}/state.json using the provider-observed current revision/blob identity. Concurrent stale claims must fail and reconcile.",
     "masterObservation": "A claim is not authoritative for orchestration until MASTER reads back the agent state and advances master/jobs/{jobId}.json from READY to CLAIMED."
@@ -98,7 +101,10 @@
     "agentMustPersistEvidence": true,
     "agentMustPersistHumanReadableResult": true,
     "gitMutationTraceRequired": true,
-    "directDefaultBranchMutationForbidden": true
+    "directDefaultBranchMutationForbidden": true,
+    "agentMayWriteOnlyDeclaredGitWorkspaces": true,
+    "crossJobBranchMutationForbidden": true,
+    "resourceLeaseRequiredForMutation": true
   },
   "resultProtocol": {
     "submission": "Agent writes the machine-readable outbox result, the mandatory HUMAN-readable Markdown result, referenced evidence and Git trace, then sets its local state to RESULT_SUBMITTED.",
