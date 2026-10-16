@@ -1,6 +1,6 @@
 # SAFOR Agent Workspace Protocol
 
-SAFOR v0.8 uses repository-native coordination for persistent agent chats.
+SAFOR v0.10 uses repository-native coordination for persistent agent chats.
 
 ## Goal
 
@@ -161,7 +161,7 @@ The MASTER verifies these Git claims before VERIFIED/ACCEPTED.
 
 ## Parallel scheduling
 
-Agent work is not dispatched merely because an inbox exists. SAFOR v0.8 routes agent jobs through the conflict-aware Multi-Agent Scheduler.
+Agent work is not dispatched merely because an inbox exists. SAFOR v0.10 routes agent jobs through the conflict-aware Multi-Agent Scheduler.
 
 The scheduler verifies dependency readiness, capability match, free agent slots, separation of duties, immutable read inputs and resource conflicts before dispatch. Mutating jobs receive dedicated `safor/job/{jobKey}/{agentKey}` branches.
 
