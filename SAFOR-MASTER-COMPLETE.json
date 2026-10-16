@@ -114,24 +114,29 @@
   },
   "integrityManifest": {
     "kernel": {
-      "sourcePath": "v0.8.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "9d64fd4554e37942475cbbd37498b82c968f1fb1"
+      "sourcePath": "v0.9.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "171db014314878b7f3864cc2f93000a3a0e8c1b8",
+      "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
-      "sourcePath": "v0.8.0/initialization-model.json",
-      "sourceBlobSha": "d940f68ea6a2e39a7654a4cb3e78ca164a4c80e3"
+      "sourcePath": "v0.9.0/initialization-model.json",
+      "sourceBlobSha": "4338106c6be0abb3db15a45a4407b1dee42e38a8",
+      "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
-      "sourcePath": "v0.8.0/interaction-model.json",
-      "sourceBlobSha": "eb68d146dd5f912f69f9f73a90af1a1679190399"
+      "sourcePath": "v0.9.0/interaction-model.json",
+      "sourceBlobSha": "a2d7e0b926dda7bc890f4dfdc38d68751169a8e1",
+      "selfHealingProfileId": "MRP-INTERACTION"
     },
     "selfHealing": {
-      "sourcePath": "v0.8.0/self-healing-model.json",
-      "sourceBlobSha": "d438ef05b731e935c610c58d60ec637c066064fe"
+      "sourcePath": "v0.9.0/self-healing-model.json",
+      "sourceBlobSha": "2f2a39bc0603544da9b18e9d346f278b921b3abd",
+      "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "agentWorkspace": {
-      "sourcePath": "v0.8.0/agent-workspace-model.json",
-      "sourceBlobSha": "9223332109778a869b05ac518dea98cf80d8bd24"
+      "sourcePath": "v0.9.0/agent-workspace-model.json",
+      "sourceBlobSha": "8514e1f07f5eb56adf9e97ef887d4b90f57b1ed4",
+      "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "repositoryPolicy": {
       "sourcePath": "v0.8.0/repository-policy.json",
@@ -258,8 +263,9 @@
       "sourceBlobSha": "3cd218fbf6183698d0b3420fc08b68999771ee2d"
     },
     "agentJobContract": {
-      "sourcePath": "v0.8.0/agent-job-contract-model.json",
-      "sourceBlobSha": "97aa4b704ba77fd2557c285de62dc1fcde4b02ec"
+      "sourcePath": "v0.9.0/agent-job-contract-model.json",
+      "sourceBlobSha": "b88317a8d2c6b86985e281c953a3793eecfc88e7",
+      "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
     },
     "moduleSelfHealing": {
       "sourcePath": "v0.9.0/module-self-healing-model.json",
@@ -275,12 +281,12 @@
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.8.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "9d64fd4554e37942475cbbd37498b82c968f1fb1",
+      "sourcePath": "v0.9.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "171db014314878b7f3864cc2f93000a3a0e8c1b8",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.8.0",
-        "kernelVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
+        "kernelVersion": "0.9.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
         "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
@@ -340,7 +346,11 @@
           "canonicalExplicitAgentJobContract": true,
           "explicitRoleAndSkillBindingPerJob": true,
           "humanReadableAgentJobProjection": true,
-          "explicitJobAuthorizationAndReturnRoutes": true
+          "explicitJobAuthorizationAndReturnRoutes": true,
+          "moduleWideSelfHealing": true,
+          "exactRecoveryProfileCoverage": true,
+          "failClosedRecoveryControl": true,
+          "noSemanticAutoRewrite": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -373,6 +383,10 @@
               "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
             },
             {
+              "id": "MODULE_SELF_HEALING",
+              "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
+            },
+            {
               "id": "PROVIDER_ADAPTER",
               "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
             }
@@ -392,7 +406,11 @@
             "AGENT_JOB_CONTRACT JSON is authoritative; the paired Markdown job view is a derived HUMAN-readable projection.",
             "Every dispatched agent job explicitly binds the role the agent must assume and every mandatory versioned skill it must apply.",
             "Job permissions are an upper bound only and never create provider rights.",
-            "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve."
+            "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve.",
+            "Every embedded module must resolve to exactly one valid module recovery profile.",
+            "SELF_HEALING executes only the intersection of failure-class policy, module recovery profile, active authority and actual provider rights.",
+            "Authoritative immutable modules are never heuristically rewritten; derived artifacts may be regenerated only from verified authoritative sources.",
+            "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops."
           ]
         },
         "packageSystem": {
@@ -574,14 +592,16 @@
           "agentInboxIndex": "schemas/agent-inbox-index.schema.json",
           "schedulerState": "schemas/scheduler-state.schema.json",
           "dispatchWave": "schemas/dispatch-wave.schema.json",
-          "resourceLease": "schemas/resource-lease.schema.json"
+          "resourceLease": "schemas/resource-lease.schema.json",
+          "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json"
         },
         "controlPlane": {
-          "startActionId": "K01",
+          "startActionId": "K00",
           "phases": [
             {
               "id": "BOOTSTRAP",
               "actions": [
+                "K00",
                 "K01",
                 "K02",
                 "K03",
@@ -671,6 +691,13 @@
             }
           ],
           "actions": [
+            {
+              "id": "K00",
+              "operation": "VERIFY_MODULE_RECOVERY_BASELINE",
+              "purpose": "Before provider or project work, verify exact embedded-module/recovery-profile coverage and fail-closed integrity of the recovery-control modules.",
+              "domainNeutral": true,
+              "modelRef": "module-self-healing-model.json"
+            },
             {
               "id": "K01",
               "operation": "SELECT_PROVIDER",
@@ -842,31 +869,31 @@
             },
             {
               "id": "H01",
-              "operation": "DETECT_AND_CLASSIFY_FAILURE",
-              "purpose": "Detect a recoverable failure, derive its failure fingerprint and classify it using the bound self-healing model.",
+              "operation": "DETECT_CLASSIFY_AND_RESOLVE_MODULE_FAILURE",
+              "purpose": "Detect failure, derive fingerprint, classify it, resolve the affected embedded module and load its unique module recovery profile.",
               "domainNeutral": true,
-              "modelRef": "self-healing-model.json"
+              "modelRef": "module-self-healing-model.json"
             },
             {
               "id": "H02",
-              "operation": "CHECK_AND_PLAN_REPAIR",
-              "purpose": "Verify repair eligibility, current mandate, provider capabilities, retry budget and required success evidence before any repair mutation.",
+              "operation": "CHECK_AND_PLAN_PROFILE_CONSTRAINED_REPAIR",
+              "purpose": "Intersect failure-class repair policy with module profile repairability, active mandate/policy, retry budget and actual provider rights before any mutation.",
               "domainNeutral": true,
               "modelRef": "self-healing-model.json"
             },
             {
               "id": "H03",
-              "operation": "EXECUTE_BOUNDED_REPAIR",
-              "purpose": "Execute only a pre-authorized, non-destructive repair allowed by the self-healing model. Unknown external effects reconcile before retry.",
+              "operation": "EXECUTE_PROFILE_CONSTRAINED_REPAIR",
+              "purpose": "Execute only the repair allowed by the resolved module profile: validate/restore verified source, regenerate declared derived artifacts, or rebind external capabilities. Semantic invention is forbidden.",
               "domainNeutral": true,
-              "modelRef": "self-healing-model.json"
+              "modelRef": "module-self-healing-model.json"
             },
             {
               "id": "H04",
-              "operation": "VERIFY_REPAIR_AND_RESUME",
-              "purpose": "Read back authoritative state, verify expected recovery evidence and either resume from the last verified checkpoint or escalate to the HUMAN.",
+              "operation": "VERIFY_MODULE_REPAIR_AND_RESUME",
+              "purpose": "Provider-readback the repaired module/artifact, revalidate profile/integrity expectations, persist the module-aware repair record and resume only from a verified checkpoint.",
               "domainNeutral": true,
-              "modelRef": "self-healing-model.json"
+              "modelRef": "module-self-healing-model.json"
             },
             {
               "id": "A01",
@@ -1341,6 +1368,82 @@
           {
             "id": "INV-086",
             "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
+          },
+          {
+            "id": "INV-087",
+            "rule": "Every embedded SAFOR module must have exactly one valid recovery profile in module-self-healing-model.json; unprofiled or multiply-profiled modules invalidate the distribution."
+          },
+          {
+            "id": "INV-088",
+            "rule": "Each embedded module and integrity-manifest entry must reference its exact recovery profile ID."
+          },
+          {
+            "id": "INV-089",
+            "rule": "A module repair action is executable only when allowed by the failure class, the resolved module recovery profile, current SAFOR authority/policy and actual provider rights."
+          },
+          {
+            "id": "INV-090",
+            "rule": "IMMUTABLE_VALIDATE_ONLY modules may never be semantically rewritten by automatic recovery; SAFOR may only verify/reload the expected pinned blob or stop/escalate."
+          },
+          {
+            "id": "INV-091",
+            "rule": "RESTORE_FROM_VERIFIED_SOURCE modules may be restored only from a source whose expected version/blob identity is independently verified."
+          },
+          {
+            "id": "INV-092",
+            "rule": "REGENERATE_DERIVED_ONLY modules may mutate only declared derived artifacts and must preserve their authoritative source unchanged."
+          },
+          {
+            "id": "INV-093",
+            "rule": "REBIND_EXTERNAL_CAPABILITY recovery may refresh/reobserve provider capabilities but must never grant, fabricate or elevate provider permissions."
+          },
+          {
+            "id": "INV-094",
+            "rule": "Unknown external effects always reconcile before retry or lease/resource reuse, regardless of the module profile."
+          },
+          {
+            "id": "INV-095",
+            "rule": "Every module repair persists moduleKey, moduleProfileId, authority type, repairability, pre-state references, selected repair action and verification evidence."
+          },
+          {
+            "id": "INV-096",
+            "rule": "Repair success requires authoritative readback plus the module-profile success predicate; assistant narration or intended action is never evidence of recovery."
+          },
+          {
+            "id": "INV-097",
+            "rule": "The self-healing model, module-self-healing model and recovery-profile schema are fail-closed recovery controls. If their expected integrity cannot be proven, automatic recovery stops."
+          },
+          {
+            "id": "INV-098",
+            "rule": "Canonical agent job recovery may regenerate job.md or other declared projections from valid job.json, but may never automatically rewrite a dispatched authoritative job.json to change role, skill, scope, input or authorization semantics."
+          },
+          {
+            "id": "INV-099",
+            "rule": "Factory and Operating Model recovery may restore pinned package blobs and revalidate bindings, but may never automatically alter workflow semantics, decision rights, mandates or separation-of-duties policy."
+          },
+          {
+            "id": "INV-100",
+            "rule": "Schema recovery may restore the expected schema and revalidate subjects; an authoritative subject must never be automatically coerced merely to satisfy schema validation."
+          },
+          {
+            "id": "INV-101",
+            "rule": "Scheduler recovery may rebuild derived READY/capacity/wave views, but resource lease expiry or uncertain job effects require reconciliation before reassignment."
+          },
+          {
+            "id": "INV-102",
+            "rule": "Provider-adapter recovery may retry idempotent reads, refresh revisions and rebind observed capabilities; missing required rights remain a blocker or HUMAN escalation."
+          },
+          {
+            "id": "INV-103",
+            "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS."
+          },
+          {
+            "id": "INV-104",
+            "rule": "K00 module-recovery preflight runs before provider/project actions. Failure to prove exact module-profile coverage or recovery-control integrity causes STOP before external work."
+          },
+          {
+            "id": "INV-105",
+            "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
           }
         ],
         "evidencePolicy": {
@@ -1398,14 +1501,14 @@
         "compatibility": {
           "sourceBaseline": "factory/safor-master/v0.3.0",
           "migrationPolicy": "EXPLICIT_MIGRATION_ONLY",
-          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.8.0 schemas."
+          "v03ProjectMigration": "Project-specific migration must be supplied as a project migration artifact; it is intentionally absent from global v0.9.0 schemas."
         },
         "repositoryPolicyRef": "repository-policy.json",
         "packageRegistryRef": "package-registry.json",
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.8.0",
+            "root": "v0.9.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1459,16 +1562,18 @@
         "selfHealingModelRef": "self-healing-model.json",
         "agentWorkspaceModelRef": "agent-workspace-model.json",
         "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
-        "agentJobContractModelRef": "agent-job-contract-model.json"
-      }
+        "agentJobContractModelRef": "agent-job-contract-model.json",
+        "moduleSelfHealingModelRef": "module-self-healing-model.json"
+      },
+      "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.8.0/initialization-model.json",
-      "sourceBlobSha": "d940f68ea6a2e39a7654a4cb3e78ca164a4c80e3",
+      "sourcePath": "v0.9.0/initialization-model.json",
+      "sourceBlobSha": "4338106c6be0abb3db15a45a4407b1dee42e38a8",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1478,6 +1583,24 @@
           "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAFOR_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
         },
         "sequence": [
+          {
+            "id": "INIT-00",
+            "operation": "VERIFY_EMBEDDED_MODULE_RECOVERY_BASELINE",
+            "title": "SAFOR Runtime prüfen",
+            "requiresProvider": false,
+            "passOutcome": "MODULE_RECOVERY_BASELINE_VERIFIED",
+            "failOutcome": "STOP",
+            "checks": [
+              "EMBEDDED_MODULE_KEYS_MATCH_RECOVERY_PROFILE_KEYS_EXACTLY",
+              "ONE_UNIQUE_PROFILE_PER_MODULE",
+              "MODULE_AND_INTEGRITY_MANIFEST_PROFILE_IDS_MATCH",
+              "SELF_HEALING_CONTROL_MODULES_PRESENT_AND_STRUCTURALLY_VALID",
+              "REFERENCE_RESOLUTION_TARGETS_EXIST",
+              "KERNEL_SCHEMA_AND_BUNDLE_VERSIONS_AGREE"
+            ],
+            "rule": "Run before any provider/project operation. If recovery-control integrity or exact profile coverage cannot be proven, fail closed and do not attempt heuristic self-repair.",
+            "selfHealingRef": "module-self-healing-model.json"
+          },
           {
             "id": "INIT-01",
             "operation": "SELECT_PROVIDER",
@@ -1842,15 +1965,16 @@
           ],
           "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
       "key": "interaction",
-      "sourcePath": "v0.8.0/interaction-model.json",
-      "sourceBlobSha": "eb68d146dd5f912f69f9f73a90af1a1679190399",
+      "sourcePath": "v0.9.0/interaction-model.json",
+      "sourceBlobSha": "a2d7e0b926dda7bc890f4dfdc38d68751169a8e1",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-INTERACTION-EXECUTIVE-CONSOLE",
         "purpose": "Provide a state-aware, low-friction action menu so a user can advance a SAFOR-guided project primarily by selecting actions instead of composing commands.",
         "principles": {
@@ -2276,6 +2400,17 @@
                 "NEXT_ACTION_OR_MENU"
               ],
               "example": "4 von 6 Agenten arbeiten. Zwei Slots sind frei; aktuell ist nur ein weiterer Job konfliktfrei bereit. Ein Paket wartet auf die Abnahme seines Vorgängers."
+            },
+            "moduleHealing": {
+              "structure": [
+                "AFFECTED_MODULE",
+                "FAILURE_CLASS",
+                "RECOVERY_ACTION",
+                "VERIFICATION",
+                "CURRENT_SAFE_STATE",
+                "NEXT_ACTION_IF_ANY"
+              ],
+              "example": "Das Scheduler-Modul hatte einen veralteten READY-Stand. SAFOR hat ausschließlich die ableitbare Sicht neu berechnet und per Readback verifiziert. Der autoritative Work-Item-State blieb unverändert."
             }
           },
           "avoid": {
@@ -2515,16 +2650,46 @@
             "When a HUMAN-readable agent report exists, surface its reference as the default result view before raw machine JSON.",
             "Explain why an apparently free agent did not receive work when the blocker is dependency, capability, SoD, mandate, provider rights or mutation conflict."
           ]
+        },
+        "moduleSelfHealingExperience": {
+          "title": "Modulgesundheit & Selbstheilung",
+          "defaultSurface": "SUMMARY",
+          "statusFields": [
+            "moduleKey",
+            "profileId",
+            "healthStatus",
+            "lastFailureClass",
+            "repairStatus",
+            "repairability",
+            "lastVerifiedAt",
+            "evidenceRefs"
+          ],
+          "healthStatuses": [
+            "HEALTHY",
+            "DEGRADED",
+            "REPAIRING",
+            "RECONCILE_REQUIRED",
+            "BLOCKED",
+            "UNKNOWN"
+          ],
+          "humanRules": [
+            "Lead with affected module and current safe state.",
+            "State whether SAFOR repaired, restored, regenerated, rebound, reconciled or deliberately refused automatic repair.",
+            "Never describe a module as healthy until the profile success predicate passed authoritative readback.",
+            "When automatic repair is forbidden, explain the exact authority/semantic boundary and the smallest HUMAN action required.",
+            "Keep raw repair records behind Details unless needed for a decision."
+          ]
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-INTERACTION"
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.8.0/self-healing-model.json",
-      "sourceBlobSha": "d438ef05b731e935c610c58d60ec637c066064fe",
+      "sourcePath": "v0.9.0/self-healing-model.json",
+      "sourceBlobSha": "2f2a39bc0603544da9b18e9d346f278b921b3abd",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -2538,11 +2703,18 @@
           "noHumanDecisionInference": true,
           "noGateBypass": true,
           "noForcePush": true,
-          "noDestructiveDeleteByDefault": true
+          "noDestructiveDeleteByDefault": true,
+          "moduleProfileRequired": true,
+          "exactModuleCoverageRequired": true,
+          "failClosedOnRecoveryControlFailure": true,
+          "derivedOnlyRegeneration": true,
+          "noSemanticAutoRewrite": true
         },
         "lifecycle": [
           "DETECT",
           "CLASSIFY",
+          "RESOLVE_SUBJECT_MODULE",
+          "LOAD_MODULE_RECOVERY_PROFILE",
           "CHECK_REPAIR_ELIGIBILITY",
           "PLAN_REPAIR",
           "EXECUTE_REPAIR",
@@ -2650,6 +2822,116 @@
             "automaticRepair": "NONE",
             "defaultRetryBudget": 0,
             "requiresHuman": true
+          },
+          {
+            "id": "SH-10",
+            "name": "MODULE_INTEGRITY_OR_COVERAGE_FAILURE",
+            "examples": [
+              "embedded module blob differs from integrity manifest",
+              "module lacks recovery profile",
+              "duplicate recovery profile"
+            ],
+            "automaticRepair": "RELOAD_EXPECTED_MODULE_OR_STOP_IF_PROFILE_COVERAGE_INVALID",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": false
+          },
+          {
+            "id": "SH-11",
+            "name": "JOB_CONTRACT_BINDING_FAILURE",
+            "examples": [
+              "job role binding mismatch",
+              "skill source/blob mismatch",
+              "authorization/return-route mismatch",
+              "immutable input mismatch"
+            ],
+            "automaticRepair": "BLOCK_JOB_AND_REBUILD_ONLY_BEFORE_DISPATCH_OR_CREATE_SUPERSEDING_JOB",
+            "defaultRetryBudget": 0,
+            "requiresHuman": "WHEN_SEMANTICS_OR_AUTHORITY_WOULD_CHANGE"
+          },
+          {
+            "id": "SH-12",
+            "name": "DERIVED_PROJECTION_FAILURE",
+            "examples": [
+              "job.md missing or blob mismatch",
+              "inbox index missing/stale",
+              "derived status projection missing"
+            ],
+            "automaticRepair": "REGENERATE_FROM_VERIFIED_AUTHORITATIVE_SOURCE",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": false
+          },
+          {
+            "id": "SH-13",
+            "name": "PACKAGE_OR_MODEL_BINDING_FAILURE",
+            "examples": [
+              "factory/operating-model package blob mismatch",
+              "registry binding points to unexpected version",
+              "model reference unresolved"
+            ],
+            "automaticRepair": "RESTORE_EXPECTED_PINNED_PACKAGE_OR_BLOCK",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": false
+          },
+          {
+            "id": "SH-14",
+            "name": "PROVIDER_CAPABILITY_DRIFT",
+            "examples": [
+              "provider permission revoked",
+              "host tool unavailable",
+              "declared adapter capability no longer observable"
+            ],
+            "automaticRepair": "REFRESH_AND_REBIND_ACTUAL_CAPABILITIES_WITHOUT_ELEVATION",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_REQUIRED_CAPABILITY_REMAINS_MISSING"
+          },
+          {
+            "id": "SH-15",
+            "name": "SCHEDULER_LEASE_OR_CAPACITY_FAILURE",
+            "examples": [
+              "agent slot count drift",
+              "resource lease conflict",
+              "expired lease with uncertain external effect",
+              "stale ready set"
+            ],
+            "automaticRepair": "RECOMPUTE_DERIVED_SCHEDULER_STATE_AND_RECONCILE_UNCERTAIN_EFFECTS",
+            "defaultRetryBudget": 1,
+            "requiresReconciliation": "WHEN_EXTERNAL_EFFECTS_ARE_UNCERTAIN"
+          },
+          {
+            "id": "SH-16",
+            "name": "SCHEMA_VALIDATION_FAILURE",
+            "examples": [
+              "schema module invalid",
+              "subject does not validate",
+              "schema version mismatch"
+            ],
+            "automaticRepair": "RESTORE_SCHEMA_OR_REGENERATE_ONLY_DERIVED_SUBJECT",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_AUTHORITATIVE_SUBJECT_WOULD_REQUIRE_SEMANTIC_CHANGE"
+          },
+          {
+            "id": "SH-17",
+            "name": "OPERATING_MODEL_OR_FACTORY_SEMANTIC_MISMATCH",
+            "examples": [
+              "role/authority mapping inconsistent",
+              "flow graph invalid",
+              "evidence/planning contract mismatch"
+            ],
+            "automaticRepair": "RESTORE_PINNED_PACKAGE_OR_BLOCK",
+            "defaultRetryBudget": 0,
+            "requiresHuman": "WHEN_PINNED_SOURCE_ITSELF_IS_INVALID_OR_CHANGE_IS_REQUIRED"
+          },
+          {
+            "id": "SH-18",
+            "name": "SELF_HEALING_CONTROL_FAILURE",
+            "examples": [
+              "self-healing model invalid",
+              "module recovery profile model invalid",
+              "recovery recursion guard triggered"
+            ],
+            "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
+            "defaultRetryBudget": 0,
+            "requiresHuman": true
           }
         ],
         "eligibilityRules": [
@@ -2659,7 +2941,13 @@
           "Required provider capabilities and rights must be proven immediately before repair.",
           "The authoritative pre-repair state must be captured or referenced.",
           "A repair must define success evidence before it runs.",
-          "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry."
+          "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry.",
+          "The subject module must resolve to exactly one module recovery profile before any automatic repair.",
+          "The repair action must be allowed by both the failure class and the resolved module recovery profile.",
+          "A module profile marked IMMUTABLE_VALIDATE_ONLY may never be semantically rewritten automatically.",
+          "A module profile marked REGENERATE_DERIVED_ONLY may mutate only declared derived artifacts, never its authoritative source.",
+          "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
+          "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -2673,7 +2961,13 @@
           "MERGE_WITH_FAILED_REQUIRED_CHECKS",
           "CHANGE_OPERATING_MODEL_OR_FACTORY_BINDING",
           "CHANGE_SECURITY_OR_COMPLIANCE_POLICY",
-          "INVENT_MISSING_EVIDENCE"
+          "INVENT_MISSING_EVIDENCE",
+          "AUTO_REWRITE_AUTHORITATIVE_JOB_CONTRACT",
+          "AUTO_CHANGE_FACTORY_OR_OPERATING_MODEL_SEMANTICS",
+          "AUTO_COERCE_AUTHORITATIVE_STATE_TO_PASS_SCHEMA",
+          "AUTO_ELEVATE_PROVIDER_PERMISSION",
+          "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
+          "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -2688,6 +2982,10 @@
           "repairId",
           "failureClass",
           "failureFingerprint",
+          "moduleKey",
+          "moduleProfileId",
+          "moduleAuthorityType",
+          "moduleRepairability",
           "subjectRef",
           "proposedAction",
           "authorityBasis",
@@ -2697,6 +2995,7 @@
         ],
         "verification": {
           "successRequires": [
+            "MODULE_PROFILE_STILL_MATCHES_SUBJECT_MODULE",
             "AUTHORITATIVE_READBACK",
             "EXPECTED_STATE_MATCH",
             "NO_NEW_GUARD_VIOLATION",
@@ -2726,16 +3025,30 @@
             "HIGH_IMPACT_OR_IRREVERSIBLE_EFFECT"
           ],
           "messageStyle": "Concise: what failed, what SAFOR tried, current safe state, and the smallest HUMAN decision/action needed."
+        },
+        "moduleRecoveryModelRef": "module-self-healing-model.json",
+        "moduleRecoveryDispatch": {
+          "resolveOrder": [
+            "SUBJECT_EXPLICIT_MODULE_KEY",
+            "MASTER_ACTION_MODEL_REF_TO_MODULE_KEY",
+            "SCHEMA_OR_PACKAGE_REFERENCE_TO_MODULE_KEY",
+            "BUNDLE_INTEGRITY_MANIFEST_PATH_TO_MODULE_KEY"
+          ],
+          "noMatch": "STOP_AND_ESCALATE",
+          "multipleMatches": "STOP_AND_ESCALATE",
+          "actionIntersectionRule": "EXECUTABLE_REPAIR = failureClass.automaticRepair INTERSECT moduleProfile.automaticRepairs INTERSECT currentAuthority/providerRights",
+          "noAllowedAction": "ESCALATE_WITHOUT_MUTATION"
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "agentWorkspace": {
       "key": "agentWorkspace",
-      "sourcePath": "v0.8.0/agent-workspace-model.json",
-      "sourceBlobSha": "9223332109778a869b05ac518dea98cf80d8bd24",
+      "sourcePath": "v0.9.0/agent-workspace-model.json",
+      "sourceBlobSha": "8514e1f07f5eb56adf9e97ef887d4b90f57b1ed4",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
         "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
         "topology": {
@@ -2975,7 +3288,8 @@
           ],
           "publicationRule": "MASTER writes JSON and Markdown, verifies both by provider readback, then and only then marks the job READY and exposes it through inbox/index.json."
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "repositoryPolicy": {
       "key": "repositoryPolicy",
@@ -10490,11 +10804,11 @@
     },
     "agentJobContract": {
       "key": "agentJobContract",
-      "sourcePath": "v0.8.0/agent-job-contract-model.json",
-      "sourceBlobSha": "97aa4b704ba77fd2557c285de62dc1fcde4b02ec",
+      "sourcePath": "v0.9.0/agent-job-contract-model.json",
+      "sourceBlobSha": "b88317a8d2c6b86985e281c953a3793eecfc88e7",
       "content": {
         "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
-        "schemaVersion": "0.8.0",
+        "schemaVersion": "0.9.0",
         "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT",
         "purpose": "Define the immutable, self-describing execution contract issued by MASTER to one persistent agent identity, plus its mandatory HUMAN-readable Markdown projection.",
         "authority": {
@@ -10584,7 +10898,8 @@
           "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB",
           "directAgentMutationForbidden": true
         }
-      }
+      },
+      "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
     },
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
