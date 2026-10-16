@@ -1,7 +1,7 @@
 {
-  "format": "SAF_PACKAGE_MANIFEST",
+  "format": "SAFOR_PACKAGE_MANIFEST",
   "schemaVersion": "0.4.0",
-  "packageId": "saf.om.saas-engineering",
+  "packageId": "safor.om.saas-engineering",
   "packageKind": "OPERATING_MODEL",
   "version": "1.0.0",
   "name": "SaaS Engineering Reference Operating Model",
