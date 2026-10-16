@@ -552,11 +552,106 @@
       "id": "CF-110",
       "statement": "Job skills are self-contained for execution but retain authoritative immutable provenance through skillRef + skillBlobSha; MASTER may not invent skill provenance.",
       "expected": true
+    },
+    {
+      "id": "CF-111",
+      "statement": "Every embedded SAFOR module has exactly one recovery profile and every recovery profile targets exactly one embedded module.",
+      "expected": true
+    },
+    {
+      "id": "CF-112",
+      "statement": "Every embedded module and its integrity-manifest entry carry the same selfHealingProfileId.",
+      "expected": true
+    },
+    {
+      "id": "CF-113",
+      "statement": "Every module recovery profile contains authority type, repairability, failure detectors, allowed/forbidden repairs, retry budget, verification and escalation.",
+      "expected": true
+    },
+    {
+      "id": "CF-114",
+      "statement": "Automatic repair is constrained by the intersection of failure-class policy, module profile, active authority and actual provider rights.",
+      "expected": true
+    },
+    {
+      "id": "CF-115",
+      "statement": "IMMUTABLE_VALIDATE_ONLY modules are never semantically rewritten automatically.",
+      "expected": true
+    },
+    {
+      "id": "CF-116",
+      "statement": "RESTORE_FROM_VERIFIED_SOURCE modules restore only expected version/blob identities from verified sources.",
+      "expected": true
+    },
+    {
+      "id": "CF-117",
+      "statement": "REGENERATE_DERIVED_ONLY modules mutate only derived artifacts and preserve authoritative sources.",
+      "expected": true
+    },
+    {
+      "id": "CF-118",
+      "statement": "REBIND_EXTERNAL_CAPABILITY recovery may refresh observations but never grant or elevate provider permissions.",
+      "expected": true
+    },
+    {
+      "id": "CF-119",
+      "statement": "Self-healing control modules fail closed when their own integrity/profile coverage cannot be proven.",
+      "expected": true
+    },
+    {
+      "id": "CF-120",
+      "statement": "Self-healing records persist module key/profile/authority/repairability plus the selected profile-constrained repair decision.",
+      "expected": true
+    },
+    {
+      "id": "CF-121",
+      "statement": "Canonical job recovery may regenerate job Markdown/index projections but never silently rewrite dispatched authoritative job semantics.",
+      "expected": true
+    },
+    {
+      "id": "CF-122",
+      "statement": "Scheduler recovery rebuilds only derived readiness/capacity/waves and reconciles uncertain leases/effects before reuse.",
+      "expected": true
+    },
+    {
+      "id": "CF-123",
+      "statement": "Factory and Operating Model recovery restores pinned blobs and validates bindings without automatic semantic or authority changes.",
+      "expected": true
+    },
+    {
+      "id": "CF-124",
+      "statement": "Schema recovery may restore schemas and regenerate only explicitly derived subjects; authoritative subjects are never coerced merely to validate.",
+      "expected": true
+    },
+    {
+      "id": "CF-125",
+      "statement": "Provider adapter recovery refreshes/rebinds observed capabilities and rights without fabricating missing permissions.",
+      "expected": true
+    },
+    {
+      "id": "CF-126",
+      "statement": "Conformance recovery is validate-only; failed assertions are never automatically marked PASS.",
+      "expected": true
+    },
+    {
+      "id": "CF-127",
+      "statement": "Unknown external mutation effects enter reconciliation before retry regardless of module profile.",
+      "expected": true
+    },
+    {
+      "id": "CF-128",
+      "statement": "Every successful module repair requires authoritative readback, expected-state match and persisted repair evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-129",
+      "statement": "Failure taxonomy includes dedicated module integrity, job binding, derived projection, package/model, provider drift, scheduler, schema, semantic-model and recovery-control classes SH-10 through SH-18.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
-    "branch": "safor/job-contract-v0.9.0-rc.1",
+    "branch": "safor/module-self-healing-v0.9.0-rc.1",
     "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-    "note": "Canonical v0.8 explicit job contract with package/sequence provenance, role, skills, granular rights, fixed return routes and HUMAN job projection added. CI and empirical dispatch acceptance remain required."
+    "note": "Module-wide profile-constrained self-healing added for every embedded module. CI and module-recovery end-to-end acceptance remain required."
   }
 }
