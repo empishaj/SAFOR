@@ -104,7 +104,7 @@
       "id": "INIT-03",
       "operation": "SELECT_OWNER_NAMESPACE",
       "humanDecision": "OWNER_SELECTION",
-      "title": "Unter welchem Owner läuft das Projekt?",
+      "title": "Projektort auswählen",
       "source": "provider.namespace.list",
       "optionRules": [
         "Include the authenticated personal namespace when available.",
@@ -119,12 +119,13 @@
           "id": "SHOW_MORE_OWNERS",
           "label": "Mehr anzeigen"
         }
-      }
+      },
+      "humanPrompt": "Wo liegt dein Projekt?"
     },
     {
       "id": "INIT-04",
       "operation": "VERIFY_OWNER_ACCESS",
-      "title": "Owner-Zugriff prüfen",
+      "title": "Zugriff auf Projektort prüfen",
       "requires": [
         "provider.repository.list",
         "provider.repository.read",
@@ -138,12 +139,12 @@
         }
       ],
       "rule": "Re-verify access in the selected owner namespace because organization/group policy may be stricter than account-level access.",
-      "failMessage": "Für diesen Owner fehlen mir noch die nötigen Lese-/Schreibrechte. Bitte gib sie frei oder wähle einen anderen Owner."
+      "failMessage": "Hier fehlen noch die nötigen Lese- oder Schreibrechte. Bitte gib sie frei oder wähle einen anderen Projektort."
     },
     {
       "id": "INIT-05",
       "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
-      "title": "SAFOR Memory prüfen",
+      "title": "SAFOR-Arbeitsbereich prüfen",
       "requires": [
         "provider.repository.read",
         "provider.artifact.read",
@@ -160,7 +161,8 @@
         "CONTINUE_WITH_READ_ONLY_SAFOR_MEMORY",
         "ASK_FOR_PASSWORD",
         "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT"
-      ]
+      ],
+      "humanSummaryName": "SAFOR-Arbeitsbereich"
     },
     {
       "id": "INIT-06",
@@ -298,9 +300,11 @@
     },
     {
       "id": "INIT-10",
-      "operation": "RESOLVE_PROJECT_PACKAGES",
-      "title": "Arbeitsmodell auswählen",
-      "rule": "Resolve the Provider Adapter and bind the Factory/Operating Model predetermined by CREATION_TYPE_SELECTION. HUMAN confirms the proposed bindings; do not silently substitute a different Factory."
+      "operation": "RESOLVE_CREATION_PROFILE_BINDINGS",
+      "title": "Passendes Arbeitsmodell vorbereiten",
+      "rule": "Resolve Provider Adapter and bind the Factory/Operating Model predetermined by CREATION_TYPE_SELECTION. Do not ask for a second approval when the resolved binding exactly matches the approved creation profile and unchanged pinned versions.",
+      "humanDecisionDefault": false,
+      "askHumanOnlyWhen": "RESOLVED_BINDING_DIFFERS_FROM_APPROVED_CREATION_PROFILE_OR_EXISTING_PINNED_BINDING"
     },
     {
       "id": "INIT-11",
@@ -348,16 +352,22 @@
     "buddyMessages": {
       "providerPrompt": "Wo möchtest du arbeiten?",
       "accessPassed": "Passt. Zugriff ist da.",
-      "ownerPrompt": "Unter welchem Owner läuft das Projekt?",
+      "ownerPrompt": "Wo liegt dein Projekt?",
       "projectModePrompt": "Bestehend oder neu?",
       "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
-      "ready": "Alles sitzt. Projektkontrolle, Agenten-Registry und Scheduler sind sauber vorbereitet.",
-      "safMemoryPassed": "Passt. `safor-memory` ist da und beschreibbar.",
+      "ready": "Alles bereit. Der Projektstand kann gespeichert und die Arbeit vorbereitet werden.",
+      "safMemoryPassed": "Alles bereit. Der SAFOR-Arbeitsbereich ist beschreibbar.",
       "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
       "creationTypePrompt": "Was möchtest du erstellen?"
     },
     "keepTechnicalDetailsBehind": "DETAILS",
-    "menusPreferred": true
+    "menusPreferred": true,
+    "cognitiveLoadRules": [
+      "Initialization may require MEDIUM load because HUMAN-controlled environment choices are not derivable.",
+      "Ask one decision at a time.",
+      "Do not expose internal package/binding mechanics on the default surface.",
+      "Do not ask for a second approval when a binding is deterministic from an already approved creation type."
+    ]
   },
   "absolutePrerequisites": {
     "safMemoryRepository": {
@@ -391,5 +401,7 @@
       }
     ],
     "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
-  }
+  },
+  "humanDecisionGateModelRef": "human-decision-gate-model.json",
+  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
 }
