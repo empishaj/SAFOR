@@ -1,0 +1,64 @@
+{
+  "format": "SAFOR_PACKAGE_MANIFEST",
+  "schemaVersion": "0.5.0",
+  "packageId": "safor.memory.versioned-repository",
+  "packageKind": "MEMORY_PROVIDER_ADAPTER",
+  "version": "1.0.0",
+  "name": "Versioned Repository Memory Adapter",
+  "description": "SAFOR Memory adapter for versioned artifact repositories such as GitHub, GitLab, generic Git or other SCM providers that expose equivalent artifact and revision capabilities.",
+  "compatibility": {
+    "kernel": ">=0.5.0 <0.6.0"
+  },
+  "exports": {
+    "capabilities": [],
+    "authorities": [],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "providerCapabilities": [],
+    "memoryCapabilities": [
+      "memory.identity.read",
+      "memory.object.list",
+      "memory.object.read",
+      "memory.object.write",
+      "memory.revision.read",
+      "memory.compare_and_swap",
+      "memory.history.read",
+      "memory.shared_access",
+      "memory.durability.prove",
+      "memory.resume.prove"
+    ]
+  },
+  "dependencies": [],
+  "model": {
+    "providerType": "GIT_REPOSITORY",
+    "backingRequirement": {
+      "kind": "PROVIDER_ADAPTER",
+      "requiresProviderCapabilities": [
+        "provider.artifact.read",
+        "provider.artifact.write",
+        "provider.history.read"
+      ]
+    },
+    "locationPolicy": {
+      "recommendedName": "safor-memory",
+      "nameIsProtocolRequirement": false,
+      "existingOrCreated": "HUMAN_DECIDES",
+      "creationRequiresExplicitApproval": true
+    },
+    "mapping": {
+      "memory.object.read": "provider.artifact.read",
+      "memory.object.write": "provider.artifact.write",
+      "memory.revision.read": "provider.history.read",
+      "memory.compare_and_swap": "expected revision / ref guarded write when supported",
+      "memory.history.read": "provider.history.read"
+    },
+    "sharedMode": "ELIGIBLE_WHEN_BACKING_PROVIDER_PROVES_SHARED_ACCESS_AND_CONCURRENCY",
+    "verification": [
+      "read known object or root descriptor",
+      "perform authorized test/write or capability proof",
+      "read back exact effect",
+      "verify revision changes",
+      "prove future session can resolve stable location"
+    ]
+  }
+}
