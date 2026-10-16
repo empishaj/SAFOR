@@ -42,7 +42,8 @@
         "identityRef",
         "workspaceRoot",
         "registeredAt",
-        "registeredBy"
+        "registeredBy",
+        "scheduling"
       ],
       "properties": {
         "agentId": {
@@ -64,6 +65,24 @@
         "registeredBy": {
           "type": "string",
           "minLength": 1
+        },
+        "scheduling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dispatchEnabled",
+            "maxConcurrentJobs"
+          ],
+          "properties": {
+            "dispatchEnabled": {
+              "type": "boolean"
+            },
+            "maxConcurrentJobs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            }
+          }
         }
       }
     }
