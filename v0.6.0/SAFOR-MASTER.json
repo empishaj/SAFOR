@@ -162,7 +162,8 @@
       "outbox": "agents/{agentId}/outbox/",
       "evidence": "agents/{agentId}/evidence/",
       "audit": "agents/{agentId}/audit/",
-      "masterJobState": "master/jobs/{jobId}.json"
+      "masterJobState": "master/jobs/{jobId}.json",
+      "inboxIndex": "agents/{agentId}/inbox/index.json"
     }
   },
   "providerCapabilityVocabulary": [
@@ -257,7 +258,8 @@
     "agentState": "schemas/agent-state.schema.json",
     "agentJob": "schemas/agent-job.schema.json",
     "agentJobState": "schemas/agent-job-state.schema.json",
-    "agentResult": "schemas/agent-result.schema.json"
+    "agentResult": "schemas/agent-result.schema.json",
+    "agentInboxIndex": "schemas/agent-inbox-index.schema.json"
   },
   "controlPlane": {
     "startActionId": "K01",
@@ -550,7 +552,7 @@
       {
         "id": "A02",
         "operation": "DISPATCH_AGENT_JOB",
-        "purpose": "Write an immutable agent job contract into the assigned agent inbox and create MASTER-owned job lifecycle state after an active mandate covers the work.",
+        "purpose": "Write an immutable agent job contract into the assigned agent inbox, update the fixed MASTER-owned inbox index projection, and create MASTER-owned job lifecycle state after an active mandate covers the work.",
         "domainNeutral": true,
         "modelRef": "agent-workspace-model.json"
       },
@@ -802,7 +804,7 @@
     },
     {
       "id": "INV-046",
-      "rule": "Agent identity, agent registry, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them."
+      "rule": "Agent identity, agent registry, agent inbox index, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them."
     },
     {
       "id": "INV-047",
@@ -839,6 +841,10 @@
     {
       "id": "INV-055",
       "rule": "A reviewer requirement continues to enforce separation of duties across agent identities; the performing agent may not approve its own contribution unless an explicit exception authority permits it."
+    },
+    {
+      "id": "INV-056",
+      "rule": "Agent job discovery must use the fixed MASTER-owned agents/{agentId}/inbox/index.json projection. The index is never authoritative lifecycle state; before claim the agent must read the referenced immutable job contract and MASTER-owned master/jobs/{jobId}.json. Repository directory enumeration is not required for correctness."
     }
   ],
   "evidencePolicy": {
