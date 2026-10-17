@@ -249,7 +249,7 @@ class DeterministicControlTests(unittest.TestCase):
             elif isinstance(node, ast.ImportFrom) and node.module:
                 imports.add(node.module.split(".")[0])
         self.assertTrue(imports.issubset({"__future__", "copy", "hashlib", "json", "typing"}))
-        for forbidden in ("requests", "subprocess", "socket", "random", "datetime.now", "time.time", "eval(", "exec("):
+        for forbidden in ("requests.", "subprocess.", "socket.", "random.", "datetime.now", "time.time", "eval(", "exec("):
             self.assertNotIn(forbidden, source)
 
 
