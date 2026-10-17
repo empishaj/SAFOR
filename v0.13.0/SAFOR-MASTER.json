@@ -124,7 +124,9 @@
     "replacementRequiresSameDomain": true,
     "replacementRequiresBidirectionalCompatibility": true,
     "packageFamilyCompatibilityRequiredForV2Packages": true,
-    "crossDomainPackageReplacementForbidden": true
+    "crossDomainPackageReplacementForbidden": true,
+    "publicPaidDomainEvaluationArtifactsAllowedForTesting": true,
+    "publicEvaluationDoesNotAuthorizePaidUse": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -301,7 +303,8 @@
       "replacementSameDomainRequired": true,
       "replacementBidirectionalCounterpartRequired": true,
       "replacementPackageFamilyConstraintsEnforced": true,
-      "crossDomainReplacementForbidden": true
+      "crossDomainReplacementForbidden": true,
+      "publicEvaluationPaidBytesNotProductionSource": true
     },
     "domainPackageSchemaRef": "schemas/domain-package.schema.json",
     "selectionSchemaRef": "schemas/package-selection.schema.json",
@@ -1909,6 +1912,18 @@
     {
       "id": "INV-197",
       "rule": "Cross-domain combinations such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model are invalid even when individual capabilities happen to overlap."
+    },
+    {
+      "id": "INV-198",
+      "rule": "PUBLIC_TEST_EVALUATION domain Frameworks may embed paid-mode prerelease test packages in the public repository solely for testing; they are not the protected commercial production package source."
+    },
+    {
+      "id": "INV-199",
+      "rule": "Public visibility of a paid-mode test package or domain Framework never satisfies entitlement; possession remains non-authoritative for commercial access."
+    },
+    {
+      "id": "INV-200",
+      "rule": "Production catalog entries for paid SaaS and Book packages must remain ENTITLED_PACKAGE_SOURCE with no public model path even while public evaluation Frameworks exist."
     }
   ],
   "evidencePolicy": {
