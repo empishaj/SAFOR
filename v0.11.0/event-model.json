@@ -1,0 +1,27 @@
+{
+  "format": "SAFOR_EVENT_MODEL",
+  "schemaVersion": "0.11.0",
+  "id": "safor-event-model",
+  "purpose": "Typed append-only observation model for HUMAN, AGENT, PROVIDER and KERNEL facts entering the deterministic control plane.",
+  "rules": {
+    "appendOnly": true,
+    "eventIdImmutable": true,
+    "sequenceAuthoritativeForReplay": true,
+    "occurredAtNotUsedForOrdering": true,
+    "sourceCannotAuthorizeTransition": true,
+    "evidenceDoesNotMutateStateDirectly": true,
+    "duplicateSameIdSameCanonicalPayload": "IDEMPOTENT_NO_OP",
+    "duplicateSameIdDifferentCanonicalPayload": "INTEGRITY_FAILURE"
+  },
+  "eventTypes": [
+    "WORK_ITEM_READINESS_REEVALUATION_REQUESTED",
+    "DEPENDENCY_ACCEPTED",
+    "MANDATE_GRANTED",
+    "INPUT_AVAILABLE",
+    "PAUSE_WORK_ITEM_REQUESTED",
+    "RESUME_WORK_ITEM_REQUESTED",
+    "STOP_WORK_ITEM_REQUESTED",
+    "EXTERNAL_MUTATION_OUTCOME_UNKNOWN",
+    "MIGRATION_GENESIS_SNAPSHOT"
+  ]
+}
