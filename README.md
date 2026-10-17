@@ -61,7 +61,13 @@ These public access bundles are not purchase evidence, are not transferable and 
 - `v0.13.0/packages/factories/website-delivery/1.1.0/package.json` — free Website Factory.
 - `v0.13.0/packages/operating-models/website-team/1.1.0/package.json` — free Website Operating Model.
 
-Historical Software Factory/SaaS Operating Model versions through 1.6.0 remain visible as legacy public disclosure. They are not the current protected commercial production channel.
+Historical Software Factory/SaaS Operating Model versions remain available through Git history. Version 1.6.0 is retained in the current tree as the explicit legacy-disclosure baseline; it is not the current protected commercial production channel.
+
+## Repository retention
+
+The default branch contains only current distributables, required build sources, explicit compatibility/disclosure baselines and maintained documentation/runtime/tests. Superseded generated bundles and early prototype trees remain recoverable through Git history instead of being duplicated in the working tree.
+
+Retained source baselines are `v0.6.0` through `v0.13.0`. The executable rc.6 bundle is assembled from `v0.10.0` through `v0.13.0`; `v0.6.0` through `v0.9.0` are retained only as the repository-native agent/workspace evolution lineage. Repository-hygiene tests prevent retired root bundles, pre-v0.6 prototype trees and superseded package worktrees from returning unnoticed.
 
 ## Commercial trust chain
 
