@@ -1,0 +1,77 @@
+{
+  "format": "SAFOR_PACKAGE_CATALOG",
+  "schemaVersion": "0.12.0",
+  "status": "PUBLIC_CATALOG",
+  "canonicalFrameworkRepository": "empishaj/SAFOR",
+  "entries": [
+    {
+      "packageId": "safor.factory.software-delivery",
+      "kind": "FACTORY",
+      "version": "1.4.0",
+      "label": "Software / Website Factory",
+      "accessMode": "FREE_PUBLIC",
+      "sku": "SAFOR-WEB-STARTER-FACTORY",
+      "distribution": {
+        "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+        "path": "v0.10.0/packages/factories/software-delivery/1.4.0/package.json"
+      }
+    },
+    {
+      "packageId": "safor.om.saas-engineering",
+      "kind": "OPERATING_MODEL",
+      "version": "1.4.0",
+      "label": "SaaS Engineering Operating Model",
+      "accessMode": "FREE_PUBLIC",
+      "sku": "SAFOR-WEB-STARTER-OM",
+      "distribution": {
+        "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+        "path": "v0.10.0/packages/operating-models/saas-engineering/1.4.0/package.json"
+      }
+    },
+    {
+      "packageId": "safor.factory.book-production",
+      "kind": "FACTORY",
+      "versionPolicy": "COMMERCIAL_CURRENT",
+      "label": "Book Production Factory",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "sku": "SAFOR-BOOK-FACTORY",
+      "distribution": {
+        "sourceClass": "ENTITLED_PACKAGE_SOURCE",
+        "publicModelPath": null
+      },
+      "legacyDisclosure": "Pre-0.12 prototype versions were publicly committed and are not treated as protected commercial package delivery."
+    },
+    {
+      "packageId": "safor.om.book-authoring",
+      "kind": "OPERATING_MODEL",
+      "versionPolicy": "COMMERCIAL_CURRENT",
+      "label": "Book Authoring Operating Model",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "sku": "SAFOR-BOOK-OM",
+      "distribution": {
+        "sourceClass": "ENTITLED_PACKAGE_SOURCE",
+        "publicModelPath": null
+      },
+      "legacyDisclosure": "Pre-0.12 prototype versions were publicly committed and are not treated as protected commercial package delivery."
+    }
+  ],
+  "creationProfiles": [
+    {
+      "creationType": "SOFTWARE_WEBSITE",
+      "label": "Software / Website",
+      "accessMode": "FREE_PUBLIC",
+      "factoryPackageId": "safor.factory.software-delivery",
+      "operatingModelPackageId": "safor.om.saas-engineering",
+      "autoResolveFromPublicFrameworkGit": true
+    },
+    {
+      "creationType": "BOOK",
+      "label": "Buch",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "factoryPackageId": "safor.factory.book-production",
+      "operatingModelPackageId": "safor.om.book-authoring",
+      "autoResolveFromPublicFrameworkGit": false,
+      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED"
+    }
+  ]
+}
