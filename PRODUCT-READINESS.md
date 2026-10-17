@@ -1,78 +1,72 @@
 # SAFOR Product Readiness
 
-Current target: **v0.11.0-rc.2**
+Current target: **v0.12.0-rc.1**
 
-Current modular source: **`v0.11.0/` overlay + retained `v0.10.0/` baseline**
+Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol/domain-package baselines**
 
 ## Release-candidate gates
 
 | Gate | State |
 |---|---|
-| Self-contained single-file distribution | PASS |
-| Product repository separated from runtime memory | PASS |
-| Mandatory writable `safor-memory` gate | PASS |
-| Software/Website Factory | PASS |
-| Book Factory | PASS |
-| Factory-bound Discovery | PASS |
-| Factory-bound Planning | PASS |
-| Factory-bound Evidence | PASS |
-| Chat-native HUMAN interface policy | PASS |
-| Phase-aware HUMAN cognitive-load policy | PASS by schema/conformance |
+| Public single-file Framework distribution | PASS |
+| Framework/domain-package separation | PASS by builder/validator |
+| Paid Factory/OM content excluded from Framework bundle | PASS |
+| Package catalog metadata | PASS |
+| Software/Website FREE_PUBLIC starter profile | PASS by unit/validator |
+| Public immutable-resolution requirement for free packages | PASS by schema/policy |
+| Book PAID_ENTITLEMENT_REQUIRED profile | PASS by unit/validator |
+| Self-asserted entitlement forbidden | PASS by unit/policy |
+| Commercial entitlement end-to-end acceptance | OPEN |
+| Commercial package delivery/entitlement verifier | OPEN |
+| Final legal commercial license terms | OPEN |
+| HUMAN licensing/product strategy decision | DECIDED |
+| HUMAN-owned REMOTE_GIT workspace | PASS by schema/unit |
+| Remote separate `safor-memory` strategy | PASS by schema/policy |
+| HUMAN-owned LOCAL_GIT workspace | PASS by schema/unit |
+| Local MASTER-only `.safor/` control root | PASS by schema/unit |
+| LOCAL_GIT end-to-end acceptance | OPEN |
+| Canonical SAFOR repository forbidden as project target | PASS by unit/validator |
+| Package source forbidden as project target | PASS by unit/validator |
+| Software/Website Factory/OM compatibility | PASS by unit/validator |
+| Factory-bound Discovery | PASS by schema/conformance |
+| Factory-bound Planning | PASS by schema/conformance |
+| Factory-bound Evidence | PASS by schema/conformance |
+| Deterministic Control Kernel unit/replay suite | PASS |
+| Deterministic Acceptance unit/replay suite | PASS |
+| Modular bootstrap/package/workspace unit suite | PASS |
+| Total Python unit tests | **38 PASS in CI** |
+| Module-wide Self-Healing exact coverage | **61/61 PASS** |
+| Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
-| Unchanged decision reuse | PASS by schema/conformance |
-| HUMAN-domain terminology abstraction | PASS by schema/conformance |
-| Dynamic primary-action labels | PASS by schema/conformance |
+| Terminal HUMAN menu contract | PASS by schema/conformance |
 | HUMAN cognitive-load end-to-end acceptance | OPEN |
-| Deterministic Control Kernel unit/replay suite | PASS in CI |
-| Deterministic Acceptance unit/replay suite | PASS in CI (25 total deterministic tests) |
-| Acceptance Contract / Review Independence / Authority validation | PASS by schema/conformance |
-| Deterministic Control end-to-end acceptance | OPEN |
-| Full governance transition migration | OPEN |
-| Bounded self-healing | PASS |
-| Module-wide self-healing coverage | PASS by schema/conformance |
-| Exact one-profile-per-module binding | PASS by validator contract |
-| Profile-constrained recovery modes | PASS by schema/conformance |
-| Fail-closed recovery-control integrity | PASS by schema/conformance |
-| Module-aware repair records | PASS by schema/conformance |
-| Module-wide Self-Healing end-to-end acceptance | OPEN |
-| Persistent repository-native agent identity | PASS by schema/conformance |
-| Agent inbox/outbox job protocol | PASS by schema/conformance |
-| MASTER-authoritative agent lifecycle | PASS by schema/conformance |
-| Canonical explicit agent job contract | PASS by schema/conformance |
-| Package/work-item/sequence job lineage | PASS by schema/conformance |
-| MASTER job provenance/timestamps | PASS by schema/conformance |
-| Explicit per-job role binding | PASS by schema/conformance |
-| Explicit versioned skill contract | PASS by schema/conformance |
-| Granular job authorization | PASS by schema/conformance |
-| Fixed result/evidence/audit return routes | PASS by schema/conformance |
-| HUMAN-readable job Markdown projection | PASS by schema/conformance |
-| Explicit Job Contract end-to-end acceptance | OPEN |
-| Conflict-aware multi-agent scheduler | PASS by schema/conformance |
-| ATOMIC/COMPOSITE work decomposition | PASS by schema/conformance |
-| Explicit agent scheduling capacity | PASS by schema/conformance |
-| Dispatch waves and resource leases | PASS by schema/conformance |
-| Dedicated Git branches for mutating agent jobs | PASS by schema/conformance |
-| HUMAN-readable agent Markdown results | PASS by schema/conformance |
-| Provider-verifiable agent Git trace | PASS by schema/conformance |
-| Six-agent parallel scheduling acceptance | OPEN |
-| Conflict-aware serialization acceptance | OPEN |
-| HUMAN-readable + Git-trace result acceptance | OPEN |
+| Persistent Agent Workspace | PASS by schema/conformance |
+| Canonical explicit Agent Job Contract | PASS by schema/conformance |
+| Conflict-aware Multi-Agent Scheduler | PASS by schema/conformance |
 | Agent Workspace end-to-end acceptance | OPEN |
-| Machine-readable validation | PASS on PR #8 validated head |
-| CI validation | PASS on PR #8 validated head |
-| Product repository slug without trailing punctuation | PASS |
-| Explicit distribution/license decision | OPEN |
-| GitHub end-to-end blank-chat acceptance run | OPEN |
-| GitLab end-to-end blank-chat acceptance run | OPEN |
+| Six-agent parallel scheduling acceptance | OPEN |
+| HUMAN-readable + Git-trace result acceptance | OPEN |
+| Explicit Job Contract end-to-end acceptance | OPEN |
+| Module-wide Self-Healing end-to-end acceptance | OPEN |
+| Deterministic Control end-to-end acceptance | OPEN |
+| Deterministic Replay acceptance | OPEN |
+| Deterministic Acceptance end-to-end acceptance | OPEN |
+| GitHub REMOTE_GIT blank-chat acceptance | OPEN |
+| GitLab REMOTE_GIT blank-chat acceptance | OPEN |
+| Full governance transition migration | OPEN |
+| Framework build reproducibility | PASS in CI |
+| Machine-readable validation | PASS in CI |
 
 ## Maturity meaning
 
-**Release Candidate** means the architecture and distribution are internally coherent and machine-checkable. It does not mean every supported host/provider path has been empirically acceptance-tested.
+**Release Candidate** means the architecture, package/workspace boundaries and machine-level invariants are internally coherent and reproducibly validated. It does not mean the commercial entitlement channel, Local Git host path or all provider/agent scenarios have been empirically proven end to end.
 
-## Acceptance evidence
+## Commercial boundary
 
-The required GitHub/GitLab scenarios are defined in `ACCEPTANCE-TESTS.md` and must be retained with release evidence.
+The Framework and Website starter are public/free. Factories and Operating Models are independently licensable packages. Book and future premium packages require verified entitlement.
+
+The licensing **architecture/product decision is complete**. Final legal license language, pricing, billing and entitlement-provider implementation remain separate GA work.
 
 ## General Availability definition
 
-SAFOR can be called GA only when every OPEN gate above is resolved and the release artifact is generated from the canonical product repository at an immutable revision.
+GA requires all OPEN gates above to be resolved or explicitly removed from GA scope through a governed HUMAN product decision, with evidence retained at immutable release revisions.
