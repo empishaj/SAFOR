@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.3**
+Current target: **v0.13.0-rc.4**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -33,8 +33,15 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Public immutable-resolution requirement for free packages | PASS by schema/policy |
 | Book PAID_ENTITLEMENT_REQUIRED profile | PASS by unit/validator |
 | Self-asserted entitlement forbidden | PASS by unit/policy |
+| Entitlement ACTIVE/status/time verification | PASS by runtime/unit/validator |
+| Entitlement subject binding | PASS by runtime/unit/validator |
+| Trusted issuer + entitlement verifier enforcement | PASS by runtime/unit/validator |
+| Commercial-basis evidence + SKU binding | PASS by schema/runtime/validator |
+| ENTITLED_PACKAGE_SOURCE delivery evidence | PASS by runtime/unit/validator |
+| Delivery entitlement/package/version/digest binding | PASS by runtime/unit/validator |
+| Trusted delivery verifier + delivery expiry | PASS by runtime/unit/validator |
 | Commercial entitlement end-to-end acceptance | OPEN |
-| Commercial package delivery/entitlement verifier | OPEN |
+| Commercial package delivery/entitlement provider implementation | OPEN |
 | Final legal commercial license terms | OPEN |
 | HUMAN licensing/product strategy decision | DECIDED |
 | HUMAN-owned REMOTE_GIT workspace | PASS by schema/unit |
@@ -51,7 +58,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **63 PASS in CI** |
+| Total Python unit tests | **final rc.4 CI evidence required** |
 | Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
