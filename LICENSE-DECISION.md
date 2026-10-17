@@ -1,7 +1,7 @@
 # SAFOR Commercial Distribution Decision
 
 Decision date: **2026-10-17**
-Current implementation baseline: **SAFOR 0.13.0-rc.3**
+Current implementation baseline: **SAFOR 0.13.0-rc.4**
 
 ## Product decision
 
@@ -78,3 +78,21 @@ This decision establishes and machine-enforces the product/licensing architectur
 - entitlement issuer/verifier implementation,
 - commercial package delivery infrastructure,
 - end-to-end entitlement acceptance evidence.
+
+
+## Commercial delivery channel contract
+
+A payment, order reference or possession of package JSON never authorizes use by itself.
+
+For a paid Factory or Operating Model, SAFOR requires:
+1. commercial-basis evidence,
+2. an ACTIVE entitlement for the exact subject/package/version,
+3. verification by explicitly trusted issuer/verifier identities,
+4. a valid entitlement time interval at explicit `evaluatedAt`,
+5. when resolved from `ENTITLED_PACKAGE_SOURCE`: time-bounded delivery evidence from a trusted delivery verifier,
+6. delivery evidence binding entitlementId, packageId, version and package digest,
+7. domain-package integrity and compatibility checks before binding.
+
+Manual licensed delivery through `HUMAN_LOADED_PACKAGE` remains allowed but does not bypass entitlement verification.
+
+The public Framework defines this protocol but does not embed payment credentials, private signing keys, customer purchase data or current commercial package content.
