@@ -176,9 +176,12 @@ if actions.get("D01", {}).get("modelRef") != "BOUND_FACTORY.model.discoveryContr
     fail("D01 must bind Factory discoveryContract.")
 if actions.get("P01", {}).get("modelRef") != "BOUND_FACTORY.model.planningContract":
     fail("P01 must bind Factory planningContract.")
-for action_id in ("E04","E05"):
-    if actions.get(action_id, {}).get("modelRef") != "BOUND_FACTORY.model.evidenceContract":
-        fail(f"{action_id} must bind Factory evidenceContract.")
+if actions.get("E04", {}).get("modelRef") != "BOUND_FACTORY.model.evidenceContract":
+    fail("E04 must bind Factory evidenceContract.")
+if actions.get("E05", {}).get("modelRef") != "acceptance-model.json":
+    fail("E05 must bind deterministic acceptance-model.json.")
+if actions.get("E05", {}).get("factoryEvidenceContractRef") != "BOUND_FACTORY.model.evidenceContract":
+    fail("E05 must retain Factory evidenceContract as domain input.")
 
 if actions.get("H01", {}).get("modelRef") != "module-self-healing-model.json":
     fail("H01 must bind module-self-healing-model.json.")
