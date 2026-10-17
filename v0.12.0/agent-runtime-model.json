@@ -1,0 +1,141 @@
+{
+  "format": "SAFOR_AGENT_RUNTIME_MODEL",
+  "schemaVersion": "0.12.0",
+  "id": "safor-agent-runtime",
+  "purpose": "Abstract how AGENT runtimes are actually activated and continued, independently from repository Provider Adapters and from agent Job Contract authority.",
+  "separation": {
+    "providerAdapterResponsibility": "Repository/collaboration capabilities such as artifacts, branches, change requests, checks and readback.",
+    "agentRuntimeAdapterResponsibility": "AGENT activation, continuation/wakeup, job discovery trigger, runtime observation and result availability.",
+    "sameImplementationMayProvideBoth": true,
+    "bindingsRemainLogicallySeparate": true
+  },
+  "activationCapabilities": [
+    "HOST_NATIVE_AUTOMATIC",
+    "EXTERNAL_AUTOMATION",
+    "HUMAN_MANUAL_TEST_ONLY",
+    "UNAVAILABLE"
+  ],
+  "adapterKinds": [
+    "HOST_NATIVE",
+    "EXTERNAL_ORCHESTRATOR",
+    "LOCAL_AGENT_PROCESS",
+    "CI_AGENT",
+    "MANUAL_TEST_HARNESS",
+    "UNAVAILABLE"
+  ],
+  "requiredObservedCapabilities": [
+    "ACTIVATION",
+    "CONTINUATION",
+    "JOB_DISCOVERY_TRIGGER",
+    "STATE_OBSERVATION",
+    "RESULT_AVAILABILITY"
+  ],
+  "bindingRules": {
+    "actualCapabilityEvidenceRequired": true,
+    "declarationsAreNotProof": true,
+    "backgroundWakeupDefault": false,
+    "backgroundWakeupRequiresEvidence": true,
+    "repositoryNativeJobContractRemainsAuthoritative": true,
+    "promptJobTransportForbidden": true,
+    "runtimeAdapterCannotCreateProviderRights": true,
+    "runtimeAdapterCannotCreateOperatingModelAuthority": true,
+    "runtimeAdapterCannotCreateExecutionMandate": true,
+    "runtimeAdapterCannotCreatePackageEntitlement": true,
+    "runtimeAdapterCannotCreateAcceptance": true
+  },
+  "operationModeCompatibility": {
+    "DESIGN": {
+      "allowedActivationCapabilities": [
+        "HOST_NATIVE_AUTOMATIC",
+        "EXTERNAL_AUTOMATION",
+        "UNAVAILABLE"
+      ],
+      "manualTestHarnessAllowed": false,
+      "rule": "DESIGN may proceed without AGENT execution. If AGENT execution is requested, automatic/external runtime support is required; manual test harness belongs to VALIDATION."
+    },
+    "VALIDATION": {
+      "allowedActivationCapabilities": [
+        "HOST_NATIVE_AUTOMATIC",
+        "EXTERNAL_AUTOMATION",
+        "HUMAN_MANUAL_TEST_ONLY",
+        "UNAVAILABLE"
+      ],
+      "manualTestHarnessAllowed": true,
+      "manualHarnessConditions": [
+        "Target is ISOLATED_TEST_WORKSPACE.",
+        "Validation purpose explicitly requires manual host activation behavior.",
+        "Artifacts/evidence are marked NON_PRODUCTION.",
+        "Manual activation cannot be reused as proof of EXECUTION automation."
+      ]
+    },
+    "EXECUTION": {
+      "allowedActivationCapabilities": [
+        "HOST_NATIVE_AUTOMATIC",
+        "EXTERNAL_AUTOMATION"
+      ],
+      "manualTestHarnessAllowed": false,
+      "missingAutomationOutcome": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+      "rule": "Routine HUMAN activation/wakeup/job transport is forbidden. If no compatible automated runtime exists, AGENT work remains blocked until a compatible runtime adapter is bound."
+    }
+  },
+  "activationProtocol": {
+    "authoritativeJobTransport": "REPOSITORY_PULL",
+    "jobPromptTransportForbidden": true,
+    "allowedIdentityBootstrap": [
+      "AUTOMATIC",
+      "ONE_TIME_MANUAL_TEST_ONLY",
+      "PREPROVISIONED"
+    ],
+    "identityBootstrapContentLimit": [
+      "CONTROL_WORKSPACE_REF",
+      "PROJECT_OR_VALIDATION_CONTEXT_ID",
+      "AGENT_ID",
+      "RUNTIME_ADAPTER_ID"
+    ],
+    "identityBootstrapMustNotContain": [
+      "FULL_JOB_CONTRACT_AS_AUTHORITY",
+      "HUMAN_COPIED_JOB_PROMPT",
+      "NEW_AUTHORITY",
+      "PROVIDER_CREDENTIALS"
+    ],
+    "agentActivationSequence": [
+      "RUNTIME_TRIGGER",
+      "LOAD_IDENTITY",
+      "LOAD_AGENT_STATE",
+      "LOAD_INBOX_INDEX",
+      "SELECT_DISCOVERABLE_JOB",
+      "READ_AUTHORITATIVE_JOB_JSON",
+      "VERIFY_JOB_AND_PROJECTION_BLOBS",
+      "READ_MASTER_JOB_STATE",
+      "VERIFY_ASSIGNMENT_ROLE_SKILLS_MANDATE_RIGHTS_AND_RUNTIME_BINDING",
+      "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+      "EXECUTE_ONLY_CLAIMED_JOB",
+      "SUBMIT_RESULT_AND_EVIDENCE"
+    ]
+  },
+  "humanActivationGovernance": {
+    "humanIsWorkflowOperator": false,
+    "forbiddenHumanRequestsInExecution": [
+      "OPEN_AGENT_CHAT_FOR_ROUTINE_JOB",
+      "WAKE_AGENT_CHAT",
+      "COPY_JOB_PROMPT",
+      "COPY_JOB_CONTRACT",
+      "POLL_AGENT_INBOX",
+      "MOVE_AGENT_RESULT_BETWEEN_CHATS",
+      "MANUALLY_ADVANCE_DISPATCH_SEQUENCE"
+    ],
+    "allowedHumanEscalation": [
+      "SELECT_OR_APPROVE_DIFFERENT_AGENT_RUNTIME_WHEN_NO_SAFE_DETERMINISTIC_BINDING_EXISTS",
+      "APPROVE_NEW_OR_EXPANDED_RUNTIME_AUTHORITY_WHEN_REQUIRED"
+    ],
+    "manualTestHarnessDisclosureRequired": true,
+    "manualTestHarnessMustBeLabeledNonProduction": true
+  },
+  "failClosedOutcomes": {
+    "executionManualOnly": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+    "runtimeCapabilityUnverified": "AGENT_RUNTIME_CAPABILITY_UNVERIFIED",
+    "backgroundWakeupUnverified": "AGENT_RUNTIME_BACKGROUND_WAKEUP_UNVERIFIED",
+    "modeAdapterMismatch": "AGENT_RUNTIME_MODE_INCOMPATIBLE",
+    "jobPromptTransportRequired": "AGENT_RUNTIME_JOB_PROMPT_TRANSPORT_FORBIDDEN"
+  }
+}
