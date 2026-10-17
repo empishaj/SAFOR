@@ -184,6 +184,49 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         self.assertTrue(policy["packageFamilyConstraintsEnforced"])
         self.assertTrue(policy["crossDomainPairForbidden"])
 
+    def test_saas_public_evaluation_framework_is_paid_and_compatible(self):
+        distribution = build_distribution("SAAS")
+        self.assertEqual("PUBLIC_TEST_EVALUATION", distribution["publicationMode"])
+        self.assertEqual("SAAS_ENGINEERING", distribution["domain"]["domainId"])
+        self.assertEqual("PAID_ENTITLEMENT_REQUIRED", distribution["domain"]["accessMode"])
+        self.assertTrue(distribution["evaluationNotice"])
+        self.assertEqual(
+            "PAID_ENTITLEMENT_REQUIRED",
+            distribution["embeddedDomainModules"]["factory"]["commercial"]["accessMode"],
+        )
+        self.assertEqual(
+            "PAID_ENTITLEMENT_REQUIRED",
+            distribution["embeddedDomainModules"]["operatingModel"]["commercial"]["accessMode"],
+        )
+        decision = validate_distribution(distribution, "SAAS")
+        self.assertTrue(decision["valid"], decision)
+
+    def test_book_public_evaluation_framework_is_paid_and_compatible(self):
+        distribution = build_distribution("BOOK_CREATION")
+        self.assertEqual("PUBLIC_TEST_EVALUATION", distribution["publicationMode"])
+        self.assertEqual("BOOK_CREATION", distribution["domain"]["domainId"])
+        self.assertEqual("PAID_ENTITLEMENT_REQUIRED", distribution["domain"]["accessMode"])
+        self.assertTrue(distribution["evaluationNotice"])
+        self.assertEqual(
+            "safor.factory.book",
+            distribution["embeddedDomainModules"]["factory"]["packageFamily"],
+        )
+        self.assertEqual(
+            "safor.om.book",
+            distribution["embeddedDomainModules"]["operatingModel"]["packageFamily"],
+        )
+        decision = validate_distribution(distribution, "BOOK_CREATION")
+        self.assertTrue(decision["valid"], decision)
+
+    def test_public_paid_test_framework_files_match_builder(self):
+        for profile_id, filename in (
+            ("SAAS", "SAFOR-FRAMEWORK-SAAS.json"),
+            ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json"),
+        ):
+            committed = load_json(filename)
+            built = build_distribution(profile_id)
+            self.assertEqual(committed, built)
+
 
 if __name__ == "__main__":
     unittest.main()
