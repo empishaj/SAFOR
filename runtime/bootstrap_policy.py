@@ -553,6 +553,17 @@ def resolve_composable_creation_packages(
             }
 
         access_mode = entry.get("accessMode")
+        access_policy = profile.get("selectedPackageAccessPolicy", "ANY_COMPATIBLE_ACCESS")
+        if (
+            access_policy == "BOTH_PAID_ENTITLEMENT_REQUIRED"
+            and access_mode != "PAID_ENTITLEMENT_REQUIRED"
+        ):
+            return {
+                "outcome": "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES",
+                "creationType": creation_type,
+                "packageId": package_id,
+                "packages": [],
+            }
         access_modes.add(str(access_mode))
         loaded = _loaded_package_record(loaded_packages, str(package_id))
 
