@@ -2,12 +2,12 @@
   "format": "SAFOR_INITIALIZATION_MODEL",
   "schemaVersion": "0.12.0",
   "id": "SAFOR-GUIDED-INITIALIZATION",
-  "purpose": "Initialize Framework, package access and compatibility first, then bind a HUMAN-owned remote or local Git project workspace and control workspace.",
+  "purpose": "Resolve SAFOR operation mode before any mutating work, then follow mode-specific initialization: Framework/schema DESIGN, isolated VALIDATION, or HUMAN project EXECUTION.",
   "entryBehavior": {
     "autoStartAfterBootstrapLoad": true,
-    "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
+    "firstHumanSurface": "MODE_DEPENDENT",
     "noProjectWorkBeforeComplete": true,
-    "completionPredicate": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED"
+    "completionPredicate": "OPERATION_MODE_RESOLVED_AND_MODE_SPECIFIC_CONTEXT_VERIFIED"
   },
   "sequence": [
     {
@@ -45,6 +45,73 @@
       "deterministicControlRef": "deterministic-control-model.json"
     },
     {
+      "id": "INIT-00B",
+      "operation": "VERIFY_OPERATION_MODE_AND_AGENT_RUNTIME_BASELINE",
+      "title": "Betriebsmodus und Agent Runtime prüfen",
+      "requiresProvider": false,
+      "passOutcome": "MODE_RUNTIME_BASELINE_VERIFIED",
+      "failOutcome": "STOP",
+      "checks": [
+        "OPERATION_MODE_MODEL_PRESENT_AND_PINNED",
+        "AGENT_RUNTIME_MODEL_PRESENT_AND_PINNED",
+        "OPERATION_MODE_BINDING_SCHEMA_PRESENT",
+        "AGENT_RUNTIME_BINDING_SCHEMA_PRESENT",
+        "HUMAN_DECISION_GATE_FORBIDS_ROUTINE_AGENT_ACTIVATION",
+        "AGENT_WORKSPACE_BINDS_RUNTIME_ADAPTER"
+      ],
+      "operationModeModelRef": "operation-mode-model.json",
+      "agentRuntimeModelRef": "agent-runtime-model.json"
+    },
+    {
+      "id": "INIT-00C",
+      "operation": "RESOLVE_OPERATION_MODE",
+      "title": "Arbeitsmodus bestimmen",
+      "requiresProvider": false,
+      "modelRef": "operation-mode-model.json",
+      "rule": "Derive DESIGN, VALIDATION or EXECUTION from explicit HUMAN intent and target context before any mutating effect. Ask only when materially ambiguous. Never silently downgrade EXECUTION to VALIDATION.",
+      "humanDecisionDefault": false,
+      "askHumanOnlyWhen": "MODE_CANNOT_BE_DERIVED_SAFELY_FROM_INTENT_AND_TARGET_CONTEXT",
+      "outcomes": [
+        "DESIGN",
+        "VALIDATION",
+        "EXECUTION"
+      ]
+    },
+    {
+      "id": "INIT-D01",
+      "when": "OPERATION_MODE == DESIGN",
+      "operation": "BIND_DESIGN_TARGET",
+      "title": "SAFOR-Entwicklungsziel binden",
+      "rule": "Bind the explicitly intended Framework/schema/package development target. Canonical SAFOR repository is allowed here as a development target because this is not a HUMAN project workspace.",
+      "completionOutcome": "DESIGN_CONTEXT_READY"
+    },
+    {
+      "id": "INIT-V01",
+      "when": "OPERATION_MODE == VALIDATION",
+      "operation": "BIND_ISOLATED_VALIDATION_TARGET",
+      "title": "Isolierten Prüfkontext binden",
+      "rule": "Validation target must be explicitly isolated/non-production and must not inherit production project authority.",
+      "completionOutcome": "VALIDATION_TARGET_BOUND"
+    },
+    {
+      "id": "INIT-V02",
+      "when": "OPERATION_MODE == VALIDATION",
+      "operation": "BIND_VALIDATION_AGENT_RUNTIME",
+      "title": "Test-Runtime prüfen",
+      "modelRef": "agent-runtime-model.json",
+      "rule": "Manual HUMAN activation is permitted only if the selected validation explicitly tests a MANUAL_TEST_HARNESS. Otherwise derive or bind an automated runtime when available.",
+      "completionOutcome": "VALIDATION_RUNTIME_READY"
+    },
+    {
+      "id": "INIT-E00",
+      "when": "OPERATION_MODE == EXECUTION",
+      "operation": "VERIFY_EXECUTION_AGENT_RUNTIME_POLICY",
+      "title": "Agent Runtime für Ausführung prüfen",
+      "modelRef": "agent-runtime-model.json",
+      "rule": "Do not require an Agent Runtime until AGENT execution is actually needed, but record that EXECUTION permits only HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION for AGENT dispatch. HUMAN_MANUAL_TEST_ONLY can never become production fallback.",
+      "completionOutcome": "EXECUTION_RUNTIME_POLICY_READY"
+    },
+    {
       "id": "INIT-01",
       "operation": "SELECT_CREATION_TYPE",
       "humanDecision": "CREATION_TYPE_SELECTION",
@@ -64,7 +131,8 @@
           }
         ]
       },
-      "rule": "Creation type determines required package IDs, not project location and not organizational authority."
+      "rule": "Creation type determines required package IDs, not project location and not organizational authority.",
+      "when": "OPERATION_MODE == EXECUTION"
     },
     {
       "id": "INIT-02",
@@ -79,7 +147,8 @@
         "FREE_PUBLIC_RESOLUTION",
         "PAID_PACKAGE_ACCESS_CHECK"
       ],
-      "rule": "Never infer paid entitlement from package possession or HUMAN statement."
+      "rule": "Never infer paid entitlement from package possession or HUMAN statement.",
+      "when": "OPERATION_MODE == EXECUTION"
     },
     {
       "id": "INIT-03",
@@ -95,7 +164,8 @@
         "missingPaidPackage": "PACKAGE_ACCESS_REQUIRED",
         "entitlementUnverified": "PACKAGE_ENTITLEMENT_UNVERIFIED",
         "publicPaidResolutionAttempt": "STOP"
-      }
+      },
+      "when": "OPERATION_MODE == EXECUTION"
     },
     {
       "id": "INIT-04",
@@ -109,7 +179,8 @@
         "ACCESS_MODE",
         "ENTITLEMENT_WHEN_REQUIRED"
       ],
-      "rule": "A package is not bindable until source, integrity and access evidence are proven."
+      "rule": "A package is not bindable until source, integrity and access evidence are proven.",
+      "when": "OPERATION_MODE == EXECUTION"
     },
     {
       "id": "INIT-05",
@@ -121,7 +192,8 @@
         "NO_FACTORY_ROLE_ID_COUPLING",
         "NO_OPERATING_MODEL_FLOW_OWNERSHIP"
       ],
-      "failOutcome": "PACKAGE_COMBINATION_INCOMPATIBLE"
+      "failOutcome": "PACKAGE_COMBINATION_INCOMPATIBLE",
+      "when": "OPERATION_MODE == EXECUTION"
     },
     {
       "id": "INIT-06",
@@ -141,11 +213,12 @@
           }
         ]
       },
-      "rule": "Project location is HUMAN-controlled and independent from package source/access."
+      "rule": "Project location is HUMAN-controlled and independent from package source/access.",
+      "when": "OPERATION_MODE == EXECUTION"
     },
     {
       "id": "INIT-07R",
-      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
       "operation": "SELECT_REMOTE_PROVIDER",
       "humanDecision": "PROVIDER_SELECTION",
       "title": "Welchen Git-Anbieter nutzt du?",
@@ -167,7 +240,7 @@
     },
     {
       "id": "INIT-08R",
-      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
       "operation": "VERIFY_REMOTE_PROVIDER_ACCESS",
       "requires": [
         "provider.identity.read",
@@ -184,7 +257,7 @@
     },
     {
       "id": "INIT-09R",
-      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
       "operation": "SELECT_REMOTE_OWNER_AND_PROJECT",
       "humanDecision": "REMOTE_PROJECT_SELECTION",
       "title": "Welches deiner Projekte verwenden wir?",
@@ -197,7 +270,7 @@
     },
     {
       "id": "INIT-10R",
-      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
       "operation": "VERIFY_AND_BIND_REMOTE_CONTROL_WORKSPACE",
       "target": "{selectedOwner}/safor-memory",
       "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
@@ -211,7 +284,7 @@
     },
     {
       "id": "INIT-07L",
-      "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == LOCAL_GIT)",
       "operation": "VERIFY_LOCAL_HOST_CAPABILITIES",
       "requires": [
         "workspace.local.read",
@@ -227,7 +300,7 @@
     },
     {
       "id": "INIT-08L",
-      "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == LOCAL_GIT)",
       "operation": "SELECT_OR_DEFINE_LOCAL_GIT_PROJECT",
       "humanDecision": "LOCAL_PROJECT_SELECTION",
       "title": "Welchen lokalen Git-Projektordner verwenden wir?",
@@ -240,7 +313,7 @@
     },
     {
       "id": "INIT-09L",
-      "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+      "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == LOCAL_GIT)",
       "operation": "BIND_LOCAL_CONTROL_WORKSPACE",
       "strategy": "LOCAL_MASTER_CONTROL_ROOT",
       "target": ".safor/",
@@ -252,7 +325,8 @@
       "humanDecision": "SETUP_APPROVAL",
       "title": "Projekt starten",
       "rule": "Materialize project/control only in the HUMAN-selected project/control workspaces. Package sources and canonical SAFOR repository remain read-only sources.",
-      "completionOutcome": "INITIALIZATION_COMPLETE"
+      "completionOutcome": "INITIALIZATION_COMPLETE",
+      "when": "OPERATION_MODE == EXECUTION"
     }
   ],
   "packageModelRefs": {
@@ -263,5 +337,19 @@
   },
   "workspaceModelRef": "workspace-model.json",
   "humanDecisionGateModelRef": "human-decision-gate-model.json",
-  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
+  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+  "operationModeModelRef": "operation-mode-model.json",
+  "agentRuntimeModelRef": "agent-runtime-model.json",
+  "modeSpecificCompletion": {
+    "DESIGN": "DESIGN_CONTEXT_READY",
+    "VALIDATION": "VALIDATION_TARGET_BOUND_AND_VALIDATION_RUNTIME_READY",
+    "EXECUTION": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED"
+  },
+  "modeHumanGovernance": {
+    "deriveBeforeAsk": true,
+    "oneDecisionContextPerTurn": true,
+    "missingExecutionAutomationIsNotHumanWorkflow": true,
+    "manualActivationVisibleOnlyInExplicitValidationHarness": true,
+    "executionToValidationSilentFallbackForbidden": true
+  }
 }
