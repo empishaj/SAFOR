@@ -877,11 +877,101 @@
       "id": "CF-175",
       "statement": "SAFOR 0.11.0-rc.1 exposes an explicit executable-transition boundary and does not claim un-migrated governance rules are already deterministic.",
       "expected": true
+    },
+    {
+      "id": "CF-176",
+      "statement": "Kernel binds the deterministic Acceptance Model and the Acceptance Contract, Review Decision and Authority Decision schemas.",
+      "expected": true
+    },
+    {
+      "id": "CF-177",
+      "statement": "Planning materializes one typed Acceptance Contract per executable Work Item from approved criteria, Factory evidence, review and authority requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-178",
+      "statement": "Plan approval explicitly includes the Work Item Acceptance Contract set and material contract changes require governed replan/new approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-179",
+      "statement": "Every Acceptance Contract criterion preserves the approved criterion text and references at least one typed EVIDENCE, REVIEW or AUTHORITY requirement.",
+      "expected": true
+    },
+    {
+      "id": "CF-180",
+      "statement": "Acceptance Contract integrity is canonical SHA-256 excluding only contractHash; a mismatching hash cannot be registered.",
+      "expected": true
+    },
+    {
+      "id": "CF-181",
+      "statement": "E05 uses the deterministic Acceptance Model while retaining the bound Factory evidenceContract as required domain input.",
+      "expected": true
+    },
+    {
+      "id": "CF-182",
+      "statement": "WORK_ITEM_ACCEPTED is the only rc.2 executable transition that may materialize Work Item status ACCEPTED.",
+      "expected": true
+    },
+    {
+      "id": "CF-183",
+      "statement": "Acceptance evidence must match work-item subject and required evidenceType; PINNED evidence requires revisionRef.",
+      "expected": true
+    },
+    {
+      "id": "CF-184",
+      "statement": "Independent review requires performer and approving reviewer to differ when configured; self-review cannot satisfy the contract.",
+      "expected": true
+    },
+    {
+      "id": "CF-185",
+      "statement": "Agent acceptanceSelfCheck is advisory and cannot satisfy independent review, provider evidence or authority approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-186",
+      "statement": "Authority satisfaction requires an exact workItemId/authorityId APPROVED decision with pinned source revision.",
+      "expected": true
+    },
+    {
+      "id": "CF-187",
+      "statement": "A recorded REJECTED decision for a required authority blocks acceptance for the current active contract.",
+      "expected": true
+    },
+    {
+      "id": "CF-188",
+      "statement": "Duplicate evidenceId, reviewId or authority decisionId records under new events are rejected from the acceptance replay ledger.",
+      "expected": true
+    },
+    {
+      "id": "CF-189",
+      "statement": "Acceptance ledger is a replay-derived projection of pinned contracts/evidence/reviews/decisions, not an independent business-authority source.",
+      "expected": true
+    },
+    {
+      "id": "CF-190",
+      "statement": "Review CHANGES_REQUIRED deterministically routes the Work Item to CHANGES_REQUIRED and does not self-heal into PASS.",
+      "expected": true
+    },
+    {
+      "id": "CF-191",
+      "statement": "Acceptance recovery SH-22 forbids fabricated evidence, review PASS, authority approval, relaxed independence or requirement deletion.",
+      "expected": true
+    },
+    {
+      "id": "CF-192",
+      "statement": "Work Item ACCEPTED remains distinct from VALUE_SUPPORTED; deterministic acceptance cannot substitute for outcome evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-193",
+      "statement": "The rc.2 deterministic-control boundary explicitly lists acceptance registration, evidence/review/authority recording and WORK_ITEM_ACCEPTED transitions while leaving later governance areas deferred.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
-    "branch": "safor/deterministic-control-v0.11.0-rc.1",
+    "branch": "safor/deterministic-acceptance-v0.11.0-rc.2",
     "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-    "note": "Deterministic Control Kernel rc.1 model, pure reducer, replay semantics and initial transition slice implemented. Machine validation and deterministic CI tests are required before release-candidate acceptance."
+    "note": "Deterministic Acceptance/Evidence model, typed contracts, replay ledger, review independence and authority gates implemented. Machine validation and acceptance test matrix are required before rc.2 acceptance."
   }
 }
