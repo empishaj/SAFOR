@@ -47,6 +47,7 @@
       "additionalProperties": false,
       "required": [
         "packageId",
+        "packageFamily",
         "kind",
         "label",
         "accessMode",
@@ -135,6 +136,10 @@
         "legacyDisclosure": {
           "type": "string",
           "minLength": 1
+        },
+        "packageFamily": {
+          "type": "string",
+          "pattern": "^safor\\.(factory|om)\\.[a-z0-9][a-z0-9.-]*$"
         }
       },
       "allOf": [
@@ -202,6 +207,7 @@
       "additionalProperties": false,
       "required": [
         "creationType",
+        "domainId",
         "label",
         "defaultFactoryPackageId",
         "defaultOperatingModelPackageId",
@@ -265,6 +271,10 @@
             "ANY_COMPATIBLE_ACCESS",
             "BOTH_PAID_ENTITLEMENT_REQUIRED"
           ]
+        },
+        "domainId": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
         }
       }
     }
