@@ -1222,6 +1222,61 @@
       "id": "CF-244",
       "statement": "HUMAN_LOADED_PACKAGE remains allowed for paid manual delivery but still requires strict verified entitlement.",
       "expected": true
+    },
+    {
+      "id": "CF-245",
+      "statement": "SAFOR defines exactly three domain framework profiles: WEBSITE, SAAS and BOOK_CREATION, all sharing the same SAFOR kernel.",
+      "expected": true
+    },
+    {
+      "id": "CF-246",
+      "statement": "SAFOR-FRAMEWORK-WEBSITE.json embeds the default Website Factory and Website Operating Model and preselects WEBSITE_CREATION.",
+      "expected": true
+    },
+    {
+      "id": "CF-247",
+      "statement": "SAFOR-FRAMEWORK-SAAS.json is a commercial distribution built only with protected Software Factory and SaaS Operating Model inputs for SAAS_ENGINEERING.",
+      "expected": true
+    },
+    {
+      "id": "CF-248",
+      "statement": "SAFOR-FRAMEWORK-BOOK-CREATION.json is a commercial distribution built only with protected Book Factory and Book Operating Model inputs for BOOK_CREATION.",
+      "expected": true
+    },
+    {
+      "id": "CF-249",
+      "statement": "Loading a domain framework distribution suppresses redundant creation-type selection because domainId and creationType are already fixed by the artifact.",
+      "expected": true
+    },
+    {
+      "id": "CF-250",
+      "statement": "V2 replaceable domain packages declare packageFamily and domainIds, and both fields are covered by the V2 declared-contract digest.",
+      "expected": true
+    },
+    {
+      "id": "CF-251",
+      "statement": "Factory counterpart requirements are evaluated against the selected Operating Model, including allowed package families and declared capability, authority, work-item and artifact requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-252",
+      "statement": "Operating Model counterpart requirements are evaluated against the selected Factory, including allowed package families and declared capability, authority, work-item and artifact requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-253",
+      "statement": "A Premium replacement with a different packageId may be adopted when it remains in an allowed package family, supports the active domain and passes all bidirectional requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-254",
+      "statement": "A cross-domain pair such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model is rejected before binding.",
+      "expected": true
+    },
+    {
+      "id": "CF-255",
+      "statement": "An incompatible replacement leaves the previously valid Factory, Operating Model and active domain unchanged.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
