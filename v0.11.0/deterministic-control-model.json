@@ -1,0 +1,78 @@
+{
+  "format": "SAFOR_DETERMINISTIC_CONTROL_MODEL",
+  "schemaVersion": "0.11.0",
+  "id": "safor-deterministic-control",
+  "purpose": "Pure deterministic governance substrate over probabilistic HUMAN, AGENT and PROVIDER actors.",
+  "principle": "PROBABILISTIC_WORK_DETERMINISTIC_GOVERNANCE",
+  "authorityBoundary": {
+    "externalActorsMayProduce": [
+      "EVENTS",
+      "EVIDENCE",
+      "ARTIFACTS",
+      "REVIEWS",
+      "PROVIDER_OUTCOMES"
+    ],
+    "externalActorsMayNotProduceAuthoritatively": [
+      "STATE_TRANSITION",
+      "MANDATE",
+      "ACCEPTANCE",
+      "AUTHORITY_EXPANSION"
+    ],
+    "authoritativeStateTransitionOwner": "DETERMINISTIC_CONTROL_KERNEL"
+  },
+  "modelRefs": {
+    "eventModel": "event-model.json",
+    "predicateRegistry": "predicate-registry.json",
+    "transitionRegistry": "transition-registry.json",
+    "effectModel": "effect-model.json",
+    "eventSchema": "schemas/event.schema.json",
+    "transitionSchema": "schemas/transition.schema.json",
+    "effectIntentSchema": "schemas/effect-intent.schema.json",
+    "transitionRecordSchema": "schemas/transition-record.schema.json",
+    "stateSnapshotSchema": "schemas/state-snapshot.schema.json"
+  },
+  "pureReducerContract": {
+    "signature": "reduce(state,event,pinnedModels)->transitionResult",
+    "sameCanonicalInputsSameLogicalOutput": true,
+    "inputMutationForbidden": true,
+    "providerIoForbidden": true,
+    "llmInvocationForbidden": true,
+    "wallClockReadForbidden": true,
+    "randomnessForbidden": true,
+    "arbitraryCodeFromJsonForbidden": true
+  },
+  "eventApplication": {
+    "orderBy": "sequence",
+    "occurredAtIsOrderingInput": false,
+    "contiguousSequenceRequired": true,
+    "duplicateSameCanonicalEvent": "IDEMPOTENT_NO_OP",
+    "duplicateDivergentEvent": "INTEGRITY_FAILURE",
+    "ambiguousTransition": "CONTROL_FAILURE"
+  },
+  "hashing": {
+    "algorithm": "SHA-256",
+    "canonicalization": "UTF8_SORTED_OBJECT_KEYS_COMPACT_JSON_ARRAY_ORDER_PRESERVED",
+    "stateHashExcludesField": "stateHash"
+  },
+  "replay": {
+    "genesisRequired": true,
+    "migrationRule": "Existing pre-0.11 projects begin with a verified MIGRATION_GENESIS_SNAPSHOT; historical events MUST NOT be fabricated.",
+    "successPredicate": "REPLAYED_STATE_HASH_EQUALS_STORED_STATE_HASH"
+  },
+  "rc1Boundary": {
+    "executableTransitions": [
+      "WORK_ITEM_BECOMES_READY",
+      "WORK_ITEM_PAUSED",
+      "WORK_ITEM_RESUMED_READY",
+      "WORK_ITEM_STOPPED",
+      "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION"
+    ],
+    "deferred": [
+      "FULL_ACCEPTANCE_PREDICATES",
+      "FULL_AGENT_LIFECYCLE",
+      "FULL_SCHEDULER_REDUCER",
+      "FULL_SELF_HEALING_TRANSITIONS",
+      "FULL_EVENT_SOURCED_AGGREGATE_REPLACEMENT"
+    ]
+  }
+}
