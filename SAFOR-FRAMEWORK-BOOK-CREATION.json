@@ -224,7 +224,7 @@
     "integrityManifest": {
       "kernel": {
         "sourcePath": "v0.13.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "3ada6d73420f588bcffaf9b14ee31ba83f0d351b",
+        "sourceBlobSha": "c3cda1f33991947b32f1a2f1bfaef95d8f54a94a",
         "selfHealingProfileId": "MRP-KERNEL"
       },
       "initialization": {
@@ -409,7 +409,7 @@
       },
       "conformance": {
         "sourcePath": "v0.13.0/conformance.json",
-        "sourceBlobSha": "e5a57f449bc8e6df9535e03766100336a49c80e3",
+        "sourceBlobSha": "58e140baab6cb1a13973bc97d03978259f7d2d74",
         "selfHealingProfileId": "MRP-CONFORMANCE"
       },
       "schemaHumanResponse": {
@@ -552,7 +552,7 @@
       "kernel": {
         "key": "kernel",
         "sourcePath": "v0.13.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "3ada6d73420f588bcffaf9b14ee31ba83f0d351b",
+        "sourceBlobSha": "c3cda1f33991947b32f1a2f1bfaef95d8f54a94a",
         "content": {
           "format": "SAFOR_MASTER_BOOTSTRAP",
           "schemaVersion": "0.13.0",
@@ -679,7 +679,9 @@
             "replacementRequiresSameDomain": true,
             "replacementRequiresBidirectionalCompatibility": true,
             "packageFamilyCompatibilityRequiredForV2Packages": true,
-            "crossDomainPackageReplacementForbidden": true
+            "crossDomainPackageReplacementForbidden": true,
+            "publicPaidDomainEvaluationArtifactsAllowedForTesting": true,
+            "publicEvaluationDoesNotAuthorizePaidUse": true
           },
           "moduleArchitecture": {
             "layers": [
@@ -856,7 +858,8 @@
               "replacementSameDomainRequired": true,
               "replacementBidirectionalCounterpartRequired": true,
               "replacementPackageFamilyConstraintsEnforced": true,
-              "crossDomainReplacementForbidden": true
+              "crossDomainReplacementForbidden": true,
+              "publicEvaluationPaidBytesNotProductionSource": true
             },
             "domainPackageSchemaRef": "schemas/domain-package.schema.json",
             "selectionSchemaRef": "schemas/package-selection.schema.json",
@@ -2464,6 +2467,18 @@
             {
               "id": "INV-197",
               "rule": "Cross-domain combinations such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model are invalid even when individual capabilities happen to overlap."
+            },
+            {
+              "id": "INV-198",
+              "rule": "PUBLIC_TEST_EVALUATION domain Frameworks may embed paid-mode prerelease test packages in the public repository solely for testing; they are not the protected commercial production package source."
+            },
+            {
+              "id": "INV-199",
+              "rule": "Public visibility of a paid-mode test package or domain Framework never satisfies entitlement; possession remains non-authoritative for commercial access."
+            },
+            {
+              "id": "INV-200",
+              "rule": "Production catalog entries for paid SaaS and Book packages must remain ENTITLED_PACKAGE_SOURCE with no public model path even while public evaluation Frameworks exist."
             }
           ],
           "evidencePolicy": {
@@ -14991,7 +15006,7 @@
       "conformance": {
         "key": "conformance",
         "sourcePath": "v0.13.0/conformance.json",
-        "sourceBlobSha": "e5a57f449bc8e6df9535e03766100336a49c80e3",
+        "sourceBlobSha": "58e140baab6cb1a13973bc97d03978259f7d2d74",
         "content": {
           "format": "SAFOR_CONFORMANCE_SUITE",
           "schemaVersion": "0.13.0",
@@ -16229,12 +16244,12 @@
             },
             {
               "id": "CF-247",
-              "statement": "SAFOR-FRAMEWORK-SAAS.json is a commercial distribution built only with protected Software Factory and SaaS Operating Model inputs for SAAS_ENGINEERING.",
+              "statement": "SAFOR-FRAMEWORK-SAAS.json is committed as PUBLIC_TEST_EVALUATION with paid-mode SaaS test modules; those public test bytes are not the protected commercial production package source.",
               "expected": true
             },
             {
               "id": "CF-248",
-              "statement": "SAFOR-FRAMEWORK-BOOK-CREATION.json is a commercial distribution built only with protected Book Factory and Book Operating Model inputs for BOOK_CREATION.",
+              "statement": "SAFOR-FRAMEWORK-BOOK-CREATION.json is committed as PUBLIC_TEST_EVALUATION with paid-mode Book test modules; those public test bytes are not the protected commercial production package source.",
               "expected": true
             },
             {
@@ -16270,6 +16285,31 @@
             {
               "id": "CF-255",
               "statement": "An incompatible replacement leaves the previously valid Factory, Operating Model and active domain unchanged.",
+              "expected": true
+            },
+            {
+              "id": "CF-256",
+              "statement": "All three domain Framework files are committed and reproducibly buildable in rc.6 for end-to-end testing.",
+              "expected": true
+            },
+            {
+              "id": "CF-257",
+              "statement": "SaaS and Book public evaluation Frameworks retain PAID_ENTITLEMENT_REQUIRED on both embedded domain modules.",
+              "expected": true
+            },
+            {
+              "id": "CF-258",
+              "statement": "Public test/evaluation package bytes use prerelease test versions and explicit PUBLIC_TEST_EVALUATION provenance.",
+              "expected": true
+            },
+            {
+              "id": "CF-259",
+              "statement": "Production catalog entries for paid SaaS/Book packages continue to expose no public model path and resolve only from ENTITLED_PACKAGE_SOURCE.",
+              "expected": true
+            },
+            {
+              "id": "CF-260",
+              "statement": "Publishing public evaluation bytes does not make possession sufficient for entitlement; paid-mode access checks remain normative.",
               "expected": true
             }
           ],
@@ -21453,6 +21493,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:38487ac1110670dddef0e2c0209ffead9aee102b78836be1860b4ee2937d606b"
+    "contentDigest": "sha256:8f9f6b823f34acdb47e8fcc3252f6a96aeda866fe841626ec1893ac611c2fd6a"
   }
 }
