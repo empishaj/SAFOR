@@ -342,6 +342,357 @@
           "payload": {}
         }
       ]
+    },
+    {
+      "transitionId": "ACCEPTANCE_CONTRACT_REGISTERED",
+      "priority": 500,
+      "aggregate": "ACCEPTANCE",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "ACCEPTANCE_CONTRACT_REGISTERED"
+      ],
+      "fromStatus": [
+        "PLANNED",
+        "READY",
+        "ASSIGNED",
+        "IN_PROGRESS",
+        "HANDOFF_READY",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "BLOCKED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "ACCEPTANCE_CONTRACT_NOT_REGISTERED"
+          },
+          {
+            "predicate": "ACCEPTANCE_CONTRACT_VALID_FOR_SUBJECT"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "APPEND_FROM_EVENT",
+          "path": "$aggregate.contracts",
+          "eventPath": "payload.contract"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "ACCEPTANCE_EVIDENCE_RECORDED",
+      "priority": 400,
+      "aggregate": "ACCEPTANCE",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "EVIDENCE_RECORDED"
+      ],
+      "fromStatus": [
+        "PLANNED",
+        "READY",
+        "ASSIGNED",
+        "IN_PROGRESS",
+        "HANDOFF_READY",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "BLOCKED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "EVIDENCE_RECORD_VALID_FOR_SUBJECT"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "APPEND_FROM_EVENT",
+          "path": "$aggregate.evidenceRecords",
+          "eventPath": "payload.record"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "ACCEPTANCE_REVIEW_APPROVED_RECORDED",
+      "priority": 600,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "REVIEW_APPROVED_RECORDED"
+      ],
+      "fromStatus": [
+        "HANDOFF_READY",
+        "IN_REVIEW"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
+          },
+          {
+            "predicate": "REVIEW_EVENT_INDEPENDENCE_VALID"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "APPEND_FROM_EVENT",
+          "path": "$acceptance.reviewDecisions",
+          "eventPath": "payload.record"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$acceptance.revision",
+          "by": 1
+        },
+        {
+          "op": "SET",
+          "path": "$subject.review.status",
+          "value": "APPROVED"
+        },
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "IN_REVIEW"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "ACCEPTANCE_REVIEW_CHANGES_REQUIRED_RECORDED",
+      "priority": 700,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "REVIEW_CHANGES_REQUIRED_RECORDED"
+      ],
+      "fromStatus": [
+        "HANDOFF_READY",
+        "IN_REVIEW"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "APPEND_FROM_EVENT",
+          "path": "$acceptance.reviewDecisions",
+          "eventPath": "payload.record"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$acceptance.revision",
+          "by": 1
+        },
+        {
+          "op": "SET",
+          "path": "$subject.review.status",
+          "value": "CHANGES_REQUIRED"
+        },
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "CHANGES_REQUIRED"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "ACCEPTANCE_AUTHORITY_APPROVED_RECORDED",
+      "priority": 400,
+      "aggregate": "ACCEPTANCE",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "AUTHORITY_APPROVED_RECORDED"
+      ],
+      "fromStatus": [
+        "PLANNED",
+        "READY",
+        "ASSIGNED",
+        "IN_PROGRESS",
+        "HANDOFF_READY",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "BLOCKED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "AUTHORITY_DECISION_VALID_FOR_SUBJECT"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "APPEND_FROM_EVENT",
+          "path": "$aggregate.authorityDecisions",
+          "eventPath": "payload.record"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "ACCEPTANCE_AUTHORITY_REJECTED_RECORDED",
+      "priority": 400,
+      "aggregate": "ACCEPTANCE",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "AUTHORITY_REJECTED_RECORDED"
+      ],
+      "fromStatus": [
+        "PLANNED",
+        "READY",
+        "ASSIGNED",
+        "IN_PROGRESS",
+        "HANDOFF_READY",
+        "IN_REVIEW",
+        "CHANGES_REQUIRED",
+        "BLOCKED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "AUTHORITY_DECISION_VALID_FOR_SUBJECT"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "APPEND_FROM_EVENT",
+          "path": "$aggregate.authorityDecisions",
+          "eventPath": "payload.record"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "WORK_ITEM_ACCEPTED",
+      "priority": 1000,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "ACCEPTANCE_REEVALUATION_REQUESTED"
+      ],
+      "fromStatus": [
+        "HANDOFF_READY",
+        "IN_REVIEW"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+          },
+          {
+            "predicate": "REQUIRED_EVIDENCE_SATISFIED"
+          },
+          {
+            "predicate": "REQUIRED_REVIEWS_SATISFIED"
+          },
+          {
+            "predicate": "REVIEW_INDEPENDENCE_SATISFIED"
+          },
+          {
+            "predicate": "REQUIRED_AUTHORITIES_SATISFIED"
+          },
+          {
+            "predicate": "NO_REJECTING_AUTHORITY_DECISION"
+          },
+          {
+            "predicate": "ALL_ACCEPTANCE_CRITERIA_SATISFIED"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "ACCEPTED"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
     }
   ]
 }
