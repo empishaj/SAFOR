@@ -1,0 +1,147 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.13.0/domain-framework-profile.schema.json",
+  "title": "SAFOR Domain Framework Profile Catalog 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "profiles"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_DOMAIN_FRAMEWORK_PROFILE_CATALOG"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "profiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/profile"
+      }
+    }
+  },
+  "$defs": {
+    "packageRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "packageFamily"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "pattern": "^safor\\.(factory|om)\\."
+        },
+        "packageFamily": {
+          "type": "string",
+          "pattern": "^safor\\.(factory|om)\\."
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionPolicy": {
+          "enum": [
+            "COMMERCIAL_CURRENT"
+          ]
+        },
+        "publicPath": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "profile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "distributionId",
+        "distributionFile",
+        "domainId",
+        "creationType",
+        "accessMode",
+        "publicArtifactCommitted",
+        "defaultFactory",
+        "defaultOperatingModel",
+        "replacementPolicy"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+        },
+        "distributionId": {
+          "type": "string",
+          "pattern": "^safor\\.framework\\."
+        },
+        "distributionFile": {
+          "type": "string",
+          "pattern": "^SAFOR-FRAMEWORK-[A-Z0-9-]+\\.json$"
+        },
+        "domainId": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+        },
+        "creationType": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+        },
+        "accessMode": {
+          "enum": [
+            "FREE_PUBLIC",
+            "PAID_ENTITLEMENT_REQUIRED"
+          ]
+        },
+        "publicArtifactCommitted": {
+          "type": "boolean"
+        },
+        "defaultFactory": {
+          "$ref": "#/$defs/packageRef"
+        },
+        "defaultOperatingModel": {
+          "$ref": "#/$defs/packageRef"
+        },
+        "replacementPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "factoryReplaceable",
+            "operatingModelReplaceable",
+            "sameDomainRequired",
+            "bidirectionalCounterpartRequired",
+            "packageFamilyConstraintsEnforced",
+            "crossDomainPairForbidden"
+          ],
+          "properties": {
+            "factoryReplaceable": {
+              "const": true
+            },
+            "operatingModelReplaceable": {
+              "const": true
+            },
+            "sameDomainRequired": {
+              "const": true
+            },
+            "bidirectionalCounterpartRequired": {
+              "const": true
+            },
+            "packageFamilyConstraintsEnforced": {
+              "const": true
+            },
+            "crossDomainPairForbidden": {
+              "const": true
+            }
+          }
+        }
+      }
+    }
+  }
+}
