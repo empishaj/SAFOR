@@ -36,7 +36,7 @@ The target invariant is:
 - Complete event-sourced replacement of existing state aggregates.
 - Historical reconstruction of pre-0.11 projects.
 
-Existing 0.10 aggregates remain authoritative persisted projections during rc.1. Event replay is introduced as a verified deterministic control mechanism, not as an immediate destructive migration.
+Existing 0.10 Control, Value-Stream and Execution aggregates remain the authoritative persisted domain aggregates during rc.1. The deterministic projection set is a pinned read-only decision snapshot over them, not a fourth domain authority. Event replay is introduced as a verified deterministic control mechanism, not as an immediate destructive migration.
 
 ## Architecture
 
@@ -53,7 +53,7 @@ No transition evaluator may:
 
 ## Deterministic function
 
-`reduce(state, event, pinnedModels) -> transitionResult`
+`reduce(projectionSet, event, pinnedModels) -> transitionResult`
 
 For identical canonical inputs and identical model revisions, the logical output and resulting state hash must be identical.
 
@@ -119,7 +119,7 @@ External mutations are represented as `SAFOR_EFFECT_INTENT` records and executed
 
 ## Replay
 
-Every deterministic state snapshot records:
+Every deterministic cross-aggregate projection-set snapshot records:
 - lastAppliedEventSequence
 - lastAppliedEventId
 - modelRevision
@@ -133,9 +133,10 @@ Existing projects migrate with a verified `MIGRATION_GENESIS_SNAPSHOT`; historic
 
 The first executable slice proves the architecture with:
 - PLANNED -> READY when readiness guards pass
-- READY -> PAUSED on valid pause event
-- PAUSED -> READY on valid resume event when readiness guards still pass
-- any executable state -> STOPPED on valid stop event
+- project Control State -> PAUSED on valid pause event while preserving resumeMode
+- PAUSED project -> prior control mode on valid resume event
+- project STOP -> STOPPED while atomically revoking active execution mandates
+- RESUME after STOP -> AWAITING_AUTHORIZATION rather than restoring prior execution authority
 - external mutation outcome unknown -> RECONCILE_REQUIRED
 - duplicate event -> idempotent no-op
 - same eventId with divergent payload -> integrity failure
