@@ -185,8 +185,8 @@
       "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
     },
     "selfHealing": {
-      "sourcePath": "v0.12.0/self-healing-model.json",
-      "sourceBlobSha": "034015a929104f8cc5fb14741e0406e514d1c4b3",
+      "sourcePath": "v0.13.0/self-healing-model.json",
+      "sourceBlobSha": "1d18f8e070abf1d5807c323d03ee58f6771962af",
       "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "moduleSelfHealing": {
@@ -350,8 +350,8 @@
       "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
     },
     "conformance": {
-      "sourcePath": "v0.12.0/conformance.json",
-      "sourceBlobSha": "8a2b92678cef0efad96731bd8d668dcefedefdad",
+      "sourcePath": "v0.13.0/conformance.json",
+      "sourceBlobSha": "6a1eccc51a7b898cb90c7871bb4106a27745ba92",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "schemaHumanResponse": {
@@ -3936,13 +3936,13 @@
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.12.0/self-healing-model.json",
-      "sourceBlobSha": "034015a929104f8cc5fb14741e0406e514d1c4b3",
+      "sourcePath": "v0.13.0/self-healing-model.json",
+      "sourceBlobSha": "1d18f8e070abf1d5807c323d03ee58f6771962af",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.12.0",
-        "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
-        "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
+        "schemaVersion": "0.13.0",
+        "id": "safor-self-healing-0.13.0",
+        "purpose": "Conservative SAFOR recovery policy including independently selectable domain-package integrity, entitlement, compatibility and HUMAN-workspace boundaries.",
         "principles": {
           "conservativeByDefault": true,
           "evidenceDriven": true,
@@ -4257,6 +4257,22 @@
             "automaticRepair": "REFRESH_DERIVED_PACKAGE_CATALOG_OR_REOBSERVE_WORKSPACE_CAPABILITIES_ONLY",
             "defaultRetryBudget": 1,
             "requiresHuman": "WHEN_PACKAGE_PURCHASE_OR_ENTITLEMENT_OR_PROJECT_LOCATION_OR_LOCAL_HOST_ACCESS_MUST_CHANGE"
+          },
+          {
+            "id": "SH-24",
+            "name": "COMPOSABLE_DOMAIN_PACKAGE_FAILURE",
+            "examples": [
+              "SAFOR_DOMAIN_PACKAGE declared-contract digest mismatch",
+              "package ID namespace does not match FACTORY or OPERATING_MODEL kind",
+              "selected package does not support active Framework version",
+              "selected package does not support active Creation Type",
+              "paid selected Factory or Operating Model lacks independently verified entitlement",
+              "Factory/Operating Model capability or authority compatibility fails",
+              "materialized package selection or compatibility decision is missing or inconsistent"
+            ],
+            "automaticRepair": "RELOAD_VERIFIED_PACKAGE_METADATA_OR_REOBSERVE_PACKAGE_SOURCE_WITHOUT_CHANGING_HUMAN_SELECTION",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
           }
         ],
         "eligibilityRules": [
@@ -4328,7 +4344,11 @@
           "USE_SAFOR_PRODUCT_REPOSITORY_AS_PROJECT_TARGET",
           "USE_PACKAGE_SOURCE_AS_PROJECT_TARGET",
           "BYPASS_LOCAL_GIT_REQUIREMENT",
-          "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT"
+          "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT",
+          "INVENT_PACKAGE_ENTITLEMENT",
+          "REWRITE_DOMAIN_PACKAGE_TO_MATCH_EXPECTED_DIGEST",
+          "SILENTLY_CHANGE_SELECTED_FACTORY_OR_OPERATING_MODEL",
+          "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -14699,12 +14719,12 @@
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.12.0/conformance.json",
-      "sourceBlobSha": "8a2b92678cef0efad96731bd8d668dcefedefdad",
+      "sourcePath": "v0.13.0/conformance.json",
+      "sourceBlobSha": "6a1eccc51a7b898cb90c7871bb4106a27745ba92",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.12.0",
-        "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
+        "schemaVersion": "0.13.0",
+        "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable, independently licensed Factory and Operating Model packages plus retained governance/workspace guarantees.",
         "assertions": [
           {
             "id": "CF-001",
@@ -15785,12 +15805,82 @@
             "id": "CF-216",
             "statement": "Control workspace strategy is conditional: REMOTE_SEPARATE_SAFOR_MEMORY for REMOTE_GIT and LOCAL_MASTER_CONTROL_ROOT for LOCAL_GIT.",
             "expected": true
+          },
+          {
+            "id": "CF-217",
+            "statement": "Every selected Factory and Operating Model is a standalone SAFOR_DOMAIN_PACKAGE JSON artifact.",
+            "expected": true
+          },
+          {
+            "id": "CF-218",
+            "statement": "Creation Profiles define default Factory/Operating Model candidates and do not lock either package against independent HUMAN override.",
+            "expected": true
+          },
+          {
+            "id": "CF-219",
+            "statement": "Factory and Operating Model access modes are evaluated independently for the actually selected package versions.",
+            "expected": true
+          },
+          {
+            "id": "CF-220",
+            "statement": "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is valid only when the paid selected package has independently verified entitlement.",
+            "expected": true
+          },
+          {
+            "id": "CF-221",
+            "statement": "Entitlement evidence is external to domain-package JSON and package possession cannot self-authorize commercial access.",
+            "expected": true
+          },
+          {
+            "id": "CF-222",
+            "statement": "Every selected domain package must pass SHA-256 verification over the declared SAFOR canonical domain contract before binding.",
+            "expected": true
+          },
+          {
+            "id": "CF-223",
+            "statement": "Package ID namespace must match package kind: safor.factory.* for FACTORY and safor.om.* for OPERATING_MODEL.",
+            "expected": true
+          },
+          {
+            "id": "CF-224",
+            "statement": "Every selected domain package explicitly supports the active Framework version and active Creation Type.",
+            "expected": true
+          },
+          {
+            "id": "CF-225",
+            "statement": "Factory capability and authority requirements must be covered by the selected Operating Model before pair binding.",
+            "expected": true
+          },
+          {
+            "id": "CF-226",
+            "statement": "HUMAN may replace only Factory, only Operating Model, or both, subject to access, integrity and compatibility checks.",
+            "expected": true
+          },
+          {
+            "id": "CF-227",
+            "statement": "A project binding references both a package-selection record and a COMPATIBLE package-compatibility decision.",
+            "expected": true
+          },
+          {
+            "id": "CF-228",
+            "statement": "Domain-package project bindings persist content digest, selection origin, integrity verification and entitlement-evidence reference.",
+            "expected": true
+          },
+          {
+            "id": "CF-229",
+            "statement": "The free Software/Website starter Factory and Operating Model remain entitlement-free defaults while paid alternatives remain independently purchasable.",
+            "expected": true
+          },
+          {
+            "id": "CF-230",
+            "statement": "Public Framework embedding remains free of Factory/Operating Model model payloads even though their schemas, catalog metadata and package-selection policy are embedded.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/modular-packages-human-workspace-v0.12.0-rc.1",
-          "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "Modular package distribution, commercial entitlement boundary and HUMAN-owned REMOTE_GIT/LOCAL_GIT workspace architecture implemented. Machine validation required before rc.1 acceptance."
+          "branch": "safor/composable-domain-packages-v0.13.0-rc.1",
+          "result": "MACHINE_VALIDATION_GREEN_BEFORE_FINAL_DOCUMENTATION_SYNC",
+          "note": "Composable package build, validator and 48-test suite passed before final governance/documentation synchronization; final branch CI remains authoritative."
         }
       },
       "selfHealingProfileId": "MRP-CONFORMANCE"
