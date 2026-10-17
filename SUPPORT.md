@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.6.0-rc.1 is a **Release Candidate**.
+SAFOR v0.13.0-rc.2 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -42,7 +42,7 @@ When safe automatic continuation is impossible, SAFOR stops or waits for the HUM
 4. the smallest required HUMAN action.
 
 
-## Project workspace support in 0.12
+## Project workspace support in 0.13
 
 SAFOR distinguishes package/framework sources from HUMAN project storage.
 
@@ -52,4 +52,13 @@ Supported project workspace classes:
 
 SAFOR does not claim local execution when the current host cannot actually access the local filesystem/Git repository.
 
-Paid Factory/Operating Model access additionally requires supported entitlement verification. The 0.12 schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.
+Paid Factory/Operating Model access additionally requires supported entitlement verification. The 0.13 schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.
+
+
+## Free Website starter in rc.2
+
+The canonical free Website defaults are:
+- `safor.factory.software-delivery@1.6.0`
+- `safor.om.saas-engineering@1.6.0`
+
+Factory 1.6 models Product Definition, Quality/Security Requirements, Solution Design/Threat Assessment, small-batch Implementation with continuous verification, independent/security verification, Release, Deployment, Activation, Operate/Observe, conditional Recovery/Vulnerability Response and Outcome Assessment.
