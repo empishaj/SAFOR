@@ -275,3 +275,34 @@ The Website Factory deliberately owns only the website value stream: audience/pu
 The Software/SaaS Factory and Operating Model remain independently licensed package identities, but the Creation Profile prevents a free package from satisfying either commercial slot.
 
 Historical Software Factory/SaaS OM versions through 1.6.0 remain public repository history and are not the current protected commercial distribution source.
+
+
+## Commercial entitlement and protected delivery chain
+
+Paid package use is a multi-stage trust chain, not a boolean field in package JSON:
+
+```text
+COMMERCIAL BASIS
+      ↓
+ENTITLEMENT ISSUED
+      ↓
+STRICT EXTERNAL VERIFICATION
+(status + time + subject + trusted issuer/verifier)
+      ↓
+PACKAGE DELIVERY AUTHORIZED
+      ↓
+DELIVERY EVIDENCE
+(entitlement + package + version + digest + expiry + trusted verifier)
+      ↓
+DOMAIN PACKAGE INTEGRITY
+      ↓
+FACTORY / OPERATING MODEL COMPATIBILITY
+      ↓
+IMMUTABLE PROJECT BINDING
+```
+
+The pure bootstrap policy receives `evaluatedAt` and trusted identity sets as explicit input. It does not read wall-clock time and never derives trust from issuer/verifier names inside a commercial record.
+
+`ENTITLED_PACKAGE_SOURCE` requires a time-bounded `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` record. `HUMAN_LOADED_PACKAGE` is still valid for a licensed artifact supplied manually, but the entitlement verification chain remains mandatory.
+
+rc.4 is a protocol/reference implementation. Billing, transaction processing, real entitlement issuance, network package delivery and cryptographic offline-signature verification remain external production services.
