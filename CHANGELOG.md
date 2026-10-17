@@ -16,7 +16,7 @@
 - Makes the three-attempt rework value an explicit configurable safety default rather than a claimed domain truth.
 - Operationalizes outcomes with metric, baseline, target/threshold, observation window, data source, decision rule and uncertainty handling.
 - Adds a Site Reliability Engineer capability binding to the free Operating Model for observability, incident response and recovery.
-- Adds conditional-requirement runtime evaluation and a dedicated Website Factory 1.6 consistency/lifecycle test suite.
+- Adds conditional-requirement runtime evaluation and a dedicated Website Factory 1.6 consistency/lifecycle test suite; total Python suite is 64 PASS.
 
 
 ## 0.13.0-rc.1
