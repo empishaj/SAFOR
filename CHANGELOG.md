@@ -12,6 +12,7 @@
 - Keeps `HUMAN_LOADED_PACKAGE` available for manually delivered licensed artifacts while still enforcing strict entitlement checks.
 - Extends SH-24, INV-181..187 and CF-237..244 for commercial-channel failures.
 - Adds executable reference-policy tests for revoked/expired entitlements, trust mismatch, subject mismatch, missing delivery evidence, digest mismatch and valid protected delivery.
+- Final rc.4 branch evidence: reproducible bundle PASS, validator PASS, 65/65 recovery profiles, 73 tests PASS.
 
 
 ## 0.13.0-rc.3
