@@ -39,7 +39,7 @@ modules = framework.get("embeddedModules", {})
 required_modules = {
     "kernel","initialization","interaction","humanDecisionGate","selfHealing","moduleSelfHealing",
     "agentWorkspace","agentJobContract","multiAgentScheduler","repositoryPolicy","packageRegistry",
-    "packageDistribution","commercialEntitlement","workspaceModel","packageCatalog",
+    "packageDistribution","commercialEntitlement","workspaceModel","packageCatalog","operationMode","agentRuntime",
     "providerGithub","providerGitlab","schemaPackageManifest","schemaControlState",
     "schemaValueStreamState","schemaExecutionState","schemaWorkItem","schemaProject","schemaBindings",
     "schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu","schemaHumanResponse",
@@ -50,7 +50,7 @@ required_modules = {
     "eventModel","predicateRegistry","transitionRegistry","effectModel","acceptanceModel",
     "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord",
     "schemaStateSnapshot","schemaAcceptanceContract","schemaReviewDecision","schemaAuthorityDecision",
-    "schemaPackageCatalog","schemaEntitlement","schemaWorkspaceBinding","conformance"
+    "schemaPackageCatalog","schemaEntitlement","schemaWorkspaceBinding","schemaOperationModeBinding","schemaAgentRuntimeBinding","conformance"
 }
 missing = sorted(required_modules - set(modules))
 extra = sorted(set(modules) - required_modules)
@@ -58,8 +58,8 @@ if missing:
     fail("Missing embedded Framework modules: " + ", ".join(missing))
 if extra:
     fail("Unexpected embedded Framework modules: " + ", ".join(extra))
-if len(modules) != 61:
-    fail(f"Expected exactly 61 embedded Framework modules, got {len(modules)}.")
+if len(modules) != 65:
+    fail(f"Expected exactly 65 embedded Framework modules, got {len(modules)}.")
 
 forbidden_domain_module_keys = {
     "operatingModelSaas","operatingModelBook","factorySoftwareWebsite","factoryBook"
@@ -97,8 +97,8 @@ if set(profile_by_key) != set(modules):
         f"missing={sorted(set(modules)-set(profile_by_key))}, "
         f"unknown={sorted(set(profile_by_key)-set(modules))}"
     )
-if len(profiles) != 61:
-    fail(f"Expected 61 recovery profiles, got {len(profiles)}.")
+if len(profiles) != 65:
+    fail(f"Expected 65 recovery profiles, got {len(profiles)}.")
 coverage = module_recovery.get("coverageContract", {})
 for field in ("exactCoverageRequired","oneProfilePerEmbeddedModule","noUnprofiledEmbeddedModules","noProfilesForUnknownModuleKeys"):
     if coverage.get(field) is not True:
@@ -182,8 +182,10 @@ if control_policy.get("LOCAL_GIT", {}).get("root") != ".safor/":
 for key in (
     "kernel","initialization","selfHealing","moduleSelfHealing","repositoryPolicy","packageRegistry",
     "packageDistribution","commercialEntitlement","workspaceModel","packageCatalog",
+    "operationMode","agentRuntime","agentWorkspace","humanDecisionGate","agentJobContract",
     "schemaProject","schemaBindings","schemaPackageCatalog","schemaEntitlement",
-    "schemaWorkspaceBinding","conformance"
+    "schemaWorkspaceBinding","schemaOperationModeBinding","schemaAgentRuntimeBinding",
+    "schemaAgentJob","conformance"
 ):
     if not str(modules.get(key, {}).get("sourcePath", "")).startswith("v0.12.0/"):
         fail(f"0.12 module {key} must come from v0.12.0 source.")
@@ -198,7 +200,11 @@ for principle in (
     "freeWebsitePackagesPubliclyResolvable","commercialEntitlementRequiredForPaidPackages",
     "entitlementIndependentFromOrganizationalAuthority","humanOwnsProjectWorkspace",
     "localGitWorkspaceSupported","projectWorkspaceSeparateFromPackageSource",
-    "frameworkRepositoryNeverProjectTarget"
+    "frameworkRepositoryNeverProjectTarget","explicitOperationModeBeforeMutation",
+    "designValidationExecutionSeparated","agentRuntimeAdapterRequiredForAgentDispatch",
+    "agentRuntimeCapabilityEvidenceRequired","agentRuntimeAutomationRequiredInExecution",
+    "manualHumanAgentActivationValidationOnly","providerAndAgentRuntimeBindingsSeparate",
+    "humanNeverRoutineAgentOperator","executionToValidationFallbackForbidden"
 ):
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
@@ -210,12 +216,14 @@ for ref_field, expected in (
     ("packageCatalogRef","package-catalog.json"),
     ("repositoryPolicyRef","repository-policy.json"),
     ("initializationModelRef","initialization-model.json"),
+    ("operationModeModelRef","operation-mode-model.json"),
+    ("agentRuntimeModelRef","agent-runtime-model.json"),
 ):
     if kernel.get(ref_field) != expected:
         fail(f"Kernel {ref_field} mismatch.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 166):
+for n in range(37, 186):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")
@@ -366,19 +374,27 @@ for field in ("entries","creationProfiles"):
     if field not in catalog_schema.get("required", []):
         fail(f"Package catalog schema missing {field}.")
 
-# Initialization order: package access before project location.
+# Initialization resolves operation mode before mode-specific work.
 initialization = modules.get("initialization", {}).get("content", {})
 sequence = initialization.get("sequence", [])
 ids = [x.get("id") for x in sequence]
-expected_prefix = ["INIT-00","INIT-00A","INIT-01","INIT-02","INIT-03","INIT-04","INIT-05","INIT-06"]
+expected_prefix = ["INIT-00","INIT-00A","INIT-00B","INIT-00C","INIT-D01","INIT-V01","INIT-V02","INIT-E00"]
 if ids[:len(expected_prefix)] != expected_prefix:
-    fail(f"Initialization prefix mismatch: {ids[:len(expected_prefix)]}")
-if initialization.get("entryBehavior", {}).get("firstHumanSurface") != "CREATION_TYPE_SELECTION_MENU":
-    fail("Creation type must be the first HUMAN bootstrap surface after preflight.")
-if ids.index("INIT-05") > ids.index("INIT-06"):
-    fail("Factory/OM compatibility must be verified before project workspace selection.")
+    fail(f"Initialization mode prefix mismatch: {ids[:len(expected_prefix)]}")
+if initialization.get("entryBehavior", {}).get("firstHumanSurface") != "MODE_DEPENDENT":
+    fail("Initialization first HUMAN surface must be mode-dependent.")
+if initialization.get("operationModeModelRef") != "operation-mode-model.json":
+    fail("Initialization must reference operation-mode model.")
+if initialization.get("agentRuntimeModelRef") != "agent-runtime-model.json":
+    fail("Initialization must reference Agent Runtime model.")
 if initialization.get("workspaceModelRef") != "workspace-model.json":
-    fail("Initialization must reference workspace model.")
+    fail("Initialization must retain workspace model for EXECUTION.")
+if ids.index("INIT-00C") > ids.index("INIT-01"):
+    fail("Operation mode must resolve before EXECUTION creation type.")
+for step in sequence:
+    if step.get("id") in {"INIT-01","INIT-02","INIT-03","INIT-04","INIT-05","INIT-06","INIT-07R","INIT-08R","INIT-09R","INIT-10R","INIT-07L","INIT-08L","INIT-09L","INIT-11"}:
+        if not str(step.get("when","")).startswith("OPERATION_MODE == EXECUTION"):
+            fail(f"{step.get('id')} must be EXECUTION-only.")
 
 actions = {a.get("id"): a for a in kernel.get("controlPlane", {}).get("actions", [])}
 if kernel.get("controlPlane", {}).get("startActionId") != "K00":
@@ -387,6 +403,10 @@ if actions.get("K00", {}).get("modelRef") != "module-self-healing-model.json":
     fail("K00 must bind module-self-healing model.")
 if actions.get("K00A", {}).get("modelRef") != "deterministic-control-model.json":
     fail("K00A must bind deterministic-control model.")
+if actions.get("K00B", {}).get("modelRef") != "agent-runtime-model.json":
+    fail("K00B must verify Agent Runtime / operation-mode baseline.")
+if actions.get("K00C", {}).get("modelRef") != "operation-mode-model.json":
+    fail("K00C must resolve operation mode.")
 for action_id in ("K01","K06","K08","K11"):
     action = actions.get(action_id, {})
     if not action.get("humanDecision"):
@@ -424,6 +444,16 @@ if gate.get("defaultDecision") != "DO_NOT_ASK":
     fail("HUMAN Decision Gate default must be DO_NOT_ASK.")
 if gate.get("decisionReusePolicy", {}).get("unchangedApprovalRepetitionForbidden") is not True:
     fail("Unchanged HUMAN decisions must not be re-requested.")
+for forbidden in (
+    "AGENT_JOB_ACTIVATION_WHEN_AUTOMATION_IS_EXPECTED","AGENT_CHAT_WAKEUP",
+    "JOB_PROMPT_TRANSPORT","JOB_CONTRACT_COPY","AGENT_INBOX_POLLING",
+    "AGENT_RESULT_TRANSPORT","MANUAL_DISPATCH_SEQUENCE_ADVANCE",
+    "RUNTIME_MODE_DOWNGRADE_TO_BYPASS_CAPABILITY_GAP"
+):
+    if forbidden not in gate.get("mustNotAskHumanFor", []):
+        fail(f"HUMAN Decision Gate must forbid {forbidden}.")
+if gate.get("agentRuntimeGovernance", {}).get("manualTestHarnessRule") != "Manual HUMAN activation is a VALIDATION-only test harness and must be labeled non-production.":
+    fail("HUMAN Decision Gate manual test harness rule mismatch.")
 interaction = modules.get("interaction", {}).get("content", {})
 terminal = interaction.get("terminalMenuContract", {})
 for field in ("exactlyOne","mustBeFinalRenderedElement","contentAfterMenuForbidden","stopRenderingAfterMenu","menuPresenceDoesNotImplyHumanDecision"):
@@ -439,16 +469,72 @@ if agent.get("resultProtocol", {}).get("notAcceptance") != "Agent result is a cl
     fail("Agent result must not self-accept.")
 if agent.get("activationContract", {}).get("backgroundWakeupAssumed") is not False:
     fail("Agent workspace must not assume background wakeup.")
+if agent.get("activationContract", {}).get("agentRuntimeModelRef") != "agent-runtime-model.json":
+    fail("Agent Workspace must bind Agent Runtime model.")
+if agent.get("activationContract", {}).get("manualHumanActivationInExecutionForbidden") is not True:
+    fail("Agent Workspace must forbid HUMAN manual activation in EXECUTION.")
+if agent.get("activationContract", {}).get("productionCapabilityGapOutcome") != "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE":
+    fail("Agent Workspace execution capability-gap outcome mismatch.")
 job = modules.get("agentJobContract", {}).get("content", {})
 if job.get("authorizationSemantics", {}).get("jobPermissionIsUpperBound") is not True:
     fail("Agent Job permissions must remain upper bounds.")
 if job.get("humanProjectionContract", {}).get("providerReadbackRequiredBeforeReady") is not True:
     fail("Agent Job HUMAN projection must be read back before READY.")
+runtime_contract = job.get("runtimeContract", {})
+if runtime_contract.get("operationModeRequired") is not True:
+    fail("Agent Job Contract must require operation mode.")
+if runtime_contract.get("agentRuntimeBindingRequiredBeforeAgentDispatch") is not True:
+    fail("Agent Job Contract must require Agent Runtime binding before dispatch.")
+if runtime_contract.get("promptJobTransportForbidden") is not True:
+    fail("Agent Job Contract must forbid prompt job transport.")
+job_schema = modules.get("schemaAgentJob", {}).get("content", {})
+if "runtime" not in job_schema.get("required", []):
+    fail("Agent Job schema must require runtime contract.")
+runtime_def = job_schema.get("$defs", {}).get("runtime", {})
+if runtime_def.get("properties", {}).get("jobPromptTransportForbidden", {}).get("const") is not True:
+    fail("Agent Job runtime schema must forbid prompt transport.")
 scheduler = modules.get("multiAgentScheduler", {}).get("content", {})
 if scheduler.get("principles", {}).get("mutationConflictsBlockParallelDispatch") is not True:
     fail("Scheduler must block mutation conflicts.")
 if scheduler.get("conflictModel", {}).get("safeDefault") != "Any ambiguity is treated as conflict and the jobs are serialized.":
     fail("Scheduler safe conflict default changed unexpectedly.")
+
+# Operation Mode / Agent Runtime governance.
+operation_mode = modules.get("operationMode", {}).get("content", {})
+if set(operation_mode.get("modes", {})) != {"DESIGN","VALIDATION","EXECUTION"}:
+    fail("Operation Mode model must define DESIGN, VALIDATION and EXECUTION.")
+if operation_mode.get("resolution", {}).get("resolveBeforeMutatingEffect") is not True:
+    fail("Operation Mode must resolve before mutating effects.")
+if operation_mode.get("resolution", {}).get("silentExecutionToValidationDowngradeForbidden") is not True:
+    fail("Operation Mode must forbid silent EXECUTION-to-VALIDATION downgrade.")
+if operation_mode.get("modes", {}).get("VALIDATION", {}).get("isolatedValidation") is not True:
+    fail("VALIDATION must be isolated.")
+if operation_mode.get("modes", {}).get("EXECUTION", {}).get("requiredAgentActivationCapabilities") != ["HOST_NATIVE_AUTOMATIC","EXTERNAL_AUTOMATION"]:
+    fail("EXECUTION Agent Runtime activation capability set mismatch.")
+
+agent_runtime = modules.get("agentRuntime", {}).get("content", {})
+if agent_runtime.get("bindingRules", {}).get("actualCapabilityEvidenceRequired") is not True:
+    fail("Agent Runtime must require actual capability evidence.")
+if agent_runtime.get("bindingRules", {}).get("backgroundWakeupDefault") is not False:
+    fail("Agent Runtime background wakeup must default false.")
+if agent_runtime.get("operationModeCompatibility", {}).get("EXECUTION", {}).get("manualTestHarnessAllowed") is not False:
+    fail("EXECUTION must forbid manual test harness.")
+if agent_runtime.get("operationModeCompatibility", {}).get("EXECUTION", {}).get("missingAutomationOutcome") != "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE":
+    fail("Agent Runtime missing-automation outcome mismatch.")
+if agent_runtime.get("activationProtocol", {}).get("authoritativeJobTransport") != "REPOSITORY_PULL":
+    fail("Agent Runtime must use repository-pull Job transport.")
+if agent_runtime.get("activationProtocol", {}).get("jobPromptTransportForbidden") is not True:
+    fail("Agent Runtime must forbid prompt Job transport.")
+if agent_runtime.get("humanActivationGovernance", {}).get("humanIsWorkflowOperator") is not False:
+    fail("Agent Runtime must not make HUMAN a workflow operator.")
+
+operation_schema = modules.get("schemaOperationModeBinding", {}).get("content", {})
+if operation_schema.get("properties", {}).get("mode", {}).get("enum") != ["DESIGN","VALIDATION","EXECUTION"]:
+    fail("Operation Mode binding schema mode enum mismatch.")
+runtime_schema = modules.get("schemaAgentRuntimeBinding", {}).get("content", {})
+for field in ("activationCapability","continuationCapability","supportedOperationModes","actualCapabilityEvidenceRefs"):
+    if field not in runtime_schema.get("required", []):
+        fail(f"Agent Runtime binding schema missing required field {field}.")
 
 # Deterministic Control / Acceptance retained.
 deterministic = modules.get("deterministicControl", {}).get("content", {})
@@ -506,14 +592,19 @@ for principle in (
 # Self-healing taxonomy includes all current failure classes.
 self_healing = modules.get("selfHealing", {}).get("content", {})
 failure_classes = {x.get("id") for x in self_healing.get("failureClasses", [])}
-for n in range(10, 24):
+for n in range(10, 25):
     cid = f"SH-{n:02d}"
     if cid not in failure_classes:
         fail(f"Missing Self-Healing failure class {cid}.")
 for forbidden in (
     "INVENT_COMMERCIAL_ENTITLEMENT","RESOLVE_PAID_PACKAGE_FROM_PUBLIC_CANONICAL_REPOSITORY",
     "USE_SAFOR_PRODUCT_REPOSITORY_AS_PROJECT_TARGET","BYPASS_LOCAL_GIT_REQUIREMENT",
-    "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT"
+    "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT",
+    "FABRICATE_AGENT_RUNTIME_CAPABILITY","FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+    "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME_AS_RECOVERY",
+    "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+    "TREAT_MANUAL_TEST_HARNESS_AS_PRODUCTION_RUNTIME",
+    "COPY_JOB_CONTRACT_TO_HUMAN_AS_RUNTIME_FALLBACK"
 ):
     if forbidden not in self_healing.get("forbiddenAutomaticRepairs", []):
         fail(f"Self-Healing missing forbidden repair {forbidden}.")
@@ -521,7 +612,7 @@ for forbidden in (
 # Conformance must include the entire current required range.
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for n in range(46, 217):
+for n in range(46, 241):
     cid = f"CF-{n:03d}"
     if assertions.get(cid, {}).get("expected") is not True:
         fail(f"Missing passing conformance assertion {cid}.")
@@ -569,4 +660,7 @@ print("- HUMAN project workspace: REMOTE_GIT or LOCAL_GIT")
 print("- REMOTE_GIT control: separate safor-memory")
 print("- LOCAL_GIT control: MASTER-only .safor/")
 print("- deterministic control/acceptance: retained")
-print("- module-wide Self-Healing: exact 61/61 coverage")
+print("- operation modes: DESIGN / VALIDATION / EXECUTION")
+print("- EXECUTION Agent Runtime: automated activation required before AGENT dispatch")
+print("- HUMAN manual activation: VALIDATION test harness only")
+print("- module-wide Self-Healing: exact 65/65 coverage")
