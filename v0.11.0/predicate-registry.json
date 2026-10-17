@@ -1,0 +1,69 @@
+{
+  "format": "SAFOR_PREDICATE_REGISTRY",
+  "schemaVersion": "0.11.0",
+  "id": "safor-predicate-registry",
+  "purpose": "Closed, versioned predicate vocabulary for deterministic SAFOR transition guards. Arbitrary executable expressions are forbidden.",
+  "executionPolicy": {
+    "closedRegistry": true,
+    "arbitraryCodeForbidden": true,
+    "unknownPredicateOutcome": "CONTROL_FAILURE",
+    "pureEvaluationRequired": true,
+    "externalIoForbidden": true,
+    "llmInvocationForbidden": true
+  },
+  "predicates": [
+    {
+      "id": "ALL_DEPENDENCIES_ACCEPTED",
+      "description": "Every dependency of the subject work item is ACCEPTED.",
+      "args": []
+    },
+    {
+      "id": "ACTIVE_MANDATE_COVERS_WORK_ITEM",
+      "description": "At least one active unrevoked mandate covers the subject work item and all of its required capabilities.",
+      "args": []
+    },
+    {
+      "id": "REQUIRED_INPUTS_RESOLVABLE",
+      "description": "All declared required input refs of the subject work item are present in state.availableInputs.",
+      "args": []
+    },
+    {
+      "id": "RESOURCE_DECLARATION_COMPLETE",
+      "description": "The subject work item has an execution.resourceAccess declaration with nonempty read/write declarations or an explicit NO_MUTATION marker.",
+      "args": []
+    },
+    {
+      "id": "FIELD_EQUALS",
+      "description": "A resolved state/event field equals the provided literal value.",
+      "args": [
+        "path",
+        "value"
+      ]
+    },
+    {
+      "id": "FIELD_IN",
+      "description": "A resolved state/event field is a member of the provided literal set.",
+      "args": [
+        "path",
+        "values"
+      ]
+    },
+    {
+      "id": "EVENT_TYPE_IS",
+      "description": "The event type equals the provided value.",
+      "args": [
+        "value"
+      ]
+    },
+    {
+      "id": "EVENT_SEQUENCE_CONTIGUOUS",
+      "description": "The event sequence is exactly lastAppliedEventSequence + 1.",
+      "args": []
+    },
+    {
+      "id": "SUBJECT_WORK_ITEM_EXISTS",
+      "description": "The event subject resolves to exactly one work item.",
+      "args": []
+    }
+  ]
+}
