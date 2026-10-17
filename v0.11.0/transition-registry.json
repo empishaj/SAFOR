@@ -1,0 +1,245 @@
+{
+  "format": "SAFOR_TRANSITION_REGISTRY",
+  "schemaVersion": "0.11.0",
+  "id": "safor-transition-registry",
+  "purpose": "Executable rc.1 transition slice for deterministic SAFOR governance.",
+  "deterministicSelection": {
+    "sort": [
+      "priority DESC",
+      "transitionId ASC"
+    ],
+    "maximumApplicableTransitions": 1,
+    "zeroMatchOutcome": "NO_TRANSITION",
+    "multipleMatchOutcome": "AMBIGUOUS_TRANSITION_CONTROL_FAILURE"
+  },
+  "transitions": [
+    {
+      "transitionId": "WORK_ITEM_BECOMES_READY",
+      "priority": 100,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "WORK_ITEM_READINESS_REEVALUATION_REQUESTED",
+        "DEPENDENCY_ACCEPTED",
+        "MANDATE_GRANTED",
+        "INPUT_AVAILABLE"
+      ],
+      "fromStatus": [
+        "PLANNED",
+        "BLOCKED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "ALL_DEPENDENCIES_ACCEPTED"
+          },
+          {
+            "predicate": "ACTIVE_MANDATE_COVERS_WORK_ITEM"
+          },
+          {
+            "predicate": "REQUIRED_INPUTS_RESOLVABLE"
+          },
+          {
+            "predicate": "RESOURCE_DECLARATION_COMPLETE"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "READY"
+        },
+        {
+          "op": "SET_FROM_EVENT",
+          "path": "$subject.readySince",
+          "eventPath": "occurredAt"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$state.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "WORK_ITEM_PAUSED",
+      "priority": 100,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "PAUSE_WORK_ITEM_REQUESTED"
+      ],
+      "fromStatus": [
+        "READY",
+        "RUNNING"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "PAUSED"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$state.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "WORK_ITEM_RESUMED_READY",
+      "priority": 100,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "RESUME_WORK_ITEM_REQUESTED"
+      ],
+      "fromStatus": [
+        "PAUSED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "ALL_DEPENDENCIES_ACCEPTED"
+          },
+          {
+            "predicate": "ACTIVE_MANDATE_COVERS_WORK_ITEM"
+          },
+          {
+            "predicate": "REQUIRED_INPUTS_RESOLVABLE"
+          },
+          {
+            "predicate": "RESOURCE_DECLARATION_COMPLETE"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "READY"
+        },
+        {
+          "op": "SET_FROM_EVENT",
+          "path": "$subject.readySince",
+          "eventPath": "occurredAt"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$state.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "WORK_ITEM_STOPPED",
+      "priority": 200,
+      "aggregate": "VALUE_STREAM",
+      "subjectType": "WORK_ITEM",
+      "eventTypes": [
+        "STOP_WORK_ITEM_REQUESTED"
+      ],
+      "fromStatus": [
+        "PLANNED",
+        "BLOCKED",
+        "READY",
+        "RUNNING",
+        "PAUSED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          },
+          {
+            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "SET",
+          "path": "$subject.status",
+          "value": "STOPPED"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$state.revision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
+      "priority": 1000,
+      "aggregate": "CONTROL",
+      "subjectType": "PROJECT",
+      "eventTypes": [
+        "EXTERNAL_MUTATION_OUTCOME_UNKNOWN"
+      ],
+      "fromStatus": [
+        "READY",
+        "RUNNING",
+        "WAITING_EXTERNAL",
+        "BLOCKED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "SET",
+          "path": "$state.status",
+          "value": "RECONCILE_REQUIRED"
+        },
+        {
+          "op": "SET",
+          "path": "$state.mode",
+          "value": "RECOVERING"
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$state.stateRevision",
+          "by": 1
+        }
+      ],
+      "effectIntents": [
+        {
+          "effectType": "PROVIDER_READBACK",
+          "reason": "RECONCILE_UNKNOWN_EXTERNAL_MUTATION"
+        }
+      ]
+    }
+  ]
+}
