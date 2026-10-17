@@ -418,6 +418,9 @@
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
           },
           {
+            "predicate": "EVIDENCE_RECORD_NOT_REGISTERED"
+          },
+          {
             "predicate": "EVIDENCE_RECORD_VALID_FOR_SUBJECT"
           }
         ]
@@ -458,6 +461,9 @@
           },
           {
             "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
+          },
+          {
+            "predicate": "REVIEW_RECORD_NOT_REGISTERED"
           },
           {
             "predicate": "REVIEW_EVENT_INDEPENDENCE_VALID"
@@ -512,6 +518,9 @@
           },
           {
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "REVIEW_RECORD_NOT_REGISTERED"
           },
           {
             "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
@@ -574,6 +583,9 @@
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
           },
           {
+            "predicate": "AUTHORITY_DECISION_NOT_REGISTERED"
+          },
+          {
             "predicate": "AUTHORITY_DECISION_VALID_FOR_SUBJECT"
           }
         ]
@@ -617,6 +629,9 @@
           },
           {
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "AUTHORITY_DECISION_NOT_REGISTERED"
           },
           {
             "predicate": "AUTHORITY_DECISION_VALID_FOR_SUBJECT"
