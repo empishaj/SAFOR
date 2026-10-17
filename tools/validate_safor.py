@@ -201,13 +201,15 @@ required_principles = (
     "replacementRequiresBidirectionalCompatibility",
     "packageFamilyCompatibilityRequiredForV2Packages",
     "crossDomainPackageReplacementForbidden",
+    "publicPaidDomainEvaluationArtifactsAllowedForTesting",
+    "publicEvaluationDoesNotAuthorizePaidUse",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 198):
+for n in range(37, 201):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")
@@ -241,6 +243,7 @@ for rule in (
     "replacementBidirectionalCounterpartRequired",
     "replacementPackageFamilyConstraintsEnforced",
     "crossDomainReplacementForbidden",
+    "publicEvaluationPaidBytesNotProductionSource",
 ):
     if package_system.get("rules", {}).get(rule) is not True:
         fail(f"Kernel package rule {rule} must be true.")
@@ -756,7 +759,7 @@ conformance = modules.get("conformance", {}).get("content", {})
 if conformance.get("schemaVersion") != "0.13.0":
     fail("Conformance model must be 0.13.0.")
 assertion_ids = {x.get("id") for x in conformance.get("assertions", [])}
-for n in range(217, 256):
+for n in range(217, 261):
     assertion = f"CF-{n:03d}"
     if assertion not in assertion_ids:
         fail(f"Missing composable-package conformance assertion {assertion}.")
