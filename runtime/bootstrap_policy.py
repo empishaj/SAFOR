@@ -315,6 +315,20 @@ def validate_domain_package(
         errors.append("DOMAIN_PACKAGE_ENTITLEMENT_MUST_BE_EXTERNAL")
 
     integrity = package.get("integrity", {})
+    canonicalization = integrity.get("canonicalization")
+    if canonicalization == "SAFOR_CANONICAL_JSON_V2":
+        package_family = str(package.get("packageFamily", ""))
+        if not package_family:
+            errors.append("DOMAIN_PACKAGE_FAMILY_MISSING")
+        elif package_kind == "FACTORY" and not package_family.startswith("safor.factory."):
+            errors.append("DOMAIN_PACKAGE_FAMILY_KIND_MISMATCH")
+        elif package_kind == "OPERATING_MODEL" and not package_family.startswith("safor.om."):
+            errors.append("DOMAIN_PACKAGE_FAMILY_KIND_MISMATCH")
+        domain_ids = package.get("compatibility", {}).get("domainIds", [])
+        if not domain_ids:
+            errors.append("DOMAIN_PACKAGE_DOMAIN_IDS_MISSING")
+
+
     if integrity.get("canonicalization") not in {
         "SAFOR_CANONICAL_JSON_V1",
         "SAFOR_CANONICAL_JSON_V2",
