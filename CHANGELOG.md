@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.10.0-rc.2
+
+- Requires every SAFOR-generated HUMAN-facing response to terminate with exactly one interaction menu.
+- Adds the schema-bound `SAFOR_HUMAN_RESPONSE` envelope and mandatory HUMAN response finalizer.
+- Forbids SAFOR-visible content after the terminal menu while keeping HUMAN Decision Gate semantics independent from menu presence.
+- Adds safe fallback-menu regeneration, terminal-menu recovery class SH-20, module recovery coverage and conformance assertions CF-154 through CF-159.
+
+
 All notable SAFOR product changes are documented here.
 
 ## 0.10.0-rc.1 — 2026-10-17
