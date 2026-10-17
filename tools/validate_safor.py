@@ -188,13 +188,17 @@ required_principles = (
     "packageSelectionRequiresCompatibilityDecision",
     "softwareSaasRequiresPaidFactoryAndOperatingModel",
     "creationProfileAccessPolicyEnforced",
+    "commercialEntitlementStatusTimeSubjectAndTrustRequired",
+    "commercialBasisEvidenceRequired",
+    "entitledSourceDeliveryEvidenceRequired",
+    "commercialDeliveryDigestBindingRequired",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 181):
+for n in range(37, 188):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")
@@ -217,6 +221,11 @@ for rule in (
     "packagePairCompatibilityDecisionRequired",
     "softwareSaasRequiresPaidFactoryAndOperatingModel",
     "creationProfileSelectedAccessPolicyRequired",
+    "entitlementStatusTimeSubjectAndTrustRequired",
+    "commercialBasisEvidenceRequired",
+    "entitledPackageSourceDeliveryEvidenceRequired",
+    "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest",
+    "humanLoadedPaidPackageStillRequiresEntitlement",
 ):
     if package_system.get("rules", {}).get(rule) is not True:
         fail(f"Kernel package rule {rule} must be true.")
@@ -233,6 +242,9 @@ for rule in (
     "compatibilityDecisionRequiredBeforeBinding",
     "creationProfileAccessPolicyEnforced",
     "softwareSaasRequiresPaidFactoryAndOperatingModel",
+    "strictEntitlementVerificationRequired",
+    "entitledSourceDeliveryEvidenceRequired",
+    "deliveryDigestBindingRequired",
 ):
     if domain_policy.get(rule) is not True:
         fail(f"Runtime domain package policy {rule} must be true.")
@@ -445,6 +457,10 @@ for principle in (
     "websiteStarterIsFreePublic",
     "softwareSaasRequiresPaidFactoryAndOperatingModel",
     "creationProfileMayConstrainSelectedAccessModes",
+    "commercialDeliveryEvidenceRequiredForEntitledSource",
+    "deliveryArtifactDigestMustMatchPackageIntegrity",
+    "trustedDeliveryVerifierRequired",
+    "deliveryEvidenceExternalToPackageArtifact",
 ):
     if distribution.get("principles", {}).get(principle) is not True:
         fail(f"Distribution principle {principle} must be true.")
@@ -466,9 +482,61 @@ for rule in (
     "softwareSaasRequiresFactoryEntitlement",
     "softwareSaasRequiresOperatingModelEntitlement",
     "freeWebsiteDefaultsRequireNoEntitlement",
+    "entitlementStatusMustBeActive",
+    "entitlementValidityEvaluatedAtExplicitTimestamp",
+    "entitlementSubjectMustMatchActiveHumanOrOrganization",
+    "entitlementIssuerMustBeTrusted",
+    "entitlementVerifierMustBeTrusted",
+    "commercialBasisEvidenceRequired",
+    "commercialBasisSkuMustMatchGrant",
+    "entitledPackageSourceRequiresDeliveryEvidence",
+    "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest",
+    "deliveryVerifierMustBeTrusted",
+    "deliveryEvidenceMustBeTimeValid",
+    "humanLoadedPaidPackageMayBypassDeliveryChannelButNeverEntitlement",
 ):
     if entitlement.get("rules", {}).get(rule) is not True:
         fail(f"Commercial entitlement rule {rule} must be true.")
+
+# Strict entitlement schema and commercial delivery contracts.
+entitlement_schema = modules.get("schemaEntitlement", {}).get("content", {})
+for field in ("status", "commercialBasis", "subject", "grant", "validity", "issuer", "verification"):
+    if field not in entitlement_schema.get("required", []):
+        fail(f"Entitlement schema must require {field}.")
+verification_required = set(
+    entitlement_schema.get("properties", {}).get("verification", {}).get("required", [])
+)
+if "result" not in verification_required:
+    fail("Entitlement verification must require result=VERIFIED.")
+basis_required = set(
+    entitlement_schema.get("properties", {}).get("commercialBasis", {}).get("required", [])
+)
+if basis_required != {"basisType", "evidenceRef", "sku"}:
+    fail("Commercial basis must require basisType, evidenceRef and sku.")
+
+delivery_contract = distribution.get("commercialDeliveryContract", {})
+for flag in (
+    "noPublicFallback",
+    "noDeliveryWithoutEntitlement",
+    "noBindingFromExpiredDeliveryEvidence",
+    "noDigestSubstitution",
+    "humanLoadedLicensedArtifactSupported",
+):
+    if delivery_contract.get(flag) is not True:
+        fail(f"Commercial delivery contract {flag} must be true.")
+
+trust_contract = entitlement.get("trustContract", {})
+required_context = set(trust_contract.get("requiredVerificationContext", []))
+for field in (
+    "evaluatedAt", "subjectRef", "trustedIssuerIds",
+    "trustedEntitlementVerifierIds", "trustedDeliveryVerifierIds",
+):
+    if field not in required_context:
+        fail(f"Commercial trust context must require {field}.")
+if trust_contract.get("noWallClockInPurePolicy") is not True:
+    fail("Commercial policy must not read wall clock.")
+if trust_contract.get("noSelfDeclaredTrust") is not True:
+    fail("Commercial trust must not be self-declared.")
 
 # 0.13 conformance and self-healing coverage.
 self_healing = modules.get("selfHealing", {}).get("content", {})
@@ -480,6 +548,13 @@ for forbidden in (
     "REWRITE_DOMAIN_PACKAGE_TO_MATCH_EXPECTED_DIGEST",
     "SILENTLY_CHANGE_SELECTED_FACTORY_OR_OPERATING_MODEL",
     "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS",
+    "INVENT_COMMERCIAL_BASIS_EVIDENCE",
+    "TREAT_REVOKED_SUSPENDED_OR_EXPIRED_ENTITLEMENT_AS_ACTIVE",
+    "TRUST_ENTITLEMENT_ISSUER_FROM_SELF_DECLARED_RECORD",
+    "TRUST_ENTITLEMENT_OR_DELIVERY_VERIFIER_FROM_SELF_DECLARED_RECORD",
+    "INVENT_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+    "IGNORE_COMMERCIAL_DELIVERY_EXPIRY",
+    "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE",
 ):
     if forbidden not in self_healing.get("forbiddenAutomaticRepairs", []):
         fail(f"Self-Healing must forbid {forbidden}.")
@@ -488,7 +563,7 @@ conformance = modules.get("conformance", {}).get("content", {})
 if conformance.get("schemaVersion") != "0.13.0":
     fail("Conformance model must be 0.13.0.")
 assertion_ids = {x.get("id") for x in conformance.get("assertions", [])}
-for n in range(217, 237):
+for n in range(217, 245):
     assertion = f"CF-{n:03d}"
     if assertion not in assertion_ids:
         fail(f"Missing composable-package conformance assertion {assertion}.")
