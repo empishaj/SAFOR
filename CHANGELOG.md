@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.13.0-rc.3
+
+- Splits the former `SOFTWARE_WEBSITE` path into distinct `WEBSITE` and `SOFTWARE_SAAS` Creation Types.
+- Adds free `safor.factory.website-delivery@1.0.0`.
+- Adds free `safor.om.website-team@1.0.0`.
+- Makes `safor.factory.software-delivery` a `PAID_ENTITLEMENT_REQUIRED` Software/SaaS product identity.
+- Makes `safor.om.saas-engineering` a `PAID_ENTITLEMENT_REQUIRED` Software/SaaS product identity.
+- Adds `selectedPackageAccessPolicy`; `SOFTWARE_SAAS` and `BOOK` require both selected domain packages to be paid.
+- Prevents free compatible overrides from bypassing a commercial Creation Profile.
+- Requires separate entitlement evidence for Software/SaaS Factory and Operating Model.
+- Records public Software/SaaS versions through 1.6.0 as legacy disclosure rather than the current commercial package channel.
+- Adds Website scope-boundary escalation to `SOFTWARE_SAAS` when Discovery identifies application/service lifecycle requirements.
+- Adds CF-231 through CF-236 and INV-176 through INV-180 for the product split.
+
+
 ## 0.13.0-rc.2
 
 - Promotes the free Software/Website Factory from 1.5.0 to 1.6.0 and its compatible SaaS Engineering Operating Model from 1.5.0 to 1.6.0.
