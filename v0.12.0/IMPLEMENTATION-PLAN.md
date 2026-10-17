@@ -122,3 +122,18 @@ Pre-0.12 development packages that were already committed publicly cannot be mad
 - LOCAL_GIT requires Git/read/write capability and protects .safor/.
 - Remote project target cannot equal canonical SAFOR product/package repository.
 - Build/validator/unit tests pass reproducibly.
+
+
+## Implementation status
+
+Implemented on branch `safor/modular-packages-human-workspace-v0.12.0-rc.1`.
+
+Machine gates:
+- `python tools/build_bundle.py --check` — PASS
+- `python tools/validate_safor.py` — PASS
+- `python -m unittest discover -s tests -v` — PASS, 38 tests
+- embedded Framework recovery coverage — PASS, 61 modules / 61 profiles
+- public Framework embedded Factory/Operating Model content — none
+- final branch CI before PR creation — PASS
+
+End-to-end commercial entitlement (Scenario Q) and LOCAL_GIT execution (Scenario R) remain GA acceptance gates.
