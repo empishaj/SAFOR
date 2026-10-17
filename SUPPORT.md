@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.13.0-rc.4 is a **Release Candidate**.
+SAFOR v0.13.0-rc.5 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -60,8 +60,8 @@ Paid Factory/Operating Model access additionally requires supported entitlement 
 ## Product paths in rc.3
 
 **Website** is the free supported starter:
-- `safor.factory.website-delivery@1.0.0`
-- `safor.om.website-team@1.0.0`
+- `safor.factory.website-delivery@1.1.0`
+- `safor.om.website-team@1.1.0`
 
 **Software / SaaS** is commercial:
 - Software Factory entitlement required.
@@ -71,3 +71,16 @@ Paid Factory/Operating Model access additionally requires supported entitlement 
 **Book** remains commercial.
 
 rc.4 provides the machine-enforced entitlement/delivery contract and reference verification logic. A production billing system, entitlement issuer/verifier service and protected package delivery service remain GA-readiness work.
+
+
+## Domain Framework files in rc.5
+
+End users should normally load a domain-specific Framework rather than the generic base Framework:
+
+- Website: `SAFOR-FRAMEWORK-WEBSITE.json` — public.
+- SaaS: `SAFOR-FRAMEWORK-SAAS.json` — commercial distribution output.
+- Book: `SAFOR-FRAMEWORK-BOOK-CREATION.json` — commercial distribution output.
+
+The SaaS and Book filenames are part of the product contract, but completed paid files are not committed publicly because they contain protected commercial Factory/Operating Model modules.
+
+Premium Factory or Operating Model replacement is supported only inside the active domain and after bidirectional package-family and counterpart compatibility checks.
