@@ -30,10 +30,11 @@ class RepositoryHygieneTests(unittest.TestCase):
             for path in ROOT.iterdir()
             if path.is_dir() and version_directory.fullmatch(path.name)
         }
-        # The rc.6 bundle resolves authoritative modules only from these source
-        # baselines. Earlier versions remain recoverable through Git history.
+        # The active development line retains the 0.10-0.13 protocol/package
+        # baselines and adds the 0.14 Master-Subagent orchestration overlay.
+        # Earlier versions remain recoverable through Git history.
         self.assertEqual(
-            {"v0.10.0", "v0.11.0", "v0.12.0", "v0.13.0"},
+            {"v0.10.0", "v0.11.0", "v0.12.0", "v0.13.0", "v0.14.0"},
             actual,
         )
 
