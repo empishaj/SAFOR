@@ -1,16 +1,16 @@
 # Release Checklist
 
-## Required before every SAFOR 0.12 release
+## Required before every SAFOR 0.13 release
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.1.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
 - [x] `python tools/validate_safor.py` passes.
-- [x] CI is green on the tested 0.12 branch head.
+- [x] CI is green on the tested 0.13 branch head.
 - [x] Public Framework embeds no Factory/Operating Model domain package content.
-- [x] Exactly 61 embedded Framework modules have exactly 61 recovery profiles.
+- [x] Exactly 65 embedded Framework modules have exactly 65 recovery profiles.
 - [x] All embedded references resolve.
 - [x] Software/Website starter catalog entries are FREE_PUBLIC.
 - [x] Free Website Factory/OM public paths resolve the expected package IDs/versions.
@@ -20,6 +20,16 @@
 - [x] Self-asserted entitlement is rejected.
 - [x] Entitlement cannot grant Operating Model authority, provider rights, mandate or project scope.
 - [x] Factory/Operating Model compatibility is checked independently from entitlement.
+- [x] Factory and Operating Model can each be overridden independently.
+- [x] Creation Profiles define defaults rather than locked package pairs.
+- [x] Access and entitlement are resolved per selected package.
+- [x] FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pairs are supported when the paid package is entitled.
+- [x] Entitlement evidence remains external to SAFOR_DOMAIN_PACKAGE JSON.
+- [x] Domain-package declared-contract SHA-256 integrity is verified.
+- [x] Domain-package Framework range and Creation-Type scope are enforced.
+- [x] Package-selection and COMPATIBLE compatibility-decision references are persisted before binding.
+- [x] SH-24 covers composable package integrity/access/compatibility failures.
+- [x] CF-217 through CF-230 cover the 0.13 composable package contract.
 - [x] Project workspace is HUMAN-controlled REMOTE_GIT or LOCAL_GIT.
 - [x] Canonical SAFOR repository cannot be a project target.
 - [x] Commercial package source cannot be a project target.
@@ -28,10 +38,10 @@
 - [x] LOCAL_GIT requires actual filesystem + Git read/history/branch/commit capabilities.
 - [x] LOCAL_GIT uses Git-tracked MASTER-only `.safor/`.
 - [x] Worker write scopes cannot include `.safor/`.
-- [x] Project/Bindings/Workspace schemas are 0.12-aware.
+- [x] Project/Bindings/Package Selection/Compatibility/Workspace schemas are 0.13-aware.
 - [x] Deterministic Control and Acceptance suites remain green.
 - [x] Modular package/workspace bootstrap tests pass.
-- [x] Total current unit suite: 38 tests PASS.
+- [x] Total current unit suite: 48 tests PASS.
 - [x] SH-23 forbids entitlement fabrication, paid-public resolution, workspace redirection and Local-Git bypass.
 - [x] HUMAN Decision Gate and terminal-menu contracts remain intact.
 - [x] Product licensing strategy is explicitly recorded in `LICENSE-DECISION.md`.
