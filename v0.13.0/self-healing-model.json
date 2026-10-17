@@ -332,9 +332,14 @@
         "entitlement is revoked, suspended, expired, not yet valid or bound to a different subject",
         "entitlement issuer or verifier is not trusted by the active verification context",
         "ENTITLED_PACKAGE_SOURCE lacks delivery evidence",
-        "commercial package delivery evidence is expired or binds the wrong entitlement/package/version/digest"
+        "commercial package delivery evidence is expired or binds the wrong entitlement/package/version/digest",
+        "replacement package does not support active domainId",
+        "Factory package family is not accepted by selected Operating Model",
+        "Operating Model package family is not accepted by selected Factory",
+        "Factory-to-Operating-Model counterpart requirements fail",
+        "Operating-Model-to-Factory counterpart requirements fail"
       ],
-      "automaticRepair": "REOBSERVE_TRUSTED_ENTITLEMENT_OR_DELIVERY_SOURCE_AND_REVERIFY_WITHOUT_CHANGING_SUBJECT_SELECTION_ENTITLEMENT_OR_PACKAGE_BYTES",
+      "automaticRepair": "RELOAD_OR_REVERIFY_THE_SAME_SELECTED_PACKAGE_BYTES_AND_REEVALUATE_DOMAIN_AND_BIDIRECTIONAL_COMPATIBILITY_WITHOUT_CHANGING_DOMAIN_OR_COUNTERPART_SELECTION",
       "defaultRetryBudget": 1,
       "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
     }
@@ -419,7 +424,11 @@
     "TRUST_ENTITLEMENT_OR_DELIVERY_VERIFIER_FROM_SELF_DECLARED_RECORD",
     "INVENT_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
     "IGNORE_COMMERCIAL_DELIVERY_EXPIRY",
-    "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE"
+    "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE",
+    "SILENTLY_CHANGE_ACTIVE_DOMAIN_TO_FIT_REPLACEMENT",
+    "AUTO_REPLACE_COUNTERPART_TO_MAKE_NEW_PACKAGE_COMPATIBLE",
+    "IGNORE_PACKAGE_FAMILY_MISMATCH",
+    "DOWNGRADE_BIDIRECTIONAL_COMPATIBILITY_TO_ONE_WAY"
   ],
   "retryPolicy": {
     "key": "failureFingerprint",

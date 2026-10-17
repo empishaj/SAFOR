@@ -15,13 +15,13 @@ def load_json(path):
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
 
 
-class WebsiteFactory100Tests(unittest.TestCase):
+class WebsiteFactory110Tests(unittest.TestCase):
     def setUp(self):
         self.factory = load_json(
-            "v0.13.0/packages/factories/website-delivery/1.0.0/package.json"
+            "v0.13.0/packages/factories/website-delivery/1.1.0/package.json"
         )
         self.om = load_json(
-            "v0.13.0/packages/operating-models/website-team/1.0.0/package.json"
+            "v0.13.0/packages/operating-models/website-team/1.1.0/package.json"
         )
         self.nodes = {
             node["id"]: node for node in self.factory["model"]["flowGraph"]["nodes"]
@@ -100,7 +100,7 @@ class WebsiteFactory100Tests(unittest.TestCase):
         )
         self.assertNotIn("SITE_RELIABILITY_ENGINEER", roles)
         result = evaluate_domain_package_pair(
-            self.factory, self.om, "0.13.0-rc.4", "WEBSITE"
+            self.factory, self.om, "0.13.0-rc.5", "WEBSITE"
         )
         self.assertTrue(result["compatible"], result)
 

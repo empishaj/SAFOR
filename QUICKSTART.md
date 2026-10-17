@@ -4,16 +4,18 @@
 
 Always:
 - A compatible chat host.
-- `SAFOR-FRAMEWORK-v0.13.0-rc.4.json` or the latest `SAFOR-FRAMEWORK.json`.
+- The domain Framework file for what you want to create.
 - A HUMAN-controlled Git project workspace.
 
-## Choose a creation type
+For Website work, load `SAFOR-FRAMEWORK-WEBSITE.json`. The Website domain and default Factory/Operating Model are already embedded, so SAFOR does not ask you to choose Website/SaaS/Book again.
+
+## Domain-specific Frameworks
 
 ### Website — free
 
 Default packages:
-- `safor.factory.website-delivery@1.0.0`
-- `safor.om.website-team@1.0.0`
+- `safor.factory.website-delivery@1.1.0`
+- `safor.om.website-team@1.1.0`
 
 Both are `FREE_PUBLIC` and resolve from canonical public SAFOR Git at immutable revision/blob.
 
@@ -52,7 +54,7 @@ Book likewise requires a paid Factory and paid Operating Model with independent 
 
 ## Start
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.4.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.5.json`.
 2. SAFOR verifies Framework, Self-Healing and deterministic-control integrity.
 3. Choose **Website**, **Software / SaaS** or **Buch**.
 4. SAFOR resolves the Creation Profile and its selected-package access policy.
@@ -94,3 +96,20 @@ For `ENTITLED_PACKAGE_SOURCE`, the package source must additionally return exter
 - trusted delivery verifier.
 
 A mismatched or expired delivery record blocks package use. `HUMAN_LOADED_PACKAGE` remains supported for a licensed file supplied manually, but the entitlement checks remain mandatory.
+
+
+## Replacing Factory or Operating Model
+
+A domain Framework starts with an embedded default Factory and Operating Model. Either module may later be replaced independently, for example by a Premium version.
+
+SAFOR adopts a replacement only when package access/integrity, active Framework version, active Creation Type, active `domainId`, allowed `packageFamily`, Factory → Operating Model requirements and Operating Model → Factory requirements all pass.
+
+A different package ID is allowed when it belongs to an accepted family and remains compatible.
+
+Examples:
+- Premium Website Factory + Website Operating Model → may be accepted.
+- Website Factory + Premium Website Operating Model → may be accepted.
+- Book Factory + SaaS Engineering Operating Model → rejected.
+- SaaS Factory loaded into the Website Framework → rejected.
+
+An incompatible replacement never silently changes the other module or the active domain; the previously valid binding remains active.

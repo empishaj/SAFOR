@@ -12,6 +12,7 @@ from runtime.bootstrap_policy import (
     compute_domain_package_digest,
     evaluate_active_conditional_requirements,
     evaluate_domain_package_pair,
+    evaluate_domain_framework_pair,
     validate_domain_package,
     validate_factory_contract_consistency,
 )
@@ -43,8 +44,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.4":
-    fail(f"VERSION must be 0.13.0-rc.4, got {version}.")
+if version != "0.13.0-rc.5":
+    fail(f"VERSION must be 0.13.0-rc.5, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
@@ -192,13 +193,21 @@ required_principles = (
     "commercialBasisEvidenceRequired",
     "entitledSourceDeliveryEvidenceRequired",
     "commercialDeliveryDigestBindingRequired",
+    "domainSpecificFrameworkDistributions",
+    "sameKernelAcrossDomainDistributions",
+    "domainDistributionPreselectsDomainAndDefaults",
+    "embeddedDomainDefaultsRemainReplaceable",
+    "replacementRequiresSameDomain",
+    "replacementRequiresBidirectionalCompatibility",
+    "packageFamilyCompatibilityRequiredForV2Packages",
+    "crossDomainPackageReplacementForbidden",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 188):
+for n in range(37, 198):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")
@@ -226,6 +235,12 @@ for rule in (
     "entitledPackageSourceDeliveryEvidenceRequired",
     "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest",
     "humanLoadedPaidPackageStillRequiresEntitlement",
+    "domainFrameworkProfileCatalogRequired",
+    "domainDistributionPreselectsDomain",
+    "replacementSameDomainRequired",
+    "replacementBidirectionalCounterpartRequired",
+    "replacementPackageFamilyConstraintsEnforced",
+    "crossDomainReplacementForbidden",
 ):
     if package_system.get("rules", {}).get(rule) is not True:
         fail(f"Kernel package rule {rule} must be true.")
@@ -255,6 +270,30 @@ if domain_policy.get("paidPublicResolutionForbidden") is not True:
 if domain_policy.get("paidRequiresVerifiedEntitlement") is not True:
     fail("Paid selected package must require verified entitlement.")
 
+domain_distribution_policy = runtime.get("domainFrameworkDistributionPolicy", {})
+for rule in (
+    "domainPreselectedByDistribution",
+    "embeddedDefaultFactoryAndOperatingModel",
+    "creationTypeQuestionSuppressedForDomainDistribution",
+    "factoryReplacementAllowed",
+    "operatingModelReplacementAllowed",
+    "replacementRequiresSameDomain",
+    "replacementRequiresBidirectionalCompatibility",
+    "replacementRequiresPackageFamilyCompatibility",
+    "crossDomainPairForbidden",
+):
+    if domain_distribution_policy.get(rule) is not True:
+        fail(f"Runtime domain distribution policy {rule} must be true.")
+if set(domain_distribution_policy.get("publicDistributions", [])) != {
+    "SAFOR-FRAMEWORK-WEBSITE.json"
+}:
+    fail("Exactly the Website domain distribution is public in this repository.")
+if set(domain_distribution_policy.get("commercialDistributions", [])) != {
+    "SAFOR-FRAMEWORK-SAAS.json",
+    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+}:
+    fail("Commercial domain distribution names mismatch.")
+
 # Package catalog: distinct free Website and commercial Software/SaaS/Book paths.
 catalog = modules.get("packageCatalog", {}).get("content", {})
 if catalog.get("format") != "SAFOR_PACKAGE_CATALOG" or catalog.get("schemaVersion") != "0.13.0":
@@ -271,6 +310,8 @@ for entry in entries:
         fail(f"Catalog entry {pid} has invalid package kind.")
     if not entry.get("supportedCreationTypes"):
         fail(f"Catalog entry {pid} must declare supportedCreationTypes.")
+    if not entry.get("packageFamily"):
+        fail(f"Catalog entry {pid} must declare packageFamily.")
 
 free_ids = ("safor.factory.website-delivery", "safor.om.website-team")
 for pid in free_ids:
@@ -323,6 +364,12 @@ if set(profiles_by_type) != {"WEBSITE", "SOFTWARE_SAAS", "BOOK"}:
 web = profiles_by_type.get("WEBSITE", {})
 software = profiles_by_type.get("SOFTWARE_SAAS", {})
 book = profiles_by_type.get("BOOK", {})
+if web.get("domainId") != "WEBSITE_CREATION":
+    fail("Website creation profile domainId mismatch.")
+if software.get("domainId") != "SAAS_ENGINEERING":
+    fail("Software/SaaS creation profile domainId mismatch.")
+if book.get("domainId") != "BOOK_CREATION":
+    fail("Book creation profile domainId mismatch.")
 if web.get("defaultFactoryPackageId") != "safor.factory.website-delivery":
     fail("Website default Factory mismatch.")
 if web.get("defaultOperatingModelPackageId") != "safor.om.website-team":
@@ -359,22 +406,36 @@ for creation_type, profile in profiles_by_type.items():
             fail(f"{creation_type} selection policy {rule} must be true.")
 
 # Free Website starter artifacts must be valid for 0.13 and mutually compatible.
-free_factory = load_json("v0.13.0/packages/factories/website-delivery/1.0.0/package.json")
-free_om = load_json("v0.13.0/packages/operating-models/website-team/1.0.0/package.json")
+free_factory = load_json("v0.13.0/packages/factories/website-delivery/1.1.0/package.json")
+free_om = load_json("v0.13.0/packages/operating-models/website-team/1.1.0/package.json")
 for package in (free_factory, free_om):
     result = validate_domain_package(package, version, "WEBSITE")
     if not result["valid"]:
         fail(f"Free Website package invalid: {package.get('packageId')}: {result['errors']}")
-pair = evaluate_domain_package_pair(free_factory, free_om, version, "WEBSITE")
+pair = evaluate_domain_framework_pair(
+    free_factory, free_om, version, "WEBSITE", "WEBSITE_CREATION"
+)
 if not pair["compatible"]:
-    fail(f"Free Website Factory/Operating Model pair is incompatible: {pair}")
+    fail(f"Free Website Factory/Operating Model pair is domain-incompatible: {pair}")
 
 factory_consistency = validate_factory_contract_consistency(free_factory)
 if not factory_consistency["valid"]:
-    fail(f"Website Factory 1.0 contract is internally inconsistent: {factory_consistency['errors']}")
+    fail(f"Website Factory 1.1 contract is internally inconsistent: {factory_consistency['errors']}")
 
-if free_factory.get("version") != "1.0.0" or free_om.get("version") != "1.0.0":
-    fail("Free Website Factory/Operating Model defaults must both be 1.0.0.")
+if free_factory.get("version") != "1.1.0" or free_om.get("version") != "1.1.0":
+    fail("Free Website Factory/Operating Model defaults must both be 1.1.0.")
+if free_factory.get("packageFamily") != "safor.factory.website":
+    fail("Website Factory packageFamily mismatch.")
+if free_om.get("packageFamily") != "safor.om.website":
+    fail("Website Operating Model packageFamily mismatch.")
+if free_factory.get("compatibility", {}).get("domainIds") != ["WEBSITE_CREATION"]:
+    fail("Website Factory domainIds mismatch.")
+if free_om.get("compatibility", {}).get("domainIds") != ["WEBSITE_CREATION"]:
+    fail("Website Operating Model domainIds mismatch.")
+if free_factory.get("integrity", {}).get("canonicalization") != "SAFOR_CANONICAL_JSON_V2":
+    fail("Website Factory 1.1 must use SAFOR_CANONICAL_JSON_V2.")
+if free_om.get("integrity", {}).get("canonicalization") != "SAFOR_CANONICAL_JSON_V2":
+    fail("Website Operating Model 1.1 must use SAFOR_CANONICAL_JSON_V2.")
 scope = free_factory.get("model", {}).get("scopeBoundary", {})
 for excluded in (
     "GENERAL_SAAS_PRODUCT_ENGINEERING",
@@ -498,6 +559,66 @@ for rule in (
     if entitlement.get("rules", {}).get(rule) is not True:
         fail(f"Commercial entitlement rule {rule} must be true.")
 
+# Domain Framework profiles and public single-file distribution.
+domain_profiles = load_json("v0.13.0/domain-framework-profiles.json")
+if domain_profiles.get("format") != "SAFOR_DOMAIN_FRAMEWORK_PROFILE_CATALOG":
+    fail("Domain framework profile catalog format mismatch.")
+profile_by_id = {x.get("id"): x for x in domain_profiles.get("profiles", [])}
+if set(profile_by_id) != {"WEBSITE", "SAAS", "BOOK_CREATION"}:
+    fail("Domain framework profiles must be exactly WEBSITE, SAAS and BOOK_CREATION.")
+expected_domain_profiles = {
+    "WEBSITE": ("WEBSITE_CREATION", "WEBSITE", "SAFOR-FRAMEWORK-WEBSITE.json", True),
+    "SAAS": ("SAAS_ENGINEERING", "SOFTWARE_SAAS", "SAFOR-FRAMEWORK-SAAS.json", False),
+    "BOOK_CREATION": ("BOOK_CREATION", "BOOK", "SAFOR-FRAMEWORK-BOOK-CREATION.json", False),
+}
+for pid, (domain_id, creation_type, filename, public_artifact) in expected_domain_profiles.items():
+    profile = profile_by_id.get(pid, {})
+    if profile.get("domainId") != domain_id:
+        fail(f"Domain framework profile {pid} domainId mismatch.")
+    if profile.get("creationType") != creation_type:
+        fail(f"Domain framework profile {pid} creationType mismatch.")
+    if profile.get("distributionFile") != filename:
+        fail(f"Domain framework profile {pid} filename mismatch.")
+    if profile.get("publicArtifactCommitted") is not public_artifact:
+        fail(f"Domain framework profile {pid} public artifact policy mismatch.")
+    replacement = profile.get("replacementPolicy", {})
+    for flag in (
+        "factoryReplaceable",
+        "operatingModelReplaceable",
+        "sameDomainRequired",
+        "bidirectionalCounterpartRequired",
+        "packageFamilyConstraintsEnforced",
+        "crossDomainPairForbidden",
+    ):
+        if replacement.get(flag) is not True:
+            fail(f"Domain framework profile {pid} replacement policy {flag} must be true.")
+
+website_distribution = load_json("SAFOR-FRAMEWORK-WEBSITE.json")
+if website_distribution.get("format") != "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION":
+    fail("Website domain Framework distribution format mismatch.")
+if website_distribution.get("distributionId") != "safor.framework.website":
+    fail("Website domain Framework distributionId mismatch.")
+if website_distribution.get("distributionVersion") != version:
+    fail("Website domain Framework distribution version mismatch.")
+if website_distribution.get("domain", {}).get("domainId") != "WEBSITE_CREATION":
+    fail("Website domain Framework domainId mismatch.")
+if website_distribution.get("framework") != framework:
+    fail("Website domain Framework must embed the exact current SAFOR base Framework.")
+embedded_defaults = website_distribution.get("embeddedDomainModules", {})
+if embedded_defaults.get("factory") != free_factory:
+    fail("Website domain Framework embedded Factory mismatch.")
+if embedded_defaults.get("operatingModel") != free_om:
+    fail("Website domain Framework embedded Operating Model mismatch.")
+website_pair = evaluate_domain_framework_pair(
+    embedded_defaults.get("factory", {}),
+    embedded_defaults.get("operatingModel", {}),
+    version,
+    "WEBSITE",
+    "WEBSITE_CREATION",
+)
+if not website_pair["compatible"]:
+    fail(f"Website domain Framework embedded pair incompatible: {website_pair}")
+
 # Strict entitlement schema and commercial delivery contracts.
 entitlement_schema = modules.get("schemaEntitlement", {}).get("content", {})
 for field in ("status", "commercialBasis", "subject", "grant", "validity", "issuer", "verification"):
@@ -555,6 +676,10 @@ for forbidden in (
     "INVENT_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
     "IGNORE_COMMERCIAL_DELIVERY_EXPIRY",
     "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE",
+    "SILENTLY_CHANGE_ACTIVE_DOMAIN_TO_FIT_REPLACEMENT",
+    "AUTO_REPLACE_COUNTERPART_TO_MAKE_NEW_PACKAGE_COMPATIBLE",
+    "IGNORE_PACKAGE_FAMILY_MISMATCH",
+    "DOWNGRADE_BIDIRECTIONAL_COMPATIBILITY_TO_ONE_WAY",
 ):
     if forbidden not in self_healing.get("forbiddenAutomaticRepairs", []):
         fail(f"Self-Healing must forbid {forbidden}.")
@@ -563,7 +688,7 @@ conformance = modules.get("conformance", {}).get("content", {})
 if conformance.get("schemaVersion") != "0.13.0":
     fail("Conformance model must be 0.13.0.")
 assertion_ids = {x.get("id") for x in conformance.get("assertions", [])}
-for n in range(217, 245):
+for n in range(217, 256):
     assertion = f"CF-{n:03d}"
     if assertion not in assertion_ids:
         fail(f"Missing composable-package conformance assertion {assertion}.")
@@ -625,4 +750,6 @@ print("Free Website starter: website-delivery + website-team, FREE_PUBLIC")
 print("Software/SaaS: paid Factory + paid Operating Model, two independent entitlements")
 print("Commercial access: per selected package, external verified entitlement")
 print("Domain package integrity: SHA-256 declared-contract verification")
+print("Domain Frameworks: WEBSITE public single-file; SAAS/BOOK commercial build profiles")
+print("Replacement compatibility: same-domain + package-family + bidirectional counterpart checks")
 print("Project workspace: HUMAN-owned REMOTE_GIT or LOCAL_GIT")

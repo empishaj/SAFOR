@@ -194,7 +194,8 @@ def build_bundle():
         "runtimeContract": {
             "moduleResolutionOrder": [
                 "EMBEDDED_FRAMEWORK_MODULES",
-                "EXTERNAL_DOMAIN_PACKAGE_RESOLUTION",
+                "DOMAIN_DISTRIBUTION_EMBEDDED_DEFAULTS_WHEN_PRESENT",
+                "EXTERNAL_DOMAIN_PACKAGE_REPLACEMENT_WHEN_REQUESTED",
             ],
             "embeddedModulesAuthoritativeForFrameworkBootstrap": True,
             "canonicalRepository": "empishaj/SAFOR",
@@ -234,6 +235,24 @@ def build_bundle():
                 "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
                 "APPROVE_AND_MATERIALIZE_PROJECT",
             ],
+            "domainFrameworkDistributionPolicy": {
+                "containerFormat": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
+                "profileCatalog": "v0.13.0/domain-framework-profiles.json",
+                "domainPreselectedByDistribution": True,
+                "embeddedDefaultFactoryAndOperatingModel": True,
+                "creationTypeQuestionSuppressedForDomainDistribution": True,
+                "factoryReplacementAllowed": True,
+                "operatingModelReplacementAllowed": True,
+                "replacementRequiresSameDomain": True,
+                "replacementRequiresBidirectionalCompatibility": True,
+                "replacementRequiresPackageFamilyCompatibility": True,
+                "crossDomainPairForbidden": True,
+                "publicDistributions": ["SAFOR-FRAMEWORK-WEBSITE.json"],
+                "commercialDistributions": [
+                    "SAFOR-FRAMEWORK-SAAS.json",
+                    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+                ],
+            },
             "creationProfiles": [
                 {
                     "id": "WEBSITE",
@@ -266,7 +285,7 @@ def build_bundle():
             "projectWorkspaceRule": "All project-specific work stays in a HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. The canonical SAFOR repository and package sources are never project targets.",
             "controlWorkspaceRule": "REMOTE_GIT uses a HUMAN-controlled separate safor-memory; LOCAL_GIT uses a Git-tracked MASTER-only .safor/ control root.",
             "entitlementRule": "Commercial entitlement gates each selected paid package independently. Strict verification requires ACTIVE status, explicit evaluatedAt, subject match, trusted issuer/verifier and commercial-basis evidence. ENTITLED_PACKAGE_SOURCE additionally requires trusted time-valid delivery evidence bound to entitlement, package/version and artifact digest. SOFTWARE_SAAS still requires separate entitlements for Factory and Operating Model.",
-            "factoryBindingRule": "Discovery, Planning and domain Evidence use only the independently selected, access-verified, digest-verified, COMPATIBLE and immutable-pinned Factory/Operating Model pair.",
+            "factoryBindingRule": "Discovery, Planning and domain Evidence use only the selected, access-verified, digest-verified, same-domain and bidirectionally COMPATIBLE Factory/Operating Model pair. Domain distributions start from embedded defaults but Factory and Operating Model remain independently replaceable.",
             "commercialVerificationContextRule": "Pure package-access policy receives evaluatedAt, subjectRef, trustedIssuerIds, trustedEntitlementVerifierIds and trustedDeliveryVerifierIds explicitly; it never reads the wall clock or trusts identities declared only inside commercial records.",
             "chatUiRule": "Use chat-native UI only.",
             "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",

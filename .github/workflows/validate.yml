@@ -24,6 +24,8 @@ jobs:
           python-version: "3.12"
       - name: Check reproducible bundle
         run: python tools/build_bundle.py --check
+      - name: Check domain Framework distributions
+        run: python tools/build_domain_framework.py --check
       - name: Validate SAFOR distribution
         run: python tools/validate_safor.py
       - name: Run deterministic control tests

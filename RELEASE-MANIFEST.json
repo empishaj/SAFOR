@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.4",
+  "version": "0.13.0-rc.5",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.4.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.5.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.3",
+  "previousVersion": "0.13.0-rc.4",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -110,7 +110,18 @@
     "TRUSTED_DELIVERY_VERIFIER",
     "DELIVERY_ENTITLEMENT_PACKAGE_VERSION_DIGEST_BINDING",
     "TIME_BOUNDED_COMMERCIAL_DELIVERY_EVIDENCE",
-    "HUMAN_LOADED_LICENSED_PACKAGE_WITH_STRICT_ENTITLEMENT"
+    "HUMAN_LOADED_LICENSED_PACKAGE_WITH_STRICT_ENTITLEMENT",
+    "DOMAIN_SPECIFIC_FRAMEWORK_DISTRIBUTIONS",
+    "SAFOR_FRAMEWORK_WEBSITE_SINGLE_FILE",
+    "SAFOR_FRAMEWORK_SAAS_COMMERCIAL_SINGLE_FILE",
+    "SAFOR_FRAMEWORK_BOOK_CREATION_COMMERCIAL_SINGLE_FILE",
+    "DOMAIN_PRESELECTED_BY_DISTRIBUTION",
+    "EMBEDDED_DEFAULT_FACTORY_AND_OPERATING_MODEL",
+    "PACKAGE_FAMILY_COMPATIBILITY",
+    "BIDIRECTIONAL_FACTORY_OPERATING_MODEL_COMPATIBILITY",
+    "CROSS_DOMAIN_PACKAGE_REJECTION",
+    "INDEPENDENT_PREMIUM_FACTORY_REPLACEMENT",
+    "INDEPENDENT_PREMIUM_OPERATING_MODEL_REPLACEMENT"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -133,7 +144,8 @@
     "COMMERCIAL_PACKAGE_DELIVERY_END_TO_END_ACCEPTANCE",
     "MODULAR_PACKAGE_DISTRIBUTION_END_TO_END_ACCEPTANCE",
     "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE",
-    "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE"
+    "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE",
+    "DOMAIN_FRAMEWORK_DISTRIBUTION_END_TO_END_ACCEPTANCE"
   ],
   "sourceBaselines": [
     "v0.13.0",
@@ -149,8 +161,8 @@
     "defaultFactoryAccessMode": "FREE_PUBLIC",
     "defaultOperatingModelAccessMode": "FREE_PUBLIC",
     "independentOverridesAllowed": true,
-    "defaultFactoryVersion": "1.0.0",
-    "defaultOperatingModelVersion": "1.0.0"
+    "defaultFactoryVersion": "1.1.0",
+    "defaultOperatingModelVersion": "1.1.0"
   },
   "paidCreationProfiles": [
     "SOFTWARE_SAAS",
@@ -172,5 +184,28 @@
     "entitledPackageSourceDeliveryEvidenceRequired": true,
     "deliveryDigestBindingRequired": true,
     "humanLoadedPaidArtifactSupportedWithStrictEntitlement": true
-  }
+  },
+  "domainFrameworkDistributions": [
+    {
+      "id": "WEBSITE",
+      "file": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "domainId": "WEBSITE_CREATION",
+      "creationType": "WEBSITE",
+      "publicArtifact": true
+    },
+    {
+      "id": "SAAS",
+      "file": "SAFOR-FRAMEWORK-SAAS.json",
+      "domainId": "SAAS_ENGINEERING",
+      "creationType": "SOFTWARE_SAAS",
+      "publicArtifact": false
+    },
+    {
+      "id": "BOOK_CREATION",
+      "file": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "domainId": "BOOK_CREATION",
+      "creationType": "BOOK",
+      "publicArtifact": false
+    }
+  ]
 }

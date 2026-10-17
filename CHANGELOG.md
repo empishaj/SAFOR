@@ -1,5 +1,23 @@
 # Changelog
 
+## 0.13.0-rc.5
+
+- Adds domain-specific single-file Framework distributions while retaining one shared modular SAFOR kernel.
+- Publishes `SAFOR-FRAMEWORK-WEBSITE.json` with embedded Website Factory 1.1.0 and Website Operating Model 1.1.0.
+- Defines protected commercial output profiles for `SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json`.
+- Domain distributions preselect `domainId` and Creation Type, suppressing redundant creation-type selection.
+- Adds `packageFamily` and `domainIds` for V2 replaceable domain packages.
+- Adds `SAFOR_CANONICAL_JSON_V2` so package-family identity is integrity-bound.
+- Makes compatibility bidirectional: Factory requirements are checked against the Operating Model and Operating Model requirements against the Factory.
+- Adds allowed package-family constraints plus optional counterpart work-item/artifact requirements.
+- Allows Premium replacements with different package IDs when domain, family and bidirectional contracts remain compatible.
+- Rejects cross-domain combinations such as Book Factory + SaaS Engineering Operating Model.
+- Keeps the prior valid binding unchanged when a replacement is incompatible.
+- Adds a reproducible domain Framework builder and CI gate.
+- Adds INV-188 through INV-197 and CF-245 through CF-255.
+- Final branch evidence: shared Framework reproducibility PASS, domain Framework reproducibility PASS, validator PASS, 65/65 recovery profiles, 82 tests PASS.
+
+
 ## 0.13.0-rc.4
 
 - Adds strict commercial entitlement verification for paid domain packages.

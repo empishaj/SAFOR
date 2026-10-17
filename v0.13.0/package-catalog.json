@@ -7,7 +7,7 @@
     {
       "packageId": "safor.factory.website-delivery",
       "kind": "FACTORY",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "label": "Website Factory",
       "accessMode": "FREE_PUBLIC",
       "sku": "SAFOR-WEBSITE-FACTORY-FREE",
@@ -17,13 +17,14 @@
       "selectionClass": "STARTER",
       "distribution": {
         "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-        "path": "v0.13.0/packages/factories/website-delivery/1.0.0/package.json"
-      }
+        "path": "v0.13.0/packages/factories/website-delivery/1.1.0/package.json"
+      },
+      "packageFamily": "safor.factory.website"
     },
     {
       "packageId": "safor.om.website-team",
       "kind": "OPERATING_MODEL",
-      "version": "1.0.0",
+      "version": "1.1.0",
       "label": "Website Operating Model",
       "accessMode": "FREE_PUBLIC",
       "sku": "SAFOR-WEBSITE-OM-FREE",
@@ -33,8 +34,9 @@
       "selectionClass": "STARTER",
       "distribution": {
         "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-        "path": "v0.13.0/packages/operating-models/website-team/1.0.0/package.json"
-      }
+        "path": "v0.13.0/packages/operating-models/website-team/1.1.0/package.json"
+      },
+      "packageFamily": "safor.om.website"
     },
     {
       "packageId": "safor.factory.software-delivery",
@@ -51,7 +53,8 @@
         "sourceClass": "ENTITLED_PACKAGE_SOURCE",
         "publicModelPath": null
       },
-      "legacyDisclosure": "Versions through 1.6.0 were published before the Website/Software commercial split. They remain historical public bytes and are not the current protected commercial Software Factory."
+      "legacyDisclosure": "Versions through 1.6.0 were published before the Website/Software commercial split. They remain historical public bytes and are not the current protected commercial Software Factory.",
+      "packageFamily": "safor.factory.saas"
     },
     {
       "packageId": "safor.om.saas-engineering",
@@ -68,7 +71,8 @@
         "sourceClass": "ENTITLED_PACKAGE_SOURCE",
         "publicModelPath": null
       },
-      "legacyDisclosure": "Versions through 1.6.0 were published before the Website/Software commercial split. They remain historical public bytes and are not the current protected commercial SaaS Engineering Operating Model."
+      "legacyDisclosure": "Versions through 1.6.0 were published before the Website/Software commercial split. They remain historical public bytes and are not the current protected commercial SaaS Engineering Operating Model.",
+      "packageFamily": "safor.om.saas"
     },
     {
       "packageId": "safor.factory.book-production",
@@ -85,7 +89,8 @@
         "sourceClass": "ENTITLED_PACKAGE_SOURCE",
         "publicModelPath": null
       },
-      "legacyDisclosure": "Pre-0.12 prototype versions were publicly committed and are not treated as protected commercial package delivery."
+      "legacyDisclosure": "Pre-0.12 prototype versions were publicly committed and are not treated as protected commercial package delivery.",
+      "packageFamily": "safor.factory.book"
     },
     {
       "packageId": "safor.om.book-authoring",
@@ -102,7 +107,8 @@
         "sourceClass": "ENTITLED_PACKAGE_SOURCE",
         "publicModelPath": null
       },
-      "legacyDisclosure": "Pre-0.12 prototype versions were publicly committed and are not treated as protected commercial package delivery."
+      "legacyDisclosure": "Pre-0.12 prototype versions were publicly committed and are not treated as protected commercial package delivery.",
+      "packageFamily": "safor.om.book"
     }
   ],
   "creationProfiles": [
@@ -120,7 +126,8 @@
         "resolveEachPackageAccessIndependently": true
       },
       "autoResolveDefaultsFromPublicFrameworkGit": true,
-      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED"
+      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED",
+      "domainId": "WEBSITE_CREATION"
     },
     {
       "creationType": "SOFTWARE_SAAS",
@@ -136,7 +143,8 @@
         "resolveEachPackageAccessIndependently": true
       },
       "autoResolveDefaultsFromPublicFrameworkGit": false,
-      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED"
+      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED",
+      "domainId": "SAAS_ENGINEERING"
     },
     {
       "creationType": "BOOK",
@@ -152,7 +160,8 @@
         "resolveEachPackageAccessIndependently": true
       },
       "autoResolveDefaultsFromPublicFrameworkGit": false,
-      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED"
+      "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED",
+      "domainId": "BOOK_CREATION"
     }
   ]
 }
