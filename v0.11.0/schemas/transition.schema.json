@@ -27,7 +27,8 @@
       "enum": [
         "CONTROL",
         "VALUE_STREAM",
-        "EXECUTION"
+        "EXECUTION",
+        "ACCEPTANCE"
       ]
     },
     "subjectType": {
@@ -76,7 +77,7 @@
   "$defs": {
     "path": {
       "type": "string",
-      "pattern": "^\\$(?:aggregate|subject)(?:\\.[A-Za-z0-9_-]+)+$"
+      "pattern": "^\\$(?:aggregate|subject|control|valueStream|execution|acceptance)(?:\\.[A-Za-z0-9_-]+)+$"
     },
     "stateEffect": {
       "type": "object",
@@ -202,6 +203,26 @@
           "properties": {
             "op": {
               "const": "REVOKE_ACTIVE_MANDATES"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "eventPath": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+$"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "eventPath"
+          ],
+          "properties": {
+            "op": {
+              "const": "APPEND_FROM_EVENT"
             },
             "path": {
               "$ref": "#/$defs/path"
