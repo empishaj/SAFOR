@@ -124,6 +124,11 @@
       "id": "ALL_ACCEPTANCE_CRITERIA_SATISFIED",
       "description": "Every criterion references at least one requirement and every referenced requirement is satisfied.",
       "args": []
+    },
+    {
+      "id": "REVIEW_EVENT_INDEPENDENCE_VALID",
+      "description": "A review event satisfies its declared independence policy; performer and approving reviewer differ when required.",
+      "args": []
     }
   ]
 }
