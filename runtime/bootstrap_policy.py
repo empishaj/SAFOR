@@ -401,6 +401,103 @@ def evaluate_domain_package_pair(
     }
 
 
+
+def evaluate_active_conditional_requirements(
+    factory: Mapping[str, Any],
+    operating_model: Mapping[str, Any],
+    active_conditions: Iterable[str],
+) -> Dict[str, Any]:
+    """Evaluate Factory requirements that become mandatory only for active conditions.
+
+    Base package compatibility intentionally checks only unconditional counterpart
+    requirements. This function fails closed when an event/risk condition activates
+    a capability or authority that the selected Operating Model cannot supply.
+    """
+    conditions = set(active_conditions)
+    contract = factory.get("model", {}).get("compatibilityContract", {})
+    om_exports = operating_model.get("exports", {})
+    available_capabilities = set(om_exports.get("capabilities", []))
+    available_authorities = set(om_exports.get("authorities", []))
+
+    required_capabilities = {
+        item.get("capabilityId")
+        for item in contract.get("conditionalCapabilities", [])
+        if item.get("when") in conditions and item.get("capabilityId")
+    }
+    required_authorities = {
+        item.get("authorityId")
+        for item in contract.get("conditionalAuthorities", [])
+        if item.get("when") in conditions and item.get("authorityId")
+    }
+    missing_capabilities = sorted(required_capabilities - available_capabilities)
+    missing_authorities = sorted(required_authorities - available_authorities)
+    return {
+        "satisfied": not missing_capabilities and not missing_authorities,
+        "activeConditions": sorted(conditions),
+        "requiredCapabilities": sorted(required_capabilities),
+        "requiredAuthorities": sorted(required_authorities),
+        "missingCapabilities": missing_capabilities,
+        "missingAuthorities": missing_authorities,
+    }
+
+
+def validate_factory_contract_consistency(factory: Mapping[str, Any]) -> Dict[str, Any]:
+    """Check internal consistency of a SAFOR Factory's declared requirements."""
+    errors: List[str] = []
+    if factory.get("packageKind") != "FACTORY":
+        errors.append("NOT_A_FACTORY")
+        return {"valid": False, "errors": errors}
+
+    compatibility = factory.get("compatibility", {}).get("counterpart", {})
+    contract = factory.get("model", {}).get("compatibilityContract", {})
+    exports = factory.get("exports", {})
+    exported_capabilities = set(exports.get("capabilities", []))
+    exported_authorities = set(exports.get("authorities", []))
+
+    counterpart_capabilities = set(compatibility.get("requiredCapabilities", []))
+    counterpart_authorities = set(compatibility.get("requiredAuthorities", []))
+    mandatory_capabilities = set(contract.get("mandatoryCapabilities", []))
+    mandatory_authorities = set(contract.get("mandatoryAuthorities", []))
+
+    if counterpart_capabilities != mandatory_capabilities:
+        errors.append("MANDATORY_CAPABILITY_CONTRACT_MISMATCH")
+    if counterpart_authorities != mandatory_authorities:
+        errors.append("MANDATORY_AUTHORITY_CONTRACT_MISMATCH")
+    if not mandatory_capabilities.issubset(exported_capabilities):
+        errors.append("MANDATORY_CAPABILITY_NOT_EXPORTED")
+    if not mandatory_authorities.issubset(exported_authorities):
+        errors.append("MANDATORY_AUTHORITY_NOT_EXPORTED")
+
+    conditional_capabilities = {
+        item.get("capabilityId")
+        for item in contract.get("conditionalCapabilities", [])
+        if item.get("capabilityId")
+    }
+    conditional_authorities = {
+        item.get("authorityId")
+        for item in contract.get("conditionalAuthorities", [])
+        if item.get("authorityId")
+    }
+    if not conditional_capabilities.issubset(exported_capabilities):
+        errors.append("CONDITIONAL_CAPABILITY_NOT_EXPORTED")
+    if not conditional_authorities.issubset(exported_authorities):
+        errors.append("CONDITIONAL_AUTHORITY_NOT_EXPORTED")
+
+    nodes = factory.get("model", {}).get("flowGraph", {}).get("nodes", [])
+    for node in nodes:
+        for capability in node.get("requiresCapabilities", []):
+            if capability not in exported_capabilities:
+                errors.append(f"FLOW_CAPABILITY_NOT_EXPORTED:{node.get('id')}:{capability}")
+        for authority in node.get("requiredAuthorities", []):
+            if authority not in exported_authorities:
+                errors.append(f"FLOW_AUTHORITY_NOT_EXPORTED:{node.get('id')}:{authority}")
+        for item in node.get("conditionalAuthorities", []):
+            authority = item.get("authorityId")
+            if authority and authority not in exported_authorities:
+                errors.append(f"FLOW_CONDITIONAL_AUTHORITY_NOT_EXPORTED:{node.get('id')}:{authority}")
+
+    return {"valid": not errors, "errors": errors}
+
 def _loaded_package_record(
     loaded_packages: Sequence[Mapping[str, Any]],
     package_id: str,
