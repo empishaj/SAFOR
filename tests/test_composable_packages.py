@@ -24,7 +24,13 @@ def entitlement(package_id, version, entitlement_id):
         "format": "SAFOR_COMMERCIAL_ENTITLEMENT",
         "schemaVersion": "0.13.0",
         "entitlementId": entitlement_id,
+        "status": "ACTIVE",
         "subject": {"subjectType": "HUMAN", "subjectRef": "human-1"},
+        "commercialBasis": {
+            "basisType": "PURCHASE",
+            "evidenceRef": "order://" + entitlement_id,
+            "sku": "TEST-SKU",
+        },
         "grant": {
             "sku": "TEST-SKU",
             "packageId": package_id,
@@ -38,7 +44,19 @@ def entitlement(package_id, version, entitlement_id):
             "verifierId": "license-verifier",
             "evidenceRef": "license://" + entitlement_id,
             "verifiedAt": "2026-10-17T00:00:01Z",
+            "result": "VERIFIED",
         },
+    }
+
+
+
+def verification_context():
+    return {
+        "evaluatedAt": "2026-10-17T12:00:00Z",
+        "subjectRef": "human-1",
+        "trustedIssuerIds": ["safor-licensing"],
+        "trustedEntitlementVerifierIds": ["license-verifier"],
+        "trustedDeliveryVerifierIds": ["delivery-verifier"],
     }
 
 
@@ -136,6 +154,7 @@ class ComposablePackageTests(unittest.TestCase):
             [],
             [],
             {"factoryPackageId": package_id},
+            verification_context=verification_context(),
         )
         self.assertEqual(
             "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES",
@@ -166,7 +185,8 @@ class ComposablePackageTests(unittest.TestCase):
             entitlement(om["packageId"], om["version"], "ENT-SW-OM"),
         ]
         result = resolve_composable_creation_packages(
-            "SOFTWARE_SAAS", self.catalog, loaded, entitlements
+            "SOFTWARE_SAAS", self.catalog, loaded, entitlements,
+            verification_context=verification_context(),
         )
         self.assertEqual("PACKAGE_ACCESS_RESOLVED", result["outcome"])
         self.assertFalse(result["mixedAccessModes"])
@@ -196,6 +216,7 @@ class ComposablePackageTests(unittest.TestCase):
                 {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": om},
             ],
             [entitlement(factory["packageId"], factory["version"], "ENT-SW-F")],
+            verification_context=verification_context(),
         )
         self.assertEqual("PACKAGE_ENTITLEMENT_UNVERIFIED", result["outcome"])
         self.assertEqual("safor.om.saas-engineering", result["packageId"])
