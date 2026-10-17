@@ -247,11 +247,20 @@ def build_bundle():
                 "replacementRequiresBidirectionalCompatibility": True,
                 "replacementRequiresPackageFamilyCompatibility": True,
                 "crossDomainPairForbidden": True,
-                "publicDistributions": ["SAFOR-FRAMEWORK-WEBSITE.json"],
-                "commercialDistributions": [
+                "publicDistributions": [
+                    "SAFOR-FRAMEWORK-WEBSITE.json",
                     "SAFOR-FRAMEWORK-SAAS.json",
                     "SAFOR-FRAMEWORK-BOOK-CREATION.json",
                 ],
+                "publicTestEvaluationDistributions": [
+                    "SAFOR-FRAMEWORK-SAAS.json",
+                    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+                ],
+                "commercialProductionDistributions": [
+                    "SAFOR-FRAMEWORK-SAAS.json",
+                    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+                ],
+                "publicTestBytesDoNotDefineCommercialProductionSource": True,
             },
             "creationProfiles": [
                 {
