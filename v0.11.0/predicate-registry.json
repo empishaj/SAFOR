@@ -19,17 +19,17 @@
     },
     {
       "id": "ACTIVE_MANDATE_COVERS_WORK_ITEM",
-      "description": "At least one active unrevoked mandate covers the subject work item and all of its required capabilities.",
+      "description": "At least one active unrevoked Control-State mandate covers the subject work item and every required capability.",
       "args": []
     },
     {
       "id": "REQUIRED_INPUTS_RESOLVABLE",
-      "description": "All declared required input refs of the subject work item are present in state.availableInputs.",
+      "description": "All subject work-item input refs resolve to value-stream objects with a non-null artifactRef.",
       "args": []
     },
     {
       "id": "RESOURCE_DECLARATION_COMPLETE",
-      "description": "The subject work item has an execution.resourceAccess declaration with nonempty read/write declarations or an explicit NO_MUTATION marker.",
+      "description": "The subject work item contains a schema-complete execution.resourceAccess declaration with readSet, writeSet and exclusiveKeys arrays.",
       "args": []
     },
     {
