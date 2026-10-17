@@ -1,0 +1,150 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.13.0/entitlement.schema.json",
+  "title": "SAFOR Commercial Entitlement 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "entitlementId",
+    "subject",
+    "grant",
+    "validity",
+    "issuer",
+    "verification"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_COMMERCIAL_ENTITLEMENT"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "entitlementId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "subjectType",
+        "subjectRef"
+      ],
+      "properties": {
+        "subjectType": {
+          "enum": [
+            "HUMAN",
+            "ORGANIZATION"
+          ]
+        },
+        "subjectRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "grant": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sku",
+        "packageId",
+        "versionRange",
+        "licenseType"
+      ],
+      "properties": {
+        "sku": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionRange": {
+          "type": "string",
+          "minLength": 1
+        },
+        "licenseType": {
+          "enum": [
+            "INDIVIDUAL",
+            "ORGANIZATION",
+            "SUBSCRIPTION",
+            "PERPETUAL"
+          ]
+        }
+      }
+    },
+    "validity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validFrom",
+        "validUntil"
+      ],
+      "properties": {
+        "validFrom": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "validUntil": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      }
+    },
+    "issuer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "issuerId",
+        "issuerName"
+      ],
+      "properties": {
+        "issuerId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "issuerName": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "verifierId",
+        "evidenceRef",
+        "verifiedAt"
+      ],
+      "properties": {
+        "method": {
+          "enum": [
+            "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
+            "VERIFIED_OFFLINE_SIGNATURE"
+          ]
+        },
+        "verifierId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "verifiedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
