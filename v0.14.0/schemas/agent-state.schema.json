@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-state:0.14.0",
+  "title": "SAFOR Agent State 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "revision",
+    "runtimeStatus",
+    "session",
+    "currentJob",
+    "lastResponseRef",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_STATE"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "runtimeStatus": {
+      "enum": [
+        "IDLE",
+        "WAITING_HUMAN_GO",
+        "PREFLIGHT",
+        "CLAIMING",
+        "RUNNING",
+        "RESULT_SUBMITTED",
+        "BLOCKED",
+        "REIDENTIFICATION_REQUIRED",
+        "PAUSED",
+        "REVOKED"
+      ]
+    },
+    "session": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/session"
+        }
+      ]
+    },
+    "currentJob": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/currentJob"
+        }
+      ]
+    },
+    "lastResponseRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "session": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sessionId",
+        "chatBindingId",
+        "activationEvidenceRef",
+        "activatedAt",
+        "selectedJobId",
+        "selectedDispatchRevision"
+      ],
+      "properties": {
+        "sessionId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "chatBindingId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "activationEvidenceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "activatedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "selectedJobId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selectedDispatchRevision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "currentJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "jobRef",
+        "jobBlobSha",
+        "masterJobStateRef",
+        "dispatchRevision",
+        "claimId"
+      ],
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jobRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jobBlobSha": {
+          "type": "string",
+          "minLength": 7
+        },
+        "masterJobStateRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dispatchRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "claimId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,186 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-initialization:0.14.0",
+  "title": "SAFOR Agent Chat Initialization 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "initializationId",
+    "projectId",
+    "agentId",
+    "displayName",
+    "identityRef",
+    "agentStateRef",
+    "inboxIndexRef",
+    "communicationContractRef",
+    "controlRepository",
+    "startupProtocol",
+    "communicationBoundary",
+    "generatedBy",
+    "immutable"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_INITIALIZATION"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "initializationId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 3
+    },
+    "identityRef": {
+      "$ref": "#/$defs/pointer"
+    },
+    "agentStateRef": {
+      "$ref": "#/$defs/pointer"
+    },
+    "inboxIndexRef": {
+      "$ref": "#/$defs/pointer"
+    },
+    "communicationContractRef": {
+      "$ref": "#/$defs/pointer"
+    },
+    "controlRepository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "startupProtocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "firstUseSteps",
+        "subsequentUseInput",
+        "jobPromptTransportRequired",
+        "onUncertainIdentity"
+      ],
+      "properties": {
+        "firstUseSteps": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "subsequentUseInput": {
+          "const": "GO"
+        },
+        "jobPromptTransportRequired": {
+          "const": false
+        },
+        "onUncertainIdentity": {
+          "const": "REIDENTIFICATION_REQUIRED"
+        }
+      }
+    },
+    "communicationBoundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "humanPlanningConversationAllowed",
+        "agentMayAskHumanDomainQuestions",
+        "detailedResultsPersistedInGit",
+        "allowedChatStatuses"
+      ],
+      "properties": {
+        "humanPlanningConversationAllowed": {
+          "const": false
+        },
+        "agentMayAskHumanDomainQuestions": {
+          "const": false
+        },
+        "detailedResultsPersistedInGit": {
+          "const": true
+        },
+        "allowedChatStatuses": {
+          "type": "array",
+          "minItems": 4,
+          "maxItems": 4,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "READY",
+              "STARTED",
+              "SUBMITTED",
+              "BLOCKED",
+              "REIDENTIFICATION_REQUIRED"
+            ]
+          }
+        }
+      }
+    },
+    "generatedBy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "masterId",
+        "masterVersion",
+        "generatedAt"
+      ],
+      "properties": {
+        "masterId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "masterVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "generatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "immutable": {
+      "const": true
+    }
+  },
+  "$defs": {
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "ref",
+        "path",
+        "blobSha"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    }
+  }
+}
