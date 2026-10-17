@@ -45,8 +45,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.6":
-    fail(f"VERSION must be 0.13.0-rc.6, got {version}.")
+if version != "0.13.0-rc.7":
+    fail(f"VERSION must be 0.13.0-rc.7, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
@@ -204,13 +204,45 @@ required_principles = (
     "crossDomainPackageReplacementForbidden",
     "publicPaidDomainEvaluationArtifactsAllowedForTesting",
     "publicEvaluationDoesNotAuthorizePaidUse",
+    "platformOwnsHumanVisibleCommunication",
+    "factoryAndOperatingModelCannotOverrideHumanPresentation",
+    "platformResponseGovernorRunsBeforeEveryHumanRender",
+    "safeMigrationPlanningIsInternalOrchestration",
+    "informationalNoticesAreCompressedAndNonInteractive",
+    "fullDetailAndEvidenceRemainAvailableOnDemand",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
 
+# Platform-owned HUMAN response governance.
+interaction = modules.get("interaction", {}).get("content", {})
+governor = interaction.get("platformResponseGovernor", {})
+if governor.get("owner") != "SAFOR_PLATFORM":
+    fail("Platform response governor owner must be SAFOR_PLATFORM.")
+if governor.get("enforcementBoundary") != "AFTER_DOMAIN_FACT_COLLECTION_BEFORE_HUMAN_RENDERING":
+    fail("Platform response governor enforcement boundary mismatch.")
+if governor.get("nonDelegation", {}).get("domainOverrideForbidden") is not True:
+    fail("Factory/Operating Model presentation override must be forbidden.")
+framework_notice = governor.get("eventPolicies", {}).get("FRAMEWORK_DETECTED", {})
+if framework_notice.get("responseClass") != "INFORMATIONAL_NOTICE":
+    fail("FRAMEWORK_DETECTED must be an INFORMATIONAL_NOTICE.")
+if framework_notice.get("maxSentences") != 2 or framework_notice.get("maxWords") != 24:
+    fail("FRAMEWORK_DETECTED response budget mismatch.")
+if framework_notice.get("offerMigrationChoices") is not False:
+    fail("FRAMEWORK_DETECTED must not offer migration choices without a genuine HUMAN decision.")
+if interaction.get("terminalMenuContract", {}).get("informationalNoticeMenuForbidden") is not True:
+    fail("Informational notices must not render a terminal menu.")
+response_schema = modules.get("schemaHumanResponse", {}).get("content", {})
+required_response_fields = set(response_schema.get("required", []))
+for field in ("responseClass", "governance", "renderingContract"):
+    if field not in required_response_fields:
+        fail(f"HUMAN response schema must require {field}.")
+if "terminalMenu" in required_response_fields:
+    fail("HUMAN response schema must not require terminalMenu for informational notices.")
+
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 201):
+for n in range(37, 207):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")

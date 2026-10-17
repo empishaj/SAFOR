@@ -126,7 +126,13 @@
     "packageFamilyCompatibilityRequiredForV2Packages": true,
     "crossDomainPackageReplacementForbidden": true,
     "publicPaidDomainEvaluationArtifactsAllowedForTesting": true,
-    "publicEvaluationDoesNotAuthorizePaidUse": true
+    "publicEvaluationDoesNotAuthorizePaidUse": true,
+    "platformOwnsHumanVisibleCommunication": true,
+    "factoryAndOperatingModelCannotOverrideHumanPresentation": true,
+    "platformResponseGovernorRunsBeforeEveryHumanRender": true,
+    "safeMigrationPlanningIsInternalOrchestration": true,
+    "informationalNoticesAreCompressedAndNonInteractive": true,
+    "fullDetailAndEvidenceRemainAvailableOnDemand": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -1024,16 +1030,23 @@
         "appliesTo": "ALL_SAFOR_GENERATED_HUMAN_FACING_RESPONSES",
         "steps": [
           "BUILD_HUMAN_RESPONSE_ENVELOPE",
+          "APPLY_PLATFORM_RESPONSE_GOVERNOR",
+          "REJECT_DOMAIN_PRESENTATION_OVERRIDE",
           "APPLY_HUMAN_DECISION_GATE",
-          "DERIVE_TERMINAL_MENU",
-          "FALLBACK_MENU_IF_REQUIRED",
-          "VALIDATE_RESPONSE_AND_MENU",
-          "RENDER_CONTENT",
-          "RENDER_TERMINAL_MENU",
+          "CLASSIFY_RESPONSE_CLASS",
+          "COMPRESS_SUMMARY_TO_PLATFORM_BUDGET",
+          "VALIDATE_HUMAN_RESPONSE_SCHEMA",
+          "IF_INFORMATIONAL_NOTICE_RENDER_CONTENT_ONLY",
+          "IF_INTERACTIVE_RENDER_EXACTLY_ONE_TERMINAL_MENU",
+          "VERIFY_NO_CONTENT_AFTER_TERMINAL_ELEMENT",
           "STOP_RENDERING"
         ],
         "emitWithoutSuccessfulFinalization": false
-      }
+      },
+      "platformResponseGovernorRef": "interaction-model.json#platformResponseGovernor",
+      "platformResponseGovernorMandatory": true,
+      "domainModulePresentationOverrideForbidden": true,
+      "informationalNoticeMayOmitTerminalMenu": true
     },
     "recoveryLoop": {
       "modelRef": "self-healing-model.json",
@@ -1924,6 +1937,30 @@
     {
       "id": "INV-200",
       "rule": "Production catalog entries for paid SaaS and Book packages must remain ENTITLED_PACKAGE_SOURCE with no public model path even while public evaluation Frameworks exist."
+    },
+    {
+      "id": "INV-201",
+      "rule": "The SAFOR platform exclusively owns HUMAN-visible response classification, verbosity, structure, progressive disclosure and menu rendering; Factory and Operating Model may supply domain facts, risks, evidence and legitimate decision requirements only."
+    },
+    {
+      "id": "INV-202",
+      "rule": "Every HUMAN-visible output passes the platform response governor after domain fact collection and before rendering; a domain module presentation override is rejected."
+    },
+    {
+      "id": "INV-203",
+      "rule": "Framework detection, technical comparison and safe reversible migration-plan drafting are internal SAFOR orchestration and do not create a HUMAN decision by themselves."
+    },
+    {
+      "id": "INV-204",
+      "rule": "A platform INFORMATIONAL_NOTICE contains at most two sentences and thirty words, hides technical identifiers and offers no choices or terminal menu."
+    },
+    {
+      "id": "INV-205",
+      "rule": "Full technical analysis, evidence and migration mappings remain retained and auditable but are shown only when the HUMAN requests Details or material safety requires disclosure."
+    },
+    {
+      "id": "INV-206",
+      "rule": "A genuine HUMAN decision may be requested only after the Decision Gate identifies non-derivable scope, material alternative, authority, risk, irreversible action or goal conflict; response compression never suppresses such a decision."
     }
   ],
   "evidencePolicy": {

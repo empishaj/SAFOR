@@ -259,13 +259,13 @@
     },
     {
       "id": "SH-20",
-      "name": "TERMINAL_MENU_CONTRACT_FAILURE",
+      "name": "HUMAN_RESPONSE_GOVERNANCE_FAILURE",
       "examples": [
-        "HUMAN-facing response has no terminal menu",
-        "multiple interaction menus appear in one HUMAN response",
-        "SAFOR-visible content appears after the terminal menu",
-        "terminal menu does not validate",
-        "contextual menu derivation fails"
+        "Interactive HUMAN response has no terminal menu or has more than one menu",
+        "Platform INFORMATIONAL_NOTICE contains a terminal menu or migration option list",
+        "Factory or Operating Model attempts to control visible response text, length or structure",
+        "Default SUMMARY exceeds the platform response budget without a Details request or material safety reason",
+        "SAFOR-visible content appears after an interactive terminal menu"
       ],
       "automaticRepair": "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE_AND_SAFE_TERMINAL_MENU",
       "defaultRetryBudget": 1,

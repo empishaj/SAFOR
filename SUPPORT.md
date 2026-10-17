@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.13.0-rc.6 is a **Release Candidate**.
+SAFOR v0.13.0-rc.7 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -57,7 +57,7 @@ Paid Factory/Operating Model access additionally requires supported entitlement 
 
 
 
-## Product paths in rc.3
+## Product paths in the current release candidate
 
 **Website** is the free supported starter:
 - `safor.factory.website-delivery@1.1.0`

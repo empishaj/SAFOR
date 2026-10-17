@@ -68,7 +68,12 @@
     "DERIVED_ARTIFACT_REGENERATION",
     "INTERNAL_STATE_TRANSITIONS",
     "TECHNICAL_IDENTIFIER_SELECTION",
-    "FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE"
+    "FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE",
+    "FRAMEWORK_DETECTION_ACKNOWLEDGEMENT",
+    "SAFE_REVERSIBLE_MIGRATION_ANALYSIS",
+    "MIGRATION_PLAN_DRAFTING",
+    "TECHNICAL_VERSION_DIGEST_AND_VALUE_STREAM_COMPARISON",
+    "PRESENTATION_FORMAT_OR_RESPONSE_LENGTH_SELECTION"
   ],
   "evaluationAlgorithm": [
     "CLASSIFY_CURRENT_PHASE",
@@ -81,7 +86,8 @@
     "APPLY_PHASE_LOAD_TARGET_AND_TEMPORARY_ESCALATION_RULES",
     "TRANSLATE_INTERNAL_TERMS_TO_HUMAN_DOMAIN_LANGUAGE",
     "REDUCE_TO_ONE_DECISION_CONTEXT_AND_MINIMUM_NECESSARY_CHOICES",
-    "ALLOW_ASK_OR_SUPPRESS_OR_REUSE"
+    "ALLOW_ASK_OR_SUPPRESS_OR_REUSE",
+    "APPLY_PLATFORM_RESPONSE_GOVERNOR_AFTER_GATE"
   ],
   "outcomes": [
     "ALLOW_ASK",
@@ -113,7 +119,9 @@
     "schedulingDefault": "NO_HUMAN_INTERACTION",
     "agentCoordinationDefault": "NO_HUMAN_INTERACTION",
     "executionDefault": "EXCEPTION_ONLY",
-    "recoveryDefault": "ESCALATION_ONLY"
+    "recoveryDefault": "ESCALATION_ONLY",
+    "frameworkDetectionDefault": "INFORMATIONAL_NOTICE_ONLY",
+    "safeMigrationPlanningDefault": "ABSORB_INTERNAL_ORCHESTRATION"
   },
   "interactionRecordRequiredFields": [
     "phase",
@@ -124,5 +132,11 @@
     "technicalDetailExposure",
     "gateOutcome",
     "reusedDecisionRef"
-  ]
+  ],
+  "platformCommunicationOwnership": {
+    "owner": "SAFOR_PLATFORM",
+    "governorRef": "interaction-model.json#platformResponseGovernor",
+    "factoryOrOperatingModelMayOverride": false,
+    "rule": "Factories and Operating Models supply domain facts, risks, evidence and legitimate decision requirements only. The SAFOR platform decides whether, how and how much is shown to the HUMAN."
+  }
 }

@@ -2,7 +2,7 @@
 
 Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**, nicht technisch analysieren wollen. Du musst keine JSON-Datei öffnen, bearbeiten oder verstehen.
 
-> Produktstatus: **SAFOR v0.13.0-rc.6 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
+> Produktstatus: **SAFOR v0.13.0-rc.7 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
 
 ## Wichtige Testgrenze
 
@@ -65,6 +65,8 @@ oder:
 Ich möchte ein Fachbuch über systemische KI-Integration für Engineering-Führungskräfte erstellen.
 ```
 
+Die sichtbare Kommunikation wird zentral durch die SAFOR-Plattform verdichtet. Factory und Operating Model liefern fachliche Fakten, dürfen aber weder die Antwortlänge noch Menüs oder technische Detailtiefe bestimmen. Reine Statusmeldungen wie eine erkannte Framework-Änderung bleiben kurz; Details erscheinen nur auf Nachfrage oder bei einer echten Entscheidung.
+
 ## 4. Daran erkennst du einen korrekten Start
 
 SAFOR muss sich in dieser Reihenfolge verhalten:
@@ -117,7 +119,7 @@ Erwartung: SAFOR lehnt den Austausch ab und behält die letzte gültige Buch-Bin
 
 ## 6. Typische Fehler vermeiden
 
-- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
+- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
 - Bearbeite die JSON-Dateien nicht. Jede Änderung kann Integritäts- oder Zugriffsprüfungen ungültig machen.
 - Verwende dein eigenes Git-Projekt. Das SAFOR-Repository ist Produktquelle, nicht Arbeitsbereich deines Vorhabens.
 - Interpretiere den öffentlichen Testzugang nicht als Kauf- oder Produktionsnachweis.

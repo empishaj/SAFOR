@@ -256,8 +256,8 @@ SAFOR now distinguishes Website creation from Software/SaaS product engineering 
 SAFOR Framework
 │
 ├── WEBSITE                         FREE_PUBLIC defaults
-│   ├── safor.factory.website-delivery@1.0.0
-│   └── safor.om.website-team@1.0.0
+│   ├── safor.factory.website-delivery@1.1.0
+│   └── safor.om.website-team@1.1.0
 │
 ├── SOFTWARE_SAAS                   COMMERCIAL
 │   ├── safor.factory.software-delivery

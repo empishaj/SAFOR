@@ -9,9 +9,10 @@
     "schemaVersion",
     "responseId",
     "phase",
+    "responseClass",
     "surface",
     "content",
-    "terminalMenu",
+    "governance",
     "renderingContract"
   ],
   "properties": {
@@ -76,7 +77,8 @@
             "type": "string"
           }
         }
-      }
+      },
+      "minItems": 1
     },
     "terminalMenu": {
       "$ref": "interaction-menu.schema.json"
@@ -85,6 +87,7 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
+        "renderMode",
         "renderOrder",
         "terminalElement",
         "exactlyOneTerminalMenu",
@@ -92,25 +95,203 @@
         "stopRenderingAfterTerminalMenu"
       ],
       "properties": {
+        "renderMode": {
+          "enum": [
+            "CONTENT_ONLY",
+            "CONTENT_THEN_MENU"
+          ]
+        },
         "renderOrder": {
-          "const": [
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "enum": [
+              "content",
+              "terminalMenu"
+            ]
+          }
+        },
+        "terminalElement": {
+          "enum": [
             "content",
             "terminalMenu"
           ]
         },
-        "terminalElement": {
-          "const": "terminalMenu"
-        },
         "exactlyOneTerminalMenu": {
-          "const": true
+          "type": "boolean"
         },
         "contentAfterTerminalElementForbidden": {
           "const": true
         },
         "stopRenderingAfterTerminalMenu": {
+          "type": "boolean"
+        }
+      }
+    },
+    "responseClass": {
+      "enum": [
+        "INFORMATIONAL_NOTICE",
+        "INTERACTIVE_CHECKPOINT",
+        "DECISION_REQUEST",
+        "BLOCKER",
+        "DETAIL_RESPONSE"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "governorId",
+        "domainOverrideApplied",
+        "decisionGateOutcome",
+        "detailsDisclosure",
+        "detailsAvailable",
+        "evidenceRetained",
+        "responseBudget"
+      ],
+      "properties": {
+        "owner": {
+          "const": "SAFOR_PLATFORM"
+        },
+        "governorId": {
+          "const": "SAFOR_PLATFORM_HUMAN_RESPONSE_GOVERNOR"
+        },
+        "domainOverrideApplied": {
+          "const": false
+        },
+        "decisionGateOutcome": {
+          "enum": [
+            "ALLOW_ASK",
+            "SUPPRESS_DERIVABLE",
+            "REUSE_EXISTING_DECISION",
+            "BLOCK_INVALID_HUMAN_DELEGATION",
+            "NOT_REQUIRED"
+          ]
+        },
+        "detailsDisclosure": {
+          "enum": [
+            "SUMMARY_ONLY",
+            "DETAILS_REQUESTED",
+            "SAFETY_REQUIRED"
+          ]
+        },
+        "detailsAvailable": {
+          "type": "boolean"
+        },
+        "evidenceRetained": {
           "const": true
+        },
+        "responseBudget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "maxSentences",
+            "maxWords"
+          ],
+          "properties": {
+            "maxSentences": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maxWords": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
         }
       }
     }
-  }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "responseClass": {
+            "const": "INFORMATIONAL_NOTICE"
+          }
+        },
+        "required": [
+          "responseClass"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "terminalMenu"
+          ]
+        },
+        "properties": {
+          "renderingContract": {
+            "properties": {
+              "renderMode": {
+                "const": "CONTENT_ONLY"
+              },
+              "renderOrder": {
+                "const": [
+                  "content"
+                ]
+              },
+              "terminalElement": {
+                "const": "content"
+              },
+              "exactlyOneTerminalMenu": {
+                "const": false
+              },
+              "stopRenderingAfterTerminalMenu": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "responseClass": {
+            "enum": [
+              "INTERACTIVE_CHECKPOINT",
+              "DECISION_REQUEST",
+              "BLOCKER",
+              "DETAIL_RESPONSE"
+            ]
+          }
+        },
+        "required": [
+          "responseClass"
+        ]
+      },
+      "then": {
+        "required": [
+          "terminalMenu"
+        ],
+        "properties": {
+          "renderingContract": {
+            "properties": {
+              "renderMode": {
+                "const": "CONTENT_THEN_MENU"
+              },
+              "renderOrder": {
+                "const": [
+                  "content",
+                  "terminalMenu"
+                ]
+              },
+              "terminalElement": {
+                "const": "terminalMenu"
+              },
+              "exactlyOneTerminalMenu": {
+                "const": true
+              },
+              "stopRenderingAfterTerminalMenu": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
 }

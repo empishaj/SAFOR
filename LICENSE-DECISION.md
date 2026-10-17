@@ -1,7 +1,7 @@
 # SAFOR Commercial Distribution Decision
 
 Decision date: **2026-10-17**
-Current implementation baseline: **SAFOR 0.13.0-rc.6**
+Current implementation baseline: **SAFOR 0.13.0-rc.7**
 
 ## Product decision
 
@@ -21,8 +21,8 @@ The HUMAN has selected a modular commercial model with an explicit boundary betw
 
 The default free Website pair is:
 
-- `safor.factory.website-delivery@1.0.0`
-- `safor.om.website-team@1.0.0`
+- `safor.factory.website-delivery@1.1.0`
+- `safor.om.website-team@1.1.0`
 
 These packages are deliberately narrower than the Software/SaaS products. They cover website intent, audience/content structure, UX, web implementation, accessibility/responsive/performance verification, publishing, post-publish observation and website outcome assessment.
 
