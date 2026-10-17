@@ -22,8 +22,8 @@
 - [x] Exactly 65 embedded Framework modules have exactly 65 recovery profiles.
 - [x] All embedded references resolve.
 - [x] WEBSITE starter catalog entries are FREE_PUBLIC.
-- [x] Website Factory default is `safor.factory.website-delivery@1.0.0`.
-- [x] Website Operating Model default is `safor.om.website-team@1.0.0`.
+- [x] Website Factory default is `safor.factory.website-delivery@1.1.0`.
+- [x] Website Operating Model default is `safor.om.website-team@1.1.0`.
 - [x] SOFTWARE_SAAS Factory is PAID_ENTITLEMENT_REQUIRED.
 - [x] SOFTWARE_SAAS Operating Model is PAID_ENTITLEMENT_REQUIRED.
 - [x] SOFTWARE_SAAS selected-package policy requires both members to be paid.
