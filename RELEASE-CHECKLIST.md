@@ -50,7 +50,7 @@
 - [x] Project/Bindings/Package Selection/Compatibility/Workspace schemas are 0.13-aware.
 - [x] Deterministic Control and Acceptance suites remain green.
 - [x] Modular package/workspace bootstrap tests pass.
-- [x] Total current unit suite: 64 tests expected; final rc.2 CI must PASS.
+- [x] Total current unit suite: 64 tests PASS.
 - [x] SH-23 forbids entitlement fabrication, paid-public resolution, workspace redirection and Local-Git bypass.
 - [x] HUMAN Decision Gate and terminal-menu contracts remain intact.
 - [x] Product licensing strategy is explicitly recorded in `LICENSE-DECISION.md`.
