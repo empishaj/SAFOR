@@ -13,6 +13,7 @@
 - Records public Software/SaaS versions through 1.6.0 as legacy disclosure rather than the current commercial package channel.
 - Adds Website scope-boundary escalation to `SOFTWARE_SAAS` when Discovery identifies application/service lifecycle requirements.
 - Adds CF-231 through CF-236 and INV-176 through INV-180 for the product split.
+- Final rc.3 branch evidence: reproducible bundle PASS, validator PASS, 65/65 recovery profiles, 63 tests PASS.
 
 
 ## 0.13.0-rc.2
