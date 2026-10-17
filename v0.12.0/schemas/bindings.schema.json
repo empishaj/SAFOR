@@ -128,32 +128,65 @@
       "$ref": "#/$defs/baseBinding"
     },
     "domainBinding": {
-      "allOf": [
-        {
-          "$ref": "#/$defs/baseBinding"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "version",
+        "sourceClass",
+        "sourceRef",
+        "sourceRevision",
+        "blobSha",
+        "snapshotRef",
+        "accessMode",
+        "entitlementEvidenceRef"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "minLength": 1
         },
-        {
-          "type": "object",
-          "properties": {
-            "accessMode": {
-              "enum": [
-                "FREE_PUBLIC",
-                "PAID_ENTITLEMENT_REQUIRED"
-              ]
-            },
-            "entitlementEvidenceRef": {
-              "type": [
-                "string",
-                "null"
-              ]
-            }
-          },
-          "required": [
-            "accessMode",
-            "entitlementEvidenceRef"
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceClass": {
+          "enum": [
+            "PUBLIC_CANONICAL_REPOSITORY",
+            "HUMAN_LOADED_PACKAGE",
+            "ENTITLED_PACKAGE_SOURCE",
+            "PROJECT_PINNED_SNAPSHOT"
+          ]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceRevision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshotRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessMode": {
+          "enum": [
+            "FREE_PUBLIC",
+            "PAID_ENTITLEMENT_REQUIRED"
+          ]
+        },
+        "entitlementEvidenceRef": {
+          "type": [
+            "string",
+            "null"
           ]
         }
-      ]
+      }
     }
   }
 }
