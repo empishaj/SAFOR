@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.2**
+Current target: **v0.13.0-rc.3**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -12,16 +12,16 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Framework/domain-package separation | PASS by builder/validator |
 | Paid Factory/OM content excluded from Framework bundle | PASS |
 | Package catalog metadata | PASS |
-| Software/Website FREE_PUBLIC starter defaults 1.6.0 | PASS by unit/validator |
-| Website quality/security shift-left | PASS by Factory contract/unit/validator |
-| Continuous verification before independent verification | PASS by Factory contract/unit/validator |
-| Supply-chain evidence (dependency inventory/SBOM/provenance) | PASS by Factory contract/unit/validator |
-| Risk-based technical review policy | PASS by Factory contract/unit |
-| Release/Deployment/Activation separation | PASS by Factory contract/unit/validator |
-| Operate/Observe + incident recovery | PASS by Factory contract/unit/validator |
-| Post-release vulnerability response | PASS by Factory contract/unit |
-| Outcome measurement contract | PASS by Factory contract/unit/validator |
-| Mandatory vs conditional capability/authority contract | PASS by runtime/unit/validator |
+| WEBSITE FREE_PUBLIC Factory + Operating Model defaults | PASS by unit/validator |
+| Website Factory scope boundary | PASS by unit/validator |
+| Website accessibility/responsive/performance verification | PASS by unit/validator |
+| Website public-discoverability check | PASS by unit |
+| Website → Software/SaaS escalation boundary | PASS by unit/validator |
+| SOFTWARE_SAAS Factory access is paid | PASS by catalog/runtime/validator |
+| SOFTWARE_SAAS Operating Model access is paid | PASS by catalog/runtime/validator |
+| SOFTWARE_SAAS requires both paid selected packages | PASS by runtime/unit/validator |
+| SOFTWARE_SAAS requires two independent entitlements | PASS by unit/policy |
+| Legacy public Software/SaaS 1.6 disclosure isolated from commercial source | PASS by catalog/validator |
 | Factory independently replaceable from Operating Model | PASS by unit/validator |
 | Operating Model independently replaceable from Factory | PASS by unit/validator |
 | Mixed FREE_PUBLIC/PAID package pair | PASS by unit |
@@ -51,7 +51,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **64 PASS in CI** |
+| Total Python unit tests | **final rc.3 CI evidence required** |
 | Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
