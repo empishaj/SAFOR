@@ -1,0 +1,84 @@
+name: Materialize SAFOR rc.8 HUMAN Notice
+
+on:
+  push:
+    branches:
+      - safor/human-notice-100-conformance
+    paths:
+      - .github/workflows/materialize-rc8.yml
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout implementation branch
+        uses: actions/checkout@v4
+        with:
+          ref: safor/human-notice-100-conformance
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Reconstruct verified implementation script
+        shell: bash
+        run: |
+          set -euo pipefail
+          cat .rc8/part* > /tmp/rc8-payload.b64
+          echo "244dbf9c48589920b7e0c73034da3c20a087eb00505f49d911c83c863b42b909  /tmp/rc8-payload.b64" | sha256sum -c -
+          base64 --decode /tmp/rc8-payload.b64 | gzip --decompress > /tmp/implement_human_notice_rc8.py
+          echo "7a8cf5c96fce8f31f49fa43723dcb3a9fb6c417732848692fe1c08705d3f25f6  /tmp/implement_human_notice_rc8.py" | sha256sum -c -
+          python -m py_compile /tmp/implement_human_notice_rc8.py
+
+      - name: Apply canonical rc.8 sources and contracts
+        run: python /tmp/implement_human_notice_rc8.py
+
+      - name: Rebuild generic Framework distribution
+        run: python tools/build_bundle.py
+
+      - name: Rebuild Website domain Framework
+        run: python tools/build_domain_framework.py --profile WEBSITE --output SAFOR-FRAMEWORK-WEBSITE.json
+
+      - name: Rebuild SaaS evaluation Framework
+        run: python tools/build_domain_framework.py --profile SAAS --output SAFOR-FRAMEWORK-SAAS.json
+
+      - name: Rebuild Book evaluation Framework
+        run: python tools/build_domain_framework.py --profile BOOK_CREATION --output SAFOR-FRAMEWORK-BOOK-CREATION.json
+
+      - name: Verify reproducible generic Framework
+        run: python tools/build_bundle.py --check
+
+      - name: Verify reproducible domain Frameworks
+        run: python tools/build_domain_framework.py --check
+
+      - name: Validate SAFOR distribution
+        run: python tools/validate_safor.py
+
+      - name: Run complete regression suite
+        run: python -m unittest discover -s tests -v
+
+      - name: Remove one-shot materialization files
+        shell: bash
+        run: |
+          rm -rf .rc8
+          rm -f .github/workflows/materialize-rc8.yml
+
+      - name: Commit validated rc.8 implementation
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git diff --cached --check
+          if git diff --cached --quiet; then
+            echo "No validated changes to commit."
+            exit 1
+          fi
+          git commit -m "SAFOR rc.8: implement HUMAN GO agent orchestration contracts"
+          git push origin HEAD:safor/human-notice-100-conformance
