@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.11.0-rc.2
+
+- Extends the Deterministic Control Kernel through Work Item acceptance.
+- Adds immutable hash-bound Acceptance Contracts whose approved criteria map to typed EVIDENCE, REVIEW and AUTHORITY requirements.
+- Adds replayable acceptance ledger records for provider evidence, independent review and authority decisions.
+- Enforces review independence, exact authority matching, duplicate record identity protection and explicit authority rejection blocking.
+- Makes E05 deterministic Acceptance Model evaluation while retaining the bound Factory evidence contract as domain input.
+- Adds SH-22, INV-136 through INV-147, CF-176 through CF-193 and exact 58-module recovery coverage.
+- Expands the deterministic runtime suite to 25 passing tests, including full acceptance replay, missing evidence/authority, self-review, contract tampering and rejection cases.
+
+
 ## 0.11.0-rc.1
 
 - Introduces the Deterministic Control Kernel: probabilistic work is separated from authoritative governance transitions.
