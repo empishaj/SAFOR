@@ -10,8 +10,10 @@ if str(ROOT) not in sys.path:
 
 from runtime.bootstrap_policy import (
     compute_domain_package_digest,
+    evaluate_active_conditional_requirements,
     evaluate_domain_package_pair,
     validate_domain_package,
+    validate_factory_contract_consistency,
 )
 
 errors = []
@@ -41,8 +43,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.1":
-    fail(f"VERSION must be 0.13.0-rc.1, got {version}.")
+if version != "0.13.0-rc.2":
+    fail(f"VERSION must be 0.13.0-rc.2, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
@@ -311,8 +313,8 @@ for creation_type, profile in profiles_by_type.items():
             fail(f"{creation_type} selection policy {rule} must be true.")
 
 # Free starter artifacts must be valid for 0.13 and mutually compatible.
-free_factory = load_json("v0.13.0/packages/factories/software-delivery/1.5.0/package.json")
-free_om = load_json("v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json")
+free_factory = load_json("v0.13.0/packages/factories/software-delivery/1.6.0/package.json")
+free_om = load_json("v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json")
 for package in (free_factory, free_om):
     result = validate_domain_package(package, version, "SOFTWARE_WEBSITE")
     if not result["valid"]:
@@ -320,6 +322,102 @@ for package in (free_factory, free_om):
 pair = evaluate_domain_package_pair(free_factory, free_om, version, "SOFTWARE_WEBSITE")
 if not pair["compatible"]:
     fail(f"Free Website Factory/Operating Model pair is incompatible: {pair}")
+
+# Website Factory 1.6 factual/lifecycle contract.
+factory_consistency = validate_factory_contract_consistency(free_factory)
+if not factory_consistency["valid"]:
+    fail(f"Website Factory 1.6 contract is internally inconsistent: {factory_consistency['errors']}")
+
+if free_factory.get("version") != "1.6.0":
+    fail("Website starter Factory must be 1.6.0.")
+if free_om.get("version") != "1.6.0":
+    fail("Website starter Operating Model must be 1.6.0.")
+
+factory_counterpart = free_factory.get("compatibility", {}).get("counterpart", {})
+if "strategic_investment" in factory_counterpart.get("requiredAuthorities", []):
+    fail("Website Factory must not hard-require unused strategic_investment authority.")
+if set(factory_counterpart.get("requiredAuthorities", [])) != {
+    "product_scope_approval", "business_outcome_acceptance"
+}:
+    fail("Website Factory mandatory authority set mismatch.")
+
+conditional_contract = free_factory.get("model", {}).get("compatibilityContract", {})
+conditional_authorities = {
+    x.get("authorityId") for x in conditional_contract.get("conditionalAuthorities", [])
+}
+if conditional_authorities != {
+    "architecture_exception_approval", "quality_risk_decision", "production_release_approval"
+}:
+    fail("Website Factory conditional authority set mismatch.")
+
+active_release = evaluate_active_conditional_requirements(
+    free_factory, free_om, {"PRODUCTION_AND_MATERIAL_RISK"}
+)
+if not active_release["satisfied"]:
+    fail(f"Default Website OM cannot satisfy conditional release authority: {active_release}")
+
+active_recovery = evaluate_active_conditional_requirements(
+    free_factory, free_om, {"INCIDENT_OR_SERVICE_DEGRADATION"}
+)
+if not active_recovery["satisfied"]:
+    fail(f"Default Website OM cannot satisfy incident recovery capabilities: {active_recovery}")
+
+nodes = {
+    node.get("id"): node
+    for node in free_factory.get("model", {}).get("flowGraph", {}).get("nodes", [])
+}
+expected_types = {
+    "SW-02": "QUALITY_SECURITY_REQUIREMENTS",
+    "SW-04": "IMPLEMENTATION_BATCH",
+    "SW-05": "INDEPENDENT_VERIFICATION",
+    "SW-06": "SECURITY_VERIFICATION",
+    "SW-08": "DEPLOYMENT",
+    "SW-09": "ACTIVATION",
+    "SW-10": "OPERATE_OBSERVE",
+    "SW-11": "INCIDENT_RECOVERY",
+    "SW-12": "VULNERABILITY_RESPONSE",
+    "SW-13": "OUTCOME_ASSESSMENT",
+}
+for node_id, expected_type in expected_types.items():
+    if nodes.get(node_id, {}).get("workItemType") != expected_type:
+        fail(f"Website Factory {node_id} must be {expected_type}.")
+
+implementation_outputs = set(nodes.get("SW-04", {}).get("produces", []))
+for artifact in (
+    "BUILD_EVIDENCE", "DEPENDENCY_INVENTORY", "SBOM",
+    "BUILD_PROVENANCE", "CONTINUOUS_VERIFICATION_EVIDENCE",
+):
+    if artifact not in implementation_outputs:
+        fail(f"Website Factory implementation must produce {artifact}.")
+
+quality = free_factory.get("model", {}).get("qualityPlanningContract", {})
+if quality.get("referenceModel") != "ISO_IEC_25010_2023_ALIGNED":
+    fail("Website Factory must declare ISO/IEC 25010:2023-aligned quality planning.")
+if len(quality.get("characteristics", [])) != 9:
+    fail("Website Factory quality planning must expose nine product-quality characteristics.")
+
+security = free_factory.get("model", {}).get("securityEngineeringContract", {})
+if security.get("shiftLeft") is not True or security.get("requirementsRequired") is not True:
+    fail("Website Factory security engineering must be shift-left and requirements-driven.")
+if security.get("secureBuild", {}).get("provenanceRequired") is not True:
+    fail("Website Factory secure build must require provenance.")
+
+review = free_factory.get("model", {}).get("reviewPolicy", {}).get("levels", {})
+if review.get("LOW", {}).get("independentReviewRequired") is not False:
+    fail("LOW-risk Website work must not universally require independent review.")
+for level in ("STANDARD", "ELEVATED", "CRITICAL"):
+    if review.get(level, {}).get("independentReviewRequired") is not True:
+        fail(f"{level} Website work must require independent review.")
+
+outcome = free_factory.get("model", {}).get("outcomeModel", {}).get("measurementContract", {})
+required_measurement_fields = {
+    "metric", "baselineOrBaselineResolution", "targetOrDecisionThreshold",
+    "observationWindow", "dataSource", "decisionRule", "uncertaintyHandling",
+}
+if not required_measurement_fields.issubset(set(outcome.get("requiredFields", []))):
+    fail("Website Factory outcome measurement contract is incomplete.")
+if "INCONCLUSIVE" not in outcome.get("allowedDecisions", []):
+    fail("Website Factory outcome model must permit INCONCLUSIVE when evidence is insufficient.")
 
 # Distribution / entitlement semantics.
 distribution = modules.get("packageDistribution", {}).get("content", {})
