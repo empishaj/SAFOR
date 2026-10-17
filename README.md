@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories and Operating Models.
 
-> Current maturity: **v0.13.0-rc.5 — Release Candidate**
+> Current maturity: **v0.13.0-rc.6 — Release Candidate**
 
 ## Product paths
 
@@ -21,8 +21,8 @@ The Website starter is deliberately narrower than the Software/SaaS path. If Web
 SAFOR stays internally modular, but users load a domain-specific single JSON file:
 
 - `SAFOR-FRAMEWORK-WEBSITE.json` — public/free; embeds Website Factory 1.1.0 and Website Operating Model 1.1.0.
-- `SAFOR-FRAMEWORK-SAAS.json` — commercial SaaS distribution; built with protected licensed Software Factory + SaaS Operating Model inputs.
-- `SAFOR-FRAMEWORK-BOOK-CREATION.json` — commercial Book distribution; built with protected licensed Book Factory + Book Operating Model inputs.
+- `SAFOR-FRAMEWORK-SAAS.json` — public **test/evaluation** SaaS distribution with paid-mode test modules.
+- `SAFOR-FRAMEWORK-BOOK-CREATION.json` — public **test/evaluation** Book distribution with paid-mode test modules.
 
 All three use the same SAFOR kernel. Embedded Factory and Operating Model are replaceable defaults. Premium replacements are adopted only when active domain, package families and bidirectional Factory↔Operating-Model compatibility all pass.
 
@@ -31,8 +31,8 @@ All three use the same SAFOR kernel. Embedded Factory and Operating Model are re
 ## Start here
 
 1. Read [QUICKSTART.md](QUICKSTART.md).
-2. Load `SAFOR-FRAMEWORK.json` or the versioned rc.3 artifact into a compatible chat.
-3. Choose **Website**, **Software / SaaS** or **Buch**.
+2. Load the domain file directly: `SAFOR-FRAMEWORK-WEBSITE.json`, `SAFOR-FRAMEWORK-SAAS.json`, or `SAFOR-FRAMEWORK-BOOK-CREATION.json`.
+3. The loaded domain file already fixes Website, SaaS or Book; SAFOR does not ask again.
 4. Website resolves its free Factory/Operating Model defaults from public canonical SAFOR Git.
 5. Software/SaaS requires a licensed Software Factory **and** licensed SaaS Engineering Operating Model; each package needs its own verified entitlement.
 6. Choose where the HUMAN project lives: **REMOTE_GIT** or **LOCAL_GIT**.
@@ -46,7 +46,7 @@ All three use the same SAFOR kernel. Embedded Factory and Operating Model are re
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.13.0-rc.5.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.6.json` — versioned public Framework release candidate.
 - `SAFOR-FRAMEWORK.json` — current Framework alias.
 - `v0.13.0/ packages/factories/website-delivery/1.1.0/package.json` — free Website Factory.
 - `v0.13.0/packages/operating-models/website-team/1.1.0/package.json` — free Website Operating Model.
@@ -80,3 +80,18 @@ The required chain is:
 Strict entitlement verification requires an explicit evaluation timestamp, matching HUMAN/organization subject, trusted issuer, trusted entitlement verifier, matching SKU/package/version and valid entitlement interval.
 
 An `ENTITLED_PACKAGE_SOURCE` additionally supplies `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` binding the entitlement ID, exact package/version and artifact digest through a trusted delivery verifier. A HUMAN may still manually load a licensed paid package, but manual loading never bypasses entitlement verification.
+
+
+## Testing paid domain Frameworks
+
+For rc.6, the two paid domains are intentionally committed as public test/evaluation artifacts:
+
+- `SAFOR-FRAMEWORK-SAAS.json`
+- `SAFOR-FRAMEWORK-BOOK-CREATION.json`
+
+Their embedded modules still declare `PAID_ENTITLEMENT_REQUIRED`. For end-to-end evaluation, use the matching test access bundle:
+
+- SaaS: `SAFOR-TEST-ACCESS-SAAS.json`
+- Book: `SAFOR-TEST-ACCESS-BOOK-CREATION.json`
+
+These test access bundles authorize only the explicit `*-test.1` package versions and set `productionAuthorization=false`. They are not a production license and do not change the production catalog, which still resolves paid package content through `ENTITLED_PACKAGE_SOURCE`.
