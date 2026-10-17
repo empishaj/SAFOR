@@ -1,11 +1,11 @@
 {
   "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
-  "schemaVersion": "0.12.0",
-  "bundleVersion": "0.12.0-rc.1",
+  "schemaVersion": "0.13.0",
+  "bundleVersion": "0.13.0-rc.1",
   "definitionId": "safor-framework",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
-  "purpose": "Public SAFOR Framework distribution. Domain Factories and Operating Models are independently resolved and pinned.",
+  "purpose": "Public SAFOR Framework distribution. Factory and Operating Model are independently selectable, chat-loadable domain packages with per-package access, integrity and compatibility binding.",
   "entrypoint": "embeddedModules.kernel.content",
   "distributionMode": "FRAMEWORK_PLUS_EXTERNAL_DOMAIN_PACKAGES",
   "runtimeContract": {
@@ -17,19 +17,28 @@
     "canonicalRepository": "empishaj/SAFOR",
     "canonicalBranch": "main",
     "domainPackagePolicy": {
+      "artifactFormat": "SAFOR_DOMAIN_PACKAGE",
       "embeddedDomainPackageContent": false,
       "freePublicSourceClass": "PUBLIC_CANONICAL_REPOSITORY",
       "paidPublicResolutionForbidden": true,
-      "paidRequiresVerifiedEntitlement": true
+      "paidRequiresVerifiedEntitlement": true,
+      "accessEvaluatedPerSelectedPackage": true,
+      "independentFactoryOverrideAllowed": true,
+      "independentOperatingModelOverrideAllowed": true,
+      "mixedFreeAndPaidPairAllowed": true,
+      "entitlementEvidenceExternal": true,
+      "declaredContractDigestRequired": true,
+      "compatibilityDecisionRequiredBeforeBinding": true
     },
     "initializationOrder": [
       "VERIFY_MODULE_RECOVERY_BASELINE",
       "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
       "SELECT_CREATION_TYPE",
-      "RESOLVE_PACKAGE_ACCESS_PROFILE",
-      "RESOLVE_REQUIRED_FACTORY_AND_OPERATING_MODEL",
+      "RESOLVE_PACKAGE_SELECTION_PROFILE",
+      "RESOLVE_SELECTED_FACTORY_AND_OPERATING_MODEL_ACCESS",
       "VERIFY_PACKAGE_INTEGRITY_AND_ACCESS",
       "VERIFY_FACTORY_OPERATING_MODEL_COMPATIBILITY",
+      "MATERIALIZE_PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
       "SELECT_PROJECT_WORKSPACE_TYPE",
       "VERIFY_PROJECT_WORKSPACE_CAPABILITIES",
       "SELECT_OR_DEFINE_HUMAN_PROJECT",
@@ -41,20 +50,24 @@
       {
         "id": "SOFTWARE_WEBSITE",
         "label": "Software / Website",
-        "accessMode": "FREE_PUBLIC",
-        "packageResolution": "PUBLIC_CANONICAL_REPOSITORY_OR_HUMAN_LOADED"
+        "defaultFactoryPackageId": "safor.factory.software-delivery",
+        "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+        "defaultAccess": "FREE_PUBLIC",
+        "independentOverridesAllowed": true
       },
       {
         "id": "BOOK",
         "label": "Buch",
-        "accessMode": "PAID_ENTITLEMENT_REQUIRED",
-        "packageResolution": "HUMAN_LOADED_OR_ENTITLED_SOURCE_ONLY"
+        "defaultFactoryPackageId": "safor.factory.book-production",
+        "defaultOperatingModelPackageId": "safor.om.book-authoring",
+        "defaultAccess": "PAID_ENTITLEMENT_REQUIRED",
+        "independentOverridesAllowed": true
       }
     ],
     "projectWorkspaceRule": "All project-specific work stays in a HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. The canonical SAFOR repository and package sources are never project targets.",
     "controlWorkspaceRule": "REMOTE_GIT uses a HUMAN-controlled separate safor-memory; LOCAL_GIT uses a Git-tracked MASTER-only .safor/ control root.",
-    "entitlementRule": "Commercial entitlement gates package use only. It never grants organizational authority, provider rights, execution mandate or project scope.",
-    "factoryBindingRule": "Discovery, Planning and domain Evidence use only the resolved, validated and immutable-pinned Factory/Operating Model pair.",
+    "entitlementRule": "Commercial entitlement gates each selected paid package independently. It remains external to the package JSON and never grants organizational authority, provider rights, execution mandate or project scope.",
+    "factoryBindingRule": "Discovery, Planning and domain Evidence use only the independently selected, access-verified, digest-verified, COMPATIBLE and immutable-pinned Factory/Operating Model pair.",
     "chatUiRule": "Use chat-native UI only.",
     "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
     "humanCognitiveLoadRule": "Derive/reuse before asking; keep package mechanics and workspace internals behind Details unless HUMAN action is required.",
@@ -71,6 +84,19 @@
     "role": "PUBLIC_FRAMEWORK_AND_FREE_PACKAGE_SOURCE",
     "independentFromHumanProjectContext": true,
     "projectTargetForbidden": true
+  },
+  "controlWorkspacePolicy": {
+    "REMOTE_GIT": {
+      "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
+      "pattern": "{selectedOwner}/safor-memory",
+      "humanControlled": true
+    },
+    "LOCAL_GIT": {
+      "strategy": "LOCAL_MASTER_CONTROL_ROOT",
+      "root": ".safor/",
+      "humanControlled": true,
+      "masterOnly": true
+    }
   },
   "referenceResolution": {
     "initialization-model.json": "initialization",
@@ -131,32 +157,21 @@
     "package-catalog.json": "packageCatalog",
     "schemas/package-catalog.schema.json": "schemaPackageCatalog",
     "schemas/entitlement.schema.json": "schemaEntitlement",
-    "schemas/workspace-binding.schema.json": "schemaWorkspaceBinding"
+    "schemas/workspace-binding.schema.json": "schemaWorkspaceBinding",
+    "composable-package-model.json": "composablePackageModel",
+    "schemas/domain-package.schema.json": "schemaDomainPackage",
+    "schemas/package-selection.schema.json": "schemaPackageSelection",
+    "schemas/package-compatibility-decision.schema.json": "schemaPackageCompatibilityDecision"
   },
   "integrityManifest": {
-    "agentJobContract": {
-      "sourcePath": "v0.10.0/agent-job-contract-model.json",
-      "sourceBlobSha": "c8c5b88bbaac2cc682c11c4ad99d1ebf421d2227",
-      "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
-    },
-    "agentWorkspace": {
-      "sourcePath": "v0.10.0/agent-workspace-model.json",
-      "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
-      "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
-    },
-    "conformance": {
-      "sourcePath": "v0.12.0/conformance.json",
-      "sourceBlobSha": "8a2b92678cef0efad96731bd8d668dcefedefdad",
-      "selfHealingProfileId": "MRP-CONFORMANCE"
-    },
-    "humanDecisionGate": {
-      "sourcePath": "v0.10.0/human-decision-gate-model.json",
-      "sourceBlobSha": "212eab209d0c8f4c906bd762e040a6a960e24d8e",
-      "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
+    "kernel": {
+      "sourcePath": "v0.13.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "3106533fe1444ff46fd68880003a976c4b31e7bd",
+      "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
-      "sourcePath": "v0.12.0/initialization-model.json",
-      "sourceBlobSha": "7cc90a2dc97b1157562a834ea20ea0c99c67a3b8",
+      "sourcePath": "v0.13.0/initialization-model.json",
+      "sourceBlobSha": "230c70352122d29a2ce227dd3fb5abe182c8cb1c",
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
@@ -164,24 +179,44 @@
       "sourceBlobSha": "f42af39509bc253a623ee2bab4d1254a3346abf4",
       "selfHealingProfileId": "MRP-INTERACTION"
     },
-    "kernel": {
-      "sourcePath": "v0.12.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "3cb958ec1b72a1ae8011b4f8152c86ee9ceb64c3",
-      "selfHealingProfileId": "MRP-KERNEL"
+    "humanDecisionGate": {
+      "sourcePath": "v0.10.0/human-decision-gate-model.json",
+      "sourceBlobSha": "212eab209d0c8f4c906bd762e040a6a960e24d8e",
+      "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
+    },
+    "selfHealing": {
+      "sourcePath": "v0.12.0/self-healing-model.json",
+      "sourceBlobSha": "034015a929104f8cc5fb14741e0406e514d1c4b3",
+      "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "moduleSelfHealing": {
-      "sourcePath": "v0.12.0/module-self-healing-model.json",
-      "sourceBlobSha": "4b6b57ebdb14be2e94e1d3b22112357a5f83f147",
+      "sourcePath": "v0.13.0/module-self-healing-model.json",
+      "sourceBlobSha": "8d9228c4950626852fd269d34293f80139f839c0",
       "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
+    },
+    "agentWorkspace": {
+      "sourcePath": "v0.10.0/agent-workspace-model.json",
+      "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
+      "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
+    },
+    "agentJobContract": {
+      "sourcePath": "v0.10.0/agent-job-contract-model.json",
+      "sourceBlobSha": "c8c5b88bbaac2cc682c11c4ad99d1ebf421d2227",
+      "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
     },
     "multiAgentScheduler": {
       "sourcePath": "v0.10.0/multi-agent-scheduler-model.json",
       "sourceBlobSha": "4a77be0d6dc2f0790ff774586d451ce94265c9e0",
       "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
     },
+    "repositoryPolicy": {
+      "sourcePath": "v0.12.0/repository-policy.json",
+      "sourceBlobSha": "32eede36f8191978836d10ff9075203b0c3795ed",
+      "selfHealingProfileId": "MRP-REPOSITORY_POLICY"
+    },
     "packageRegistry": {
-      "sourcePath": "v0.12.0/package-registry.json",
-      "sourceBlobSha": "82f45d59c8a89da54e208181c4cc9ee6ab1da0f3",
+      "sourcePath": "v0.13.0/package-registry.json",
+      "sourceBlobSha": "62c669e796ad7f7938eecf7bf364d70b79f93bff",
       "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
     "providerGithub": {
@@ -194,75 +229,55 @@
       "sourceBlobSha": "3135462dd37b8adcf46c1ac2e4549471af7cd6f8",
       "selfHealingProfileId": "MRP-PROVIDER_GITLAB"
     },
-    "repositoryPolicy": {
-      "sourcePath": "v0.12.0/repository-policy.json",
-      "sourceBlobSha": "32eede36f8191978836d10ff9075203b0c3795ed",
-      "selfHealingProfileId": "MRP-REPOSITORY_POLICY"
-    },
-    "schemaAgentIdentity": {
-      "sourcePath": "v0.10.0/schemas/agent-identity.schema.json",
-      "sourceBlobSha": "efe38c948233123541c9e05ede5757d9487fb191",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
-    },
-    "schemaAgentInboxIndex": {
-      "sourcePath": "v0.10.0/schemas/agent-inbox-index.schema.json",
-      "sourceBlobSha": "8252a69e600a445bd829484c646b57da865273b6",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
-    },
-    "schemaAgentJob": {
-      "sourcePath": "v0.10.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "4131f05fab04f2441d193fad668cb807ff1da04c",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
-    },
-    "schemaAgentJobState": {
-      "sourcePath": "v0.10.0/schemas/agent-job-state.schema.json",
-      "sourceBlobSha": "10c50014edaeb18f5205c09c2c37b93483968bca",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
-    },
-    "schemaAgentRegistry": {
-      "sourcePath": "v0.10.0/schemas/agent-registry.schema.json",
-      "sourceBlobSha": "c64e832b256a04868d69faa63c07ce841df69e3f",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
-    },
-    "schemaAgentResult": {
-      "sourcePath": "v0.10.0/schemas/agent-result.schema.json",
-      "sourceBlobSha": "e2b64b7a933838c7604a635a870f6f836803b361",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
-    },
-    "schemaAgentState": {
-      "sourcePath": "v0.10.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "56cc1ca26b451751e03a3af12dabc00cf757e066",
-      "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
-    },
-    "schemaBindings": {
-      "sourcePath": "v0.12.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "6a6b9c7e39e2fd740291c7f7f167604f98a6fd37",
-      "selfHealingProfileId": "MRP-SCHEMA_BINDINGS"
+    "schemaPackageManifest": {
+      "sourcePath": "v0.10.0/schemas/package-manifest.schema.json",
+      "sourceBlobSha": "c5e6b01273d899ce9f5a59200e4912340ffe1fe9",
+      "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_MANIFEST"
     },
     "schemaControlState": {
       "sourcePath": "v0.10.0/schemas/control-state.schema.json",
       "sourceBlobSha": "8ce7b025eada4f8d5c8e645d9825a7e0a301e76a",
       "selfHealingProfileId": "MRP-SCHEMA_CONTROL_STATE"
     },
+    "schemaValueStreamState": {
+      "sourcePath": "v0.10.0/schemas/value-stream-state.schema.json",
+      "sourceBlobSha": "3b3d23836eb707da5893cc59bab7484b0adc8fed",
+      "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
+    },
+    "schemaExecutionState": {
+      "sourcePath": "v0.10.0/schemas/execution-state.schema.json",
+      "sourceBlobSha": "0a734cf43d9d03fd07aedbe0260fa6c5f7498d59",
+      "selfHealingProfileId": "MRP-SCHEMA_EXECUTION_STATE"
+    },
+    "schemaWorkItem": {
+      "sourcePath": "v0.10.0/schemas/work-item.schema.json",
+      "sourceBlobSha": "9b8f55e009358aa1848ccc0cfd58cc54a623c796",
+      "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
+    },
+    "schemaProject": {
+      "sourcePath": "v0.12.0/schemas/project.schema.json",
+      "sourceBlobSha": "7b226965e1af762e1e1853d7e3a7d681321934aa",
+      "selfHealingProfileId": "MRP-SCHEMA_PROJECT"
+    },
+    "schemaBindings": {
+      "sourcePath": "v0.13.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "0ae3faf9c86527bcc009b17946357f0f65e5ef35",
+      "selfHealingProfileId": "MRP-SCHEMA_BINDINGS"
+    },
     "schemaDecisionRecord": {
       "sourcePath": "v0.10.0/schemas/decision-record.schema.json",
       "sourceBlobSha": "a8452a5a9dbc50f7bae821cbd53859f89bbe861e",
       "selfHealingProfileId": "MRP-SCHEMA_DECISION_RECORD"
-    },
-    "schemaDispatchWave": {
-      "sourcePath": "v0.10.0/schemas/dispatch-wave.schema.json",
-      "sourceBlobSha": "dd072998a7bc7bd20f7e8c19fbbcc6067bea1a24",
-      "selfHealingProfileId": "MRP-SCHEMA_DISPATCH_WAVE"
     },
     "schemaEvidenceRecord": {
       "sourcePath": "v0.10.0/schemas/evidence-record.schema.json",
       "sourceBlobSha": "9a79b165fa7468024db44127eb1aee1f75094307",
       "selfHealingProfileId": "MRP-SCHEMA_EVIDENCE_RECORD"
     },
-    "schemaExecutionState": {
-      "sourcePath": "v0.10.0/schemas/execution-state.schema.json",
-      "sourceBlobSha": "0a734cf43d9d03fd07aedbe0260fa6c5f7498d59",
-      "selfHealingProfileId": "MRP-SCHEMA_EXECUTION_STATE"
+    "schemaInteractionMenu": {
+      "sourcePath": "v0.10.0/schemas/interaction-menu.schema.json",
+      "sourceBlobSha": "d05d780591998d4fe72a586e0b34d3f3416f620a",
+      "selfHealingProfileId": "MRP-SCHEMA_INTERACTION_MENU"
     },
     "schemaHumanCognitiveLoadPolicy": {
       "sourcePath": "v0.10.0/schemas/human-cognitive-load-policy.schema.json",
@@ -274,55 +289,70 @@
       "sourceBlobSha": "7ff846e2d1ae5f7ad116e97bff9868445da8e805",
       "selfHealingProfileId": "MRP-SCHEMA_HUMAN_DECISION_GATE"
     },
-    "schemaInteractionMenu": {
-      "sourcePath": "v0.10.0/schemas/interaction-menu.schema.json",
-      "sourceBlobSha": "d05d780591998d4fe72a586e0b34d3f3416f620a",
-      "selfHealingProfileId": "MRP-SCHEMA_INTERACTION_MENU"
+    "schemaSelfHealingRecord": {
+      "sourcePath": "v0.10.0/schemas/self-healing-record.schema.json",
+      "sourceBlobSha": "fd415135509248033628f28da0a7bb57f26af446",
+      "selfHealingProfileId": "MRP-SCHEMA_SELF_HEALING_RECORD"
     },
     "schemaModuleRecoveryProfile": {
       "sourcePath": "v0.10.0/schemas/module-recovery-profile.schema.json",
       "sourceBlobSha": "e043ce2c3248ce41dbbbefaf6ad5d72c8790faeb",
       "selfHealingProfileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE"
     },
-    "schemaPackageManifest": {
-      "sourcePath": "v0.10.0/schemas/package-manifest.schema.json",
-      "sourceBlobSha": "c5e6b01273d899ce9f5a59200e4912340ffe1fe9",
-      "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_MANIFEST"
+    "schemaAgentRegistry": {
+      "sourcePath": "v0.10.0/schemas/agent-registry.schema.json",
+      "sourceBlobSha": "c64e832b256a04868d69faa63c07ce841df69e3f",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
     },
-    "schemaProject": {
-      "sourcePath": "v0.12.0/schemas/project.schema.json",
-      "sourceBlobSha": "7b226965e1af762e1e1853d7e3a7d681321934aa",
-      "selfHealingProfileId": "MRP-SCHEMA_PROJECT"
+    "schemaAgentIdentity": {
+      "sourcePath": "v0.10.0/schemas/agent-identity.schema.json",
+      "sourceBlobSha": "efe38c948233123541c9e05ede5757d9487fb191",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
     },
-    "schemaResourceLease": {
-      "sourcePath": "v0.10.0/schemas/resource-lease.schema.json",
-      "sourceBlobSha": "87afb5676adf3125d50f979468b0cbba4328dd04",
-      "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
+    "schemaAgentInboxIndex": {
+      "sourcePath": "v0.10.0/schemas/agent-inbox-index.schema.json",
+      "sourceBlobSha": "8252a69e600a445bd829484c646b57da865273b6",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
+    },
+    "schemaAgentState": {
+      "sourcePath": "v0.10.0/schemas/agent-state.schema.json",
+      "sourceBlobSha": "56cc1ca26b451751e03a3af12dabc00cf757e066",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
+    },
+    "schemaAgentJob": {
+      "sourcePath": "v0.10.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "4131f05fab04f2441d193fad668cb807ff1da04c",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
+    },
+    "schemaAgentJobState": {
+      "sourcePath": "v0.10.0/schemas/agent-job-state.schema.json",
+      "sourceBlobSha": "10c50014edaeb18f5205c09c2c37b93483968bca",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
+    },
+    "schemaAgentResult": {
+      "sourcePath": "v0.10.0/schemas/agent-result.schema.json",
+      "sourceBlobSha": "e2b64b7a933838c7604a635a870f6f836803b361",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
     },
     "schemaSchedulerState": {
       "sourcePath": "v0.10.0/schemas/scheduler-state.schema.json",
       "sourceBlobSha": "f33152aa4d4ef95da12ab44b4df31b8256e50097",
       "selfHealingProfileId": "MRP-SCHEMA_SCHEDULER_STATE"
     },
-    "schemaSelfHealingRecord": {
-      "sourcePath": "v0.10.0/schemas/self-healing-record.schema.json",
-      "sourceBlobSha": "fd415135509248033628f28da0a7bb57f26af446",
-      "selfHealingProfileId": "MRP-SCHEMA_SELF_HEALING_RECORD"
+    "schemaDispatchWave": {
+      "sourcePath": "v0.10.0/schemas/dispatch-wave.schema.json",
+      "sourceBlobSha": "dd072998a7bc7bd20f7e8c19fbbcc6067bea1a24",
+      "selfHealingProfileId": "MRP-SCHEMA_DISPATCH_WAVE"
     },
-    "schemaValueStreamState": {
-      "sourcePath": "v0.10.0/schemas/value-stream-state.schema.json",
-      "sourceBlobSha": "3b3d23836eb707da5893cc59bab7484b0adc8fed",
-      "selfHealingProfileId": "MRP-SCHEMA_VALUE_STREAM_STATE"
+    "schemaResourceLease": {
+      "sourcePath": "v0.10.0/schemas/resource-lease.schema.json",
+      "sourceBlobSha": "87afb5676adf3125d50f979468b0cbba4328dd04",
+      "selfHealingProfileId": "MRP-SCHEMA_RESOURCE_LEASE"
     },
-    "schemaWorkItem": {
-      "sourcePath": "v0.10.0/schemas/work-item.schema.json",
-      "sourceBlobSha": "9b8f55e009358aa1848ccc0cfd58cc54a623c796",
-      "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
-    },
-    "selfHealing": {
-      "sourcePath": "v0.12.0/self-healing-model.json",
-      "sourceBlobSha": "034015a929104f8cc5fb14741e0406e514d1c4b3",
-      "selfHealingProfileId": "MRP-SELF_HEALING"
+    "conformance": {
+      "sourcePath": "v0.12.0/conformance.json",
+      "sourceBlobSha": "8a2b92678cef0efad96731bd8d668dcefedefdad",
+      "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "schemaHumanResponse": {
       "sourcePath": "v0.10.0/schemas/human-response.schema.json",
@@ -405,13 +435,13 @@
       "selfHealingProfileId": "MRP-SCHEMA_AUTHORITY_DECISION"
     },
     "packageDistribution": {
-      "sourcePath": "v0.12.0/package-distribution-model.json",
-      "sourceBlobSha": "76a3373c3a4d4bcf1b36c8b8aac7194ebeedb6f2",
+      "sourcePath": "v0.13.0/package-distribution-model.json",
+      "sourceBlobSha": "857f634e331b887b1bf415703d3a660d8eb3cbf2",
       "selfHealingProfileId": "MRP-PACKAGE_DISTRIBUTION"
     },
     "commercialEntitlement": {
-      "sourcePath": "v0.12.0/commercial-entitlement-model.json",
-      "sourceBlobSha": "b873705d4d50d727a96ec023655bad4fcacfa0eb",
+      "sourcePath": "v0.13.0/commercial-entitlement-model.json",
+      "sourceBlobSha": "795447c1a2faf6afb2cc34901eeb731883590e78",
       "selfHealingProfileId": "MRP-COMMERCIAL_ENTITLEMENT"
     },
     "workspaceModel": {
@@ -420,52 +450,73 @@
       "selfHealingProfileId": "MRP-WORKSPACE_MODEL"
     },
     "packageCatalog": {
-      "sourcePath": "v0.12.0/package-catalog.json",
-      "sourceBlobSha": "117e9417caef34e50d6cf1ff2a5df04b09ccd896",
+      "sourcePath": "v0.13.0/package-catalog.json",
+      "sourceBlobSha": "99e1634b95ec52b0a3a0d495b1c0a5fd08ffea94",
       "selfHealingProfileId": "MRP-PACKAGE_CATALOG"
     },
     "schemaPackageCatalog": {
-      "sourcePath": "v0.12.0/schemas/package-catalog.schema.json",
-      "sourceBlobSha": "1231955e9af1d18f7547abf81f7e04bbbef7ae2f",
+      "sourcePath": "v0.13.0/schemas/package-catalog.schema.json",
+      "sourceBlobSha": "89ff0e0337f946fa8a5d6182ce87dd6e1062ec53",
       "selfHealingProfileId": "MRP-SCHEMA_PACKAGE_CATALOG"
     },
     "schemaEntitlement": {
-      "sourcePath": "v0.12.0/schemas/entitlement.schema.json",
-      "sourceBlobSha": "f1de582fbefd96f92845c32472664a225ad92d05",
+      "sourcePath": "v0.13.0/schemas/entitlement.schema.json",
+      "sourceBlobSha": "b54998100f1354c0e2c96ece21ea4737565545f9",
       "selfHealingProfileId": "MRP-SCHEMA_ENTITLEMENT"
     },
     "schemaWorkspaceBinding": {
       "sourcePath": "v0.12.0/schemas/workspace-binding.schema.json",
       "sourceBlobSha": "c3de770117e58a2b2b0c8c9d1a5046fc073b0860",
       "selfHealingProfileId": "MRP-SCHEMA_WORKSPACE_BINDING"
+    },
+    "composablePackageModel": {
+      "sourcePath": "v0.13.0/composable-package-model.json",
+      "sourceBlobSha": "378a093f6579eee1d56d019ee85a0a63ae34e77c",
+      "selfHealingProfileId": "MRP-COMPOSABLE-PACKAGE-MODEL"
+    },
+    "schemaDomainPackage": {
+      "sourcePath": "v0.13.0/schemas/domain-package.schema.json",
+      "sourceBlobSha": "e1fa647dbc0bdbeb7b6cab8929fb38f3c9594a7f",
+      "selfHealingProfileId": "MRP-SCHEMA-DOMAIN-PACKAGE"
+    },
+    "schemaPackageSelection": {
+      "sourcePath": "v0.13.0/schemas/package-selection.schema.json",
+      "sourceBlobSha": "72b1de8d637c361da7b9e9f57c7150d89e3e4345",
+      "selfHealingProfileId": "MRP-SCHEMA-PACKAGE-SELECTION"
+    },
+    "schemaPackageCompatibilityDecision": {
+      "sourcePath": "v0.13.0/schemas/package-compatibility-decision.schema.json",
+      "sourceBlobSha": "c34246898cd9d5ab649e5e8195ba0998fd8c9775",
+      "selfHealingProfileId": "MRP-SCHEMA-PACKAGE-COMPATIBILITY-DECISION"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.12.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "3cb958ec1b72a1ae8011b4f8152c86ee9ceb64c3",
+      "sourcePath": "v0.13.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "3106533fe1444ff46fd68880003a976c4b31e7bd",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.12.0",
-        "kernelVersion": "0.12.0",
+        "schemaVersion": "0.13.0",
+        "kernelVersion": "0.13.0",
         "definitionId": "safor-master-kernel",
-        "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-        "purpose": "Portable SAFOR Framework kernel for modular Factory/Operating Model loading, commercial entitlement gating, HUMAN-owned remote/local Git workspaces and deterministic governance.",
+        "maturity": "REFERENCE_BASELINE_S3_COMPOSABLE_DOMAIN_PACKAGES",
+        "purpose": "Portable SAFOR Framework kernel for independently selectable chat-loadable Factory and Operating Model JSON packages, per-package entitlement gating, deterministic compatibility binding, HUMAN-owned remote/local Git workspaces and deterministic governance.",
         "bootstrapContract": {
           "singleFileEntry": true,
           "entryFile": "SAFOR-FRAMEWORK.json",
           "userExperience": [
-            "HUMAN loads the SAFOR Framework into a compatible chat.",
-            "SAFOR verifies Framework/recovery/deterministic-control integrity before project work.",
-            "HUMAN chooses a creation type.",
-            "SAFOR resolves required Factory and Operating Model independently from project location.",
-            "The Software / Website starter pair is FREE_PUBLIC and may be resolved automatically from the canonical public SAFOR Git at immutable revision/blob.",
-            "Paid creation paths require HUMAN-loaded or entitled Factory/Operating Model packages plus independently verified entitlement evidence.",
-            "After package integrity/access/compatibility pass, HUMAN chooses REMOTE_GIT or LOCAL_GIT for the project.",
-            "REMOTE_GIT binds a HUMAN-controlled GitHub/GitLab project repository and separate HUMAN-controlled safor-memory.",
-            "LOCAL_GIT binds a HUMAN-selected local Git repository and protects .safor/ as MASTER-only control state.",
-            "SAFOR product/package repositories are read-only sources and never implicit project targets."
+            "HUMAN loads the SAFOR Framework JSON into a compatible chat.",
+            "SAFOR verifies Framework, recovery and deterministic-control integrity before project work.",
+            "HUMAN chooses a creation type; the creation profile supplies default Factory and Operating Model candidates, not an immutable pair.",
+            "Each selected Factory and Operating Model is an independent SAFOR_DOMAIN_PACKAGE JSON artifact.",
+            "The Software / Website starter Factory and starter Operating Model are FREE_PUBLIC and may be resolved automatically from the canonical public SAFOR Git at immutable revision/blob.",
+            "HUMAN may independently replace the default Factory, the default Operating Model, or both with compatible alternatives.",
+            "Package access is resolved independently for Factory and Operating Model; a mixed FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED pair is valid when every paid package has verified entitlement.",
+            "Package possession never proves entitlement; entitlement evidence remains external to the package JSON.",
+            "SAFOR verifies package shape, declared contract digest, Framework range, creation-type support and Factory/Operating Model compatibility before binding.",
+            "After package selection and compatibility are materialized, HUMAN chooses REMOTE_GIT or LOCAL_GIT for the project.",
+            "SAFOR product/package repositories remain read-only sources and never implicit project targets."
           ],
           "noImplicitExecution": true,
           "noImplicitAuthorization": true,
@@ -548,7 +599,15 @@
           "humanOwnsProjectWorkspace": true,
           "localGitWorkspaceSupported": true,
           "projectWorkspaceSeparateFromPackageSource": true,
-          "frameworkRepositoryNeverProjectTarget": true
+          "frameworkRepositoryNeverProjectTarget": true,
+          "domainPackagesAreChatLoadableJson": true,
+          "factoryAndOperatingModelIndependentlySelectable": true,
+          "creationProfilesDefineDefaultsNotLockedPairs": true,
+          "packageAccessResolvedPerSelectedPackage": true,
+          "mixedFreeAndPaidPackagePairsAllowed": true,
+          "domainPackageEntitlementEvidenceExternal": true,
+          "domainPackageIntegrityRequired": true,
+          "packageSelectionRequiresCompatibilityDecision": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -563,6 +622,10 @@
             {
               "id": "OPERATING_MODEL",
               "responsibility": "Roles, mandates, capability ownership, decision rights, human gates, separation of duties and escalation."
+            },
+            {
+              "id": "COMPOSABLE_DOMAIN_PACKAGE_SELECTION",
+              "responsibility": "Resolve creation-profile defaults plus optional HUMAN Factory/Operating Model overrides, verify each package independently and materialize one compatibility decision before immutable binding."
             },
             {
               "id": "PACKAGE_DISTRIBUTION",
@@ -650,7 +713,12 @@
             "Free-text or qualitative acceptance criteria may not be directly marked PASS by an LLM; they must resolve to typed EVIDENCE, REVIEW or AUTHORITY requirements in the approved Acceptance Contract.",
             "Agent acceptanceSelfCheck is advisory only and cannot satisfy required independent review or authority approval.",
             "A Work Item may become ACCEPTED only through the deterministic acceptance transition after all requirements of its hash-valid ACTIVE Acceptance Contract are satisfied.",
-            "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED."
+            "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED.",
+            "Creation profiles define default Factory and Operating Model package IDs; they do not lock the project to one commercial bundle.",
+            "Factory and Operating Model access are evaluated independently; FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may form one pair when every paid package is independently entitled.",
+            "A HUMAN may replace only the Factory, only the Operating Model, or both; every override remains subject to package integrity, Framework/creation-type scope and pair compatibility.",
+            "Possession of a domain-package JSON artifact never establishes commercial entitlement; entitlement evidence remains external and independently verifiable.",
+            "No selected Factory/Operating Model pair becomes authoritative until a package-selection record and COMPATIBLE compatibility decision are materialized and referenced by project bindings."
           ]
         },
         "packageSystem": {
@@ -666,13 +734,15 @@
           "entitlementModelRef": "commercial-entitlement-model.json",
           "bindingResolutionOrder": [
             "HUMAN.CREATION_TYPE_SELECTION",
-            "PACKAGE_CATALOG.creationProfiles",
-            "PACKAGE_ACCESS_AND_ENTITLEMENT",
-            "PACKAGE_SOURCE_RESOLUTION",
-            "PACKAGE_INTEGRITY_AND_KERNEL_COMPATIBILITY",
-            "FACTORY.requiredCapabilities",
-            "OPERATING_MODEL.capabilityBindings",
-            "FACTORY_OPERATING_MODEL_COMPATIBILITY",
+            "PACKAGE_CATALOG.creationProfiles.DEFAULTS",
+            "HUMAN_OPTIONAL_FACTORY_AND_OPERATING_MODEL_OVERRIDES",
+            "FACTORY_PACKAGE_ACCESS_AND_ENTITLEMENT",
+            "OPERATING_MODEL_PACKAGE_ACCESS_AND_ENTITLEMENT",
+            "DOMAIN_PACKAGE_SHAPE_AND_INTEGRITY",
+            "DOMAIN_PACKAGE_FRAMEWORK_AND_CREATION_TYPE_COMPATIBILITY",
+            "FACTORY_OPERATING_MODEL_CAPABILITY_AND_AUTHORITY_COMPATIBILITY",
+            "PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+            "IMMUTABLE_PACKAGE_BINDINGS",
             "PROJECT_WORKSPACE_SELECTION",
             "PROJECT_INSTANCE.actorAssignments",
             "ACTUAL_HOST_RIGHTS"
@@ -685,13 +755,27 @@
             "validateRequiredCapabilities": true,
             "rejectFactoryRoleReferences": true,
             "rejectOperatingModelFlowOwnership": true,
-            "creationProfileDeterminesRequiredPackageIds": true,
             "freeWebsiteMayAutoResolveFromPublicCanonicalRepo": true,
             "paidPackagesRequireVerifiedEntitlement": true,
             "paidPackageContentForbiddenInPublicFramework": true,
             "entitlementNeverGrantsAuthority": true,
-            "packageSourceNeverProjectWorkspace": true
-          }
+            "packageSourceNeverProjectWorkspace": true,
+            "creationProfileDefinesDefaultPackageIds": true,
+            "factoryOverrideAllowed": true,
+            "operatingModelOverrideAllowed": true,
+            "packageAccessResolvedPerSelectedPackage": true,
+            "mixedFreeAndPaidPackagePairsAllowed": true,
+            "paidOverrideRequiresExplicitHumanApproval": true,
+            "domainPackageEntitlementEvidenceExternal": true,
+            "domainPackageContractDigestRequired": true,
+            "domainPackageFrameworkRangeRequired": true,
+            "domainPackageCreationTypeSupportRequired": true,
+            "packagePairCompatibilityDecisionRequired": true
+          },
+          "domainPackageSchemaRef": "schemas/domain-package.schema.json",
+          "selectionSchemaRef": "schemas/package-selection.schema.json",
+          "compatibilityDecisionSchemaRef": "schemas/package-compatibility-decision.schema.json",
+          "composablePackageModelRef": "composable-package-model.json"
         },
         "projectMaterialization": {
           "root": "projects/{projectSlug}/",
@@ -857,7 +941,10 @@
           "authorityDecision": "schemas/authority-decision.schema.json",
           "packageCatalog": "schemas/package-catalog.schema.json",
           "entitlement": "schemas/entitlement.schema.json",
-          "workspaceBinding": "schemas/workspace-binding.schema.json"
+          "workspaceBinding": "schemas/workspace-binding.schema.json",
+          "domainPackage": "schemas/domain-package.schema.json",
+          "packageSelection": "schemas/package-selection.schema.json",
+          "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json"
         },
         "controlPlane": {
           "startActionId": "K00",
@@ -2157,6 +2244,46 @@
           {
             "id": "INV-165",
             "rule": "Project/control data remain HUMAN-owned whether remote or local; SAFOR does not require project artifacts to be stored in an OpenAI- or SAFOR-owned repository."
+          },
+          {
+            "id": "INV-166",
+            "rule": "Every selected Factory and Operating Model is represented as an independently loadable SAFOR_DOMAIN_PACKAGE JSON artifact."
+          },
+          {
+            "id": "INV-167",
+            "rule": "A Creation Profile defines default Factory and Operating Model candidates but MUST NOT make either package non-replaceable."
+          },
+          {
+            "id": "INV-168",
+            "rule": "Factory access and Operating Model access are evaluated independently for the actually selected package IDs and versions."
+          },
+          {
+            "id": "INV-169",
+            "rule": "A mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED Factory/Operating Model pair is permitted only when each paid package has its own verified entitlement."
+          },
+          {
+            "id": "INV-170",
+            "rule": "Commercial entitlement evidence is external to SAFOR_DOMAIN_PACKAGE content; possession or modification of package JSON cannot self-authorize package use."
+          },
+          {
+            "id": "INV-171",
+            "rule": "Every SAFOR_DOMAIN_PACKAGE must pass declared-contract SHA-256 integrity verification before it may be bound."
+          },
+          {
+            "id": "INV-172",
+            "rule": "Every selected domain package must explicitly support the active Framework version and Creation Type."
+          },
+          {
+            "id": "INV-173",
+            "rule": "Factory and Operating Model may be upgraded or replaced independently, but the resulting pair must pass capability, authority and declared counterpart compatibility checks."
+          },
+          {
+            "id": "INV-174",
+            "rule": "Project bindings reference a materialized package selection and a COMPATIBLE package-compatibility decision before domain execution begins."
+          },
+          {
+            "id": "INV-175",
+            "rule": "The free Software / Website starter path remains usable without commercial entitlement for its default Factory and Operating Model, while paid alternatives remain independently purchasable."
           }
         ],
         "evidencePolicy": {
@@ -2221,14 +2348,14 @@
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.12.0",
+            "root": "v0.13.0",
             "registry": "package-registry.json",
             "catalog": "package-catalog.json"
           },
           "frameworkArtifact": "SAFOR-FRAMEWORK.json",
-          "resolutionPolicy": "Framework modules are embedded. FREE_PUBLIC domain packages resolve from the canonical public repository at immutable revision/blob or from explicit HUMAN-loaded artifacts. Paid package content resolves only from HUMAN-loaded or entitled sources with verified entitlement.",
+          "resolutionPolicy": "Framework modules are embedded. Creation profiles supply defaults only. Each selected Factory and Operating Model is independently resolved, access-checked, integrity-verified and pinned. FREE_PUBLIC packages may resolve from the canonical public repository at immutable revision/blob or explicit HUMAN-loaded artifacts. PAID_ENTITLEMENT_REQUIRED packages resolve only from HUMAN-loaded or entitled sources with independently verified entitlement.",
           "publicPaidContentForbidden": true,
-          "offlineFallback": "HUMAN may load Factory/Operating Model artifacts directly. Paid artifacts still require independently verifiable entitlement evidence."
+          "offlineFallback": "HUMAN may load a Factory JSON and/or Operating Model JSON directly. Each paid artifact still requires independently verifiable external entitlement evidence, and every selected pair must pass compatibility checks."
         },
         "kernelDecisionTypes": [
           "PROVIDER_SELECTION",
@@ -2310,19 +2437,20 @@
         "packageDistributionModelRef": "package-distribution-model.json",
         "commercialEntitlementModelRef": "commercial-entitlement-model.json",
         "workspaceModelRef": "workspace-model.json",
-        "packageCatalogRef": "package-catalog.json"
+        "packageCatalogRef": "package-catalog.json",
+        "composablePackageModelRef": "composable-package-model.json"
       },
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.12.0/initialization-model.json",
-      "sourceBlobSha": "7cc90a2dc97b1157562a834ea20ea0c99c67a3b8",
+      "sourcePath": "v0.13.0/initialization-model.json",
+      "sourceBlobSha": "230c70352122d29a2ce227dd3fb5abe182c8cb1c",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.12.0",
-        "id": "SAFOR-GUIDED-INITIALIZATION",
-        "purpose": "Initialize Framework, package access and compatibility first, then bind a HUMAN-owned remote or local Git project workspace and control workspace.",
+        "schemaVersion": "0.13.0",
+        "id": "safor-initialization-0.13.0",
+        "purpose": "Initialize SAFOR with independently selectable Factory and Operating Model JSON packages, per-package access control, deterministic integrity/compatibility binding and HUMAN-owned project workspaces.",
         "entryBehavior": {
           "autoStartAfterBootstrapLoad": true,
           "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
@@ -2357,6 +2485,8 @@
             "checks": [
               "DETERMINISTIC_CONTROL_MODULES_PRESENT_AND_PINNED",
               "ACCEPTANCE_MODEL_AND_SCHEMAS_PRESENT_AND_PINNED",
+              "COMPOSABLE_PACKAGE_MODEL_PRESENT",
+              "DOMAIN_PACKAGE_AND_SELECTION_SCHEMAS_PRESENT",
               "PACKAGE_DISTRIBUTION_MODEL_PRESENT",
               "ENTITLEMENT_MODEL_PRESENT",
               "WORKSPACE_MODEL_PRESENT",
@@ -2384,31 +2514,31 @@
                 }
               ]
             },
-            "rule": "Creation type determines required package IDs, not project location and not organizational authority."
+            "rule": "Creation type determines default package candidates only; Factory and Operating Model remain independently selectable and do not grant organizational authority."
           },
           {
             "id": "INIT-02",
-            "operation": "RESOLVE_PACKAGE_ACCESS_PROFILE",
-            "title": "Arbeitsmodell prüfen",
+            "operation": "RESOLVE_PACKAGE_SELECTION_PROFILE",
+            "title": "Factory und Operating Model auswählen",
             "modelRefs": [
               "package-catalog.json",
-              "package-distribution-model.json",
-              "commercial-entitlement-model.json"
+              "composable-package-model.json"
             ],
             "outcomes": [
-              "FREE_PUBLIC_RESOLUTION",
-              "PAID_PACKAGE_ACCESS_CHECK"
+              "DEFAULT_PACKAGE_CANDIDATES_RESOLVED",
+              "HUMAN_PACKAGE_OVERRIDE_REQUIRED"
             ],
-            "rule": "Never infer paid entitlement from package possession or HUMAN statement."
+            "rule": "Resolve profile defaults first. HUMAN may independently override Factory and/or Operating Model; paid overrides require explicit HUMAN approval."
           },
           {
             "id": "INIT-03",
-            "operation": "RESOLVE_REQUIRED_FACTORY_AND_OPERATING_MODEL",
-            "title": "Factory und Operating Model laden",
+            "operation": "RESOLVE_SELECTED_FACTORY_AND_OPERATING_MODEL_ACCESS",
+            "title": "Paket-Zugriff getrennt prüfen",
             "rules": [
-              "Explicit HUMAN-loaded valid package may be used.",
-              "SOFTWARE_WEBSITE may auto-resolve its FREE_PUBLIC Factory/OM from canonical public SAFOR Git.",
-              "BOOK may resolve only from HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE with verified entitlement.",
+              "Resolve access separately for selected Factory and selected Operating Model.",
+              "FREE_PUBLIC selected packages may resolve from canonical public SAFOR Git or an explicit HUMAN-loaded artifact.",
+              "PAID_ENTITLEMENT_REQUIRED selected packages require HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus independently verified entitlement for that exact package/version.",
+              "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is allowed when the paid member is entitled.",
               "Paid package model content may not be read from the public canonical repository."
             ],
             "failOutcomes": {
@@ -2420,28 +2550,49 @@
           {
             "id": "INIT-04",
             "operation": "VERIFY_PACKAGE_INTEGRITY_AND_ACCESS",
-            "title": "Pakete verifizieren",
+            "title": "Domain-Pakete verifizieren",
             "checks": [
-              "EXACT_PACKAGE_ID_VERSION",
-              "IMMUTABLE_SOURCE_REVISION",
-              "BLOB_IDENTITY",
-              "KERNEL_COMPATIBILITY",
+              "SAFOR_DOMAIN_PACKAGE_SHAPE",
+              "PACKAGE_ID_KIND_MATCH",
+              "DECLARED_CONTRACT_SHA256",
+              "IMMUTABLE_SOURCE_REVISION_OR_TRUSTED_ARTIFACT_VERIFICATION",
+              "FRAMEWORK_VERSION_RANGE",
+              "CREATION_TYPE_SUPPORT",
               "ACCESS_MODE",
               "ENTITLEMENT_WHEN_REQUIRED"
             ],
-            "rule": "A package is not bindable until source, integrity and access evidence are proven."
+            "rule": "Factory and Operating Model are verified independently and are not bindable until artifact integrity, compatibility scope and access evidence are proven."
           },
           {
             "id": "INIT-05",
             "operation": "VERIFY_FACTORY_OPERATING_MODEL_COMPATIBILITY",
-            "title": "Arbeitsmodell abstimmen",
+            "title": "Factory und Operating Model kompatibel binden",
             "checks": [
+              "FACTORY_KIND_VALID",
+              "OPERATING_MODEL_KIND_VALID",
               "FACTORY_REQUIRED_CAPABILITIES_COVERED_BY_OPERATING_MODEL",
-              "REQUIRED_AUTHORITIES_RESOLVABLE",
+              "FACTORY_REQUIRED_AUTHORITIES_COVERED_BY_OPERATING_MODEL",
+              "DECLARED_COUNTERPART_RESTRICTIONS_SATISFIED",
               "NO_FACTORY_ROLE_ID_COUPLING",
               "NO_OPERATING_MODEL_FLOW_OWNERSHIP"
             ],
-            "failOutcome": "PACKAGE_COMBINATION_INCOMPATIBLE"
+            "failOutcome": "FACTORY_OPERATING_MODEL_INCOMPATIBLE"
+          },
+          {
+            "id": "INIT-05A",
+            "operation": "MATERIALIZE_PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+            "title": "Arbeitsmodell festschreiben",
+            "schemas": [
+              "schemas/package-selection.schema.json",
+              "schemas/package-compatibility-decision.schema.json"
+            ],
+            "requires": [
+              "PACKAGE_ACCESS_RESOLVED",
+              "DOMAIN_PACKAGES_INTEGRITY_VERIFIED",
+              "FACTORY_OPERATING_MODEL_COMPATIBLE"
+            ],
+            "outcome": "DOMAIN_PACKAGE_BINDING_READY",
+            "rule": "Persist the selected Factory and Operating Model plus a COMPATIBLE decision before immutable project bindings are materialized."
           },
           {
             "id": "INIT-06",
@@ -2575,12 +2726,12 @@
             "completionOutcome": "INITIALIZATION_COMPLETE"
           }
         ],
-        "packageModelRefs": {
-          "registry": "package-registry.json",
-          "catalog": "package-catalog.json",
-          "distribution": "package-distribution-model.json",
-          "entitlement": "commercial-entitlement-model.json"
-        },
+        "packageModelRefs": [
+          "package-catalog.json",
+          "package-distribution-model.json",
+          "commercial-entitlement-model.json",
+          "composable-package-model.json"
+        ],
         "workspaceModelRef": "workspace-model.json",
         "humanDecisionGateModelRef": "human-decision-gate-model.json",
         "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
@@ -4254,13 +4405,13 @@
     },
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
-      "sourcePath": "v0.12.0/module-self-healing-model.json",
-      "sourceBlobSha": "4b6b57ebdb14be2e94e1d3b22112357a5f83f147",
+      "sourcePath": "v0.13.0/module-self-healing-model.json",
+      "sourceBlobSha": "8d9228c4950626852fd269d34293f80139f839c0",
       "content": {
         "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
-        "schemaVersion": "0.12.0",
-        "id": "SAFOR-MODULE-WIDE-SELF-HEALING",
-        "purpose": "Provide one explicit, bounded recovery profile for every embedded SAFOR module so failures are detected and repaired according to module authority, derivability and risk without semantic invention.",
+        "schemaVersion": "0.13.0",
+        "id": "safor-module-self-healing-0.13.0",
+        "purpose": "Bounded recovery coverage for every embedded SAFOR 0.13 Framework module, including composable domain-package selection and schemas.",
         "coverageContract": {
           "exactCoverageRequired": true,
           "oneProfilePerEmbeddedModule": true,
@@ -7279,6 +7430,192 @@
               ],
               "target": "STOP"
             }
+          },
+          {
+            "profileId": "MRP-COMPOSABLE-PACKAGE-MODEL",
+            "moduleKey": "composablePackageModel",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.composablePackageModel + integrityManifest.composablePackageModel",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "PACKAGE_SELECTION_POLICY_FAILURE",
+              "MIXED_ACCESS_MODE_POLICY_FAILURE",
+              "PAIR_COMPATIBILITY_POLICY_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_PACKAGE_SELECTION_POLICY"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_ENTITLEMENT",
+              "SILENTLY_CHANGE_HUMAN_PACKAGE_SELECTION",
+              "BYPASS_PAIR_COMPATIBILITY",
+              "EXPAND_PACKAGE_ACCESS",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_COMMERCIAL_OR_WORKSPACE_AUTHORITY_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "PACKAGE_WORKSPACE_POLICY_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "MODULE_MATCHES_EXPECTED_BLOB_AND_COMPOSABLE_PACKAGE_POLICY_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "COMMERCIAL_OR_WORKSPACE_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA-DOMAIN-PACKAGE",
+            "moduleKey": "schemaDomainPackage",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaDomainPackage + integrityManifest.schemaDomainPackage",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "DOMAIN_PACKAGE_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_DOMAIN_PACKAGE"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_ENTITLEMENT",
+              "REWRITE_PACKAGE_MODEL",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_DOMAIN_PACKAGE_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA-PACKAGE-SELECTION",
+            "moduleKey": "schemaPackageSelection",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaPackageSelection + integrityManifest.schemaPackageSelection",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "PACKAGE_SELECTION_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_PACKAGE_SELECTION"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "CHANGE_HUMAN_SELECTION",
+              "INVENT_ENTITLEMENT",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_PACKAGE_SELECTION_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA-PACKAGE-COMPATIBILITY-DECISION",
+            "moduleKey": "schemaPackageCompatibilityDecision",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaPackageCompatibilityDecision + integrityManifest.schemaPackageCompatibilityDecision",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "PACKAGE_COMPATIBILITY_DECISION_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_PACKAGE_COMPATIBILITY_DECISION"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "FORCE_COMPATIBLE_OUTCOME",
+              "INVENT_CAPABILITY_OR_AUTHORITY",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_PACKAGE_COMPATIBILITY_DECISION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
           }
         ]
       },
@@ -8052,29 +8389,29 @@
     },
     "packageRegistry": {
       "key": "packageRegistry",
-      "sourcePath": "v0.12.0/package-registry.json",
-      "sourceBlobSha": "82f45d59c8a89da54e208181c4cc9ee6ab1da0f3",
+      "sourcePath": "v0.13.0/package-registry.json",
+      "sourceBlobSha": "62c669e796ad7f7938eecf7bf364d70b79f93bff",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
-        "schemaVersion": "0.12.0",
+        "schemaVersion": "0.13.0",
         "status": "FRAMEWORK_REGISTRY",
         "catalogRef": "package-catalog.json",
         "technicalPackages": [
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "accessMode": "FREE_PUBLIC",
             "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-            "path": "v0.10.0/packages/operating-models/saas-engineering/1.4.0/package.json"
+            "path": "v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json"
           },
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.4.0",
+            "version": "1.5.0",
             "accessMode": "FREE_PUBLIC",
             "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-            "path": "v0.10.0/packages/factories/software-delivery/1.4.0/package.json"
+            "path": "v0.13.0/packages/factories/software-delivery/1.5.0/package.json"
           },
           {
             "packageId": "safor.provider.github",
@@ -8113,21 +8450,19 @@
           {
             "creationType": "SOFTWARE_WEBSITE",
             "label": "Software / Website",
-            "accessMode": "FREE_PUBLIC",
-            "factoryPackageId": "safor.factory.software-delivery",
-            "operatingModelPackageId": "safor.om.saas-engineering",
-            "resolutionPolicy": "AUTO_RESOLVE_PUBLIC_FREE_IF_NOT_EXPLICITLY_LOADED"
+            "defaultFactoryPackageId": "safor.factory.software-delivery",
+            "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+            "resolutionPolicy": "DEFAULTS_FREE_PUBLIC_WITH_INDEPENDENT_HUMAN_OVERRIDES"
           },
           {
             "creationType": "BOOK",
             "label": "Buch",
-            "accessMode": "PAID_ENTITLEMENT_REQUIRED",
-            "factoryPackageId": "safor.factory.book-production",
-            "operatingModelPackageId": "safor.om.book-authoring",
-            "resolutionPolicy": "REQUIRE_HUMAN_LOADED_OR_ENTITLED_SOURCE"
+            "defaultFactoryPackageId": "safor.factory.book-production",
+            "defaultOperatingModelPackageId": "safor.om.book-authoring",
+            "resolutionPolicy": "DEFAULTS_PAID_WITH_INDEPENDENT_HUMAN_OVERRIDES"
           }
         ],
-        "selectionRule": "HUMAN selects creation type. SAFOR resolves the declared Factory/Operating Model pair subject to access, entitlement, integrity and compatibility. Project workspace selection is a later independent decision."
+        "selectionRule": "HUMAN selects creation type. SAFOR derives default Factory/Operating Model candidates, permits independent compatible overrides, resolves access and entitlement per selected package, verifies artifact integrity and pair compatibility, then pins the approved selection. Project workspace selection remains an independent later decision."
       },
       "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
@@ -9823,12 +10158,12 @@
     },
     "schemaBindings": {
       "key": "schemaBindings",
-      "sourcePath": "v0.12.0/schemas/bindings.schema.json",
-      "sourceBlobSha": "6a6b9c7e39e2fd740291c7f7f167604f98a6fd37",
+      "sourcePath": "v0.13.0/schemas/bindings.schema.json",
+      "sourceBlobSha": "0ae3faf9c86527bcc009b17946357f0f65e5ef35",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://safor.dev/schemas/0.12.0/bindings.schema.json",
-        "title": "SAFOR Project Bindings 0.12.0",
+        "$id": "https://safor.dev/schemas/0.13.0/bindings.schema.json",
+        "title": "SAFOR Project Bindings 0.13.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -9836,6 +10171,8 @@
           "schemaVersion",
           "revision",
           "kernel",
+          "packageSelectionRef",
+          "compatibilityDecisionRef",
           "operatingModel",
           "factory",
           "providerAdapters",
@@ -9847,14 +10184,22 @@
             "const": "SAFOR_PROJECT_BINDINGS"
           },
           "schemaVersion": {
-            "const": "0.12.0"
+            "const": "0.13.0"
           },
           "revision": {
             "type": "integer",
             "minimum": 1
           },
           "kernel": {
-            "$ref": "#/$defs/kernelBinding"
+            "$ref": "#/$defs/baseBinding"
+          },
+          "packageSelectionRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "compatibilityDecisionRef": {
+            "type": "string",
+            "minLength": 1
           },
           "operatingModel": {
             "$ref": "#/$defs/domainBinding"
@@ -9865,7 +10210,7 @@
           "providerAdapters": {
             "type": "array",
             "items": {
-              "$ref": "#/$defs/providerBinding"
+              "$ref": "#/$defs/baseBinding"
             }
           },
           "workspaceBindingRef": {
@@ -9927,7 +10272,8 @@
                   "PUBLIC_CANONICAL_REPOSITORY",
                   "HUMAN_LOADED_PACKAGE",
                   "ENTITLED_PACKAGE_SOURCE",
-                  "PROJECT_PINNED_SNAPSHOT"
+                  "PROJECT_PINNED_SNAPSHOT",
+                  "EMBEDDED_FRAMEWORK"
                 ]
               },
               "sourceRef": {
@@ -9948,34 +10294,39 @@
               }
             }
           },
-          "kernelBinding": {
-            "$ref": "#/$defs/baseBinding"
-          },
-          "providerBinding": {
-            "$ref": "#/$defs/baseBinding"
-          },
           "domainBinding": {
             "type": "object",
             "additionalProperties": false,
             "required": [
               "packageId",
               "version",
+              "artifactFormat",
+              "artifactSchemaVersion",
               "sourceClass",
               "sourceRef",
               "sourceRevision",
               "blobSha",
               "snapshotRef",
+              "contentDigest",
               "accessMode",
-              "entitlementEvidenceRef"
+              "entitlementEvidenceRef",
+              "selectionOrigin",
+              "integrityVerificationRef"
             ],
             "properties": {
               "packageId": {
                 "type": "string",
-                "minLength": 1
+                "pattern": "^safor\\.(factory|om)\\."
               },
               "version": {
                 "type": "string",
                 "minLength": 1
+              },
+              "artifactFormat": {
+                "const": "SAFOR_DOMAIN_PACKAGE"
+              },
+              "artifactSchemaVersion": {
+                "const": "0.13.0"
               },
               "sourceClass": {
                 "enum": [
@@ -10001,6 +10352,10 @@
                 "type": "string",
                 "minLength": 1
               },
+              "contentDigest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
               "accessMode": {
                 "enum": [
                   "FREE_PUBLIC",
@@ -10012,6 +10367,16 @@
                   "string",
                   "null"
                 ]
+              },
+              "selectionOrigin": {
+                "enum": [
+                  "DEFAULT_PROFILE",
+                  "HUMAN_OVERRIDE"
+                ]
+              },
+              "integrityVerificationRef": {
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -17939,13 +18304,13 @@
     },
     "packageDistribution": {
       "key": "packageDistribution",
-      "sourcePath": "v0.12.0/package-distribution-model.json",
-      "sourceBlobSha": "76a3373c3a4d4bcf1b36c8b8aac7194ebeedb6f2",
+      "sourcePath": "v0.13.0/package-distribution-model.json",
+      "sourceBlobSha": "857f634e331b887b1bf415703d3a660d8eb3cbf2",
       "content": {
         "format": "SAFOR_PACKAGE_DISTRIBUTION_MODEL",
-        "schemaVersion": "0.12.0",
+        "schemaVersion": "0.13.0",
         "id": "safor-package-distribution",
-        "purpose": "Separate public Framework distribution from independently loadable free and commercial Factory/Operating Model packages.",
+        "purpose": "Separate public Framework distribution from independently selectable, chat-loadable Factory and Operating Model JSON packages with per-package access and immutable compatibility binding.",
         "principles": {
           "frameworkDoesNotOwnDomainPackages": true,
           "paidContentExcludedFromPublicFramework": true,
@@ -17953,7 +18318,14 @@
           "freePackagesMayResolveFromCanonicalPublicRepo": true,
           "loadedPackagesPinnedBeforeUse": true,
           "packageSourceNeverImplicitProjectWorkspace": true,
-          "entitlementSeparateFromOrganizationalAuthority": true
+          "entitlementSeparateFromOrganizationalAuthority": true,
+          "factoryAndOperatingModelIndependentlySelectable": true,
+          "creationProfilesProvideDefaultsOnly": true,
+          "accessEvaluatedPerSelectedPackage": true,
+          "mixedFreeAndPaidPairAllowed": true,
+          "entitlementEvidenceExternalToPackageArtifact": true,
+          "domainPackageIntegrityRequired": true,
+          "compatibilityDecisionRequiredBeforeBinding": true
         },
         "sourceClasses": {
           "PUBLIC_CANONICAL_REPOSITORY": {
@@ -17989,24 +18361,26 @@
         ],
         "freeStarterProfile": {
           "creationType": "SOFTWARE_WEBSITE",
-          "factoryPackageId": "safor.factory.software-delivery",
-          "operatingModelPackageId": "safor.om.saas-engineering",
+          "defaultFactoryPackageId": "safor.factory.software-delivery",
+          "defaultOperatingModelPackageId": "safor.om.saas-engineering",
           "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-          "autoResolveWhenNotExplicitlyLoaded": true
+          "autoResolveDefaultsWhenNotExplicitlyOverridden": true
         },
-        "paidPathRule": "A PAID_ENTITLEMENT_REQUIRED package is never resolved from PUBLIC_CANONICAL_REPOSITORY and its model content is never embedded in the public Framework bundle."
+        "paidPathRule": "A PAID_ENTITLEMENT_REQUIRED selected package is never resolved from PUBLIC_CANONICAL_REPOSITORY; its model content is never embedded in the public Framework bundle and it must carry separately verifiable entitlement evidence before use.",
+        "selectionRule": "Resolve profile defaults first, then apply any HUMAN-approved Factory and/or Operating Model override. Access is evaluated independently for each selected package.",
+        "mixedAccessRule": "FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may be paired. Only the paid member requires commercial entitlement, and the resulting pair still requires technical compatibility."
       },
       "selfHealingProfileId": "MRP-PACKAGE_DISTRIBUTION"
     },
     "commercialEntitlement": {
       "key": "commercialEntitlement",
-      "sourcePath": "v0.12.0/commercial-entitlement-model.json",
-      "sourceBlobSha": "b873705d4d50d727a96ec023655bad4fcacfa0eb",
+      "sourcePath": "v0.13.0/commercial-entitlement-model.json",
+      "sourceBlobSha": "795447c1a2faf6afb2cc34901eeb731883590e78",
       "content": {
         "format": "SAFOR_COMMERCIAL_ENTITLEMENT_MODEL",
-        "schemaVersion": "0.12.0",
+        "schemaVersion": "0.13.0",
         "id": "safor-commercial-entitlement",
-        "purpose": "Gate commercial package use without changing project decision authority or provider rights.",
+        "purpose": "Gate commercial use independently for each selected Factory or Operating Model package without changing project decision authority, provider rights or the other package's access mode.",
         "accessModes": [
           "FREE_PUBLIC",
           "PAID_ENTITLEMENT_REQUIRED"
@@ -18019,7 +18393,11 @@
           "entitlementCannotGrantOperatingModelAuthority": true,
           "entitlementCannotGrantProviderRights": true,
           "entitlementCannotExpandProjectScope": true,
-          "exactPackageAndVersionCoverageRequired": true
+          "exactPackageAndVersionCoverageRequired": true,
+          "entitlementEvaluatedPerSelectedPackage": true,
+          "mixedPairRequiresOnlyPaidPackageEntitlements": true,
+          "entitlementEvidenceExternalToPackageArtifact": true,
+          "packageSelectionDoesNotTransferEntitlement": true
         },
         "allowedVerificationMethods": [
           "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
@@ -18113,36 +18491,44 @@
     },
     "packageCatalog": {
       "key": "packageCatalog",
-      "sourcePath": "v0.12.0/package-catalog.json",
-      "sourceBlobSha": "117e9417caef34e50d6cf1ff2a5df04b09ccd896",
+      "sourcePath": "v0.13.0/package-catalog.json",
+      "sourceBlobSha": "99e1634b95ec52b0a3a0d495b1c0a5fd08ffea94",
       "content": {
         "format": "SAFOR_PACKAGE_CATALOG",
-        "schemaVersion": "0.12.0",
+        "schemaVersion": "0.13.0",
         "status": "PUBLIC_CATALOG",
         "canonicalFrameworkRepository": "empishaj/SAFOR",
         "entries": [
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.4.0",
-            "label": "Software / Website Factory",
+            "version": "1.5.0",
+            "label": "Software / Website Starter Factory",
             "accessMode": "FREE_PUBLIC",
             "sku": "SAFOR-WEB-STARTER-FACTORY",
+            "supportedCreationTypes": [
+              "SOFTWARE_WEBSITE"
+            ],
+            "selectionClass": "STARTER",
             "distribution": {
               "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-              "path": "v0.10.0/packages/factories/software-delivery/1.4.0/package.json"
+              "path": "v0.13.0/packages/factories/software-delivery/1.5.0/package.json"
             }
           },
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.4.0",
-            "label": "SaaS Engineering Operating Model",
+            "version": "1.5.0",
+            "label": "SaaS Engineering Starter Operating Model",
             "accessMode": "FREE_PUBLIC",
             "sku": "SAFOR-WEB-STARTER-OM",
+            "supportedCreationTypes": [
+              "SOFTWARE_WEBSITE"
+            ],
+            "selectionClass": "STARTER",
             "distribution": {
               "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-              "path": "v0.10.0/packages/operating-models/saas-engineering/1.4.0/package.json"
+              "path": "v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json"
             }
           },
           {
@@ -18152,6 +18538,10 @@
             "label": "Book Production Factory",
             "accessMode": "PAID_ENTITLEMENT_REQUIRED",
             "sku": "SAFOR-BOOK-FACTORY",
+            "supportedCreationTypes": [
+              "BOOK"
+            ],
+            "selectionClass": "STANDARD",
             "distribution": {
               "sourceClass": "ENTITLED_PACKAGE_SOURCE",
               "publicModelPath": null
@@ -18165,6 +18555,10 @@
             "label": "Book Authoring Operating Model",
             "accessMode": "PAID_ENTITLEMENT_REQUIRED",
             "sku": "SAFOR-BOOK-OM",
+            "supportedCreationTypes": [
+              "BOOK"
+            ],
+            "selectionClass": "STANDARD",
             "distribution": {
               "sourceClass": "ENTITLED_PACKAGE_SOURCE",
               "publicModelPath": null
@@ -18176,18 +18570,31 @@
           {
             "creationType": "SOFTWARE_WEBSITE",
             "label": "Software / Website",
-            "accessMode": "FREE_PUBLIC",
-            "factoryPackageId": "safor.factory.software-delivery",
-            "operatingModelPackageId": "safor.om.saas-engineering",
-            "autoResolveFromPublicFrameworkGit": true
+            "defaultFactoryPackageId": "safor.factory.software-delivery",
+            "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+            "selectionPolicy": {
+              "factoryOverrideAllowed": true,
+              "operatingModelOverrideAllowed": true,
+              "requireExplicitHumanApprovalForPaidOverride": true,
+              "requirePairCompatibility": true,
+              "resolveEachPackageAccessIndependently": true
+            },
+            "autoResolveDefaultsFromPublicFrameworkGit": true,
+            "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED"
           },
           {
             "creationType": "BOOK",
             "label": "Buch",
-            "accessMode": "PAID_ENTITLEMENT_REQUIRED",
-            "factoryPackageId": "safor.factory.book-production",
-            "operatingModelPackageId": "safor.om.book-authoring",
-            "autoResolveFromPublicFrameworkGit": false,
+            "defaultFactoryPackageId": "safor.factory.book-production",
+            "defaultOperatingModelPackageId": "safor.om.book-authoring",
+            "selectionPolicy": {
+              "factoryOverrideAllowed": true,
+              "operatingModelOverrideAllowed": true,
+              "requireExplicitHumanApprovalForPaidOverride": true,
+              "requirePairCompatibility": true,
+              "resolveEachPackageAccessIndependently": true
+            },
+            "autoResolveDefaultsFromPublicFrameworkGit": false,
             "missingAccessOutcome": "PACKAGE_ACCESS_REQUIRED"
           }
         ]
@@ -18196,12 +18603,12 @@
     },
     "schemaPackageCatalog": {
       "key": "schemaPackageCatalog",
-      "sourcePath": "v0.12.0/schemas/package-catalog.schema.json",
-      "sourceBlobSha": "1231955e9af1d18f7547abf81f7e04bbbef7ae2f",
+      "sourcePath": "v0.13.0/schemas/package-catalog.schema.json",
+      "sourceBlobSha": "89ff0e0337f946fa8a5d6182ce87dd6e1062ec53",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://safor.dev/schemas/0.12.0/package-catalog.schema.json",
-        "title": "SAFOR Package Catalog",
+        "$id": "https://safor.dev/schemas/0.13.0/package-catalog.schema.json",
+        "title": "SAFOR Package Catalog 0.13.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -18217,7 +18624,7 @@
             "const": "SAFOR_PACKAGE_CATALOG"
           },
           "schemaVersion": {
-            "const": "0.12.0"
+            "const": "0.13.0"
           },
           "status": {
             "const": "PUBLIC_CATALOG"
@@ -18243,142 +18650,27 @@
         },
         "$defs": {
           "entry": {
-            "oneOf": [
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "packageId",
-                  "kind",
-                  "version",
-                  "label",
-                  "accessMode",
-                  "sku",
-                  "distribution"
-                ],
-                "properties": {
-                  "packageId": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "kind": {
-                    "enum": [
-                      "FACTORY",
-                      "OPERATING_MODEL"
-                    ]
-                  },
-                  "version": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "label": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "accessMode": {
-                    "const": "FREE_PUBLIC"
-                  },
-                  "sku": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "distribution": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                      "sourceClass",
-                      "path"
-                    ],
-                    "properties": {
-                      "sourceClass": {
-                        "const": "PUBLIC_CANONICAL_REPOSITORY"
-                      },
-                      "path": {
-                        "type": "string",
-                        "minLength": 1
-                      }
-                    }
-                  }
-                }
-              },
-              {
-                "type": "object",
-                "additionalProperties": false,
-                "required": [
-                  "packageId",
-                  "kind",
-                  "versionPolicy",
-                  "label",
-                  "accessMode",
-                  "sku",
-                  "distribution",
-                  "legacyDisclosure"
-                ],
-                "properties": {
-                  "packageId": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "kind": {
-                    "enum": [
-                      "FACTORY",
-                      "OPERATING_MODEL"
-                    ]
-                  },
-                  "versionPolicy": {
-                    "const": "COMMERCIAL_CURRENT"
-                  },
-                  "label": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "accessMode": {
-                    "const": "PAID_ENTITLEMENT_REQUIRED"
-                  },
-                  "sku": {
-                    "type": "string",
-                    "minLength": 1
-                  },
-                  "distribution": {
-                    "type": "object",
-                    "additionalProperties": false,
-                    "required": [
-                      "sourceClass",
-                      "publicModelPath"
-                    ],
-                    "properties": {
-                      "sourceClass": {
-                        "const": "ENTITLED_PACKAGE_SOURCE"
-                      },
-                      "publicModelPath": {
-                        "type": "null"
-                      }
-                    }
-                  },
-                  "legacyDisclosure": {
-                    "type": "string",
-                    "minLength": 1
-                  }
-                }
-              }
-            ]
-          },
-          "creationProfile": {
             "type": "object",
             "additionalProperties": false,
             "required": [
-              "creationType",
+              "packageId",
+              "kind",
               "label",
               "accessMode",
-              "factoryPackageId",
-              "operatingModelPackageId",
-              "autoResolveFromPublicFrameworkGit"
+              "sku",
+              "supportedCreationTypes",
+              "selectionClass",
+              "distribution"
             ],
             "properties": {
-              "creationType": {
+              "packageId": {
+                "type": "string",
+                "pattern": "^safor\\.(factory|om)\\."
+              },
+              "kind": {
                 "enum": [
-                  "SOFTWARE_WEBSITE",
-                  "BOOK"
+                  "FACTORY",
+                  "OPERATING_MODEL"
                 ]
               },
               "label": {
@@ -18391,21 +18683,188 @@
                   "PAID_ENTITLEMENT_REQUIRED"
                 ]
               },
-              "factoryPackageId": {
+              "sku": {
                 "type": "string",
                 "minLength": 1
               },
-              "operatingModelPackageId": {
+              "supportedCreationTypes": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "selectionClass": {
+                "enum": [
+                  "STARTER",
+                  "STANDARD",
+                  "PREMIUM",
+                  "SPECIALIZED",
+                  "CUSTOM"
+                ]
+              },
+              "version": {
                 "type": "string",
                 "minLength": 1
               },
-              "autoResolveFromPublicFrameworkGit": {
+              "versionPolicy": {
+                "enum": [
+                  "COMMERCIAL_CURRENT"
+                ]
+              },
+              "distribution": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "sourceClass"
+                ],
+                "properties": {
+                  "sourceClass": {
+                    "enum": [
+                      "PUBLIC_CANONICAL_REPOSITORY",
+                      "ENTITLED_PACKAGE_SOURCE"
+                    ]
+                  },
+                  "path": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "publicModelPath": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "legacyDisclosure": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "accessMode": {
+                      "const": "FREE_PUBLIC"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "version"
+                  ],
+                  "properties": {
+                    "distribution": {
+                      "required": [
+                        "sourceClass",
+                        "path"
+                      ],
+                      "properties": {
+                        "sourceClass": {
+                          "const": "PUBLIC_CANONICAL_REPOSITORY"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "accessMode": {
+                      "const": "PAID_ENTITLEMENT_REQUIRED"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "versionPolicy"
+                  ],
+                  "properties": {
+                    "distribution": {
+                      "required": [
+                        "sourceClass",
+                        "publicModelPath"
+                      ],
+                      "properties": {
+                        "sourceClass": {
+                          "const": "ENTITLED_PACKAGE_SOURCE"
+                        },
+                        "publicModelPath": {
+                          "type": "null"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "creationProfile": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "creationType",
+              "label",
+              "defaultFactoryPackageId",
+              "defaultOperatingModelPackageId",
+              "selectionPolicy",
+              "missingAccessOutcome"
+            ],
+            "properties": {
+              "creationType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              },
+              "defaultFactoryPackageId": {
+                "type": "string",
+                "pattern": "^safor\\.factory\\."
+              },
+              "defaultOperatingModelPackageId": {
+                "type": "string",
+                "pattern": "^safor\\.om\\."
+              },
+              "selectionPolicy": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "factoryOverrideAllowed",
+                  "operatingModelOverrideAllowed",
+                  "requireExplicitHumanApprovalForPaidOverride",
+                  "requirePairCompatibility",
+                  "resolveEachPackageAccessIndependently"
+                ],
+                "properties": {
+                  "factoryOverrideAllowed": {
+                    "const": true
+                  },
+                  "operatingModelOverrideAllowed": {
+                    "const": true
+                  },
+                  "requireExplicitHumanApprovalForPaidOverride": {
+                    "const": true
+                  },
+                  "requirePairCompatibility": {
+                    "const": true
+                  },
+                  "resolveEachPackageAccessIndependently": {
+                    "const": true
+                  }
+                }
+              },
+              "autoResolveDefaultsFromPublicFrameworkGit": {
                 "type": "boolean"
               },
               "missingAccessOutcome": {
-                "enum": [
-                  "PACKAGE_ACCESS_REQUIRED"
-                ]
+                "const": "PACKAGE_ACCESS_REQUIRED"
               }
             }
           }
@@ -18415,12 +18874,12 @@
     },
     "schemaEntitlement": {
       "key": "schemaEntitlement",
-      "sourcePath": "v0.12.0/schemas/entitlement.schema.json",
-      "sourceBlobSha": "f1de582fbefd96f92845c32472664a225ad92d05",
+      "sourcePath": "v0.13.0/schemas/entitlement.schema.json",
+      "sourceBlobSha": "b54998100f1354c0e2c96ece21ea4737565545f9",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "https://safor.dev/schemas/0.12.0/entitlement.schema.json",
-        "title": "SAFOR Commercial Entitlement",
+        "$id": "https://safor.dev/schemas/0.13.0/entitlement.schema.json",
+        "title": "SAFOR Commercial Entitlement 0.13.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -18438,7 +18897,7 @@
             "const": "SAFOR_COMMERCIAL_ENTITLEMENT"
           },
           "schemaVersion": {
-            "const": "0.12.0"
+            "const": "0.13.0"
           },
           "entitlementId": {
             "type": "string",
@@ -18767,19 +19226,704 @@
         }
       },
       "selfHealingProfileId": "MRP-SCHEMA_WORKSPACE_BINDING"
-    }
-  },
-  "controlWorkspacePolicy": {
-    "REMOTE_GIT": {
-      "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
-      "pattern": "{selectedOwner}/safor-memory",
-      "humanControlled": true
     },
-    "LOCAL_GIT": {
-      "strategy": "LOCAL_MASTER_CONTROL_ROOT",
-      "root": ".safor/",
-      "humanControlled": true,
-      "masterOnly": true
+    "composablePackageModel": {
+      "key": "composablePackageModel",
+      "sourcePath": "v0.13.0/composable-package-model.json",
+      "sourceBlobSha": "378a093f6579eee1d56d019ee85a0a63ae34e77c",
+      "content": {
+        "format": "SAFOR_COMPOSABLE_PACKAGE_MODEL",
+        "schemaVersion": "0.13.0",
+        "id": "safor-composable-domain-packages",
+        "purpose": "Make Factory and Operating Model independently loadable JSON products that can be mixed only after deterministic access, integrity and compatibility checks.",
+        "principles": {
+          "frameworkIsIndependentProduct": true,
+          "factoryAndOperatingModelAreIndependentPackages": true,
+          "onePackageEqualsOneLoadableJsonArtifact": true,
+          "entitlementEvidenceIsExternalToPackageJson": true,
+          "packagePossessionIsNotEntitlement": true,
+          "websiteStarterDefaultsAreFreePublic": true,
+          "factoryMayBeUpgradedIndependently": true,
+          "operatingModelMayBeUpgradedIndependently": true,
+          "mixedFreeAndPaidPairAllowed": true,
+          "selectedPairMustBeCompatible": true,
+          "projectWorkspaceIndependentFromPackageSource": true
+        },
+        "packageArtifactContract": {
+          "format": "SAFOR_DOMAIN_PACKAGE",
+          "schemaRef": "schemas/domain-package.schema.json",
+          "chatLoadable": true,
+          "singleJsonFile": true,
+          "entitlementEmbedded": false,
+          "integrityDigestScope": "DECLARED_DOMAIN_CONTRACT"
+        },
+        "selectionContract": {
+          "catalogRef": "package-catalog.json",
+          "selectionSchemaRef": "schemas/package-selection.schema.json",
+          "compatibilityDecisionSchemaRef": "schemas/package-compatibility-decision.schema.json",
+          "defaultRule": "Use creation-profile defaults unless HUMAN explicitly selects an allowed alternative.",
+          "accessRule": "Resolve access independently for the selected Factory and selected Operating Model.",
+          "paidOverrideRule": "A paid override requires HUMAN approval and independently verified entitlement for that package only.",
+          "compatibilityRule": "No Factory/Operating Model pair may bind without COMPATIBLE decision."
+        },
+        "resolutionOrder": [
+          "SELECT_CREATION_TYPE",
+          "LOAD_OR_RESOLVE_DEFAULT_PACKAGE_CANDIDATES",
+          "OFFER_OR_ACCEPT_HUMAN_PACKAGE_OVERRIDES",
+          "RESOLVE_FACTORY_ACCESS_INDEPENDENTLY",
+          "RESOLVE_OPERATING_MODEL_ACCESS_INDEPENDENTLY",
+          "VERIFY_DOMAIN_PACKAGE_SHAPE_AND_INTEGRITY",
+          "VERIFY_FRAMEWORK_VERSION_COMPATIBILITY",
+          "VERIFY_CREATION_TYPE_SUPPORT",
+          "VERIFY_FACTORY_OPERATING_MODEL_CAPABILITY_AND_AUTHORITY_COVERAGE",
+          "MATERIALIZE_PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+          "PIN_PACKAGE_BINDINGS",
+          "CONTINUE_TO_PROJECT_WORKSPACE_SELECTION"
+        ],
+        "failureOutcomes": {
+          "missingPackage": "PACKAGE_ACCESS_REQUIRED",
+          "unverifiedEntitlement": "PACKAGE_ENTITLEMENT_UNVERIFIED",
+          "invalidPackage": "DOMAIN_PACKAGE_INVALID",
+          "integrityMismatch": "DOMAIN_PACKAGE_INTEGRITY_MISMATCH",
+          "frameworkIncompatible": "DOMAIN_PACKAGE_FRAMEWORK_INCOMPATIBLE",
+          "pairIncompatible": "FACTORY_OPERATING_MODEL_INCOMPATIBLE",
+          "unsupportedCreationType": "DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED"
+        }
+      },
+      "selfHealingProfileId": "MRP-COMPOSABLE-PACKAGE-MODEL"
+    },
+    "schemaDomainPackage": {
+      "key": "schemaDomainPackage",
+      "sourcePath": "v0.13.0/schemas/domain-package.schema.json",
+      "sourceBlobSha": "e1fa647dbc0bdbeb7b6cab8929fb38f3c9594a7f",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.13.0/domain-package.schema.json",
+        "title": "SAFOR Domain Package 0.13.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "packageId",
+          "packageKind",
+          "version",
+          "name",
+          "description",
+          "commercial",
+          "compatibility",
+          "exports",
+          "dependencies",
+          "integrity",
+          "model"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_DOMAIN_PACKAGE"
+          },
+          "schemaVersion": {
+            "const": "0.13.0"
+          },
+          "packageId": {
+            "type": "string",
+            "pattern": "^safor\\.(factory|om)\\.[a-z0-9][a-z0-9.-]*$"
+          },
+          "packageKind": {
+            "enum": [
+              "FACTORY",
+              "OPERATING_MODEL"
+            ]
+          },
+          "version": {
+            "type": "string",
+            "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "commercial": {
+            "$ref": "#/$defs/commercial"
+          },
+          "compatibility": {
+            "$ref": "#/$defs/compatibility"
+          },
+          "exports": {
+            "$ref": "#/$defs/exports"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/dependency"
+            }
+          },
+          "integrity": {
+            "$ref": "#/$defs/integrity"
+          },
+          "model": {
+            "type": "object"
+          },
+          "provenance": {
+            "$ref": "#/$defs/provenance"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "packageKind": {
+                  "const": "FACTORY"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "packageId": {
+                  "pattern": "^safor\\.factory\\."
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "packageKind": {
+                  "const": "OPERATING_MODEL"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "packageId": {
+                  "pattern": "^safor\\.om\\."
+                }
+              }
+            }
+          }
+        ],
+        "$defs": {
+          "commercial": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "accessMode",
+              "sku",
+              "entitlementRequired",
+              "entitlementEvidenceMode",
+              "independentlySelectable"
+            ],
+            "properties": {
+              "accessMode": {
+                "enum": [
+                  "FREE_PUBLIC",
+                  "PAID_ENTITLEMENT_REQUIRED"
+                ]
+              },
+              "sku": {
+                "type": "string",
+                "minLength": 1
+              },
+              "entitlementRequired": {
+                "type": "boolean"
+              },
+              "entitlementEvidenceMode": {
+                "const": "EXTERNAL_ONLY"
+              },
+              "independentlySelectable": {
+                "const": true
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "accessMode": {
+                      "const": "FREE_PUBLIC"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "entitlementRequired": {
+                      "const": false
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "accessMode": {
+                      "const": "PAID_ENTITLEMENT_REQUIRED"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "entitlementRequired": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            ]
+          },
+          "compatibility": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "framework",
+              "supportedCreationTypes",
+              "counterpart"
+            ],
+            "properties": {
+              "framework": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "minimum",
+                  "maximumExclusive"
+                ],
+                "properties": {
+                  "minimum": {
+                    "type": "string",
+                    "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+                  },
+                  "maximumExclusive": {
+                    "type": "string",
+                    "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+                  }
+                }
+              },
+              "supportedCreationTypes": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "counterpart": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "requiredKind",
+                  "requiredCapabilities",
+                  "requiredAuthorities"
+                ],
+                "properties": {
+                  "requiredKind": {
+                    "enum": [
+                      "FACTORY",
+                      "OPERATING_MODEL"
+                    ]
+                  },
+                  "requiredCapabilities": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "requiredAuthorities": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "allowedPackageIds": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "type": "string",
+                      "pattern": "^safor\\.(factory|om)\\."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "exports": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "capabilities",
+              "authorities",
+              "workItemTypes",
+              "artifactTypes",
+              "providerCapabilities"
+            ],
+            "properties": {
+              "capabilities": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "authorities": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "workItemTypes": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "artifactTypes": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              },
+              "providerCapabilities": {
+                "type": "array",
+                "uniqueItems": true,
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "dependency": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "packageId",
+              "versionRange"
+            ],
+            "properties": {
+              "packageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "versionRange": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "integrity": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "canonicalization",
+              "digestAlgorithm",
+              "digestScope",
+              "contentDigest",
+              "verificationMode"
+            ],
+            "properties": {
+              "canonicalization": {
+                "const": "SAFOR_CANONICAL_JSON_V1"
+              },
+              "digestAlgorithm": {
+                "const": "SHA-256"
+              },
+              "digestScope": {
+                "const": "DECLARED_DOMAIN_CONTRACT"
+              },
+              "contentDigest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              },
+              "verificationMode": {
+                "enum": [
+                  "CANONICAL_REPOSITORY_READBACK",
+                  "TRUSTED_PACKAGE_SOURCE_READBACK",
+                  "SIGNED_ARTIFACT"
+                ]
+              },
+              "signature": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "algorithm",
+                  "keyId",
+                  "value"
+                ],
+                "properties": {
+                  "algorithm": {
+                    "enum": [
+                      "Ed25519"
+                    ]
+                  },
+                  "keyId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "value": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "verificationMode": {
+                      "const": "SIGNED_ARTIFACT"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "signature"
+                  ]
+                }
+              }
+            ]
+          },
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "publisher": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sourceRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "builtAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA-DOMAIN-PACKAGE"
+    },
+    "schemaPackageSelection": {
+      "key": "schemaPackageSelection",
+      "sourcePath": "v0.13.0/schemas/package-selection.schema.json",
+      "sourceBlobSha": "72b1de8d637c361da7b9e9f57c7150d89e3e4345",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.13.0/package-selection.schema.json",
+        "title": "SAFOR Package Selection 0.13.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "selectionId",
+          "creationType",
+          "factory",
+          "operatingModel",
+          "compatibilityDecisionRef"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_PACKAGE_SELECTION"
+          },
+          "schemaVersion": {
+            "const": "0.13.0"
+          },
+          "selectionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "creationType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "factory": {
+            "$ref": "#/$defs/selection"
+          },
+          "operatingModel": {
+            "$ref": "#/$defs/selection"
+          },
+          "compatibilityDecisionRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "approvedByHumanDecisionRef": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "$defs": {
+          "selection": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "packageId",
+              "selectionOrigin"
+            ],
+            "properties": {
+              "packageId": {
+                "type": "string",
+                "pattern": "^safor\\.(factory|om)\\."
+              },
+              "selectionOrigin": {
+                "enum": [
+                  "DEFAULT_PROFILE",
+                  "HUMAN_OVERRIDE"
+                ]
+              },
+              "requestedVersion": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA-PACKAGE-SELECTION"
+    },
+    "schemaPackageCompatibilityDecision": {
+      "key": "schemaPackageCompatibilityDecision",
+      "sourcePath": "v0.13.0/schemas/package-compatibility-decision.schema.json",
+      "sourceBlobSha": "c34246898cd9d5ab649e5e8195ba0998fd8c9775",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.13.0/package-compatibility-decision.schema.json",
+        "title": "SAFOR Package Compatibility Decision 0.13.0",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "decisionId",
+          "creationType",
+          "frameworkVersion",
+          "factory",
+          "operatingModel",
+          "checks",
+          "outcome"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_PACKAGE_COMPATIBILITY_DECISION"
+          },
+          "schemaVersion": {
+            "const": "0.13.0"
+          },
+          "decisionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "creationType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "frameworkVersion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "factory": {
+            "$ref": "#/$defs/boundPackage"
+          },
+          "operatingModel": {
+            "$ref": "#/$defs/boundPackage"
+          },
+          "checks": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "factoryKind",
+              "operatingModelKind",
+              "frameworkRange",
+              "creationTypeSupport",
+              "capabilityCoverage",
+              "authorityCoverage",
+              "dependencyCoverage"
+            ],
+            "properties": {
+              "factoryKind": {
+                "type": "boolean"
+              },
+              "operatingModelKind": {
+                "type": "boolean"
+              },
+              "frameworkRange": {
+                "type": "boolean"
+              },
+              "creationTypeSupport": {
+                "type": "boolean"
+              },
+              "capabilityCoverage": {
+                "type": "boolean"
+              },
+              "authorityCoverage": {
+                "type": "boolean"
+              },
+              "dependencyCoverage": {
+                "type": "boolean"
+              }
+            }
+          },
+          "missingCapabilities": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "missingAuthorities": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          "outcome": {
+            "enum": [
+              "COMPATIBLE",
+              "INCOMPATIBLE"
+            ]
+          }
+        },
+        "$defs": {
+          "boundPackage": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "packageId",
+              "version",
+              "contentDigest"
+            ],
+            "properties": {
+              "packageId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "contentDigest": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$"
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA-PACKAGE-COMPATIBILITY-DECISION"
     }
   }
 }
