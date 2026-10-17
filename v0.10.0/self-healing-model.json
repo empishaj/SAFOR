@@ -256,6 +256,20 @@
       "automaticRepair": "RESTORE_VERIFIED_INTERACTION_GOVERNANCE_OR_SUPPRESS_NONESSENTIAL_ASK",
       "defaultRetryBudget": 1,
       "requiresHuman": "ONLY_MINIMUM_SAFE_BLOCKER_IF_GOVERNANCE_CANNOT_BE_RESTORED"
+    },
+    {
+      "id": "SH-20",
+      "name": "TERMINAL_MENU_CONTRACT_FAILURE",
+      "examples": [
+        "HUMAN-facing response has no terminal menu",
+        "multiple interaction menus appear in one HUMAN response",
+        "SAFOR-visible content appears after the terminal menu",
+        "terminal menu does not validate",
+        "contextual menu derivation fails"
+      ],
+      "automaticRepair": "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE_AND_SAFE_TERMINAL_MENU",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "ONLY_IF_A_VALID_NON_AUTHORITY_EXPANDING_FALLBACK_MENU_CANNOT_BE_DERIVED"
     }
   ],
   "eligibilityRules": [
@@ -273,7 +287,9 @@
     "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
     "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates.",
     "Interaction recovery may simplify or suppress a nonessential question, but may never infer a HUMAN decision, approval, risk acceptance or new authority.",
-    "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate."
+    "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate.",
+    "A terminal-menu repair may only regenerate derived HUMAN presentation artifacts and must not mutate authoritative project state to manufacture an available action.",
+    "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative."
   ],
   "forbiddenAutomaticRepairs": [
     "FORCE_PUSH",
@@ -295,7 +311,9 @@
     "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
     "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS",
     "INFER_HUMAN_APPROVAL_DURING_INTERACTION_RECOVERY",
-    "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE"
+    "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE",
+    "INVENT_AUTHORITY_OR_STATE_TRANSITION_TO_POPULATE_TERMINAL_MENU",
+    "REMOVE_TERMINAL_MENU_REQUIREMENT_TO_CONTINUE_RENDERING"
   ],
   "retryPolicy": {
     "key": "failureFingerprint",

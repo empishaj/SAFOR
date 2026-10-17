@@ -13,7 +13,10 @@
     "accessibleLabels": true,
     "technicalIdsAreSecondary": true,
     "destructiveActionsSeparated": true,
-    "userMayAlwaysTypeFreeText": true
+    "userMayAlwaysTypeFreeText": true,
+    "terminalMenuAlwaysRequired": true,
+    "terminalMenuIsFinalRenderedSurface": true,
+    "humanResponseEnvelopeRequired": true
   },
   "hostInteractionCapabilities": {
     "discoverAtBootstrap": true,
@@ -193,7 +196,10 @@
         "requiresConfirmation": true,
         "visibilityRule": "STOP_ALLOWED"
       }
-    ]
+    ],
+    "terminalMenuRequired": true,
+    "exactlyOneTerminalMenu": true,
+    "noContentAfterTerminalMenu": true
   },
   "recommendationExperience": {
     "entryIntent": "VIEW_RECOMMENDATIONS",
@@ -285,7 +291,9 @@
       "menuAfterMessageWhenApplicable": true,
       "cognitiveLoadPolicyRequired": true,
       "deriveBeforeAsk": true,
-      "reuseUnchangedDecisions": true
+      "reuseUnchangedDecisions": true,
+      "terminalMenuRequired": true,
+      "noContentAfterTerminalMenu": true
     },
     "responseBudgets": {
       "acknowledgement": {
@@ -467,7 +475,8 @@
         "TECHNICAL_STATE"
       ],
       "rule": "Keep SUMMARY human-friendly and short. Reveal deeper technical surfaces only when requested, required for a decision, or necessary to explain material risk."
-    }
+    },
+    "terminalRule": "Every SAFOR-generated HUMAN-facing response ends with exactly one interaction menu. No SAFOR-visible text or other content may follow that menu."
   },
   "initializationExperience": {
     "modelRef": "initialization-model.json",
@@ -984,5 +993,64 @@
       "EXECUTE_TRANSITION"
     ],
     "rule": "Interne Intent-IDs bestimmen nie das HUMAN-Label, wenn eine konkrete fachliche Aktion benannt werden kann."
+  },
+  "terminalMenuContract": {
+    "scope": "EVERY_SAFOR_GENERATED_HUMAN_FACING_RESPONSE",
+    "responseSchemaRef": "schemas/human-response.schema.json",
+    "menuSchemaRef": "schemas/interaction-menu.schema.json",
+    "exactlyOne": true,
+    "mustBeFinalRenderedElement": true,
+    "contentAfterMenuForbidden": true,
+    "stopRenderingAfterMenu": true,
+    "menuPresenceDoesNotImplyHumanDecision": true,
+    "appliesTo": [
+      "ACKNOWLEDGEMENT",
+      "NORMAL",
+      "PROGRESS",
+      "DECISION",
+      "BLOCKER",
+      "WARNING",
+      "RECOVERY",
+      "STATUS",
+      "HELP",
+      "PAUSED",
+      "STOPPED",
+      "OUTCOME",
+      "COMPLETION"
+    ],
+    "finalizer": {
+      "mandatory": true,
+      "steps": [
+        "BUILD_HUMAN_RESPONSE_ENVELOPE",
+        "APPLY_HUMAN_DECISION_GATE",
+        "DERIVE_CONTEXTUAL_TERMINAL_MENU",
+        "IF_CONTEXTUAL_MENU_UNAVAILABLE_DERIVE_SAFE_FALLBACK_MENU",
+        "VALIDATE_TERMINAL_MENU",
+        "VALIDATE_HUMAN_RESPONSE_SCHEMA",
+        "VERIFY_EXACTLY_ONE_TERMINAL_MENU",
+        "VERIFY_NO_CONTENT_AFTER_TERMINAL_MENU",
+        "RENDER_CONTENT",
+        "RENDER_TERMINAL_MENU",
+        "STOP_RENDERING"
+      ],
+      "emitWithoutSuccessfulFinalization": false
+    },
+    "fallbackMenu": {
+      "required": true,
+      "derivationRule": "Derive only currently valid navigation/control actions from authoritative state, Decision Gate, active mandates and actual host capabilities. Never invent a decision or authority merely to populate a menu.",
+      "preferredIntents": [
+        "NEXT_ROUND",
+        "STATUS",
+        "DETAILS",
+        "HELP",
+        "PAUSE",
+        "STOP"
+      ],
+      "minimumUsefulFallback": [
+        "DETAILS",
+        "HELP"
+      ],
+      "ifNoStateAdvancingActionExists": "Show non-mutating navigation/help actions only."
+    }
   }
 }

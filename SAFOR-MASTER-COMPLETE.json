@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
   "schemaVersion": "0.10.0",
-  "bundleVersion": "0.10.0-rc.1",
+  "bundleVersion": "0.10.0-rc.2",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -62,7 +62,8 @@
     "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative.",
     "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection.",
     "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
-    "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability."
+    "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
+    "humanTerminalMenuRule": "Every SAFOR-generated HUMAN-facing response validates against the embedded HUMAN response schema, contains exactly one interaction menu as the final rendered SAFOR-visible element, and stops rendering immediately after that menu. Menu presence does not itself imply a HUMAN decision."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -115,7 +116,8 @@
     "packages/operating-models/saas-engineering/1.4.0/package.json": "operatingModelSaas",
     "packages/operating-models/book-authoring/0.5.0/package.json": "operatingModelBook",
     "packages/factories/software-delivery/1.4.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.5.0/package.json": "factoryBook"
+    "packages/factories/book-production/0.5.0/package.json": "factoryBook",
+    "schemas/human-response.schema.json": "schemaHumanResponse"
   },
   "integrityManifest": {
     "agentJobContract": {
@@ -130,7 +132,7 @@
     },
     "conformance": {
       "sourcePath": "v0.10.0/conformance.json",
-      "sourceBlobSha": "49c4eaaa8b00b3aa193045f418f316c53bc3df52",
+      "sourceBlobSha": "7d2f7bbb595418200db8a63cd7ef1c085c8dd363",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "factoryBook": {
@@ -155,17 +157,17 @@
     },
     "interaction": {
       "sourcePath": "v0.10.0/interaction-model.json",
-      "sourceBlobSha": "4d881f7adb833bcf3422c4cdde90e8671e571a6b",
+      "sourceBlobSha": "f42af39509bc253a623ee2bab4d1254a3346abf4",
       "selfHealingProfileId": "MRP-INTERACTION"
     },
     "kernel": {
       "sourcePath": "v0.10.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "6439c4141d38040baa8530461ca0364aff87d818",
+      "sourceBlobSha": "6c2445e9d6fb4606c15631d3db480065930996a5",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "moduleSelfHealing": {
       "sourcePath": "v0.10.0/module-self-healing-model.json",
-      "sourceBlobSha": "cef17aecc1f3d278f2d9ed998d81ecf6927b2b4d",
+      "sourceBlobSha": "05fc04ad75a4a25ba61715609dd59142a6fdfae9",
       "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
     },
     "multiAgentScheduler": {
@@ -325,15 +327,20 @@
     },
     "selfHealing": {
       "sourcePath": "v0.10.0/self-healing-model.json",
-      "sourceBlobSha": "15af978aad1de0dd7125b03bc9aa00d143a3e2bb",
+      "sourceBlobSha": "d0f648f1ef60d21ea46e122b83cbc708209d6377",
       "selfHealingProfileId": "MRP-SELF_HEALING"
+    },
+    "schemaHumanResponse": {
+      "sourcePath": "v0.10.0/schemas/human-response.schema.json",
+      "sourceBlobSha": "f71604dbd780dc1e000b687227bc7449ced3764d",
+      "selfHealingProfileId": "MRP-SCHEMA_HUMAN_RESPONSE"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.10.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "6439c4141d38040baa8530461ca0364aff87d818",
+      "sourceBlobSha": "6c2445e9d6fb4606c15631d3db480065930996a5",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.10.0",
@@ -408,7 +415,10 @@
           "reuseUnchangedHumanDecisions": true,
           "postDiscoveryLoadReduction": true,
           "humanDomainLanguageDefault": true,
-          "humanAsDecisionMakerNotWorkflowOperator": true
+          "humanAsDecisionMakerNotWorkflowOperator": true,
+          "terminalMenuOnEveryHumanResponse": true,
+          "terminalMenuIsFinalRenderedSurface": true,
+          "humanResponseEnvelopeRequired": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -442,7 +452,7 @@
             },
             {
               "id": "HUMAN_INTERACTION_GOVERNANCE",
-              "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction and dynamic primary-action labeling."
+              "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction, dynamic primary-action labeling and mandatory terminal-menu finalization for every HUMAN-facing response."
             },
             {
               "id": "MODULE_SELF_HEALING",
@@ -477,7 +487,11 @@
             "A derivable or unchanged previously approved decision must not be delegated back to the HUMAN.",
             "High HUMAN cognitive load is legitimate in Discovery when acquiring non-derivable intent/domain knowledge; after plan approval default HUMAN load decreases to LOW/VERY_LOW except for material decisions, new authority, risk, irreversible action, recovery escalation or outcome judgment.",
             "Scheduling, job IDs, leases, dispatch waves, readback, evidence collection and deterministic agent coordination are internal SAFOR responsibilities.",
-            "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required."
+            "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required.",
+            "Every SAFOR-generated HUMAN-facing response must validate against the HUMAN response contract and terminate with exactly one interaction menu.",
+            "The terminal interaction menu is a presentation/navigation surface and does not itself imply that a HUMAN decision is required.",
+            "No SAFOR-visible content may be rendered after the terminal menu; the HUMAN response finalizer stops rendering immediately after it.",
+            "If contextual menu derivation fails, only a safe state-derived non-authority-expanding fallback menu may be generated."
           ]
         },
         "packageSystem": {
@@ -662,7 +676,8 @@
           "resourceLease": "schemas/resource-lease.schema.json",
           "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json",
           "humanCognitiveLoadPolicy": "schemas/human-cognitive-load-policy.schema.json",
-          "humanDecisionGate": "schemas/human-decision-gate.schema.json"
+          "humanDecisionGate": "schemas/human-decision-gate.schema.json",
+          "humanResponse": "schemas/human-response.schema.json"
         },
         "controlPlane": {
           "startActionId": "K00",
@@ -1196,14 +1211,31 @@
             "COMPLETED"
           ],
           "interactionLoop": {
-            "stableCheckpointBehavior": "Present the current SAFOR action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
+            "stableCheckpointBehavior": "Every SAFOR-generated HUMAN-facing response MUST end with exactly one valid state-derived interaction menu. This applies to checkpoints, progress, decisions, blockers, recovery, status, help, pause, stop, outcome and completion. No SAFOR-visible content may follow the menu.",
             "defaultPrimaryIntent": "NEXT_ROUND",
             "roundDefinitionRef": "interaction-model.json#roundSemantics",
             "menuPolicyRef": "interaction-model.json#menuPolicy",
             "recommendationPolicyRef": "interaction-model.json#recommendationExperience",
             "decisionPolicyRef": "interaction-model.json#decisionExperience",
             "humanCommunicationRef": "interaction-model.json#humanCommunication",
-            "defaultHumanSurface": "SUMMARY"
+            "defaultHumanSurface": "SUMMARY",
+            "humanResponseSchemaRef": "schemas/human-response.schema.json",
+            "terminalMenuPolicyRef": "interaction-model.json#terminalMenuContract",
+            "humanResponseFinalizer": {
+              "mandatory": true,
+              "appliesTo": "ALL_SAFOR_GENERATED_HUMAN_FACING_RESPONSES",
+              "steps": [
+                "BUILD_HUMAN_RESPONSE_ENVELOPE",
+                "APPLY_HUMAN_DECISION_GATE",
+                "DERIVE_TERMINAL_MENU",
+                "FALLBACK_MENU_IF_REQUIRED",
+                "VALIDATE_RESPONSE_AND_MENU",
+                "RENDER_CONTENT",
+                "RENDER_TERMINAL_MENU",
+                "STOP_RENDERING"
+              ],
+              "emitWithoutSuccessfulFinalization": false
+            }
           },
           "recoveryLoop": {
             "modelRef": "self-healing-model.json",
@@ -1722,6 +1754,26 @@
           {
             "id": "INV-120",
             "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored."
+          },
+          {
+            "id": "INV-121",
+            "rule": "Every SAFOR-generated HUMAN-facing response contains exactly one valid interaction menu as its terminal surface."
+          },
+          {
+            "id": "INV-122",
+            "rule": "No SAFOR-visible text, status, evidence, explanation or other content may be rendered after the terminal interaction menu."
+          },
+          {
+            "id": "INV-123",
+            "rule": "A terminal interaction menu is required for normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses."
+          },
+          {
+            "id": "INV-124",
+            "rule": "Presence of the terminal menu does not imply a HUMAN decision; Decision Gate semantics remain authoritative and non-decision menus may contain only valid navigation/control actions."
+          },
+          {
+            "id": "INV-125",
+            "rule": "If contextual terminal-menu derivation fails, SAFOR may regenerate only a safe derived fallback menu from authoritative state and actual capabilities; it must not invent authority, scope, approval or state transitions to create menu options."
           }
         ],
         "evidencePolicy": {
@@ -1837,8 +1889,13 @@
             "Before asking the HUMAN anything, attempt safe derivation/reuse and evaluate the HUMAN Decision Gate.",
             "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
             "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
-            "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval."
-          ]
+            "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval.",
+            "End every SAFOR-generated HUMAN-facing response with exactly one interaction menu.",
+            "Do not render any SAFOR-visible content after the terminal interaction menu.",
+            "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK."
+          ],
+          "responseSchemaRef": "schemas/human-response.schema.json",
+          "terminalMenuRequired": true
         },
         "initializationModelRef": "initialization-model.json",
         "selfHealingModelRef": "self-healing-model.json",
@@ -2266,7 +2323,7 @@
     "interaction": {
       "key": "interaction",
       "sourcePath": "v0.10.0/interaction-model.json",
-      "sourceBlobSha": "4d881f7adb833bcf3422c4cdde90e8671e571a6b",
+      "sourceBlobSha": "f42af39509bc253a623ee2bab4d1254a3346abf4",
       "content": {
         "format": "SAFOR_INTERACTION_MODEL",
         "schemaVersion": "0.10.0",
@@ -2282,7 +2339,10 @@
           "accessibleLabels": true,
           "technicalIdsAreSecondary": true,
           "destructiveActionsSeparated": true,
-          "userMayAlwaysTypeFreeText": true
+          "userMayAlwaysTypeFreeText": true,
+          "terminalMenuAlwaysRequired": true,
+          "terminalMenuIsFinalRenderedSurface": true,
+          "humanResponseEnvelopeRequired": true
         },
         "hostInteractionCapabilities": {
           "discoverAtBootstrap": true,
@@ -2462,7 +2522,10 @@
               "requiresConfirmation": true,
               "visibilityRule": "STOP_ALLOWED"
             }
-          ]
+          ],
+          "terminalMenuRequired": true,
+          "exactlyOneTerminalMenu": true,
+          "noContentAfterTerminalMenu": true
         },
         "recommendationExperience": {
           "entryIntent": "VIEW_RECOMMENDATIONS",
@@ -2554,7 +2617,9 @@
             "menuAfterMessageWhenApplicable": true,
             "cognitiveLoadPolicyRequired": true,
             "deriveBeforeAsk": true,
-            "reuseUnchangedDecisions": true
+            "reuseUnchangedDecisions": true,
+            "terminalMenuRequired": true,
+            "noContentAfterTerminalMenu": true
           },
           "responseBudgets": {
             "acknowledgement": {
@@ -2736,7 +2801,8 @@
               "TECHNICAL_STATE"
             ],
             "rule": "Keep SUMMARY human-friendly and short. Reveal deeper technical surfaces only when requested, required for a decision, or necessary to explain material risk."
-          }
+          },
+          "terminalRule": "Every SAFOR-generated HUMAN-facing response ends with exactly one interaction menu. No SAFOR-visible text or other content may follow that menu."
         },
         "initializationExperience": {
           "modelRef": "initialization-model.json",
@@ -3253,6 +3319,65 @@
             "EXECUTE_TRANSITION"
           ],
           "rule": "Interne Intent-IDs bestimmen nie das HUMAN-Label, wenn eine konkrete fachliche Aktion benannt werden kann."
+        },
+        "terminalMenuContract": {
+          "scope": "EVERY_SAFOR_GENERATED_HUMAN_FACING_RESPONSE",
+          "responseSchemaRef": "schemas/human-response.schema.json",
+          "menuSchemaRef": "schemas/interaction-menu.schema.json",
+          "exactlyOne": true,
+          "mustBeFinalRenderedElement": true,
+          "contentAfterMenuForbidden": true,
+          "stopRenderingAfterMenu": true,
+          "menuPresenceDoesNotImplyHumanDecision": true,
+          "appliesTo": [
+            "ACKNOWLEDGEMENT",
+            "NORMAL",
+            "PROGRESS",
+            "DECISION",
+            "BLOCKER",
+            "WARNING",
+            "RECOVERY",
+            "STATUS",
+            "HELP",
+            "PAUSED",
+            "STOPPED",
+            "OUTCOME",
+            "COMPLETION"
+          ],
+          "finalizer": {
+            "mandatory": true,
+            "steps": [
+              "BUILD_HUMAN_RESPONSE_ENVELOPE",
+              "APPLY_HUMAN_DECISION_GATE",
+              "DERIVE_CONTEXTUAL_TERMINAL_MENU",
+              "IF_CONTEXTUAL_MENU_UNAVAILABLE_DERIVE_SAFE_FALLBACK_MENU",
+              "VALIDATE_TERMINAL_MENU",
+              "VALIDATE_HUMAN_RESPONSE_SCHEMA",
+              "VERIFY_EXACTLY_ONE_TERMINAL_MENU",
+              "VERIFY_NO_CONTENT_AFTER_TERMINAL_MENU",
+              "RENDER_CONTENT",
+              "RENDER_TERMINAL_MENU",
+              "STOP_RENDERING"
+            ],
+            "emitWithoutSuccessfulFinalization": false
+          },
+          "fallbackMenu": {
+            "required": true,
+            "derivationRule": "Derive only currently valid navigation/control actions from authoritative state, Decision Gate, active mandates and actual host capabilities. Never invent a decision or authority merely to populate a menu.",
+            "preferredIntents": [
+              "NEXT_ROUND",
+              "STATUS",
+              "DETAILS",
+              "HELP",
+              "PAUSE",
+              "STOP"
+            ],
+            "minimumUsefulFallback": [
+              "DETAILS",
+              "HELP"
+            ],
+            "ifNoStateAdvancingActionExists": "Show non-mutating navigation/help actions only."
+          }
         }
       },
       "selfHealingProfileId": "MRP-INTERACTION"
@@ -3394,7 +3519,7 @@
     "selfHealing": {
       "key": "selfHealing",
       "sourcePath": "v0.10.0/self-healing-model.json",
-      "sourceBlobSha": "15af978aad1de0dd7125b03bc9aa00d143a3e2bb",
+      "sourceBlobSha": "d0f648f1ef60d21ea46e122b83cbc708209d6377",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
         "schemaVersion": "0.10.0",
@@ -3653,6 +3778,20 @@
             "automaticRepair": "RESTORE_VERIFIED_INTERACTION_GOVERNANCE_OR_SUPPRESS_NONESSENTIAL_ASK",
             "defaultRetryBudget": 1,
             "requiresHuman": "ONLY_MINIMUM_SAFE_BLOCKER_IF_GOVERNANCE_CANNOT_BE_RESTORED"
+          },
+          {
+            "id": "SH-20",
+            "name": "TERMINAL_MENU_CONTRACT_FAILURE",
+            "examples": [
+              "HUMAN-facing response has no terminal menu",
+              "multiple interaction menus appear in one HUMAN response",
+              "SAFOR-visible content appears after the terminal menu",
+              "terminal menu does not validate",
+              "contextual menu derivation fails"
+            ],
+            "automaticRepair": "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE_AND_SAFE_TERMINAL_MENU",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "ONLY_IF_A_VALID_NON_AUTHORITY_EXPANDING_FALLBACK_MENU_CANNOT_BE_DERIVED"
           }
         ],
         "eligibilityRules": [
@@ -3670,7 +3809,9 @@
           "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
           "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates.",
           "Interaction recovery may simplify or suppress a nonessential question, but may never infer a HUMAN decision, approval, risk acceptance or new authority.",
-          "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate."
+          "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate.",
+          "A terminal-menu repair may only regenerate derived HUMAN presentation artifacts and must not mutate authoritative project state to manufacture an available action.",
+          "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -3692,7 +3833,9 @@
           "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
           "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS",
           "INFER_HUMAN_APPROVAL_DURING_INTERACTION_RECOVERY",
-          "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE"
+          "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE",
+          "INVENT_AUTHORITY_OR_STATE_TRANSITION_TO_POPULATE_TERMINAL_MENU",
+          "REMOVE_TERMINAL_MENU_REQUIREMENT_TO_CONTINUE_RENDERING"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -3770,7 +3913,7 @@
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
       "sourcePath": "v0.10.0/module-self-healing-model.json",
-      "sourceBlobSha": "cef17aecc1f3d278f2d9ed998d81ecf6927b2b4d",
+      "sourceBlobSha": "05fc04ad75a4a25ba61715609dd59142a6fdfae9",
       "content": {
         "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
         "schemaVersion": "0.10.0",
@@ -3911,19 +4054,28 @@
               "COGNITIVE_LOAD_POLICY_INVALID",
               "HUMAN_LANGUAGE_POLICY_INVALID",
               "PRIMARY_ACTION_POLICY_INVALID",
-              "UNNECESSARY_HUMAN_DECISION_DETECTED"
+              "UNNECESSARY_HUMAN_DECISION_DETECTED",
+              "TERMINAL_MENU_MISSING",
+              "TERMINAL_MENU_NOT_LAST",
+              "MULTIPLE_TERMINAL_MENUS",
+              "TERMINAL_MENU_INVALID",
+              "POST_MENU_CONTENT_DETECTED"
             ],
             "automaticRepairs": [
               "RELOAD_VERIFIED_EMBEDDED_MODULE",
               "FALLBACK_TO_NATIVE_MARKDOWN_WITHOUT_STATE_ADVANCE",
               "RESTORE_VERIFIED_INTERACTION_MODEL",
-              "SUPPRESS_DERIVABLE_OR_REPEATED_ASK"
+              "SUPPRESS_DERIVABLE_OR_REPEATED_ASK",
+              "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE",
+              "REGENERATE_SAFE_TERMINAL_MENU_FROM_AUTHORITATIVE_STATE"
             ],
             "forbiddenRepairs": [
               "INVENT_MISSING_EVIDENCE",
               "EXPAND_AUTHORITY_OR_SCOPE",
               "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
-              "ACCEPT_UNVERIFIED_STATE"
+              "ACCEPT_UNVERIFIED_STATE",
+              "INVENT_AUTHORITY_OR_STATE_TO_POPULATE_MENU",
+              "SUPPRESS_TERMINAL_MENU_REQUIREMENT"
             ],
             "retryBudget": 1,
             "preconditions": [
@@ -3938,7 +4090,7 @@
                 "EXPECTED_STATE_MATCH",
                 "REPAIR_RECORD_PERSISTED"
               ],
-              "successPredicate": "INTERACTION_MODEL_VALID_AND_NO_CONTROL_STATE_MUTATION_OCCURRED"
+              "successPredicate": "INTERACTION_MODEL_VALID_AND_EVERY_EMITTED_HUMAN_RESPONSE_TERMINATES_WITH_EXACTLY_ONE_VALID_MENU_WITH_NO_POST_MENU_CONTENT_AND_NO_CONTROL_STATE_MUTATION_OCCURRED"
             },
             "escalation": {
               "when": [
@@ -5894,6 +6046,58 @@
                 "RETRY_BUDGET_EXHAUSTED",
                 "SOURCE_OF_TRUTH_AMBIGUOUS",
                 "GOVERNANCE_SEMANTICS_WOULD_CHANGE"
+              ],
+              "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_HUMAN_RESPONSE",
+            "moduleKey": "schemaHumanResponse",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaHumanResponse + integrityManifest.schemaHumanResponse",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "HUMAN_RESPONSE_VALIDATION_FAILURE",
+              "TERMINAL_MENU_CONTRACT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT",
+              "REGENERATE_SUBJECT_ONLY_IF_SUBJECT_IS_DECLARED_DERIVED"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVIDENCE",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+              "ACCEPT_UNVERIFIED_STATE",
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "REMOVE_TERMINAL_MENU_REQUIREMENT"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "ACTIVE_AUTHORITY_STILL_VALID",
+              "CURRENT_PROVIDER_RIGHTS_PROVEN",
+              "PRE_REPAIR_STATE_REFERENCED",
+              "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "HUMAN_RESPONSE_SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_RESPONSE_VALIDATES_WITH_EXACTLY_ONE_TERMINAL_MENU"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                "AUTHORITATIVE_READBACK_FAILS"
               ],
               "target": "HUMAN"
             }
@@ -14131,7 +14335,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.10.0/conformance.json",
-      "sourceBlobSha": "49c4eaaa8b00b3aa193045f418f316c53bc3df52",
+      "sourceBlobSha": "7d2f7bbb595418200db8a63cd7ef1c085c8dd363",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.10.0",
@@ -14901,15 +15105,167 @@
             "id": "CF-153",
             "statement": "Every explicit kernel HUMAN-decision action carries a humanInteractionContract with gate ref, phase, legitimate reason, load target, one-decision limit and derive/reuse semantics.",
             "expected": true
+          },
+          {
+            "id": "CF-154",
+            "statement": "Every SAFOR-generated HUMAN-facing response validates against the HUMAN response schema and contains exactly one terminal interaction menu.",
+            "expected": true
+          },
+          {
+            "id": "CF-155",
+            "statement": "The terminal interaction menu is the final rendered SAFOR-visible element; no SAFOR text, status, evidence, explanation or other content follows it.",
+            "expected": true
+          },
+          {
+            "id": "CF-156",
+            "statement": "Terminal-menu presence applies to normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses.",
+            "expected": true
+          },
+          {
+            "id": "CF-157",
+            "statement": "A terminal menu does not imply a HUMAN decision; the HUMAN Decision Gate independently determines whether decision interaction is allowed.",
+            "expected": true
+          },
+          {
+            "id": "CF-158",
+            "statement": "If contextual menu derivation fails, HUMAN Interaction Governance regenerates only a safe derived fallback menu from authoritative state and actual capabilities without inventing authority, approval, scope or state transitions.",
+            "expected": true
+          },
+          {
+            "id": "CF-159",
+            "statement": "The HUMAN response finalizer is mandatory, validates response and menu before emission, renders the terminal menu last and stops rendering immediately after it.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/human-cognitive-load-v0.10.0-rc.1",
+          "branch": "safor/terminal-menu-v0.10.0-rc.2",
           "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "Phase-aware HUMAN cognitive-load governance and derive-before-ask Decision Gate implemented. Machine validation and cognitive-load acceptance remain required."
+          "note": "Terminal-menu response contract, finalizer, recovery behavior and conformance assertions implemented. Machine validation and end-to-end terminal rendering acceptance remain required."
         }
       },
       "selfHealingProfileId": "MRP-CONFORMANCE"
+    },
+    "schemaHumanResponse": {
+      "key": "schemaHumanResponse",
+      "sourcePath": "v0.10.0/schemas/human-response.schema.json",
+      "sourceBlobSha": "f71604dbd780dc1e000b687227bc7449ced3764d",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/human-response.schema.json",
+        "title": "SAFOR HUMAN Response",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "responseId",
+          "phase",
+          "surface",
+          "content",
+          "terminalMenu",
+          "renderingContract"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_HUMAN_RESPONSE"
+          },
+          "schemaVersion": {
+            "const": "0.10.0"
+          },
+          "responseId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "phase": {
+            "enum": [
+              "BOOTSTRAP",
+              "RESUME",
+              "DISCOVERY",
+              "PLANNING",
+              "SCHEDULING",
+              "AGENT_COORDINATION",
+              "EXECUTION",
+              "RECOVERY",
+              "OUTCOME",
+              "CLOSING"
+            ]
+          },
+          "surface": {
+            "enum": [
+              "SUMMARY",
+              "DETAILS",
+              "EVIDENCE",
+              "TECHNICAL_STATE"
+            ]
+          },
+          "content": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "type",
+                "text"
+              ],
+              "properties": {
+                "type": {
+                  "enum": [
+                    "ACKNOWLEDGEMENT",
+                    "SUMMARY",
+                    "STATUS",
+                    "PROGRESS",
+                    "DECISION_CONTEXT",
+                    "BLOCKER",
+                    "WARNING",
+                    "RECOVERY",
+                    "OUTCOME",
+                    "COMPLETION",
+                    "DETAIL"
+                  ]
+                },
+                "text": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "terminalMenu": {
+            "$ref": "interaction-menu.schema.json"
+          },
+          "renderingContract": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "renderOrder",
+              "terminalElement",
+              "exactlyOneTerminalMenu",
+              "contentAfterTerminalElementForbidden",
+              "stopRenderingAfterTerminalMenu"
+            ],
+            "properties": {
+              "renderOrder": {
+                "const": [
+                  "content",
+                  "terminalMenu"
+                ]
+              },
+              "terminalElement": {
+                "const": "terminalMenu"
+              },
+              "exactlyOneTerminalMenu": {
+                "const": true
+              },
+              "contentAfterTerminalElementForbidden": {
+                "const": true
+              },
+              "stopRenderingAfterTerminalMenu": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_HUMAN_RESPONSE"
     }
   }
 }

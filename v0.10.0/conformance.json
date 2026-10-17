@@ -767,11 +767,41 @@
       "id": "CF-153",
       "statement": "Every explicit kernel HUMAN-decision action carries a humanInteractionContract with gate ref, phase, legitimate reason, load target, one-decision limit and derive/reuse semantics.",
       "expected": true
+    },
+    {
+      "id": "CF-154",
+      "statement": "Every SAFOR-generated HUMAN-facing response validates against the HUMAN response schema and contains exactly one terminal interaction menu.",
+      "expected": true
+    },
+    {
+      "id": "CF-155",
+      "statement": "The terminal interaction menu is the final rendered SAFOR-visible element; no SAFOR text, status, evidence, explanation or other content follows it.",
+      "expected": true
+    },
+    {
+      "id": "CF-156",
+      "statement": "Terminal-menu presence applies to normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses.",
+      "expected": true
+    },
+    {
+      "id": "CF-157",
+      "statement": "A terminal menu does not imply a HUMAN decision; the HUMAN Decision Gate independently determines whether decision interaction is allowed.",
+      "expected": true
+    },
+    {
+      "id": "CF-158",
+      "statement": "If contextual menu derivation fails, HUMAN Interaction Governance regenerates only a safe derived fallback menu from authoritative state and actual capabilities without inventing authority, approval, scope or state transitions.",
+      "expected": true
+    },
+    {
+      "id": "CF-159",
+      "statement": "The HUMAN response finalizer is mandatory, validates response and menu before emission, renders the terminal menu last and stops rendering immediately after it.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
-    "branch": "safor/human-cognitive-load-v0.10.0-rc.1",
+    "branch": "safor/terminal-menu-v0.10.0-rc.2",
     "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-    "note": "Phase-aware HUMAN cognitive-load governance and derive-before-ask Decision Gate implemented. Machine validation and cognitive-load acceptance remain required."
+    "note": "Terminal-menu response contract, finalizer, recovery behavior and conformance assertions implemented. Machine validation and end-to-end terminal rendering acceptance remain required."
   }
 }

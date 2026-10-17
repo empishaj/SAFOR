@@ -72,7 +72,10 @@
     "reuseUnchangedHumanDecisions": true,
     "postDiscoveryLoadReduction": true,
     "humanDomainLanguageDefault": true,
-    "humanAsDecisionMakerNotWorkflowOperator": true
+    "humanAsDecisionMakerNotWorkflowOperator": true,
+    "terminalMenuOnEveryHumanResponse": true,
+    "terminalMenuIsFinalRenderedSurface": true,
+    "humanResponseEnvelopeRequired": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -106,7 +109,7 @@
       },
       {
         "id": "HUMAN_INTERACTION_GOVERNANCE",
-        "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction and dynamic primary-action labeling."
+        "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction, dynamic primary-action labeling and mandatory terminal-menu finalization for every HUMAN-facing response."
       },
       {
         "id": "MODULE_SELF_HEALING",
@@ -141,7 +144,11 @@
       "A derivable or unchanged previously approved decision must not be delegated back to the HUMAN.",
       "High HUMAN cognitive load is legitimate in Discovery when acquiring non-derivable intent/domain knowledge; after plan approval default HUMAN load decreases to LOW/VERY_LOW except for material decisions, new authority, risk, irreversible action, recovery escalation or outcome judgment.",
       "Scheduling, job IDs, leases, dispatch waves, readback, evidence collection and deterministic agent coordination are internal SAFOR responsibilities.",
-      "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required."
+      "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required.",
+      "Every SAFOR-generated HUMAN-facing response must validate against the HUMAN response contract and terminate with exactly one interaction menu.",
+      "The terminal interaction menu is a presentation/navigation surface and does not itself imply that a HUMAN decision is required.",
+      "No SAFOR-visible content may be rendered after the terminal menu; the HUMAN response finalizer stops rendering immediately after it.",
+      "If contextual menu derivation fails, only a safe state-derived non-authority-expanding fallback menu may be generated."
     ]
   },
   "packageSystem": {
@@ -326,7 +333,8 @@
     "resourceLease": "schemas/resource-lease.schema.json",
     "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json",
     "humanCognitiveLoadPolicy": "schemas/human-cognitive-load-policy.schema.json",
-    "humanDecisionGate": "schemas/human-decision-gate.schema.json"
+    "humanDecisionGate": "schemas/human-decision-gate.schema.json",
+    "humanResponse": "schemas/human-response.schema.json"
   },
   "controlPlane": {
     "startActionId": "K00",
@@ -860,14 +868,31 @@
       "COMPLETED"
     ],
     "interactionLoop": {
-      "stableCheckpointBehavior": "Present the current SAFOR action menu after every user-relevant stable checkpoint, unless no meaningful user action exists while waiting on an external effect.",
+      "stableCheckpointBehavior": "Every SAFOR-generated HUMAN-facing response MUST end with exactly one valid state-derived interaction menu. This applies to checkpoints, progress, decisions, blockers, recovery, status, help, pause, stop, outcome and completion. No SAFOR-visible content may follow the menu.",
       "defaultPrimaryIntent": "NEXT_ROUND",
       "roundDefinitionRef": "interaction-model.json#roundSemantics",
       "menuPolicyRef": "interaction-model.json#menuPolicy",
       "recommendationPolicyRef": "interaction-model.json#recommendationExperience",
       "decisionPolicyRef": "interaction-model.json#decisionExperience",
       "humanCommunicationRef": "interaction-model.json#humanCommunication",
-      "defaultHumanSurface": "SUMMARY"
+      "defaultHumanSurface": "SUMMARY",
+      "humanResponseSchemaRef": "schemas/human-response.schema.json",
+      "terminalMenuPolicyRef": "interaction-model.json#terminalMenuContract",
+      "humanResponseFinalizer": {
+        "mandatory": true,
+        "appliesTo": "ALL_SAFOR_GENERATED_HUMAN_FACING_RESPONSES",
+        "steps": [
+          "BUILD_HUMAN_RESPONSE_ENVELOPE",
+          "APPLY_HUMAN_DECISION_GATE",
+          "DERIVE_TERMINAL_MENU",
+          "FALLBACK_MENU_IF_REQUIRED",
+          "VALIDATE_RESPONSE_AND_MENU",
+          "RENDER_CONTENT",
+          "RENDER_TERMINAL_MENU",
+          "STOP_RENDERING"
+        ],
+        "emitWithoutSuccessfulFinalization": false
+      }
     },
     "recoveryLoop": {
       "modelRef": "self-healing-model.json",
@@ -1386,6 +1411,26 @@
     {
       "id": "INV-120",
       "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored."
+    },
+    {
+      "id": "INV-121",
+      "rule": "Every SAFOR-generated HUMAN-facing response contains exactly one valid interaction menu as its terminal surface."
+    },
+    {
+      "id": "INV-122",
+      "rule": "No SAFOR-visible text, status, evidence, explanation or other content may be rendered after the terminal interaction menu."
+    },
+    {
+      "id": "INV-123",
+      "rule": "A terminal interaction menu is required for normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses."
+    },
+    {
+      "id": "INV-124",
+      "rule": "Presence of the terminal menu does not imply a HUMAN decision; Decision Gate semantics remain authoritative and non-decision menus may contain only valid navigation/control actions."
+    },
+    {
+      "id": "INV-125",
+      "rule": "If contextual terminal-menu derivation fails, SAFOR may regenerate only a safe derived fallback menu from authoritative state and actual capabilities; it must not invent authority, scope, approval or state transitions to create menu options."
     }
   ],
   "evidencePolicy": {
@@ -1501,8 +1546,13 @@
       "Before asking the HUMAN anything, attempt safe derivation/reuse and evaluate the HUMAN Decision Gate.",
       "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
       "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
-      "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval."
-    ]
+      "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval.",
+      "End every SAFOR-generated HUMAN-facing response with exactly one interaction menu.",
+      "Do not render any SAFOR-visible content after the terminal interaction menu.",
+      "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK."
+    ],
+    "responseSchemaRef": "schemas/human-response.schema.json",
+    "terminalMenuRequired": true
   },
   "initializationModelRef": "initialization-model.json",
   "selfHealingModelRef": "self-healing-model.json",
