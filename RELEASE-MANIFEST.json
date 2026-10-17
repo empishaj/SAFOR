@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.3",
+  "version": "0.13.0-rc.4",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.3.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.4.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.2",
+  "previousVersion": "0.13.0-rc.3",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -102,7 +102,15 @@
     "FREE_PUBLIC_WEBSITE_FACTORY_AND_OPERATING_MODEL",
     "SOFTWARE_SAAS_BOTH_PACKAGES_PAID_REQUIRED",
     "CREATION_PROFILE_SELECTED_ACCESS_POLICY",
-    "SOFTWARE_SAAS_LEGACY_PUBLIC_DISCLOSURE_BOUNDARY"
+    "SOFTWARE_SAAS_LEGACY_PUBLIC_DISCLOSURE_BOUNDARY",
+    "STRICT_COMMERCIAL_ENTITLEMENT_STATUS_TIME_SUBJECT_TRUST",
+    "COMMERCIAL_BASIS_EVIDENCE",
+    "TRUSTED_ENTITLEMENT_ISSUER_AND_VERIFIER",
+    "ENTITLED_PACKAGE_SOURCE_DELIVERY_EVIDENCE",
+    "TRUSTED_DELIVERY_VERIFIER",
+    "DELIVERY_ENTITLEMENT_PACKAGE_VERSION_DIGEST_BINDING",
+    "TIME_BOUNDED_COMMERCIAL_DELIVERY_EVIDENCE",
+    "HUMAN_LOADED_LICENSED_PACKAGE_WITH_STRICT_ENTITLEMENT"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -122,6 +130,7 @@
     "DETERMINISTIC_ACCEPTANCE_END_TO_END_ACCEPTANCE",
     "COMMERCIAL_LICENSE_TERMS_FINALIZATION",
     "COMMERCIAL_ENTITLEMENT_END_TO_END_ACCEPTANCE",
+    "COMMERCIAL_PACKAGE_DELIVERY_END_TO_END_ACCEPTANCE",
     "MODULAR_PACKAGE_DISTRIBUTION_END_TO_END_ACCEPTANCE",
     "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE",
     "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE"
@@ -153,6 +162,15 @@
     "mixedFreeAndPaidPairAllowedOnlyWhenCreationProfilePermits": true,
     "entitlementEvidenceExternalToPackageArtifact": true,
     "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-    "softwareSaasRequiresTwoIndependentEntitlements": true
+    "softwareSaasRequiresTwoIndependentEntitlements": true,
+    "strictEntitlementVerification": true,
+    "commercialBasisEvidenceRequired": true,
+    "entitlementStatusMustBeActive": true,
+    "explicitEvaluationTimestampRequired": true,
+    "subjectBindingRequired": true,
+    "trustedIssuerAndVerifierRequired": true,
+    "entitledPackageSourceDeliveryEvidenceRequired": true,
+    "deliveryDigestBindingRequired": true,
+    "humanLoadedPaidArtifactSupportedWithStrictEntitlement": true
   }
 }
