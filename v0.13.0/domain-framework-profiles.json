@@ -30,7 +30,8 @@
         "packageFamilyConstraintsEnforced": true,
         "crossDomainPairForbidden": true
       },
-      "publicationMode": "PUBLIC_PRODUCTION"
+      "publicationMode": "PUBLIC_PRODUCTION",
+      "evaluationAccessFile": null
     },
     {
       "id": "SAAS",
@@ -60,7 +61,8 @@
         "packageFamilyConstraintsEnforced": true,
         "crossDomainPairForbidden": true
       },
-      "publicationMode": "PUBLIC_TEST_EVALUATION"
+      "publicationMode": "PUBLIC_TEST_EVALUATION",
+      "evaluationAccessFile": "SAFOR-TEST-ACCESS-SAAS.json"
     },
     {
       "id": "BOOK_CREATION",
@@ -90,7 +92,8 @@
         "packageFamilyConstraintsEnforced": true,
         "crossDomainPairForbidden": true
       },
-      "publicationMode": "PUBLIC_TEST_EVALUATION"
+      "publicationMode": "PUBLIC_TEST_EVALUATION",
+      "evaluationAccessFile": "SAFOR-TEST-ACCESS-BOOK-CREATION.json"
     }
   ]
 }
