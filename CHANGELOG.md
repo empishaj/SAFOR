@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.12.0-rc.2
+
+- Adds explicit SAFOR Operation Modes: DESIGN, VALIDATION and EXECUTION.
+- Resolves Operation Mode before mutating effects and makes initialization mode-specific.
+- Adds provider-neutral Agent Runtime Adapter model separate from repository Provider Adapters.
+- Adds Agent Runtime binding schema with evidenced activation/continuation/background-wakeup capabilities.
+- Requires HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION before AGENT dispatch in EXECUTION.
+- Restricts HUMAN_MANUAL_TEST_ONLY to explicitly isolated VALIDATION harnesses.
+- Prohibits routine HUMAN agent-chat wakeup, Job prompt/contract copy, inbox polling, result transport and manual dispatch sequencing in EXECUTION.
+- Makes missing production automation fail closed as AGENT_RUNTIME_AUTOMATION_UNAVAILABLE.
+- Adds operation-mode/runtime context to the canonical Agent Job Contract.
+- Forbids silent EXECUTION -> VALIDATION downgrade as a recovery mechanism.
+- Adds SH-24, INV-166 through INV-185 and CF-217 through CF-240.
+- Extends exact embedded Framework recovery coverage to 65/65.
+- Adds 15 Agent Runtime/Operation Mode unit tests; total Python suite is 53 PASS.
+
+
 ## 0.12.0-rc.1
 
 - Reframes the public artifact as `SAFOR-FRAMEWORK` rather than an all-domain `MASTER-COMPLETE` distribution.
