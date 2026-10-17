@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
   "schemaVersion": "0.11.0",
-  "bundleVersion": "0.11.0-rc.1",
+  "bundleVersion": "0.11.0-rc.2",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -65,7 +65,8 @@
     "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
     "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
     "humanTerminalMenuRule": "Every SAFOR-generated HUMAN-facing response validates against the embedded HUMAN response schema, contains exactly one interaction menu as the final rendered SAFOR-visible element, and stops rendering immediately after that menu. Menu presence does not itself imply a HUMAN decision.",
-    "deterministicControlRule": "Within the explicit 0.11 rc.1 executable transition slice, external HUMAN/AGENT/PROVIDER observations enter as typed events and only the pure embedded deterministic control kernel may materialize authoritative state transitions. External mutations are emitted as effect intents and completion requires later authoritative provider evidence."
+    "deterministicControlRule": "Within the explicit 0.11 executable transition boundary, external HUMAN/AGENT/PROVIDER observations enter as typed events and only the pure embedded deterministic control kernel may materialize authoritative state transitions. External mutations are emitted as effect intents and completion requires later authoritative provider evidence.",
+    "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records. Qualitative criteria require explicit review or authority decisions; agent self-checks and assistant claims are never authoritative acceptance."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -145,7 +146,7 @@
     },
     "conformance": {
       "sourcePath": "v0.11.0/conformance.json",
-      "sourceBlobSha": "603807a2b0667c3ddeedece1c2ea5cffe695447c",
+      "sourceBlobSha": "67aed82e439aa90746fd5ff2c9189d57f601e1a2",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "factoryBook": {
@@ -165,7 +166,7 @@
     },
     "initialization": {
       "sourcePath": "v0.11.0/initialization-model.json",
-      "sourceBlobSha": "2a300e94b06004cf999b080a8c12ef4b7d1b4d72",
+      "sourceBlobSha": "a6410d16e7bf521eedeeba8398c6efd9aac70cc7",
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
@@ -175,12 +176,12 @@
     },
     "kernel": {
       "sourcePath": "v0.11.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "20f7cf1b460e4debb4dbfb29d6cd1aa69a85bd36",
+      "sourceBlobSha": "cf8a94d10f152366ea4bdb216c10b015136211e1",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "moduleSelfHealing": {
       "sourcePath": "v0.11.0/module-self-healing-model.json",
-      "sourceBlobSha": "e97b6191d13fd96ad49960866ad482d71caab6a9",
+      "sourceBlobSha": "f46b3e0b6983236491481a890cff25e8fd98a217",
       "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
     },
     "multiAgentScheduler": {
@@ -340,7 +341,7 @@
     },
     "selfHealing": {
       "sourcePath": "v0.11.0/self-healing-model.json",
-      "sourceBlobSha": "7d5b43a60fd47dba428f65b7ebd5da352524cc66",
+      "sourceBlobSha": "1d59ae3ba5893c2881269db51c44580c948d9433",
       "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "schemaHumanResponse": {
@@ -350,7 +351,7 @@
     },
     "deterministicControl": {
       "sourcePath": "v0.11.0/deterministic-control-model.json",
-      "sourceBlobSha": "2e25c64a05fe1dab36d6983e7c7032254456ebd7",
+      "sourceBlobSha": "fddb2708b78526636aeb462f46d0ba5cbefed981",
       "selfHealingProfileId": "MRP-DETERMINISTIC_CONTROL"
     },
     "eventModel": {
@@ -408,7 +409,7 @@
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.11.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "20f7cf1b460e4debb4dbfb29d6cd1aa69a85bd36",
+      "sourceBlobSha": "cf8a94d10f152366ea4bdb216c10b015136211e1",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.11.0",
@@ -496,7 +497,13 @@
           "replayVerificationRequired": true,
           "transitionAmbiguityFailsClosed": true,
           "arbitraryCodeInTransitionModelsForbidden": true,
-          "deterministicRcBoundaryMustBeExplicit": true
+          "deterministicRcBoundaryMustBeExplicit": true,
+          "typedAcceptanceContracts": true,
+          "deterministicAcceptanceEvaluation": true,
+          "qualitativeAcceptanceRequiresExplicitReviewOrAuthority": true,
+          "agentSelfCheckNeverAuthoritativeAcceptance": true,
+          "acceptanceContractImmutableAfterApproval": true,
+          "acceptanceDoesNotImplyOutcome": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -515,6 +522,10 @@
             {
               "id": "FACTORY",
               "responsibility": "Domain-specific value stream, artifact types, work-item types, transformations, quality requirements and outcome model."
+            },
+            {
+              "id": "DETERMINISTIC_ACCEPTANCE",
+              "responsibility": "Approved typed Acceptance Contracts bind Factory evidence, qualitative review and authority requirements so Work Item acceptance can be evaluated deterministically without converting probabilistic judgment into direct state authority."
             },
             {
               "id": "PROJECT_INSTANCE",
@@ -577,7 +588,12 @@
             "Within the migrated executable transition slice, authoritative state transitions are owned only by the deterministic control kernel; HUMAN, AGENT and PROVIDER actors contribute typed events/evidence instead of direct authoritative state changes.",
             "The deterministic reducer is pure: it performs no provider/LLM calls, reads no wall clock, uses no randomness and never executes arbitrary code from JSON.",
             "External mutations are emitted only as effect intents. Completion requires a later provider outcome/readback event.",
-            "Non-migrated 0.10 governance semantics remain valid but must not be falsely represented as executable deterministic transitions in rc.1."
+            "Non-migrated 0.10 governance semantics remain valid but must not be falsely represented as executable deterministic transitions in rc.1.",
+            "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance evaluation.",
+            "Free-text or qualitative acceptance criteria may not be directly marked PASS by an LLM; they must resolve to typed EVIDENCE, REVIEW or AUTHORITY requirements in the approved Acceptance Contract.",
+            "Agent acceptanceSelfCheck is advisory only and cannot satisfy required independent review or authority approval.",
+            "A Work Item may become ACCEPTED only through the deterministic acceptance transition after all requirements of its hash-valid ACTIVE Acceptance Contract are satisfied.",
+            "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED."
           ]
         },
         "packageSystem": {
@@ -769,7 +785,10 @@
           "transition": "schemas/transition.schema.json",
           "effectIntent": "schemas/effect-intent.schema.json",
           "transitionRecord": "schemas/transition-record.schema.json",
-          "stateSnapshot": "schemas/state-snapshot.schema.json"
+          "stateSnapshot": "schemas/state-snapshot.schema.json",
+          "acceptanceContract": "schemas/acceptance-contract.schema.json",
+          "reviewDecision": "schemas/review-decision.schema.json",
+          "authorityDecision": "schemas/authority-decision.schema.json"
         },
         "controlPlane": {
           "startActionId": "K00",
@@ -1074,7 +1093,9 @@
               "operation": "INSTANTIATE_VALUE_STREAM",
               "purpose": "Create the plan strictly from the same bound Factory planningContract, confirmed Discovery and Factory flow graph.",
               "domainNeutral": true,
-              "modelRef": "BOUND_FACTORY.model.planningContract"
+              "modelRef": "BOUND_FACTORY.model.planningContract",
+              "acceptanceModelRef": "acceptance-model.json#derivationContract",
+              "acceptanceRule": "Planning must materialize one typed Acceptance Contract per executable Work Item from the approved Factory evidence contract, Work Item criteria/review/authority requirements and plan provenance. Qualitative criteria must bind to REVIEW or AUTHORITY."
             },
             {
               "id": "P02",
@@ -1098,7 +1119,12 @@
                 "deriveBeforeAsk": true,
                 "reuseUnchangedDecision": true
               },
-              "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active."
+              "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active.",
+              "approvalIncludes": [
+                "PLAN",
+                "WORK_ITEM_ACCEPTANCE_CONTRACTS"
+              ],
+              "acceptanceRule": "Plan approval pins the Acceptance Contract set. A material acceptance-contract change requires governed replan/new approval."
             },
             {
               "id": "E01",
@@ -1141,9 +1167,11 @@
             {
               "id": "E05",
               "operation": "EVALUATE_WORK_ITEM",
-              "purpose": "Evaluate acceptance against Factory acceptance criteria, the bound Factory evidenceContract, review independence and applicable gates.",
+              "purpose": "Evaluate Work Item acceptance deterministically from the approved hash-valid Acceptance Contract and replayed Evidence/Review/Authority records; never infer qualitative PASS from LLM output.",
               "domainNeutral": true,
-              "modelRef": "BOUND_FACTORY.model.evidenceContract"
+              "modelRef": "acceptance-model.json",
+              "factoryEvidenceContractRef": "BOUND_FACTORY.model.evidenceContract",
+              "rule": "Only WORK_ITEM_ACCEPTED may materialize ACCEPTED in the migrated rc.2 slice, and only when every typed requirement is satisfied."
             },
             {
               "id": "E06",
@@ -1388,6 +1416,20 @@
                 "REPLAY_DIVERGENCE"
               ],
               "rule": "External actors submit typed events/evidence. The deterministic control kernel alone evaluates guards and produces the next authoritative state within the migrated executable slice."
+            },
+            "deterministicAcceptance": {
+              "modelRef": "acceptance-model.json",
+              "appliesBefore": "EVERY_WORK_ITEM_ACCEPTED_TRANSITION",
+              "requiredChecks": [
+                "SINGLE_ACTIVE_HASH_VALID_ACCEPTANCE_CONTRACT",
+                "ALL_CRITERIA_TYPED",
+                "REQUIRED_EVIDENCE_SATISFIED",
+                "REQUIRED_REVIEW_SATISFIED",
+                "REVIEW_INDEPENDENCE_SATISFIED",
+                "REQUIRED_AUTHORITIES_SATISFIED",
+                "NO_REQUIRED_AUTHORITY_REJECTION"
+              ],
+              "failClosed": true
             }
           }
         },
@@ -1931,6 +1973,54 @@
           {
             "id": "INV-135",
             "rule": "SAFOR 0.11.0-rc.1 claims determinism only for transitions explicitly listed by the deterministic-control model; non-migrated governance rules remain normative but non-executable until migrated."
+          },
+          {
+            "id": "INV-136",
+            "rule": "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance may be evaluated."
+          },
+          {
+            "id": "INV-137",
+            "rule": "Every approved acceptance criterion must be preserved in the Acceptance Contract and reference at least one typed EVIDENCE, REVIEW or AUTHORITY requirement."
+          },
+          {
+            "id": "INV-138",
+            "rule": "A free-text or qualitative criterion may never be directly converted to PASS by an LLM; it must be satisfied through explicit typed evidence, review or authority decision."
+          },
+          {
+            "id": "INV-139",
+            "rule": "A Work Item may enter ACCEPTED only through WORK_ITEM_ACCEPTED with a hash-valid active contract and all typed requirements satisfied."
+          },
+          {
+            "id": "INV-140",
+            "rule": "Evidence used for acceptance must match the Work Item subject and declared evidence type; PINNED requirements require a concrete revisionRef."
+          },
+          {
+            "id": "INV-141",
+            "rule": "When independent review is required, performer and approving reviewer must differ; self-review cannot satisfy the Acceptance Contract."
+          },
+          {
+            "id": "INV-142",
+            "rule": "Agent acceptanceSelfCheck is advisory and can never substitute for required independent review, provider evidence or authority decision."
+          },
+          {
+            "id": "INV-143",
+            "rule": "A recorded REJECTED decision for a required authority blocks acceptance for the current Acceptance Contract revision."
+          },
+          {
+            "id": "INV-144",
+            "rule": "An approved Acceptance Contract is immutable. Material changes require a new governed contract revision and approval; Self-Healing may not relax requirements."
+          },
+          {
+            "id": "INV-145",
+            "rule": "Acceptance ledger records are replay-derived pinned copies of source artifacts/events and must not become an independent writable source of business authority."
+          },
+          {
+            "id": "INV-146",
+            "rule": "Duplicate acceptance record identities under different events must not be appended to the deterministic acceptance ledger."
+          },
+          {
+            "id": "INV-147",
+            "rule": "Work Item ACCEPTED and VALUE_SUPPORTED are distinct; deterministic acceptance does not establish business or reader outcome success."
           }
         ],
         "evidencePolicy": {
@@ -2065,14 +2155,15 @@
         "eventModelRef": "event-model.json",
         "predicateRegistryRef": "predicate-registry.json",
         "transitionRegistryRef": "transition-registry.json",
-        "effectModelRef": "effect-model.json"
+        "effectModelRef": "effect-model.json",
+        "acceptanceModelRef": "acceptance-model.json"
       },
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
       "sourcePath": "v0.11.0/initialization-model.json",
-      "sourceBlobSha": "2a300e94b06004cf999b080a8c12ef4b7d1b4d72",
+      "sourceBlobSha": "a6410d16e7bf521eedeeba8398c6efd9aac70cc7",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
         "schemaVersion": "0.11.0",
@@ -2115,9 +2206,13 @@
               "TRANSITION_PREDICATES_RESOLVE_TO_CLOSED_REGISTRY",
               "TRANSITION_EFFECTS_USE_CLOSED_OPERATION_SET",
               "STATE_HASHING_AND_REPLAY_CONTRACT_PRESENT",
-              "RC1_EXECUTABLE_TRANSITION_BOUNDARY_EXPLICIT"
+              "RC1_EXECUTABLE_TRANSITION_BOUNDARY_EXPLICIT",
+              "ACCEPTANCE_MODEL_AND_SCHEMAS_PRESENT_AND_PINNED",
+              "ACCEPTANCE_TRANSITIONS_REFERENCE_CLOSED_PREDICATES",
+              "ACCEPTANCE_CONTRACT_HASH_POLICY_PRESENT",
+              "INDEPENDENT_REVIEW_AND_AUTHORITY_GUARDS_PRESENT"
             ],
-            "rule": "Run after module-recovery baseline and before provider/project work. Failure to verify deterministic control modules stops executable deterministic processing.",
+            "rule": "Run after module-recovery baseline and before provider/project work. Failure to verify deterministic control or deterministic acceptance modules stops executable deterministic processing.",
             "deterministicControlRef": "deterministic-control-model.json"
           },
           {
@@ -3698,7 +3793,7 @@
     "selfHealing": {
       "key": "selfHealing",
       "sourcePath": "v0.11.0/self-healing-model.json",
-      "sourceBlobSha": "7d5b43a60fd47dba428f65b7ebd5da352524cc66",
+      "sourceBlobSha": "1d59ae3ba5893c2881269db51c44580c948d9433",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
         "schemaVersion": "0.11.0",
@@ -3986,6 +4081,22 @@
             "automaticRepair": "RESTORE_VERIFIED_DETERMINISTIC_CONTROL_MODULES_OR_REPLAY_DERIVED_PROJECTION",
             "defaultRetryBudget": 1,
             "requiresHuman": "WHEN_AUTHORITATIVE_STATE_DIVERGENCE_OR_MISSING_EVENT_CANNOT_BE_RECONCILED_FROM_VERIFIED_EVIDENCE"
+          },
+          {
+            "id": "SH-22",
+            "name": "DETERMINISTIC_ACCEPTANCE_FAILURE",
+            "examples": [
+              "Acceptance Contract hash mismatch",
+              "acceptance criterion has no typed requirement",
+              "evidence subject/type/integrity mismatch",
+              "independent review violated by self-review",
+              "required authority approval absent or rejected",
+              "duplicate acceptance record identity",
+              "acceptance replay divergence"
+            ],
+            "automaticRepair": "RESTORE_VERIFIED_ACCEPTANCE_MODEL_OR_REPLAY_DERIVED_ACCEPTANCE_LEDGER",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_APPROVED_ACCEPTANCE_CONTRACT_OR_REQUIRED_HUMAN_AUTHORITY_MUST_CHANGE"
           }
         ],
         "eligibilityRules": [
@@ -4008,7 +4119,10 @@
           "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative.",
           "Deterministic-control recovery may restore only pinned verified control definitions or regenerate/replay declared derived projection state; it may never invent a missing event, HUMAN decision, provider outcome or historical transition.",
           "Replay divergence is an integrity failure. Automatic recovery may not overwrite authoritative evidence merely to make hashes match.",
-          "Unknown predicates, arbitrary executable transition expressions and ambiguous authoritative transitions fail closed."
+          "Unknown predicates, arbitrary executable transition expressions and ambiguous authoritative transitions fail closed.",
+          "Acceptance recovery may restore only pinned acceptance definitions or replay/regenerate the derived acceptance ledger from verified events; it may never fabricate evidence, PASS reviews, approvals or requirement satisfaction.",
+          "A failed independent-review or authority requirement is a business/governance fact, not a repairable presentation defect.",
+          "Acceptance Contract mutation after approval requires a new governed contract revision; Self-Healing must not edit requirements to make work pass."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -4037,7 +4151,13 @@
           "ALTER_EVENT_SEQUENCE_TO_FORCE_REPLAY",
           "AUTO_SELECT_AMBIGUOUS_AUTHORITATIVE_TRANSITION",
           "EXECUTE_ARBITRARY_CODE_FROM_TRANSITION_MODEL",
-          "OVERWRITE_AUTHORITATIVE_STATE_TO_MATCH_REPLAY"
+          "OVERWRITE_AUTHORITATIVE_STATE_TO_MATCH_REPLAY",
+          "FABRICATE_ACCEPTANCE_EVIDENCE",
+          "FABRICATE_REVIEW_PASS",
+          "FABRICATE_AUTHORITY_APPROVAL",
+          "RELAX_REVIEW_INDEPENDENCE",
+          "REMOVE_ACCEPTANCE_REQUIREMENT_TO_PASS",
+          "REWRITE_APPROVED_ACCEPTANCE_CONTRACT_HASH"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -4115,7 +4235,7 @@
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
       "sourcePath": "v0.11.0/module-self-healing-model.json",
-      "sourceBlobSha": "e97b6191d13fd96ad49960866ad482d71caab6a9",
+      "sourceBlobSha": "f46b3e0b6983236491481a890cff25e8fd98a217",
       "content": {
         "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
         "schemaVersion": "0.11.0",
@@ -6805,6 +6925,192 @@
               "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
               "INVENT_MISSING_EVENT",
               "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-ACCEPTANCE_MODEL",
+            "moduleKey": "acceptanceModel",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.acceptanceModel + integrityManifest.acceptanceModel",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "DETERMINISTIC_ACCEPTANCE_VALIDATION_FAILURE",
+              "ACCEPTANCE_CONTRACT_HASH_MISMATCH",
+              "UNTYPED_ACCEPTANCE_CRITERION",
+              "REVIEW_INDEPENDENCE_FAILURE",
+              "AUTHORITY_REQUIREMENT_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_ACCEPTANCE_CONTROL_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_ACCEPTANCE_EVIDENCE",
+              "INVENT_REVIEW_PASS",
+              "INVENT_AUTHORITY_APPROVAL",
+              "RELAX_REVIEW_INDEPENDENCE",
+              "REMOVE_ACCEPTANCE_REQUIREMENT",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_ACCEPTANCE_FACT_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "ACCEPTANCE_MODEL_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "ACCEPTANCE_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "ACCEPTANCE_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_ACCEPTANCE_CONTRACT",
+            "moduleKey": "schemaAcceptanceContract",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAcceptanceContract + integrityManifest.schemaAcceptanceContract",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_ACCEPTANCE_FACT",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_REVIEW_DECISION",
+            "moduleKey": "schemaReviewDecision",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaReviewDecision + integrityManifest.schemaReviewDecision",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_ACCEPTANCE_FACT",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AUTHORITY_DECISION",
+            "moduleKey": "schemaAuthorityDecision",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAuthorityDecision + integrityManifest.schemaAuthorityDecision",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_ACCEPTANCE_FACT",
               "ACCEPT_UNVERIFIED_STATE"
             ],
             "retryBudget": 1,
@@ -15063,7 +15369,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.11.0/conformance.json",
-      "sourceBlobSha": "603807a2b0667c3ddeedece1c2ea5cffe695447c",
+      "sourceBlobSha": "67aed82e439aa90746fd5ff2c9189d57f601e1a2",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.11.0",
@@ -15943,12 +16249,102 @@
             "id": "CF-175",
             "statement": "SAFOR 0.11.0-rc.1 exposes an explicit executable-transition boundary and does not claim un-migrated governance rules are already deterministic.",
             "expected": true
+          },
+          {
+            "id": "CF-176",
+            "statement": "Kernel binds the deterministic Acceptance Model and the Acceptance Contract, Review Decision and Authority Decision schemas.",
+            "expected": true
+          },
+          {
+            "id": "CF-177",
+            "statement": "Planning materializes one typed Acceptance Contract per executable Work Item from approved criteria, Factory evidence, review and authority requirements.",
+            "expected": true
+          },
+          {
+            "id": "CF-178",
+            "statement": "Plan approval explicitly includes the Work Item Acceptance Contract set and material contract changes require governed replan/new approval.",
+            "expected": true
+          },
+          {
+            "id": "CF-179",
+            "statement": "Every Acceptance Contract criterion preserves the approved criterion text and references at least one typed EVIDENCE, REVIEW or AUTHORITY requirement.",
+            "expected": true
+          },
+          {
+            "id": "CF-180",
+            "statement": "Acceptance Contract integrity is canonical SHA-256 excluding only contractHash; a mismatching hash cannot be registered.",
+            "expected": true
+          },
+          {
+            "id": "CF-181",
+            "statement": "E05 uses the deterministic Acceptance Model while retaining the bound Factory evidenceContract as required domain input.",
+            "expected": true
+          },
+          {
+            "id": "CF-182",
+            "statement": "WORK_ITEM_ACCEPTED is the only rc.2 executable transition that may materialize Work Item status ACCEPTED.",
+            "expected": true
+          },
+          {
+            "id": "CF-183",
+            "statement": "Acceptance evidence must match work-item subject and required evidenceType; PINNED evidence requires revisionRef.",
+            "expected": true
+          },
+          {
+            "id": "CF-184",
+            "statement": "Independent review requires performer and approving reviewer to differ when configured; self-review cannot satisfy the contract.",
+            "expected": true
+          },
+          {
+            "id": "CF-185",
+            "statement": "Agent acceptanceSelfCheck is advisory and cannot satisfy independent review, provider evidence or authority approval.",
+            "expected": true
+          },
+          {
+            "id": "CF-186",
+            "statement": "Authority satisfaction requires an exact workItemId/authorityId APPROVED decision with pinned source revision.",
+            "expected": true
+          },
+          {
+            "id": "CF-187",
+            "statement": "A recorded REJECTED decision for a required authority blocks acceptance for the current active contract.",
+            "expected": true
+          },
+          {
+            "id": "CF-188",
+            "statement": "Duplicate evidenceId, reviewId or authority decisionId records under new events are rejected from the acceptance replay ledger.",
+            "expected": true
+          },
+          {
+            "id": "CF-189",
+            "statement": "Acceptance ledger is a replay-derived projection of pinned contracts/evidence/reviews/decisions, not an independent business-authority source.",
+            "expected": true
+          },
+          {
+            "id": "CF-190",
+            "statement": "Review CHANGES_REQUIRED deterministically routes the Work Item to CHANGES_REQUIRED and does not self-heal into PASS.",
+            "expected": true
+          },
+          {
+            "id": "CF-191",
+            "statement": "Acceptance recovery SH-22 forbids fabricated evidence, review PASS, authority approval, relaxed independence or requirement deletion.",
+            "expected": true
+          },
+          {
+            "id": "CF-192",
+            "statement": "Work Item ACCEPTED remains distinct from VALUE_SUPPORTED; deterministic acceptance cannot substitute for outcome evidence.",
+            "expected": true
+          },
+          {
+            "id": "CF-193",
+            "statement": "The rc.2 deterministic-control boundary explicitly lists acceptance registration, evidence/review/authority recording and WORK_ITEM_ACCEPTED transitions while leaving later governance areas deferred.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/deterministic-control-v0.11.0-rc.1",
+          "branch": "safor/deterministic-acceptance-v0.11.0-rc.2",
           "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "Deterministic Control Kernel rc.1 model, pure reducer, replay semantics and initial transition slice implemented. Machine validation and deterministic CI tests are required before release-candidate acceptance."
+          "note": "Deterministic Acceptance/Evidence model, typed contracts, replay ledger, review independence and authority gates implemented. Machine validation and acceptance test matrix are required before rc.2 acceptance."
         }
       },
       "selfHealingProfileId": "MRP-CONFORMANCE"
@@ -16078,7 +16474,7 @@
     "deterministicControl": {
       "key": "deterministicControl",
       "sourcePath": "v0.11.0/deterministic-control-model.json",
-      "sourceBlobSha": "2e25c64a05fe1dab36d6983e7c7032254456ebd7",
+      "sourceBlobSha": "fddb2708b78526636aeb462f46d0ba5cbefed981",
       "content": {
         "format": "SAFOR_DETERMINISTIC_CONTROL_MODEL",
         "schemaVersion": "0.11.0",
@@ -16121,7 +16517,7 @@
           "wallClockReadForbidden": true,
           "randomnessForbidden": true,
           "arbitraryCodeFromJsonForbidden": true,
-          "projectionSetRule": "The projection set is a read-only pinned view over authoritative Control, Value-Stream and Execution aggregates. It is not a fourth authoritative domain aggregate."
+          "projectionSetRule": "The projection set is a read-only pinned view over authoritative Control, Value-Stream and Execution aggregates plus replay-derived Acceptance ledger inputs. The Acceptance ledger is a deterministic replay projection, not an independent source of business authority."
         },
         "eventApplication": {
           "orderBy": "sequence",
@@ -16151,11 +16547,30 @@
             "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION"
           ],
           "deferred": [
-            "FULL_ACCEPTANCE_PREDICATES",
             "FULL_AGENT_LIFECYCLE",
             "FULL_SCHEDULER_REDUCER",
             "FULL_SELF_HEALING_TRANSITIONS",
             "FULL_EVENT_SOURCED_AGGREGATE_REPLACEMENT"
+          ]
+        },
+        "rc2Boundary": {
+          "executableTransitions": [
+            "ACCEPTANCE_CONTRACT_REGISTERED",
+            "ACCEPTANCE_EVIDENCE_RECORDED",
+            "ACCEPTANCE_REVIEW_APPROVED_RECORDED",
+            "ACCEPTANCE_REVIEW_CHANGES_REQUIRED_RECORDED",
+            "ACCEPTANCE_AUTHORITY_APPROVED_RECORDED",
+            "ACCEPTANCE_AUTHORITY_REJECTED_RECORDED",
+            "WORK_ITEM_ACCEPTED"
+          ],
+          "deterministicAcceptanceModelRef": "acceptance-model.json",
+          "remainingDeferred": [
+            "FULL_AGENT_LIFECYCLE",
+            "FULL_SCHEDULER_REDUCER",
+            "FULL_SELF_HEALING_TRANSITIONS",
+            "FULL_EVENT_SOURCED_AGGREGATE_REPLACEMENT",
+            "CONDITIONAL_FACTORY_EVIDENCE_COMPILER",
+            "OUTCOME_ACCEPTANCE"
           ]
         }
       },
