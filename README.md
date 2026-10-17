@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.11.0-rc.1 — Release Candidate**
+> Current maturity: **v0.11.0-rc.2 — Release Candidate**
 
 ## Start here
 
@@ -25,9 +25,9 @@ These concerns are intentionally separate.
 
 ## Distribution
 
-- `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` — immutable-name release-candidate distribution.
+- `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` — immutable-name release-candidate distribution.
 - `SAFOR-MASTER-COMPLETE.json` — latest release-candidate alias.
-- `v0.11.0/` — deterministic-control overlay: typed events, closed predicates, executable transitions, effect intents, replay/hash contracts and updated kernel/recovery/conformance.
+- `v0.11.0/` — deterministic-control overlay with typed events, closed predicates, executable transitions, replay/hash contracts and deterministic Acceptance Contracts over Evidence, independent Review and Authority decisions.
 - `v0.10.0/` — retained compatible baseline for unchanged Factory, Operating Model, Agent Workspace, Scheduler and HUMAN interaction modules.
 - `v0.9.0/`, `v0.8.0/`, `v0.7.0/`, `v0.6.0/`, `v0.5.0/` and `v0.4.0/` — retained historical source baselines.
 
@@ -58,4 +58,4 @@ The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR is currently a **Release Candidate**, not General Availability. v0.11.0-rc.1 proves an executable deterministic control substrate for an explicit transition slice; it does not yet claim that every legacy governance rule has been migrated. GA requires clean GitHub/GitLab, Agent Workspace, canonical Job Contract, module-wide self-healing, HUMAN cognitive-load acceptance, six-agent parallel scheduling and Git-trace/HUMAN-result acceptance plus an explicit HUMAN licensing/distribution decision.
+SAFOR is currently a **Release Candidate**, not General Availability. v0.11.0-rc.2 extends the executable deterministic control substrate through Work Item acceptance. It still does not claim that every legacy governance rule has been migrated. GA requires clean GitHub/GitLab, Agent Workspace, canonical Job Contract, module-wide self-healing, HUMAN cognitive-load acceptance, six-agent parallel scheduling and Git-trace/HUMAN-result acceptance plus an explicit HUMAN licensing/distribution decision.
