@@ -1,0 +1,265 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.13.0/package-catalog.schema.json",
+  "title": "SAFOR Package Catalog 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "status",
+    "canonicalFrameworkRepository",
+    "entries",
+    "creationProfiles"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PACKAGE_CATALOG"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "status": {
+      "const": "PUBLIC_CATALOG"
+    },
+    "canonicalFrameworkRepository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "creationProfiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/creationProfile"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "kind",
+        "label",
+        "accessMode",
+        "sku",
+        "supportedCreationTypes",
+        "selectionClass",
+        "distribution"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "pattern": "^safor\\.(factory|om)\\."
+        },
+        "kind": {
+          "enum": [
+            "FACTORY",
+            "OPERATING_MODEL"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessMode": {
+          "enum": [
+            "FREE_PUBLIC",
+            "PAID_ENTITLEMENT_REQUIRED"
+          ]
+        },
+        "sku": {
+          "type": "string",
+          "minLength": 1
+        },
+        "supportedCreationTypes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "selectionClass": {
+          "enum": [
+            "STARTER",
+            "STANDARD",
+            "PREMIUM",
+            "SPECIALIZED",
+            "CUSTOM"
+          ]
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionPolicy": {
+          "enum": [
+            "COMMERCIAL_CURRENT"
+          ]
+        },
+        "distribution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "sourceClass"
+          ],
+          "properties": {
+            "sourceClass": {
+              "enum": [
+                "PUBLIC_CANONICAL_REPOSITORY",
+                "ENTITLED_PACKAGE_SOURCE"
+              ]
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "publicModelPath": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "legacyDisclosure": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accessMode": {
+                "const": "FREE_PUBLIC"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "version"
+            ],
+            "properties": {
+              "distribution": {
+                "required": [
+                  "sourceClass",
+                  "path"
+                ],
+                "properties": {
+                  "sourceClass": {
+                    "const": "PUBLIC_CANONICAL_REPOSITORY"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "accessMode": {
+                "const": "PAID_ENTITLEMENT_REQUIRED"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "versionPolicy"
+            ],
+            "properties": {
+              "distribution": {
+                "required": [
+                  "sourceClass",
+                  "publicModelPath"
+                ],
+                "properties": {
+                  "sourceClass": {
+                    "const": "ENTITLED_PACKAGE_SOURCE"
+                  },
+                  "publicModelPath": {
+                    "type": "null"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "creationProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "creationType",
+        "label",
+        "defaultFactoryPackageId",
+        "defaultOperatingModelPackageId",
+        "selectionPolicy",
+        "missingAccessOutcome"
+      ],
+      "properties": {
+        "creationType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "defaultFactoryPackageId": {
+          "type": "string",
+          "pattern": "^safor\\.factory\\."
+        },
+        "defaultOperatingModelPackageId": {
+          "type": "string",
+          "pattern": "^safor\\.om\\."
+        },
+        "selectionPolicy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "factoryOverrideAllowed",
+            "operatingModelOverrideAllowed",
+            "requireExplicitHumanApprovalForPaidOverride",
+            "requirePairCompatibility",
+            "resolveEachPackageAccessIndependently"
+          ],
+          "properties": {
+            "factoryOverrideAllowed": {
+              "const": true
+            },
+            "operatingModelOverrideAllowed": {
+              "const": true
+            },
+            "requireExplicitHumanApprovalForPaidOverride": {
+              "const": true
+            },
+            "requirePairCompatibility": {
+              "const": true
+            },
+            "resolveEachPackageAccessIndependently": {
+              "const": true
+            }
+          }
+        },
+        "autoResolveDefaultsFromPublicFrameworkGit": {
+          "type": "boolean"
+        },
+        "missingAccessOutcome": {
+          "const": "PACKAGE_ACCESS_REQUIRED"
+        }
+      }
+    }
+  }
+}
