@@ -1082,11 +1082,131 @@
       "id": "CF-216",
       "statement": "Control workspace strategy is conditional: REMOTE_SEPARATE_SAFOR_MEMORY for REMOTE_GIT and LOCAL_MASTER_CONTROL_ROOT for LOCAL_GIT.",
       "expected": true
+    },
+    {
+      "id": "CF-217",
+      "statement": "Operation Mode model and Operation Mode binding schema are embedded, pinned and referenced by the Kernel.",
+      "expected": true
+    },
+    {
+      "id": "CF-218",
+      "statement": "SAFOR resolves DESIGN, VALIDATION or EXECUTION before every mutating effect.",
+      "expected": true
+    },
+    {
+      "id": "CF-219",
+      "statement": "DESIGN is explicitly Framework/schema/package development and is not represented as HUMAN project Value Creation execution.",
+      "expected": true
+    },
+    {
+      "id": "CF-220",
+      "statement": "VALIDATION requires an explicitly isolated non-production target.",
+      "expected": true
+    },
+    {
+      "id": "CF-221",
+      "statement": "Validation evidence cannot silently satisfy production execution mandate, Work Item acceptance, release authority or business outcome authority.",
+      "expected": true
+    },
+    {
+      "id": "CF-222",
+      "statement": "EXECUTION targets a HUMAN project workspace and is distinct from DESIGN/VALIDATION.",
+      "expected": true
+    },
+    {
+      "id": "CF-223",
+      "statement": "EXECUTION AGENT dispatch permits only HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION activation/continuation.",
+      "expected": true
+    },
+    {
+      "id": "CF-224",
+      "statement": "HUMAN_MANUAL_TEST_ONLY is restricted to an explicit VALIDATION manual test harness.",
+      "expected": true
+    },
+    {
+      "id": "CF-225",
+      "statement": "Agent Runtime capabilities require actual host/runtime evidence; declarations alone do not satisfy dispatch.",
+      "expected": true
+    },
+    {
+      "id": "CF-226",
+      "statement": "Background wakeup defaults false and requires explicit capability evidence before use.",
+      "expected": true
+    },
+    {
+      "id": "CF-227",
+      "statement": "Provider Adapter and Agent Runtime Adapter remain logically separate bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-228",
+      "statement": "Agent Runtime Adapter cannot grant provider rights, Operating Model authority, execution mandate, package entitlement, review approval or acceptance.",
+      "expected": true
+    },
+    {
+      "id": "CF-229",
+      "statement": "The canonical Agent Job Contract includes explicit Operation Mode and Agent Runtime binding/capability evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-230",
+      "statement": "Agent Job transport remains REPOSITORY_PULL and copied job prompts/contracts are forbidden as authority.",
+      "expected": true
+    },
+    {
+      "id": "CF-231",
+      "statement": "HUMAN Decision Gate explicitly forbids routine agent chat activation/wakeup, job transport, inbox polling, result transport and manual dispatch sequencing in EXECUTION.",
+      "expected": true
+    },
+    {
+      "id": "CF-232",
+      "statement": "Missing EXECUTION agent automation fails closed as AGENT_RUNTIME_AUTOMATION_UNAVAILABLE instead of producing a HUMAN workflow task.",
+      "expected": true
+    },
+    {
+      "id": "CF-233",
+      "statement": "EXECUTION cannot silently downgrade to VALIDATION to bypass missing Agent Runtime capability.",
+      "expected": true
+    },
+    {
+      "id": "CF-234",
+      "statement": "Agent Workspace activation is delegated to a verified Agent Runtime binding and no longer treats HUMAN activation as generic production trigger.",
+      "expected": true
+    },
+    {
+      "id": "CF-235",
+      "statement": "SH-24 governs Agent Runtime / Operation Mode failures and forbids capability fabrication or HUMAN-operation fallback.",
+      "expected": true
+    },
+    {
+      "id": "CF-236",
+      "statement": "Every embedded 0.12.0-rc.2 Framework module has exactly one recovery profile; target coverage is 65/65.",
+      "expected": true
+    },
+    {
+      "id": "CF-237",
+      "statement": "Initialization resolves Operation Mode before Creation Type, package resolution or project workspace selection.",
+      "expected": true
+    },
+    {
+      "id": "CF-238",
+      "statement": "EXECUTION may proceed without an Agent Runtime while no AGENT work is required; runtime becomes mandatory before AGENT dispatch.",
+      "expected": true
+    },
+    {
+      "id": "CF-239",
+      "statement": "MANUAL_TEST_HARNESS output is non-production and cannot prove production Agent Runtime automation.",
+      "expected": true
+    },
+    {
+      "id": "CF-240",
+      "statement": "Operation-mode changes cannot create or expand authority, provider rights or runtime capability.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
-    "branch": "safor/modular-packages-human-workspace-v0.12.0-rc.1",
-    "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-    "note": "Modular package distribution, commercial entitlement boundary and HUMAN-owned REMOTE_GIT/LOCAL_GIT workspace architecture implemented. Machine validation required before rc.1 acceptance."
+    "branch": "safor/agent-runtime-modes-v0.12.0-rc.2",
+    "result": "PENDING_MACHINE_VALIDATION",
+    "note": "Operation Mode, Agent Runtime Adapter, HUMAN activation governance, runtime-bound Agent Jobs and SH-24 added. Machine build/validator/test gates pending."
   }
 }
