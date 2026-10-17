@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -258,7 +258,7 @@ For one mutating agent job and one read-only agent job:
 ## N. HUMAN Cognitive Load and Communication
 
 **Preconditions**
-- Start a fresh chat with the exact v0.10 release artifact.
+- Start a fresh chat with the exact v0.11 release artifact.
 - Use a realistic project where Discovery requires genuine HUMAN intent and priorities.
 - Retain the interaction transcript plus emitted interaction-menu metadata.
 
@@ -305,3 +305,25 @@ For one mutating agent job and one read-only agent job:
 28. SAFOR never presents that number as a validated psychological/scientific cognitive-load measurement.
 
 **Pass condition:** all 28 observations are evidenced. The transcript must show a deliberately higher HUMAN contribution during genuine Discovery and a clear reduction after planning/authorization, with only temporary, reasoned load increases for material decisions.
+
+## Scenario O — Deterministic Control Kernel
+
+Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly and fails closed around integrity/authority boundaries.
+
+1. Load the exact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` artifact and verify K00 then K00A complete before provider/project work.
+2. Create or load a project with a PLANNED work item whose dependency is ACCEPTED, required input object is resolvable, resource declaration is complete and an active execution mandate covers the work item/capability.
+3. Submit a typed `WORK_ITEM_READINESS_REEVALUATION_REQUESTED` event with the next contiguous sequence.
+4. Verify the deterministic transition is `WORK_ITEM_BECOMES_READY`, the work item becomes READY, `execution.readySince` comes from the event timestamp and the resulting canonical state hash is recorded.
+5. Replay the same genesis projection set and ordered events; the replayed state hash must equal the stored state hash.
+6. Re-submit the identical eventId/canonical event; verify `IDEMPOTENT_NO_OP` and unchanged state hash.
+7. Re-submit the same eventId with different payload; verify `INTEGRITY_FAILURE` and no state change.
+8. Remove or revoke the covering mandate and retry readiness from a valid genesis/next event sequence; verify no READY transition occurs.
+9. Submit `PAUSE_PROJECT_REQUESTED`; verify Control mode becomes PAUSED, status WAITING_HUMAN and prior mode is retained in resumeMode.
+10. Submit `RESUME_PROJECT_REQUESTED`; verify the prior nonterminal mode is restored and guards are re-evaluated before further execution.
+11. Submit `STOP_PROJECT_REQUESTED`; verify all active mandates are revoked with revokedAt derived from the triggering event and Control mode becomes STOPPED.
+12. Submit RESUME after STOP; verify Control moves to AWAITING_AUTHORIZATION and execution authority is not restored.
+13. Submit `EXTERNAL_MUTATION_OUTCOME_UNKNOWN`; verify Control becomes RECOVERING/RECONCILE_REQUIRED and a PROVIDER_READBACK effect intent is emitted without retrying the mutation.
+14. Inject an unknown predicate identifier or duplicate an otherwise applicable transition so two authoritative transitions match; verify fail-closed CONTROL_FAILURE.
+15. Verify no transition JSON contains executable code fields and the reference reducer imports no provider/network/LLM/random/time execution facility.
+
+Pass criteria: identical canonical inputs and pinned model revision produce identical logical transition outputs/state hashes; replay reproduces the stored hash; integrity/authority ambiguities never auto-advance state.
