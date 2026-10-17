@@ -4,7 +4,7 @@
   "kernelVersion": "0.12.0",
   "definitionId": "safor-master-kernel",
   "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-  "purpose": "Portable SAFOR Framework kernel for modular Factory/Operating Model loading, commercial entitlement gating, HUMAN-owned remote/local Git workspaces and deterministic governance.",
+  "purpose": "Portable SAFOR Framework kernel for modular domain packages, explicit DESIGN/VALIDATION/EXECUTION governance, evidence-bound Agent Runtime activation, HUMAN-owned workspaces and deterministic control.",
   "bootstrapContract": {
     "singleFileEntry": true,
     "entryFile": "SAFOR-FRAMEWORK.json",
@@ -101,13 +101,26 @@
     "humanOwnsProjectWorkspace": true,
     "localGitWorkspaceSupported": true,
     "projectWorkspaceSeparateFromPackageSource": true,
-    "frameworkRepositoryNeverProjectTarget": true
+    "frameworkRepositoryNeverProjectTarget": true,
+    "explicitOperationModeBeforeMutation": true,
+    "designValidationExecutionSeparated": true,
+    "agentRuntimeAdapterRequiredForAgentDispatch": true,
+    "agentRuntimeCapabilityEvidenceRequired": true,
+    "agentRuntimeAutomationRequiredInExecution": true,
+    "manualHumanAgentActivationValidationOnly": true,
+    "providerAndAgentRuntimeBindingsSeparate": true,
+    "humanNeverRoutineAgentOperator": true,
+    "executionToValidationFallbackForbidden": true
   },
   "moduleArchitecture": {
     "layers": [
       {
         "id": "MASTER_KERNEL",
         "responsibility": "Generic orchestration, state transitions, evidence, authorization, reconciliation, package loading and invariants."
+      },
+      {
+        "id": "OPERATION_MODE",
+        "responsibility": "Resolve and govern DESIGN, VALIDATION or EXECUTION before mutating effects so Framework authoring, isolated tests and real project Value Creation cannot be conflated."
       },
       {
         "id": "DETERMINISTIC_CONTROL_KERNEL",
@@ -148,6 +161,10 @@
       {
         "id": "AGENT_JOB_CONTRACT",
         "responsibility": "Immutable, self-describing MASTER-issued execution contract binding job identity, package lineage, MASTER provenance, agent/role/skills, scope, immutable inputs, authorization, workspace, scheduling, output routes and verification."
+      },
+      {
+        "id": "AGENT_RUNTIME",
+        "responsibility": "Bind and verify actual AGENT activation/continuation capabilities independently from repository Provider Adapters; prohibit HUMAN manual workflow operation in EXECUTION."
       },
       {
         "id": "AGENT_WORKSPACE_PROTOCOL",
@@ -203,7 +220,18 @@
       "Free-text or qualitative acceptance criteria may not be directly marked PASS by an LLM; they must resolve to typed EVIDENCE, REVIEW or AUTHORITY requirements in the approved Acceptance Contract.",
       "Agent acceptanceSelfCheck is advisory only and cannot satisfy required independent review or authority approval.",
       "A Work Item may become ACCEPTED only through the deterministic acceptance transition after all requirements of its hash-valid ACTIVE Acceptance Contract are satisfied.",
-      "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED."
+      "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED.",
+      "OPERATION_MODE is resolved before every mutating effect; DESIGN, VALIDATION and EXECUTION semantics must not be silently substituted.",
+      "DESIGN may target the canonical SAFOR Framework repository as a development target, but that does not make it a HUMAN project workspace.",
+      "VALIDATION requires an isolated non-production target; manual HUMAN agent activation is allowed only as an explicit test harness.",
+      "Validation evidence cannot silently satisfy production execution mandate, Work Item acceptance or business outcome authority.",
+      "AGENT_RUNTIME is logically separate from PROVIDER_ADAPTER even when one host implementation supplies both capabilities.",
+      "Before AGENT dispatch, MASTER must bind an Agent Runtime Adapter and verify actual activation/continuation capability evidence.",
+      "EXECUTION permits AGENT dispatch only through HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION activation capability.",
+      "Missing EXECUTION agent automation yields AGENT_RUNTIME_AUTOMATION_UNAVAILABLE; SAFOR must not ask the HUMAN to open chats, copy jobs, poll inboxes or transport results.",
+      "Repository-native Agent Job JSON remains authoritative regardless of Agent Runtime Adapter.",
+      "An Agent Runtime Adapter cannot grant repository/provider rights, Operating Model authority, execution mandate, package entitlement or acceptance.",
+      "EXECUTION must never be silently downgraded to VALIDATION to bypass missing Agent Runtime capability."
     ]
   },
   "packageSystem": {
@@ -256,7 +284,9 @@
       "executionState": "state/execution.json",
       "agentRegistry": "agents/index.json",
       "schedulerState": "master/scheduler/state.json",
-      "workspaceBinding": "workspace.json"
+      "workspaceBinding": "workspace.json",
+      "operationModeBinding": "operation-mode.json",
+      "agentRuntimeBindings": "agent-runtimes.json"
     },
     "directories": [
       "packages/",
@@ -296,7 +326,9 @@
       "dispatchWaves": "master/dispatch-waves/",
       "resourceLeases": "master/resource-leases/"
     },
-    "workspaceRule": "Project-specific work is materialized only in the HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. Remote control state remains in HUMAN safor-memory; local control state is under MASTER-only .safor/."
+    "workspaceRule": "Project-specific work is materialized only in the HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. Remote control state remains in HUMAN safor-memory; local control state is under MASTER-only .safor/.",
+    "operationModeRule": "EXECUTION projects persist an operation-mode binding. Agent Runtime bindings may be empty until AGENT work is required, but must be present and capability-verified before AGENT dispatch.",
+    "agentRuntimeRule": "Agent Runtime bindings are separate from Provider Adapter bindings and never create project/provider authority."
   },
   "providerCapabilityVocabulary": [
     "provider.identity.read",
@@ -410,7 +442,9 @@
     "authorityDecision": "schemas/authority-decision.schema.json",
     "packageCatalog": "schemas/package-catalog.schema.json",
     "entitlement": "schemas/entitlement.schema.json",
-    "workspaceBinding": "schemas/workspace-binding.schema.json"
+    "workspaceBinding": "schemas/workspace-binding.schema.json",
+    "operationModeBinding": "schemas/operation-mode-binding.schema.json",
+    "agentRuntimeBinding": "schemas/agent-runtime-binding.schema.json"
   },
   "controlPlane": {
     "startActionId": "K00",
@@ -420,6 +454,12 @@
         "actions": [
           "K00",
           "K00A",
+          "K00B",
+          "K00C",
+          "KD01",
+          "KV01",
+          "KV02",
+          "KE00",
           "K01",
           "K02",
           "K03",
@@ -524,6 +564,63 @@
         "modelRef": "deterministic-control-model.json"
       },
       {
+        "id": "K00B",
+        "operation": "VERIFY_OPERATION_MODE_AND_AGENT_RUNTIME_BASELINE",
+        "purpose": "Verify pinned operation-mode, Agent Runtime, binding-schema, Agent Workspace and HUMAN activation-governance modules before any mode-specific mutation.",
+        "domainNeutral": true,
+        "modelRef": "agent-runtime-model.json"
+      },
+      {
+        "id": "K00C",
+        "operation": "RESOLVE_OPERATION_MODE",
+        "purpose": "Derive DESIGN, VALIDATION or EXECUTION from HUMAN intent and target context before any mutating effect; ask only when mode cannot be safely derived.",
+        "domainNeutral": true,
+        "modelRef": "operation-mode-model.json",
+        "humanDecisionWhen": "ONLY_IF_MODE_CANNOT_BE_DERIVED_SAFELY",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
+      },
+      {
+        "id": "KD01",
+        "operation": "BIND_DESIGN_TARGET",
+        "when": "OPERATION_MODE == DESIGN",
+        "purpose": "Bind the explicit Framework/schema/package development target without entering a HUMAN project Value Creation Stream.",
+        "domainNeutral": true,
+        "modelRef": "operation-mode-model.json"
+      },
+      {
+        "id": "KV01",
+        "operation": "BIND_ISOLATED_VALIDATION_TARGET",
+        "when": "OPERATION_MODE == VALIDATION",
+        "purpose": "Bind an isolated non-production validation target and prevent validation evidence from silently becoming production authority.",
+        "domainNeutral": true,
+        "modelRef": "operation-mode-model.json"
+      },
+      {
+        "id": "KV02",
+        "operation": "BIND_VALIDATION_AGENT_RUNTIME",
+        "when": "OPERATION_MODE == VALIDATION",
+        "purpose": "Bind and verify a validation Agent Runtime; HUMAN_MANUAL_TEST_ONLY is allowed only for an explicit isolated manual-host test harness.",
+        "domainNeutral": true,
+        "modelRef": "agent-runtime-model.json"
+      },
+      {
+        "id": "KE00",
+        "operation": "VERIFY_EXECUTION_AGENT_RUNTIME_POLICY",
+        "when": "OPERATION_MODE == EXECUTION",
+        "purpose": "Establish that AGENT dispatch later in EXECUTION requires verified HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION capability; do not require a runtime before AGENT work is needed.",
+        "domainNeutral": true,
+        "modelRef": "agent-runtime-model.json"
+      },
+      {
         "id": "K01",
         "operation": "SELECT_CREATION_TYPE",
         "purpose": "HUMAN chooses the intended creation path before project location; choice determines required Factory/Operating Model package IDs.",
@@ -539,34 +636,39 @@
           "technicalDetailExposure": "SUMMARY",
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
-        }
+        },
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K02",
         "operation": "RESOLVE_PACKAGE_ACCESS_PROFILE",
         "purpose": "Resolve FREE_PUBLIC versus PAID_ENTITLEMENT_REQUIRED access requirements from public package catalog.",
         "domainNeutral": true,
-        "modelRef": "package-distribution-model.json"
+        "modelRef": "package-distribution-model.json",
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K03",
         "operation": "RESOLVE_REQUIRED_PACKAGES",
         "purpose": "Resolve explicit HUMAN-loaded, entitled or public-free Factory/Operating Model packages according to access policy.",
         "domainNeutral": true,
-        "modelRef": "package-distribution-model.json"
+        "modelRef": "package-distribution-model.json",
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K04",
         "operation": "VERIFY_PACKAGE_ACCESS_INTEGRITY",
         "purpose": "Verify entitlement when required plus package identity, immutable revision/blob and kernel compatibility.",
         "domainNeutral": true,
-        "modelRef": "commercial-entitlement-model.json"
+        "modelRef": "commercial-entitlement-model.json",
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K05",
         "operation": "VERIFY_FACTORY_OM_COMPATIBILITY",
         "purpose": "Prove the selected Factory requirements are covered by the selected Operating Model before project binding.",
-        "domainNeutral": true
+        "domainNeutral": true,
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K06",
@@ -584,14 +686,16 @@
           "technicalDetailExposure": "SUMMARY",
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
-        }
+        },
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K07",
         "operation": "VERIFY_PROJECT_WORKSPACE_CAPABILITIES",
         "purpose": "Verify actual remote-provider or local-filesystem/Git capabilities for the selected HUMAN-owned workspace.",
         "domainNeutral": true,
-        "modelRef": "workspace-model.json"
+        "modelRef": "workspace-model.json",
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K08",
@@ -609,20 +713,23 @@
           "technicalDetailExposure": "SUMMARY",
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
-        }
+        },
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K09",
         "operation": "BIND_CONTROL_WORKSPACE",
         "purpose": "Use separate safor-memory for REMOTE_GIT or protected MASTER-only .safor/ for LOCAL_GIT.",
         "domainNeutral": true,
-        "modelRef": "workspace-model.json"
+        "modelRef": "workspace-model.json",
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K10",
         "operation": "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
         "purpose": "Persist immutable package pins, access evidence and workspace binding; entitlement never changes organizational authority.",
-        "domainNeutral": true
+        "domainNeutral": true,
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K11",
@@ -640,7 +747,8 @@
           "technicalDetailExposure": "SUMMARY",
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
-        }
+        },
+        "when": "OPERATION_MODE == EXECUTION"
       },
       {
         "id": "K10A",
@@ -1046,6 +1154,44 @@
           "PROJECT_TARGET_IS_PACKAGE_SOURCE",
           "LOCAL_GIT_CAPABILITY_UNPROVEN",
           "WORKER_TARGETS_MASTER_CONTROL_ROOT"
+        ]
+      },
+      "operationMode": {
+        "modelRef": "operation-mode-model.json",
+        "appliesBefore": "EVERY_MUTATING_EFFECT",
+        "requiredChecks": [
+          "OPERATION_MODE_RESOLVED",
+          "TARGET_CLASS_COMPATIBLE_WITH_MODE",
+          "NO_SILENT_EXECUTION_TO_VALIDATION_DOWNGRADE",
+          "VALIDATION_TARGET_IS_ISOLATED_WHEN_APPLICABLE"
+        ],
+        "failClosedOn": [
+          "MODE_UNRESOLVED",
+          "MODE_TARGET_MISMATCH",
+          "VALIDATION_NOT_ISOLATED",
+          "SILENT_MODE_DOWNGRADE_ATTEMPT"
+        ]
+      },
+      "agentRuntime": {
+        "modelRef": "agent-runtime-model.json",
+        "appliesBefore": "EVERY_AGENT_DISPATCH_ACTIVATION_OR_CONTINUATION",
+        "requiredChecks": [
+          "RUNTIME_BINDING_PRESENT",
+          "ACTUAL_RUNTIME_CAPABILITY_EVIDENCE_PRESENT",
+          "RUNTIME_COMPATIBLE_WITH_OPERATION_MODE",
+          "BACKGROUND_WAKEUP_NOT_ASSUMED_WITHOUT_EVIDENCE",
+          "JOB_PROMPT_TRANSPORT_NOT_REQUIRED"
+        ],
+        "executionAllowedActivationCapabilities": [
+          "HOST_NATIVE_AUTOMATIC",
+          "EXTERNAL_AUTOMATION"
+        ],
+        "failClosedOn": [
+          "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+          "AGENT_RUNTIME_CAPABILITY_UNVERIFIED",
+          "AGENT_RUNTIME_BACKGROUND_WAKEUP_UNVERIFIED",
+          "AGENT_RUNTIME_MODE_INCOMPATIBLE",
+          "AGENT_RUNTIME_JOB_PROMPT_TRANSPORT_FORBIDDEN"
         ]
       }
     }
@@ -1710,6 +1856,86 @@
     {
       "id": "INV-165",
       "rule": "Project/control data remain HUMAN-owned whether remote or local; SAFOR does not require project artifacts to be stored in an OpenAI- or SAFOR-owned repository."
+    },
+    {
+      "id": "INV-166",
+      "rule": "SAFOR resolves and records DESIGN, VALIDATION or EXECUTION before any mutating effect."
+    },
+    {
+      "id": "INV-167",
+      "rule": "DESIGN work is Framework/schema/package development and must not be represented as execution of a HUMAN project Value Creation Stream."
+    },
+    {
+      "id": "INV-168",
+      "rule": "VALIDATION requires an explicitly isolated non-production target."
+    },
+    {
+      "id": "INV-169",
+      "rule": "VALIDATION evidence cannot silently satisfy production execution mandates, Work Item acceptance, release authority or business outcome acceptance."
+    },
+    {
+      "id": "INV-170",
+      "rule": "EXECUTION targets a HUMAN project and forbids HUMAN_MANUAL_TEST_ONLY as an AGENT execution runtime."
+    },
+    {
+      "id": "INV-171",
+      "rule": "Before AGENT dispatch in EXECUTION, a verified Agent Runtime binding must provide HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION activation and continuation."
+    },
+    {
+      "id": "INV-172",
+      "rule": "Missing AGENT automation in EXECUTION produces AGENT_RUNTIME_AUTOMATION_UNAVAILABLE and must not become a HUMAN chat-wakeup/copy-paste task."
+    },
+    {
+      "id": "INV-173",
+      "rule": "Agent Runtime capabilities are evidenced from actual host/runtime observations; declarations or prompts are not proof."
+    },
+    {
+      "id": "INV-174",
+      "rule": "Background wakeup support defaults false and becomes true only with authoritative runtime evidence."
+    },
+    {
+      "id": "INV-175",
+      "rule": "Provider Adapter bindings and Agent Runtime Adapter bindings are logically separate even if supplied by the same host implementation."
+    },
+    {
+      "id": "INV-176",
+      "rule": "Agent Runtime binding cannot create provider rights, Operating Model authority, execution mandate, package entitlement, review approval or acceptance."
+    },
+    {
+      "id": "INV-177",
+      "rule": "Repository-native Agent Job JSON remains authoritative regardless of activation/runtime mechanism."
+    },
+    {
+      "id": "INV-178",
+      "rule": "Identity bootstrap may contain only identity/context/runtime references and must not transport a full Job Contract as authority."
+    },
+    {
+      "id": "INV-179",
+      "rule": "In EXECUTION the HUMAN is never asked to open/wake routine agent chats, copy jobs, poll inboxes, move results or manually advance dispatch sequencing."
+    },
+    {
+      "id": "INV-180",
+      "rule": "EXECUTION cannot silently downgrade to VALIDATION to bypass missing Agent Runtime automation."
+    },
+    {
+      "id": "INV-181",
+      "rule": "HUMAN manual agent activation is permitted only in an explicitly labeled VALIDATION manual test harness."
+    },
+    {
+      "id": "INV-182",
+      "rule": "Operation-mode changes cannot create or expand organizational authority, provider rights or runtime capability."
+    },
+    {
+      "id": "INV-183",
+      "rule": "Agent Runtime binding is required only before AGENT dispatch/activation; EXECUTION without AGENT work may proceed without an active Agent Runtime."
+    },
+    {
+      "id": "INV-184",
+      "rule": "A MANUAL_TEST_HARNESS result is NON_PRODUCTION and cannot be reused as proof that production Agent Runtime automation exists."
+    },
+    {
+      "id": "INV-185",
+      "rule": "The canonical SAFOR repository may be a DESIGN development target but remains forbidden as an implicit HUMAN project workspace in EXECUTION."
     }
   ],
   "evidencePolicy": {
@@ -1863,5 +2089,7 @@
   "packageDistributionModelRef": "package-distribution-model.json",
   "commercialEntitlementModelRef": "commercial-entitlement-model.json",
   "workspaceModelRef": "workspace-model.json",
-  "packageCatalogRef": "package-catalog.json"
+  "packageCatalogRef": "package-catalog.json",
+  "operationModeModelRef": "operation-mode-model.json",
+  "agentRuntimeModelRef": "agent-runtime-model.json"
 }
