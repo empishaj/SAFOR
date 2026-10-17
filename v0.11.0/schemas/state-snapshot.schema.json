@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.11.0/state-snapshot.schema.json",
+  "title": "SAFOR Deterministic State Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "aggregate",
+    "projectId",
+    "modelRevision",
+    "lastAppliedEventSequence",
+    "lastAppliedEventId",
+    "state",
+    "stateHash",
+    "genesisRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_STATE_SNAPSHOT"
+    },
+    "schemaVersion": {
+      "const": "0.11.0"
+    },
+    "aggregate": {
+      "enum": [
+        "CONTROL",
+        "VALUE_STREAM",
+        "EXECUTION"
+      ]
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "modelRevision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lastAppliedEventSequence": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "lastAppliedEventId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "state": {
+      "type": "object"
+    },
+    "stateHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "genesisRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
