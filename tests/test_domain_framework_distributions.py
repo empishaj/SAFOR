@@ -6,6 +6,7 @@ from pathlib import Path
 from runtime.bootstrap_policy import (
     compute_domain_package_digest,
     evaluate_domain_framework_pair,
+    resolve_composable_creation_packages,
 )
 from tools.build_domain_framework import build_distribution, validate_distribution
 
@@ -226,6 +227,31 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
             committed = load_json(filename)
             built = build_distribution(profile_id)
             self.assertEqual(committed, built)
+
+    def test_public_evaluation_access_bundles_unlock_only_paid_test_modules(self):
+        catalog = load_json("v0.13.0/package-catalog.json")
+        for profile_id, framework_file in (
+            ("SAAS", "SAFOR-FRAMEWORK-SAAS.json"),
+            ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json"),
+        ):
+            with self.subTest(profile_id=profile_id):
+                distribution = load_json(framework_file)
+                access_file = distribution["evaluationAccess"]["file"]
+                access = load_json(access_file)
+                modules = distribution["embeddedDomainModules"]
+                result = resolve_composable_creation_packages(
+                    distribution["domain"]["creationType"],
+                    catalog,
+                    [
+                        {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": modules["factory"]},
+                        {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": modules["operatingModel"]},
+                    ],
+                    access["entitlements"],
+                    verification_context=access["verificationContext"],
+                )
+                self.assertEqual("PACKAGE_ACCESS_RESOLVED", result["outcome"], result)
+                self.assertFalse(access["restrictions"]["productionAuthorization"])
+                self.assertTrue(access["restrictions"]["testPackageVersionsOnly"])
 
 
 if __name__ == "__main__":
