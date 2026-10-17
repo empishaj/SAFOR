@@ -76,7 +76,7 @@
   "$defs": {
     "path": {
       "type": "string",
-      "pattern": "^\\$(?:state|subject)(?:\\.[A-Za-z0-9_-]+)+$"
+      "pattern": "^\\$(?:aggregate|subject)(?:\\.[A-Za-z0-9_-]+)+$"
     },
     "stateEffect": {
       "type": "object",
@@ -170,6 +170,45 @@
             },
             "match": {
               "type": "object"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "statePath"
+          ],
+          "properties": {
+            "op": {
+              "const": "SET_FROM_STATE"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "statePath": {
+              "$ref": "#/$defs/path"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "eventPath"
+          ],
+          "properties": {
+            "op": {
+              "const": "REVOKE_ACTIVE_MANDATES"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "eventPath": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+$"
             }
           }
         }
