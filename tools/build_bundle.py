@@ -188,7 +188,7 @@ def build_bundle():
         "definitionId": "safor-framework",
         "productName": "SAFOR",
         "productExpansion": "Systemic AI Factory Orchestration Runtime",
-        "purpose": "Public SAFOR Framework distribution. Factory and Operating Model are independently selectable, chat-loadable domain packages with per-package access, integrity and compatibility binding.",
+        "purpose": "Portable SAFOR Framework with a free Website starter plus commercially licensed Software/SaaS and Book domain-package paths, per-package access, integrity and compatibility binding.",
         "entrypoint": "embeddedModules.kernel.content",
         "distributionMode": "FRAMEWORK_PLUS_EXTERNAL_DOMAIN_PACKAGES",
         "runtimeContract": {
