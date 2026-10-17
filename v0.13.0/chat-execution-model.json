@@ -1,0 +1,35 @@
+{
+  "format": "SAFOR_CHAT_EXECUTION_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-DECLARATIVE-CHAT-EXECUTION",
+  "purpose": "Define SAFOR as a JSON-governed product executed by a compatible ordinary LLM chat using the host tools that actually exist, without requiring customer-installed SAFOR runtime software.",
+  "primaryExecutionMode": "DECLARATIVE_LLM_CHAT",
+  "customerInstalledRuntimeRequired": false,
+  "requiredCustomerInstallation": "NONE",
+  "requiredChatCapabilities": [
+    "READ_UPLOADED_JSON",
+    "MAINTAIN_CURRENT_CHAT_CONTEXT",
+    "READ_GIT_ARTIFACTS_WHEN_AUTHORIZED",
+    "WRITE_GIT_ARTIFACTS_WHEN_AUTHORIZED"
+  ],
+  "referenceImplementations": {
+    "role": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION",
+    "requiredForNormalChatUse": false,
+    "mayStrengthenTechnicalEnforcement": true,
+    "mayNotBePresentedAsCustomerInstallationPrerequisite": true
+  },
+  "truthBoundary": {
+    "jsonDefinesNormativeBehavior": true,
+    "jsonCannotCreateProviderRights": true,
+    "jsonCannotGuaranteeHostCompliance": true,
+    "hostAndProviderEvidenceRemainAuthoritative": true,
+    "technicalLimitationsMustBeDisclosedWithoutChangingTheProductMode": true
+  },
+  "invariants": [
+    "A compatible ordinary LLM chat is the primary SAFOR execution surface.",
+    "No domain path may require a customer-installed SAFOR runtime.",
+    "Optional reference code may validate or strengthen enforcement but never replaces the declarative chat contract.",
+    "Missing optional reference execution is not itself a product blocker.",
+    "Actual Git/provider capabilities and permissions are discovered and verified before effects are claimed."
+  ]
+}

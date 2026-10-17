@@ -1,0 +1,36 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.13.0",
+  "schemaRef": "schemas/agent-response.schema.json",
+  "targetOwner": "MASTER",
+  "persistence": "VERSIONED_GIT_ARTIFACT",
+  "templateId": "job_result",
+  "responseType": "JOB_RESULT",
+  "defaultLifecycleStatus": "SUBMITTED",
+  "requiredPayloadFields": [
+    "artifactRefs",
+    "gitTrace",
+    "verification",
+    "openItems"
+  ],
+  "commonRequiredFields": [
+    "responseId",
+    "responseType",
+    "projectId",
+    "workPackageId",
+    "jobId",
+    "agentId",
+    "identityRevision",
+    "createdAt",
+    "contractRef",
+    "responseTemplateRef",
+    "targetMasterRef",
+    "lifecycleStatus",
+    "summary",
+    "affectedRefs",
+    "evidenceRefs",
+    "masterDecisionRef",
+    "supersedesResponseId",
+    "payload"
+  ]
+}

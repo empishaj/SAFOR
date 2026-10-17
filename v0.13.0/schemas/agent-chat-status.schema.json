@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-chat-status:0.13.0",
+  "title": "SAFOR Minimal Agent Chat Status 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "chatStatusId",
+    "agentId",
+    "displayName",
+    "jobId",
+    "status",
+    "targetBranch",
+    "gitRef",
+    "renderedText"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_CHAT_STATUS"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "chatStatusId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 2
+    },
+    "jobId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "SUBMITTED",
+        "BLOCKED",
+        "REBIND_REQUIRED"
+      ]
+    },
+    "targetBranch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "gitRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "renderedText": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 240,
+      "pattern": "^[^\\r\\n]+$"
+    }
+  }
+}

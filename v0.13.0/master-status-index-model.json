@@ -1,0 +1,42 @@
+{
+  "format": "SAFOR_MASTER_STATUS_INDEX_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-COMPACT-MASTER-STATUS-INDEX",
+  "purpose": "Provide one compact authoritative projection for fast HUMAN status answers without global repository scans.",
+  "schemaRef": "schemas/master-status-index.schema.json",
+  "sourceOfTruth": "POINTER_PROJECTION_ONLY",
+  "authoritativeInputs": [
+    "AGENT_REGISTRY",
+    "MASTER_JOB_STATES",
+    "RESPONSE_INDEXES",
+    "REVIEW_STATES",
+    "SCHEDULER_STATE",
+    "PROVIDER_READBACK"
+  ],
+  "normalReadSet": [
+    "master/status-index.json",
+    "agents/index.json",
+    "ONLY_REFERENCED_CHANGED_OR_CONFLICTING_RECORDS"
+  ],
+  "forbiddenNormalBehavior": [
+    "SCAN_COMPLETE_PROJECT_TREE",
+    "READ_FOREIGN_AGENT_INBOXES_WITHOUT_POINTER",
+    "RECONSTRUCT_ALL_HISTORY_FOR_ROUTINE_STATUS",
+    "GUESS_STALE_OR_MISSING_POINTER_TARGETS"
+  ],
+  "statusQuestionsSupported": [
+    "PROJECT_STATUS",
+    "CURRENT_ROADMAP",
+    "AGENTS_TO_START",
+    "RUNNING_COMPLETED_BLOCKED_JOBS",
+    "ALL_AGENT_RESPONSES_RECEIVED",
+    "NEXT_USEFUL_STEP"
+  ],
+  "freshnessContract": {
+    "revisionRequired": true,
+    "generatedAtRequired": true,
+    "providerReadbackRefRequired": true,
+    "stalePointersReported": true,
+    "unknownFreshnessNeverPresentedAsLive": true
+  }
+}

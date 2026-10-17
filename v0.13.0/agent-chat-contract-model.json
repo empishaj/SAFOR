@@ -1,0 +1,46 @@
+{
+  "format": "SAFOR_AGENT_CHAT_CONTRACT_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-MINIMAL-SUBAGENT-CHAT",
+  "purpose": "Limit subagent chat output to one-line operational status while all substantive work, evidence, questions and conflicts are persisted as Git artifacts for MASTER.",
+  "schemaRef": "schemas/agent-chat-status.schema.json",
+  "owner": "SAFOR_PLATFORM",
+  "allowedStatuses": [
+    "STARTED",
+    "SUBMITTED",
+    "BLOCKED",
+    "REBIND_REQUIRED"
+  ],
+  "allowedContent": [
+    "agentId",
+    "displayName",
+    "jobId",
+    "status",
+    "targetBranch",
+    "gitRef",
+    "renderedText"
+  ],
+  "forbiddenContent": [
+    "DOMAIN_DISCUSSION",
+    "HUMAN_DECISION_OPTIONS",
+    "LONG_RESULT_REPORT",
+    "RAW_JSON",
+    "EVIDENCE_DUMP",
+    "MENU",
+    "FACTORY_PRESENTATION_OVERRIDE",
+    "OPERATING_MODEL_PRESENTATION_OVERRIDE"
+  ],
+  "rendering": {
+    "singleLine": true,
+    "maxCharacters": 240,
+    "menuForbidden": true,
+    "detailsForbidden": true,
+    "substantiveContentStoredInGit": true
+  },
+  "routing": {
+    "domainQuestions": "PERSIST_CLARIFICATION_REQUEST_AND_WAIT_FOR_MASTER",
+    "capabilityProblems": "PERSIST_CAPABILITY_MISMATCH_AND_WAIT_FOR_MASTER",
+    "technicalErrors": "PERSIST_JOB_ERROR_AND_WAIT_FOR_MASTER",
+    "humanDecisionNeeded": "MASTER_ONLY"
+  }
+}

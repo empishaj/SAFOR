@@ -1,0 +1,90 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE_CATALOG",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-CANONICAL-AGENT-RESPONSE-TEMPLATES",
+  "purpose": "Canonical response-template family for every dispatched SAFOR agent job.",
+  "templates": {
+    "job_result": {
+      "schemaRef": "schemas/agent-response.schema.json",
+      "targetOwner": "MASTER",
+      "persistence": "VERSIONED_GIT_ARTIFACT",
+      "templateId": "job_result",
+      "responseType": "JOB_RESULT",
+      "defaultLifecycleStatus": "SUBMITTED",
+      "requiredPayloadFields": [
+        "artifactRefs",
+        "gitTrace",
+        "verification",
+        "openItems"
+      ]
+    },
+    "job_error": {
+      "schemaRef": "schemas/agent-response.schema.json",
+      "targetOwner": "MASTER",
+      "persistence": "VERSIONED_GIT_ARTIFACT",
+      "templateId": "job_error",
+      "responseType": "JOB_ERROR",
+      "defaultLifecycleStatus": "FAILED",
+      "requiredPayloadFields": [
+        "errorClass",
+        "failedStep",
+        "reproducibleFinding",
+        "blockedArtifacts",
+        "suggestedMasterAction"
+      ]
+    },
+    "clarification_request": {
+      "schemaRef": "schemas/agent-response.schema.json",
+      "targetOwner": "MASTER",
+      "persistence": "VERSIONED_GIT_ARTIFACT",
+      "templateId": "clarification_request",
+      "responseType": "CLARIFICATION_REQUEST",
+      "defaultLifecycleStatus": "BLOCKED",
+      "requiredPayloadFields": [
+        "question",
+        "affectedJobFields",
+        "conflictType",
+        "options",
+        "suggestedMasterAction"
+      ]
+    },
+    "capability_mismatch": {
+      "schemaRef": "schemas/agent-response.schema.json",
+      "targetOwner": "MASTER",
+      "persistence": "VERSIONED_GIT_ARTIFACT",
+      "templateId": "capability_mismatch",
+      "responseType": "CAPABILITY_MISMATCH",
+      "defaultLifecycleStatus": "BLOCKED",
+      "requiredPayloadFields": [
+        "expectedCapabilities",
+        "availableCapabilities",
+        "affectedScope",
+        "risk",
+        "suggestedMasterAction"
+      ]
+    },
+    "improvement_proposal": {
+      "schemaRef": "schemas/agent-response.schema.json",
+      "targetOwner": "MASTER",
+      "persistence": "VERSIONED_GIT_ARTIFACT",
+      "templateId": "improvement_proposal",
+      "responseType": "IMPROVEMENT_PROPOSAL",
+      "defaultLifecycleStatus": "PROPOSED",
+      "requiredPayloadFields": [
+        "problem",
+        "proposal",
+        "expectedBenefit",
+        "risk",
+        "affectedProcess",
+        "suggestedMasterAction"
+      ]
+    }
+  },
+  "rules": [
+    "Every new job binds all five template IDs to immutable exact references before READY.",
+    "The agent chooses only the response type justified by the observed outcome.",
+    "The response path is job- and agent-specific and may not be improvised.",
+    "A BLOCKED or FAILED response stops further mutating work for the job.",
+    "Only MASTER may resolve a conflict, replace a job, reassign work or record acceptance."
+  ]
+}

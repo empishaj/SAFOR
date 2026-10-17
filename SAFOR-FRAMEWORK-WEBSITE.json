@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
   "schemaVersion": "0.13.0",
-  "distributionVersion": "0.13.0-rc.7",
+  "distributionVersion": "0.13.0-rc.8",
   "distributionId": "safor.framework.website",
   "fileName": "SAFOR-FRAMEWORK-WEBSITE.json",
   "publicationMode": "PUBLIC_PRODUCTION",
@@ -15,11 +15,11 @@
   "framework": {
     "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
     "schemaVersion": "0.13.0",
-    "bundleVersion": "0.13.0-rc.7",
+    "bundleVersion": "0.13.0-rc.8",
     "definitionId": "safor-framework",
     "productName": "SAFOR",
     "productExpansion": "Systemic AI Factory Orchestration Runtime",
-    "purpose": "Portable SAFOR Framework with a free Website starter plus commercially licensed Software/SaaS and Book domain-package paths, per-package access, integrity and compatibility binding.",
+    "purpose": "Portable JSON-governed SAFOR Framework for ordinary compatible LLM chats, with free Website and licensed Software/SaaS and Book domain packages, HUMAN-GO-only subagents, typed Git responses and compact MASTER status.",
     "entrypoint": "embeddedModules.kernel.content",
     "distributionMode": "FRAMEWORK_PLUS_EXTERNAL_DOMAIN_PACKAGES",
     "runtimeContract": {
@@ -31,6 +31,13 @@
       "embeddedModulesAuthoritativeForFrameworkBootstrap": true,
       "canonicalRepository": "empishaj/SAFOR",
       "canonicalBranch": "main",
+      "executionEnvironment": {
+        "primaryMode": "DECLARATIVE_LLM_CHAT",
+        "customerInstalledRuntimeRequired": false,
+        "requiredCustomerInstallation": "NONE",
+        "referenceRuntimeRole": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION",
+        "missingReferenceRuntimeBlocksNormalChatUse": false
+      },
       "domainPackagePolicy": {
         "artifactFormat": "SAFOR_DOMAIN_PACKAGE",
         "embeddedDomainPackageContent": false,
@@ -136,7 +143,11 @@
       "deterministicControlRule": "Within the executable transition boundary, external observations enter as typed events and only the deterministic control kernel materializes authoritative state transitions.",
       "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
       "selfHealingRule": "Use conservative profile-constrained recovery; never invent entitlement, authority, evidence or workspace ownership.",
-      "agentWorkspaceRule": "AGENT work uses persistent identities and repository-native jobs; local .safor/ is never a worker write target.",
+      "agentWorkspaceRule": "AGENT work uses persistent chat-bound identities and repository-native jobs; local .safor/ is never a worker write target.",
+      "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate, claim or start a subagent job; Git and automation events never wake an agent.",
+      "agentResponseRule": "Every dispatched job binds all five typed response templates and exact separate Git return targets before READY.",
+      "agentChatRule": "Subagent chats render only minimal operational status; all substantive results, errors, questions and conflicts are versioned Git responses for MASTER.",
+      "masterStatusIndexRule": "Routine status is read from compact versioned pointer indexes; global repository scans are forbidden in the normal path.",
       "multiAgentSchedulerRule": "Dispatch only atomic READY conflict-free work with explicit capacity, leases and isolated Git mutation scope."
     },
     "productRepository": {
@@ -162,6 +173,12 @@
       "initialization-model.json": "initialization",
       "interaction-model.json": "interaction",
       "human-decision-gate-model.json": "humanDecisionGate",
+      "chat-execution-model.json": "chatExecution",
+      "agent-bootstrap-model.json": "agentBootstrap",
+      "agent-response-contract-model.json": "agentResponseContract",
+      "agent-response-templates.json": "agentResponseTemplates",
+      "agent-chat-contract-model.json": "agentChatContract",
+      "master-status-index-model.json": "masterStatusIndex",
       "self-healing-model.json": "selfHealing",
       "module-self-healing-model.json": "moduleSelfHealing",
       "agent-workspace-model.json": "agentWorkspace",
@@ -201,6 +218,10 @@
       "schemas/agent-job.schema.json": "schemaAgentJob",
       "schemas/agent-job-state.schema.json": "schemaAgentJobState",
       "schemas/agent-result.schema.json": "schemaAgentResult",
+      "schemas/agent-bootstrap.schema.json": "schemaAgentBootstrap",
+      "schemas/agent-response.schema.json": "schemaAgentResponse",
+      "schemas/agent-chat-status.schema.json": "schemaAgentChatStatus",
+      "schemas/master-status-index.schema.json": "schemaMasterStatusIndex",
       "schemas/scheduler-state.schema.json": "schemaSchedulerState",
       "schemas/dispatch-wave.schema.json": "schemaDispatchWave",
       "schemas/resource-lease.schema.json": "schemaResourceLease",
@@ -226,12 +247,12 @@
     "integrityManifest": {
       "kernel": {
         "sourcePath": "v0.13.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "ed7460972218fa96377d66ae48df29763f4c3482",
+        "sourceBlobSha": "809692824a958b6762af693d0d907bb550ef747f",
         "selfHealingProfileId": "MRP-KERNEL"
       },
       "initialization": {
         "sourcePath": "v0.13.0/initialization-model.json",
-        "sourceBlobSha": "da6844307157c0ada5ec3e5d5f196134f91031c2",
+        "sourceBlobSha": "86368e2fc84ecb6d4413563831bc19ed27fbb538",
         "selfHealingProfileId": "MRP-INITIALIZATION"
       },
       "interaction": {
@@ -244,29 +265,59 @@
         "sourceBlobSha": "4f31c1842c2a6944ee52f9ef3c2f560023f69460",
         "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
       },
+      "chatExecution": {
+        "sourcePath": "v0.13.0/chat-execution-model.json",
+        "sourceBlobSha": "4b0f92713681ddee4793c6241f030554a8b9aafa",
+        "selfHealingProfileId": "MRP-CHATEXECUTION"
+      },
+      "agentBootstrap": {
+        "sourcePath": "v0.13.0/agent-bootstrap-model.json",
+        "sourceBlobSha": "3623ac16d909e07e2d5dc6957924f47e7e811a9f",
+        "selfHealingProfileId": "MRP-AGENTBOOTSTRAP"
+      },
+      "agentResponseContract": {
+        "sourcePath": "v0.13.0/agent-response-contract-model.json",
+        "sourceBlobSha": "c118a5399a99ce78eebdde04610045abc7c6f274",
+        "selfHealingProfileId": "MRP-AGENTRESPONSECONTRACT"
+      },
+      "agentResponseTemplates": {
+        "sourcePath": "v0.13.0/agent-response-templates.json",
+        "sourceBlobSha": "3b2cf057f04d7d062804c8f825ffd829461bf643",
+        "selfHealingProfileId": "MRP-AGENTRESPONSETEMPLATES"
+      },
+      "agentChatContract": {
+        "sourcePath": "v0.13.0/agent-chat-contract-model.json",
+        "sourceBlobSha": "7742c1a0752309470cfb41583e8c3c0dc282b916",
+        "selfHealingProfileId": "MRP-AGENTCHATCONTRACT"
+      },
+      "masterStatusIndex": {
+        "sourcePath": "v0.13.0/master-status-index-model.json",
+        "sourceBlobSha": "9eaf3a96901ff5c924cfac78fbe910a3d1783f31",
+        "selfHealingProfileId": "MRP-MASTERSTATUSINDEX"
+      },
       "selfHealing": {
         "sourcePath": "v0.13.0/self-healing-model.json",
-        "sourceBlobSha": "f4874990914eab9a2de225ae85c5312af6a7b07c",
+        "sourceBlobSha": "3c1910be2413e786bb7c2d42b52d07a54a3c13d1",
         "selfHealingProfileId": "MRP-SELF_HEALING"
       },
       "moduleSelfHealing": {
         "sourcePath": "v0.13.0/module-self-healing-model.json",
-        "sourceBlobSha": "8d9228c4950626852fd269d34293f80139f839c0",
+        "sourceBlobSha": "f6c927e04f3e3e3c700bb508185378ea34ce064b",
         "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
       },
       "agentWorkspace": {
-        "sourcePath": "v0.10.0/agent-workspace-model.json",
-        "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
+        "sourcePath": "v0.13.0/agent-workspace-model.json",
+        "sourceBlobSha": "6bf491b3a338e940157695750f32e7d94bb51a67",
         "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
       },
       "agentJobContract": {
-        "sourcePath": "v0.10.0/agent-job-contract-model.json",
-        "sourceBlobSha": "c8c5b88bbaac2cc682c11c4ad99d1ebf421d2227",
+        "sourcePath": "v0.13.0/agent-job-contract-model.json",
+        "sourceBlobSha": "e880ed31ff33a5741bcb312ede48fb6f5f1d0873",
         "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
       },
       "multiAgentScheduler": {
-        "sourcePath": "v0.10.0/multi-agent-scheduler-model.json",
-        "sourceBlobSha": "4a77be0d6dc2f0790ff774586d451ce94265c9e0",
+        "sourcePath": "v0.13.0/multi-agent-scheduler-model.json",
+        "sourceBlobSha": "00bb0417b1ce04b92dbe483f8ad668b6f07fa706",
         "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
       },
       "repositoryPolicy": {
@@ -385,39 +436,59 @@
         "selfHealingProfileId": "MRP-SCHEMA_MODULE_RECOVERY_PROFILE"
       },
       "schemaAgentRegistry": {
-        "sourcePath": "v0.10.0/schemas/agent-registry.schema.json",
-        "sourceBlobSha": "c64e832b256a04868d69faa63c07ce841df69e3f",
+        "sourcePath": "v0.13.0/schemas/agent-registry.schema.json",
+        "sourceBlobSha": "1ce2a57cda43c1110c0c01fe97099297898171dd",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_REGISTRY"
       },
       "schemaAgentIdentity": {
-        "sourcePath": "v0.10.0/schemas/agent-identity.schema.json",
-        "sourceBlobSha": "efe38c948233123541c9e05ede5757d9487fb191",
+        "sourcePath": "v0.13.0/schemas/agent-identity.schema.json",
+        "sourceBlobSha": "ffd4e390a990f2a1e828cd91f049111f5ca027e7",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_IDENTITY"
       },
       "schemaAgentInboxIndex": {
-        "sourcePath": "v0.10.0/schemas/agent-inbox-index.schema.json",
-        "sourceBlobSha": "8252a69e600a445bd829484c646b57da865273b6",
+        "sourcePath": "v0.13.0/schemas/agent-inbox-index.schema.json",
+        "sourceBlobSha": "dc9ef5d3775fea2a3e79c711981c38e6acb501d5",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
       },
       "schemaAgentState": {
-        "sourcePath": "v0.10.0/schemas/agent-state.schema.json",
-        "sourceBlobSha": "56cc1ca26b451751e03a3af12dabc00cf757e066",
+        "sourcePath": "v0.13.0/schemas/agent-state.schema.json",
+        "sourceBlobSha": "bd7174b4c55e41bccb3c30b216066b129a1f602b",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_STATE"
       },
       "schemaAgentJob": {
-        "sourcePath": "v0.10.0/schemas/agent-job.schema.json",
-        "sourceBlobSha": "4131f05fab04f2441d193fad668cb807ff1da04c",
+        "sourcePath": "v0.13.0/schemas/agent-job.schema.json",
+        "sourceBlobSha": "fd66a75df641ec13f5b42338a71e348e7f9b23e4",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
       },
       "schemaAgentJobState": {
-        "sourcePath": "v0.10.0/schemas/agent-job-state.schema.json",
-        "sourceBlobSha": "10c50014edaeb18f5205c09c2c37b93483968bca",
+        "sourcePath": "v0.13.0/schemas/agent-job-state.schema.json",
+        "sourceBlobSha": "3f0f2e349461007c9763eb6b9feb24b73fbd9f75",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB_STATE"
       },
       "schemaAgentResult": {
         "sourcePath": "v0.10.0/schemas/agent-result.schema.json",
         "sourceBlobSha": "e2b64b7a933838c7604a635a870f6f836803b361",
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
+      },
+      "schemaAgentBootstrap": {
+        "sourcePath": "v0.13.0/schemas/agent-bootstrap.schema.json",
+        "sourceBlobSha": "0830a10fb705d8a58da7207325f06906a80f4c56",
+        "selfHealingProfileId": "MRP-SCHEMAAGENTBOOTSTRAP"
+      },
+      "schemaAgentResponse": {
+        "sourcePath": "v0.13.0/schemas/agent-response.schema.json",
+        "sourceBlobSha": "a68e20d197afd531a102824b3f61df5e2175eadf",
+        "selfHealingProfileId": "MRP-SCHEMAAGENTRESPONSE"
+      },
+      "schemaAgentChatStatus": {
+        "sourcePath": "v0.13.0/schemas/agent-chat-status.schema.json",
+        "sourceBlobSha": "9f2b2b0d6bef9c8e9df9bf2ec52983eeb175d0fb",
+        "selfHealingProfileId": "MRP-SCHEMAAGENTCHATSTATUS"
+      },
+      "schemaMasterStatusIndex": {
+        "sourcePath": "v0.13.0/schemas/master-status-index.schema.json",
+        "sourceBlobSha": "a9df6c47accd4dfead34a3f16c11d7276c8237f3",
+        "selfHealingProfileId": "MRP-SCHEMAMASTERSTATUSINDEX"
       },
       "schemaSchedulerState": {
         "sourcePath": "v0.10.0/schemas/scheduler-state.schema.json",
@@ -526,7 +597,7 @@
       },
       "conformance": {
         "sourcePath": "v0.13.0/conformance.json",
-        "sourceBlobSha": "9e00b0c904b085f662be322d0c244b24fb5666f2",
+        "sourceBlobSha": "4589361ea61b0857209af3fb92e104026fda5ff4",
         "selfHealingProfileId": "MRP-CONFORMANCE"
       },
       "composablePackageModel": {
@@ -554,14 +625,14 @@
       "kernel": {
         "key": "kernel",
         "sourcePath": "v0.13.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "ed7460972218fa96377d66ae48df29763f4c3482",
+        "sourceBlobSha": "809692824a958b6762af693d0d907bb550ef747f",
         "content": {
           "format": "SAFOR_MASTER_BOOTSTRAP",
           "schemaVersion": "0.13.0",
           "kernelVersion": "0.13.0",
           "definitionId": "safor-master-kernel",
-          "maturity": "REFERENCE_BASELINE_S3_COMPOSABLE_DOMAIN_PACKAGES",
-          "purpose": "Portable SAFOR Framework kernel for free Website creation plus commercially licensed Software/SaaS and Book domain paths, independently selectable chat-loadable Factory/Operating Model JSON packages, per-package entitlement gating, deterministic compatibility binding, HUMAN-owned workspaces and deterministic governance.",
+          "maturity": "REFERENCE_BASELINE_S4_HUMAN_NOTICE_CONFORMANT",
+          "purpose": "Portable JSON-governed SAFOR Framework for ordinary compatible LLM chats, with composable domain packages, HUMAN-GO-only subagents, typed Git responses, compact MASTER status and platform-owned HUMAN communication.",
           "bootstrapContract": {
             "singleFileEntry": true,
             "entryFile": "SAFOR-FRAMEWORK.json",
@@ -689,7 +760,26 @@
             "platformResponseGovernorRunsBeforeEveryHumanRender": true,
             "safeMigrationPlanningIsInternalOrchestration": true,
             "informationalNoticesAreCompressedAndNonInteractive": true,
-            "fullDetailAndEvidenceRemainAvailableOnDemand": true
+            "fullDetailAndEvidenceRemainAvailableOnDemand": true,
+            "ordinaryCompatibleLlmChatIsPrimaryExecutionSurface": true,
+            "customerInstalledRuntimeNotRequired": true,
+            "referenceRuntimeOptional": true,
+            "humanGoIsExclusiveSubagentActivation": true,
+            "gitEventsNeverActivateSubagents": true,
+            "oneTimeAgentChatBinding": true,
+            "agentIdentityRebindFailsClosed": true,
+            "distinctAgentDisplayNameRequired": true,
+            "typedAgentResponseFamilyRequired": true,
+            "allAgentJobsBindAllResponseTemplates": true,
+            "productAndControlWriteScopesSeparated": true,
+            "minimalSubagentChatStatusOnly": true,
+            "subagentsDoNotDiscussDomainWorkWithHuman": true,
+            "masterIsOnlyHumanManagementInterface": true,
+            "compactMasterStatusIndexRequired": true,
+            "routineStatusGlobalScanForbidden": true,
+            "agentRegistryCompletenessRequired": true,
+            "blockedAgentsStopMutatingWork": true,
+            "jobSupersessionPreservesHistory": true
           },
           "moduleArchitecture": {
             "layers": [
@@ -754,6 +844,26 @@
                 "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
               },
               {
+                "id": "DECLARATIVE_CHAT_EXECUTION",
+                "responsibility": "Make ordinary compatible LLM chat the primary execution surface without customer-installed SAFOR runtime software."
+              },
+              {
+                "id": "AGENT_CHAT_BOOTSTRAP",
+                "responsibility": "Create one persistent agent identity/chat binding and enforce HUMAN-GO-only activation with fail-closed rebind."
+              },
+              {
+                "id": "AGENT_RESPONSE_CONTRACT",
+                "responsibility": "Bind exact typed response templates, schemas and Git return paths for result, error, clarification, capability mismatch and improvement proposals."
+              },
+              {
+                "id": "AGENT_CHAT_GOVERNANCE",
+                "responsibility": "Render only one-line operational status in subagent chats and route all substantive content to Git and MASTER."
+              },
+              {
+                "id": "MASTER_STATUS_INDEX",
+                "responsibility": "Provide a compact pointer projection for project, agent, job, review, blocker and next-action status without repository-wide scans."
+              },
+              {
                 "id": "PROVIDER_ADAPTER",
                 "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
               }
@@ -800,7 +910,13 @@
               "Factory and Operating Model access are evaluated independently; FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may form one pair when every paid package is independently entitled.",
               "A HUMAN may replace only the Factory, only the Operating Model, or both; every override remains subject to package integrity, Framework/creation-type scope and pair compatibility.",
               "Possession of a domain-package JSON artifact never establishes commercial entitlement; entitlement evidence remains external and independently verifiable.",
-              "No selected Factory/Operating Model pair becomes authoritative until a package-selection record and COMPATIBLE compatibility decision are materialized and referenced by project bindings."
+              "No selected Factory/Operating Model pair becomes authoritative until a package-selection record and COMPATIBLE compatibility decision are materialized and referenced by project bindings.",
+              "DECLARATIVE_CHAT_EXECUTION is the primary product mode; optional reference code is never a customer-installation prerequisite.",
+              "AGENT_CHAT_BOOTSTRAP accepts only HUMAN GO from the bound agent chat as execution activation.",
+              "Git pushes, polling, file creation, automation and background host events never activate a subagent.",
+              "Every new Agent Job binds all five typed response templates and exact separate control-write targets before READY.",
+              "Subagent chats render only minimal operational status; domain questions, errors and conflicts are Git responses to MASTER.",
+              "MASTER_STATUS_INDEX is a derived pointer projection and never replaces authoritative job, response, review or control records."
             ]
           },
           "packageSystem": {
@@ -1047,7 +1163,11 @@
             "workspaceBinding": "schemas/workspace-binding.schema.json",
             "domainPackage": "schemas/domain-package.schema.json",
             "packageSelection": "schemas/package-selection.schema.json",
-            "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json"
+            "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json",
+            "agentBootstrap": "schemas/agent-bootstrap.schema.json",
+            "agentResponse": "schemas/agent-response.schema.json",
+            "agentChatStatus": "schemas/agent-chat-status.schema.json",
+            "masterStatusIndex": "schemas/master-status-index.schema.json"
           },
           "controlPlane": {
             "startActionId": "K00",
@@ -2518,6 +2638,78 @@
             {
               "id": "INV-206",
               "rule": "A genuine HUMAN decision may be requested only after the Decision Gate identifies non-derivable scope, material alternative, authority, risk, irreversible action or goal conflict; response compression never suppresses such a decision."
+            },
+            {
+              "id": "INV-207",
+              "rule": "A compatible ordinary LLM chat is the primary SAFOR execution surface; no customer-installed SAFOR runtime is required."
+            },
+            {
+              "id": "INV-208",
+              "rule": "Optional reference runtimes may validate or strengthen enforcement but may not be presented as an Endkunden prerequisite."
+            },
+            {
+              "id": "INV-209",
+              "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat."
+            },
+            {
+              "id": "INV-210",
+              "rule": "Git push, polling, inbox creation, automation and host background events never count as HUMAN GO."
+            },
+            {
+              "id": "INV-211",
+              "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain."
+            },
+            {
+              "id": "INV-212",
+              "rule": "Every active chat agent has a stable agentId and a distinct memorable displayName; the name never replaces the ID."
+            },
+            {
+              "id": "INV-213",
+              "rule": "Agent normal reads are limited to identity, personal index, assigned job and explicitly referenced inputs."
+            },
+            {
+              "id": "INV-214",
+              "rule": "Every new dispatched Agent Job binds exact templates for result, error, clarification, capability mismatch and improvement proposal."
+            },
+            {
+              "id": "INV-215",
+              "rule": "Unknown, mismatched or structurally invalid agent responses fail closed and cannot advance MASTER job state."
+            },
+            {
+              "id": "INV-216",
+              "rule": "Product artifact writes and SAFOR control/response writes are separate authorization scopes."
+            },
+            {
+              "id": "INV-217",
+              "rule": "Subagent chat output is limited to one-line STARTED, SUBMITTED, BLOCKED or REBIND_REQUIRED operational status."
+            },
+            {
+              "id": "INV-218",
+              "rule": "Subagents do not conduct domain or governance discussions with the HUMAN; substantive questions and conflicts are Git responses to MASTER."
+            },
+            {
+              "id": "INV-219",
+              "rule": "MASTER is the only fachliche and organizational HUMAN interface for goals, plans, status, decisions, conflicts and integration."
+            },
+            {
+              "id": "INV-220",
+              "rule": "Routine MASTER status uses compact versioned pointer indexes and loads deeper records only when referenced or required."
+            },
+            {
+              "id": "INV-221",
+              "rule": "The active Agent Registry includes every known active, paused, rebind-required or revoked project agent identity."
+            },
+            {
+              "id": "INV-222",
+              "rule": "A BLOCKED, FAILED, clarification or capability-mismatch response stops further mutating job work until MASTER resolution."
+            },
+            {
+              "id": "INV-223",
+              "rule": "Substantial job changes produce a superseding job or dispatch revision and preserve predecessor and decision references."
+            },
+            {
+              "id": "INV-224",
+              "rule": "Factory and Operating Model provide domain facts only; SAFOR platform owns HUMAN and subagent chat rendering contracts."
             }
           ],
           "evidencePolicy": {
@@ -2672,19 +2864,88 @@
           "commercialEntitlementModelRef": "commercial-entitlement-model.json",
           "workspaceModelRef": "workspace-model.json",
           "packageCatalogRef": "package-catalog.json",
-          "composablePackageModelRef": "composable-package-model.json"
+          "composablePackageModelRef": "composable-package-model.json",
+          "executionEnvironmentContract": {
+            "format": "SAFOR_CHAT_EXECUTION_MODEL",
+            "schemaVersion": "0.13.0",
+            "id": "SAFOR-DECLARATIVE-CHAT-EXECUTION",
+            "purpose": "Define SAFOR as a JSON-governed product executed by a compatible ordinary LLM chat using the host tools that actually exist, without requiring customer-installed SAFOR runtime software.",
+            "primaryExecutionMode": "DECLARATIVE_LLM_CHAT",
+            "customerInstalledRuntimeRequired": false,
+            "requiredCustomerInstallation": "NONE",
+            "requiredChatCapabilities": [
+              "READ_UPLOADED_JSON",
+              "MAINTAIN_CURRENT_CHAT_CONTEXT",
+              "READ_GIT_ARTIFACTS_WHEN_AUTHORIZED",
+              "WRITE_GIT_ARTIFACTS_WHEN_AUTHORIZED"
+            ],
+            "referenceImplementations": {
+              "role": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION",
+              "requiredForNormalChatUse": false,
+              "mayStrengthenTechnicalEnforcement": true,
+              "mayNotBePresentedAsCustomerInstallationPrerequisite": true
+            },
+            "truthBoundary": {
+              "jsonDefinesNormativeBehavior": true,
+              "jsonCannotCreateProviderRights": true,
+              "jsonCannotGuaranteeHostCompliance": true,
+              "hostAndProviderEvidenceRemainAuthoritative": true,
+              "technicalLimitationsMustBeDisclosedWithoutChangingTheProductMode": true
+            },
+            "invariants": [
+              "A compatible ordinary LLM chat is the primary SAFOR execution surface.",
+              "No domain path may require a customer-installed SAFOR runtime.",
+              "Optional reference code may validate or strengthen enforcement but never replaces the declarative chat contract.",
+              "Missing optional reference execution is not itself a product blocker.",
+              "Actual Git/provider capabilities and permissions are discovered and verified before effects are claimed."
+            ]
+          },
+          "agentActivationProtocol": {
+            "modelRef": "agent-bootstrap-model.json",
+            "mode": "HUMAN_GO_ONLY",
+            "acceptedCommand": "GO",
+            "gitEventWakeupForbidden": true,
+            "automationWakeupForbidden": true,
+            "oneTimeChatBindingRequired": true,
+            "rebindWhenIdentityUncertain": true
+          },
+          "agentResponseProtocol": {
+            "modelRef": "agent-response-contract-model.json",
+            "templateCatalogRef": "agent-response-templates.json",
+            "schemaRef": "schemas/agent-response.schema.json",
+            "requiredTypes": [
+              "JOB_RESULT",
+              "JOB_ERROR",
+              "CLARIFICATION_REQUEST",
+              "CAPABILITY_MISMATCH",
+              "IMPROVEMENT_PROPOSAL"
+            ],
+            "productAndControlWritesSeparatelyAuthorized": true
+          },
+          "agentChatProtocol": {
+            "modelRef": "agent-chat-contract-model.json",
+            "schemaRef": "schemas/agent-chat-status.schema.json",
+            "mode": "MINIMAL_STATUS_ONLY",
+            "masterOnlyHumanDomainInterface": true
+          },
+          "masterStatusProtocol": {
+            "modelRef": "master-status-index-model.json",
+            "schemaRef": "schemas/master-status-index.schema.json",
+            "normalReadMode": "COMPACT_POINTER_INDEX",
+            "globalFullScanForbiddenForRoutineStatus": true
+          }
         },
         "selfHealingProfileId": "MRP-KERNEL"
       },
       "initialization": {
         "key": "initialization",
         "sourcePath": "v0.13.0/initialization-model.json",
-        "sourceBlobSha": "da6844307157c0ada5ec3e5d5f196134f91031c2",
+        "sourceBlobSha": "86368e2fc84ecb6d4413563831bc19ed27fbb538",
         "content": {
           "format": "SAFOR_INITIALIZATION_MODEL",
           "schemaVersion": "0.13.0",
           "id": "safor-initialization-0.13.0",
-          "purpose": "Initialize SAFOR with independently selectable Factory and Operating Model JSON packages, per-package access control, deterministic integrity/compatibility binding and HUMAN-owned project workspaces.",
+          "purpose": "Guided initialization for the declarative SAFOR chat product, project workspace and one-time chat-bound agent identities; no customer-installed runtime is required.",
           "entryBehavior": {
             "autoStartAfterBootstrapLoad": true,
             "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
@@ -3009,7 +3270,20 @@
           ],
           "workspaceModelRef": "workspace-model.json",
           "humanDecisionGateModelRef": "human-decision-gate-model.json",
-          "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
+          "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+          "executionEnvironmentContract": {
+            "modelRef": "chat-execution-model.json",
+            "primaryMode": "DECLARATIVE_LLM_CHAT",
+            "customerInstalledRuntimeRequired": false,
+            "optionalReferenceRuntimeDoesNotBlockInitialization": true
+          },
+          "agentBootstrapContract": {
+            "modelRef": "agent-bootstrap-model.json",
+            "masterPreparesIdentityAndPrompt": true,
+            "humanInsertsPromptOnce": true,
+            "futureActivation": "HUMAN_GO_ONLY",
+            "jobPromptCopyingForbiddenAfterBinding": true
+          }
         },
         "selfHealingProfileId": "MRP-INITIALIZATION"
       },
@@ -4351,10 +4625,397 @@
         },
         "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
       },
+      "chatExecution": {
+        "key": "chatExecution",
+        "sourcePath": "v0.13.0/chat-execution-model.json",
+        "sourceBlobSha": "4b0f92713681ddee4793c6241f030554a8b9aafa",
+        "content": {
+          "format": "SAFOR_CHAT_EXECUTION_MODEL",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-DECLARATIVE-CHAT-EXECUTION",
+          "purpose": "Define SAFOR as a JSON-governed product executed by a compatible ordinary LLM chat using the host tools that actually exist, without requiring customer-installed SAFOR runtime software.",
+          "primaryExecutionMode": "DECLARATIVE_LLM_CHAT",
+          "customerInstalledRuntimeRequired": false,
+          "requiredCustomerInstallation": "NONE",
+          "requiredChatCapabilities": [
+            "READ_UPLOADED_JSON",
+            "MAINTAIN_CURRENT_CHAT_CONTEXT",
+            "READ_GIT_ARTIFACTS_WHEN_AUTHORIZED",
+            "WRITE_GIT_ARTIFACTS_WHEN_AUTHORIZED"
+          ],
+          "referenceImplementations": {
+            "role": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION",
+            "requiredForNormalChatUse": false,
+            "mayStrengthenTechnicalEnforcement": true,
+            "mayNotBePresentedAsCustomerInstallationPrerequisite": true
+          },
+          "truthBoundary": {
+            "jsonDefinesNormativeBehavior": true,
+            "jsonCannotCreateProviderRights": true,
+            "jsonCannotGuaranteeHostCompliance": true,
+            "hostAndProviderEvidenceRemainAuthoritative": true,
+            "technicalLimitationsMustBeDisclosedWithoutChangingTheProductMode": true
+          },
+          "invariants": [
+            "A compatible ordinary LLM chat is the primary SAFOR execution surface.",
+            "No domain path may require a customer-installed SAFOR runtime.",
+            "Optional reference code may validate or strengthen enforcement but never replaces the declarative chat contract.",
+            "Missing optional reference execution is not itself a product blocker.",
+            "Actual Git/provider capabilities and permissions are discovered and verified before effects are claimed."
+          ]
+        },
+        "selfHealingProfileId": "MRP-CHATEXECUTION"
+      },
+      "agentBootstrap": {
+        "key": "agentBootstrap",
+        "sourcePath": "v0.13.0/agent-bootstrap-model.json",
+        "sourceBlobSha": "3623ac16d909e07e2d5dc6957924f47e7e811a9f",
+        "content": {
+          "format": "SAFOR_AGENT_BOOTSTRAP_MODEL",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-ONE-TIME-AGENT-CHAT-BINDING",
+          "purpose": "Prepare one persistent chat-bound subagent identity once, then activate every assigned job only through an explicit HUMAN GO in the same bound chat.",
+          "identityContract": {
+            "stableAgentIdRequired": true,
+            "distinctDisplayNameRequired": true,
+            "displayNamePurpose": "Memorable HUMAN-facing name; never replaces agentId.",
+            "persistentWorkspaceRequired": true,
+            "personalInboxIndexRequired": true,
+            "roleAndCapabilityProfileRefsRequired": true
+          },
+          "oneTimeInitializationPrompt": {
+            "createdBy": "MASTER",
+            "insertedBy": "HUMAN_ONCE",
+            "requiredFields": [
+              "CONTROL_REPOSITORY",
+              "PROJECT_ID",
+              "AGENT_ID",
+              "DISPLAY_NAME",
+              "IDENTITY_REF",
+              "WORKSPACE_ROOT",
+              "INBOX_INDEX_REF",
+              "START_PROTOCOL_REF",
+              "COMMUNICATION_BOUNDARY_REF"
+            ],
+            "jobPromptTransportAfterBinding": "FORBIDDEN"
+          },
+          "activationContract": {
+            "mode": "HUMAN_GO_ONLY",
+            "acceptedCommand": "GO",
+            "casePolicy": "CASE_INSENSITIVE_TRIMMED_EXACT_TOKEN",
+            "forbiddenTriggers": [
+              "GIT_PUSH",
+              "GIT_POLL",
+              "INBOX_FILE_CREATION",
+              "AUTOMATION_EVENT",
+              "HOST_BACKGROUND_WAKEUP",
+              "MASTER_MESSAGE_IN_ANOTHER_CHAT"
+            ],
+            "rule": "No job claim, RUNNING transition or product write may occur before HUMAN GO is observed in the bound agent chat."
+          },
+          "rebindContract": {
+            "failClosed": true,
+            "triggers": [
+              "CHAT_HISTORY_MISSING",
+              "CHAT_BINDING_UNCERTAIN",
+              "AGENT_IDENTITY_REFERENCE_UNRESOLVABLE",
+              "IDENTITY_REVISION_MISMATCH",
+              "CONTROL_REPOSITORY_UNAVAILABLE",
+              "HUMAN_REPORTS_NEW_AGENT_CHAT"
+            ],
+            "requiredOutcome": "REBIND_REQUIRED",
+            "forbidden": [
+              "GUESS_AGENT_IDENTITY",
+              "CLAIM_JOB",
+              "WRITE_PRODUCT_REPOSITORY",
+              "WRITE_CONTROL_RESPONSE"
+            ],
+            "resolution": "MASTER prepares a new one-time binding; HUMAN inserts it in the intended chat."
+          },
+          "activationSteps": [
+            "VERIFY_BOUND_CHAT_IDENTITY",
+            "VERIFY_HUMAN_GO",
+            "LOAD_IDENTITY",
+            "LOAD_AGENT_STATE",
+            "LOAD_PERSONAL_INBOX_INDEX",
+            "SELECT_DISCOVERABLE_JOB",
+            "READ_AUTHORITATIVE_JOB",
+            "VERIFY_JOB_AND_HUMAN_PROJECTION_BLOBS",
+            "READ_MASTER_JOB_STATE",
+            "VERIFY_ASSIGNMENT_ROLE_SKILLS_CONTEXT_INPUTS_RIGHTS_AND_WRITE_TARGETS",
+            "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+            "EXECUTE_ONLY_CLAIMED_JOB",
+            "SUBMIT_TYPED_RESPONSE_AND_EVIDENCE",
+            "RENDER_MINIMAL_AGENT_CHAT_STATUS"
+          ]
+        },
+        "selfHealingProfileId": "MRP-AGENTBOOTSTRAP"
+      },
+      "agentResponseContract": {
+        "key": "agentResponseContract",
+        "sourcePath": "v0.13.0/agent-response-contract-model.json",
+        "sourceBlobSha": "c118a5399a99ce78eebdde04610045abc7c6f274",
+        "content": {
+          "format": "SAFOR_AGENT_RESPONSE_CONTRACT_MODEL",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-TYPED-AGENT-TO-MASTER-RESPONSES",
+          "purpose": "Require each agent job to bind concrete result, error, clarification, capability-mismatch and improvement-proposal templates plus exact Git write targets.",
+          "schemaRef": "schemas/agent-response.schema.json",
+          "templateCatalogRef": "agent-response-templates.json",
+          "requiredResponseTypes": [
+            "JOB_RESULT",
+            "JOB_ERROR",
+            "CLARIFICATION_REQUEST",
+            "CAPABILITY_MISMATCH",
+            "IMPROVEMENT_PROPOSAL"
+          ],
+          "commonBindingFields": [
+            "responseId",
+            "responseType",
+            "projectId",
+            "workPackageId",
+            "jobId",
+            "agentId",
+            "identityRevision",
+            "createdAt",
+            "contractRef",
+            "responseTemplateRef",
+            "targetMasterRef",
+            "lifecycleStatus",
+            "summary",
+            "affectedRefs",
+            "evidenceRefs",
+            "masterDecisionRef",
+            "supersedesResponseId",
+            "payload"
+          ],
+          "writeContract": {
+            "productAndControlTargetsSeparatelyAuthorized": true,
+            "targetRepositoryRequired": true,
+            "targetBranchRequired": true,
+            "targetPathRequired": true,
+            "allowedOperationsRequired": true,
+            "providerReadbackRequired": true,
+            "responseIndexUpdateOnlyWhenJobAuthorizes": true
+          },
+          "conflictLifecycle": [
+            "DETECTED",
+            "PERSISTED",
+            "REFERENCED_IN_AGENT_STATUS",
+            "WAITING_MASTER",
+            "MASTER_DECIDED",
+            "SUPERSEDED_OR_RESUMED"
+          ],
+          "failClosedRules": [
+            "Unknown response types are invalid.",
+            "Missing exact template references make the job non-dispatchable.",
+            "A response with mismatched job, agent or identity revision is rejected.",
+            "A blocked response forbids further product mutation until MASTER issues a new or rework job.",
+            "Substantial job changes create a new job or dispatch revision and preserve predecessor references."
+          ]
+        },
+        "selfHealingProfileId": "MRP-AGENTRESPONSECONTRACT"
+      },
+      "agentResponseTemplates": {
+        "key": "agentResponseTemplates",
+        "sourcePath": "v0.13.0/agent-response-templates.json",
+        "sourceBlobSha": "3b2cf057f04d7d062804c8f825ffd829461bf643",
+        "content": {
+          "format": "SAFOR_AGENT_RESPONSE_TEMPLATE_CATALOG",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-CANONICAL-AGENT-RESPONSE-TEMPLATES",
+          "purpose": "Canonical response-template family for every dispatched SAFOR agent job.",
+          "templates": {
+            "job_result": {
+              "schemaRef": "schemas/agent-response.schema.json",
+              "targetOwner": "MASTER",
+              "persistence": "VERSIONED_GIT_ARTIFACT",
+              "templateId": "job_result",
+              "responseType": "JOB_RESULT",
+              "defaultLifecycleStatus": "SUBMITTED",
+              "requiredPayloadFields": [
+                "artifactRefs",
+                "gitTrace",
+                "verification",
+                "openItems"
+              ]
+            },
+            "job_error": {
+              "schemaRef": "schemas/agent-response.schema.json",
+              "targetOwner": "MASTER",
+              "persistence": "VERSIONED_GIT_ARTIFACT",
+              "templateId": "job_error",
+              "responseType": "JOB_ERROR",
+              "defaultLifecycleStatus": "FAILED",
+              "requiredPayloadFields": [
+                "errorClass",
+                "failedStep",
+                "reproducibleFinding",
+                "blockedArtifacts",
+                "suggestedMasterAction"
+              ]
+            },
+            "clarification_request": {
+              "schemaRef": "schemas/agent-response.schema.json",
+              "targetOwner": "MASTER",
+              "persistence": "VERSIONED_GIT_ARTIFACT",
+              "templateId": "clarification_request",
+              "responseType": "CLARIFICATION_REQUEST",
+              "defaultLifecycleStatus": "BLOCKED",
+              "requiredPayloadFields": [
+                "question",
+                "affectedJobFields",
+                "conflictType",
+                "options",
+                "suggestedMasterAction"
+              ]
+            },
+            "capability_mismatch": {
+              "schemaRef": "schemas/agent-response.schema.json",
+              "targetOwner": "MASTER",
+              "persistence": "VERSIONED_GIT_ARTIFACT",
+              "templateId": "capability_mismatch",
+              "responseType": "CAPABILITY_MISMATCH",
+              "defaultLifecycleStatus": "BLOCKED",
+              "requiredPayloadFields": [
+                "expectedCapabilities",
+                "availableCapabilities",
+                "affectedScope",
+                "risk",
+                "suggestedMasterAction"
+              ]
+            },
+            "improvement_proposal": {
+              "schemaRef": "schemas/agent-response.schema.json",
+              "targetOwner": "MASTER",
+              "persistence": "VERSIONED_GIT_ARTIFACT",
+              "templateId": "improvement_proposal",
+              "responseType": "IMPROVEMENT_PROPOSAL",
+              "defaultLifecycleStatus": "PROPOSED",
+              "requiredPayloadFields": [
+                "problem",
+                "proposal",
+                "expectedBenefit",
+                "risk",
+                "affectedProcess",
+                "suggestedMasterAction"
+              ]
+            }
+          },
+          "rules": [
+            "Every new job binds all five template IDs to immutable exact references before READY.",
+            "The agent chooses only the response type justified by the observed outcome.",
+            "The response path is job- and agent-specific and may not be improvised.",
+            "A BLOCKED or FAILED response stops further mutating work for the job.",
+            "Only MASTER may resolve a conflict, replace a job, reassign work or record acceptance."
+          ]
+        },
+        "selfHealingProfileId": "MRP-AGENTRESPONSETEMPLATES"
+      },
+      "agentChatContract": {
+        "key": "agentChatContract",
+        "sourcePath": "v0.13.0/agent-chat-contract-model.json",
+        "sourceBlobSha": "7742c1a0752309470cfb41583e8c3c0dc282b916",
+        "content": {
+          "format": "SAFOR_AGENT_CHAT_CONTRACT_MODEL",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-MINIMAL-SUBAGENT-CHAT",
+          "purpose": "Limit subagent chat output to one-line operational status while all substantive work, evidence, questions and conflicts are persisted as Git artifacts for MASTER.",
+          "schemaRef": "schemas/agent-chat-status.schema.json",
+          "owner": "SAFOR_PLATFORM",
+          "allowedStatuses": [
+            "STARTED",
+            "SUBMITTED",
+            "BLOCKED",
+            "REBIND_REQUIRED"
+          ],
+          "allowedContent": [
+            "agentId",
+            "displayName",
+            "jobId",
+            "status",
+            "targetBranch",
+            "gitRef",
+            "renderedText"
+          ],
+          "forbiddenContent": [
+            "DOMAIN_DISCUSSION",
+            "HUMAN_DECISION_OPTIONS",
+            "LONG_RESULT_REPORT",
+            "RAW_JSON",
+            "EVIDENCE_DUMP",
+            "MENU",
+            "FACTORY_PRESENTATION_OVERRIDE",
+            "OPERATING_MODEL_PRESENTATION_OVERRIDE"
+          ],
+          "rendering": {
+            "singleLine": true,
+            "maxCharacters": 240,
+            "menuForbidden": true,
+            "detailsForbidden": true,
+            "substantiveContentStoredInGit": true
+          },
+          "routing": {
+            "domainQuestions": "PERSIST_CLARIFICATION_REQUEST_AND_WAIT_FOR_MASTER",
+            "capabilityProblems": "PERSIST_CAPABILITY_MISMATCH_AND_WAIT_FOR_MASTER",
+            "technicalErrors": "PERSIST_JOB_ERROR_AND_WAIT_FOR_MASTER",
+            "humanDecisionNeeded": "MASTER_ONLY"
+          }
+        },
+        "selfHealingProfileId": "MRP-AGENTCHATCONTRACT"
+      },
+      "masterStatusIndex": {
+        "key": "masterStatusIndex",
+        "sourcePath": "v0.13.0/master-status-index-model.json",
+        "sourceBlobSha": "9eaf3a96901ff5c924cfac78fbe910a3d1783f31",
+        "content": {
+          "format": "SAFOR_MASTER_STATUS_INDEX_MODEL",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-COMPACT-MASTER-STATUS-INDEX",
+          "purpose": "Provide one compact authoritative projection for fast HUMAN status answers without global repository scans.",
+          "schemaRef": "schemas/master-status-index.schema.json",
+          "sourceOfTruth": "POINTER_PROJECTION_ONLY",
+          "authoritativeInputs": [
+            "AGENT_REGISTRY",
+            "MASTER_JOB_STATES",
+            "RESPONSE_INDEXES",
+            "REVIEW_STATES",
+            "SCHEDULER_STATE",
+            "PROVIDER_READBACK"
+          ],
+          "normalReadSet": [
+            "master/status-index.json",
+            "agents/index.json",
+            "ONLY_REFERENCED_CHANGED_OR_CONFLICTING_RECORDS"
+          ],
+          "forbiddenNormalBehavior": [
+            "SCAN_COMPLETE_PROJECT_TREE",
+            "READ_FOREIGN_AGENT_INBOXES_WITHOUT_POINTER",
+            "RECONSTRUCT_ALL_HISTORY_FOR_ROUTINE_STATUS",
+            "GUESS_STALE_OR_MISSING_POINTER_TARGETS"
+          ],
+          "statusQuestionsSupported": [
+            "PROJECT_STATUS",
+            "CURRENT_ROADMAP",
+            "AGENTS_TO_START",
+            "RUNNING_COMPLETED_BLOCKED_JOBS",
+            "ALL_AGENT_RESPONSES_RECEIVED",
+            "NEXT_USEFUL_STEP"
+          ],
+          "freshnessContract": {
+            "revisionRequired": true,
+            "generatedAtRequired": true,
+            "providerReadbackRefRequired": true,
+            "stalePointersReported": true,
+            "unknownFreshnessNeverPresentedAsLive": true
+          }
+        },
+        "selfHealingProfileId": "MRP-MASTERSTATUSINDEX"
+      },
       "selfHealing": {
         "key": "selfHealing",
         "sourcePath": "v0.13.0/self-healing-model.json",
-        "sourceBlobSha": "f4874990914eab9a2de225ae85c5312af6a7b07c",
+        "sourceBlobSha": "3c1910be2413e786bb7c2d42b52d07a54a3c13d1",
         "content": {
           "format": "SAFOR_SELF_HEALING_MODEL",
           "schemaVersion": "0.13.0",
@@ -4699,6 +5360,42 @@
               "automaticRepair": "RELOAD_OR_REVERIFY_THE_SAME_SELECTED_PACKAGE_BYTES_AND_REEVALUATE_DOMAIN_AND_BIDIRECTIONAL_COMPATIBILITY_WITHOUT_CHANGING_DOMAIN_OR_COUNTERPART_SELECTION",
               "defaultRetryBudget": 1,
               "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
+            },
+            {
+              "id": "SH-25",
+              "name": "AGENT_IDENTITY_BINDING_UNCERTAIN",
+              "examples": [
+                "chat history missing",
+                "identity revision mismatch",
+                "agent cannot prove bound chat identity"
+              ],
+              "automaticRepair": "NONE",
+              "defaultRetryBudget": 0,
+              "requiresHuman": true,
+              "requiredOutcome": "REBIND_REQUIRED"
+            },
+            {
+              "id": "SH-26",
+              "name": "AGENT_RESPONSE_CONTRACT_INVALID",
+              "examples": [
+                "unknown response type",
+                "missing template reference",
+                "job/agent binding mismatch"
+              ],
+              "automaticRepair": "RESTORE_TEMPLATE_OR_REISSUE_JOB_BEFORE_EXECUTION",
+              "defaultRetryBudget": 0,
+              "requiresHuman": "WHEN_MASTER_CANNOT_REISSUE_WITHOUT_NEW_DECISION"
+            },
+            {
+              "id": "SH-27",
+              "name": "MASTER_STATUS_INDEX_STALE",
+              "examples": [
+                "stale response pointer",
+                "registry/index mismatch"
+              ],
+              "automaticRepair": "REGENERATE_DERIVED_INDEX_FROM_AUTHORITATIVE_POINTERS",
+              "defaultRetryBudget": 1,
+              "requiresReconciliation": false
             }
           ],
           "eligibilityRules": [
@@ -4863,12 +5560,12 @@
       "moduleSelfHealing": {
         "key": "moduleSelfHealing",
         "sourcePath": "v0.13.0/module-self-healing-model.json",
-        "sourceBlobSha": "8d9228c4950626852fd269d34293f80139f839c0",
+        "sourceBlobSha": "f6c927e04f3e3e3c700bb508185378ea34ce064b",
         "content": {
           "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
           "schemaVersion": "0.13.0",
           "id": "safor-module-self-healing-0.13.0",
-          "purpose": "Bounded recovery coverage for every embedded SAFOR 0.13 Framework module, including composable domain-package selection and schemas.",
+          "purpose": "Bounded recovery coverage for every embedded SAFOR 0.13 module including declarative chat execution, HUMAN-GO agents, typed responses, minimal agent chat and compact MASTER status.",
           "coverageContract": {
             "exactCoverageRequired": true,
             "oneProfilePerEmbeddedModule": true,
@@ -4887,7 +5584,11 @@
             "Repeated failure fingerprints obey the lower of module-profile and failure-class retry budgets.",
             "Self-healing of the self-healing modules is fail-closed: reload verified expected blobs or STOP.",
             "HUMAN interaction governance is fail-closed: if the Decision Gate or Cognitive Load Policy cannot be validated, SAFOR may show only the minimum safe blocker and must not infer approval.",
-            "Recovery may suppress an unnecessary HUMAN question, but may never answer a required HUMAN decision on the HUMAN's behalf."
+            "Recovery may suppress an unnecessary HUMAN question, but may never answer a required HUMAN decision on the HUMAN's behalf.",
+            "Recovery never substitutes another trigger for HUMAN GO.",
+            "Identity ambiguity always fails closed to REBIND_REQUIRED.",
+            "Invalid response contracts cannot be repaired by inventing fields; MASTER restores a verified template or reissues the job.",
+            "Master status indexes are derived and may be regenerated only from authoritative versioned pointers."
           ],
           "moduleProfiles": [
             {
@@ -8073,6 +8774,486 @@
                 ],
                 "target": "STOP"
               }
+            },
+            {
+              "profileId": "MRP-CHATEXECUTION",
+              "moduleKey": "chatExecution",
+              "moduleClass": "RUNTIME_MODEL",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.chatExecution + integrityManifest.chatExecution",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-AGENTBOOTSTRAP",
+              "moduleKey": "agentBootstrap",
+              "moduleClass": "RUNTIME_MODEL",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.agentBootstrap + integrityManifest.agentBootstrap",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-AGENTRESPONSECONTRACT",
+              "moduleKey": "agentResponseContract",
+              "moduleClass": "RUNTIME_MODEL",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.agentResponseContract + integrityManifest.agentResponseContract",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-AGENTRESPONSETEMPLATES",
+              "moduleKey": "agentResponseTemplates",
+              "moduleClass": "REGISTRY",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.agentResponseTemplates + integrityManifest.agentResponseTemplates",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-AGENTCHATCONTRACT",
+              "moduleKey": "agentChatContract",
+              "moduleClass": "RUNTIME_MODEL",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.agentChatContract + integrityManifest.agentChatContract",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-MASTERSTATUSINDEX",
+              "moduleKey": "masterStatusIndex",
+              "moduleClass": "RUNTIME_MODEL",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.masterStatusIndex + integrityManifest.masterStatusIndex",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-SCHEMAAGENTBOOTSTRAP",
+              "moduleKey": "schemaAgentBootstrap",
+              "moduleClass": "SCHEMA",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.schemaAgentBootstrap + integrityManifest.schemaAgentBootstrap",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-SCHEMAAGENTRESPONSE",
+              "moduleKey": "schemaAgentResponse",
+              "moduleClass": "SCHEMA",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.schemaAgentResponse + integrityManifest.schemaAgentResponse",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-SCHEMAAGENTCHATSTATUS",
+              "moduleKey": "schemaAgentChatStatus",
+              "moduleClass": "SCHEMA",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.schemaAgentChatStatus + integrityManifest.schemaAgentChatStatus",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
+            },
+            {
+              "profileId": "MRP-SCHEMAMASTERSTATUSINDEX",
+              "moduleKey": "schemaMasterStatusIndex",
+              "moduleClass": "SCHEMA",
+              "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+              "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+              "sourceOfTruth": "embeddedModules.schemaMasterStatusIndex + integrityManifest.schemaMasterStatusIndex",
+              "failureDetectors": [
+                "MODULE_BLOB_MISMATCH",
+                "SCHEMA_OR_CONTRACT_INVALID",
+                "REFERENCE_RESOLUTION_INVALID"
+              ],
+              "automaticRepairs": [
+                "RELOAD_VERIFIED_EMBEDDED_MODULE",
+                "RESTORE_FROM_EXPECTED_PINNED_BLOB"
+              ],
+              "forbiddenRepairs": [
+                "INVENT_MISSING_EVIDENCE",
+                "EXPAND_AUTHORITY_OR_SCOPE",
+                "BYPASS_HUMAN_GO_OR_MASTER_DECISION",
+                "ACCEPT_UNVERIFIED_STATE",
+                "AUTO_REWRITE_SEMANTICS"
+              ],
+              "retryBudget": 1,
+              "preconditions": [
+                "ACTIVE_AUTHORITY_STILL_VALID",
+                "CURRENT_PROVIDER_RIGHTS_PROVEN",
+                "PRE_REPAIR_STATE_REFERENCED",
+                "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+              ],
+              "verification": {
+                "requiredEvidence": [
+                  "AUTHORITATIVE_READBACK",
+                  "EXPECTED_STATE_MATCH",
+                  "REPAIR_RECORD_PERSISTED"
+                ],
+                "successPredicate": "MODULE_MATCHES_PINNED_BLOB_AND_CONTRACT"
+              },
+              "escalation": {
+                "when": [
+                  "RETRY_BUDGET_EXHAUSTED",
+                  "SOURCE_OF_TRUTH_AMBIGUOUS",
+                  "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+                  "AUTHORITATIVE_READBACK_FAILS"
+                ],
+                "target": "HUMAN"
+              }
             }
           ]
         },
@@ -8080,13 +9261,13 @@
       },
       "agentWorkspace": {
         "key": "agentWorkspace",
-        "sourcePath": "v0.10.0/agent-workspace-model.json",
-        "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
+        "sourcePath": "v0.13.0/agent-workspace-model.json",
+        "sourceBlobSha": "6bf491b3a338e940157695750f32e7d94bb51a67",
         "content": {
           "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-          "schemaVersion": "0.10.0",
-          "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
-          "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL-0.13",
+          "purpose": "Repository-native coordination in which persistent chat-bound agent identities are initialized once, activated only by HUMAN GO, retrieve immutable jobs by pointer and submit typed Git responses for MASTER verification.",
           "topology": {
             "projectRoot": "projects/{projectSlug}/",
             "agentRegistry": "agents/index.json",
@@ -8107,7 +9288,11 @@
             "masterJobState": "master/jobs/{jobId}.json",
             "inboxIndex": "agents/{agentId}/inbox/index.json",
             "agentHumanReadableResult": "agents/{agentId}/outbox/{jobId}.result.md",
-            "jobHumanReadableProjection": "agents/{agentId}/inbox/{jobId}.md"
+            "jobHumanReadableProjection": "agents/{agentId}/inbox/{jobId}.md",
+            "agentResponseIndex": "agents/{agentId}/outbox/index.json",
+            "agentTypedResponse": "agents/{agentId}/outbox/{jobId}.{responseType}.json",
+            "masterStatusIndex": "master/status-index.json",
+            "responseTemplateCatalog": "templates/agent-responses/index.json"
           },
           "ownership": {
             "MASTER_ONLY": [
@@ -8141,28 +9326,40 @@
               "controlRepository",
               "workspaceRoot"
             ],
-            "identityChangePolicy": "Changing an immutable identity field requires explicit HUMAN re-identification and a new identityRevision before further job claims."
+            "identityChangePolicy": "Changing an immutable identity field requires explicit HUMAN re-identification and a new identityRevision before further job claims.",
+            "distinctDisplayNameRequired": true,
+            "oneTimeChatBindingRequired": true,
+            "sameChatContinuationRequired": true,
+            "failClosedRebindRequiredWhenIdentityUncertain": true
           },
           "activationContract": {
             "backgroundWakeupAssumed": false,
-            "trigger": "HUMAN, automation or another host-supported activation mechanism must activate the chat/agent runtime.",
-            "minimalActivationIntent": "CHECK_WORKSPACE",
+            "mode": "HUMAN_GO_ONLY",
+            "trigger": "The HUMAN types the exact activation intent GO in the already bound agent chat.",
+            "acceptedActivationIntent": "GO",
+            "gitPushActivatesAgent": false,
+            "gitPollingActivatesAgent": false,
+            "automationActivatesAgent": false,
+            "hostBackgroundWakeupActivatesAgent": false,
+            "minimalActivationIntent": "GO",
             "steps": [
+              "VERIFY_BOUND_CHAT_IDENTITY",
+              "VERIFY_HUMAN_GO",
               "LOAD_IDENTITY",
-              "VERIFY_IDENTITY_STATUS_ACTIVE",
               "LOAD_AGENT_STATE",
-              "LOAD_INBOX_INDEX",
+              "LOAD_PERSONAL_INBOX_INDEX",
               "SELECT_DISCOVERABLE_JOB",
-              "READ_AUTHORITATIVE_JOB_JSON",
-              "VERIFY_JOB_JSON_BLOB",
-              "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
+              "READ_AUTHORITATIVE_JOB",
+              "VERIFY_JOB_AND_HUMAN_PROJECTION_BLOBS",
               "READ_MASTER_JOB_STATE",
-              "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
+              "VERIFY_ASSIGNMENT_ROLE_SKILLS_CONTEXT_INPUTS_RIGHTS_AND_WRITE_TARGETS",
               "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
               "EXECUTE_ONLY_CLAIMED_JOB",
-              "SUBMIT_RESULT_AND_EVIDENCE"
+              "SUBMIT_TYPED_RESPONSE_AND_EVIDENCE",
+              "RENDER_MINIMAL_AGENT_CHAT_STATUS"
             ],
-            "promptTransportRule": "The HUMAN must not need to copy the job contract into the agent chat after initial identity bootstrap."
+            "promptTransportRule": "After one-time identity bootstrap the HUMAN never copies job contracts or domain prompts into the agent chat.",
+            "noGoOutcome": "WAIT_WITHOUT_CLAIM_OR_WRITE"
           },
           "claimProtocol": {
             "eligibleWhen": [
@@ -8200,7 +9397,11 @@
             "roleSwitchForbidden": true,
             "skillSubstitutionForbiddenWithoutContractChange": true,
             "authorizationRule": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW",
-            "jobHumanProjectionRule": "The Markdown job view is derived from the authoritative JSON and may not expand scope, role, skills, authorization or outputs."
+            "jobHumanProjectionRule": "The Markdown job view is derived from the authoritative JSON and may not expand scope, role, skills, authorization or outputs.",
+            "humanGoEvidenceRequiredBeforeClaim": true,
+            "substantiveHumanConversationForbidden": true,
+            "questionsAndConflictsPersistedAsTypedResponses": true,
+            "productAndControlWritesSeparatelyAuthorized": true
           },
           "resultProtocol": {
             "submission": "Agent writes the machine-readable outbox result, the mandatory HUMAN-readable Markdown result, referenced evidence and Git trace, then sets its local state to RESULT_SUBMITTED.",
@@ -8237,7 +9438,16 @@
               "mutatingJobs": "Every repository mutation must be attributable to the job through dedicated branch, immutable base commit, result commit SHA(s), changed paths and provider readback.",
               "readOnlyJobs": "A read-only job may have an empty work-repository gitTrace, but its HUMAN-readable and machine-readable outbox results still persist in the Git-backed control repository.",
               "verification": "MASTER reads back every claimed commit/branch/change request before result verification."
-            }
+            },
+            "typedResponseSchemaRef": "schemas/agent-response.schema.json",
+            "requiredResponseTypes": [
+              "JOB_RESULT",
+              "JOB_ERROR",
+              "CLARIFICATION_REQUEST",
+              "CAPABILITY_MISMATCH",
+              "IMPROVEMENT_PROPOSAL"
+            ],
+            "minimalChatStatusSchemaRef": "schemas/agent-chat-status.schema.json"
           },
           "lifecycle": {
             "masterStatuses": [
@@ -8280,7 +9490,12 @@
             "noCrossAgentClaim": true,
             "noSelfAcceptance": true,
             "noAutomaticJobReassignment": true,
-            "noAutomaticIdentityMutation": true
+            "noAutomaticIdentityMutation": true,
+            "humanGoOnly": true,
+            "noGitEventWakeup": true,
+            "noDirectDomainDialogueWithHuman": true,
+            "masterOnlyHumanDecisionRouting": true,
+            "identityGuessingForbidden": true
           },
           "discoveryProtocol": {
             "indexRef": "agents/{agentId}/inbox/index.json",
@@ -8329,13 +9544,13 @@
       },
       "agentJobContract": {
         "key": "agentJobContract",
-        "sourcePath": "v0.10.0/agent-job-contract-model.json",
-        "sourceBlobSha": "c8c5b88bbaac2cc682c11c4ad99d1ebf421d2227",
+        "sourcePath": "v0.13.0/agent-job-contract-model.json",
+        "sourceBlobSha": "e880ed31ff33a5741bcb312ede48fb6f5f1d0873",
         "content": {
           "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
-          "schemaVersion": "0.10.0",
-          "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT",
-          "purpose": "Define the immutable, self-describing execution contract issued by MASTER to one persistent agent identity, plus its mandatory HUMAN-readable Markdown projection.",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT-0.13",
+          "purpose": "Define the immutable self-describing job contract issued by MASTER to one persistent chat-bound agent, including exact domain context, separate product/control write scopes and all typed response templates.",
           "authority": {
             "authoritativeArtifact": "agents/{agentId}/inbox/{jobId}.json",
             "humanProjection": "agents/{agentId}/inbox/{jobId}.md",
@@ -8358,7 +9573,12 @@
             "COMPUTE_HUMAN_PROJECTION_BLOB_SHA",
             "WRITE_JSON_AND_MARKDOWN",
             "PROVIDER_READBACK_BOTH_ARTIFACTS",
-            "ONLY_THEN_MARK_MASTER_JOB_READY_AND_PUBLISH_INBOX_INDEX"
+            "ONLY_THEN_MARK_MASTER_JOB_READY_AND_PUBLISH_INBOX_INDEX",
+            "BIND_DOMAIN_FACTORY_OPERATING_MODEL_AND_PROCESS_CONTEXT",
+            "BIND_SEPARATE_PRODUCT_AND_CONTROL_WRITE_SCOPES",
+            "BIND_ALL_TYPED_RESPONSE_TEMPLATES",
+            "BIND_MINIMAL_AGENT_CHAT_CONTRACT",
+            "VERIFY_HUMAN_GO_ONLY_ACTIVATION_CONTRACT"
           ],
           "identifierContract": {
             "jobId": "UUIDv7 preferred and required by the v0.8 schema for time-ordered globally unique job identity.",
@@ -8422,18 +9642,46 @@
             "skillChange": "NEW_JOB_OR_PRE_DISPATCH_REBUILD",
             "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB",
             "directAgentMutationForbidden": true
+          },
+          "responseContract": {
+            "required": true,
+            "modelRef": "agent-response-contract-model.json",
+            "schemaRef": "schemas/agent-response.schema.json",
+            "templateCatalogRef": "agent-response-templates.json",
+            "requiredTemplateIds": [
+              "job_result",
+              "job_error",
+              "clarification_request",
+              "capability_mismatch",
+              "improvement_proposal"
+            ],
+            "exactWriteTargetRequired": true,
+            "separateFromProductWriteScope": true
+          },
+          "agentChatContract": {
+            "required": true,
+            "modelRef": "agent-chat-contract-model.json",
+            "schemaRef": "schemas/agent-chat-status.schema.json",
+            "mode": "MINIMAL_STATUS_ONLY"
+          },
+          "dispatchEligibility": {
+            "requiresHumanGoOnlyIdentityContract": true,
+            "requiresAllResponseTemplates": true,
+            "requiresResolvablePinnedInputs": true,
+            "requiresRoleSkillDomainCompatibility": true,
+            "requiresSeparateWriteAuthorization": true
           }
         },
         "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
       },
       "multiAgentScheduler": {
         "key": "multiAgentScheduler",
-        "sourcePath": "v0.10.0/multi-agent-scheduler-model.json",
-        "sourceBlobSha": "4a77be0d6dc2f0790ff774586d451ce94265c9e0",
+        "sourcePath": "v0.13.0/multi-agent-scheduler-model.json",
+        "sourceBlobSha": "00bb0417b1ce04b92dbe483f8ad668b6f07fa706",
         "content": {
           "format": "SAFOR_MULTI_AGENT_SCHEDULER_MODEL",
-          "schemaVersion": "0.10.0",
-          "id": "SAFOR-CONFLICT-AWARE-MULTI-AGENT-SCHEDULER",
+          "schemaVersion": "0.13.0",
+          "id": "SAFOR-MULTI-AGENT-SCHEDULER-0.13",
           "purpose": "MASTER-owned scheduling protocol that decomposes approved work into atomic execution units and dispatches the largest safe parallel wave that fits dependencies, agent capabilities, capacity, separation-of-duties rules and mutation-conflict constraints.",
           "topology": {
             "schedulerState": "master/scheduler/state.json",
@@ -8585,7 +9833,22 @@
             ],
             "humanSummary": "MASTER should present aggregate utilization and blockers without requiring the HUMAN to inspect raw JSON."
           },
-          "jobContractModelRef": "agent-job-contract-model.json"
+          "jobContractModelRef": "agent-job-contract-model.json",
+          "humanGoActivationContract": {
+            "dispatchMayPublishJobBeforeGo": true,
+            "dispatchMayStartAgentBeforeGo": false,
+            "claimRequiresHumanGoEvidence": true,
+            "runningRequiresHumanGoEvidence": true,
+            "gitEventsNeverCountAsHumanGo": true,
+            "automationNeverCountsAsHumanGo": true,
+            "noGoBehavior": "KEEP_JOB_READY_AND_AGENT_IDLE"
+          },
+          "responseObservationContract": {
+            "readResponseIndexesFirst": true,
+            "typedResponseSchemaRef": "schemas/agent-response.schema.json",
+            "blockedResponseStopsFurtherMutation": true,
+            "masterOwnsResolutionAndReassignment": true
+          }
         },
         "selfHealingProfileId": "MRP-MULTI_AGENT_SCHEDULER"
       },
@@ -13006,12 +14269,12 @@
       },
       "schemaAgentRegistry": {
         "key": "schemaAgentRegistry",
-        "sourcePath": "v0.10.0/schemas/agent-registry.schema.json",
-        "sourceBlobSha": "c64e832b256a04868d69faa63c07ce841df69e3f",
+        "sourcePath": "v0.13.0/schemas/agent-registry.schema.json",
+        "sourceBlobSha": "1ce2a57cda43c1110c0c01fe97099297898171dd",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "urn:safor:agent-registry:0.10.0",
-          "title": "SAFOR Agent Registry 0.10.0",
+          "$id": "urn:safor:agent-registry:0.13.0",
+          "title": "SAFOR Complete Agent Registry 0.13.0",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -13019,14 +14282,17 @@
             "schemaVersion",
             "projectId",
             "revision",
-            "agents"
+            "completeness",
+            "agents",
+            "updatedAt",
+            "providerReadbackRef"
           ],
           "properties": {
             "format": {
               "const": "SAFOR_AGENT_REGISTRY"
             },
             "schemaVersion": {
-              "const": "0.10.0"
+              "const": "0.13.0"
             },
             "projectId": {
               "type": "string",
@@ -13036,11 +14302,40 @@
               "type": "integer",
               "minimum": 0
             },
+            "completeness": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "allKnownAgentIdentitiesIncluded",
+                "legacyIdentityRefs"
+              ],
+              "properties": {
+                "allKnownAgentIdentitiesIncluded": {
+                  "const": true
+                },
+                "legacyIdentityRefs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "uniqueItems": true
+                }
+              }
+            },
             "agents": {
               "type": "array",
+              "uniqueItems": true,
               "items": {
                 "$ref": "#/$defs/agentEntry"
               }
+            },
+            "updatedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "providerReadbackRef": {
+              "type": "string",
+              "minLength": 1
             }
           },
           "$defs": {
@@ -13049,18 +14344,44 @@
               "additionalProperties": false,
               "required": [
                 "agentId",
+                "displayName",
+                "identityRevision",
                 "identityRef",
+                "stateRef",
+                "inboxIndexRef",
+                "responseIndexRef",
                 "workspaceRoot",
                 "registeredAt",
                 "registeredBy",
+                "status",
                 "scheduling"
               ],
               "properties": {
                 "agentId": {
                   "type": "string",
-                  "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+                  "minLength": 3
+                },
+                "displayName": {
+                  "type": "string",
+                  "minLength": 2
+                },
+                "identityRevision": {
+                  "type": "integer",
+                  "minimum": 1
                 },
                 "identityRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "stateRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "inboxIndexRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "responseIndexRef": {
                   "type": "string",
                   "minLength": 1
                 },
@@ -13075,6 +14396,14 @@
                 "registeredBy": {
                   "type": "string",
                   "minLength": 1
+                },
+                "status": {
+                  "enum": [
+                    "ACTIVE",
+                    "PAUSED",
+                    "REBIND_REQUIRED",
+                    "REVOKED"
+                  ]
                 },
                 "scheduling": {
                   "type": "object",
@@ -13102,12 +14431,12 @@
       },
       "schemaAgentIdentity": {
         "key": "schemaAgentIdentity",
-        "sourcePath": "v0.10.0/schemas/agent-identity.schema.json",
-        "sourceBlobSha": "efe38c948233123541c9e05ede5757d9487fb191",
+        "sourcePath": "v0.13.0/schemas/agent-identity.schema.json",
+        "sourceBlobSha": "ffd4e390a990f2a1e828cd91f049111f5ca027e7",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "urn:safor:agent-identity:0.10.0",
-          "title": "SAFOR Agent Identity 0.10.0",
+          "$id": "urn:safor:agent-identity:0.13.0",
+          "title": "SAFOR Chat-bound Agent Identity 0.13.0",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -13115,7 +14444,7 @@
             "schemaVersion",
             "projectId",
             "agentId",
-            "agentName",
+            "displayName",
             "agentKind",
             "masterId",
             "controlRepository",
@@ -13126,14 +14455,16 @@
             "initializedBy",
             "roleIds",
             "capabilityIds",
-            "activationContract"
+            "bootstrapBinding",
+            "activationContract",
+            "rebindPolicy"
           ],
           "properties": {
             "format": {
               "const": "SAFOR_AGENT_IDENTITY"
             },
             "schemaVersion": {
-              "const": "0.10.0"
+              "const": "0.13.0"
             },
             "projectId": {
               "type": "string",
@@ -13143,15 +14474,13 @@
               "type": "string",
               "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
             },
-            "agentName": {
+            "displayName": {
               "type": "string",
-              "minLength": 1
+              "minLength": 2,
+              "maxLength": 80
             },
             "agentKind": {
-              "enum": [
-                "CHAT_AGENT",
-                "SERVICE_AGENT"
-              ]
+              "const": "CHAT_AGENT"
             },
             "masterId": {
               "type": "string",
@@ -13173,6 +14502,7 @@
               "enum": [
                 "ACTIVE",
                 "PAUSED",
+                "REBIND_REQUIRED",
                 "REVOKED"
               ]
             },
@@ -13198,54 +14528,140 @@
               },
               "uniqueItems": true
             },
+            "bootstrapBinding": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "bootstrapRef",
+                "bindingRevision",
+                "bindingStatus",
+                "sameChatContinuationRequired",
+                "boundAt",
+                "bindingEvidenceRef"
+              ],
+              "properties": {
+                "bootstrapRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "bindingRevision": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "bindingStatus": {
+                  "enum": [
+                    "BOUND",
+                    "REBIND_REQUIRED"
+                  ]
+                },
+                "sameChatContinuationRequired": {
+                  "const": true
+                },
+                "boundAt": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "format": "date-time"
+                },
+                "bindingEvidenceRef": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            },
             "activationContract": {
               "type": "object",
               "additionalProperties": false,
               "required": [
                 "activationMode",
-                "initialBootstrapFields",
+                "goCommand",
+                "forbiddenTriggers",
                 "onActivation",
                 "jobPromptTransportRequired"
               ],
               "properties": {
                 "activationMode": {
-                  "const": "EXTERNAL_TRIGGER_REQUIRED"
+                  "const": "HUMAN_GO_ONLY"
                 },
-                "initialBootstrapFields": {
+                "goCommand": {
+                  "const": "GO"
+                },
+                "forbiddenTriggers": {
                   "type": "array",
+                  "minItems": 6,
+                  "uniqueItems": true,
                   "items": {
                     "enum": [
-                      "CONTROL_REPOSITORY",
-                      "PROJECT_ID",
-                      "AGENT_ID"
+                      "GIT_PUSH",
+                      "GIT_POLL",
+                      "INBOX_FILE_CREATION",
+                      "AUTOMATION_EVENT",
+                      "HOST_BACKGROUND_WAKEUP",
+                      "MASTER_MESSAGE_IN_ANOTHER_CHAT"
                     ]
-                  },
-                  "minItems": 3,
-                  "maxItems": 3,
-                  "uniqueItems": true
+                  }
                 },
                 "onActivation": {
                   "type": "array",
-                  "minItems": 10,
+                  "minItems": 14,
+                  "maxItems": 14,
+                  "uniqueItems": true,
                   "items": {
                     "enum": [
+                      "VERIFY_BOUND_CHAT_IDENTITY",
+                      "VERIFY_HUMAN_GO",
                       "LOAD_IDENTITY",
                       "LOAD_AGENT_STATE",
-                      "LOAD_INBOX_INDEX",
+                      "LOAD_PERSONAL_INBOX_INDEX",
                       "SELECT_DISCOVERABLE_JOB",
-                      "READ_AUTHORITATIVE_JOB_JSON",
-                      "VERIFY_JOB_JSON_BLOB",
-                      "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
+                      "READ_AUTHORITATIVE_JOB",
+                      "VERIFY_JOB_AND_HUMAN_PROJECTION_BLOBS",
                       "READ_MASTER_JOB_STATE",
-                      "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
+                      "VERIFY_ASSIGNMENT_ROLE_SKILLS_CONTEXT_INPUTS_RIGHTS_AND_WRITE_TARGETS",
                       "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
                       "EXECUTE_ONLY_CLAIMED_JOB",
-                      "SUBMIT_RESULT_AND_EVIDENCE"
+                      "SUBMIT_TYPED_RESPONSE_AND_EVIDENCE",
+                      "RENDER_MINIMAL_AGENT_CHAT_STATUS"
                     ]
                   }
                 },
                 "jobPromptTransportRequired": {
                   "const": false
+                }
+              }
+            },
+            "rebindPolicy": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "failClosed",
+                "triggerConditions",
+                "requiredOutcome"
+              ],
+              "properties": {
+                "failClosed": {
+                  "const": true
+                },
+                "triggerConditions": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "CHAT_HISTORY_MISSING",
+                      "CHAT_BINDING_UNCERTAIN",
+                      "AGENT_IDENTITY_REFERENCE_UNRESOLVABLE",
+                      "IDENTITY_REVISION_MISMATCH",
+                      "CONTROL_REPOSITORY_UNAVAILABLE",
+                      "HUMAN_REPORTS_NEW_AGENT_CHAT"
+                    ]
+                  }
+                },
+                "requiredOutcome": {
+                  "const": "REBIND_REQUIRED"
                 }
               }
             }
@@ -13255,12 +14671,12 @@
       },
       "schemaAgentInboxIndex": {
         "key": "schemaAgentInboxIndex",
-        "sourcePath": "v0.10.0/schemas/agent-inbox-index.schema.json",
-        "sourceBlobSha": "8252a69e600a445bd829484c646b57da865273b6",
+        "sourcePath": "v0.13.0/schemas/agent-inbox-index.schema.json",
+        "sourceBlobSha": "dc9ef5d3775fea2a3e79c711981c38e6acb501d5",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "urn:safor:agent-inbox-index:0.10.0",
-          "title": "SAFOR Agent Inbox Index 0.10.0",
+          "$id": "urn:safor:agent-inbox-index:0.13.0",
+          "title": "SAFOR Agent Inbox Index 0.13.0",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -13281,7 +14697,7 @@
               "const": "SAFOR_AGENT_INBOX_INDEX"
             },
             "schemaVersion": {
-              "const": "0.10.0"
+              "const": "0.13.0"
             },
             "projectId": {
               "type": "string",
@@ -13407,12 +14823,12 @@
       },
       "schemaAgentState": {
         "key": "schemaAgentState",
-        "sourcePath": "v0.10.0/schemas/agent-state.schema.json",
-        "sourceBlobSha": "56cc1ca26b451751e03a3af12dabc00cf757e066",
+        "sourcePath": "v0.13.0/schemas/agent-state.schema.json",
+        "sourceBlobSha": "bd7174b4c55e41bccb3c30b216066b129a1f602b",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "urn:safor:agent-state:0.10.0",
-          "title": "SAFOR Agent Runtime State 0.10.0",
+          "$id": "urn:safor:agent-state:0.13.0",
+          "title": "SAFOR Agent Runtime State 0.13.0",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -13426,14 +14842,15 @@
             "session",
             "currentJob",
             "lastResultRef",
-            "updatedAt"
+            "updatedAt",
+            "lastActivation"
           ],
           "properties": {
             "format": {
               "const": "SAFOR_AGENT_STATE"
             },
             "schemaVersion": {
-              "const": "0.10.0"
+              "const": "0.13.0"
             },
             "projectId": {
               "type": "string",
@@ -13491,6 +14908,35 @@
             "updatedAt": {
               "type": "string",
               "format": "date-time"
+            },
+            "lastActivation": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "additionalProperties": false,
+              "required": [
+                "source",
+                "intent",
+                "receivedAt",
+                "evidenceRef"
+              ],
+              "properties": {
+                "source": {
+                  "const": "HUMAN_IN_BOUND_AGENT_CHAT"
+                },
+                "intent": {
+                  "const": "GO"
+                },
+                "receivedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "evidenceRef": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
             }
           },
           "$defs": {
@@ -13635,12 +15081,12 @@
       },
       "schemaAgentJob": {
         "key": "schemaAgentJob",
-        "sourcePath": "v0.10.0/schemas/agent-job.schema.json",
-        "sourceBlobSha": "4131f05fab04f2441d193fad668cb807ff1da04c",
+        "sourcePath": "v0.13.0/schemas/agent-job.schema.json",
+        "sourceBlobSha": "fd66a75df641ec13f5b42338a71e348e7f9b23e4",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "urn:safor:agent-job:0.10.0",
-          "title": "SAFOR Canonical Agent Job Contract 0.10.0",
+          "$id": "urn:safor:agent-job:0.13.0",
+          "title": "SAFOR Canonical Agent Job Contract 0.13.0",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -13661,14 +15107,17 @@
             "outputContract",
             "verificationContract",
             "constraints",
-            "humanReadableProjection"
+            "humanReadableProjection",
+            "domainContext",
+            "responseContract",
+            "agentChatContract"
           ],
           "properties": {
             "format": {
               "const": "SAFOR_AGENT_JOB"
             },
             "schemaVersion": {
-              "const": "0.10.0"
+              "const": "0.13.0"
             },
             "identity": {
               "$ref": "#/$defs/jobIdentity"
@@ -13724,6 +15173,15 @@
             },
             "humanReadableProjection": {
               "$ref": "#/$defs/humanReadableProjection"
+            },
+            "domainContext": {
+              "$ref": "#/$defs/domainContext"
+            },
+            "responseContract": {
+              "$ref": "#/$defs/responseContract"
+            },
+            "agentChatContract": {
+              "$ref": "#/$defs/agentChatContract"
             }
           },
           "$defs": {
@@ -15024,6 +16482,278 @@
                   "CONSTRAINTS_AND_STOP_CONDITIONS"
                 ]
               }
+            },
+            "domainContext": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "frameworkDistributionRef",
+                "domainId",
+                "creationType",
+                "factoryRef",
+                "operatingModelRef",
+                "processStateRefs"
+              ],
+              "properties": {
+                "frameworkDistributionRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "domainId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "creationType": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "factoryRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "operatingModelRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "processStateRefs": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                }
+              }
+            },
+            "responseTemplateBinding": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "templateId",
+                "templateRef",
+                "schemaRef",
+                "targetPathPattern"
+              ],
+              "properties": {
+                "templateId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "templateRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "schemaRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "targetPathPattern": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "responseContract": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "templateCatalogRef",
+                "responseSchemaRef",
+                "templates",
+                "writeTarget",
+                "responseIndexRef",
+                "masterTargetRef",
+                "validationRules"
+              ],
+              "properties": {
+                "templateCatalogRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "responseSchemaRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "templates": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "jobResult",
+                    "jobError",
+                    "clarificationRequest",
+                    "capabilityMismatch",
+                    "improvementProposal"
+                  ],
+                  "properties": {
+                    "jobResult": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/responseTemplateBinding"
+                        },
+                        {
+                          "properties": {
+                            "templateId": {
+                              "const": "job_result"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "jobError": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/responseTemplateBinding"
+                        },
+                        {
+                          "properties": {
+                            "templateId": {
+                              "const": "job_error"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "clarificationRequest": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/responseTemplateBinding"
+                        },
+                        {
+                          "properties": {
+                            "templateId": {
+                              "const": "clarification_request"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "capabilityMismatch": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/responseTemplateBinding"
+                        },
+                        {
+                          "properties": {
+                            "templateId": {
+                              "const": "capability_mismatch"
+                            }
+                          }
+                        }
+                      ]
+                    },
+                    "improvementProposal": {
+                      "allOf": [
+                        {
+                          "$ref": "#/$defs/responseTemplateBinding"
+                        },
+                        {
+                          "properties": {
+                            "templateId": {
+                              "const": "improvement_proposal"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                },
+                "writeTarget": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "repository",
+                    "branch",
+                    "basePath",
+                    "allowedPaths",
+                    "allowedOperations"
+                  ],
+                  "properties": {
+                    "repository": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "branch": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "basePath": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "allowedPaths": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "minItems": 1
+                    },
+                    "allowedOperations": {
+                      "type": "array",
+                      "items": {
+                        "enum": [
+                          "create",
+                          "modify",
+                          "commit",
+                          "push",
+                          "index_update"
+                        ]
+                      },
+                      "minItems": 1,
+                      "uniqueItems": true
+                    }
+                  }
+                },
+                "responseIndexRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "masterTargetRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "validationRules": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "minItems": 1
+                }
+              }
+            },
+            "agentChatContract": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "schemaRef",
+                "mode",
+                "allowedStatuses",
+                "substantiveContentTarget"
+              ],
+              "properties": {
+                "schemaRef": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "mode": {
+                  "const": "MINIMAL_STATUS_ONLY"
+                },
+                "allowedStatuses": {
+                  "type": "array",
+                  "minItems": 4,
+                  "maxItems": 4,
+                  "uniqueItems": true,
+                  "items": {
+                    "enum": [
+                      "STARTED",
+                      "SUBMITTED",
+                      "BLOCKED",
+                      "REBIND_REQUIRED"
+                    ]
+                  }
+                },
+                "substantiveContentTarget": {
+                  "const": "VERSIONED_GIT_RESPONSE"
+                }
+              }
             }
           }
         },
@@ -15031,12 +16761,12 @@
       },
       "schemaAgentJobState": {
         "key": "schemaAgentJobState",
-        "sourcePath": "v0.10.0/schemas/agent-job-state.schema.json",
-        "sourceBlobSha": "10c50014edaeb18f5205c09c2c37b93483968bca",
+        "sourcePath": "v0.13.0/schemas/agent-job-state.schema.json",
+        "sourceBlobSha": "3f0f2e349461007c9763eb6b9feb24b73fbd9f75",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
-          "$id": "urn:safor:agent-job-state:0.10.0",
-          "title": "SAFOR MASTER Agent Job State 0.10.0",
+          "$id": "urn:safor:agent-job-state:0.13.0",
+          "title": "SAFOR MASTER Agent Job State 0.13.0",
           "type": "object",
           "additionalProperties": false,
           "required": [
@@ -15071,14 +16801,17 @@
             "evidenceRefs",
             "verification",
             "transitionHistory",
-            "updatedAt"
+            "updatedAt",
+            "activationEvidenceRef",
+            "responseRefs",
+            "conflictRefs"
           ],
           "properties": {
             "format": {
               "const": "SAFOR_AGENT_JOB_STATE"
             },
             "schemaVersion": {
-              "const": "0.10.0"
+              "const": "0.13.0"
             },
             "projectId": {
               "type": "string",
@@ -15261,6 +16994,26 @@
             "humanJobBlobSha": {
               "type": "string",
               "minLength": 1
+            },
+            "activationEvidenceRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "responseRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "conflictRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
             }
           },
           "$defs": {
@@ -15595,6 +17348,757 @@
           }
         },
         "selfHealingProfileId": "MRP-SCHEMA_AGENT_RESULT"
+      },
+      "schemaAgentBootstrap": {
+        "key": "schemaAgentBootstrap",
+        "sourcePath": "v0.13.0/schemas/agent-bootstrap.schema.json",
+        "sourceBlobSha": "0830a10fb705d8a58da7207325f06906a80f4c56",
+        "content": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "urn:safor:agent-bootstrap:0.13.0",
+          "title": "SAFOR Agent Chat Bootstrap 0.13.0",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "schemaVersion",
+            "projectId",
+            "agentId",
+            "displayName",
+            "identityRef",
+            "controlRepository",
+            "workspaceRoot",
+            "inboxIndexRef",
+            "startProtocolRef",
+            "communicationBoundaryRef",
+            "bindingRevision"
+          ],
+          "properties": {
+            "format": {
+              "const": "SAFOR_AGENT_CHAT_BOOTSTRAP"
+            },
+            "schemaVersion": {
+              "const": "0.13.0"
+            },
+            "projectId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "agentId": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+            },
+            "displayName": {
+              "type": "string",
+              "minLength": 2,
+              "maxLength": 80
+            },
+            "identityRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "controlRepository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "workspaceRoot": {
+              "type": "string",
+              "minLength": 1
+            },
+            "inboxIndexRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "startProtocolRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "communicationBoundaryRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "bindingRevision": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "selfHealingProfileId": "MRP-SCHEMAAGENTBOOTSTRAP"
+      },
+      "schemaAgentResponse": {
+        "key": "schemaAgentResponse",
+        "sourcePath": "v0.13.0/schemas/agent-response.schema.json",
+        "sourceBlobSha": "a68e20d197afd531a102824b3f61df5e2175eadf",
+        "content": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "urn:safor:agent-response:0.13.0",
+          "title": "SAFOR Typed Agent-to-MASTER Response 0.13.0",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "schemaVersion",
+            "responseId",
+            "responseType",
+            "projectId",
+            "workPackageId",
+            "jobId",
+            "agentId",
+            "identityRevision",
+            "createdAt",
+            "contractRef",
+            "responseTemplateRef",
+            "targetMasterRef",
+            "lifecycleStatus",
+            "summary",
+            "affectedRefs",
+            "evidenceRefs",
+            "masterDecisionRef",
+            "supersedesResponseId",
+            "payload"
+          ],
+          "properties": {
+            "format": {
+              "const": "SAFOR_AGENT_RESPONSE"
+            },
+            "schemaVersion": {
+              "const": "0.13.0"
+            },
+            "responseId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "responseType": {
+              "enum": [
+                "JOB_RESULT",
+                "JOB_ERROR",
+                "CLARIFICATION_REQUEST",
+                "CAPABILITY_MISMATCH",
+                "IMPROVEMENT_PROPOSAL"
+              ]
+            },
+            "projectId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "workPackageId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "jobId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "agentId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "identityRevision": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "contractRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "responseTemplateRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "targetMasterRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "lifecycleStatus": {
+              "enum": [
+                "SUBMITTED",
+                "BLOCKED",
+                "FAILED",
+                "PROPOSED"
+              ]
+            },
+            "summary": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 500
+            },
+            "affectedRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "evidenceRefs": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            },
+            "masterDecisionRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "supersedesResponseId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "payload": {
+              "type": "object"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "responseType": {
+                    "const": "JOB_RESULT"
+                  }
+                },
+                "required": [
+                  "responseType"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "lifecycleStatus": {
+                    "const": "SUBMITTED"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "artifactRefs",
+                      "gitTrace",
+                      "verification",
+                      "openItems"
+                    ],
+                    "properties": {
+                      "artifactRefs": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "minItems": 1
+                      },
+                      "gitTrace": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "verification": {
+                        "type": "array",
+                        "items": {
+                          "type": "object"
+                        }
+                      },
+                      "openItems": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "responseType": {
+                    "const": "JOB_ERROR"
+                  }
+                },
+                "required": [
+                  "responseType"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "lifecycleStatus": {
+                    "const": "FAILED"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "errorClass",
+                      "failedStep",
+                      "reproducibleFinding",
+                      "blockedArtifacts",
+                      "suggestedMasterAction"
+                    ],
+                    "properties": {
+                      "errorClass": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "failedStep": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "reproducibleFinding": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "blockedArtifacts": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "suggestedMasterAction": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "responseType": {
+                    "const": "CLARIFICATION_REQUEST"
+                  }
+                },
+                "required": [
+                  "responseType"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "lifecycleStatus": {
+                    "const": "BLOCKED"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "question",
+                      "affectedJobFields",
+                      "conflictType",
+                      "options",
+                      "suggestedMasterAction"
+                    ],
+                    "properties": {
+                      "question": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "affectedJobFields": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "minItems": 1
+                      },
+                      "conflictType": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "options": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "suggestedMasterAction": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "responseType": {
+                    "const": "CAPABILITY_MISMATCH"
+                  }
+                },
+                "required": [
+                  "responseType"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "lifecycleStatus": {
+                    "const": "BLOCKED"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "expectedCapabilities",
+                      "availableCapabilities",
+                      "affectedScope",
+                      "risk",
+                      "suggestedMasterAction"
+                    ],
+                    "properties": {
+                      "expectedCapabilities": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "minItems": 1
+                      },
+                      "availableCapabilities": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      "affectedScope": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "risk": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "suggestedMasterAction": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "responseType": {
+                    "const": "IMPROVEMENT_PROPOSAL"
+                  }
+                },
+                "required": [
+                  "responseType"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "lifecycleStatus": {
+                    "const": "PROPOSED"
+                  },
+                  "payload": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "problem",
+                      "proposal",
+                      "expectedBenefit",
+                      "risk",
+                      "affectedProcess",
+                      "suggestedMasterAction"
+                    ],
+                    "properties": {
+                      "problem": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "proposal": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "expectedBenefit": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "risk": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "affectedProcess": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "suggestedMasterAction": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "selfHealingProfileId": "MRP-SCHEMAAGENTRESPONSE"
+      },
+      "schemaAgentChatStatus": {
+        "key": "schemaAgentChatStatus",
+        "sourcePath": "v0.13.0/schemas/agent-chat-status.schema.json",
+        "sourceBlobSha": "9f2b2b0d6bef9c8e9df9bf2ec52983eeb175d0fb",
+        "content": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "urn:safor:agent-chat-status:0.13.0",
+          "title": "SAFOR Minimal Agent Chat Status 0.13.0",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "schemaVersion",
+            "chatStatusId",
+            "agentId",
+            "displayName",
+            "jobId",
+            "status",
+            "targetBranch",
+            "gitRef",
+            "renderedText"
+          ],
+          "properties": {
+            "format": {
+              "const": "SAFOR_AGENT_CHAT_STATUS"
+            },
+            "schemaVersion": {
+              "const": "0.13.0"
+            },
+            "chatStatusId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "agentId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "displayName": {
+              "type": "string",
+              "minLength": 2
+            },
+            "jobId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "status": {
+              "enum": [
+                "STARTED",
+                "SUBMITTED",
+                "BLOCKED",
+                "REBIND_REQUIRED"
+              ]
+            },
+            "targetBranch": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "gitRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "renderedText": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 240,
+              "pattern": "^[^\\r\\n]+$"
+            }
+          }
+        },
+        "selfHealingProfileId": "MRP-SCHEMAAGENTCHATSTATUS"
+      },
+      "schemaMasterStatusIndex": {
+        "key": "schemaMasterStatusIndex",
+        "sourcePath": "v0.13.0/schemas/master-status-index.schema.json",
+        "sourceBlobSha": "a9df6c47accd4dfead34a3f16c11d7276c8237f3",
+        "content": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "$id": "urn:safor:master-status-index:0.13.0",
+          "title": "SAFOR Compact MASTER Status Index 0.13.0",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "format",
+            "schemaVersion",
+            "projectId",
+            "revision",
+            "authoritativeControlStateRef",
+            "registryRef",
+            "schedulerStateRef",
+            "generatedAt",
+            "providerReadbackRef",
+            "agents",
+            "jobs",
+            "reviews",
+            "blockers",
+            "nextHumanActions",
+            "stalePointers"
+          ],
+          "properties": {
+            "format": {
+              "const": "SAFOR_MASTER_STATUS_INDEX"
+            },
+            "schemaVersion": {
+              "const": "0.13.0"
+            },
+            "projectId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "revision": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "authoritativeControlStateRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "registryRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "schedulerStateRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "generatedAt": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "providerReadbackRef": {
+              "type": "string",
+              "minLength": 1
+            },
+            "agents": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/agent"
+              }
+            },
+            "jobs": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/job"
+              }
+            },
+            "reviews": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "blockers": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "nextHumanActions": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            },
+            "stalePointers": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "uniqueItems": true
+            }
+          },
+          "$defs": {
+            "agent": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "agentId",
+                "displayName",
+                "status",
+                "currentJobId",
+                "lastResponseRef",
+                "startRequired"
+              ],
+              "properties": {
+                "agentId": {
+                  "type": "string"
+                },
+                "displayName": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "currentJobId": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "lastResponseRef": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "startRequired": {
+                  "type": "boolean"
+                }
+              }
+            },
+            "job": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "jobId",
+                "agentId",
+                "lifecycleStatus",
+                "jobRef",
+                "responseRef",
+                "reviewRef"
+              ],
+              "properties": {
+                "jobId": {
+                  "type": "string"
+                },
+                "agentId": {
+                  "type": "string"
+                },
+                "lifecycleStatus": {
+                  "type": "string"
+                },
+                "jobRef": {
+                  "type": "string"
+                },
+                "responseRef": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "reviewRef": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "selfHealingProfileId": "MRP-SCHEMAMASTERSTATUSINDEX"
       },
       "schemaSchedulerState": {
         "key": "schemaSchedulerState",
@@ -19036,11 +21540,11 @@
       "conformance": {
         "key": "conformance",
         "sourcePath": "v0.13.0/conformance.json",
-        "sourceBlobSha": "9e00b0c904b085f662be322d0c244b24fb5666f2",
+        "sourceBlobSha": "4589361ea61b0857209af3fb92e104026fda5ff4",
         "content": {
           "format": "SAFOR_CONFORMANCE_SUITE",
           "schemaVersion": "0.13.0",
-          "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable packages, free Website creation, paid Software/SaaS and Book paths, plus retained governance/workspace guarantees.",
+          "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable packages plus the complete HUMAN Notice MASTER-subagent contract.",
           "assertions": [
             {
               "id": "CF-001",
@@ -20375,6 +22879,66 @@
             {
               "id": "CF-267",
               "statement": "SAFOR_HUMAN_RESPONSE distinguishes informational notices without menus from interactive checkpoints with exactly one terminal menu.",
+              "expected": true
+            },
+            {
+              "id": "CF-268",
+              "statement": "Ordinary compatible LLM chat is SAFOR's primary execution surface and customer-installed runtime is not required.",
+              "expected": true
+            },
+            {
+              "id": "CF-269",
+              "statement": "Optional reference code is validation/host-integration support and never a normal-chat product prerequisite.",
+              "expected": true
+            },
+            {
+              "id": "CF-270",
+              "statement": "Chat-bound subagents are activated only by explicit HUMAN GO in the same bound chat.",
+              "expected": true
+            },
+            {
+              "id": "CF-271",
+              "statement": "Git events, polling, inbox creation, automation and host background wakeups cannot activate a subagent.",
+              "expected": true
+            },
+            {
+              "id": "CF-272",
+              "statement": "Every active chat agent has stable agentId, distinct displayName and fail-closed rebind policy.",
+              "expected": true
+            },
+            {
+              "id": "CF-273",
+              "statement": "Every new Agent Job binds exact result, error, clarification, capability-mismatch and improvement-proposal templates.",
+              "expected": true
+            },
+            {
+              "id": "CF-274",
+              "statement": "Product and SAFOR response write scopes are separately authorized.",
+              "expected": true
+            },
+            {
+              "id": "CF-275",
+              "statement": "Subagent chat output is one-line operational status; substantive content is a versioned Git response to MASTER.",
+              "expected": true
+            },
+            {
+              "id": "CF-276",
+              "statement": "MASTER is the only fachliche and organizational HUMAN interface.",
+              "expected": true
+            },
+            {
+              "id": "CF-277",
+              "statement": "Routine MASTER status uses compact pointer indexes and forbids global full scans.",
+              "expected": true
+            },
+            {
+              "id": "CF-278",
+              "statement": "Blocked/failed/mismatch responses stop further job mutation until MASTER resolution.",
+              "expected": true
+            },
+            {
+              "id": "CF-279",
+              "statement": "Substantial job changes preserve history through superseding jobs or dispatch revisions.",
               "expected": true
             }
           ],
@@ -21980,6 +24544,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:e9b4a0ead438e1aca3417c5a6dd99ab0c3fdc2d90a6f310ccfabdc9ff5e82913"
+    "contentDigest": "sha256:1564a75b659bfed4e7f61c598e856b9cc81eeec6a494f68bcfda7940d8f0273d"
   }
 }

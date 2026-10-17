@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_CONFORMANCE_SUITE",
   "schemaVersion": "0.13.0",
-  "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable packages, free Website creation, paid Software/SaaS and Book paths, plus retained governance/workspace guarantees.",
+  "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable packages plus the complete HUMAN Notice MASTER-subagent contract.",
   "assertions": [
     {
       "id": "CF-001",
@@ -1336,6 +1336,66 @@
     {
       "id": "CF-267",
       "statement": "SAFOR_HUMAN_RESPONSE distinguishes informational notices without menus from interactive checkpoints with exactly one terminal menu.",
+      "expected": true
+    },
+    {
+      "id": "CF-268",
+      "statement": "Ordinary compatible LLM chat is SAFOR's primary execution surface and customer-installed runtime is not required.",
+      "expected": true
+    },
+    {
+      "id": "CF-269",
+      "statement": "Optional reference code is validation/host-integration support and never a normal-chat product prerequisite.",
+      "expected": true
+    },
+    {
+      "id": "CF-270",
+      "statement": "Chat-bound subagents are activated only by explicit HUMAN GO in the same bound chat.",
+      "expected": true
+    },
+    {
+      "id": "CF-271",
+      "statement": "Git events, polling, inbox creation, automation and host background wakeups cannot activate a subagent.",
+      "expected": true
+    },
+    {
+      "id": "CF-272",
+      "statement": "Every active chat agent has stable agentId, distinct displayName and fail-closed rebind policy.",
+      "expected": true
+    },
+    {
+      "id": "CF-273",
+      "statement": "Every new Agent Job binds exact result, error, clarification, capability-mismatch and improvement-proposal templates.",
+      "expected": true
+    },
+    {
+      "id": "CF-274",
+      "statement": "Product and SAFOR response write scopes are separately authorized.",
+      "expected": true
+    },
+    {
+      "id": "CF-275",
+      "statement": "Subagent chat output is one-line operational status; substantive content is a versioned Git response to MASTER.",
+      "expected": true
+    },
+    {
+      "id": "CF-276",
+      "statement": "MASTER is the only fachliche and organizational HUMAN interface.",
+      "expected": true
+    },
+    {
+      "id": "CF-277",
+      "statement": "Routine MASTER status uses compact pointer indexes and forbids global full scans.",
+      "expected": true
+    },
+    {
+      "id": "CF-278",
+      "statement": "Blocked/failed/mismatch responses stop further job mutation until MASTER resolution.",
+      "expected": true
+    },
+    {
+      "id": "CF-279",
+      "statement": "Substantial job changes preserve history through superseding jobs or dispatch revisions.",
       "expected": true
     }
   ],

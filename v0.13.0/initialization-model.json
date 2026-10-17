@@ -2,7 +2,7 @@
   "format": "SAFOR_INITIALIZATION_MODEL",
   "schemaVersion": "0.13.0",
   "id": "safor-initialization-0.13.0",
-  "purpose": "Initialize SAFOR with independently selectable Factory and Operating Model JSON packages, per-package access control, deterministic integrity/compatibility binding and HUMAN-owned project workspaces.",
+  "purpose": "Guided initialization for the declarative SAFOR chat product, project workspace and one-time chat-bound agent identities; no customer-installed runtime is required.",
   "entryBehavior": {
     "autoStartAfterBootstrapLoad": true,
     "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
@@ -327,5 +327,18 @@
   ],
   "workspaceModelRef": "workspace-model.json",
   "humanDecisionGateModelRef": "human-decision-gate-model.json",
-  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
+  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+  "executionEnvironmentContract": {
+    "modelRef": "chat-execution-model.json",
+    "primaryMode": "DECLARATIVE_LLM_CHAT",
+    "customerInstalledRuntimeRequired": false,
+    "optionalReferenceRuntimeDoesNotBlockInitialization": true
+  },
+  "agentBootstrapContract": {
+    "modelRef": "agent-bootstrap-model.json",
+    "masterPreparesIdentityAndPrompt": true,
+    "humanInsertsPromptOnce": true,
+    "futureActivation": "HUMAN_GO_ONLY",
+    "jobPromptCopyingForbiddenAfterBinding": true
+  }
 }

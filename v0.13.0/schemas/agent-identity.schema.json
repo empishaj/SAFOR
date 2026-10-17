@@ -1,0 +1,234 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-identity:0.13.0",
+  "title": "SAFOR Chat-bound Agent Identity 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "displayName",
+    "agentKind",
+    "masterId",
+    "controlRepository",
+    "workspaceRoot",
+    "identityRevision",
+    "status",
+    "registeredAt",
+    "initializedBy",
+    "roleIds",
+    "capabilityIds",
+    "bootstrapBinding",
+    "activationContract",
+    "rebindPolicy"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_IDENTITY"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "agentKind": {
+      "const": "CHAT_AGENT"
+    },
+    "masterId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "controlRepository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workspaceRoot": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "PAUSED",
+        "REBIND_REQUIRED",
+        "REVOKED"
+      ]
+    },
+    "registeredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "initializedBy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "roleIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "capabilityIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "bootstrapBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bootstrapRef",
+        "bindingRevision",
+        "bindingStatus",
+        "sameChatContinuationRequired",
+        "boundAt",
+        "bindingEvidenceRef"
+      ],
+      "properties": {
+        "bootstrapRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bindingRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "bindingStatus": {
+          "enum": [
+            "BOUND",
+            "REBIND_REQUIRED"
+          ]
+        },
+        "sameChatContinuationRequired": {
+          "const": true
+        },
+        "boundAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "bindingEvidenceRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "activationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "activationMode",
+        "goCommand",
+        "forbiddenTriggers",
+        "onActivation",
+        "jobPromptTransportRequired"
+      ],
+      "properties": {
+        "activationMode": {
+          "const": "HUMAN_GO_ONLY"
+        },
+        "goCommand": {
+          "const": "GO"
+        },
+        "forbiddenTriggers": {
+          "type": "array",
+          "minItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "GIT_PUSH",
+              "GIT_POLL",
+              "INBOX_FILE_CREATION",
+              "AUTOMATION_EVENT",
+              "HOST_BACKGROUND_WAKEUP",
+              "MASTER_MESSAGE_IN_ANOTHER_CHAT"
+            ]
+          }
+        },
+        "onActivation": {
+          "type": "array",
+          "minItems": 14,
+          "maxItems": 14,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "VERIFY_BOUND_CHAT_IDENTITY",
+              "VERIFY_HUMAN_GO",
+              "LOAD_IDENTITY",
+              "LOAD_AGENT_STATE",
+              "LOAD_PERSONAL_INBOX_INDEX",
+              "SELECT_DISCOVERABLE_JOB",
+              "READ_AUTHORITATIVE_JOB",
+              "VERIFY_JOB_AND_HUMAN_PROJECTION_BLOBS",
+              "READ_MASTER_JOB_STATE",
+              "VERIFY_ASSIGNMENT_ROLE_SKILLS_CONTEXT_INPUTS_RIGHTS_AND_WRITE_TARGETS",
+              "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+              "EXECUTE_ONLY_CLAIMED_JOB",
+              "SUBMIT_TYPED_RESPONSE_AND_EVIDENCE",
+              "RENDER_MINIMAL_AGENT_CHAT_STATUS"
+            ]
+          }
+        },
+        "jobPromptTransportRequired": {
+          "const": false
+        }
+      }
+    },
+    "rebindPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "failClosed",
+        "triggerConditions",
+        "requiredOutcome"
+      ],
+      "properties": {
+        "failClosed": {
+          "const": true
+        },
+        "triggerConditions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CHAT_HISTORY_MISSING",
+              "CHAT_BINDING_UNCERTAIN",
+              "AGENT_IDENTITY_REFERENCE_UNRESOLVABLE",
+              "IDENTITY_REVISION_MISMATCH",
+              "CONTROL_REPOSITORY_UNAVAILABLE",
+              "HUMAN_REPORTS_NEW_AGENT_CHAT"
+            ]
+          }
+        },
+        "requiredOutcome": {
+          "const": "REBIND_REQUIRED"
+        }
+      }
+    }
+  }
+}

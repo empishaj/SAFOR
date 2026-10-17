@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.7",
+  "version": "0.13.0-rc.8",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.7.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.8.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.6",
+  "previousVersion": "0.13.0-rc.7",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -130,7 +130,27 @@
     "DOMAIN_MODULE_PRESENTATION_OVERRIDE_FORBIDDEN",
     "INFORMATIONAL_NOTICE_COMPRESSION",
     "SAFE_MIGRATION_PLANNING_INTERNALIZED",
-    "DETAIL_ON_DEMAND_WITH_EVIDENCE_RETENTION"
+    "DETAIL_ON_DEMAND_WITH_EVIDENCE_RETENTION",
+    "DECLARATIVE_ORDINARY_LLM_CHAT_PRIMARY_MODE",
+    "NO_CUSTOMER_INSTALLED_RUNTIME_REQUIRED",
+    "OPTIONAL_REFERENCE_RUNTIME_ONLY",
+    "ONE_TIME_AGENT_CHAT_BINDING",
+    "HUMAN_GO_ONLY_AGENT_ACTIVATION",
+    "GIT_EVENT_AGENT_WAKEUP_FORBIDDEN",
+    "DISTINCT_AGENT_DISPLAY_NAMES",
+    "FAIL_CLOSED_AGENT_REBIND",
+    "TYPED_AGENT_RESPONSE_FAMILY",
+    "JOB_RESULT_RESPONSE",
+    "JOB_ERROR_RESPONSE",
+    "CLARIFICATION_REQUEST_RESPONSE",
+    "CAPABILITY_MISMATCH_RESPONSE",
+    "IMPROVEMENT_PROPOSAL_RESPONSE",
+    "MINIMAL_SUBAGENT_CHAT_STATUS",
+    "MASTER_ONLY_HUMAN_DOMAIN_INTERFACE",
+    "COMPACT_MASTER_STATUS_INDEX",
+    "POINTER_FIRST_STATUS_READS",
+    "SEPARATE_PRODUCT_AND_CONTROL_WRITE_SCOPES",
+    "HUMAN_NOTICE_TRACEABILITY_SUITE"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -139,8 +159,6 @@
     "GITLAB_END_TO_END_ACCEPTANCE",
     "AGENT_WORKSPACE_END_TO_END_ACCEPTANCE",
     "SIX_AGENT_PARALLEL_SCHEDULING_ACCEPTANCE",
-    "AGENT_GIT_TRACE_AND_HUMAN_RESULT_ACCEPTANCE",
-    "EXPLICIT_AGENT_JOB_CONTRACT_END_TO_END_ACCEPTANCE",
     "MODULE_WIDE_SELF_HEALING_END_TO_END_ACCEPTANCE",
     "HUMAN_COGNITIVE_LOAD_END_TO_END_ACCEPTANCE",
     "TERMINAL_MENU_END_TO_END_ACCEPTANCE",
@@ -155,7 +173,9 @@
     "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE",
     "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE",
     "DOMAIN_FRAMEWORK_DISTRIBUTION_END_TO_END_ACCEPTANCE",
-    "PLATFORM_RESPONSE_GOVERNOR_HOST_END_TO_END_ACCEPTANCE"
+    "PLATFORM_RESPONSE_GOVERNOR_HOST_END_TO_END_ACCEPTANCE",
+    "FRESH_CHAT_HUMAN_GO_CROSS_HOST_ACCEPTANCE",
+    "REFERENCE_PROJECT_RC8_MIGRATION_ACCEPTANCE"
   ],
   "sourceBaselines": [
     "v0.13.0",
@@ -226,5 +246,22 @@
     "productionCommercialSourceUnaffected": true,
     "paidModeStillEnforced": true,
     "publicTestBytesAreNotProtectedCommercialProductionPackages": true
-  }
+  },
+  "executionEnvironment": {
+    "primaryMode": "DECLARATIVE_LLM_CHAT",
+    "customerInstalledRuntimeRequired": false,
+    "referenceRuntimeRole": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION"
+  },
+  "agentActivation": {
+    "mode": "HUMAN_GO_ONLY",
+    "command": "GO",
+    "gitAndAutomationWakeupForbidden": true
+  },
+  "agentResponseTypes": [
+    "JOB_RESULT",
+    "JOB_ERROR",
+    "CLARIFICATION_REQUEST",
+    "CAPABILITY_MISMATCH",
+    "IMPROVEMENT_PROPOSAL"
+  ]
 }

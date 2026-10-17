@@ -2,18 +2,15 @@
 
 Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**, nicht technisch analysieren wollen. Du musst keine JSON-Datei öffnen, bearbeiten oder verstehen.
 
-> Produktstatus: **SAFOR v0.13.0-rc.7 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
+> Produktstatus: **SAFOR v0.13.0-rc.8 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
 
-## Wichtige Testgrenze
+## Ausführungsmodell
 
-Das Hochladen der JSON-Dateien macht den SAFOR-Vertrag für ein Sprachmodell lesbar. Ein normaler Chat führt den Python-Referenzcode in `runtime/public_evaluation_access.py` jedoch **nicht automatisch** aus, nur weil die Dateien hochgeladen wurden.
+SAFOR ist ein **deklaratives JSON-Produkt für gewöhnliche kompatible LLM-Chats**. Du lädst das passende Domain-Framework in den Chat; eine zusätzlich auf deinem Rechner oder beim Endkunden zu installierende SAFOR-Runtime ist **nicht erforderlich**.
 
-Damit gibt es zwei unterschiedliche Prüfmodi:
+Ein normaler Chat führt den Python-Referenzcode nicht automatisch aus. Das ist keine Installationsvoraussetzung: Der Chat interpretiert den eingebetteten SAFOR-Vertrag und nutzt ausschließlich die Werkzeuge und Git-Rechte, die der Host tatsächlich bereitstellt. Die Python-Module unter `runtime/` sind optionale Referenz-, Prüf- und Hostintegrationsimplementierungen. Sie dürfen technische Durchsetzung verstärken, sind aber keine Voraussetzung für den normalen Chatbetrieb.
 
-- Im normalen Chat prüfst du, ob das Modell den SAFOR-Vertrag korrekt versteht und befolgt.
-- Eine deterministische, maschinenverifizierte Zugriffsentscheidung entsteht erst, wenn ein kompatibler SAFOR-Host oder Adapter den Referenzcode tatsächlich aufruft.
-
-Für eine spätere produktive Nutzung ist diese Host-/Runtime-Integration Pflicht. Der manuelle Chat-Test ist wertvoll, ersetzt aber keine technisch erzwungene Entitlement-, Integritäts- und Zustandsprüfung.
+Die Grenze bleibt transparent: JSON kann keine fehlenden Connector-Rechte erzeugen und keinen nichtkonformen Chat-Host technisch zwingen. SAFOR verlangt deshalb Provider-Readback, Git-Nachweise, Reviews und fail-closed Stopps, ohne daraus eine Installationspflicht abzuleiten.
 
 ## 1. Entscheide, was du erstellen möchtest
 
@@ -119,7 +116,7 @@ Erwartung: SAFOR lehnt den Austausch ab und behält die letzte gültige Buch-Bin
 
 ## 6. Typische Fehler vermeiden
 
-- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
+- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.8.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
 - Bearbeite die JSON-Dateien nicht. Jede Änderung kann Integritäts- oder Zugriffsprüfungen ungültig machen.
 - Verwende dein eigenes Git-Projekt. Das SAFOR-Repository ist Produktquelle, nicht Arbeitsbereich deines Vorhabens.
 - Interpretiere den öffentlichen Testzugang nicht als Kauf- oder Produktionsnachweis.

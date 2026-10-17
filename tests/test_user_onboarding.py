@@ -35,11 +35,12 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertIn("frage mich nicht erneut", self.start_here)
         self.assertIn("productionAuthorization = false", self.start_here)
 
-    def test_german_guide_explains_manual_chat_vs_runtime_enforcement(self):
+    def test_german_guide_explains_declarative_chat_and_optional_reference_runtime(self):
         self.assertIn("führt den Python-Referenzcode", self.start_here)
         self.assertIn("nicht automatisch", self.start_here)
-        self.assertIn("deterministische, maschinenverifizierte Zugriffsentscheidung", self.start_here)
-        self.assertIn("Host-/Runtime-Integration Pflicht", self.start_here)
+        self.assertIn("nicht erforderlich", self.start_here)
+        self.assertIn("optionale Referenz-", self.start_here)
+        self.assertNotIn("Host-/Runtime-Integration Pflicht", self.start_here)
 
     def test_quickstart_separates_end_user_and_generic_engineering_routes(self):
         self.assertIn("## Recommended end-user start", self.quickstart)
@@ -48,7 +49,7 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertIn("does **not** ask the HUMAN", self.quickstart)
 
     def test_readme_uses_current_rc_and_has_no_stale_path_typo(self):
-        self.assertIn("v0.13.0-rc.7", self.readme)
+        self.assertIn("v0.13.0-rc.8", self.readme)
         self.assertNotIn("Paid package access in rc.4", self.readme)
         self.assertNotIn("v0.13.0/ packages/", self.readme)
         self.assertIn("runtime/public_evaluation_access.py", self.readme)
