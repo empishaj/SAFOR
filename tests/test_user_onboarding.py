@@ -35,6 +35,12 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertIn("frage mich nicht erneut", self.start_here)
         self.assertIn("productionAuthorization = false", self.start_here)
 
+    def test_german_guide_explains_manual_chat_vs_runtime_enforcement(self):
+        self.assertIn("führt den Python-Referenzcode", self.start_here)
+        self.assertIn("nicht automatisch", self.start_here)
+        self.assertIn("deterministische, maschinenverifizierte Zugriffsentscheidung", self.start_here)
+        self.assertIn("Host-/Runtime-Integration Pflicht", self.start_here)
+
     def test_quickstart_separates_end_user_and_generic_engineering_routes(self):
         self.assertIn("## Recommended end-user start", self.quickstart)
         self.assertIn("## Generic engineering start — advanced", self.quickstart)
@@ -46,6 +52,11 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertNotIn("Paid package access in rc.4", self.readme)
         self.assertNotIn("v0.13.0/ packages/", self.readme)
         self.assertIn("runtime/public_evaluation_access.py", self.readme)
+
+    def test_readme_does_not_overstate_generic_chat_execution(self):
+        self.assertIn("deterministic reference implementation", self.readme)
+        self.assertIn("does not automatically execute this Python module", self.readme)
+        self.assertIn("Production use therefore requires an integrated SAFOR host/runtime boundary", self.readme)
 
 
 if __name__ == "__main__":
