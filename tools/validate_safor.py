@@ -231,9 +231,8 @@ for rule in (
     "entitlementEvidenceExternal",
     "declaredContractDigestRequired",
     "compatibilityDecisionRequiredBeforeBinding",
-    "websiteStarterIsFreePublic",
+    "creationProfileAccessPolicyEnforced",
     "softwareSaasRequiresPaidFactoryAndOperatingModel",
-    "creationProfileMayConstrainSelectedAccessModes",
 ):
     if domain_policy.get(rule) is not True:
         fail(f"Runtime domain package policy {rule} must be true.")
@@ -443,6 +442,9 @@ for principle in (
     "entitlementEvidenceExternalToPackageArtifact",
     "domainPackageIntegrityRequired",
     "compatibilityDecisionRequiredBeforeBinding",
+    "websiteStarterIsFreePublic",
+    "softwareSaasRequiresPaidFactoryAndOperatingModel",
+    "creationProfileMayConstrainSelectedAccessModes",
 ):
     if distribution.get("principles", {}).get(principle) is not True:
         fail(f"Distribution principle {principle} must be true.")
