@@ -23,26 +23,17 @@ class RepositoryHygieneTests(unittest.TestCase):
         legacy = sorted(path.name for path in ROOT.glob("SAFOR-MASTER-COMPLETE*.json"))
         self.assertEqual([], legacy)
 
-    def test_only_retained_source_baselines_remain(self):
+    def test_only_active_source_baselines_remain(self):
         version_directory = re.compile(r"v\d+\.\d+\.\d+")
         actual = {
             path.name
             for path in ROOT.iterdir()
             if path.is_dir() and version_directory.fullmatch(path.name)
         }
-        # v0.6 introduced the repository-native agent workspace lineage. Earlier
-        # prototype trees are available through Git history instead of main.
+        # The rc.6 bundle resolves authoritative modules only from these source
+        # baselines. Earlier versions remain recoverable through Git history.
         self.assertEqual(
-            {
-                "v0.6.0",
-                "v0.7.0",
-                "v0.8.0",
-                "v0.9.0",
-                "v0.10.0",
-                "v0.11.0",
-                "v0.12.0",
-                "v0.13.0",
-            },
+            {"v0.10.0", "v0.11.0", "v0.12.0", "v0.13.0"},
             actual,
         )
 
