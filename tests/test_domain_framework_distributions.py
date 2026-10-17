@@ -6,6 +6,7 @@ from pathlib import Path
 from runtime.bootstrap_policy import (
     compute_domain_package_digest,
     evaluate_domain_framework_pair,
+    resolve_composable_creation_packages,
 )
 from tools.build_domain_framework import build_distribution, validate_distribution
 
@@ -34,7 +35,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             self.om,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -50,7 +51,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             premium,
             self.om,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -64,7 +65,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             premium,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -79,7 +80,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             foreign,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -95,7 +96,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             foreign,
             self.om,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -126,7 +127,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             book_factory,
             engineering_om,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "BOOK",
             "BOOK_CREATION",
         )
@@ -142,7 +143,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             incomplete,
             self.om,
-            "0.13.0-rc.5",
+            "0.13.0-rc.6",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -183,6 +184,74 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         self.assertTrue(policy["bidirectionalCounterpartRequired"])
         self.assertTrue(policy["packageFamilyConstraintsEnforced"])
         self.assertTrue(policy["crossDomainPairForbidden"])
+
+    def test_saas_public_evaluation_framework_is_paid_and_compatible(self):
+        distribution = build_distribution("SAAS")
+        self.assertEqual("PUBLIC_TEST_EVALUATION", distribution["publicationMode"])
+        self.assertEqual("SAAS_ENGINEERING", distribution["domain"]["domainId"])
+        self.assertEqual("PAID_ENTITLEMENT_REQUIRED", distribution["domain"]["accessMode"])
+        self.assertTrue(distribution["evaluationNotice"])
+        self.assertEqual(
+            "PAID_ENTITLEMENT_REQUIRED",
+            distribution["embeddedDomainModules"]["factory"]["commercial"]["accessMode"],
+        )
+        self.assertEqual(
+            "PAID_ENTITLEMENT_REQUIRED",
+            distribution["embeddedDomainModules"]["operatingModel"]["commercial"]["accessMode"],
+        )
+        decision = validate_distribution(distribution, "SAAS")
+        self.assertTrue(decision["valid"], decision)
+
+    def test_book_public_evaluation_framework_is_paid_and_compatible(self):
+        distribution = build_distribution("BOOK_CREATION")
+        self.assertEqual("PUBLIC_TEST_EVALUATION", distribution["publicationMode"])
+        self.assertEqual("BOOK_CREATION", distribution["domain"]["domainId"])
+        self.assertEqual("PAID_ENTITLEMENT_REQUIRED", distribution["domain"]["accessMode"])
+        self.assertTrue(distribution["evaluationNotice"])
+        self.assertEqual(
+            "safor.factory.book",
+            distribution["embeddedDomainModules"]["factory"]["packageFamily"],
+        )
+        self.assertEqual(
+            "safor.om.book",
+            distribution["embeddedDomainModules"]["operatingModel"]["packageFamily"],
+        )
+        decision = validate_distribution(distribution, "BOOK_CREATION")
+        self.assertTrue(decision["valid"], decision)
+
+    def test_public_paid_test_framework_files_match_builder(self):
+        for profile_id, filename in (
+            ("SAAS", "SAFOR-FRAMEWORK-SAAS.json"),
+            ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json"),
+        ):
+            committed = load_json(filename)
+            built = build_distribution(profile_id)
+            self.assertEqual(committed, built)
+
+    def test_public_evaluation_access_bundles_unlock_only_paid_test_modules(self):
+        catalog = load_json("v0.13.0/package-catalog.json")
+        for profile_id, framework_file in (
+            ("SAAS", "SAFOR-FRAMEWORK-SAAS.json"),
+            ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json"),
+        ):
+            with self.subTest(profile_id=profile_id):
+                distribution = load_json(framework_file)
+                access_file = distribution["evaluationAccess"]["file"]
+                access = load_json(access_file)
+                modules = distribution["embeddedDomainModules"]
+                result = resolve_composable_creation_packages(
+                    distribution["domain"]["creationType"],
+                    catalog,
+                    [
+                        {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": modules["factory"]},
+                        {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": modules["operatingModel"]},
+                    ],
+                    access["entitlements"],
+                    verification_context=access["verificationContext"],
+                )
+                self.assertEqual("PACKAGE_ACCESS_RESOLVED", result["outcome"], result)
+                self.assertFalse(access["restrictions"]["productionAuthorization"])
+                self.assertTrue(access["restrictions"]["testPackageVersionsOnly"])
 
 
 if __name__ == "__main__":

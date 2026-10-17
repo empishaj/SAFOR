@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.13.0-rc.6
+
+- Publishes `SAFOR-FRAMEWORK-SAAS.json` as a public test/evaluation artifact.
+- Publishes `SAFOR-FRAMEWORK-BOOK-CREATION.json` as a public test/evaluation artifact.
+- Adds paid-mode SaaS test modules `software-delivery@1.7.0-test.1` and `saas-engineering@1.7.0-test.1`.
+- Migrates Book Factory/Operating Model into paid-mode V2 test packages `1.0.0-test.1`.
+- Adds `SAFOR-TEST-ACCESS-SAAS.json` and `SAFOR-TEST-ACCESS-BOOK-CREATION.json` for deterministic paid-gate testing.
+- Test access bundles are explicitly non-production and never make possession sufficient for commercial authorization.
+- Production catalog entries remain `ENTITLED_PACKAGE_SOURCE` with no public paid-model path.
+- All three domain Framework files are now reproducibly checked in CI.
+- Adds INV-198..200 and CF-256..260 for public paid-domain evaluation safety.
+- Final rc.6 branch evidence: shared Framework reproducibility PASS, all domain Frameworks reproducibility PASS, validator PASS, 65/65 recovery profiles, 86 tests PASS.
+
+
 ## 0.13.0-rc.5
 
 - Adds domain-specific single-file Framework distributions while retaining one shared modular SAFOR kernel.

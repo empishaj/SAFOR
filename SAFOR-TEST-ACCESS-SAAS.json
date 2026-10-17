@@ -1,0 +1,101 @@
+{
+  "format": "SAFOR_PUBLIC_EVALUATION_ACCESS_BUNDLE",
+  "schemaVersion": "0.13.0",
+  "domainId": "SAAS_ENGINEERING",
+  "creationType": "SOFTWARE_SAAS",
+  "purpose": "PUBLIC_TEST_EVALUATION_ONLY",
+  "subjectRef": "safor-public-evaluation-user",
+  "verificationContext": {
+    "evaluatedAt": "2026-10-17T13:30:00Z",
+    "subjectRef": "safor-public-evaluation-user",
+    "trustedIssuerIds": [
+      "safor-test-licensing"
+    ],
+    "trustedEntitlementVerifierIds": [
+      "safor-test-license-verifier"
+    ],
+    "trustedDeliveryVerifierIds": [
+      "safor-test-delivery-verifier"
+    ]
+  },
+  "entitlements": [
+    {
+      "format": "SAFOR_COMMERCIAL_ENTITLEMENT",
+      "schemaVersion": "0.13.0",
+      "entitlementId": "TEST-SAAS-FACTORY",
+      "status": "ACTIVE",
+      "subject": {
+        "subjectType": "HUMAN",
+        "subjectRef": "safor-public-evaluation-user"
+      },
+      "commercialBasis": {
+        "basisType": "MANUAL_GRANT",
+        "evidenceRef": "test-grant://TEST-SAAS-FACTORY",
+        "sku": "SAFOR-SOFTWARE-FACTORY-TEST"
+      },
+      "grant": {
+        "sku": "SAFOR-SOFTWARE-FACTORY-TEST",
+        "packageId": "safor.factory.software-delivery",
+        "versionRange": "1.7.0-test.1",
+        "licenseType": "PERPETUAL"
+      },
+      "validity": {
+        "validFrom": "2026-01-01T00:00:00Z",
+        "validUntil": "2035-01-01T00:00:00Z"
+      },
+      "issuer": {
+        "issuerId": "safor-test-licensing",
+        "issuerName": "SAFOR Public Evaluation"
+      },
+      "verification": {
+        "method": "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
+        "verifierId": "safor-test-license-verifier",
+        "evidenceRef": "test-license://TEST-SAAS-FACTORY",
+        "verifiedAt": "2026-10-17T12:00:00Z",
+        "result": "VERIFIED"
+      }
+    },
+    {
+      "format": "SAFOR_COMMERCIAL_ENTITLEMENT",
+      "schemaVersion": "0.13.0",
+      "entitlementId": "TEST-SAAS-OM",
+      "status": "ACTIVE",
+      "subject": {
+        "subjectType": "HUMAN",
+        "subjectRef": "safor-public-evaluation-user"
+      },
+      "commercialBasis": {
+        "basisType": "MANUAL_GRANT",
+        "evidenceRef": "test-grant://TEST-SAAS-OM",
+        "sku": "SAFOR-SAAS-ENGINEERING-OM-TEST"
+      },
+      "grant": {
+        "sku": "SAFOR-SAAS-ENGINEERING-OM-TEST",
+        "packageId": "safor.om.saas-engineering",
+        "versionRange": "1.7.0-test.1",
+        "licenseType": "PERPETUAL"
+      },
+      "validity": {
+        "validFrom": "2026-01-01T00:00:00Z",
+        "validUntil": "2035-01-01T00:00:00Z"
+      },
+      "issuer": {
+        "issuerId": "safor-test-licensing",
+        "issuerName": "SAFOR Public Evaluation"
+      },
+      "verification": {
+        "method": "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
+        "verifierId": "safor-test-license-verifier",
+        "evidenceRef": "test-license://TEST-SAAS-OM",
+        "verifiedAt": "2026-10-17T12:00:00Z",
+        "result": "VERIFIED"
+      }
+    }
+  ],
+  "restrictions": {
+    "testPackageVersionsOnly": true,
+    "productionAuthorization": false,
+    "transferable": false,
+    "commercialPurchaseEvidence": false
+  }
+}

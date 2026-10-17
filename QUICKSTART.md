@@ -32,7 +32,11 @@ The Website path covers:
 
 If the requested result requires application logic, SaaS/service lifecycle or broader software engineering/operations, the Website Factory stops and requires an explicit change to **Software / SaaS**.
 
-### Software / SaaS — paid
+### Software / SaaS — paid, public test artifact in rc.6
+
+For testing, load `SAFOR-FRAMEWORK-SAAS.json`. Then load `SAFOR-TEST-ACCESS-SAAS.json` to exercise the paid-access gate with the public `1.7.0-test.1` Factory/OM pair.
+
+The public test access is not a production license.
 
 Default product identities:
 - `safor.factory.software-delivery`
@@ -48,13 +52,15 @@ You need:
 
 A free Factory or free Operating Model cannot be used to bypass the Software/SaaS commercial profile.
 
-### Buch — paid
+### Buch — paid, public test artifact in rc.6
+
+For testing, load `SAFOR-FRAMEWORK-BOOK-CREATION.json`. Then load `SAFOR-TEST-ACCESS-BOOK-CREATION.json` to exercise the paid-access gate with the public `1.0.0-test.1` Factory/OM pair.
 
 Book likewise requires a paid Factory and paid Operating Model with independent entitlement evidence.
 
 ## Start
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.5.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
 2. SAFOR verifies Framework, Self-Healing and deterministic-control integrity.
 3. Choose **Website**, **Software / SaaS** or **Buch**.
 4. SAFOR resolves the Creation Profile and its selected-package access policy.
@@ -76,7 +82,7 @@ It never grants organizational authority, provider permissions, project scope, e
 Historical public Software Factory/SaaS OM 1.6.0 bytes are legacy disclosure, not the current commercial delivery source.
 
 
-## Paid package verification in rc.4
+## Paid package verification in rc.6
 
 For every paid package SAFOR requires a verification context containing:
 - explicit `evaluatedAt`,

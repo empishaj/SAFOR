@@ -128,6 +128,23 @@ def build_distribution(
         "distributionVersion": framework["bundleVersion"],
         "distributionId": profile["distributionId"],
         "fileName": profile["distributionFile"],
+        "publicationMode": profile["publicationMode"],
+        "evaluationNotice": (
+            "Public test/evaluation artifact. Embedded paid-mode modules are public test bytes "
+            "and are not the protected commercial production package source."
+            if profile["publicationMode"] == "PUBLIC_TEST_EVALUATION"
+            else None
+        ),
+        "evaluationAccess": (
+            {
+                "mode": "EXTERNAL_TEST_ACCESS_BUNDLE",
+                "file": profile["evaluationAccessFile"],
+                "embeddedModulesSourceClass": "HUMAN_LOADED_PACKAGE",
+                "productionAuthorization": False,
+            }
+            if profile["publicationMode"] == "PUBLIC_TEST_EVALUATION"
+            else None
+        ),
         "domain": {
             "domainId": profile["domainId"],
             "creationType": profile["creationType"],
@@ -189,6 +206,16 @@ def validate_distribution(
         errors.append("DOMAIN_FRAMEWORK_PROFILE_MISMATCH")
     if distribution.get("fileName") != profile["distributionFile"]:
         errors.append("DOMAIN_FRAMEWORK_FILENAME_MISMATCH")
+    if distribution.get("publicationMode") != profile["publicationMode"]:
+        errors.append("DOMAIN_FRAMEWORK_PUBLICATION_MODE_MISMATCH")
+    if profile["publicationMode"] == "PUBLIC_TEST_EVALUATION":
+        access = distribution.get("evaluationAccess", {})
+        if access.get("file") != profile.get("evaluationAccessFile"):
+            errors.append("DOMAIN_FRAMEWORK_EVALUATION_ACCESS_MISMATCH")
+        if access.get("embeddedModulesSourceClass") != "HUMAN_LOADED_PACKAGE":
+            errors.append("DOMAIN_FRAMEWORK_EVALUATION_SOURCE_CLASS_INVALID")
+        if access.get("productionAuthorization") is not False:
+            errors.append("DOMAIN_FRAMEWORK_EVALUATION_PRODUCTION_AUTHORIZATION_INVALID")
     domain = distribution.get("domain", {})
     if domain.get("domainId") != profile["domainId"]:
         errors.append("DOMAIN_FRAMEWORK_DOMAIN_MISMATCH")

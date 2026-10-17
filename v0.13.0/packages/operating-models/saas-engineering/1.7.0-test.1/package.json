@@ -1,0 +1,481 @@
+{
+  "format": "SAFOR_DOMAIN_PACKAGE",
+  "schemaVersion": "0.13.0",
+  "packageId": "safor.om.saas-engineering",
+  "packageKind": "OPERATING_MODEL",
+  "version": "1.7.0-test.1",
+  "name": "SaaS Engineering Reference Operating Model",
+  "description": "Role, mandate, capability and decision-authority model for a SaaS engineering organization supporting secure product definition, continuous delivery, operations, recovery and outcome assessment. It intentionally defines no value-stream ordering.",
+  "commercial": {
+    "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+    "sku": "SAFOR-SAAS-ENGINEERING-OM-TEST",
+    "entitlementRequired": true,
+    "entitlementEvidenceMode": "EXTERNAL_ONLY",
+    "independentlySelectable": true
+  },
+  "compatibility": {
+    "framework": {
+      "minimum": "0.13.0",
+      "maximumExclusive": "0.14.0"
+    },
+    "supportedCreationTypes": [
+      "SOFTWARE_SAAS"
+    ],
+    "counterpart": {
+      "requiredKind": "FACTORY",
+      "requiredCapabilities": [],
+      "requiredAuthorities": [],
+      "allowedPackageFamilies": [
+        "safor.factory.saas"
+      ],
+      "requiredWorkItemTypes": [
+        "PRODUCT_DEFINITION",
+        "QUALITY_SECURITY_REQUIREMENTS",
+        "SOLUTION_DESIGN",
+        "IMPLEMENTATION_BATCH",
+        "INDEPENDENT_VERIFICATION",
+        "SECURITY_VERIFICATION",
+        "RELEASE",
+        "DEPLOYMENT",
+        "ACTIVATION",
+        "OPERATE_OBSERVE",
+        "OUTCOME_ASSESSMENT"
+      ],
+      "requiredArtifactTypes": [
+        "BUSINESS_INTENT",
+        "SOLUTION_DESIGN",
+        "CONTRIBUTION",
+        "BUILD_EVIDENCE",
+        "TEST_EVIDENCE",
+        "SECURITY_EVIDENCE",
+        "RELEASE_ARTIFACT",
+        "DEPLOYMENT",
+        "ACTIVATION",
+        "OPERATIONAL_STATUS",
+        "OUTCOME"
+      ]
+    },
+    "domainIds": [
+      "SAAS_ENGINEERING"
+    ]
+  },
+  "exports": {
+    "capabilities": [
+      "business_intent",
+      "scope_definition",
+      "requirement_definition",
+      "quality_requirement_definition",
+      "security_requirement_definition",
+      "solution_design",
+      "threat_modeling",
+      "code_contribution",
+      "build_automation",
+      "dependency_governance",
+      "continuous_verification",
+      "technical_review",
+      "test_evidence",
+      "security_evidence",
+      "release_readiness",
+      "deployment_execution",
+      "activation_execution",
+      "observability_evidence",
+      "incident_response",
+      "recovery_execution",
+      "vulnerability_response",
+      "outcome_assessment"
+    ],
+    "authorities": [
+      "strategic_investment",
+      "product_scope_approval",
+      "architecture_exception_approval",
+      "quality_risk_decision",
+      "production_release_approval",
+      "business_outcome_acceptance"
+    ],
+    "workItemTypes": [],
+    "artifactTypes": [],
+    "providerCapabilities": []
+  },
+  "dependencies": [],
+  "integrity": {
+    "canonicalization": "SAFOR_CANONICAL_JSON_V2",
+    "digestAlgorithm": "SHA-256",
+    "digestScope": "DECLARED_DOMAIN_CONTRACT",
+    "contentDigest": "sha256:546d6d5bc0de4e284c4fbe2a5d865ca31000138bb4d62978f100d984cc77341a",
+    "verificationMode": "CANONICAL_REPOSITORY_READBACK"
+  },
+  "model": {
+    "maturity": "RESEARCH_REFERENCE_NOT_ORGANIZATION_APPROVED",
+    "roles": [
+      {
+        "id": "BUSINESS_SPONSOR",
+        "unit": "business",
+        "capabilities": [
+          "business_intent"
+        ],
+        "authorities": [
+          "strategic_investment"
+        ]
+      },
+      {
+        "id": "PRODUCT_OWNER",
+        "unit": "product",
+        "capabilities": [
+          "scope_definition",
+          "requirement_definition",
+          "quality_requirement_definition"
+        ],
+        "authorities": [
+          "product_scope_approval"
+        ]
+      },
+      {
+        "id": "ARCHITECT",
+        "unit": "engineering",
+        "capabilities": [
+          "solution_design",
+          "threat_modeling",
+          "technical_review"
+        ],
+        "authorities": [
+          "architecture_exception_approval"
+        ]
+      },
+      {
+        "id": "DEVELOPER",
+        "unit": "engineering",
+        "capabilities": [
+          "code_contribution",
+          "build_automation",
+          "dependency_governance",
+          "continuous_verification",
+          "technical_review"
+        ],
+        "authorities": []
+      },
+      {
+        "id": "QA_ENGINEER",
+        "unit": "quality",
+        "capabilities": [
+          "quality_requirement_definition",
+          "continuous_verification",
+          "test_evidence"
+        ],
+        "authorities": [
+          "quality_risk_decision"
+        ]
+      },
+      {
+        "id": "SECURITY_REVIEWER",
+        "unit": "security",
+        "capabilities": [
+          "security_requirement_definition",
+          "threat_modeling",
+          "security_evidence",
+          "vulnerability_response"
+        ],
+        "authorities": [
+          "quality_risk_decision"
+        ]
+      },
+      {
+        "id": "RELEASE_OWNER",
+        "unit": "operations",
+        "capabilities": [
+          "release_readiness",
+          "deployment_execution",
+          "activation_execution"
+        ],
+        "authorities": [
+          "production_release_approval"
+        ]
+      },
+      {
+        "id": "SITE_RELIABILITY_ENGINEER",
+        "unit": "operations",
+        "capabilities": [
+          "observability_evidence",
+          "incident_response",
+          "recovery_execution",
+          "deployment_execution"
+        ],
+        "authorities": [
+          "quality_risk_decision"
+        ]
+      },
+      {
+        "id": "PRODUCT_ANALYST",
+        "unit": "product",
+        "capabilities": [
+          "outcome_assessment"
+        ],
+        "authorities": [
+          "business_outcome_acceptance"
+        ]
+      }
+    ],
+    "capabilityBindings": [
+      {
+        "capabilityId": "business_intent",
+        "eligibleRoles": [
+          "BUSINESS_SPONSOR"
+        ]
+      },
+      {
+        "capabilityId": "scope_definition",
+        "eligibleRoles": [
+          "PRODUCT_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "requirement_definition",
+        "eligibleRoles": [
+          "PRODUCT_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "quality_requirement_definition",
+        "eligibleRoles": [
+          "PRODUCT_OWNER",
+          "QA_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "security_requirement_definition",
+        "eligibleRoles": [
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "solution_design",
+        "eligibleRoles": [
+          "ARCHITECT"
+        ]
+      },
+      {
+        "capabilityId": "threat_modeling",
+        "eligibleRoles": [
+          "ARCHITECT",
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "code_contribution",
+        "eligibleRoles": [
+          "DEVELOPER"
+        ]
+      },
+      {
+        "capabilityId": "build_automation",
+        "eligibleRoles": [
+          "DEVELOPER"
+        ]
+      },
+      {
+        "capabilityId": "dependency_governance",
+        "eligibleRoles": [
+          "DEVELOPER",
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "continuous_verification",
+        "eligibleRoles": [
+          "DEVELOPER",
+          "QA_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "technical_review",
+        "eligibleRoles": [
+          "ARCHITECT",
+          "DEVELOPER"
+        ]
+      },
+      {
+        "capabilityId": "test_evidence",
+        "eligibleRoles": [
+          "QA_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "security_evidence",
+        "eligibleRoles": [
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "release_readiness",
+        "eligibleRoles": [
+          "RELEASE_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "deployment_execution",
+        "eligibleRoles": [
+          "RELEASE_OWNER",
+          "SITE_RELIABILITY_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "activation_execution",
+        "eligibleRoles": [
+          "RELEASE_OWNER"
+        ]
+      },
+      {
+        "capabilityId": "observability_evidence",
+        "eligibleRoles": [
+          "SITE_RELIABILITY_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "incident_response",
+        "eligibleRoles": [
+          "SITE_RELIABILITY_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "recovery_execution",
+        "eligibleRoles": [
+          "SITE_RELIABILITY_ENGINEER"
+        ]
+      },
+      {
+        "capabilityId": "vulnerability_response",
+        "eligibleRoles": [
+          "SECURITY_REVIEWER"
+        ]
+      },
+      {
+        "capabilityId": "outcome_assessment",
+        "eligibleRoles": [
+          "PRODUCT_ANALYST"
+        ]
+      }
+    ],
+    "authorityBindings": [
+      {
+        "authorityId": "strategic_investment",
+        "eligibleRoles": [
+          "BUSINESS_SPONSOR"
+        ]
+      },
+      {
+        "authorityId": "product_scope_approval",
+        "eligibleRoles": [
+          "PRODUCT_OWNER"
+        ]
+      },
+      {
+        "authorityId": "architecture_exception_approval",
+        "eligibleRoles": [
+          "ARCHITECT"
+        ]
+      },
+      {
+        "authorityId": "quality_risk_decision",
+        "eligibleRoles": [
+          "QA_ENGINEER",
+          "SECURITY_REVIEWER",
+          "SITE_RELIABILITY_ENGINEER"
+        ]
+      },
+      {
+        "authorityId": "production_release_approval",
+        "eligibleRoles": [
+          "RELEASE_OWNER"
+        ]
+      },
+      {
+        "authorityId": "business_outcome_acceptance",
+        "eligibleRoles": [
+          "PRODUCT_ANALYST",
+          "BUSINESS_SPONSOR"
+        ]
+      }
+    ],
+    "humanGates": [
+      {
+        "id": "HG-0",
+        "authorityId": "strategic_investment",
+        "trigger": "STRATEGIC_THRESHOLD",
+        "outcomes": [
+          "APPROVE",
+          "REJECT",
+          "REFRAME"
+        ]
+      },
+      {
+        "id": "HG-1",
+        "authorityId": "product_scope_approval",
+        "trigger": "PRODUCT_SCOPE_DECISION",
+        "outcomes": [
+          "ACCEPT_SCOPE",
+          "CLARIFY",
+          "STOP"
+        ]
+      },
+      {
+        "id": "HG-2",
+        "authorityId": "architecture_exception_approval",
+        "trigger": "ELEVATED_ARCHITECTURE_RISK",
+        "outcomes": [
+          "ACCEPT_DESIGN",
+          "CHANGES_REQUIRED",
+          "ESCALATE"
+        ]
+      },
+      {
+        "id": "HG-3",
+        "authorityId": "quality_risk_decision",
+        "trigger": "CRITICAL_QUALITY_OR_SECURITY_DEVIATION",
+        "outcomes": [
+          "REWORK",
+          "RISK_DECISION",
+          "BLOCK"
+        ]
+      },
+      {
+        "id": "HG-4",
+        "authorityId": "production_release_approval",
+        "trigger": "PRODUCTION_AND_MATERIAL_RISK",
+        "outcomes": [
+          "AUTHORIZE",
+          "HOLD",
+          "ROLLBACK_PLAN_REQUIRED"
+        ]
+      },
+      {
+        "id": "HG-5",
+        "authorityId": "business_outcome_acceptance",
+        "trigger": "OUTCOME_ASSESSMENT",
+        "outcomes": [
+          "ACCEPT_VALUE",
+          "ITERATE",
+          "CONTINUE_OBSERVATION",
+          "ABANDON"
+        ]
+      }
+    ],
+    "separationOfDuties": [
+      {
+        "id": "SOD-TECH-REVIEW",
+        "rule": "When the Factory risk policy requires authoritative independent technical review, the approving reviewer actor must differ from the contribution author actor."
+      },
+      {
+        "id": "SOD-SECURITY",
+        "rule": "Security evidence may not be substituted by the implementation author's self-attestation when independent security verification is required."
+      },
+      {
+        "id": "SOD-RISK-DECISION",
+        "rule": "An actor responsible for producing the evidence that triggered a critical quality/security deviation must not be the sole actor exercising the quality_risk_decision authority for that same deviation."
+      }
+    ]
+  },
+  "provenance": {
+    "publisher": "SAFOR",
+    "sourceRef": "PUBLIC_TEST_EVALUATION successor to saas-engineering@1.6.0 for SAFOR-FRAMEWORK-SAAS.json testing; not the protected commercial production package."
+  },
+  "packageFamily": "safor.om.saas"
+}

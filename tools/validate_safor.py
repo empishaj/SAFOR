@@ -13,6 +13,7 @@ from runtime.bootstrap_policy import (
     evaluate_active_conditional_requirements,
     evaluate_domain_package_pair,
     evaluate_domain_framework_pair,
+    resolve_composable_creation_packages,
     validate_domain_package,
     validate_factory_contract_consistency,
 )
@@ -44,8 +45,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.5":
-    fail(f"VERSION must be 0.13.0-rc.5, got {version}.")
+if version != "0.13.0-rc.6":
+    fail(f"VERSION must be 0.13.0-rc.6, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
@@ -201,13 +202,15 @@ required_principles = (
     "replacementRequiresBidirectionalCompatibility",
     "packageFamilyCompatibilityRequiredForV2Packages",
     "crossDomainPackageReplacementForbidden",
+    "publicPaidDomainEvaluationArtifactsAllowedForTesting",
+    "publicEvaluationDoesNotAuthorizePaidUse",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 198):
+for n in range(37, 201):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")
@@ -241,6 +244,7 @@ for rule in (
     "replacementBidirectionalCounterpartRequired",
     "replacementPackageFamilyConstraintsEnforced",
     "crossDomainReplacementForbidden",
+    "publicEvaluationPaidBytesNotProductionSource",
 ):
     if package_system.get("rules", {}).get(rule) is not True:
         fail(f"Kernel package rule {rule} must be true.")
@@ -285,14 +289,23 @@ for rule in (
     if domain_distribution_policy.get(rule) is not True:
         fail(f"Runtime domain distribution policy {rule} must be true.")
 if set(domain_distribution_policy.get("publicDistributions", [])) != {
-    "SAFOR-FRAMEWORK-WEBSITE.json"
-}:
-    fail("Exactly the Website domain distribution is public in this repository.")
-if set(domain_distribution_policy.get("commercialDistributions", [])) != {
+    "SAFOR-FRAMEWORK-WEBSITE.json",
     "SAFOR-FRAMEWORK-SAAS.json",
     "SAFOR-FRAMEWORK-BOOK-CREATION.json",
 }:
-    fail("Commercial domain distribution names mismatch.")
+    fail("All three domain Framework artifacts must be present for rc.6 testing.")
+if set(domain_distribution_policy.get("publicTestEvaluationDistributions", [])) != {
+    "SAFOR-FRAMEWORK-SAAS.json",
+    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+}:
+    fail("SaaS and Book must be marked public test/evaluation distributions.")
+if set(domain_distribution_policy.get("commercialProductionDistributions", [])) != {
+    "SAFOR-FRAMEWORK-SAAS.json",
+    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+}:
+    fail("Commercial production distribution names mismatch.")
+if domain_distribution_policy.get("publicTestBytesDoNotDefineCommercialProductionSource") is not True:
+    fail("Public test bytes must not define the commercial production source.")
 
 # Package catalog: distinct free Website and commercial Software/SaaS/Book paths.
 catalog = modules.get("packageCatalog", {}).get("content", {})
@@ -567,11 +580,11 @@ profile_by_id = {x.get("id"): x for x in domain_profiles.get("profiles", [])}
 if set(profile_by_id) != {"WEBSITE", "SAAS", "BOOK_CREATION"}:
     fail("Domain framework profiles must be exactly WEBSITE, SAAS and BOOK_CREATION.")
 expected_domain_profiles = {
-    "WEBSITE": ("WEBSITE_CREATION", "WEBSITE", "SAFOR-FRAMEWORK-WEBSITE.json", True),
-    "SAAS": ("SAAS_ENGINEERING", "SOFTWARE_SAAS", "SAFOR-FRAMEWORK-SAAS.json", False),
-    "BOOK_CREATION": ("BOOK_CREATION", "BOOK", "SAFOR-FRAMEWORK-BOOK-CREATION.json", False),
+    "WEBSITE": ("WEBSITE_CREATION", "WEBSITE", "SAFOR-FRAMEWORK-WEBSITE.json", True, "PUBLIC_PRODUCTION"),
+    "SAAS": ("SAAS_ENGINEERING", "SOFTWARE_SAAS", "SAFOR-FRAMEWORK-SAAS.json", True, "PUBLIC_TEST_EVALUATION"),
+    "BOOK_CREATION": ("BOOK_CREATION", "BOOK", "SAFOR-FRAMEWORK-BOOK-CREATION.json", True, "PUBLIC_TEST_EVALUATION"),
 }
-for pid, (domain_id, creation_type, filename, public_artifact) in expected_domain_profiles.items():
+for pid, (domain_id, creation_type, filename, public_artifact, publication_mode) in expected_domain_profiles.items():
     profile = profile_by_id.get(pid, {})
     if profile.get("domainId") != domain_id:
         fail(f"Domain framework profile {pid} domainId mismatch.")
@@ -581,6 +594,8 @@ for pid, (domain_id, creation_type, filename, public_artifact) in expected_domai
         fail(f"Domain framework profile {pid} filename mismatch.")
     if profile.get("publicArtifactCommitted") is not public_artifact:
         fail(f"Domain framework profile {pid} public artifact policy mismatch.")
+    if profile.get("publicationMode") != publication_mode:
+        fail(f"Domain framework profile {pid} publicationMode mismatch.")
     replacement = profile.get("replacementPolicy", {})
     for flag in (
         "factoryReplaceable",
@@ -618,6 +633,101 @@ website_pair = evaluate_domain_framework_pair(
 )
 if not website_pair["compatible"]:
     fail(f"Website domain Framework embedded pair incompatible: {website_pair}")
+
+for profile_id, filename, domain_id, creation_type, expected_factory_family, expected_om_family in (
+    ("SAAS", "SAFOR-FRAMEWORK-SAAS.json", "SAAS_ENGINEERING", "SOFTWARE_SAAS", "safor.factory.saas", "safor.om.saas"),
+    ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json", "BOOK_CREATION", "BOOK", "safor.factory.book", "safor.om.book"),
+):
+    distribution_artifact = load_json(filename)
+    if distribution_artifact.get("format") != "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION":
+        fail(f"{profile_id} domain Framework format mismatch.")
+        continue
+    if distribution_artifact.get("publicationMode") != "PUBLIC_TEST_EVALUATION":
+        fail(f"{profile_id} must be marked PUBLIC_TEST_EVALUATION.")
+    if not distribution_artifact.get("evaluationNotice"):
+        fail(f"{profile_id} public evaluation notice is required.")
+    if distribution_artifact.get("distributionVersion") != version:
+        fail(f"{profile_id} domain Framework version mismatch.")
+    if distribution_artifact.get("framework") != framework:
+        fail(f"{profile_id} domain Framework must embed exact current base Framework.")
+    if distribution_artifact.get("domain", {}).get("domainId") != domain_id:
+        fail(f"{profile_id} domainId mismatch.")
+    if distribution_artifact.get("domain", {}).get("creationType") != creation_type:
+        fail(f"{profile_id} creationType mismatch.")
+    if distribution_artifact.get("domain", {}).get("accessMode") != "PAID_ENTITLEMENT_REQUIRED":
+        fail(f"{profile_id} test Framework must retain paid access mode.")
+
+    embedded = distribution_artifact.get("embeddedDomainModules", {})
+    test_factory = embedded.get("factory", {})
+    test_om = embedded.get("operatingModel", {})
+    if test_factory.get("packageFamily") != expected_factory_family:
+        fail(f"{profile_id} Factory family mismatch.")
+    if test_om.get("packageFamily") != expected_om_family:
+        fail(f"{profile_id} Operating Model family mismatch.")
+    if test_factory.get("commercial", {}).get("accessMode") != "PAID_ENTITLEMENT_REQUIRED":
+        fail(f"{profile_id} embedded Factory must remain PAID_ENTITLEMENT_REQUIRED.")
+    if test_om.get("commercial", {}).get("accessMode") != "PAID_ENTITLEMENT_REQUIRED":
+        fail(f"{profile_id} embedded Operating Model must remain PAID_ENTITLEMENT_REQUIRED.")
+    if "PUBLIC_TEST_EVALUATION" not in test_factory.get("provenance", {}).get("sourceRef", ""):
+        fail(f"{profile_id} Factory must be explicitly marked public test/evaluation.")
+    if "PUBLIC_TEST_EVALUATION" not in test_om.get("provenance", {}).get("sourceRef", ""):
+        fail(f"{profile_id} Operating Model must be explicitly marked public test/evaluation.")
+    test_pair = evaluate_domain_framework_pair(
+        test_factory, test_om, version, creation_type, domain_id
+    )
+    if not test_pair["compatible"]:
+        fail(f"{profile_id} embedded test pair incompatible: {test_pair}")
+
+    evaluation_access = distribution_artifact.get("evaluationAccess", {})
+    access_file = evaluation_access.get("file")
+    if evaluation_access.get("mode") != "EXTERNAL_TEST_ACCESS_BUNDLE":
+        fail(f"{profile_id} evaluation access mode mismatch.")
+    if evaluation_access.get("embeddedModulesSourceClass") != "HUMAN_LOADED_PACKAGE":
+        fail(f"{profile_id} embedded paid test modules must resolve as HUMAN_LOADED_PACKAGE.")
+    if evaluation_access.get("productionAuthorization") is not False:
+        fail(f"{profile_id} evaluation access must not authorize production.")
+    if not access_file:
+        fail(f"{profile_id} evaluation access file missing.")
+        continue
+
+    access_bundle = load_json(access_file)
+    if access_bundle.get("format") != "SAFOR_PUBLIC_EVALUATION_ACCESS_BUNDLE":
+        fail(f"{profile_id} test access bundle format mismatch.")
+    if access_bundle.get("domainId") != domain_id:
+        fail(f"{profile_id} test access domain mismatch.")
+    if access_bundle.get("creationType") != creation_type:
+        fail(f"{profile_id} test access creation type mismatch.")
+    restrictions = access_bundle.get("restrictions", {})
+    if restrictions.get("testPackageVersionsOnly") is not True:
+        fail(f"{profile_id} test access must be restricted to test package versions.")
+    if restrictions.get("productionAuthorization") is not False:
+        fail(f"{profile_id} test access must not authorize production.")
+
+    resolved = resolve_composable_creation_packages(
+        creation_type,
+        catalog,
+        [
+            {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": test_factory},
+            {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": test_om},
+        ],
+        access_bundle.get("entitlements", []),
+        verification_context=access_bundle.get("verificationContext", {}),
+    )
+    if resolved.get("outcome") != "PACKAGE_ACCESS_RESOLVED":
+        fail(f"{profile_id} public evaluation access bundle does not resolve paid test modules: {resolved}")
+
+# Public evaluation bytes must not become production catalog delivery paths.
+for paid_id in (
+    "safor.factory.software-delivery",
+    "safor.om.saas-engineering",
+    "safor.factory.book-production",
+    "safor.om.book-authoring",
+):
+    paid_entry = entry_by_id.get(paid_id, {})
+    if paid_entry.get("distribution", {}).get("sourceClass") != "ENTITLED_PACKAGE_SOURCE":
+        fail(f"{paid_id} production catalog source must remain ENTITLED_PACKAGE_SOURCE.")
+    if paid_entry.get("distribution", {}).get("publicModelPath", "NOT_NULL") is not None:
+        fail(f"{paid_id} production catalog must still expose no public model path.")
 
 # Strict entitlement schema and commercial delivery contracts.
 entitlement_schema = modules.get("schemaEntitlement", {}).get("content", {})
@@ -688,7 +798,7 @@ conformance = modules.get("conformance", {}).get("content", {})
 if conformance.get("schemaVersion") != "0.13.0":
     fail("Conformance model must be 0.13.0.")
 assertion_ids = {x.get("id") for x in conformance.get("assertions", [])}
-for n in range(217, 256):
+for n in range(217, 261):
     assertion = f"CF-{n:03d}"
     if assertion not in assertion_ids:
         fail(f"Missing composable-package conformance assertion {assertion}.")

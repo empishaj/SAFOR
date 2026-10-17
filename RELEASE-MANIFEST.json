@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.5",
+  "version": "0.13.0-rc.6",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.5.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.6.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.4",
+  "previousVersion": "0.13.0-rc.5",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -121,7 +121,11 @@
     "BIDIRECTIONAL_FACTORY_OPERATING_MODEL_COMPATIBILITY",
     "CROSS_DOMAIN_PACKAGE_REJECTION",
     "INDEPENDENT_PREMIUM_FACTORY_REPLACEMENT",
-    "INDEPENDENT_PREMIUM_OPERATING_MODEL_REPLACEMENT"
+    "INDEPENDENT_PREMIUM_OPERATING_MODEL_REPLACEMENT",
+    "PUBLIC_TEST_SAAS_FRAMEWORK",
+    "PUBLIC_TEST_BOOK_CREATION_FRAMEWORK",
+    "PAID_MODE_PUBLIC_EVALUATION_MODULES",
+    "ALL_THREE_DOMAIN_FRAMEWORKS_REPRODUCIBLE_IN_CI"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -191,6 +195,7 @@
       "file": "SAFOR-FRAMEWORK-WEBSITE.json",
       "domainId": "WEBSITE_CREATION",
       "creationType": "WEBSITE",
+      "publicationMode": "PUBLIC_PRODUCTION",
       "publicArtifact": true
     },
     {
@@ -198,14 +203,22 @@
       "file": "SAFOR-FRAMEWORK-SAAS.json",
       "domainId": "SAAS_ENGINEERING",
       "creationType": "SOFTWARE_SAAS",
-      "publicArtifact": false
+      "publicationMode": "PUBLIC_TEST_EVALUATION",
+      "publicArtifact": true
     },
     {
       "id": "BOOK_CREATION",
       "file": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
       "domainId": "BOOK_CREATION",
       "creationType": "BOOK",
-      "publicArtifact": false
+      "publicationMode": "PUBLIC_TEST_EVALUATION",
+      "publicArtifact": true
     }
-  ]
+  ],
+  "publicTestEvaluation": {
+    "purpose": "Enable real chat/E2E testing of paid-domain Framework containers before protected commercial delivery infrastructure is live.",
+    "productionCommercialSourceUnaffected": true,
+    "paidModeStillEnforced": true,
+    "publicTestBytesAreNotProtectedCommercialProductionPackages": true
+  }
 }
