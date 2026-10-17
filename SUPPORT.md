@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.13.0-rc.2 is a **Release Candidate**.
+SAFOR v0.13.0-rc.3 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -55,10 +55,18 @@ SAFOR does not claim local execution when the current host cannot actually acces
 Paid Factory/Operating Model access additionally requires supported entitlement verification. The 0.13 schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.
 
 
-## Free Website starter in rc.2
 
-The canonical free Website defaults are:
-- `safor.factory.software-delivery@1.6.0`
-- `safor.om.saas-engineering@1.6.0`
+## Product paths in rc.3
 
-Factory 1.6 models Product Definition, Quality/Security Requirements, Solution Design/Threat Assessment, small-batch Implementation with continuous verification, independent/security verification, Release, Deployment, Activation, Operate/Observe, conditional Recovery/Vulnerability Response and Outcome Assessment.
+**Website** is the free supported starter:
+- `safor.factory.website-delivery@1.0.0`
+- `safor.om.website-team@1.0.0`
+
+**Software / SaaS** is commercial:
+- Software Factory entitlement required.
+- SaaS Engineering Operating Model entitlement required.
+- Both packages must be paid; a free override is not valid for this Creation Profile.
+
+**Book** remains commercial.
+
+Current paid package delivery infrastructure remains a GA-readiness gate.

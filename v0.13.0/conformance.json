@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_CONFORMANCE_SUITE",
   "schemaVersion": "0.13.0",
-  "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable, independently licensed Factory and Operating Model packages plus retained governance/workspace guarantees.",
+  "purpose": "Machine-readable conformance assertions for SAFOR 0.13 composable packages, free Website creation, paid Software/SaaS and Book paths, plus retained governance/workspace guarantees.",
   "assertions": [
     {
       "id": "CF-001",
@@ -245,17 +245,17 @@
     },
     {
       "id": "CF-049",
-      "statement": "The HUMAN must explicitly choose exactly one creation type: SOFTWARE_WEBSITE or BOOK.",
+      "statement": "The HUMAN explicitly chooses exactly one creation type: WEBSITE, SOFTWARE_SAAS or BOOK.",
       "expected": true
     },
     {
       "id": "CF-050",
-      "statement": "Creation type deterministically selects the compatible Factory and Operating Model pair.",
+      "statement": "Creation type selects default Factory/Operating Model candidates plus its commercial access policy; compatible overrides remain separately governed.",
       "expected": true
     },
     {
       "id": "CF-051",
-      "statement": "Software/Website and Book factories each define their own discoveryContract, planningContract and evidenceContract.",
+      "statement": "Website, Software/SaaS and Book factories each own their domain-specific discovery, planning and evidence contracts.",
       "expected": true
     },
     {
@@ -1100,7 +1100,7 @@
     },
     {
       "id": "CF-220",
-      "statement": "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is valid only when the paid selected package has independently verified entitlement.",
+      "statement": "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is valid only when the active Creation Profile allows mixed access and every paid member has independently verified entitlement.",
       "expected": true
     },
     {
@@ -1145,12 +1145,42 @@
     },
     {
       "id": "CF-229",
-      "statement": "The free Software/Website starter Factory and Operating Model remain entitlement-free defaults while paid alternatives remain independently purchasable.",
+      "statement": "The free WEBSITE starter uses safor.factory.website-delivery plus safor.om.website-team; SOFTWARE_SAAS is a separate commercial path.",
       "expected": true
     },
     {
       "id": "CF-230",
       "statement": "Public Framework embedding remains free of Factory/Operating Model model payloads even though their schemas, catalog metadata and package-selection policy are embedded.",
+      "expected": true
+    },
+    {
+      "id": "CF-231",
+      "statement": "WEBSITE and SOFTWARE_SAAS are distinct Creation Types with distinct default package identities and commercial policies.",
+      "expected": true
+    },
+    {
+      "id": "CF-232",
+      "statement": "WEBSITE defaults to FREE_PUBLIC safor.factory.website-delivery and FREE_PUBLIC safor.om.website-team.",
+      "expected": true
+    },
+    {
+      "id": "CF-233",
+      "statement": "SOFTWARE_SAAS defaults to safor.factory.software-delivery and safor.om.saas-engineering, both PAID_ENTITLEMENT_REQUIRED.",
+      "expected": true
+    },
+    {
+      "id": "CF-234",
+      "statement": "A SOFTWARE_SAAS selection containing any FREE_PUBLIC Factory or Operating Model fails before binding even if technical compatibility would otherwise pass.",
+      "expected": true
+    },
+    {
+      "id": "CF-235",
+      "statement": "SOFTWARE_SAAS requires independent entitlement evidence for both selected paid domain packages.",
+      "expected": true
+    },
+    {
+      "id": "CF-236",
+      "statement": "Historical public Software Factory/SaaS Operating Model bytes are legacy disclosure and are not the current protected commercial package source.",
       "expected": true
     }
   ],

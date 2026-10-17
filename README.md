@@ -2,66 +2,56 @@
 
 **Systemic AI Factory Orchestration Runtime**
 
-SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
+SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories and Operating Models.
 
-> Current maturity: **v0.13.0-rc.2 — Release Candidate**
+> Current maturity: **v0.13.0-rc.3 — Release Candidate**
+
+## Product paths
+
+| Creation Type | Factory | Operating Model | Access |
+|---|---|---|---|
+| WEBSITE | `safor.factory.website-delivery@1.0.0` | `safor.om.website-team@1.0.0` | FREE_PUBLIC |
+| SOFTWARE_SAAS | `safor.factory.software-delivery` | `safor.om.saas-engineering` | **both paid** |
+| BOOK | `safor.factory.book-production` | `safor.om.book-authoring` | **both paid** |
+
+The Website starter is deliberately narrower than the Software/SaaS path. If Website Discovery reveals application logic, service/SaaS lifecycle or broader software operations, SAFOR requires an explicit switch to `SOFTWARE_SAAS`.
 
 ## Start here
 
 1. Read [QUICKSTART.md](QUICKSTART.md).
-2. Load `SAFOR-FRAMEWORK.json` into a compatible chat.
-3. Choose what you want to create.
-4. **Software / Website** starts with a FREE_PUBLIC Factory and a FREE_PUBLIC Operating Model; both are independent `SAFOR_DOMAIN_PACKAGE` JSON artifacts.
-5. You may later replace only the Factory, only the Operating Model, or both with compatible alternatives.
-6. Every selected paid package requires its own externally verified entitlement; free and paid packages may be combined.
-7. Choose where the HUMAN project lives: **REMOTE_GIT** (GitHub/GitLab) or **LOCAL_GIT**. Remote projects use separate HUMAN-controlled `safor-memory`; local projects use protected `.safor/` control state.
+2. Load `SAFOR-FRAMEWORK.json` or the versioned rc.3 artifact into a compatible chat.
+3. Choose **Website**, **Software / SaaS** or **Buch**.
+4. Website resolves its free Factory/Operating Model defaults from public canonical SAFOR Git.
+5. Software/SaaS requires a licensed Software Factory **and** licensed SaaS Engineering Operating Model; each package needs its own verified entitlement.
+6. Choose where the HUMAN project lives: **REMOTE_GIT** or **LOCAL_GIT**.
 
 ## Repository separation
 
-- **`empishaj/SAFOR`** — public SAFOR Framework source, package catalog, free starter package source, Provider Adapters, schemas and historical development baselines. It is never a HUMAN project workspace.
-- **`{OWNER}/safor-memory`** — HUMAN-controlled remote control workspace used only for REMOTE_GIT projects.
-- **HUMAN project workspace** — either a HUMAN-controlled remote Git repository or a HUMAN-controlled local Git repository; all domain work artifacts stay here.
-
-These concerns are intentionally separate.
+- **`empishaj/SAFOR`** — public Framework, metadata, schemas, free Website packages and historical baselines. Never the HUMAN project workspace.
+- **`{OWNER}/safor-memory`** — HUMAN-controlled remote control workspace for REMOTE_GIT projects.
+- **HUMAN project workspace** — the selected remote or local Git repository containing domain work.
+- **Commercial package source** — separate entitled/private distribution for current paid Software/SaaS and Book package content.
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` — versioned public Framework release candidate.
-- `SAFOR-FRAMEWORK.json` — latest Framework RC alias.
-- `v0.13.0/` — composable domain-package contract, independent Factory/Operating Model selection, per-package entitlement, SHA-256 package integrity and compatibility decisions.
-- `v0.12.0/` — modular package/workspace boundary baseline.
-- `v0.11.0/` — deterministic control and deterministic acceptance baseline.
-- `v0.10.0/` and earlier — historical development baselines. Pre-0.12 package prototypes already published there cannot be made confidential retroactively.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.3.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK.json` — current Framework alias.
+- `v0.13.0/ packages/factories/website-delivery/1.0.0/package.json` — free Website Factory.
+- `v0.13.0/packages/operating-models/website-team/1.0.0/package.json` — free Website Operating Model.
 
-Factories and Operating Models are independently loadable JSON products. Creation Profiles define defaults rather than locked commercial bundles. The free Website defaults are Software Factory 1.6.0 plus SaaS Engineering Operating Model 1.6.0. Paid package model content is not embedded in the public Framework artifact; entitlement evidence remains external to the package JSON.
-
-## Product documentation
-
-- [Quickstart](QUICKSTART.md)
-- [Architecture](ARCHITECTURE.md)
-- [Agent Workspace Protocol](AGENT-WORKSPACE.md)
-- [Agent Job Contract](AGENT-JOB-CONTRACT.md)
-- [Module-wide Self-Healing](MODULE-SELF-HEALING.md)
-- [HUMAN Cognitive Load](HUMAN-COGNITIVE-LOAD.md)
-- [Multi-Agent Scheduler](MULTI-AGENT-SCHEDULER.md)
-- [Security](SECURITY.md)
-- [Support & boundaries](SUPPORT.md)
-- [Product readiness](PRODUCT-READINESS.md)
-- [Release checklist](RELEASE-CHECKLIST.md)
-- [End-to-end acceptance tests](ACCEPTANCE-TESTS.md)
-- [Changelog](CHANGELOG.md)
-- [Contributing](CONTRIBUTING.md)
+Software Factory/SaaS OM versions through 1.6.0 remain visible as historical public disclosure. They are not the current protected commercial package channel.
 
 ## Validation
 
 ```bash
 python tools/validate_safor.py
+python -m unittest discover -s tests -v
 ```
 
 The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR is currently a **Release Candidate**, not General Availability. v0.13.0-rc.2 proves the composable Factory/Operating-Model contract, per-package commercial gating, declared-contract integrity, compatibility binding and retained Framework/workspace boundaries in machine tests. Real entitlement delivery, Local-Git host execution and provider/agent end-to-end scenarios remain GA gates.
+SAFOR remains a **Release Candidate**, not General Availability. The Framework/package/licensing boundary is machine-enforced, while real commercial package delivery, entitlement infrastructure and provider/agent end-to-end acceptance remain GA gates.
 
-The commercial product decision is explicit: the Framework and Website starter defaults are public/free; Factories and Operating Models are independently selectable and independently licensable. A customer can therefore add a premium Factory, a premium Operating Model, or both without replacing the Framework. Final legal license text, pricing and entitlement-service operations remain open.
+See [LICENSE-DECISION.md](LICENSE-DECISION.md), [PRODUCT-READINESS.md](PRODUCT-READINESS.md) and [ACCEPTANCE-TESTS.md](ACCEPTANCE-TESTS.md).

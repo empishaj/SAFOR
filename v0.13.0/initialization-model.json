@@ -55,18 +55,23 @@
         "type": "SINGLE_SELECT",
         "options": [
           {
-            "id": "SOFTWARE_WEBSITE",
-            "label": "Software / Website",
+            "id": "WEBSITE",
+            "label": "Website",
             "accessLabel": "Kostenlos"
+          },
+          {
+            "id": "SOFTWARE_SAAS",
+            "label": "Software / SaaS",
+            "accessLabel": "Factory + Operating Model Lizenz erforderlich"
           },
           {
             "id": "BOOK",
             "label": "Buch",
-            "accessLabel": "Lizenz erforderlich"
+            "accessLabel": "Factory + Operating Model Lizenz erforderlich"
           }
         ]
       },
-      "rule": "Creation type determines default package candidates only; Factory and Operating Model remain independently selectable and do not grant organizational authority."
+      "rule": "Creation type determines default package candidates and commercial access policy. WEBSITE has free public defaults. SOFTWARE_SAAS and BOOK require both selected domain packages to be paid and independently entitled. Package selection never grants organizational authority."
     },
     {
       "id": "INIT-02",
@@ -88,15 +93,17 @@
       "title": "Paket-Zugriff getrennt prüfen",
       "rules": [
         "Resolve access separately for selected Factory and selected Operating Model.",
-        "FREE_PUBLIC selected packages may resolve from canonical public SAFOR Git or an explicit HUMAN-loaded artifact.",
-        "PAID_ENTITLEMENT_REQUIRED selected packages require HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus independently verified entitlement for that exact package/version.",
-        "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is allowed when the paid member is entitled.",
+        "WEBSITE defaults are FREE_PUBLIC and may resolve from canonical public SAFOR Git at immutable revision/blob.",
+        "SOFTWARE_SAAS and BOOK require BOTH selected packages to be PAID_ENTITLEMENT_REQUIRED; a free override cannot satisfy those creation profiles.",
+        "Every selected PAID_ENTITLEMENT_REQUIRED package requires HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus independently verified entitlement for that exact package/version.",
+        "Mixed FREE_PUBLIC/PAID pairs remain possible only for creation profiles whose selectedPackageAccessPolicy allows them.",
         "Paid package model content may not be read from the public canonical repository."
       ],
       "failOutcomes": {
         "missingPaidPackage": "PACKAGE_ACCESS_REQUIRED",
         "entitlementUnverified": "PACKAGE_ENTITLEMENT_UNVERIFIED",
-        "publicPaidResolutionAttempt": "STOP"
+        "publicPaidResolutionAttempt": "STOP",
+        "creationProfilePaidPairViolation": "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES"
       }
     },
     {

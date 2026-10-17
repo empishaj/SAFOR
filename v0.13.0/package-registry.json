@@ -5,20 +5,20 @@
   "catalogRef": "package-catalog.json",
   "technicalPackages": [
     {
-      "packageId": "safor.om.saas-engineering",
+      "packageId": "safor.om.website-team",
       "kind": "OPERATING_MODEL",
-      "version": "1.6.0",
+      "version": "1.0.0",
       "accessMode": "FREE_PUBLIC",
       "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-      "path": "v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json"
+      "path": "v0.13.0/packages/operating-models/website-team/1.0.0/package.json"
     },
     {
-      "packageId": "safor.factory.software-delivery",
+      "packageId": "safor.factory.website-delivery",
       "kind": "FACTORY",
-      "version": "1.6.0",
+      "version": "1.0.0",
       "accessMode": "FREE_PUBLIC",
       "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-      "path": "v0.13.0/packages/factories/software-delivery/1.6.0/package.json"
+      "path": "v0.13.0/packages/factories/website-delivery/1.0.0/package.json"
     },
     {
       "packageId": "safor.provider.github",
@@ -39,6 +39,20 @@
   ],
   "externalCommercialRequirements": [
     {
+      "packageId": "safor.factory.software-delivery",
+      "kind": "FACTORY",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "sku": "SAFOR-SOFTWARE-FACTORY",
+      "publicContentResolutionForbidden": true
+    },
+    {
+      "packageId": "safor.om.saas-engineering",
+      "kind": "OPERATING_MODEL",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "sku": "SAFOR-SAAS-ENGINEERING-OM",
+      "publicContentResolutionForbidden": true
+    },
+    {
       "packageId": "safor.factory.book-production",
       "kind": "FACTORY",
       "accessMode": "PAID_ENTITLEMENT_REQUIRED",
@@ -55,19 +69,26 @@
   ],
   "creationProfiles": [
     {
-      "creationType": "SOFTWARE_WEBSITE",
-      "label": "Software / Website",
+      "creationType": "WEBSITE",
+      "label": "Website",
+      "defaultFactoryPackageId": "safor.factory.website-delivery",
+      "defaultOperatingModelPackageId": "safor.om.website-team",
+      "resolutionPolicy": "DEFAULTS_FREE_PUBLIC_WITH_COMPATIBLE_OVERRIDES"
+    },
+    {
+      "creationType": "SOFTWARE_SAAS",
+      "label": "Software / SaaS",
       "defaultFactoryPackageId": "safor.factory.software-delivery",
       "defaultOperatingModelPackageId": "safor.om.saas-engineering",
-      "resolutionPolicy": "DEFAULTS_FREE_PUBLIC_WITH_INDEPENDENT_HUMAN_OVERRIDES"
+      "resolutionPolicy": "BOTH_SELECTED_PACKAGES_PAID_ENTITLEMENT_REQUIRED"
     },
     {
       "creationType": "BOOK",
       "label": "Buch",
       "defaultFactoryPackageId": "safor.factory.book-production",
       "defaultOperatingModelPackageId": "safor.om.book-authoring",
-      "resolutionPolicy": "DEFAULTS_PAID_WITH_INDEPENDENT_HUMAN_OVERRIDES"
+      "resolutionPolicy": "BOTH_SELECTED_PACKAGES_PAID_ENTITLEMENT_REQUIRED"
     }
   ],
-  "selectionRule": "HUMAN selects creation type. SAFOR derives default Factory/Operating Model candidates, permits independent compatible overrides, resolves access and entitlement per selected package, verifies artifact integrity and pair compatibility, then pins the approved selection. Project workspace selection remains an independent later decision."
+  "selectionRule": "HUMAN selects creation type. WEBSITE defaults resolve free/public. SOFTWARE_SAAS and BOOK require both selected domain packages to be PAID_ENTITLEMENT_REQUIRED and independently entitled. Factory/Operating Model compatibility and project workspace selection remain separate."
 }

@@ -17,7 +17,10 @@
     "mixedFreeAndPaidPairAllowed": true,
     "entitlementEvidenceExternalToPackageArtifact": true,
     "domainPackageIntegrityRequired": true,
-    "compatibilityDecisionRequiredBeforeBinding": true
+    "compatibilityDecisionRequiredBeforeBinding": true,
+    "websiteStarterIsFreePublic": true,
+    "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
+    "creationProfileMayConstrainSelectedAccessModes": true
   },
   "sourceClasses": {
     "PUBLIC_CANONICAL_REPOSITORY": {
@@ -52,13 +55,27 @@
     "PUBLIC_CANONICAL_REPOSITORY_FOR_FREE_PUBLIC_ONLY"
   ],
   "freeStarterProfile": {
-    "creationType": "SOFTWARE_WEBSITE",
-    "defaultFactoryPackageId": "safor.factory.software-delivery",
-    "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+    "creationType": "WEBSITE",
+    "defaultFactoryPackageId": "safor.factory.website-delivery",
+    "defaultOperatingModelPackageId": "safor.om.website-team",
     "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
     "autoResolveDefaultsWhenNotExplicitlyOverridden": true
   },
   "paidPathRule": "A PAID_ENTITLEMENT_REQUIRED selected package is never resolved from PUBLIC_CANONICAL_REPOSITORY; its model content is never embedded in the public Framework bundle and it must carry separately verifiable entitlement evidence before use.",
-  "selectionRule": "Resolve profile defaults first, then apply any HUMAN-approved Factory and/or Operating Model override. Access is evaluated independently for each selected package.",
-  "mixedAccessRule": "FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may be paired. Only the paid member requires commercial entitlement, and the resulting pair still requires technical compatibility."
+  "selectionRule": "Resolve creation-profile defaults, apply HUMAN-approved overrides, then enforce the profile selectedPackageAccessPolicy before package access. WEBSITE allows compatible free/paid composition; SOFTWARE_SAAS and BOOK require both selected packages to be paid and independently entitled.",
+  "mixedAccessRule": "Mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages are permitted only when the active creation profile allows ANY_COMPATIBLE_ACCESS. Profiles marked BOTH_PAID_ENTITLEMENT_REQUIRED reject any free selected member.",
+  "commercialCreationProfiles": {
+    "SOFTWARE_SAAS": {
+      "selectedPackageAccessPolicy": "BOTH_PAID_ENTITLEMENT_REQUIRED",
+      "defaultFactoryPackageId": "safor.factory.software-delivery",
+      "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+      "publicModelResolutionForbidden": true
+    },
+    "BOOK": {
+      "selectedPackageAccessPolicy": "BOTH_PAID_ENTITLEMENT_REQUIRED",
+      "defaultFactoryPackageId": "safor.factory.book-production",
+      "defaultOperatingModelPackageId": "safor.om.book-authoring",
+      "publicModelResolutionForbidden": true
+    }
+  }
 }

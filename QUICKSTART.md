@@ -4,76 +4,71 @@
 
 Always:
 - A compatible chat host.
-- `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` or the latest `SAFOR-FRAMEWORK.json`.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.3.json` or the latest `SAFOR-FRAMEWORK.json`.
 - A HUMAN-controlled Git project workspace.
 
-For **Software / Website**:
-- No commercial entitlement is required for the default starter Factory or default starter Operating Model.
-- The current free defaults are `safor.factory.software-delivery@1.6.0` and `safor.om.saas-engineering@1.6.0`; both are separate `SAFOR_DOMAIN_PACKAGE` JSON artifacts resolved from canonical public SAFOR Git at immutable revision/blob.
-- You may independently replace the Factory, the Operating Model, or both.
+## Choose a creation type
 
-For any selected **paid Factory or Operating Model**:
-- That package must be supplied through a HUMAN-loaded or entitled package source.
-- Verified entitlement evidence for that exact selected package/version is mandatory.
-- A free Factory may be combined with a paid Operating Model and vice versa when the pair is technically compatible.
-- Merely possessing JSON or stating that it was purchased is not sufficient.
+### Website — free
 
-For **REMOTE_GIT** projects:
-- GitHub or GitLab access with the required project read/write capabilities.
-- A HUMAN-controlled `{OWNER}/safor-memory` for SAFOR control state.
+Default packages:
+- `safor.factory.website-delivery@1.0.0`
+- `safor.om.website-team@1.0.0`
 
-For **LOCAL_GIT** projects:
-- Host access to the HUMAN-selected local filesystem and Git repository.
-- Proven read/write, Git history, branch and commit capabilities.
-- No remote `safor-memory` is required; SAFOR uses a Git-tracked MASTER-only `.safor/` control root.
+Both are `FREE_PUBLIC` and resolve from canonical public SAFOR Git at immutable revision/blob.
+
+The Website path covers:
+- audience/purpose/scope,
+- content and information architecture,
+- experience design,
+- web implementation,
+- accessibility, responsive and performance verification,
+- optional search-visibility verification,
+- publishing,
+- post-publish observation,
+- website outcome assessment.
+
+If the requested result requires application logic, SaaS/service lifecycle or broader software engineering/operations, the Website Factory stops and requires an explicit change to **Software / SaaS**.
+
+### Software / SaaS — paid
+
+Default product identities:
+- `safor.factory.software-delivery`
+- `safor.om.saas-engineering`
+
+Both selected packages must be `PAID_ENTITLEMENT_REQUIRED`.
+
+You need:
+1. a licensed Software Factory artifact,
+2. a verified entitlement for that Factory/version,
+3. a licensed SaaS Engineering Operating Model artifact,
+4. a separate verified entitlement for that Operating Model/version.
+
+A free Factory or free Operating Model cannot be used to bypass the Software/SaaS commercial profile.
+
+### Buch — paid
+
+Book likewise requires a paid Factory and paid Operating Model with independent entitlement evidence.
 
 ## Start
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
-2. SAFOR verifies its Framework, Self-Healing and deterministic-control integrity.
-3. Choose **Software / Website** or **Buch**.
-4. SAFOR derives the Creation Profile's default Factory and Operating Model candidates before asking where the project lives.
-5. Keep the defaults or independently override the Factory, Operating Model, or both.
-6. SAFOR resolves access separately for each selected package; only a selected paid package requires entitlement.
-7. SAFOR verifies each package's `SAFOR_DOMAIN_PACKAGE` structure, SHA-256 declared-contract digest, Framework range and Creation-Type scope.
-8. SAFOR materializes a package-selection record and a COMPATIBLE Factory/Operating-Model decision.
-9. Choose **In meinem Git-Repository** or **Lokal auf meinem Rechner**.
-10. SAFOR verifies the actual remote-provider or local Git capabilities.
-11. Select/define the HUMAN project.
-12. SAFOR binds control storage:
-   - Remote → separate HUMAN-owned `safor-memory`
-   - Local → MASTER-only `.safor/`
-13. Approve setup. Only then does SAFOR materialize control state and enter Factory Discovery.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.3.json`.
+2. SAFOR verifies Framework, Self-Healing and deterministic-control integrity.
+3. Choose **Website**, **Software / SaaS** or **Buch**.
+4. SAFOR resolves the Creation Profile and its selected-package access policy.
+5. SAFOR resolves Factory and Operating Model access separately.
+6. For commercial profiles, SAFOR rejects a free selected member before binding.
+7. Every paid selected package requires its own verified entitlement.
+8. SAFOR verifies package structure, SHA-256 contract digest, Framework range, Creation-Type scope and pair compatibility.
+9. SAFOR materializes the package selection and compatibility decision.
+10. Choose **In meinem Git-Repository** or **Lokal auf meinem Rechner**.
+11. SAFOR verifies actual provider/local Git capabilities and binds HUMAN-owned control storage.
+12. Only then does Factory Discovery begin.
 
-## Ownership boundary
+## Commercial boundary
 
-The canonical SAFOR repository and any commercial package source are package/framework sources only. They are never valid project targets.
+Entitlement answers only: **May this exact package/version be used?**
 
-Project code, manuscripts, assets and other Factory-produced work remain in the HUMAN-selected remote or local Git workspace.
+It never grants organizational authority, provider permissions, project scope, execution mandate or acceptance authority.
 
-## Package and authority boundary
-
-Commercial entitlement is evaluated **per selected Factory or Operating Model** and answers only: **May this exact package/version be used?**
-
-It never grants:
-- Operating Model decision authority,
-- provider permissions,
-- execution mandate,
-- project scope,
-- review/acceptance authority.
-
-Technical compatibility and organizational authority are evaluated separately.
-
-## Factory consistency
-
-Once independently selected, verified, declared COMPATIBLE and pinned, Discovery, Planning and domain Evidence use that exact Factory/Operating-Model pair. The project binding stores package selection, compatibility decision, package digest, selection origin and entitlement-evidence references. Snapshots cannot be reused to expand commercial access.
-
-
-
-## Website Factory 1.6 lifecycle
-
-The free Website Factory now models the full value-creation and production lifecycle:
-
-`Product Definition → Quality/Security Requirements → Solution Design/Threat Model → Small-Batch Implementation + Continuous Verification → Independent Verification + Security Verification → Release → Deployment → Activation → Operate/Observe → Outcome Assessment`
-
-Incident Recovery and Vulnerability Response are event-driven side paths after activation. Release, deployment, activation, healthy operation and business outcome remain separate facts.
+Historical public Software Factory/SaaS OM 1.6.0 bytes are legacy disclosure, not the current commercial delivery source.

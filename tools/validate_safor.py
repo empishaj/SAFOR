@@ -43,8 +43,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.2":
-    fail(f"VERSION must be 0.13.0-rc.2, got {version}.")
+if version != "0.13.0-rc.3":
+    fail(f"VERSION must be 0.13.0-rc.3, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
@@ -186,13 +186,15 @@ required_principles = (
     "domainPackageEntitlementEvidenceExternal",
     "domainPackageIntegrityRequired",
     "packageSelectionRequiresCompatibilityDecision",
+    "softwareSaasRequiresPaidFactoryAndOperatingModel",
+    "creationProfileAccessPolicyEnforced",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
         fail(f"Kernel principle {principle} must be true.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 176):
+for n in range(37, 181):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")
@@ -213,6 +215,8 @@ for rule in (
     "domainPackageEntitlementEvidenceExternal",
     "domainPackageContractDigestRequired",
     "packagePairCompatibilityDecisionRequired",
+    "softwareSaasRequiresPaidFactoryAndOperatingModel",
+    "creationProfileSelectedAccessPolicyRequired",
 ):
     if package_system.get("rules", {}).get(rule) is not True:
         fail(f"Kernel package rule {rule} must be true.")
@@ -227,6 +231,8 @@ for rule in (
     "entitlementEvidenceExternal",
     "declaredContractDigestRequired",
     "compatibilityDecisionRequiredBeforeBinding",
+    "creationProfileAccessPolicyEnforced",
+    "softwareSaasRequiresPaidFactoryAndOperatingModel",
 ):
     if domain_policy.get(rule) is not True:
         fail(f"Runtime domain package policy {rule} must be true.")
@@ -237,7 +243,7 @@ if domain_policy.get("paidPublicResolutionForbidden") is not True:
 if domain_policy.get("paidRequiresVerifiedEntitlement") is not True:
     fail("Paid selected package must require verified entitlement.")
 
-# Package catalog: defaults and independently purchasable entries.
+# Package catalog: distinct free Website and commercial Software/SaaS/Book paths.
 catalog = modules.get("packageCatalog", {}).get("content", {})
 if catalog.get("format") != "SAFOR_PACKAGE_CATALOG" or catalog.get("schemaVersion") != "0.13.0":
     fail("Package catalog format/version mismatch.")
@@ -254,11 +260,13 @@ for entry in entries:
     if not entry.get("supportedCreationTypes"):
         fail(f"Catalog entry {pid} must declare supportedCreationTypes.")
 
-free_ids = ("safor.factory.software-delivery", "safor.om.saas-engineering")
+free_ids = ("safor.factory.website-delivery", "safor.om.website-team")
 for pid in free_ids:
     entry = entry_by_id.get(pid, {})
     if entry.get("accessMode") != "FREE_PUBLIC":
         fail(f"{pid} must be FREE_PUBLIC.")
+    if entry.get("supportedCreationTypes") != ["WEBSITE"]:
+        fail(f"{pid} must support WEBSITE only.")
     dist = entry.get("distribution", {})
     if dist.get("sourceClass") != "PUBLIC_CANONICAL_REPOSITORY" or not dist.get("path"):
         fail(f"{pid} must resolve from public canonical repository.")
@@ -275,7 +283,13 @@ for pid in free_ids:
     if package.get("integrity", {}).get("contentDigest") != compute_domain_package_digest(package):
         fail(f"Public free package digest mismatch for {pid}.")
 
-for pid in ("safor.factory.book-production", "safor.om.book-authoring"):
+commercial_ids = (
+    "safor.factory.software-delivery",
+    "safor.om.saas-engineering",
+    "safor.factory.book-production",
+    "safor.om.book-authoring",
+)
+for pid in commercial_ids:
     entry = entry_by_id.get(pid, {})
     if entry.get("accessMode") != "PAID_ENTITLEMENT_REQUIRED":
         fail(f"{pid} must be PAID_ENTITLEMENT_REQUIRED.")
@@ -285,21 +299,41 @@ for pid in ("safor.factory.book-production", "safor.om.book-authoring"):
     if dist.get("publicModelPath", "NOT_NULL") is not None:
         fail(f"{pid} must expose no public model path.")
 
+if entry_by_id.get("safor.factory.software-delivery", {}).get("supportedCreationTypes") != ["SOFTWARE_SAAS"]:
+    fail("Software Factory catalog entry must support SOFTWARE_SAAS only.")
+if entry_by_id.get("safor.om.saas-engineering", {}).get("supportedCreationTypes") != ["SOFTWARE_SAAS"]:
+    fail("SaaS Engineering OM catalog entry must support SOFTWARE_SAAS only.")
+
 profiles_by_type = {x.get("creationType"): x for x in catalog.get("creationProfiles", [])}
-web = profiles_by_type.get("SOFTWARE_WEBSITE", {})
+if set(profiles_by_type) != {"WEBSITE", "SOFTWARE_SAAS", "BOOK"}:
+    fail("Creation profiles must be exactly WEBSITE, SOFTWARE_SAAS and BOOK.")
+
+web = profiles_by_type.get("WEBSITE", {})
+software = profiles_by_type.get("SOFTWARE_SAAS", {})
 book = profiles_by_type.get("BOOK", {})
-if web.get("defaultFactoryPackageId") != "safor.factory.software-delivery":
+if web.get("defaultFactoryPackageId") != "safor.factory.website-delivery":
     fail("Website default Factory mismatch.")
-if web.get("defaultOperatingModelPackageId") != "safor.om.saas-engineering":
+if web.get("defaultOperatingModelPackageId") != "safor.om.website-team":
     fail("Website default Operating Model mismatch.")
+if web.get("selectedPackageAccessPolicy") != "ANY_COMPATIBLE_ACCESS":
+    fail("Website selected package access policy mismatch.")
 if web.get("autoResolveDefaultsFromPublicFrameworkGit") is not True:
     fail("Website defaults must be public-auto-resolvable.")
-if book.get("defaultFactoryPackageId") != "safor.factory.book-production":
-    fail("Book default Factory mismatch.")
-if book.get("defaultOperatingModelPackageId") != "safor.om.book-authoring":
-    fail("Book default Operating Model mismatch.")
+
+if software.get("defaultFactoryPackageId") != "safor.factory.software-delivery":
+    fail("Software/SaaS default Factory mismatch.")
+if software.get("defaultOperatingModelPackageId") != "safor.om.saas-engineering":
+    fail("Software/SaaS default Operating Model mismatch.")
+if software.get("selectedPackageAccessPolicy") != "BOTH_PAID_ENTITLEMENT_REQUIRED":
+    fail("Software/SaaS must require both selected packages to be paid.")
+if software.get("autoResolveDefaultsFromPublicFrameworkGit") is not False:
+    fail("Software/SaaS commercial defaults must not public-auto-resolve.")
+
+if book.get("selectedPackageAccessPolicy") != "BOTH_PAID_ENTITLEMENT_REQUIRED":
+    fail("Book must require both selected packages to be paid.")
 if book.get("autoResolveDefaultsFromPublicFrameworkGit") is not False:
     fail("Book defaults must not public-auto-resolve.")
+
 for creation_type, profile in profiles_by_type.items():
     policy = profile.get("selectionPolicy", {})
     for rule in (
@@ -312,112 +346,91 @@ for creation_type, profile in profiles_by_type.items():
         if policy.get(rule) is not True:
             fail(f"{creation_type} selection policy {rule} must be true.")
 
-# Free starter artifacts must be valid for 0.13 and mutually compatible.
-free_factory = load_json("v0.13.0/packages/factories/software-delivery/1.6.0/package.json")
-free_om = load_json("v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json")
+# Free Website starter artifacts must be valid for 0.13 and mutually compatible.
+free_factory = load_json("v0.13.0/packages/factories/website-delivery/1.0.0/package.json")
+free_om = load_json("v0.13.0/packages/operating-models/website-team/1.0.0/package.json")
 for package in (free_factory, free_om):
-    result = validate_domain_package(package, version, "SOFTWARE_WEBSITE")
+    result = validate_domain_package(package, version, "WEBSITE")
     if not result["valid"]:
-        fail(f"Free domain package invalid: {package.get('packageId')}: {result['errors']}")
-pair = evaluate_domain_package_pair(free_factory, free_om, version, "SOFTWARE_WEBSITE")
+        fail(f"Free Website package invalid: {package.get('packageId')}: {result['errors']}")
+pair = evaluate_domain_package_pair(free_factory, free_om, version, "WEBSITE")
 if not pair["compatible"]:
     fail(f"Free Website Factory/Operating Model pair is incompatible: {pair}")
 
-# Website Factory 1.6 factual/lifecycle contract.
 factory_consistency = validate_factory_contract_consistency(free_factory)
 if not factory_consistency["valid"]:
-    fail(f"Website Factory 1.6 contract is internally inconsistent: {factory_consistency['errors']}")
+    fail(f"Website Factory 1.0 contract is internally inconsistent: {factory_consistency['errors']}")
 
-if free_factory.get("version") != "1.6.0":
-    fail("Website starter Factory must be 1.6.0.")
-if free_om.get("version") != "1.6.0":
-    fail("Website starter Operating Model must be 1.6.0.")
-
-factory_counterpart = free_factory.get("compatibility", {}).get("counterpart", {})
-if "strategic_investment" in factory_counterpart.get("requiredAuthorities", []):
-    fail("Website Factory must not hard-require unused strategic_investment authority.")
-if set(factory_counterpart.get("requiredAuthorities", [])) != {
-    "product_scope_approval", "business_outcome_acceptance"
-}:
-    fail("Website Factory mandatory authority set mismatch.")
-
-conditional_contract = free_factory.get("model", {}).get("compatibilityContract", {})
-conditional_authorities = {
-    x.get("authorityId") for x in conditional_contract.get("conditionalAuthorities", [])
-}
-if conditional_authorities != {
-    "architecture_exception_approval", "quality_risk_decision", "production_release_approval"
-}:
-    fail("Website Factory conditional authority set mismatch.")
-
-active_release = evaluate_active_conditional_requirements(
-    free_factory, free_om, {"PRODUCTION_AND_MATERIAL_RISK"}
-)
-if not active_release["satisfied"]:
-    fail(f"Default Website OM cannot satisfy conditional release authority: {active_release}")
-
-active_recovery = evaluate_active_conditional_requirements(
-    free_factory, free_om, {"INCIDENT_OR_SERVICE_DEGRADATION"}
-)
-if not active_recovery["satisfied"]:
-    fail(f"Default Website OM cannot satisfy incident recovery capabilities: {active_recovery}")
+if free_factory.get("version") != "1.0.0" or free_om.get("version") != "1.0.0":
+    fail("Free Website Factory/Operating Model defaults must both be 1.0.0.")
+scope = free_factory.get("model", {}).get("scopeBoundary", {})
+for excluded in (
+    "GENERAL_SAAS_PRODUCT_ENGINEERING",
+    "SERVICE_OPERATIONS",
+    "INCIDENT_RESPONSE",
+    "SOFTWARE_SUPPLY_CHAIN_GOVERNANCE",
+):
+    if excluded not in scope.get("excluded", []):
+        fail(f"Website Factory must explicitly exclude {excluded}.")
+boundary = free_factory.get("model", {}).get("discoveryContract", {}).get("boundaryCheck", {})
+if boundary.get("targetCreationType") != "SOFTWARE_SAAS":
+    fail("Website Factory must escalate application/SaaS scope to SOFTWARE_SAAS.")
 
 nodes = {
     node.get("id"): node
     for node in free_factory.get("model", {}).get("flowGraph", {}).get("nodes", [])
 }
 expected_types = {
-    "SW-02": "QUALITY_SECURITY_REQUIREMENTS",
-    "SW-04": "IMPLEMENTATION_BATCH",
-    "SW-05": "INDEPENDENT_VERIFICATION",
-    "SW-06": "SECURITY_VERIFICATION",
-    "SW-08": "DEPLOYMENT",
-    "SW-09": "ACTIVATION",
-    "SW-10": "OPERATE_OBSERVE",
-    "SW-11": "INCIDENT_RECOVERY",
-    "SW-12": "VULNERABILITY_RESPONSE",
-    "SW-13": "OUTCOME_ASSESSMENT",
+    "WEB-01": "WEBSITE_DEFINITION",
+    "WEB-02": "CONTENT_INFORMATION_ARCHITECTURE",
+    "WEB-03": "EXPERIENCE_DESIGN",
+    "WEB-04": "WEBSITE_IMPLEMENTATION",
+    "WEB-05": "WEBSITE_VERIFICATION",
+    "WEB-06": "PUBLISH",
+    "WEB-07": "POST_PUBLISH_OBSERVATION",
+    "WEB-08": "WEBSITE_OUTCOME_ASSESSMENT",
 }
 for node_id, expected_type in expected_types.items():
     if nodes.get(node_id, {}).get("workItemType") != expected_type:
         fail(f"Website Factory {node_id} must be {expected_type}.")
 
-implementation_outputs = set(nodes.get("SW-04", {}).get("produces", []))
-for artifact in (
-    "BUILD_EVIDENCE", "DEPENDENCY_INVENTORY", "SBOM",
-    "BUILD_PROVENANCE", "CONTINUOUS_VERIFICATION_EVIDENCE",
-):
-    if artifact not in implementation_outputs:
-        fail(f"Website Factory implementation must produce {artifact}.")
+quality = free_factory.get("model", {}).get("webQualityContract", {})
+if quality.get("accessibility", {}).get("defaultStandard") != "WCAG_2_2":
+    fail("Website Factory default accessibility standard must be WCAG 2.2.")
+if quality.get("accessibility", {}).get("defaultTargetLevel") != "AA":
+    fail("Website Factory default accessibility target must be AA.")
+if quality.get("responsiveVerificationRequired") is not True:
+    fail("Website Factory must require responsive verification.")
+if quality.get("performanceEvidenceRequired") is not True:
+    fail("Website Factory must require performance evidence.")
 
-quality = free_factory.get("model", {}).get("qualityPlanningContract", {})
-if quality.get("referenceModel") != "ISO_IEC_25010_2023_ALIGNED":
-    fail("Website Factory must declare ISO/IEC 25010:2023-aligned quality planning.")
-if len(quality.get("characteristics", [])) != 9:
-    fail("Website Factory quality planning must expose nine product-quality characteristics.")
-
-security = free_factory.get("model", {}).get("securityEngineeringContract", {})
-if security.get("shiftLeft") is not True or security.get("requirementsRequired") is not True:
-    fail("Website Factory security engineering must be shift-left and requirements-driven.")
-if security.get("secureBuild", {}).get("provenanceRequired") is not True:
-    fail("Website Factory secure build must require provenance.")
-
-review = free_factory.get("model", {}).get("reviewPolicy", {}).get("levels", {})
-if review.get("LOW", {}).get("independentReviewRequired") is not False:
-    fail("LOW-risk Website work must not universally require independent review.")
-for level in ("STANDARD", "ELEVATED", "CRITICAL"):
-    if review.get(level, {}).get("independentReviewRequired") is not True:
-        fail(f"{level} Website work must require independent review.")
+conditional = free_factory.get("model", {}).get("compatibilityContract", {}).get("conditionalCapabilities", [])
+if {x.get("capabilityId") for x in conditional} != {"search_visibility_verification"}:
+    fail("Website Factory search visibility must be the only conditional capability in the starter.")
 
 outcome = free_factory.get("model", {}).get("outcomeModel", {}).get("measurementContract", {})
 required_measurement_fields = {
     "metric", "baselineOrBaselineResolution", "targetOrDecisionThreshold",
-    "observationWindow", "dataSource", "decisionRule", "uncertaintyHandling",
+    "observationWindow", "dataSource", "decisionRule",
 }
 if not required_measurement_fields.issubset(set(outcome.get("requiredFields", []))):
     fail("Website Factory outcome measurement contract is incomplete.")
 if "INCONCLUSIVE" not in outcome.get("allowedDecisions", []):
-    fail("Website Factory outcome model must permit INCONCLUSIVE when evidence is insufficient.")
+    fail("Website Factory outcome model must permit INCONCLUSIVE.")
+
+# Publicly disclosed Software/SaaS 1.6 artifacts are historical only and must not be catalog-resolvable.
+for legacy_path in (
+    "v0.13.0/packages/factories/software-delivery/1.6.0/package.json",
+    "v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json",
+):
+    if not (ROOT / legacy_path).exists():
+        fail(f"Expected historical disclosure artifact missing: {legacy_path}")
+for pid in ("safor.factory.software-delivery", "safor.om.saas-engineering"):
+    entry = entry_by_id.get(pid, {})
+    if entry.get("distribution", {}).get("path"):
+        fail(f"Commercial Software/SaaS catalog entry {pid} must not expose a public path.")
+    if not entry.get("legacyDisclosure"):
+        fail(f"Commercial Software/SaaS catalog entry {pid} must record legacy disclosure.")
 
 # Distribution / entitlement semantics.
 distribution = modules.get("packageDistribution", {}).get("content", {})
@@ -429,6 +442,9 @@ for principle in (
     "entitlementEvidenceExternalToPackageArtifact",
     "domainPackageIntegrityRequired",
     "compatibilityDecisionRequiredBeforeBinding",
+    "websiteStarterIsFreePublic",
+    "softwareSaasRequiresPaidFactoryAndOperatingModel",
+    "creationProfileMayConstrainSelectedAccessModes",
 ):
     if distribution.get("principles", {}).get(principle) is not True:
         fail(f"Distribution principle {principle} must be true.")
@@ -446,6 +462,10 @@ for rule in (
     "mixedPairRequiresOnlyPaidPackageEntitlements",
     "entitlementEvidenceExternalToPackageArtifact",
     "packageSelectionDoesNotTransferEntitlement",
+    "creationProfileAccessPolicyMustBeSatisfiedBeforeBinding",
+    "softwareSaasRequiresFactoryEntitlement",
+    "softwareSaasRequiresOperatingModelEntitlement",
+    "freeWebsiteDefaultsRequireNoEntitlement",
 ):
     if entitlement.get("rules", {}).get(rule) is not True:
         fail(f"Commercial entitlement rule {rule} must be true.")
@@ -468,7 +488,7 @@ conformance = modules.get("conformance", {}).get("content", {})
 if conformance.get("schemaVersion") != "0.13.0":
     fail("Conformance model must be 0.13.0.")
 assertion_ids = {x.get("id") for x in conformance.get("assertions", [])}
-for n in range(217, 231):
+for n in range(217, 237):
     assertion = f"CF-{n:03d}"
     if assertion not in assertion_ids:
         fail(f"Missing composable-package conformance assertion {assertion}.")
@@ -526,7 +546,8 @@ if errors:
 print("SAFOR validation: PASS")
 print(f"Framework: {version}")
 print(f"Embedded modules/recovery profiles: {len(modules)}/{len(profile_by_key)}")
-print("Free Website starter: independently selectable FREE_PUBLIC Factory + Operating Model")
+print("Free Website starter: website-delivery + website-team, FREE_PUBLIC")
+print("Software/SaaS: paid Factory + paid Operating Model, two independent entitlements")
 print("Commercial access: per selected package, external verified entitlement")
 print("Domain package integrity: SHA-256 declared-contract verification")
 print("Project workspace: HUMAN-owned REMOTE_GIT or LOCAL_GIT")

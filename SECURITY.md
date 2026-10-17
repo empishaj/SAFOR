@@ -21,4 +21,9 @@ Do not post secrets or exploitable details in a public issue. Contact the reposi
 
 ## Supported version
 
-Security hardening currently targets SAFOR v0.13.0-rc.2 and the free Website Factory/Operating Model 1.6.0 pair.
+Security hardening currently targets SAFOR v0.13.0-rc.3 and the free Website Factory/Operating Model 1.0.0 pair.
+
+
+## Commercial package boundary
+
+Current Software/SaaS package content is never resolved from the public canonical repository. Historical public 1.6 bytes are disclosure-only and do not satisfy the rc.3 commercial package source contract. SOFTWARE_SAAS additionally fails closed if either selected domain package is FREE_PUBLIC or lacks independent entitlement evidence.
