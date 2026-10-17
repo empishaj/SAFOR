@@ -8,7 +8,7 @@
 - [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
-- [ ] `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json` is rebuilt from canonical `v0.10.0/` source.
+- [ ] `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` is rebuilt from canonical `v0.11.0/` overlay plus pinned `v0.10.0/` baseline.
 - [ ] `SAFOR-MASTER-COMPLETE.json` exactly matches the versioned release artifact.
 - [ ] All embedded module references resolve.
 - [ ] Runtime memory requirement is exactly `{OWNER}/safor-memory`.
@@ -68,6 +68,10 @@
 - [ ] No secrets or credentials exist in release files.
 - [ ] HUMAN has approved any change to license/distribution terms.
 
+- [ ] Deterministic reducer tests pass: same inputs -> same hash, replay equivalence, idempotency, divergent duplicate rejection, pause/resume, STOP mandate revocation and reconcile-on-unknown-effect.
+- [ ] All transition predicates resolve to the closed registry and all effects use the closed operation set.
+- [ ] 54 embedded modules map exactly to 54 recovery profiles.
+
 ## Additional gates for General Availability
 
 - [ ] GitHub blank-chat end-to-end acceptance passes according to `ACCEPTANCE-TESTS.md`.
@@ -79,3 +83,6 @@
 - [ ] HUMAN Cognitive Load/communication acceptance passes according to scenario N.
 - [ ] License/distribution decision is explicit.
 - [ ] Public repository slug is final and stable.
+
+- [ ] Deterministic Control end-to-end acceptance passes according to scenario O.
+- [ ] Full governance transition migration is completed or the remaining non-executable boundary is explicitly accepted for GA scope.
