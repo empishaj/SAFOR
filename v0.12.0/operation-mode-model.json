@@ -1,0 +1,92 @@
+{
+  "format": "SAFOR_OPERATION_MODE_MODEL",
+  "schemaVersion": "0.12.0",
+  "id": "safor-operation-mode",
+  "purpose": "Separate SAFOR Framework/schema design, isolated validation and real HUMAN project execution so governance and agent activation requirements cannot be conflated.",
+  "modes": {
+    "DESIGN": {
+      "targetClasses": [
+        "FRAMEWORK_REPOSITORY",
+        "PACKAGE_DEVELOPMENT_WORKSPACE"
+      ],
+      "purpose": "Author or revise SAFOR Framework, schemas, policies and package definitions.",
+      "projectValueStreamExecution": false,
+      "isolatedValidation": false,
+      "productionEvidenceEligible": false,
+      "humanOperationalWorkflowForbidden": true,
+      "rules": [
+        "A DESIGN target may be the canonical SAFOR product repository or another explicitly approved Framework/package development workspace.",
+        "DESIGN must not mutate a HUMAN project Value Creation Stream as if executing that project.",
+        "Agent use is optional and still requires a bound Agent Runtime Adapter."
+      ]
+    },
+    "VALIDATION": {
+      "targetClasses": [
+        "ISOLATED_TEST_WORKSPACE"
+      ],
+      "purpose": "Validate SAFOR behavior, schemas, replay, packages or runtime integration in an explicitly isolated test harness.",
+      "projectValueStreamExecution": false,
+      "isolatedValidation": true,
+      "productionEvidenceEligible": false,
+      "humanOperationalWorkflowForbidden": false,
+      "rules": [
+        "Validation targets must be explicitly identified as isolated/non-production.",
+        "HUMAN_MANUAL_TEST_ONLY activation is permitted only here and only when the validation objective requires a manual host test harness.",
+        "Validation evidence may prove SAFOR conformance but cannot silently satisfy production execution mandates, production Work Item acceptance or business outcome authority."
+      ]
+    },
+    "EXECUTION": {
+      "targetClasses": [
+        "HUMAN_PROJECT"
+      ],
+      "purpose": "Execute a real HUMAN project Value Creation Stream under Factory, Operating Model and project authority.",
+      "projectValueStreamExecution": true,
+      "isolatedValidation": false,
+      "productionEvidenceEligible": true,
+      "humanOperationalWorkflowForbidden": true,
+      "requiredAgentActivationCapabilities": [
+        "HOST_NATIVE_AUTOMATIC",
+        "EXTERNAL_AUTOMATION"
+      ],
+      "forbiddenAgentActivationCapabilities": [
+        "HUMAN_MANUAL_TEST_ONLY",
+        "UNAVAILABLE"
+      ],
+      "rules": [
+        "All project mutations remain inside the HUMAN-selected project workspace.",
+        "Routine agent activation, continuation and result transport are system/runtime responsibilities.",
+        "Missing agent automation blocks AGENT dispatch with AGENT_RUNTIME_AUTOMATION_UNAVAILABLE; it must not become a HUMAN copy/paste or chat-wakeup task."
+      ]
+    }
+  },
+  "resolution": {
+    "resolveBeforeMutatingEffect": true,
+    "deriveBeforeAsk": true,
+    "rules": [
+      {
+        "when": "INTENT_TARGETS_SAFOR_FRAMEWORK_SCHEMA_OR_PACKAGE_DEFINITION_AND_TARGET_IS_DEVELOPMENT_WORKSPACE",
+        "mode": "DESIGN"
+      },
+      {
+        "when": "INTENT_IS_EXPLICIT_TEST_REPLAY_E2E_OR_CONFORMANCE_AND_TARGET_IS_ISOLATED",
+        "mode": "VALIDATION"
+      },
+      {
+        "when": "INTENT_EXECUTES_FACTORY_VALUE_STREAM_FOR_HUMAN_PROJECT",
+        "mode": "EXECUTION"
+      }
+    ],
+    "ambiguousOutcome": "HUMAN_DECISION_ALLOWED",
+    "ambiguityReason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+    "silentModeFallbackForbidden": true,
+    "silentExecutionToValidationDowngradeForbidden": true
+  },
+  "modeChange": {
+    "materialChangeRequiresGovernedTransition": true,
+    "executionToValidationRequiresExplicitValidationIntentAndIsolatedTarget": true,
+    "validationToExecutionRequiresHumanProjectWorkspaceAndExecutionAuthority": true,
+    "modeChangeCannotCreateAuthority": true,
+    "modeChangeCannotCreateProviderRights": true,
+    "modeChangeCannotCreateAgentRuntimeCapability": true
+  }
+}
