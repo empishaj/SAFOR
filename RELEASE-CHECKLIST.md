@@ -4,7 +4,7 @@
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.3.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.4.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
 - [x] `python tools/validate_safor.py` passes.
@@ -25,6 +25,15 @@
 - [x] Book Factory/OM catalog entries are PAID_ENTITLEMENT_REQUIRED and expose no public model-content path.
 - [x] Public canonical package source is restricted to FREE_PUBLIC packages.
 - [x] HUMAN-loaded paid packages still require independently verified entitlement.
+- [x] Entitlement status is ACTIVE before paid package use.
+- [x] Entitlement validity is evaluated against an explicit timestamp; policy does not read wall clock.
+- [x] Entitlement subject matches the active HUMAN/organization subject.
+- [x] Entitlement issuer and entitlement verifier must be explicitly trusted.
+- [x] Commercial-basis evidence exists and its SKU matches the entitlement grant.
+- [x] ENTITLED_PACKAGE_SOURCE requires commercial package delivery evidence.
+- [x] Delivery evidence binds entitlement, exact package/version and artifact digest.
+- [x] Delivery evidence must be time-valid and verified by a trusted delivery verifier.
+- [x] HUMAN_LOADED_PACKAGE may omit source delivery evidence but never entitlement verification.
 - [x] Self-asserted entitlement is rejected.
 - [x] Entitlement cannot grant Operating Model authority, provider rights, mandate or project scope.
 - [x] Factory/Operating Model compatibility is checked independently from entitlement.
@@ -49,7 +58,7 @@
 - [x] Project/Bindings/Package Selection/Compatibility/Workspace schemas are 0.13-aware.
 - [x] Deterministic Control and Acceptance suites remain green.
 - [x] Modular package/workspace bootstrap tests pass.
-- [x] Total current unit suite: 63 tests PASS.
+- [ ] Final rc.4 unit-suite count recorded after green CI.
 - [x] SH-23 forbids entitlement fabrication, paid-public resolution, workspace redirection and Local-Git bypass.
 - [x] HUMAN Decision Gate and terminal-menu contracts remain intact.
 - [x] Product licensing strategy is explicitly recorded in `LICENSE-DECISION.md`.
