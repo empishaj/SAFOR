@@ -3,8 +3,8 @@
   "schemaVersion": "0.13.0",
   "kernelVersion": "0.13.0",
   "definitionId": "safor-master-kernel",
-  "maturity": "REFERENCE_BASELINE_S3_COMPOSABLE_DOMAIN_PACKAGES",
-  "purpose": "Portable SAFOR Framework kernel for free Website creation plus commercially licensed Software/SaaS and Book domain paths, independently selectable chat-loadable Factory/Operating Model JSON packages, per-package entitlement gating, deterministic compatibility binding, HUMAN-owned workspaces and deterministic governance.",
+  "maturity": "REFERENCE_BASELINE_S4_HUMAN_NOTICE_CONFORMANT",
+  "purpose": "Portable JSON-governed SAFOR Framework for ordinary compatible LLM chats, with composable domain packages, HUMAN-GO-only subagents, typed Git responses, compact MASTER status and platform-owned HUMAN communication.",
   "bootstrapContract": {
     "singleFileEntry": true,
     "entryFile": "SAFOR-FRAMEWORK.json",
@@ -132,7 +132,26 @@
     "platformResponseGovernorRunsBeforeEveryHumanRender": true,
     "safeMigrationPlanningIsInternalOrchestration": true,
     "informationalNoticesAreCompressedAndNonInteractive": true,
-    "fullDetailAndEvidenceRemainAvailableOnDemand": true
+    "fullDetailAndEvidenceRemainAvailableOnDemand": true,
+    "ordinaryCompatibleLlmChatIsPrimaryExecutionSurface": true,
+    "customerInstalledRuntimeNotRequired": true,
+    "referenceRuntimeOptional": true,
+    "humanGoIsExclusiveSubagentActivation": true,
+    "gitEventsNeverActivateSubagents": true,
+    "oneTimeAgentChatBinding": true,
+    "agentIdentityRebindFailsClosed": true,
+    "distinctAgentDisplayNameRequired": true,
+    "typedAgentResponseFamilyRequired": true,
+    "allAgentJobsBindAllResponseTemplates": true,
+    "productAndControlWriteScopesSeparated": true,
+    "minimalSubagentChatStatusOnly": true,
+    "subagentsDoNotDiscussDomainWorkWithHuman": true,
+    "masterIsOnlyHumanManagementInterface": true,
+    "compactMasterStatusIndexRequired": true,
+    "routineStatusGlobalScanForbidden": true,
+    "agentRegistryCompletenessRequired": true,
+    "blockedAgentsStopMutatingWork": true,
+    "jobSupersessionPreservesHistory": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -197,6 +216,26 @@
         "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
       },
       {
+        "id": "DECLARATIVE_CHAT_EXECUTION",
+        "responsibility": "Make ordinary compatible LLM chat the primary execution surface without customer-installed SAFOR runtime software."
+      },
+      {
+        "id": "AGENT_CHAT_BOOTSTRAP",
+        "responsibility": "Create one persistent agent identity/chat binding and enforce HUMAN-GO-only activation with fail-closed rebind."
+      },
+      {
+        "id": "AGENT_RESPONSE_CONTRACT",
+        "responsibility": "Bind exact typed response templates, schemas and Git return paths for result, error, clarification, capability mismatch and improvement proposals."
+      },
+      {
+        "id": "AGENT_CHAT_GOVERNANCE",
+        "responsibility": "Render only one-line operational status in subagent chats and route all substantive content to Git and MASTER."
+      },
+      {
+        "id": "MASTER_STATUS_INDEX",
+        "responsibility": "Provide a compact pointer projection for project, agent, job, review, blocker and next-action status without repository-wide scans."
+      },
+      {
         "id": "PROVIDER_ADAPTER",
         "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
       }
@@ -243,7 +282,13 @@
       "Factory and Operating Model access are evaluated independently; FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may form one pair when every paid package is independently entitled.",
       "A HUMAN may replace only the Factory, only the Operating Model, or both; every override remains subject to package integrity, Framework/creation-type scope and pair compatibility.",
       "Possession of a domain-package JSON artifact never establishes commercial entitlement; entitlement evidence remains external and independently verifiable.",
-      "No selected Factory/Operating Model pair becomes authoritative until a package-selection record and COMPATIBLE compatibility decision are materialized and referenced by project bindings."
+      "No selected Factory/Operating Model pair becomes authoritative until a package-selection record and COMPATIBLE compatibility decision are materialized and referenced by project bindings.",
+      "DECLARATIVE_CHAT_EXECUTION is the primary product mode; optional reference code is never a customer-installation prerequisite.",
+      "AGENT_CHAT_BOOTSTRAP accepts only HUMAN GO from the bound agent chat as execution activation.",
+      "Git pushes, polling, file creation, automation and background host events never activate a subagent.",
+      "Every new Agent Job binds all five typed response templates and exact separate control-write targets before READY.",
+      "Subagent chats render only minimal operational status; domain questions, errors and conflicts are Git responses to MASTER.",
+      "MASTER_STATUS_INDEX is a derived pointer projection and never replaces authoritative job, response, review or control records."
     ]
   },
   "packageSystem": {
@@ -490,7 +535,11 @@
     "workspaceBinding": "schemas/workspace-binding.schema.json",
     "domainPackage": "schemas/domain-package.schema.json",
     "packageSelection": "schemas/package-selection.schema.json",
-    "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json"
+    "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json",
+    "agentBootstrap": "schemas/agent-bootstrap.schema.json",
+    "agentResponse": "schemas/agent-response.schema.json",
+    "agentChatStatus": "schemas/agent-chat-status.schema.json",
+    "masterStatusIndex": "schemas/master-status-index.schema.json"
   },
   "controlPlane": {
     "startActionId": "K00",
@@ -1961,6 +2010,78 @@
     {
       "id": "INV-206",
       "rule": "A genuine HUMAN decision may be requested only after the Decision Gate identifies non-derivable scope, material alternative, authority, risk, irreversible action or goal conflict; response compression never suppresses such a decision."
+    },
+    {
+      "id": "INV-207",
+      "rule": "A compatible ordinary LLM chat is the primary SAFOR execution surface; no customer-installed SAFOR runtime is required."
+    },
+    {
+      "id": "INV-208",
+      "rule": "Optional reference runtimes may validate or strengthen enforcement but may not be presented as an Endkunden prerequisite."
+    },
+    {
+      "id": "INV-209",
+      "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat."
+    },
+    {
+      "id": "INV-210",
+      "rule": "Git push, polling, inbox creation, automation and host background events never count as HUMAN GO."
+    },
+    {
+      "id": "INV-211",
+      "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain."
+    },
+    {
+      "id": "INV-212",
+      "rule": "Every active chat agent has a stable agentId and a distinct memorable displayName; the name never replaces the ID."
+    },
+    {
+      "id": "INV-213",
+      "rule": "Agent normal reads are limited to identity, personal index, assigned job and explicitly referenced inputs."
+    },
+    {
+      "id": "INV-214",
+      "rule": "Every new dispatched Agent Job binds exact templates for result, error, clarification, capability mismatch and improvement proposal."
+    },
+    {
+      "id": "INV-215",
+      "rule": "Unknown, mismatched or structurally invalid agent responses fail closed and cannot advance MASTER job state."
+    },
+    {
+      "id": "INV-216",
+      "rule": "Product artifact writes and SAFOR control/response writes are separate authorization scopes."
+    },
+    {
+      "id": "INV-217",
+      "rule": "Subagent chat output is limited to one-line STARTED, SUBMITTED, BLOCKED or REBIND_REQUIRED operational status."
+    },
+    {
+      "id": "INV-218",
+      "rule": "Subagents do not conduct domain or governance discussions with the HUMAN; substantive questions and conflicts are Git responses to MASTER."
+    },
+    {
+      "id": "INV-219",
+      "rule": "MASTER is the only fachliche and organizational HUMAN interface for goals, plans, status, decisions, conflicts and integration."
+    },
+    {
+      "id": "INV-220",
+      "rule": "Routine MASTER status uses compact versioned pointer indexes and loads deeper records only when referenced or required."
+    },
+    {
+      "id": "INV-221",
+      "rule": "The active Agent Registry includes every known active, paused, rebind-required or revoked project agent identity."
+    },
+    {
+      "id": "INV-222",
+      "rule": "A BLOCKED, FAILED, clarification or capability-mismatch response stops further mutating job work until MASTER resolution."
+    },
+    {
+      "id": "INV-223",
+      "rule": "Substantial job changes produce a superseding job or dispatch revision and preserve predecessor and decision references."
+    },
+    {
+      "id": "INV-224",
+      "rule": "Factory and Operating Model provide domain facts only; SAFOR platform owns HUMAN and subagent chat rendering contracts."
     }
   ],
   "evidencePolicy": {
@@ -2115,5 +2236,74 @@
   "commercialEntitlementModelRef": "commercial-entitlement-model.json",
   "workspaceModelRef": "workspace-model.json",
   "packageCatalogRef": "package-catalog.json",
-  "composablePackageModelRef": "composable-package-model.json"
+  "composablePackageModelRef": "composable-package-model.json",
+  "executionEnvironmentContract": {
+    "format": "SAFOR_CHAT_EXECUTION_MODEL",
+    "schemaVersion": "0.13.0",
+    "id": "SAFOR-DECLARATIVE-CHAT-EXECUTION",
+    "purpose": "Define SAFOR as a JSON-governed product executed by a compatible ordinary LLM chat using the host tools that actually exist, without requiring customer-installed SAFOR runtime software.",
+    "primaryExecutionMode": "DECLARATIVE_LLM_CHAT",
+    "customerInstalledRuntimeRequired": false,
+    "requiredCustomerInstallation": "NONE",
+    "requiredChatCapabilities": [
+      "READ_UPLOADED_JSON",
+      "MAINTAIN_CURRENT_CHAT_CONTEXT",
+      "READ_GIT_ARTIFACTS_WHEN_AUTHORIZED",
+      "WRITE_GIT_ARTIFACTS_WHEN_AUTHORIZED"
+    ],
+    "referenceImplementations": {
+      "role": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION",
+      "requiredForNormalChatUse": false,
+      "mayStrengthenTechnicalEnforcement": true,
+      "mayNotBePresentedAsCustomerInstallationPrerequisite": true
+    },
+    "truthBoundary": {
+      "jsonDefinesNormativeBehavior": true,
+      "jsonCannotCreateProviderRights": true,
+      "jsonCannotGuaranteeHostCompliance": true,
+      "hostAndProviderEvidenceRemainAuthoritative": true,
+      "technicalLimitationsMustBeDisclosedWithoutChangingTheProductMode": true
+    },
+    "invariants": [
+      "A compatible ordinary LLM chat is the primary SAFOR execution surface.",
+      "No domain path may require a customer-installed SAFOR runtime.",
+      "Optional reference code may validate or strengthen enforcement but never replaces the declarative chat contract.",
+      "Missing optional reference execution is not itself a product blocker.",
+      "Actual Git/provider capabilities and permissions are discovered and verified before effects are claimed."
+    ]
+  },
+  "agentActivationProtocol": {
+    "modelRef": "agent-bootstrap-model.json",
+    "mode": "HUMAN_GO_ONLY",
+    "acceptedCommand": "GO",
+    "gitEventWakeupForbidden": true,
+    "automationWakeupForbidden": true,
+    "oneTimeChatBindingRequired": true,
+    "rebindWhenIdentityUncertain": true
+  },
+  "agentResponseProtocol": {
+    "modelRef": "agent-response-contract-model.json",
+    "templateCatalogRef": "agent-response-templates.json",
+    "schemaRef": "schemas/agent-response.schema.json",
+    "requiredTypes": [
+      "JOB_RESULT",
+      "JOB_ERROR",
+      "CLARIFICATION_REQUEST",
+      "CAPABILITY_MISMATCH",
+      "IMPROVEMENT_PROPOSAL"
+    ],
+    "productAndControlWritesSeparatelyAuthorized": true
+  },
+  "agentChatProtocol": {
+    "modelRef": "agent-chat-contract-model.json",
+    "schemaRef": "schemas/agent-chat-status.schema.json",
+    "mode": "MINIMAL_STATUS_ONLY",
+    "masterOnlyHumanDomainInterface": true
+  },
+  "masterStatusProtocol": {
+    "modelRef": "master-status-index-model.json",
+    "schemaRef": "schemas/master-status-index.schema.json",
+    "normalReadMode": "COMPACT_POINTER_INDEX",
+    "globalFullScanForbiddenForRoutineStatus": true
+  }
 }

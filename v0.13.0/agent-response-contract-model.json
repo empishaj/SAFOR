@@ -1,0 +1,59 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_CONTRACT_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-TYPED-AGENT-TO-MASTER-RESPONSES",
+  "purpose": "Require each agent job to bind concrete result, error, clarification, capability-mismatch and improvement-proposal templates plus exact Git write targets.",
+  "schemaRef": "schemas/agent-response.schema.json",
+  "templateCatalogRef": "agent-response-templates.json",
+  "requiredResponseTypes": [
+    "JOB_RESULT",
+    "JOB_ERROR",
+    "CLARIFICATION_REQUEST",
+    "CAPABILITY_MISMATCH",
+    "IMPROVEMENT_PROPOSAL"
+  ],
+  "commonBindingFields": [
+    "responseId",
+    "responseType",
+    "projectId",
+    "workPackageId",
+    "jobId",
+    "agentId",
+    "identityRevision",
+    "createdAt",
+    "contractRef",
+    "responseTemplateRef",
+    "targetMasterRef",
+    "lifecycleStatus",
+    "summary",
+    "affectedRefs",
+    "evidenceRefs",
+    "masterDecisionRef",
+    "supersedesResponseId",
+    "payload"
+  ],
+  "writeContract": {
+    "productAndControlTargetsSeparatelyAuthorized": true,
+    "targetRepositoryRequired": true,
+    "targetBranchRequired": true,
+    "targetPathRequired": true,
+    "allowedOperationsRequired": true,
+    "providerReadbackRequired": true,
+    "responseIndexUpdateOnlyWhenJobAuthorizes": true
+  },
+  "conflictLifecycle": [
+    "DETECTED",
+    "PERSISTED",
+    "REFERENCED_IN_AGENT_STATUS",
+    "WAITING_MASTER",
+    "MASTER_DECIDED",
+    "SUPERSEDED_OR_RESUMED"
+  ],
+  "failClosedRules": [
+    "Unknown response types are invalid.",
+    "Missing exact template references make the job non-dispatchable.",
+    "A response with mismatched job, agent or identity revision is rejected.",
+    "A blocked response forbids further product mutation until MASTER issues a new or rework job.",
+    "Substantial job changes create a new job or dispatch revision and preserve predecessor references."
+  ]
+}

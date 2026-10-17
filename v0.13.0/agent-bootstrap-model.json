@@ -1,0 +1,79 @@
+{
+  "format": "SAFOR_AGENT_BOOTSTRAP_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-ONE-TIME-AGENT-CHAT-BINDING",
+  "purpose": "Prepare one persistent chat-bound subagent identity once, then activate every assigned job only through an explicit HUMAN GO in the same bound chat.",
+  "identityContract": {
+    "stableAgentIdRequired": true,
+    "distinctDisplayNameRequired": true,
+    "displayNamePurpose": "Memorable HUMAN-facing name; never replaces agentId.",
+    "persistentWorkspaceRequired": true,
+    "personalInboxIndexRequired": true,
+    "roleAndCapabilityProfileRefsRequired": true
+  },
+  "oneTimeInitializationPrompt": {
+    "createdBy": "MASTER",
+    "insertedBy": "HUMAN_ONCE",
+    "requiredFields": [
+      "CONTROL_REPOSITORY",
+      "PROJECT_ID",
+      "AGENT_ID",
+      "DISPLAY_NAME",
+      "IDENTITY_REF",
+      "WORKSPACE_ROOT",
+      "INBOX_INDEX_REF",
+      "START_PROTOCOL_REF",
+      "COMMUNICATION_BOUNDARY_REF"
+    ],
+    "jobPromptTransportAfterBinding": "FORBIDDEN"
+  },
+  "activationContract": {
+    "mode": "HUMAN_GO_ONLY",
+    "acceptedCommand": "GO",
+    "casePolicy": "CASE_INSENSITIVE_TRIMMED_EXACT_TOKEN",
+    "forbiddenTriggers": [
+      "GIT_PUSH",
+      "GIT_POLL",
+      "INBOX_FILE_CREATION",
+      "AUTOMATION_EVENT",
+      "HOST_BACKGROUND_WAKEUP",
+      "MASTER_MESSAGE_IN_ANOTHER_CHAT"
+    ],
+    "rule": "No job claim, RUNNING transition or product write may occur before HUMAN GO is observed in the bound agent chat."
+  },
+  "rebindContract": {
+    "failClosed": true,
+    "triggers": [
+      "CHAT_HISTORY_MISSING",
+      "CHAT_BINDING_UNCERTAIN",
+      "AGENT_IDENTITY_REFERENCE_UNRESOLVABLE",
+      "IDENTITY_REVISION_MISMATCH",
+      "CONTROL_REPOSITORY_UNAVAILABLE",
+      "HUMAN_REPORTS_NEW_AGENT_CHAT"
+    ],
+    "requiredOutcome": "REBIND_REQUIRED",
+    "forbidden": [
+      "GUESS_AGENT_IDENTITY",
+      "CLAIM_JOB",
+      "WRITE_PRODUCT_REPOSITORY",
+      "WRITE_CONTROL_RESPONSE"
+    ],
+    "resolution": "MASTER prepares a new one-time binding; HUMAN inserts it in the intended chat."
+  },
+  "activationSteps": [
+    "VERIFY_BOUND_CHAT_IDENTITY",
+    "VERIFY_HUMAN_GO",
+    "LOAD_IDENTITY",
+    "LOAD_AGENT_STATE",
+    "LOAD_PERSONAL_INBOX_INDEX",
+    "SELECT_DISCOVERABLE_JOB",
+    "READ_AUTHORITATIVE_JOB",
+    "VERIFY_JOB_AND_HUMAN_PROJECTION_BLOBS",
+    "READ_MASTER_JOB_STATE",
+    "VERIFY_ASSIGNMENT_ROLE_SKILLS_CONTEXT_INPUTS_RIGHTS_AND_WRITE_TARGETS",
+    "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+    "EXECUTE_ONLY_CLAIMED_JOB",
+    "SUBMIT_TYPED_RESPONSE_AND_EVIDENCE",
+    "RENDER_MINIMAL_AGENT_CHAT_STATUS"
+  ]
+}

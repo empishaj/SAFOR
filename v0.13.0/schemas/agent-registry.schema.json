@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-registry:0.13.0",
+  "title": "SAFOR Complete Agent Registry 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "revision",
+    "completeness",
+    "agents",
+    "updatedAt",
+    "providerReadbackRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_REGISTRY"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "completeness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allKnownAgentIdentitiesIncluded",
+        "legacyIdentityRefs"
+      ],
+      "properties": {
+        "allKnownAgentIdentitiesIncluded": {
+          "const": true
+        },
+        "legacyIdentityRefs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "uniqueItems": true
+        }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/agentEntry"
+      }
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "providerReadbackRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "$defs": {
+    "agentEntry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agentId",
+        "displayName",
+        "identityRevision",
+        "identityRef",
+        "stateRef",
+        "inboxIndexRef",
+        "responseIndexRef",
+        "workspaceRoot",
+        "registeredAt",
+        "registeredBy",
+        "status",
+        "scheduling"
+      ],
+      "properties": {
+        "agentId": {
+          "type": "string",
+          "minLength": 3
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 2
+        },
+        "identityRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "identityRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stateRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "inboxIndexRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "responseIndexRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workspaceRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "registeredBy": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "ACTIVE",
+            "PAUSED",
+            "REBIND_REQUIRED",
+            "REVOKED"
+          ]
+        },
+        "scheduling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dispatchEnabled",
+            "maxConcurrentJobs"
+          ],
+          "properties": {
+            "dispatchEnabled": {
+              "type": "boolean"
+            },
+            "maxConcurrentJobs": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 32
+            }
+          }
+        }
+      }
+    }
+  }
+}

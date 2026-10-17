@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.13.0-rc.8
+
+- Defines ordinary compatible LLM chat as SAFOR's primary execution surface and removes any customer-runtime installation prerequisite.
+- Enforces one-time chat-bound agent identity and exclusive HUMAN `GO` activation; Git and automation wake-up are forbidden.
+- Adds complete typed Agent-to-MASTER response contracts for result, error, clarification, capability mismatch and improvement proposals.
+- Adds platform-owned minimal one-line subagent chat status and routes all substantive content to versioned Git artifacts for MASTER.
+- Adds a compact MASTER status index, pointer-first reads, complete active agent registry requirements and fail-closed stale-pointer handling.
+- Adds new schemas, template catalog, reference validators, self-healing profiles, conformance assertions and regression tests.
+- Rebuilds the generic and all three domain Framework distributions as rc.8.
+
 ## 0.13.0-rc.7
 
 - Makes HUMAN-visible communication an exclusive SAFOR platform responsibility.

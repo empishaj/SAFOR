@@ -35,7 +35,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             self.om,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -51,7 +51,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             premium,
             self.om,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -65,7 +65,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             premium,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -80,7 +80,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             foreign,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -96,7 +96,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             foreign,
             self.om,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -127,7 +127,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             book_factory,
             engineering_om,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "BOOK",
             "BOOK_CREATION",
         )
@@ -143,7 +143,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             incomplete,
             self.om,
-            "0.13.0-rc.7",
+            "0.13.0-rc.8",
             "WEBSITE",
             "WEBSITE_CREATION",
         )

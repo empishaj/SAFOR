@@ -1,0 +1,38 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.13.0",
+  "schemaRef": "schemas/agent-response.schema.json",
+  "targetOwner": "MASTER",
+  "persistence": "VERSIONED_GIT_ARTIFACT",
+  "templateId": "improvement_proposal",
+  "responseType": "IMPROVEMENT_PROPOSAL",
+  "defaultLifecycleStatus": "PROPOSED",
+  "requiredPayloadFields": [
+    "problem",
+    "proposal",
+    "expectedBenefit",
+    "risk",
+    "affectedProcess",
+    "suggestedMasterAction"
+  ],
+  "commonRequiredFields": [
+    "responseId",
+    "responseType",
+    "projectId",
+    "workPackageId",
+    "jobId",
+    "agentId",
+    "identityRevision",
+    "createdAt",
+    "contractRef",
+    "responseTemplateRef",
+    "targetMasterRef",
+    "lifecycleStatus",
+    "summary",
+    "affectedRefs",
+    "evidenceRefs",
+    "masterDecisionRef",
+    "supersedesResponseId",
+    "payload"
+  ]
+}

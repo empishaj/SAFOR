@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-bootstrap:0.13.0",
+  "title": "SAFOR Agent Chat Bootstrap 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "displayName",
+    "identityRef",
+    "controlRepository",
+    "workspaceRoot",
+    "inboxIndexRef",
+    "startProtocolRef",
+    "communicationBoundaryRef",
+    "bindingRevision"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_CHAT_BOOTSTRAP"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80
+    },
+    "identityRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "controlRepository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workspaceRoot": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inboxIndexRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "startProtocolRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "communicationBoundaryRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bindingRevision": {
+      "type": "integer",
+      "minimum": 1
+    }
+  }
+}

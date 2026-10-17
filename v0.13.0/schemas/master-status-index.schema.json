@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:master-status-index:0.13.0",
+  "title": "SAFOR Compact MASTER Status Index 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "revision",
+    "authoritativeControlStateRef",
+    "registryRef",
+    "schedulerStateRef",
+    "generatedAt",
+    "providerReadbackRef",
+    "agents",
+    "jobs",
+    "reviews",
+    "blockers",
+    "nextHumanActions",
+    "stalePointers"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_MASTER_STATUS_INDEX"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "authoritativeControlStateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registryRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schedulerStateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "providerReadbackRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/agent"
+      }
+    },
+    "jobs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/job"
+      }
+    },
+    "reviews": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "blockers": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "nextHumanActions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "stalePointers": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    }
+  },
+  "$defs": {
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agentId",
+        "displayName",
+        "status",
+        "currentJobId",
+        "lastResponseRef",
+        "startRequired"
+      ],
+      "properties": {
+        "agentId": {
+          "type": "string"
+        },
+        "displayName": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string"
+        },
+        "currentJobId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastResponseRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "startRequired": {
+          "type": "boolean"
+        }
+      }
+    },
+    "job": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "agentId",
+        "lifecycleStatus",
+        "jobRef",
+        "responseRef",
+        "reviewRef"
+      ],
+      "properties": {
+        "jobId": {
+          "type": "string"
+        },
+        "agentId": {
+          "type": "string"
+        },
+        "lifecycleStatus": {
+          "type": "string"
+        },
+        "jobRef": {
+          "type": "string"
+        },
+        "responseRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reviewRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

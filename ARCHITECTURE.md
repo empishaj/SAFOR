@@ -368,3 +368,7 @@ In rc.6, `SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json` ar
 This does **not** turn the public repository into the commercial production source. The production catalog still exposes no public paid-model path and resolves commercial production versions only through `ENTITLED_PACKAGE_SOURCE`.
 
 For evaluation, the embedded modules are treated as `HUMAN_LOADED_PACKAGE` and access is supplied separately by the matching public test access bundle. Possession of the Framework file alone remains insufficient.
+
+## HUMAN Notice orchestration contract
+
+The primary execution surface is an ordinary compatible LLM chat with the SAFOR JSON loaded. The HUMAN communicates domain and governance matters only with MASTER. A chat-bound subagent is initialized once, then accepts only explicit HUMAN `GO`, reads identity → personal index → job → pinned inputs, and writes one of five typed responses to Git. Its chat surface is a one-line operational projection. MASTER uses a compact status index and dereferences detailed records only when necessary. Product and control writes are separately authorized.

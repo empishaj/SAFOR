@@ -342,6 +342,42 @@
       "automaticRepair": "RELOAD_OR_REVERIFY_THE_SAME_SELECTED_PACKAGE_BYTES_AND_REEVALUATE_DOMAIN_AND_BIDIRECTIONAL_COMPATIBILITY_WITHOUT_CHANGING_DOMAIN_OR_COUNTERPART_SELECTION",
       "defaultRetryBudget": 1,
       "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
+    },
+    {
+      "id": "SH-25",
+      "name": "AGENT_IDENTITY_BINDING_UNCERTAIN",
+      "examples": [
+        "chat history missing",
+        "identity revision mismatch",
+        "agent cannot prove bound chat identity"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true,
+      "requiredOutcome": "REBIND_REQUIRED"
+    },
+    {
+      "id": "SH-26",
+      "name": "AGENT_RESPONSE_CONTRACT_INVALID",
+      "examples": [
+        "unknown response type",
+        "missing template reference",
+        "job/agent binding mismatch"
+      ],
+      "automaticRepair": "RESTORE_TEMPLATE_OR_REISSUE_JOB_BEFORE_EXECUTION",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_MASTER_CANNOT_REISSUE_WITHOUT_NEW_DECISION"
+    },
+    {
+      "id": "SH-27",
+      "name": "MASTER_STATUS_INDEX_STALE",
+      "examples": [
+        "stale response pointer",
+        "registry/index mismatch"
+      ],
+      "automaticRepair": "REGENERATE_DERIVED_INDEX_FROM_AUTHORITATIVE_POINTERS",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
     }
   ],
   "eligibilityRules": [

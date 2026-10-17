@@ -1,0 +1,411 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-response:0.13.0",
+  "title": "SAFOR Typed Agent-to-MASTER Response 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "responseId",
+    "responseType",
+    "projectId",
+    "workPackageId",
+    "jobId",
+    "agentId",
+    "identityRevision",
+    "createdAt",
+    "contractRef",
+    "responseTemplateRef",
+    "targetMasterRef",
+    "lifecycleStatus",
+    "summary",
+    "affectedRefs",
+    "evidenceRefs",
+    "masterDecisionRef",
+    "supersedesResponseId",
+    "payload"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_RESPONSE"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "responseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "responseType": {
+      "enum": [
+        "JOB_RESULT",
+        "JOB_ERROR",
+        "CLARIFICATION_REQUEST",
+        "CAPABILITY_MISMATCH",
+        "IMPROVEMENT_PROPOSAL"
+      ]
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workPackageId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contractRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "responseTemplateRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetMasterRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lifecycleStatus": {
+      "enum": [
+        "SUBMITTED",
+        "BLOCKED",
+        "FAILED",
+        "PROPOSED"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 500
+    },
+    "affectedRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "masterDecisionRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "supersedesResponseId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "responseType": {
+            "const": "JOB_RESULT"
+          }
+        },
+        "required": [
+          "responseType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lifecycleStatus": {
+            "const": "SUBMITTED"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "artifactRefs",
+              "gitTrace",
+              "verification",
+              "openItems"
+            ],
+            "properties": {
+              "artifactRefs": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "gitTrace": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "verification": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              },
+              "openItems": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "responseType": {
+            "const": "JOB_ERROR"
+          }
+        },
+        "required": [
+          "responseType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lifecycleStatus": {
+            "const": "FAILED"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "errorClass",
+              "failedStep",
+              "reproducibleFinding",
+              "blockedArtifacts",
+              "suggestedMasterAction"
+            ],
+            "properties": {
+              "errorClass": {
+                "type": "string",
+                "minLength": 1
+              },
+              "failedStep": {
+                "type": "string",
+                "minLength": 1
+              },
+              "reproducibleFinding": {
+                "type": "string",
+                "minLength": 1
+              },
+              "blockedArtifacts": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "suggestedMasterAction": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "responseType": {
+            "const": "CLARIFICATION_REQUEST"
+          }
+        },
+        "required": [
+          "responseType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lifecycleStatus": {
+            "const": "BLOCKED"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "question",
+              "affectedJobFields",
+              "conflictType",
+              "options",
+              "suggestedMasterAction"
+            ],
+            "properties": {
+              "question": {
+                "type": "string",
+                "minLength": 1
+              },
+              "affectedJobFields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "conflictType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "suggestedMasterAction": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "responseType": {
+            "const": "CAPABILITY_MISMATCH"
+          }
+        },
+        "required": [
+          "responseType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lifecycleStatus": {
+            "const": "BLOCKED"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "expectedCapabilities",
+              "availableCapabilities",
+              "affectedScope",
+              "risk",
+              "suggestedMasterAction"
+            ],
+            "properties": {
+              "expectedCapabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "minItems": 1
+              },
+              "availableCapabilities": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "affectedScope": {
+                "type": "string",
+                "minLength": 1
+              },
+              "risk": {
+                "type": "string",
+                "minLength": 1
+              },
+              "suggestedMasterAction": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "responseType": {
+            "const": "IMPROVEMENT_PROPOSAL"
+          }
+        },
+        "required": [
+          "responseType"
+        ]
+      },
+      "then": {
+        "properties": {
+          "lifecycleStatus": {
+            "const": "PROPOSED"
+          },
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "problem",
+              "proposal",
+              "expectedBenefit",
+              "risk",
+              "affectedProcess",
+              "suggestedMasterAction"
+            ],
+            "properties": {
+              "problem": {
+                "type": "string",
+                "minLength": 1
+              },
+              "proposal": {
+                "type": "string",
+                "minLength": 1
+              },
+              "expectedBenefit": {
+                "type": "string",
+                "minLength": 1
+              },
+              "risk": {
+                "type": "string",
+                "minLength": 1
+              },
+              "affectedProcess": {
+                "type": "string",
+                "minLength": 1
+              },
+              "suggestedMasterAction": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

@@ -45,8 +45,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.7":
-    fail(f"VERSION must be 0.13.0-rc.7, got {version}.")
+if version != "0.13.0-rc.8":
+    fail(f"VERSION must be 0.13.0-rc.8, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
@@ -95,6 +95,16 @@ required_modules = {
     "schemaPackageCatalog","schemaEntitlement","schemaWorkspaceBinding","conformance",
     "composablePackageModel","schemaDomainPackage","schemaPackageSelection",
     "schemaPackageCompatibilityDecision",
+    "chatExecution",
+    "agentBootstrap",
+    "agentResponseContract",
+    "agentResponseTemplates",
+    "agentChatContract",
+    "masterStatusIndex",
+    "schemaAgentBootstrap",
+    "schemaAgentResponse",
+    "schemaAgentChatStatus",
+    "schemaMasterStatusIndex",
 }
 missing = sorted(required_modules - set(modules))
 extra = sorted(set(modules) - required_modules)
@@ -102,8 +112,8 @@ if missing:
     fail("Missing embedded Framework modules: " + ", ".join(missing))
 if extra:
     fail("Unexpected embedded Framework modules: " + ", ".join(extra))
-if len(modules) != 65:
-    fail(f"Expected exactly 65 embedded Framework modules, got {len(modules)}.")
+if len(modules) != 75:
+    fail(f"Expected exactly 75 embedded Framework modules, got {len(modules)}.")
 
 profiles = modules.get("moduleSelfHealing", {}).get("content", {}).get("moduleProfiles", [])
 profile_by_key = {p.get("moduleKey"): p for p in profiles}
@@ -159,6 +169,7 @@ for key in (
     "commercialEntitlement","packageCatalog","schemaBindings","schemaPackageCatalog",
     "schemaEntitlement","conformance","composablePackageModel","schemaDomainPackage",
     "schemaPackageSelection","schemaPackageCompatibilityDecision",
+    "chatExecution","agentBootstrap","agentResponseContract","agentResponseTemplates","agentChatContract","masterStatusIndex","agentWorkspace","agentJobContract","multiAgentScheduler","schemaAgentRegistry","schemaAgentIdentity","schemaAgentInboxIndex","schemaAgentState","schemaAgentJob","schemaAgentJobState","schemaAgentBootstrap","schemaAgentResponse","schemaAgentChatStatus","schemaMasterStatusIndex",
 ):
     if not str(modules.get(key, {}).get("sourcePath", "")).startswith("v0.13.0/"):
         fail(f"0.13 module {key} must come from v0.13.0 source.")
@@ -210,6 +221,25 @@ required_principles = (
     "safeMigrationPlanningIsInternalOrchestration",
     "informationalNoticesAreCompressedAndNonInteractive",
     "fullDetailAndEvidenceRemainAvailableOnDemand",
+    "ordinaryCompatibleLlmChatIsPrimaryExecutionSurface",
+    "customerInstalledRuntimeNotRequired",
+    "referenceRuntimeOptional",
+    "humanGoIsExclusiveSubagentActivation",
+    "gitEventsNeverActivateSubagents",
+    "oneTimeAgentChatBinding",
+    "agentIdentityRebindFailsClosed",
+    "distinctAgentDisplayNameRequired",
+    "typedAgentResponseFamilyRequired",
+    "allAgentJobsBindAllResponseTemplates",
+    "productAndControlWriteScopesSeparated",
+    "minimalSubagentChatStatusOnly",
+    "subagentsDoNotDiscussDomainWorkWithHuman",
+    "masterIsOnlyHumanManagementInterface",
+    "compactMasterStatusIndexRequired",
+    "routineStatusGlobalScanForbidden",
+    "agentRegistryCompletenessRequired",
+    "blockedAgentsStopMutatingWork",
+    "jobSupersessionPreservesHistory",
 )
 for principle in required_principles:
     if kernel.get("kernelPrinciples", {}).get(principle) is not True:
@@ -241,8 +271,53 @@ for field in ("responseClass", "governance", "renderingContract"):
 if "terminalMenu" in required_response_fields:
     fail("HUMAN response schema must not require terminalMenu for informational notices.")
 
+# HUMAN Notice MASTER-subagent conformance.
+chat_execution = modules.get("chatExecution", {}).get("content", {})
+if chat_execution.get("primaryExecutionMode") != "DECLARATIVE_LLM_CHAT":
+    fail("Ordinary LLM chat must be the primary execution mode.")
+if chat_execution.get("customerInstalledRuntimeRequired") is not False:
+    fail("Customer-installed SAFOR runtime must not be required.")
+if chat_execution.get("referenceImplementations", {}).get("requiredForNormalChatUse") is not False:
+    fail("Reference implementations must remain optional for normal chat use.")
+agent_bootstrap = modules.get("agentBootstrap", {}).get("content", {})
+activation = agent_bootstrap.get("activationContract", {})
+if activation.get("mode") != "HUMAN_GO_ONLY" or activation.get("acceptedCommand") != "GO":
+    fail("Subagent activation must be HUMAN_GO_ONLY with GO command.")
+for forbidden in ("GIT_PUSH", "GIT_POLL", "INBOX_FILE_CREATION", "AUTOMATION_EVENT", "HOST_BACKGROUND_WAKEUP"):
+    if forbidden not in activation.get("forbiddenTriggers", []):
+        fail(f"Missing forbidden agent trigger {forbidden}.")
+response_model = modules.get("agentResponseContract", {}).get("content", {})
+required_response_types = {"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}
+if set(response_model.get("requiredResponseTypes", [])) != required_response_types:
+    fail("Typed agent response family mismatch.")
+templates = modules.get("agentResponseTemplates", {}).get("content", {}).get("templates", {})
+if set(templates) != {"job_result", "job_error", "clarification_request", "capability_mismatch", "improvement_proposal"}:
+    fail("Agent response template catalog mismatch.")
+chat_contract = modules.get("agentChatContract", {}).get("content", {})
+if chat_contract.get("owner") != "SAFOR_PLATFORM":
+    fail("Agent chat contract owner must be SAFOR_PLATFORM.")
+if chat_contract.get("rendering", {}).get("singleLine") is not True:
+    fail("Subagent chat status must be single-line.")
+if chat_contract.get("rendering", {}).get("menuForbidden") is not True:
+    fail("Subagent chat menus must be forbidden.")
+master_index = modules.get("masterStatusIndex", {}).get("content", {})
+if "SCAN_COMPLETE_PROJECT_TREE" not in master_index.get("forbiddenNormalBehavior", []):
+    fail("Routine MASTER status must forbid complete project-tree scans.")
+identity_schema = modules.get("schemaAgentIdentity", {}).get("content", {})
+identity_required = set(identity_schema.get("required", []))
+for field in ("displayName", "bootstrapBinding", "activationContract", "rebindPolicy"):
+    if field not in identity_required:
+        fail(f"Agent identity schema must require {field}.")
+if identity_schema.get("properties", {}).get("activationContract", {}).get("properties", {}).get("activationMode", {}).get("const") != "HUMAN_GO_ONLY":
+    fail("Agent identity activationMode must be HUMAN_GO_ONLY.")
+job_schema = modules.get("schemaAgentJob", {}).get("content", {})
+job_required = set(job_schema.get("required", []))
+for field in ("domainContext", "responseContract", "agentChatContract"):
+    if field not in job_required:
+        fail(f"Agent job schema must require {field}.")
+
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for n in range(37, 207):
+for n in range(37, 225):
     inv = f"INV-{n:03d}"
     if inv not in invariants:
         fail(f"Missing invariant {inv}.")

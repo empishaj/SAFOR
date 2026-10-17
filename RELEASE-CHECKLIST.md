@@ -4,7 +4,7 @@
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.8.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
 - [x] `python tools/build_domain_framework.py --check` reproduces all public domain Framework distributions.
@@ -23,7 +23,7 @@
 - [x] `python tools/validate_safor.py` passes.
 - [x] CI is green on the tested 0.13 branch head.
 - [x] Public Framework embeds no Factory/Operating Model domain package content.
-- [x] Exactly 65 embedded Framework modules have exactly 65 recovery profiles.
+- [x] Exactly 75 embedded Framework modules have exactly 75 recovery profiles.
 - [x] All embedded references resolve.
 - [x] WEBSITE starter catalog entries are FREE_PUBLIC.
 - [x] Website Factory default is `safor.factory.website-delivery@1.1.0`.
@@ -103,3 +103,13 @@
 - [ ] Scenario R — LOCAL_GIT HUMAN Project Workspace PASS.
 - [ ] Scenario S — platform-owned HUMAN response governor host E2E PASS.
 - [ ] Full governance transition migration completed or remaining non-executable boundary explicitly accepted for GA scope.
+
+## HUMAN Notice conformance
+
+- [x] Ordinary compatible LLM chat is the primary product mode.
+- [x] No customer-installed SAFOR runtime is required.
+- [x] Subagents are activated only through HUMAN `GO`.
+- [x] Every new job binds all five typed response templates.
+- [x] Subagent chat output is minimal status only.
+- [x] MASTER status uses compact versioned pointer indexes.
+- [x] Negative tests reject Git wake-up, identity ambiguity, invalid responses and scope mixing.

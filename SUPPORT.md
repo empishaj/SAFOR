@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.13.0-rc.7 is a **Release Candidate**.
+SAFOR v0.13.0-rc.8 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -21,9 +21,13 @@ Additional Factories are not implicitly supported until they are published, boun
 
 Actual usability depends on the chat host exposing the required provider connection and capabilities.
 
+## Execution environment
+
+SAFOR's primary product mode is declarative execution in an ordinary compatible LLM chat. No customer-installed SAFOR runtime is required. Code under `runtime/` is optional reference and host-integration support. Actual host tools and provider permissions remain authoritative.
+
 ## Agent runtime boundary
 
-SAFOR can persist agent identities and repository-native jobs, but a normal chat is not assumed to wake automatically when a new inbox job appears. A HUMAN, automation or host-supported activation mechanism must activate the agent runtime. After activation, the job contract comes from the repository rather than HUMAN prompt copying.
+SAFOR persists chat-bound agent identities and repository-native jobs. A subagent starts work only when the HUMAN types `GO` in that already bound agent chat. Git pushes, polling, inbox creation, automation and host background events never activate an agent. After the one-time identity bootstrap, the job contract comes from the repository and the HUMAN never transports the job prompt.
 
 ## What SAFOR does not promise
 

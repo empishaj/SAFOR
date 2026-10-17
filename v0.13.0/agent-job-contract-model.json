@@ -1,0 +1,126 @@
+{
+  "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT-0.13",
+  "purpose": "Define the immutable self-describing job contract issued by MASTER to one persistent chat-bound agent, including exact domain context, separate product/control write scopes and all typed response templates.",
+  "authority": {
+    "authoritativeArtifact": "agents/{agentId}/inbox/{jobId}.json",
+    "humanProjection": "agents/{agentId}/inbox/{jobId}.md",
+    "rule": "The JSON contract is authoritative. The Markdown file is a derived HUMAN-readable projection and may never override or expand the JSON contract."
+  },
+  "creationProtocol": [
+    "DERIVE_JOB_FROM_APPROVED_ATOMIC_WORK_ITEM",
+    "ALLOCATE_GLOBALLY_UNIQUE_JOB_ID_AND_HUMAN_JOB_KEY",
+    "BIND_PACKAGE_WORK_ITEM_AND_SEQUENCE_LINEAGE",
+    "CAPTURE_MASTER_PROVENANCE_AND_TIMESTAMP",
+    "BIND_AGENT_IDENTITY_REVISION",
+    "BIND_EXPLICIT_ROLE_CONTRACT",
+    "BIND_VERSIONED_SKILL_CONTRACTS",
+    "PIN_IMMUTABLE_INPUTS",
+    "SNAPSHOT_AUTHORIZATION_RESOURCE_ACCESS_AND_GIT_WORKSPACES",
+    "BIND_DISPATCH_WAVE_AND_RESOURCE_LEASES",
+    "DECLARE_MACHINE_HUMAN_EVIDENCE_AND_AUDIT_RETURN_TARGETS",
+    "DECLARE_ACCEPTANCE_REVIEW_AND_EVIDENCE_REQUIREMENTS",
+    "RENDER_HUMAN_JOB_MARKDOWN",
+    "COMPUTE_HUMAN_PROJECTION_BLOB_SHA",
+    "WRITE_JSON_AND_MARKDOWN",
+    "PROVIDER_READBACK_BOTH_ARTIFACTS",
+    "ONLY_THEN_MARK_MASTER_JOB_READY_AND_PUBLISH_INBOX_INDEX",
+    "BIND_DOMAIN_FACTORY_OPERATING_MODEL_AND_PROCESS_CONTEXT",
+    "BIND_SEPARATE_PRODUCT_AND_CONTROL_WRITE_SCOPES",
+    "BIND_ALL_TYPED_RESPONSE_TEMPLATES",
+    "BIND_MINIMAL_AGENT_CHAT_CONTRACT",
+    "VERIFY_HUMAN_GO_ONLY_ACTIVATION_CONTRACT"
+  ],
+  "identifierContract": {
+    "jobId": "UUIDv7 preferred and required by the v0.8 schema for time-ordered globally unique job identity.",
+    "jobKey": "Deterministic HUMAN/Git-safe operational key. It is not the authoritative identity.",
+    "packageId": "Stable identifier of the originating approved work package.",
+    "workItemId": "Stable identifier of the atomic execution unit.",
+    "sequenceDimensions": [
+      "planSequence",
+      "packageSequence",
+      "dispatchSequence",
+      "attempt",
+      "reworkCycle"
+    ],
+    "noReuse": "A rework attempt receives a new jobId. Historical job IDs are never reused."
+  },
+  "roleAndSkillContract": {
+    "roleMeaning": "The role defines who the agent must act as for this job: mission, responsibilities, decision boundaries and prohibited role substitutions.",
+    "skillMeaning": "Skills define how the assigned role performs the job. Every mandatory skill is versioned, described and pinned to an immutable source reference.",
+    "noImplicitRole": "The assigned role must be present in the job even when it also exists in the persistent agent identity.",
+    "noImplicitSkill": "A required skill may not exist only in chat memory; it must be explicit in the job contract.",
+    "skillSourceRule": "MASTER may bind only skills resolved from authoritative project/package artifacts or other HUMAN-approved immutable sources. It must not invent a skill source or fabricate skill evidence.",
+    "skillSelfContainedRule": "The job repeats the skill description and execution instructions so the agent can execute without relying on hidden chat memory, while skillRef + skillBlobSha retain provenance."
+  },
+  "authorizationSemantics": {
+    "jobPermissionIsUpperBound": true,
+    "actualProviderRightsRemainAuthoritative": true,
+    "executionPredicate": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW",
+    "noJsonPermissionGrant": true,
+    "repositoryRightsAreExplicit": true,
+    "pathRightsAreExplicit": true,
+    "branchRightsAreExplicit": true,
+    "mergeDeployRightsAreExplicit": true
+  },
+  "humanProjectionContract": {
+    "format": "MARKDOWN",
+    "requiredSections": [
+      "JOB_IDENTITY",
+      "PACKAGE_AND_SEQUENCE",
+      "MASTER_PROVENANCE",
+      "ASSIGNMENT",
+      "ROLE",
+      "SKILLS",
+      "TASK",
+      "DEPENDENCIES_AND_INPUTS",
+      "AUTHORIZATION",
+      "WORKSPACE_AND_GIT",
+      "SCHEDULING",
+      "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
+      "VERIFICATION_AND_REVIEW",
+      "CONSTRAINTS_AND_STOP_CONDITIONS"
+    ],
+    "generatedOnly": true,
+    "mustMatchJson": true,
+    "jsonPinsMarkdownBlob": true,
+    "providerReadbackRequiredBeforeReady": true
+  },
+  "immutability": {
+    "afterDispatch": true,
+    "scopeChange": "NEW_DISPATCH_REVISION_OR_SUPERSEDING_JOB",
+    "roleChange": "NEW_JOB",
+    "skillChange": "NEW_JOB_OR_PRE_DISPATCH_REBUILD",
+    "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB",
+    "directAgentMutationForbidden": true
+  },
+  "responseContract": {
+    "required": true,
+    "modelRef": "agent-response-contract-model.json",
+    "schemaRef": "schemas/agent-response.schema.json",
+    "templateCatalogRef": "agent-response-templates.json",
+    "requiredTemplateIds": [
+      "job_result",
+      "job_error",
+      "clarification_request",
+      "capability_mismatch",
+      "improvement_proposal"
+    ],
+    "exactWriteTargetRequired": true,
+    "separateFromProductWriteScope": true
+  },
+  "agentChatContract": {
+    "required": true,
+    "modelRef": "agent-chat-contract-model.json",
+    "schemaRef": "schemas/agent-chat-status.schema.json",
+    "mode": "MINIMAL_STATUS_ONLY"
+  },
+  "dispatchEligibility": {
+    "requiresHumanGoOnlyIdentityContract": true,
+    "requiresAllResponseTemplates": true,
+    "requiresResolvablePinnedInputs": true,
+    "requiresRoleSkillDomainCompatibility": true,
+    "requiresSeparateWriteAuthorization": true
+  }
+}
