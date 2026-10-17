@@ -1,7 +1,7 @@
 # SAFOR Commercial Distribution Decision
 
 Decision date: **2026-10-17**
-Current implementation baseline: **SAFOR 0.13.0-rc.4**
+Current implementation baseline: **SAFOR 0.13.0-rc.6**
 
 ## Product decision
 
@@ -96,3 +96,14 @@ For a paid Factory or Operating Model, SAFOR requires:
 Manual licensed delivery through `HUMAN_LOADED_PACKAGE` remains allowed but does not bypass entitlement verification.
 
 The public Framework defines this protocol but does not embed payment credentials, private signing keys, customer purchase data or current commercial package content.
+
+
+## Public evaluation exception
+
+For rc.6 testing, SAFOR deliberately publishes:
+- `SAFOR-FRAMEWORK-SAAS.json`,
+- `SAFOR-FRAMEWORK-BOOK-CREATION.json`,
+- their explicitly versioned `*-test.1` Factory/Operating Model modules,
+- matching public test access bundles.
+
+This is a test/evaluation exception, not the commercial production distribution model. The test access bundles state `productionAuthorization=false`; production catalog entries still expose no public model path and continue to require the entitled/private package channel.
