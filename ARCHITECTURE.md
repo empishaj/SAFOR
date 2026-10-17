@@ -203,3 +203,11 @@ The deterministic control path is:
 The reducer is pure: no provider I/O, no LLM invocation, no wall-clock reads, no randomness and no arbitrary executable code from JSON. External mutations are emitted as effect intents and become facts only after provider outcome/readback events. Duplicate identical events are idempotent, divergent duplicates are integrity failures, transition ambiguity fails closed, and replay must reproduce the canonical state hash.
 
 v0.11.0-rc.1 deliberately migrates only an explicit transition slice. Existing Factory, Operating Model, Agent Workspace, Scheduler and HUMAN-governance semantics remain valid and are not falsely labeled executable until migrated.
+
+## Deterministic Acceptance
+
+SAFOR v0.11.0-rc.2 moves Work Item acceptance into the deterministic control plane. Planning materializes one approved, immutable Acceptance Contract per executable Work Item. The contract preserves each accepted criterion and binds it to typed EVIDENCE, REVIEW or AUTHORITY requirements.
+
+Qualitative judgment remains probabilistic where appropriate, but it enters governance as an explicit review or authority-decision record. The kernel never turns free-text LLM confidence into PASS. Independent-review policies are enforced structurally, agent self-checks remain advisory, and a required authority rejection blocks the current contract revision.
+
+The replay-derived acceptance ledger contains pinned copies of contracts, evidence, review decisions and authority decisions. It is not a new business-authority source. The sole rc.2 transition that materializes Work Item status ACCEPTED is `WORK_ITEM_ACCEPTED` after every typed requirement passes. Work Item acceptance remains separate from business/reader outcome success.
