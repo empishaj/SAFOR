@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-job-state:0.14.0",
+  "title": "SAFOR Agent Job State 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "jobId",
+    "assignedAgentId",
+    "assignedIdentityRevision",
+    "jobKey",
+    "packageId",
+    "workItemId",
+    "roleId",
+    "owner",
+    "revision",
+    "lifecycleStatus",
+    "contractRef",
+    "goEvidenceRef",
+    "responseRefs",
+    "reviewRefs",
+    "verification",
+    "integrationRef",
+    "transitionHistory",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {"const": "SAFOR_AGENT_JOB_STATE"},
+    "schemaVersion": {"const": "0.14.0"},
+    "projectId": {"type": "string", "minLength": 1},
+    "jobId": {"type": "string", "minLength": 1},
+    "assignedAgentId": {"type": "string", "minLength": 3},
+    "assignedIdentityRevision": {"type": "integer", "minimum": 1},
+    "jobKey": {"type": "string", "minLength": 1},
+    "packageId": {"type": "string", "minLength": 1},
+    "workItemId": {"type": "string", "minLength": 1},
+    "roleId": {"type": "string", "minLength": 1},
+    "owner": {"const": "MASTER"},
+    "revision": {"type": "integer", "minimum": 1},
+    "lifecycleStatus": {
+      "enum": [
+        "PREPARED",
+        "WAITING_HUMAN_GO",
+        "GO_OBSERVED",
+        "CLAIMED",
+        "RUNNING",
+        "RESPONSE_SUBMITTED",
+        "VERIFIED",
+        "ACCEPTED",
+        "INTEGRATED",
+        "BLOCKED",
+        "REJECTED",
+        "REWORK_READY",
+        "CANCELED",
+        "SUPERSEDED"
+      ]
+    },
+    "contractRef": {"$ref": "#/$defs/pointer"},
+    "goEvidenceRef": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/pointer"}]},
+    "responseRefs": {"type": "array", "items": {"$ref": "#/$defs/pointer"}},
+    "reviewRefs": {"type": "array", "items": {"$ref": "#/$defs/pointer"}},
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "verifiedAt", "reason"],
+      "properties": {
+        "status": {"enum": ["NOT_STARTED", "PASS", "FAIL"]},
+        "verifiedAt": {"type": ["string", "null"], "format": "date-time"},
+        "reason": {"type": ["string", "null"]}
+      }
+    },
+    "integrationRef": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/pointer"}]},
+    "transitionHistory": {"type": "array", "items": {"$ref": "#/$defs/transition"}},
+    "updatedAt": {"type": "string", "format": "date-time"}
+  },
+  "$defs": {
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "ref", "path", "blobSha"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "ref": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "blobSha": {"type": "string", "minLength": 7}
+      }
+    },
+    "transition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from", "to", "at", "actorId", "evidenceRefs"],
+      "properties": {
+        "from": {"type": ["string", "null"]},
+        "to": {"type": "string", "minLength": 1},
+        "at": {"type": "string", "format": "date-time"},
+        "actorId": {"type": "string", "minLength": 1},
+        "evidenceRefs": {"type": "array", "items": {"type": "string", "minLength": 1}}
+      }
+    }
+  }
+}

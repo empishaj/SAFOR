@@ -1,0 +1,70 @@
+{
+  "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT",
+  "purpose": "Define one immutable, self-contained, agent-bound job with HUMAN-GO activation, pinned inputs, explicit product and response write scopes, five typed response contracts and minimal chat communication.",
+  "authority": {
+    "authoritativeArtifact": "agents/{agentId}/inbox/{jobId}.json",
+    "humanProjection": "agents/{agentId}/inbox/{jobId}.md",
+    "masterLifecycle": "master/jobs/{jobId}.json",
+    "rule": "JSON is authoritative; the Markdown projection cannot expand scope, rights, role, skills or outputs."
+  },
+  "creationProtocol": [
+    "DERIVE_FROM_APPROVED_ATOMIC_WORK_ITEM",
+    "ALLOCATE_NEW_UUIDV7_JOB_ID",
+    "BIND_AGENT_IDENTITY_REVISION_AND_DISPLAY_NAME",
+    "BIND_DOMAIN_FACTORY_AND_OPERATING_MODEL_CONTEXT",
+    "BIND_EXPLICIT_ROLE_AND_VERSIONED_SKILLS",
+    "PIN_ALL_INPUTS",
+    "ALLOCATE_DEDICATED_PRODUCT_BRANCH_WHEN_MUTATING",
+    "DECLARE_SEPARATE_PRODUCT_AND_RESPONSE_WRITE_SCOPES",
+    "BIND_ALL_FIVE_RESPONSE_TEMPLATES",
+    "BIND_MINIMAL_AGENT_CHAT_CONTRACT",
+    "DECLARE_VERIFICATION_REVIEW_AND_ACCEPTANCE",
+    "RENDER_AND_READ_BACK_JSON_AND_MARKDOWN",
+    "PUBLISH_AS_WAITING_HUMAN_GO"
+  ],
+  "activation": {
+    "normalChatAgentMode": "HUMAN_GO_REQUIRED",
+    "preGoLifecycle": "WAITING_HUMAN_GO",
+    "claimRequiresGoEvidence": true,
+    "jobPromptTransportRequired": false,
+    "automaticChatActivationForbidden": true
+  },
+  "writeSeparation": {
+    "productArtifacts": "WORK_REPOSITORY on dedicated branch and allowed paths",
+    "responses": "CONTROL_REPOSITORY on explicit response paths",
+    "onePermissionNeverImpliesTheOther": true,
+    "agentMayWriteMasterLifecycle": false
+  },
+  "responses": {
+    "requiredTypes": [
+      "JOB_RESULT",
+      "JOB_ERROR",
+      "CLARIFICATION_REQUEST",
+      "CAPABILITY_MISMATCH",
+      "IMPROVEMENT_PROPOSAL"
+    ],
+    "schema": "schemas/agent-response.schema.json",
+    "masterResolution": "schemas/agent-response-resolution.schema.json",
+    "responseIndex": "schemas/agent-response-index.schema.json"
+  },
+  "immutability": {
+    "afterPublication": true,
+    "scopeChange": "SUPERSEDING_JOB_REQUIRED",
+    "roleOrSkillChange": "NEW_JOB_REQUIRED",
+    "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB_REQUIRED",
+    "rework": "NEW_JOB_ID_WITH_SUPERSEDES_AND_CONFLICT_REF",
+    "historicalJobIdReuseForbidden": true
+  },
+  "lifecycleSeparation": [
+    "WAITING_HUMAN_GO",
+    "GO_OBSERVED",
+    "CLAIMED",
+    "RUNNING",
+    "RESPONSE_SUBMITTED",
+    "VERIFIED",
+    "ACCEPTED",
+    "INTEGRATED"
+  ]
+}
