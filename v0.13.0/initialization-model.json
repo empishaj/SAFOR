@@ -7,7 +7,9 @@
     "autoStartAfterBootstrapLoad": true,
     "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
     "noProjectWorkBeforeComplete": true,
-    "completionPredicate": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED"
+    "completionPredicate": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED",
+    "domainFrameworkDistributionAware": true,
+    "preselectedDomainRule": "When the loaded container format is SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION, use its domain and embedded default Factory/Operating Model as the initial selection and suppress redundant creation-type selection."
   },
   "sequence": [
     {
@@ -71,7 +73,9 @@
           }
         ]
       },
-      "rule": "Creation type determines default package candidates and commercial access policy. WEBSITE has free public defaults. SOFTWARE_SAAS and BOOK require both selected domain packages to be paid and independently entitled. Package selection never grants organizational authority."
+      "rule": "Generic SAFOR-FRAMEWORK asks for a creation type. A domain-specific SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION already fixes domain and creation type, so this HUMAN question is suppressed.",
+      "skipWhen": "CONTAINER_FORMAT == SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
+      "preselectedOutcome": "DOMAIN_AND_CREATION_TYPE_PRESELECTED"
     },
     {
       "id": "INIT-02",
@@ -85,7 +89,13 @@
         "DEFAULT_PACKAGE_CANDIDATES_RESOLVED",
         "HUMAN_PACKAGE_OVERRIDE_REQUIRED"
       ],
-      "rule": "Resolve profile defaults first. HUMAN may independently override Factory and/or Operating Model; paid overrides require explicit HUMAN approval."
+      "rule": "Domain distribution defaults are embedded and immediately available; replacement is explicit and never changes the active domain implicitly.",
+      "rules": [
+        "For a generic Framework, resolve Creation Profile defaults.",
+        "For SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION, use embeddedDomainModules.factory and embeddedDomainModules.operatingModel as the default binding.",
+        "A later HUMAN-loaded or entitled replacement may replace Factory only, Operating Model only, or both.",
+        "Every replacement must support the active domainId and Creation Type and must pass bidirectional counterpart/package-family compatibility."
+      ]
     },
     {
       "id": "INIT-03",
@@ -144,13 +154,22 @@
       "checks": [
         "FACTORY_KIND_VALID",
         "OPERATING_MODEL_KIND_VALID",
+        "FACTORY_AND_OPERATING_MODEL_SUPPORT_ACTIVE_DOMAIN_ID",
+        "FACTORY_AND_OPERATING_MODEL_SUPPORT_ACTIVE_CREATION_TYPE",
+        "FACTORY_PACKAGE_FAMILY_PRESENT_FOR_V2",
+        "OPERATING_MODEL_PACKAGE_FAMILY_PRESENT_FOR_V2",
+        "FACTORY_REQUIRED_OPERATING_MODEL_FAMILY_ALLOWED",
+        "OPERATING_MODEL_REQUIRED_FACTORY_FAMILY_ALLOWED",
         "FACTORY_REQUIRED_CAPABILITIES_COVERED_BY_OPERATING_MODEL",
         "FACTORY_REQUIRED_AUTHORITIES_COVERED_BY_OPERATING_MODEL",
-        "DECLARED_COUNTERPART_RESTRICTIONS_SATISFIED",
+        "FACTORY_REQUIRED_WORK_ITEM_AND_ARTIFACT_TYPES_COVERED_WHEN_DECLARED",
+        "OPERATING_MODEL_REQUIRED_FACTORY_WORK_ITEM_AND_ARTIFACT_TYPES_COVERED_WHEN_DECLARED",
+        "DECLARED_COUNTERPART_RESTRICTIONS_SATISFIED_BIDIRECTIONALLY",
         "NO_FACTORY_ROLE_ID_COUPLING",
         "NO_OPERATING_MODEL_FLOW_OWNERSHIP"
       ],
-      "failOutcome": "FACTORY_OPERATING_MODEL_INCOMPATIBLE"
+      "failOutcome": "FACTORY_OPERATING_MODEL_INCOMPATIBLE",
+      "rule": "Compatibility is bidirectional and domain-bound. A Factory may constrain acceptable Operating Model families/capabilities; an Operating Model may constrain acceptable Factory families/work-item/artifact contracts. Cross-domain pairing is rejected."
     },
     {
       "id": "INIT-05A",
