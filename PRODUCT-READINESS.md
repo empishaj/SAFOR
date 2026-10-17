@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.4**
+Current target: **v0.13.0-rc.5**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -13,6 +13,16 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Paid Factory/OM content excluded from Framework bundle | PASS |
 | Package catalog metadata | PASS |
 | WEBSITE FREE_PUBLIC Factory + Operating Model defaults | PASS by unit/validator |
+| Website single-file domain Framework | PASS by reproducible builder/CI |
+| Domain Framework preselects domain + creation type | PASS by model/unit/validator |
+| Website defaults family-aware at 1.1.0 | PASS |
+| Package-family compatibility for Premium replacements | PASS by runtime/unit |
+| Bidirectional Factory ↔ Operating Model compatibility | PASS by runtime/unit |
+| Operating Model required Factory work-item/artifact contract | PASS by unit |
+| Cross-domain combinations fail closed | PASS by unit |
+| Incompatible replacement preserves existing valid binding | PASS by governance/conformance |
+| SaaS commercial domain Framework build profile | PASS by builder/profile; protected bytes not public |
+| Book commercial domain Framework build profile | PASS by builder/profile; protected bytes not public |
 | Website Factory scope boundary | PASS by unit/validator |
 | Website accessibility/responsive/performance verification | PASS by unit/validator |
 | Website public-discoverability check | PASS by unit |
@@ -58,7 +68,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **73 PASS in CI** |
+| Total Python unit tests | **82 PASS in CI** |
 | Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
