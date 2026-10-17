@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
   "schemaVersion": "0.13.0",
-  "bundleVersion": "0.13.0-rc.5",
+  "bundleVersion": "0.13.0-rc.6",
   "definitionId": "safor-framework",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -109,12 +109,19 @@
       "replacementRequiresPackageFamilyCompatibility": true,
       "crossDomainPairForbidden": true,
       "publicDistributions": [
-        "SAFOR-FRAMEWORK-WEBSITE.json"
-      ],
-      "commercialDistributions": [
+        "SAFOR-FRAMEWORK-WEBSITE.json",
         "SAFOR-FRAMEWORK-SAAS.json",
         "SAFOR-FRAMEWORK-BOOK-CREATION.json"
-      ]
+      ],
+      "publicTestEvaluationDistributions": [
+        "SAFOR-FRAMEWORK-SAAS.json",
+        "SAFOR-FRAMEWORK-BOOK-CREATION.json"
+      ],
+      "commercialProductionDistributions": [
+        "SAFOR-FRAMEWORK-SAAS.json",
+        "SAFOR-FRAMEWORK-BOOK-CREATION.json"
+      ],
+      "publicTestBytesDoNotDefineCommercialProductionSource": true
     }
   },
   "productRepository": {
