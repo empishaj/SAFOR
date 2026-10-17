@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.5**
+Current target: **v0.13.0-rc.6**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -21,8 +21,12 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Operating Model required Factory work-item/artifact contract | PASS by unit |
 | Cross-domain combinations fail closed | PASS by unit |
 | Incompatible replacement preserves existing valid binding | PASS by governance/conformance |
-| SaaS commercial domain Framework build profile | PASS by builder/profile; protected bytes not public |
-| Book commercial domain Framework build profile | PASS by builder/profile; protected bytes not public |
+| SaaS public test/evaluation domain Framework | PASS by builder/validator/unit; paid-mode test bytes public |
+| Book public test/evaluation domain Framework | PASS by builder/validator/unit; paid-mode test bytes public |
+| Public SaaS test access bundle | PASS by validator/unit |
+| Public Book test access bundle | PASS by validator/unit |
+| Public paid-test bytes remain non-production authorization | PASS by kernel/conformance/validator |
+| Production paid catalog still has no public model path | PASS by validator |
 | Website Factory scope boundary | PASS by unit/validator |
 | Website accessibility/responsive/performance verification | PASS by unit/validator |
 | Website public-discoverability check | PASS by unit |
@@ -68,7 +72,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **82 PASS in CI** |
+| Total Python unit tests | **86 PASS in CI** |
 | Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
