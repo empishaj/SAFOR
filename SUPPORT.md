@@ -53,3 +53,14 @@ Supported project workspace classes:
 SAFOR does not claim local execution when the current host cannot actually access the local filesystem/Git repository.
 
 Paid Factory/Operating Model access additionally requires supported entitlement verification. The 0.12 schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.
+
+
+## Agent Runtime support
+
+SAFOR 0.12.0-rc.2 defines a provider-neutral Agent Runtime Adapter contract.
+
+A host/runtime is production-capable for AGENT execution only when actual capability evidence proves automatic host-native activation or external automation plus continuation support.
+
+A normal chat that requires the HUMAN to manually open or wake each agent is treated as `HUMAN_MANUAL_TEST_ONLY`. That capability is supported only as a VALIDATION test harness and is not advertised as production EXECUTION support.
+
+Repository Provider support and Agent Runtime support are evaluated independently.

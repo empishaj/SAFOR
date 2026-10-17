@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.12.0-rc.1 — Release Candidate**
+> Current maturity: **v0.12.0-rc.2 — Release Candidate**
 
 ## Start here
 
@@ -64,3 +64,17 @@ The same validation runs in GitHub Actions.
 SAFOR is currently a **Release Candidate**, not General Availability. v0.12.0-rc.1 proves the Framework/package/workspace boundary in machine tests, but real entitlement distribution, local-Git host execution and existing provider/agent end-to-end scenarios remain GA gates.
 
 The commercial product decision is now explicit: the Framework and Website starter path are public/free; Factories and Operating Models can be independently licensed, with Book and future premium packages entitlement-gated. Final legal license text, pricing and entitlement-service operations are still open.
+
+## Operation modes and Agent Runtime
+
+SAFOR 0.12.0-rc.2 separates three governance modes before mutating work:
+
+- **DESIGN** — Framework, schema and package architecture work.
+- **VALIDATION** — isolated, explicitly non-production tests and E2E harnesses.
+- **EXECUTION** — real HUMAN project Value Creation.
+
+Agent execution is now separated from repository-provider access. A Provider Adapter handles Git/repository operations; an Agent Runtime Adapter handles actual agent activation, continuation and result availability.
+
+In **EXECUTION**, AGENT dispatch requires verified `HOST_NATIVE_AUTOMATIC` or `EXTERNAL_AUTOMATION` capability. SAFOR must not ask the HUMAN to open agent chats, copy job prompts/contracts, poll inboxes or move results between chats.
+
+`HUMAN_MANUAL_TEST_ONLY` is allowed only inside an explicitly isolated **VALIDATION** test harness. Such evidence is non-production and cannot prove production agent automation.

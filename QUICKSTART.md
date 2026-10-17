@@ -4,7 +4,7 @@
 
 Always:
 - A compatible chat host.
-- `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` or the latest `SAFOR-FRAMEWORK.json`.
+- `SAFOR-FRAMEWORK-v0.12.0-rc.2.json` or the latest `SAFOR-FRAMEWORK.json`.
 - A HUMAN-controlled Git project workspace.
 
 For **Software / Website**:
@@ -24,9 +24,21 @@ For **LOCAL_GIT** projects:
 - Proven read/write, Git history, branch and commit capabilities.
 - No remote `safor-memory` is required; SAFOR uses a Git-tracked MASTER-only `.safor/` control root.
 
+## First: SAFOR resolves the operation mode
+
+Before project/package initialization SAFOR derives one of:
+
+- **DESIGN** — you are changing SAFOR Framework/schema/package architecture.
+- **VALIDATION** — you are running an isolated test or E2E harness.
+- **EXECUTION** — you are creating value in a real HUMAN project.
+
+When the intent and target make the mode deterministic, SAFOR does not ask. Only genuine ambiguity may create a HUMAN decision.
+
+For EXECUTION, Creation Type / Factory / Operating Model / project workspace initialization follows. For DESIGN and VALIDATION, SAFOR does not force the HUMAN through the project-creation flow.
+
 ## Start
 
-1. Load `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Load `SAFOR-FRAMEWORK-v0.12.0-rc.2.json`.
 2. SAFOR verifies its Framework, Self-Healing and deterministic-control integrity.
 3. Choose **Software / Website** or **Buch**.
 4. SAFOR resolves package access before asking where the project lives.
@@ -65,3 +77,12 @@ Technical compatibility and organizational authority are evaluated separately.
 Once resolved and pinned, Discovery, Planning and domain Evidence use the same Factory. Factory/Operating Model snapshots are immutable project binding evidence; they cannot be reused to expand commercial access.
 
 
+
+
+## Agent Runtime requirement
+
+An AGENT job is dispatchable in EXECUTION only when an Agent Runtime binding has verified `HOST_NATIVE_AUTOMATIC` or `EXTERNAL_AUTOMATION` activation and continuation capability.
+
+If the host supports only manual chat activation, SAFOR must not turn that limitation into instructions for the HUMAN to operate agent chats. The job remains blocked with `AGENT_RUNTIME_AUTOMATION_UNAVAILABLE`.
+
+Manual activation is permitted only in an explicitly labeled VALIDATION test harness and never proves production runtime readiness.

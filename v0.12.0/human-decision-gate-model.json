@@ -1,0 +1,153 @@
+{
+  "format": "SAFOR_HUMAN_DECISION_GATE_MODEL",
+  "schemaVersion": "0.12.0",
+  "id": "SAFOR-HUMAN-DECISION-GATE",
+  "purpose": "Decide whether HUMAN involvement is necessary while explicitly preventing routine agent-runtime operation, chat wakeup or job transport from being delegated to the HUMAN.",
+  "schemaRef": "schemas/human-decision-gate.schema.json",
+  "cognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+  "defaultDecision": "DO_NOT_ASK",
+  "legitimateReasons": [
+    {
+      "id": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "HUMAN_CONTROLLED_TARGET_SELECTION",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "MATERIAL_ALTERNATIVE_CHOICE",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "SCOPE_CHANGE_REQUIRED",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "IRREVERSIBLE_ACTION_REQUIRED",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "GOAL_CONFLICT_REQUIRES_PRIORITY",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "RECOVERY_CANNOT_PROCEED_SAFELY",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+      "requiresRecordedRationale": true
+    },
+    {
+      "id": "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+      "requiresRecordedRationale": true
+    }
+  ],
+  "mustNotAskHumanFor": [
+    "JOB_ID_GENERATION",
+    "AGENT_SELECTION_WHEN_DETERMINISTIC",
+    "BRANCH_CREATION",
+    "RESOURCE_LEASE_MANAGEMENT",
+    "DISPATCH_WAVE_PLANNING",
+    "READBACK_VERIFICATION",
+    "EVIDENCE_COLLECTION",
+    "RECOVERY_PROFILE_SELECTION",
+    "DERIVED_ARTIFACT_REGENERATION",
+    "INTERNAL_STATE_TRANSITIONS",
+    "TECHNICAL_IDENTIFIER_SELECTION",
+    "FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE",
+    "AGENT_JOB_ACTIVATION_WHEN_AUTOMATION_IS_EXPECTED",
+    "AGENT_CHAT_WAKEUP",
+    "JOB_PROMPT_TRANSPORT",
+    "JOB_CONTRACT_COPY",
+    "AGENT_INBOX_POLLING",
+    "AGENT_RESULT_TRANSPORT",
+    "MANUAL_DISPATCH_SEQUENCE_ADVANCE",
+    "RUNTIME_MODE_DOWNGRADE_TO_BYPASS_CAPABILITY_GAP"
+  ],
+  "evaluationAlgorithm": [
+    "CLASSIFY_CURRENT_PHASE",
+    "IDENTIFY_PROPOSED_HUMAN_QUESTION_OR_APPROVAL",
+    "ATTEMPT_SAFE_DERIVATION_FROM_APPROVED_STATE_POLICY_AND_AUTHORITATIVE_EVIDENCE",
+    "CHECK_FOR_UNCHANGED_PRIOR_DECISION_WITH_SAME_SCOPE_AND_BOUND_INPUTS",
+    "RESOLVE_ONE_LEGITIMATE_HUMAN_INVOLVEMENT_REASON",
+    "REJECT_IF_REASON_IS_INTERNAL_ORCHESTRATION_ONLY",
+    "CHECK_AGENT_RUNTIME_CAPABILITY_GAP_IS_NOT_HUMAN_WORK",
+    "CHECK_OPERATION_MODE_DOES_NOT_ALLOW_MANUAL_TEST_HARNESS_AS_EXECUTION_FALLBACK",
+    "COMPUTE_HEURISTIC_LOAD_ESTIMATE",
+    "APPLY_PHASE_LOAD_TARGET_AND_TEMPORARY_ESCALATION_RULES",
+    "TRANSLATE_INTERNAL_TERMS_TO_HUMAN_DOMAIN_LANGUAGE",
+    "REDUCE_TO_ONE_DECISION_CONTEXT_AND_MINIMUM_NECESSARY_CHOICES",
+    "ALLOW_ASK_OR_SUPPRESS_OR_REUSE"
+  ],
+  "outcomes": [
+    "ALLOW_ASK",
+    "SUPPRESS_DERIVABLE",
+    "REUSE_EXISTING_DECISION",
+    "BLOCK_INVALID_HUMAN_DELEGATION"
+  ],
+  "askPredicate": "ALLOW_ASK only when one legitimate reason applies, the answer cannot be safely derived or reused, and the question is the minimum necessary HUMAN contribution.",
+  "decisionReusePolicy": {
+    "reuseWhen": [
+      "SAME_DECISION_TYPE",
+      "SAME_SCOPE",
+      "SAME_BOUND_INPUT_REVISIONS",
+      "NO_MATERIAL_RISK_CHANGE",
+      "DECISION_NOT_REVOKED"
+    ],
+    "reaskWhen": [
+      "SCOPE_CHANGED",
+      "BOUND_INPUT_REVISION_CHANGED_MATERIALLY",
+      "MATERIAL_RISK_CHANGED",
+      "DECISION_REVOKED",
+      "AUTHORITY_EXPANSION_REQUIRED"
+    ],
+    "unchangedApprovalRepetitionForbidden": true
+  },
+  "latePhasePolicy": {
+    "afterPlanApprovalDefault": "DO_NOT_ASK_UNLESS_LEGITIMATE_REASON",
+    "afterExecutionMandateDefault": "ABSORB_INTERNAL_ORCHESTRATION",
+    "schedulingDefault": "NO_HUMAN_INTERACTION",
+    "agentCoordinationDefault": "NO_HUMAN_INTERACTION",
+    "executionDefault": "EXCEPTION_ONLY",
+    "recoveryDefault": "ESCALATION_ONLY"
+  },
+  "interactionRecordRequiredFields": [
+    "phase",
+    "interactionReason",
+    "decisionRequired",
+    "targetLoad",
+    "heuristicLoadEstimate",
+    "technicalDetailExposure",
+    "gateOutcome",
+    "reusedDecisionRef"
+  ],
+  "agentRuntimeGovernance": {
+    "modelRef": "agent-runtime-model.json",
+    "operationModeModelRef": "operation-mode-model.json",
+    "executionRule": "If AGENT execution is required and no HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION runtime is available, suppress routine activation requests and surface AGENT_RUNTIME_AUTOMATION_UNAVAILABLE.",
+    "humanChoiceAllowedOnlyWhen": "A material choice among runtime alternatives cannot be safely derived and requires HUMAN-controlled target/authority selection.",
+    "manualTestHarnessRule": "Manual HUMAN activation is a VALIDATION-only test harness and must be labeled non-production.",
+    "forbiddenFallbacks": [
+      "ASK_HUMAN_TO_OPEN_AGENT_CHAT",
+      "ASK_HUMAN_TO_COPY_JOB_PROMPT",
+      "ASK_HUMAN_TO_COPY_JOB_CONTRACT",
+      "ASK_HUMAN_TO_POLL_AGENT_INBOX",
+      "ASK_HUMAN_TO_MOVE_RESULT_BETWEEN_CHATS",
+      "SILENTLY_SWITCH_EXECUTION_TO_VALIDATION"
+    ]
+  }
+}

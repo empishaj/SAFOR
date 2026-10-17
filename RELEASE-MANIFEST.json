@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.12.0-rc.1",
+  "version": "0.12.0-rc.2",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.12.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.12.0-rc.1.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.12.0-rc.2.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.11.0-rc.2",
+  "previousVersion": "0.12.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -74,7 +74,16 @@
     "HUMAN_OWNED_LOCAL_GIT_PROJECT_WORKSPACE",
     "LOCAL_MASTER_CONTROL_ROOT",
     "REMOTE_SEPARATE_SAFOR_MEMORY",
-    "PACKAGE_SOURCE_PROJECT_WORKSPACE_SEPARATION"
+    "PACKAGE_SOURCE_PROJECT_WORKSPACE_SEPARATION",
+    "EXPLICIT_OPERATION_MODES",
+    "DESIGN_VALIDATION_EXECUTION_SEPARATION",
+    "AGENT_RUNTIME_ADAPTER",
+    "AGENT_RUNTIME_CAPABILITY_EVIDENCE",
+    "EXECUTION_AGENT_AUTOMATION_REQUIRED",
+    "MANUAL_AGENT_ACTIVATION_VALIDATION_ONLY",
+    "HUMAN_NOT_AGENT_RUNTIME_OPERATOR",
+    "RUNTIME_BOUND_AGENT_JOB_CONTRACT",
+    "PROVIDER_AGENT_RUNTIME_BINDING_SEPARATION"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -95,7 +104,9 @@
     "COMMERCIAL_LICENSE_TERMS_FINALIZATION",
     "COMMERCIAL_ENTITLEMENT_END_TO_END_ACCEPTANCE",
     "MODULAR_PACKAGE_DISTRIBUTION_END_TO_END_ACCEPTANCE",
-    "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE"
+    "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE",
+    "OPERATION_MODE_END_TO_END_ACCEPTANCE",
+    "AGENT_RUNTIME_AUTOMATION_END_TO_END_ACCEPTANCE"
   ],
   "sourceBaselines": [
     "v0.12.0",
@@ -111,5 +122,18 @@
   },
   "paidCreationProfiles": [
     "BOOK"
-  ]
+  ],
+  "operationModes": [
+    "DESIGN",
+    "VALIDATION",
+    "EXECUTION"
+  ],
+  "executionAgentRuntimePolicy": {
+    "allowedActivationCapabilities": [
+      "HOST_NATIVE_AUTOMATIC",
+      "EXTERNAL_AUTOMATION"
+    ],
+    "manualHumanActivationAllowed": false,
+    "missingAutomationOutcome": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE"
+  }
 }

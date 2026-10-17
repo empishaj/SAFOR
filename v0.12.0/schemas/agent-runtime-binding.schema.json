@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.12.0/agent-runtime-binding.schema.json",
+  "title": "SAFOR Agent Runtime Binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "bindingRevision",
+    "adapterId",
+    "adapterKind",
+    "adapterRef",
+    "activationCapability",
+    "continuationCapability",
+    "supportedOperationModes",
+    "backgroundWakeup",
+    "identityBootstrap",
+    "jobTransport",
+    "stateObservation",
+    "resultAvailability",
+    "actualCapabilityEvidenceRefs"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_RUNTIME_BINDING"
+    },
+    "schemaVersion": {
+      "const": "0.12.0"
+    },
+    "bindingRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "adapterId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapterKind": {
+      "enum": [
+        "HOST_NATIVE",
+        "EXTERNAL_ORCHESTRATOR",
+        "LOCAL_AGENT_PROCESS",
+        "CI_AGENT",
+        "MANUAL_TEST_HARNESS",
+        "UNAVAILABLE"
+      ]
+    },
+    "adapterRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "activationCapability": {
+      "enum": [
+        "HOST_NATIVE_AUTOMATIC",
+        "EXTERNAL_AUTOMATION",
+        "HUMAN_MANUAL_TEST_ONLY",
+        "UNAVAILABLE"
+      ]
+    },
+    "continuationCapability": {
+      "enum": [
+        "HOST_NATIVE_AUTOMATIC",
+        "EXTERNAL_AUTOMATION",
+        "HUMAN_MANUAL_TEST_ONLY",
+        "UNAVAILABLE"
+      ]
+    },
+    "supportedOperationModes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "DESIGN",
+          "VALIDATION",
+          "EXECUTION"
+        ]
+      }
+    },
+    "backgroundWakeup": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "supported",
+        "evidenceRef"
+      ],
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "evidenceRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "identityBootstrap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "jobContractTransportForbidden"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "AUTOMATIC",
+            "ONE_TIME_MANUAL_TEST_ONLY",
+            "PREPROVISIONED",
+            "UNAVAILABLE"
+          ]
+        },
+        "jobContractTransportForbidden": {
+          "const": true
+        }
+      }
+    },
+    "jobTransport": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "promptTransportForbidden"
+      ],
+      "properties": {
+        "mode": {
+          "const": "REPOSITORY_PULL"
+        },
+        "promptTransportForbidden": {
+          "const": true
+        }
+      }
+    },
+    "stateObservation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "PUSH",
+            "POLL",
+            "RUNTIME_NATIVE",
+            "MANUAL_TEST_ONLY",
+            "UNAVAILABLE"
+          ]
+        }
+      }
+    },
+    "resultAvailability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "PUSH",
+            "POLL",
+            "REPOSITORY_READBACK",
+            "MANUAL_TEST_ONLY",
+            "UNAVAILABLE"
+          ]
+        }
+      }
+    },
+    "actualCapabilityEvidenceRefs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "adapterKind": {
+            "const": "MANUAL_TEST_HARNESS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "activationCapability": {
+            "const": "HUMAN_MANUAL_TEST_ONLY"
+          },
+          "continuationCapability": {
+            "const": "HUMAN_MANUAL_TEST_ONLY"
+          },
+          "supportedOperationModes": {
+            "const": [
+              "VALIDATION"
+            ]
+          },
+          "identityBootstrap": {
+            "properties": {
+              "mode": {
+                "const": "ONE_TIME_MANUAL_TEST_ONLY"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "backgroundWakeup": {
+            "properties": {
+              "supported": {
+                "const": true
+              }
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "backgroundWakeup": {
+            "properties": {
+              "evidenceRef": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "supportedOperationModes": {
+            "contains": {
+              "const": "EXECUTION"
+            }
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "activationCapability": {
+            "enum": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION"
+            ]
+          },
+          "continuationCapability": {
+            "enum": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION"
+            ]
+          }
+        }
+      }
+    }
+  ]
+}
