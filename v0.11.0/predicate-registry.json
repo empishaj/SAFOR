@@ -129,6 +129,21 @@
       "id": "REVIEW_EVENT_INDEPENDENCE_VALID",
       "description": "A review event satisfies its declared independence policy; performer and approving reviewer differ when required.",
       "args": []
+    },
+    {
+      "id": "EVIDENCE_RECORD_NOT_REGISTERED",
+      "description": "No evidence record with the same evidenceId is already present in the acceptance replay ledger.",
+      "args": []
+    },
+    {
+      "id": "REVIEW_RECORD_NOT_REGISTERED",
+      "description": "No review decision with the same reviewId is already present in the acceptance replay ledger.",
+      "args": []
+    },
+    {
+      "id": "AUTHORITY_DECISION_NOT_REGISTERED",
+      "description": "No authority decision with the same decisionId is already present in the acceptance replay ledger.",
+      "args": []
     }
   ]
 }
