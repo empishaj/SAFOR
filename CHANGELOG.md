@@ -1,5 +1,24 @@
 # Changelog
 
+## 0.13.0-rc.2
+
+- Promotes the free Software/Website Factory from 1.5.0 to 1.6.0 and its compatible SaaS Engineering Operating Model from 1.5.0 to 1.6.0.
+- Reframes the Factory from a development/delivery pipeline into a software value-creation, delivery and operations stream.
+- Moves quality and security requirements before implementation and adds lightweight/risk-elevated threat assessment.
+- Adds continuous per-change verification and separates it from later independent/non-functional verification.
+- Adds dependency inventory, conditional SBOM, build provenance, artifact integrity and dependency-risk evidence.
+- Separates Release, Deployment and Activation as distinct facts.
+- Adds Operate/Observe plus event-driven Incident Recovery and Vulnerability Response paths.
+- Replaces universal independent implementation review with an explicit LOW/STANDARD/ELEVATED/CRITICAL risk-based review policy.
+- Separates mandatory package compatibility requirements from conditional capabilities and authorities.
+- Removes unused `strategic_investment` from the Factory hard-authority contract.
+- Adds ISO/IEC 25010:2023-aligned quality planning, WCAG 2.2 default web accessibility targeting, web-performance planning and conditional public-discoverability/SEO concerns.
+- Makes the three-attempt rework value an explicit configurable safety default rather than a claimed domain truth.
+- Operationalizes outcomes with metric, baseline, target/threshold, observation window, data source, decision rule and uncertainty handling.
+- Adds a Site Reliability Engineer capability binding to the free Operating Model for observability, incident response and recovery.
+- Adds conditional-requirement runtime evaluation and a dedicated Website Factory 1.6 consistency/lifecycle test suite; total Python suite is 64 PASS.
+
+
 ## 0.13.0-rc.1
 
 - Introduces `SAFOR_DOMAIN_PACKAGE` as the standalone JSON contract for Factory and Operating Model products.

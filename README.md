@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.13.0-rc.1 — Release Candidate**
+> Current maturity: **v0.13.0-rc.2 — Release Candidate**
 
 ## Start here
 
@@ -26,14 +26,14 @@ These concerns are intentionally separate.
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.13.0-rc.1.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` — versioned public Framework release candidate.
 - `SAFOR-FRAMEWORK.json` — latest Framework RC alias.
 - `v0.13.0/` — composable domain-package contract, independent Factory/Operating Model selection, per-package entitlement, SHA-256 package integrity and compatibility decisions.
 - `v0.12.0/` — modular package/workspace boundary baseline.
 - `v0.11.0/` — deterministic control and deterministic acceptance baseline.
 - `v0.10.0/` and earlier — historical development baselines. Pre-0.12 package prototypes already published there cannot be made confidential retroactively.
 
-Factories and Operating Models are independently loadable JSON products. Creation Profiles define defaults rather than locked commercial bundles. Paid package model content is not embedded in the public Framework artifact; entitlement evidence remains external to the package JSON.
+Factories and Operating Models are independently loadable JSON products. Creation Profiles define defaults rather than locked commercial bundles. The free Website defaults are Software Factory 1.6.0 plus SaaS Engineering Operating Model 1.6.0. Paid package model content is not embedded in the public Framework artifact; entitlement evidence remains external to the package JSON.
 
 ## Product documentation
 
@@ -62,6 +62,6 @@ The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR is currently a **Release Candidate**, not General Availability. v0.13.0-rc.1 proves the composable Factory/Operating-Model contract, per-package commercial gating, declared-contract integrity, compatibility binding and retained Framework/workspace boundaries in machine tests. Real entitlement delivery, Local-Git host execution and provider/agent end-to-end scenarios remain GA gates.
+SAFOR is currently a **Release Candidate**, not General Availability. v0.13.0-rc.2 proves the composable Factory/Operating-Model contract, per-package commercial gating, declared-contract integrity, compatibility binding and retained Framework/workspace boundaries in machine tests. Real entitlement delivery, Local-Git host execution and provider/agent end-to-end scenarios remain GA gates.
 
 The commercial product decision is explicit: the Framework and Website starter defaults are public/free; Factories and Operating Models are independently selectable and independently licensable. A customer can therefore add a premium Factory, a premium Operating Model, or both without replacing the Framework. Final legal license text, pricing and entitlement-service operations remain open.

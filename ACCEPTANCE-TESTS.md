@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
 
 ## A. GitHub REMOTE_GIT — free Website happy path
 
@@ -10,10 +10,10 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - The selected owner contains a pre-existing writable `safor-memory`.
 
 **Expected flow**
-1. Upload only `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Upload only `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
 2. SAFOR verifies Framework/recovery/deterministic-control integrity.
 3. HUMAN selects **Software / Website**.
-4. SAFOR resolves the FREE_PUBLIC Software Factory and Operating Model from public SAFOR Git at immutable revision/blob without asking for a paid entitlement.
+4. SAFOR resolves `safor.factory.software-delivery@1.6.0` and `safor.om.saas-engineering@1.6.0` from public SAFOR Git at immutable revision/blob without asking for a paid entitlement.
 5. SAFOR verifies Factory/Operating Model compatibility.
 6. HUMAN selects **In meinem Git-Repository**.
 7. HUMAN selects GitHub and the HUMAN-controlled owner/project repository.
@@ -223,7 +223,7 @@ For one mutating agent job and one read-only agent job:
 ## M. Module-wide Self-Healing
 
 **Preconditions**
-- Load the exact v0.12 Framework bundle.
+- Load the exact v0.13.0-rc.2 Framework bundle.
 - Confirm the embedded module set and module recovery profiles are intact.
 - Use a disposable project/control environment for mutation tests.
 
@@ -270,7 +270,7 @@ For one mutating agent job and one read-only agent job:
 ## N. HUMAN Cognitive Load and Communication
 
 **Preconditions**
-- Start a fresh chat with the exact v0.12 Framework artifact.
+- Start a fresh chat with the exact v0.13.0-rc.2 Framework artifact.
 - Use a realistic project where Discovery requires genuine HUMAN intent and priorities.
 - Retain the interaction transcript plus emitted interaction-menu metadata.
 
@@ -322,7 +322,7 @@ For one mutating agent job and one read-only agent job:
 
 Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly and fails closed around integrity/authority boundaries.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` artifact and verify K00 then K00A complete before provider/project work.
+1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` artifact and verify K00 then K00A complete before provider/project work.
 2. Create or load a project with a PLANNED work item whose dependency is ACCEPTED, required input object is resolvable, resource declaration is complete and an active execution mandate covers the work item/capability.
 3. Submit a typed `WORK_ITEM_READINESS_REEVALUATION_REQUESTED` event with the next contiguous sequence.
 4. Verify the deterministic transition is `WORK_ITEM_BECOMES_READY`, the work item becomes READY, `execution.readySince` comes from the event timestamp and the resulting canonical state hash is recorded.
@@ -344,7 +344,7 @@ Pass criteria: identical canonical inputs and pinned model revision produce iden
 
 Goal: prove that Work Item ACCEPTED is derived only from the approved Acceptance Contract and authoritative typed evidence/review/authority records.
 
-1. Use the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` artifact.
+1. Use the exact `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` artifact.
 2. Create an executable Work Item with three approved criteria: pinned contribution evidence, independent technical review and explicit risk authority approval.
 3. Verify Planning materializes an ACTIVE Acceptance Contract preserving all three criterion texts and mapping each to typed requirements.
 4. Verify the contractHash matches canonical contract content and P03 approval binds the contract set.
@@ -369,7 +369,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that paid Factory/Operating Model use is licensed independently from organizational authority.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
 2. Select **Buch**.
 3. With no commercial package artifacts, verify `PACKAGE_ACCESS_REQUIRED`.
 4. Supply Book Factory/OM as HUMAN-loaded package artifacts but no independently verified entitlements; verify `PACKAGE_ENTITLEMENT_UNVERIFIED`.
@@ -388,7 +388,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that the project can remain on the HUMAN local disk without remote project storage.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
 2. Select **Software / Website** and resolve the FREE_PUBLIC Factory/OM.
 3. Select **Lokal auf meinem Rechner**.
 4. Verify the host exposes actual local filesystem read/write plus Git repository/history/branch/commit capabilities.
@@ -404,3 +404,31 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 14. Verify stopping/resuming does not move the project or control state to a remote service implicitly.
 
 **Pass condition:** all project/domain bytes remain in the HUMAN local Git workspace and SAFOR retains its governance/evidence guarantees.
+
+
+## S. Website Factory 1.6 Production-Aligned Lifecycle
+
+**Goal:** prove that the free Website Factory executes the secure software value stream rather than a post-development test/release pipeline.
+
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` and resolve Factory/OM 1.6.0.
+2. Complete Product Definition and verify approved scope before implementation work exists.
+3. Verify Quality and Security Requirements are materialized before Solution Design/Implementation.
+4. Verify Solution Design produces a threat model/risk assessment appropriate to the project context.
+5. Dispatch a small implementation batch and verify build, dependency inventory, continuous-verification and build-provenance evidence are produced before independent verification.
+6. When third-party dependencies exist, verify SBOM/dependency-risk evidence is present.
+7. Verify LOW-risk work may use automated gates/self-check without fabricating an independent review; STANDARD/ELEVATED/CRITICAL work invokes the declared independent review policy.
+8. Run Independent Verification and Security Verification in parallel after implementation where resources permit.
+9. Verify Release creates an immutable releasable artifact and does not itself claim deployment.
+10. Verify Deployment readback proves the artifact is materialized in the target environment.
+11. Verify Activation separately proves user/traffic exposure.
+12. Verify Operate/Observe produces authoritative operational/health evidence.
+13. Trigger a synthetic service degradation and verify Incident Recovery requires incident record, recovery action and recovered-health readback.
+14. Trigger a post-release vulnerability and verify Vulnerability Response records impact, remediation/risk decision and post-remediation verification.
+15. Verify a missing conditional capability/authority blocks only when its trigger is active; it must not make the base pair incompatible when inactive.
+16. Verify public Website quality planning includes accessibility/performance and adds SEO concerns only when public discoverability is required.
+17. Verify Outcome Assessment cannot pass from delivery/activation/health evidence alone and requires metric, baseline, target/threshold, observation window, data source and decision rule.
+18. With insufficient outcome evidence, verify the result may be INCONCLUSIVE or CONTINUE_OBSERVATION instead of invented value success.
+19. Verify material learning creates a new planning revision rather than mutating the approved historical plan.
+20. Verify rework-attempt defaults may be changed through governed risk/reversibility policy and are not treated as universal software-engineering truth.
+
+**Pass condition:** all 20 observations are evidenced from bound artifacts/provider readback and no lifecycle stage substitutes for a later fact.

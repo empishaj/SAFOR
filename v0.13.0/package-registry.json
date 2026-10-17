@@ -7,18 +7,18 @@
     {
       "packageId": "safor.om.saas-engineering",
       "kind": "OPERATING_MODEL",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "accessMode": "FREE_PUBLIC",
       "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-      "path": "v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json"
+      "path": "v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json"
     },
     {
       "packageId": "safor.factory.software-delivery",
       "kind": "FACTORY",
-      "version": "1.5.0",
+      "version": "1.6.0",
       "accessMode": "FREE_PUBLIC",
       "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-      "path": "v0.13.0/packages/factories/software-delivery/1.5.0/package.json"
+      "path": "v0.13.0/packages/factories/software-delivery/1.6.0/package.json"
     },
     {
       "packageId": "safor.provider.github",

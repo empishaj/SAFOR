@@ -4,7 +4,7 @@
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.1.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
 - [x] `python tools/validate_safor.py` passes.
@@ -14,6 +14,15 @@
 - [x] All embedded references resolve.
 - [x] Software/Website starter catalog entries are FREE_PUBLIC.
 - [x] Free Website Factory/OM public paths resolve the expected package IDs/versions.
+- [x] Website Factory default is 1.6.0 and default SaaS Engineering Operating Model is 1.6.0.
+- [x] Website Factory 1.6 shift-left quality/security requirements precede implementation.
+- [x] Continuous verification and supply-chain evidence are generated during implementation.
+- [x] Release, Deployment, Activation and Operate/Observe are separate lifecycle states.
+- [x] Incident Recovery and Vulnerability Response are conditional event-driven paths.
+- [x] Factory hard compatibility contains only mandatory authorities; conditional authorities activate fail-closed on matching conditions.
+- [x] `strategic_investment` is not an unused hard Factory requirement.
+- [x] Outcome assessment requires an explicit measurement contract including uncertainty handling.
+- [x] Risk-based review policy replaces universal independent review for LOW-risk changes.
 - [x] Book Factory/OM catalog entries are PAID_ENTITLEMENT_REQUIRED and expose no public model-content path.
 - [x] Public canonical package source is restricted to FREE_PUBLIC packages.
 - [x] HUMAN-loaded paid packages still require independently verified entitlement.
@@ -41,7 +50,7 @@
 - [x] Project/Bindings/Package Selection/Compatibility/Workspace schemas are 0.13-aware.
 - [x] Deterministic Control and Acceptance suites remain green.
 - [x] Modular package/workspace bootstrap tests pass.
-- [x] Total current unit suite: 48 tests PASS.
+- [x] Total current unit suite: 64 tests PASS.
 - [x] SH-23 forbids entitlement fabrication, paid-public resolution, workspace redirection and Local-Git bypass.
 - [x] HUMAN Decision Gate and terminal-menu contracts remain intact.
 - [x] Product licensing strategy is explicitly recorded in `LICENSE-DECISION.md`.

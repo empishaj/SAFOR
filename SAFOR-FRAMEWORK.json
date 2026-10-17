@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
   "schemaVersion": "0.13.0",
-  "bundleVersion": "0.13.0-rc.1",
+  "bundleVersion": "0.13.0-rc.2",
   "definitionId": "safor-framework",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -216,7 +216,7 @@
     },
     "packageRegistry": {
       "sourcePath": "v0.13.0/package-registry.json",
-      "sourceBlobSha": "62c669e796ad7f7938eecf7bf364d70b79f93bff",
+      "sourceBlobSha": "6afc98c5c614cc3686aa30b5aa047e2bdf74ccf5",
       "selfHealingProfileId": "MRP-PACKAGE_REGISTRY"
     },
     "providerGithub": {
@@ -451,7 +451,7 @@
     },
     "packageCatalog": {
       "sourcePath": "v0.13.0/package-catalog.json",
-      "sourceBlobSha": "99e1634b95ec52b0a3a0d495b1c0a5fd08ffea94",
+      "sourceBlobSha": "fa9f8b1c61ddea32b3e361da7b43817c4181c4f7",
       "selfHealingProfileId": "MRP-PACKAGE_CATALOG"
     },
     "schemaPackageCatalog": {
@@ -8410,7 +8410,7 @@
     "packageRegistry": {
       "key": "packageRegistry",
       "sourcePath": "v0.13.0/package-registry.json",
-      "sourceBlobSha": "62c669e796ad7f7938eecf7bf364d70b79f93bff",
+      "sourceBlobSha": "6afc98c5c614cc3686aa30b5aa047e2bdf74ccf5",
       "content": {
         "format": "SAFOR_PACKAGE_REGISTRY",
         "schemaVersion": "0.13.0",
@@ -8420,18 +8420,18 @@
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "accessMode": "FREE_PUBLIC",
             "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-            "path": "v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json"
+            "path": "v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json"
           },
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.5.0",
+            "version": "1.6.0",
             "accessMode": "FREE_PUBLIC",
             "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-            "path": "v0.13.0/packages/factories/software-delivery/1.5.0/package.json"
+            "path": "v0.13.0/packages/factories/software-delivery/1.6.0/package.json"
           },
           {
             "packageId": "safor.provider.github",
@@ -18582,7 +18582,7 @@
     "packageCatalog": {
       "key": "packageCatalog",
       "sourcePath": "v0.13.0/package-catalog.json",
-      "sourceBlobSha": "99e1634b95ec52b0a3a0d495b1c0a5fd08ffea94",
+      "sourceBlobSha": "fa9f8b1c61ddea32b3e361da7b43817c4181c4f7",
       "content": {
         "format": "SAFOR_PACKAGE_CATALOG",
         "schemaVersion": "0.13.0",
@@ -18592,8 +18592,8 @@
           {
             "packageId": "safor.factory.software-delivery",
             "kind": "FACTORY",
-            "version": "1.5.0",
-            "label": "Software / Website Starter Factory",
+            "version": "1.6.0",
+            "label": "Software / Website Starter Factory 1.6",
             "accessMode": "FREE_PUBLIC",
             "sku": "SAFOR-WEB-STARTER-FACTORY",
             "supportedCreationTypes": [
@@ -18602,14 +18602,14 @@
             "selectionClass": "STARTER",
             "distribution": {
               "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-              "path": "v0.13.0/packages/factories/software-delivery/1.5.0/package.json"
+              "path": "v0.13.0/packages/factories/software-delivery/1.6.0/package.json"
             }
           },
           {
             "packageId": "safor.om.saas-engineering",
             "kind": "OPERATING_MODEL",
-            "version": "1.5.0",
-            "label": "SaaS Engineering Starter Operating Model",
+            "version": "1.6.0",
+            "label": "SaaS Engineering Starter Operating Model 1.6",
             "accessMode": "FREE_PUBLIC",
             "sku": "SAFOR-WEB-STARTER-OM",
             "supportedCreationTypes": [
@@ -18618,7 +18618,7 @@
             "selectionClass": "STARTER",
             "distribution": {
               "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
-              "path": "v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json"
+              "path": "v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json"
             }
           },
           {

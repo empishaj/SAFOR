@@ -4,12 +4,12 @@
 
 Always:
 - A compatible chat host.
-- `SAFOR-FRAMEWORK-v0.13.0-rc.1.json` or the latest `SAFOR-FRAMEWORK.json`.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.2.json` or the latest `SAFOR-FRAMEWORK.json`.
 - A HUMAN-controlled Git project workspace.
 
 For **Software / Website**:
 - No commercial entitlement is required for the default starter Factory or default starter Operating Model.
-- Both defaults are separate `SAFOR_DOMAIN_PACKAGE` JSON artifacts and may resolve from canonical public SAFOR Git at immutable revision/blob.
+- The current free defaults are `safor.factory.software-delivery@1.6.0` and `safor.om.saas-engineering@1.6.0`; both are separate `SAFOR_DOMAIN_PACKAGE` JSON artifacts resolved from canonical public SAFOR Git at immutable revision/blob.
 - You may independently replace the Factory, the Operating Model, or both.
 
 For any selected **paid Factory or Operating Model**:
@@ -29,7 +29,7 @@ For **LOCAL_GIT** projects:
 
 ## Start
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.1.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.2.json`.
 2. SAFOR verifies its Framework, Self-Healing and deterministic-control integrity.
 3. Choose **Software / Website** or **Buch**.
 4. SAFOR derives the Creation Profile's default Factory and Operating Model candidates before asking where the project lives.
@@ -69,3 +69,11 @@ Technical compatibility and organizational authority are evaluated separately.
 Once independently selected, verified, declared COMPATIBLE and pinned, Discovery, Planning and domain Evidence use that exact Factory/Operating-Model pair. The project binding stores package selection, compatibility decision, package digest, selection origin and entitlement-evidence references. Snapshots cannot be reused to expand commercial access.
 
 
+
+## Website Factory 1.6 lifecycle
+
+The free Website Factory now models the full value-creation and production lifecycle:
+
+`Product Definition → Quality/Security Requirements → Solution Design/Threat Model → Small-Batch Implementation + Continuous Verification → Independent Verification + Security Verification → Release → Deployment → Activation → Operate/Observe → Outcome Assessment`
+
+Incident Recovery and Vulnerability Response are event-driven side paths after activation. Release, deployment, activation, healthy operation and business outcome remain separate facts.

@@ -90,10 +90,10 @@ class ComposablePackageTests(unittest.TestCase):
     def setUp(self):
         self.catalog = load_json("v0.13.0/package-catalog.json")
         self.free_factory = load_json(
-            "v0.13.0/packages/factories/software-delivery/1.5.0/package.json"
+            "v0.13.0/packages/factories/software-delivery/1.6.0/package.json"
         )
         self.free_om = load_json(
-            "v0.13.0/packages/operating-models/saas-engineering/1.5.0/package.json"
+            "v0.13.0/packages/operating-models/saas-engineering/1.6.0/package.json"
         )
 
     def test_free_website_defaults_resolve_from_public_catalog(self):
@@ -207,19 +207,19 @@ class ComposablePackageTests(unittest.TestCase):
 
     def test_free_domain_packages_have_valid_integrity_and_framework_range(self):
         for pkg in (self.free_factory, self.free_om):
-            result = validate_domain_package(pkg, "0.13.0-rc.1", "SOFTWARE_WEBSITE")
+            result = validate_domain_package(pkg, "0.13.0-rc.2", "SOFTWARE_WEBSITE")
             self.assertTrue(result["valid"], result["errors"])
 
     def test_package_tampering_is_detected(self):
         tampered = copy.deepcopy(self.free_factory)
         tampered["model"]["tampered"] = True
-        result = validate_domain_package(tampered, "0.13.0-rc.1", "SOFTWARE_WEBSITE")
+        result = validate_domain_package(tampered, "0.13.0-rc.2", "SOFTWARE_WEBSITE")
         self.assertFalse(result["valid"])
         self.assertIn("DOMAIN_PACKAGE_INTEGRITY_MISMATCH", result["errors"])
 
     def test_free_factory_and_operating_model_are_compatible(self):
         result = evaluate_domain_package_pair(
-            self.free_factory, self.free_om, "0.13.0-rc.1", "SOFTWARE_WEBSITE"
+            self.free_factory, self.free_om, "0.13.0-rc.2", "SOFTWARE_WEBSITE"
         )
         self.assertTrue(result["compatible"], result)
 
@@ -230,7 +230,7 @@ class ComposablePackageTests(unittest.TestCase):
         ]
         om["integrity"]["contentDigest"] = compute_domain_package_digest(om)
         result = evaluate_domain_package_pair(
-            self.free_factory, om, "0.13.0-rc.1", "SOFTWARE_WEBSITE"
+            self.free_factory, om, "0.13.0-rc.2", "SOFTWARE_WEBSITE"
         )
         self.assertFalse(result["compatible"])
         self.assertIn("security_evidence", result["missingCapabilities"])
@@ -239,12 +239,12 @@ class ComposablePackageTests(unittest.TestCase):
         invalid = copy.deepcopy(self.free_factory)
         invalid["packageId"] = "safor.om.this-is-not-a-factory"
         invalid["integrity"]["contentDigest"] = compute_domain_package_digest(invalid)
-        result = validate_domain_package(invalid, "0.13.0-rc.1", "SOFTWARE_WEBSITE")
+        result = validate_domain_package(invalid, "0.13.0-rc.2", "SOFTWARE_WEBSITE")
         self.assertFalse(result["valid"])
         self.assertIn("DOMAIN_PACKAGE_ID_KIND_MISMATCH", result["errors"])
 
     def test_package_creation_type_scope_is_enforced(self):
-        result = validate_domain_package(self.free_factory, "0.13.0-rc.1", "BOOK")
+        result = validate_domain_package(self.free_factory, "0.13.0-rc.2", "BOOK")
         self.assertFalse(result["valid"])
         self.assertIn("DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED", result["errors"])
 

@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.1",
+  "version": "0.13.0-rc.2",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.1.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.2.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.12.0-rc.1",
+  "previousVersion": "0.13.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -87,7 +87,17 @@
     "DOMAIN_PACKAGE_CREATION_TYPE_SCOPE",
     "MATERIALIZED_PACKAGE_SELECTION",
     "MATERIALIZED_PACKAGE_COMPATIBILITY_DECISION",
-    "AUDITABLE_DOMAIN_PACKAGE_BINDINGS"
+    "AUDITABLE_DOMAIN_PACKAGE_BINDINGS",
+    "WEBSITE_FACTORY_1_6_PRODUCTION_ALIGNED",
+    "SHIFT_LEFT_SECURITY_AND_QUALITY",
+    "CONTINUOUS_VERIFICATION",
+    "SOFTWARE_SUPPLY_CHAIN_EVIDENCE",
+    "RISK_BASED_TECHNICAL_REVIEW",
+    "SEPARATE_RELEASE_DEPLOYMENT_ACTIVATION",
+    "OPERATE_OBSERVE_RECOVERY",
+    "POST_RELEASE_VULNERABILITY_RESPONSE",
+    "MEASURABLE_OUTCOME_CONTRACT",
+    "CONDITIONAL_CAPABILITY_AND_AUTHORITY_REQUIREMENTS"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -124,7 +134,9 @@
     "defaultOperatingModelPackageId": "safor.om.saas-engineering",
     "defaultFactoryAccessMode": "FREE_PUBLIC",
     "defaultOperatingModelAccessMode": "FREE_PUBLIC",
-    "independentOverridesAllowed": true
+    "independentOverridesAllowed": true,
+    "defaultFactoryVersion": "1.6.0",
+    "defaultOperatingModelVersion": "1.6.0"
   },
   "paidCreationProfiles": [
     "BOOK"
