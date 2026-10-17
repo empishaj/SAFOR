@@ -460,6 +460,9 @@
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
           },
           {
+            "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+          },
+          {
             "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
           },
           {
@@ -518,6 +521,9 @@
           },
           {
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
           },
           {
             "predicate": "REVIEW_RECORD_NOT_REGISTERED"
@@ -583,6 +589,9 @@
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
           },
           {
+            "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+          },
+          {
             "predicate": "AUTHORITY_DECISION_NOT_REGISTERED"
           },
           {
@@ -629,6 +638,9 @@
           },
           {
             "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+          },
+          {
+            "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
           },
           {
             "predicate": "AUTHORITY_DECISION_NOT_REGISTERED"
