@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
   "schemaVersion": "0.12.0",
-  "bundleVersion": "0.12.0-rc.1",
+  "bundleVersion": "0.12.0-rc.2",
   "definitionId": "safor-framework",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -25,17 +25,9 @@
     "initializationOrder": [
       "VERIFY_MODULE_RECOVERY_BASELINE",
       "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
-      "SELECT_CREATION_TYPE",
-      "RESOLVE_PACKAGE_ACCESS_PROFILE",
-      "RESOLVE_REQUIRED_FACTORY_AND_OPERATING_MODEL",
-      "VERIFY_PACKAGE_INTEGRITY_AND_ACCESS",
-      "VERIFY_FACTORY_OPERATING_MODEL_COMPATIBILITY",
-      "SELECT_PROJECT_WORKSPACE_TYPE",
-      "VERIFY_PROJECT_WORKSPACE_CAPABILITIES",
-      "SELECT_OR_DEFINE_HUMAN_PROJECT",
-      "BIND_CONTROL_WORKSPACE",
-      "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
-      "APPROVE_AND_MATERIALIZE_PROJECT"
+      "VERIFY_OPERATION_MODE_AND_AGENT_RUNTIME_BASELINE",
+      "RESOLVE_OPERATION_MODE",
+      "FOLLOW_MODE_SPECIFIC_INITIALIZATION"
     ],
     "creationProfiles": [
       {
@@ -64,7 +56,9 @@
     "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
     "selfHealingRule": "Use conservative profile-constrained recovery; never invent entitlement, authority, evidence or workspace ownership.",
     "agentWorkspaceRule": "AGENT work uses persistent identities and repository-native jobs; local .safor/ is never a worker write target.",
-    "multiAgentSchedulerRule": "Dispatch only atomic READY conflict-free work with explicit capacity, leases and isolated Git mutation scope."
+    "multiAgentSchedulerRule": "Dispatch only atomic READY conflict-free work with explicit capacity, leases and isolated Git mutation scope.",
+    "operationModeRule": "Resolve DESIGN, VALIDATION or EXECUTION before mutating effects. DESIGN is Framework/schema work; VALIDATION is isolated/non-production; EXECUTION is HUMAN project Value Creation.",
+    "agentRuntimeRule": "Before AGENT dispatch, bind actual Agent Runtime capability. EXECUTION permits only HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION; HUMAN_MANUAL_TEST_ONLY is VALIDATION-only and never a production fallback."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -131,32 +125,36 @@
     "package-catalog.json": "packageCatalog",
     "schemas/package-catalog.schema.json": "schemaPackageCatalog",
     "schemas/entitlement.schema.json": "schemaEntitlement",
-    "schemas/workspace-binding.schema.json": "schemaWorkspaceBinding"
+    "schemas/workspace-binding.schema.json": "schemaWorkspaceBinding",
+    "operation-mode-model.json": "operationMode",
+    "agent-runtime-model.json": "agentRuntime",
+    "schemas/operation-mode-binding.schema.json": "schemaOperationModeBinding",
+    "schemas/agent-runtime-binding.schema.json": "schemaAgentRuntimeBinding"
   },
   "integrityManifest": {
     "agentJobContract": {
-      "sourcePath": "v0.10.0/agent-job-contract-model.json",
-      "sourceBlobSha": "c8c5b88bbaac2cc682c11c4ad99d1ebf421d2227",
+      "sourcePath": "v0.12.0/agent-job-contract-model.json",
+      "sourceBlobSha": "167432cd27628a6126854961cc448bf52646d399",
       "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
     },
     "agentWorkspace": {
-      "sourcePath": "v0.10.0/agent-workspace-model.json",
-      "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
+      "sourcePath": "v0.12.0/agent-workspace-model.json",
+      "sourceBlobSha": "39bfed8c2d3a780451b81180098beb3546daa960",
       "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "conformance": {
       "sourcePath": "v0.12.0/conformance.json",
-      "sourceBlobSha": "8a2b92678cef0efad96731bd8d668dcefedefdad",
+      "sourceBlobSha": "32e882d101ae07c0de7fd6e9b4e45e3e930c019a",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "humanDecisionGate": {
-      "sourcePath": "v0.10.0/human-decision-gate-model.json",
-      "sourceBlobSha": "212eab209d0c8f4c906bd762e040a6a960e24d8e",
+      "sourcePath": "v0.12.0/human-decision-gate-model.json",
+      "sourceBlobSha": "efde18f292cfe5cc2ae87526cc1660fd2e8f5929",
       "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
     },
     "initialization": {
       "sourcePath": "v0.12.0/initialization-model.json",
-      "sourceBlobSha": "7cc90a2dc97b1157562a834ea20ea0c99c67a3b8",
+      "sourceBlobSha": "f94fbd6cf19a71846614a13f6a714011bbdb117b",
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
@@ -166,12 +164,12 @@
     },
     "kernel": {
       "sourcePath": "v0.12.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "3cb958ec1b72a1ae8011b4f8152c86ee9ceb64c3",
+      "sourceBlobSha": "1f6005512f993248664158c8d52a6ba8f45a60c5",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "moduleSelfHealing": {
       "sourcePath": "v0.12.0/module-self-healing-model.json",
-      "sourceBlobSha": "4b6b57ebdb14be2e94e1d3b22112357a5f83f147",
+      "sourceBlobSha": "5c15caf0fc8bfadf0c7d7461de6929578204f0e2",
       "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
     },
     "multiAgentScheduler": {
@@ -210,8 +208,8 @@
       "selfHealingProfileId": "MRP-SCHEMA_AGENT_INBOX_INDEX"
     },
     "schemaAgentJob": {
-      "sourcePath": "v0.10.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "4131f05fab04f2441d193fad668cb807ff1da04c",
+      "sourcePath": "v0.12.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "bde7ed3c489eac9a5510f7f089c7ac7f45e04c5c",
       "selfHealingProfileId": "MRP-SCHEMA_AGENT_JOB"
     },
     "schemaAgentJobState": {
@@ -321,7 +319,7 @@
     },
     "selfHealing": {
       "sourcePath": "v0.12.0/self-healing-model.json",
-      "sourceBlobSha": "034015a929104f8cc5fb14741e0406e514d1c4b3",
+      "sourceBlobSha": "cc035bae80251d33c38b328257449a7b0b350000",
       "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "schemaHumanResponse": {
@@ -438,20 +436,40 @@
       "sourcePath": "v0.12.0/schemas/workspace-binding.schema.json",
       "sourceBlobSha": "c3de770117e58a2b2b0c8c9d1a5046fc073b0860",
       "selfHealingProfileId": "MRP-SCHEMA_WORKSPACE_BINDING"
+    },
+    "operationMode": {
+      "sourcePath": "v0.12.0/operation-mode-model.json",
+      "sourceBlobSha": "be68a1a35a888e8f570bdb3a9aae7d72fd9dfb48",
+      "selfHealingProfileId": "MRP-OPERATION_MODE"
+    },
+    "agentRuntime": {
+      "sourcePath": "v0.12.0/agent-runtime-model.json",
+      "sourceBlobSha": "435223708e4315f2381a7cf6bb516af0e0651d2b",
+      "selfHealingProfileId": "MRP-AGENT_RUNTIME"
+    },
+    "schemaOperationModeBinding": {
+      "sourcePath": "v0.12.0/schemas/operation-mode-binding.schema.json",
+      "sourceBlobSha": "d4fff431e7024a4c99150339c1ace1b5478b4e03",
+      "selfHealingProfileId": "MRP-SCHEMA_OPERATION_MODE_BINDING"
+    },
+    "schemaAgentRuntimeBinding": {
+      "sourcePath": "v0.12.0/schemas/agent-runtime-binding.schema.json",
+      "sourceBlobSha": "0fbccaf4af7a5a8e8ca8dcbc8cd65d5aa35bbe98",
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RUNTIME_BINDING"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.12.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "3cb958ec1b72a1ae8011b4f8152c86ee9ceb64c3",
+      "sourceBlobSha": "1f6005512f993248664158c8d52a6ba8f45a60c5",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.12.0",
         "kernelVersion": "0.12.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-        "purpose": "Portable SAFOR Framework kernel for modular Factory/Operating Model loading, commercial entitlement gating, HUMAN-owned remote/local Git workspaces and deterministic governance.",
+        "purpose": "Portable SAFOR Framework kernel for modular domain packages, explicit DESIGN/VALIDATION/EXECUTION governance, evidence-bound Agent Runtime activation, HUMAN-owned workspaces and deterministic control.",
         "bootstrapContract": {
           "singleFileEntry": true,
           "entryFile": "SAFOR-FRAMEWORK.json",
@@ -548,13 +566,26 @@
           "humanOwnsProjectWorkspace": true,
           "localGitWorkspaceSupported": true,
           "projectWorkspaceSeparateFromPackageSource": true,
-          "frameworkRepositoryNeverProjectTarget": true
+          "frameworkRepositoryNeverProjectTarget": true,
+          "explicitOperationModeBeforeMutation": true,
+          "designValidationExecutionSeparated": true,
+          "agentRuntimeAdapterRequiredForAgentDispatch": true,
+          "agentRuntimeCapabilityEvidenceRequired": true,
+          "agentRuntimeAutomationRequiredInExecution": true,
+          "manualHumanAgentActivationValidationOnly": true,
+          "providerAndAgentRuntimeBindingsSeparate": true,
+          "humanNeverRoutineAgentOperator": true,
+          "executionToValidationFallbackForbidden": true
         },
         "moduleArchitecture": {
           "layers": [
             {
               "id": "MASTER_KERNEL",
               "responsibility": "Generic orchestration, state transitions, evidence, authorization, reconciliation, package loading and invariants."
+            },
+            {
+              "id": "OPERATION_MODE",
+              "responsibility": "Resolve and govern DESIGN, VALIDATION or EXECUTION before mutating effects so Framework authoring, isolated tests and real project Value Creation cannot be conflated."
             },
             {
               "id": "DETERMINISTIC_CONTROL_KERNEL",
@@ -595,6 +626,10 @@
             {
               "id": "AGENT_JOB_CONTRACT",
               "responsibility": "Immutable, self-describing MASTER-issued execution contract binding job identity, package lineage, MASTER provenance, agent/role/skills, scope, immutable inputs, authorization, workspace, scheduling, output routes and verification."
+            },
+            {
+              "id": "AGENT_RUNTIME",
+              "responsibility": "Bind and verify actual AGENT activation/continuation capabilities independently from repository Provider Adapters; prohibit HUMAN manual workflow operation in EXECUTION."
             },
             {
               "id": "AGENT_WORKSPACE_PROTOCOL",
@@ -650,7 +685,18 @@
             "Free-text or qualitative acceptance criteria may not be directly marked PASS by an LLM; they must resolve to typed EVIDENCE, REVIEW or AUTHORITY requirements in the approved Acceptance Contract.",
             "Agent acceptanceSelfCheck is advisory only and cannot satisfy required independent review or authority approval.",
             "A Work Item may become ACCEPTED only through the deterministic acceptance transition after all requirements of its hash-valid ACTIVE Acceptance Contract are satisfied.",
-            "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED."
+            "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED.",
+            "OPERATION_MODE is resolved before every mutating effect; DESIGN, VALIDATION and EXECUTION semantics must not be silently substituted.",
+            "DESIGN may target the canonical SAFOR Framework repository as a development target, but that does not make it a HUMAN project workspace.",
+            "VALIDATION requires an isolated non-production target; manual HUMAN agent activation is allowed only as an explicit test harness.",
+            "Validation evidence cannot silently satisfy production execution mandate, Work Item acceptance or business outcome authority.",
+            "AGENT_RUNTIME is logically separate from PROVIDER_ADAPTER even when one host implementation supplies both capabilities.",
+            "Before AGENT dispatch, MASTER must bind an Agent Runtime Adapter and verify actual activation/continuation capability evidence.",
+            "EXECUTION permits AGENT dispatch only through HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION activation capability.",
+            "Missing EXECUTION agent automation yields AGENT_RUNTIME_AUTOMATION_UNAVAILABLE; SAFOR must not ask the HUMAN to open chats, copy jobs, poll inboxes or transport results.",
+            "Repository-native Agent Job JSON remains authoritative regardless of Agent Runtime Adapter.",
+            "An Agent Runtime Adapter cannot grant repository/provider rights, Operating Model authority, execution mandate, package entitlement or acceptance.",
+            "EXECUTION must never be silently downgraded to VALIDATION to bypass missing Agent Runtime capability."
           ]
         },
         "packageSystem": {
@@ -703,7 +749,9 @@
             "executionState": "state/execution.json",
             "agentRegistry": "agents/index.json",
             "schedulerState": "master/scheduler/state.json",
-            "workspaceBinding": "workspace.json"
+            "workspaceBinding": "workspace.json",
+            "operationModeBinding": "operation-mode.json",
+            "agentRuntimeBindings": "agent-runtimes.json"
           },
           "directories": [
             "packages/",
@@ -743,7 +791,9 @@
             "dispatchWaves": "master/dispatch-waves/",
             "resourceLeases": "master/resource-leases/"
           },
-          "workspaceRule": "Project-specific work is materialized only in the HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. Remote control state remains in HUMAN safor-memory; local control state is under MASTER-only .safor/."
+          "workspaceRule": "Project-specific work is materialized only in the HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. Remote control state remains in HUMAN safor-memory; local control state is under MASTER-only .safor/.",
+          "operationModeRule": "EXECUTION projects persist an operation-mode binding. Agent Runtime bindings may be empty until AGENT work is required, but must be present and capability-verified before AGENT dispatch.",
+          "agentRuntimeRule": "Agent Runtime bindings are separate from Provider Adapter bindings and never create project/provider authority."
         },
         "providerCapabilityVocabulary": [
           "provider.identity.read",
@@ -857,7 +907,9 @@
           "authorityDecision": "schemas/authority-decision.schema.json",
           "packageCatalog": "schemas/package-catalog.schema.json",
           "entitlement": "schemas/entitlement.schema.json",
-          "workspaceBinding": "schemas/workspace-binding.schema.json"
+          "workspaceBinding": "schemas/workspace-binding.schema.json",
+          "operationModeBinding": "schemas/operation-mode-binding.schema.json",
+          "agentRuntimeBinding": "schemas/agent-runtime-binding.schema.json"
         },
         "controlPlane": {
           "startActionId": "K00",
@@ -867,6 +919,12 @@
               "actions": [
                 "K00",
                 "K00A",
+                "K00B",
+                "K00C",
+                "KD01",
+                "KV01",
+                "KV02",
+                "KE00",
                 "K01",
                 "K02",
                 "K03",
@@ -971,6 +1029,63 @@
               "modelRef": "deterministic-control-model.json"
             },
             {
+              "id": "K00B",
+              "operation": "VERIFY_OPERATION_MODE_AND_AGENT_RUNTIME_BASELINE",
+              "purpose": "Verify pinned operation-mode, Agent Runtime, binding-schema, Agent Workspace and HUMAN activation-governance modules before any mode-specific mutation.",
+              "domainNeutral": true,
+              "modelRef": "agent-runtime-model.json"
+            },
+            {
+              "id": "K00C",
+              "operation": "RESOLVE_OPERATION_MODE",
+              "purpose": "Derive DESIGN, VALIDATION or EXECUTION from HUMAN intent and target context before any mutating effect; ask only when mode cannot be safely derived.",
+              "domainNeutral": true,
+              "modelRef": "operation-mode-model.json",
+              "humanDecisionWhen": "ONLY_IF_MODE_CANNOT_BE_DERIVED_SAFELY",
+              "humanInteractionContract": {
+                "gateRef": "human-decision-gate-model.json",
+                "phase": "BOOTSTRAP",
+                "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+                "targetLoad": "MEDIUM",
+                "maxNewDecisionContexts": 1,
+                "technicalDetailExposure": "SUMMARY",
+                "deriveBeforeAsk": true,
+                "reuseUnchangedDecision": true
+              }
+            },
+            {
+              "id": "KD01",
+              "operation": "BIND_DESIGN_TARGET",
+              "when": "OPERATION_MODE == DESIGN",
+              "purpose": "Bind the explicit Framework/schema/package development target without entering a HUMAN project Value Creation Stream.",
+              "domainNeutral": true,
+              "modelRef": "operation-mode-model.json"
+            },
+            {
+              "id": "KV01",
+              "operation": "BIND_ISOLATED_VALIDATION_TARGET",
+              "when": "OPERATION_MODE == VALIDATION",
+              "purpose": "Bind an isolated non-production validation target and prevent validation evidence from silently becoming production authority.",
+              "domainNeutral": true,
+              "modelRef": "operation-mode-model.json"
+            },
+            {
+              "id": "KV02",
+              "operation": "BIND_VALIDATION_AGENT_RUNTIME",
+              "when": "OPERATION_MODE == VALIDATION",
+              "purpose": "Bind and verify a validation Agent Runtime; HUMAN_MANUAL_TEST_ONLY is allowed only for an explicit isolated manual-host test harness.",
+              "domainNeutral": true,
+              "modelRef": "agent-runtime-model.json"
+            },
+            {
+              "id": "KE00",
+              "operation": "VERIFY_EXECUTION_AGENT_RUNTIME_POLICY",
+              "when": "OPERATION_MODE == EXECUTION",
+              "purpose": "Establish that AGENT dispatch later in EXECUTION requires verified HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION capability; do not require a runtime before AGENT work is needed.",
+              "domainNeutral": true,
+              "modelRef": "agent-runtime-model.json"
+            },
+            {
               "id": "K01",
               "operation": "SELECT_CREATION_TYPE",
               "purpose": "HUMAN chooses the intended creation path before project location; choice determines required Factory/Operating Model package IDs.",
@@ -986,34 +1101,39 @@
                 "technicalDetailExposure": "SUMMARY",
                 "deriveBeforeAsk": true,
                 "reuseUnchangedDecision": true
-              }
+              },
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K02",
               "operation": "RESOLVE_PACKAGE_ACCESS_PROFILE",
               "purpose": "Resolve FREE_PUBLIC versus PAID_ENTITLEMENT_REQUIRED access requirements from public package catalog.",
               "domainNeutral": true,
-              "modelRef": "package-distribution-model.json"
+              "modelRef": "package-distribution-model.json",
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K03",
               "operation": "RESOLVE_REQUIRED_PACKAGES",
               "purpose": "Resolve explicit HUMAN-loaded, entitled or public-free Factory/Operating Model packages according to access policy.",
               "domainNeutral": true,
-              "modelRef": "package-distribution-model.json"
+              "modelRef": "package-distribution-model.json",
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K04",
               "operation": "VERIFY_PACKAGE_ACCESS_INTEGRITY",
               "purpose": "Verify entitlement when required plus package identity, immutable revision/blob and kernel compatibility.",
               "domainNeutral": true,
-              "modelRef": "commercial-entitlement-model.json"
+              "modelRef": "commercial-entitlement-model.json",
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K05",
               "operation": "VERIFY_FACTORY_OM_COMPATIBILITY",
               "purpose": "Prove the selected Factory requirements are covered by the selected Operating Model before project binding.",
-              "domainNeutral": true
+              "domainNeutral": true,
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K06",
@@ -1031,14 +1151,16 @@
                 "technicalDetailExposure": "SUMMARY",
                 "deriveBeforeAsk": true,
                 "reuseUnchangedDecision": true
-              }
+              },
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K07",
               "operation": "VERIFY_PROJECT_WORKSPACE_CAPABILITIES",
               "purpose": "Verify actual remote-provider or local-filesystem/Git capabilities for the selected HUMAN-owned workspace.",
               "domainNeutral": true,
-              "modelRef": "workspace-model.json"
+              "modelRef": "workspace-model.json",
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K08",
@@ -1056,20 +1178,23 @@
                 "technicalDetailExposure": "SUMMARY",
                 "deriveBeforeAsk": true,
                 "reuseUnchangedDecision": true
-              }
+              },
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K09",
               "operation": "BIND_CONTROL_WORKSPACE",
               "purpose": "Use separate safor-memory for REMOTE_GIT or protected MASTER-only .safor/ for LOCAL_GIT.",
               "domainNeutral": true,
-              "modelRef": "workspace-model.json"
+              "modelRef": "workspace-model.json",
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K10",
               "operation": "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
               "purpose": "Persist immutable package pins, access evidence and workspace binding; entitlement never changes organizational authority.",
-              "domainNeutral": true
+              "domainNeutral": true,
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K11",
@@ -1087,7 +1212,8 @@
                 "technicalDetailExposure": "SUMMARY",
                 "deriveBeforeAsk": true,
                 "reuseUnchangedDecision": true
-              }
+              },
+              "when": "OPERATION_MODE == EXECUTION"
             },
             {
               "id": "K10A",
@@ -1493,6 +1619,44 @@
                 "PROJECT_TARGET_IS_PACKAGE_SOURCE",
                 "LOCAL_GIT_CAPABILITY_UNPROVEN",
                 "WORKER_TARGETS_MASTER_CONTROL_ROOT"
+              ]
+            },
+            "operationMode": {
+              "modelRef": "operation-mode-model.json",
+              "appliesBefore": "EVERY_MUTATING_EFFECT",
+              "requiredChecks": [
+                "OPERATION_MODE_RESOLVED",
+                "TARGET_CLASS_COMPATIBLE_WITH_MODE",
+                "NO_SILENT_EXECUTION_TO_VALIDATION_DOWNGRADE",
+                "VALIDATION_TARGET_IS_ISOLATED_WHEN_APPLICABLE"
+              ],
+              "failClosedOn": [
+                "MODE_UNRESOLVED",
+                "MODE_TARGET_MISMATCH",
+                "VALIDATION_NOT_ISOLATED",
+                "SILENT_MODE_DOWNGRADE_ATTEMPT"
+              ]
+            },
+            "agentRuntime": {
+              "modelRef": "agent-runtime-model.json",
+              "appliesBefore": "EVERY_AGENT_DISPATCH_ACTIVATION_OR_CONTINUATION",
+              "requiredChecks": [
+                "RUNTIME_BINDING_PRESENT",
+                "ACTUAL_RUNTIME_CAPABILITY_EVIDENCE_PRESENT",
+                "RUNTIME_COMPATIBLE_WITH_OPERATION_MODE",
+                "BACKGROUND_WAKEUP_NOT_ASSUMED_WITHOUT_EVIDENCE",
+                "JOB_PROMPT_TRANSPORT_NOT_REQUIRED"
+              ],
+              "executionAllowedActivationCapabilities": [
+                "HOST_NATIVE_AUTOMATIC",
+                "EXTERNAL_AUTOMATION"
+              ],
+              "failClosedOn": [
+                "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+                "AGENT_RUNTIME_CAPABILITY_UNVERIFIED",
+                "AGENT_RUNTIME_BACKGROUND_WAKEUP_UNVERIFIED",
+                "AGENT_RUNTIME_MODE_INCOMPATIBLE",
+                "AGENT_RUNTIME_JOB_PROMPT_TRANSPORT_FORBIDDEN"
               ]
             }
           }
@@ -2157,6 +2321,86 @@
           {
             "id": "INV-165",
             "rule": "Project/control data remain HUMAN-owned whether remote or local; SAFOR does not require project artifacts to be stored in an OpenAI- or SAFOR-owned repository."
+          },
+          {
+            "id": "INV-166",
+            "rule": "SAFOR resolves and records DESIGN, VALIDATION or EXECUTION before any mutating effect."
+          },
+          {
+            "id": "INV-167",
+            "rule": "DESIGN work is Framework/schema/package development and must not be represented as execution of a HUMAN project Value Creation Stream."
+          },
+          {
+            "id": "INV-168",
+            "rule": "VALIDATION requires an explicitly isolated non-production target."
+          },
+          {
+            "id": "INV-169",
+            "rule": "VALIDATION evidence cannot silently satisfy production execution mandates, Work Item acceptance, release authority or business outcome acceptance."
+          },
+          {
+            "id": "INV-170",
+            "rule": "EXECUTION targets a HUMAN project and forbids HUMAN_MANUAL_TEST_ONLY as an AGENT execution runtime."
+          },
+          {
+            "id": "INV-171",
+            "rule": "Before AGENT dispatch in EXECUTION, a verified Agent Runtime binding must provide HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION activation and continuation."
+          },
+          {
+            "id": "INV-172",
+            "rule": "Missing AGENT automation in EXECUTION produces AGENT_RUNTIME_AUTOMATION_UNAVAILABLE and must not become a HUMAN chat-wakeup/copy-paste task."
+          },
+          {
+            "id": "INV-173",
+            "rule": "Agent Runtime capabilities are evidenced from actual host/runtime observations; declarations or prompts are not proof."
+          },
+          {
+            "id": "INV-174",
+            "rule": "Background wakeup support defaults false and becomes true only with authoritative runtime evidence."
+          },
+          {
+            "id": "INV-175",
+            "rule": "Provider Adapter bindings and Agent Runtime Adapter bindings are logically separate even if supplied by the same host implementation."
+          },
+          {
+            "id": "INV-176",
+            "rule": "Agent Runtime binding cannot create provider rights, Operating Model authority, execution mandate, package entitlement, review approval or acceptance."
+          },
+          {
+            "id": "INV-177",
+            "rule": "Repository-native Agent Job JSON remains authoritative regardless of activation/runtime mechanism."
+          },
+          {
+            "id": "INV-178",
+            "rule": "Identity bootstrap may contain only identity/context/runtime references and must not transport a full Job Contract as authority."
+          },
+          {
+            "id": "INV-179",
+            "rule": "In EXECUTION the HUMAN is never asked to open/wake routine agent chats, copy jobs, poll inboxes, move results or manually advance dispatch sequencing."
+          },
+          {
+            "id": "INV-180",
+            "rule": "EXECUTION cannot silently downgrade to VALIDATION to bypass missing Agent Runtime automation."
+          },
+          {
+            "id": "INV-181",
+            "rule": "HUMAN manual agent activation is permitted only in an explicitly labeled VALIDATION manual test harness."
+          },
+          {
+            "id": "INV-182",
+            "rule": "Operation-mode changes cannot create or expand organizational authority, provider rights or runtime capability."
+          },
+          {
+            "id": "INV-183",
+            "rule": "Agent Runtime binding is required only before AGENT dispatch/activation; EXECUTION without AGENT work may proceed without an active Agent Runtime."
+          },
+          {
+            "id": "INV-184",
+            "rule": "A MANUAL_TEST_HARNESS result is NON_PRODUCTION and cannot be reused as proof that production Agent Runtime automation exists."
+          },
+          {
+            "id": "INV-185",
+            "rule": "The canonical SAFOR repository may be a DESIGN development target but remains forbidden as an implicit HUMAN project workspace in EXECUTION."
           }
         ],
         "evidencePolicy": {
@@ -2310,24 +2554,26 @@
         "packageDistributionModelRef": "package-distribution-model.json",
         "commercialEntitlementModelRef": "commercial-entitlement-model.json",
         "workspaceModelRef": "workspace-model.json",
-        "packageCatalogRef": "package-catalog.json"
+        "packageCatalogRef": "package-catalog.json",
+        "operationModeModelRef": "operation-mode-model.json",
+        "agentRuntimeModelRef": "agent-runtime-model.json"
       },
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
       "sourcePath": "v0.12.0/initialization-model.json",
-      "sourceBlobSha": "7cc90a2dc97b1157562a834ea20ea0c99c67a3b8",
+      "sourceBlobSha": "f94fbd6cf19a71846614a13f6a714011bbdb117b",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
         "schemaVersion": "0.12.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
-        "purpose": "Initialize Framework, package access and compatibility first, then bind a HUMAN-owned remote or local Git project workspace and control workspace.",
+        "purpose": "Resolve SAFOR operation mode before any mutating work, then follow mode-specific initialization: Framework/schema DESIGN, isolated VALIDATION, or HUMAN project EXECUTION.",
         "entryBehavior": {
           "autoStartAfterBootstrapLoad": true,
-          "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
+          "firstHumanSurface": "MODE_DEPENDENT",
           "noProjectWorkBeforeComplete": true,
-          "completionPredicate": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED"
+          "completionPredicate": "OPERATION_MODE_RESOLVED_AND_MODE_SPECIFIC_CONTEXT_VERIFIED"
         },
         "sequence": [
           {
@@ -2365,6 +2611,73 @@
             "deterministicControlRef": "deterministic-control-model.json"
           },
           {
+            "id": "INIT-00B",
+            "operation": "VERIFY_OPERATION_MODE_AND_AGENT_RUNTIME_BASELINE",
+            "title": "Betriebsmodus und Agent Runtime prüfen",
+            "requiresProvider": false,
+            "passOutcome": "MODE_RUNTIME_BASELINE_VERIFIED",
+            "failOutcome": "STOP",
+            "checks": [
+              "OPERATION_MODE_MODEL_PRESENT_AND_PINNED",
+              "AGENT_RUNTIME_MODEL_PRESENT_AND_PINNED",
+              "OPERATION_MODE_BINDING_SCHEMA_PRESENT",
+              "AGENT_RUNTIME_BINDING_SCHEMA_PRESENT",
+              "HUMAN_DECISION_GATE_FORBIDS_ROUTINE_AGENT_ACTIVATION",
+              "AGENT_WORKSPACE_BINDS_RUNTIME_ADAPTER"
+            ],
+            "operationModeModelRef": "operation-mode-model.json",
+            "agentRuntimeModelRef": "agent-runtime-model.json"
+          },
+          {
+            "id": "INIT-00C",
+            "operation": "RESOLVE_OPERATION_MODE",
+            "title": "Arbeitsmodus bestimmen",
+            "requiresProvider": false,
+            "modelRef": "operation-mode-model.json",
+            "rule": "Derive DESIGN, VALIDATION or EXECUTION from explicit HUMAN intent and target context before any mutating effect. Ask only when materially ambiguous. Never silently downgrade EXECUTION to VALIDATION.",
+            "humanDecisionDefault": false,
+            "askHumanOnlyWhen": "MODE_CANNOT_BE_DERIVED_SAFELY_FROM_INTENT_AND_TARGET_CONTEXT",
+            "outcomes": [
+              "DESIGN",
+              "VALIDATION",
+              "EXECUTION"
+            ]
+          },
+          {
+            "id": "INIT-D01",
+            "when": "OPERATION_MODE == DESIGN",
+            "operation": "BIND_DESIGN_TARGET",
+            "title": "SAFOR-Entwicklungsziel binden",
+            "rule": "Bind the explicitly intended Framework/schema/package development target. Canonical SAFOR repository is allowed here as a development target because this is not a HUMAN project workspace.",
+            "completionOutcome": "DESIGN_CONTEXT_READY"
+          },
+          {
+            "id": "INIT-V01",
+            "when": "OPERATION_MODE == VALIDATION",
+            "operation": "BIND_ISOLATED_VALIDATION_TARGET",
+            "title": "Isolierten Prüfkontext binden",
+            "rule": "Validation target must be explicitly isolated/non-production and must not inherit production project authority.",
+            "completionOutcome": "VALIDATION_TARGET_BOUND"
+          },
+          {
+            "id": "INIT-V02",
+            "when": "OPERATION_MODE == VALIDATION",
+            "operation": "BIND_VALIDATION_AGENT_RUNTIME",
+            "title": "Test-Runtime prüfen",
+            "modelRef": "agent-runtime-model.json",
+            "rule": "Manual HUMAN activation is permitted only if the selected validation explicitly tests a MANUAL_TEST_HARNESS. Otherwise derive or bind an automated runtime when available.",
+            "completionOutcome": "VALIDATION_RUNTIME_READY"
+          },
+          {
+            "id": "INIT-E00",
+            "when": "OPERATION_MODE == EXECUTION",
+            "operation": "VERIFY_EXECUTION_AGENT_RUNTIME_POLICY",
+            "title": "Agent Runtime für Ausführung prüfen",
+            "modelRef": "agent-runtime-model.json",
+            "rule": "Do not require an Agent Runtime until AGENT execution is actually needed, but record that EXECUTION permits only HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION for AGENT dispatch. HUMAN_MANUAL_TEST_ONLY can never become production fallback.",
+            "completionOutcome": "EXECUTION_RUNTIME_POLICY_READY"
+          },
+          {
             "id": "INIT-01",
             "operation": "SELECT_CREATION_TYPE",
             "humanDecision": "CREATION_TYPE_SELECTION",
@@ -2384,7 +2697,8 @@
                 }
               ]
             },
-            "rule": "Creation type determines required package IDs, not project location and not organizational authority."
+            "rule": "Creation type determines required package IDs, not project location and not organizational authority.",
+            "when": "OPERATION_MODE == EXECUTION"
           },
           {
             "id": "INIT-02",
@@ -2399,7 +2713,8 @@
               "FREE_PUBLIC_RESOLUTION",
               "PAID_PACKAGE_ACCESS_CHECK"
             ],
-            "rule": "Never infer paid entitlement from package possession or HUMAN statement."
+            "rule": "Never infer paid entitlement from package possession or HUMAN statement.",
+            "when": "OPERATION_MODE == EXECUTION"
           },
           {
             "id": "INIT-03",
@@ -2415,7 +2730,8 @@
               "missingPaidPackage": "PACKAGE_ACCESS_REQUIRED",
               "entitlementUnverified": "PACKAGE_ENTITLEMENT_UNVERIFIED",
               "publicPaidResolutionAttempt": "STOP"
-            }
+            },
+            "when": "OPERATION_MODE == EXECUTION"
           },
           {
             "id": "INIT-04",
@@ -2429,7 +2745,8 @@
               "ACCESS_MODE",
               "ENTITLEMENT_WHEN_REQUIRED"
             ],
-            "rule": "A package is not bindable until source, integrity and access evidence are proven."
+            "rule": "A package is not bindable until source, integrity and access evidence are proven.",
+            "when": "OPERATION_MODE == EXECUTION"
           },
           {
             "id": "INIT-05",
@@ -2441,7 +2758,8 @@
               "NO_FACTORY_ROLE_ID_COUPLING",
               "NO_OPERATING_MODEL_FLOW_OWNERSHIP"
             ],
-            "failOutcome": "PACKAGE_COMBINATION_INCOMPATIBLE"
+            "failOutcome": "PACKAGE_COMBINATION_INCOMPATIBLE",
+            "when": "OPERATION_MODE == EXECUTION"
           },
           {
             "id": "INIT-06",
@@ -2461,11 +2779,12 @@
                 }
               ]
             },
-            "rule": "Project location is HUMAN-controlled and independent from package source/access."
+            "rule": "Project location is HUMAN-controlled and independent from package source/access.",
+            "when": "OPERATION_MODE == EXECUTION"
           },
           {
             "id": "INIT-07R",
-            "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
             "operation": "SELECT_REMOTE_PROVIDER",
             "humanDecision": "PROVIDER_SELECTION",
             "title": "Welchen Git-Anbieter nutzt du?",
@@ -2487,7 +2806,7 @@
           },
           {
             "id": "INIT-08R",
-            "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
             "operation": "VERIFY_REMOTE_PROVIDER_ACCESS",
             "requires": [
               "provider.identity.read",
@@ -2504,7 +2823,7 @@
           },
           {
             "id": "INIT-09R",
-            "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
             "operation": "SELECT_REMOTE_OWNER_AND_PROJECT",
             "humanDecision": "REMOTE_PROJECT_SELECTION",
             "title": "Welches deiner Projekte verwenden wir?",
@@ -2517,7 +2836,7 @@
           },
           {
             "id": "INIT-10R",
-            "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == REMOTE_GIT)",
             "operation": "VERIFY_AND_BIND_REMOTE_CONTROL_WORKSPACE",
             "target": "{selectedOwner}/safor-memory",
             "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
@@ -2531,7 +2850,7 @@
           },
           {
             "id": "INIT-07L",
-            "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == LOCAL_GIT)",
             "operation": "VERIFY_LOCAL_HOST_CAPABILITIES",
             "requires": [
               "workspace.local.read",
@@ -2547,7 +2866,7 @@
           },
           {
             "id": "INIT-08L",
-            "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == LOCAL_GIT)",
             "operation": "SELECT_OR_DEFINE_LOCAL_GIT_PROJECT",
             "humanDecision": "LOCAL_PROJECT_SELECTION",
             "title": "Welchen lokalen Git-Projektordner verwenden wir?",
@@ -2560,7 +2879,7 @@
           },
           {
             "id": "INIT-09L",
-            "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+            "when": "OPERATION_MODE == EXECUTION AND (PROJECT_WORKSPACE_TYPE == LOCAL_GIT)",
             "operation": "BIND_LOCAL_CONTROL_WORKSPACE",
             "strategy": "LOCAL_MASTER_CONTROL_ROOT",
             "target": ".safor/",
@@ -2572,7 +2891,8 @@
             "humanDecision": "SETUP_APPROVAL",
             "title": "Projekt starten",
             "rule": "Materialize project/control only in the HUMAN-selected project/control workspaces. Package sources and canonical SAFOR repository remain read-only sources.",
-            "completionOutcome": "INITIALIZATION_COMPLETE"
+            "completionOutcome": "INITIALIZATION_COMPLETE",
+            "when": "OPERATION_MODE == EXECUTION"
           }
         ],
         "packageModelRefs": {
@@ -2583,7 +2903,21 @@
         },
         "workspaceModelRef": "workspace-model.json",
         "humanDecisionGateModelRef": "human-decision-gate-model.json",
-        "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
+        "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+        "operationModeModelRef": "operation-mode-model.json",
+        "agentRuntimeModelRef": "agent-runtime-model.json",
+        "modeSpecificCompletion": {
+          "DESIGN": "DESIGN_CONTEXT_READY",
+          "VALIDATION": "VALIDATION_TARGET_BOUND_AND_VALIDATION_RUNTIME_READY",
+          "EXECUTION": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED"
+        },
+        "modeHumanGovernance": {
+          "deriveBeforeAsk": true,
+          "oneDecisionContextPerTurn": true,
+          "missingExecutionAutomationIsNotHumanWorkflow": true,
+          "manualActivationVisibleOnlyInExplicitValidationHarness": true,
+          "executionToValidationSilentFallbackForbidden": true
+        }
       },
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
@@ -3651,13 +3985,13 @@
     },
     "humanDecisionGate": {
       "key": "humanDecisionGate",
-      "sourcePath": "v0.10.0/human-decision-gate-model.json",
-      "sourceBlobSha": "212eab209d0c8f4c906bd762e040a6a960e24d8e",
+      "sourcePath": "v0.12.0/human-decision-gate-model.json",
+      "sourceBlobSha": "efde18f292cfe5cc2ae87526cc1660fd2e8f5929",
       "content": {
         "format": "SAFOR_HUMAN_DECISION_GATE_MODEL",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.12.0",
         "id": "SAFOR-HUMAN-DECISION-GATE",
-        "purpose": "Prevent SAFOR from delegating deterministic internal orchestration to the HUMAN while preserving HUMAN authority for intent, target, material tradeoff, scope, risk, irreversible action, governance and outcome decisions.",
+        "purpose": "Decide whether HUMAN involvement is necessary while explicitly preventing routine agent-runtime operation, chat wakeup or job transport from being delegated to the HUMAN.",
         "schemaRef": "schemas/human-decision-gate.schema.json",
         "cognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
         "defaultDecision": "DO_NOT_ASK",
@@ -3723,7 +4057,15 @@
           "DERIVED_ARTIFACT_REGENERATION",
           "INTERNAL_STATE_TRANSITIONS",
           "TECHNICAL_IDENTIFIER_SELECTION",
-          "FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE"
+          "FACTORY_OR_OPERATING_MODEL_BINDING_WHEN_DETERMINISTIC_FROM_APPROVED_CREATION_TYPE",
+          "AGENT_JOB_ACTIVATION_WHEN_AUTOMATION_IS_EXPECTED",
+          "AGENT_CHAT_WAKEUP",
+          "JOB_PROMPT_TRANSPORT",
+          "JOB_CONTRACT_COPY",
+          "AGENT_INBOX_POLLING",
+          "AGENT_RESULT_TRANSPORT",
+          "MANUAL_DISPATCH_SEQUENCE_ADVANCE",
+          "RUNTIME_MODE_DOWNGRADE_TO_BYPASS_CAPABILITY_GAP"
         ],
         "evaluationAlgorithm": [
           "CLASSIFY_CURRENT_PHASE",
@@ -3732,6 +4074,8 @@
           "CHECK_FOR_UNCHANGED_PRIOR_DECISION_WITH_SAME_SCOPE_AND_BOUND_INPUTS",
           "RESOLVE_ONE_LEGITIMATE_HUMAN_INVOLVEMENT_REASON",
           "REJECT_IF_REASON_IS_INTERNAL_ORCHESTRATION_ONLY",
+          "CHECK_AGENT_RUNTIME_CAPABILITY_GAP_IS_NOT_HUMAN_WORK",
+          "CHECK_OPERATION_MODE_DOES_NOT_ALLOW_MANUAL_TEST_HARNESS_AS_EXECUTION_FALLBACK",
           "COMPUTE_HEURISTIC_LOAD_ESTIMATE",
           "APPLY_PHASE_LOAD_TARGET_AND_TEMPORARY_ESCALATION_RULES",
           "TRANSLATE_INTERNAL_TERMS_TO_HUMAN_DOMAIN_LANGUAGE",
@@ -3779,14 +4123,29 @@
           "technicalDetailExposure",
           "gateOutcome",
           "reusedDecisionRef"
-        ]
+        ],
+        "agentRuntimeGovernance": {
+          "modelRef": "agent-runtime-model.json",
+          "operationModeModelRef": "operation-mode-model.json",
+          "executionRule": "If AGENT execution is required and no HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION runtime is available, suppress routine activation requests and surface AGENT_RUNTIME_AUTOMATION_UNAVAILABLE.",
+          "humanChoiceAllowedOnlyWhen": "A material choice among runtime alternatives cannot be safely derived and requires HUMAN-controlled target/authority selection.",
+          "manualTestHarnessRule": "Manual HUMAN activation is a VALIDATION-only test harness and must be labeled non-production.",
+          "forbiddenFallbacks": [
+            "ASK_HUMAN_TO_OPEN_AGENT_CHAT",
+            "ASK_HUMAN_TO_COPY_JOB_PROMPT",
+            "ASK_HUMAN_TO_COPY_JOB_CONTRACT",
+            "ASK_HUMAN_TO_POLL_AGENT_INBOX",
+            "ASK_HUMAN_TO_MOVE_RESULT_BETWEEN_CHATS",
+            "SILENTLY_SWITCH_EXECUTION_TO_VALIDATION"
+          ]
+        }
       },
       "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
     },
     "selfHealing": {
       "key": "selfHealing",
       "sourcePath": "v0.12.0/self-healing-model.json",
-      "sourceBlobSha": "034015a929104f8cc5fb14741e0406e514d1c4b3",
+      "sourceBlobSha": "cc035bae80251d33c38b328257449a7b0b350000",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
         "schemaVersion": "0.12.0",
@@ -4106,6 +4465,22 @@
             "automaticRepair": "REFRESH_DERIVED_PACKAGE_CATALOG_OR_REOBSERVE_WORKSPACE_CAPABILITIES_ONLY",
             "defaultRetryBudget": 1,
             "requiresHuman": "WHEN_PACKAGE_PURCHASE_OR_ENTITLEMENT_OR_PROJECT_LOCATION_OR_LOCAL_HOST_ACCESS_MUST_CHANGE"
+          },
+          {
+            "id": "SH-24",
+            "name": "AGENT_RUNTIME_OR_OPERATION_MODE_GOVERNANCE_FAILURE",
+            "examples": [
+              "EXECUTION requires AGENT work but only HUMAN_MANUAL_TEST_ONLY runtime is available",
+              "Agent runtime capability or background wakeup is asserted without host/runtime evidence",
+              "A HUMAN is asked to open/wake a routine production agent chat",
+              "A HUMAN is asked to copy a Job Contract or job prompt between chats",
+              "EXECUTION is silently downgraded to VALIDATION to bypass missing automation",
+              "MANUAL_TEST_HARNESS is used against a non-isolated target",
+              "Agent Runtime Adapter is treated as provider-rights or organizational-authority source"
+            ],
+            "automaticRepair": "REOBSERVE_RUNTIME_CAPABILITIES_OR_REBIND_ALREADY_AUTHORIZED_COMPATIBLE_RUNTIME_ONLY",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "ONLY_WHEN_A_MATERIAL_RUNTIME_TARGET_OR_AUTHORITY_CHOICE_CANNOT_BE_DERIVED_SAFELY"
           }
         ],
         "eligibilityRules": [
@@ -4135,7 +4510,12 @@
           "Commercial recovery may re-read public catalog metadata or re-observe actual entitlement/workspace evidence, but may never create, forge, extend or infer entitlement.",
           "Workspace recovery may not move project artifacts to SAFOR product/package repositories or to a different location without explicit HUMAN selection.",
           "LOCAL_GIT recovery may not silently downgrade to non-Git filesystem execution.",
-          "Paid package resolution failure cannot be repaired by reading historical/public prototype package content."
+          "Paid package resolution failure cannot be repaired by reading historical/public prototype package content.",
+          "Agent runtime capability may be re-observed from authoritative host/runtime evidence but never fabricated.",
+          "EXECUTION may not be silently downgraded to VALIDATION as recovery for missing runtime automation.",
+          "Manual HUMAN agent activation is never an automatic recovery path for EXECUTION.",
+          "A VALIDATION manual test harness must remain isolated and explicitly non-production.",
+          "Recovery may rebind an already authorized compatible Agent Runtime Adapter only when the binding is deterministic and does not expand rights or authority."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -4177,7 +4557,15 @@
           "USE_SAFOR_PRODUCT_REPOSITORY_AS_PROJECT_TARGET",
           "USE_PACKAGE_SOURCE_AS_PROJECT_TARGET",
           "BYPASS_LOCAL_GIT_REQUIREMENT",
-          "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT"
+          "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT",
+          "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+          "FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+          "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME_AS_RECOVERY",
+          "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+          "TREAT_MANUAL_TEST_HARNESS_AS_PRODUCTION_RUNTIME",
+          "COPY_JOB_CONTRACT_TO_HUMAN_AS_RUNTIME_FALLBACK",
+          "GRANT_PROVIDER_RIGHTS_FROM_AGENT_RUNTIME_BINDING",
+          "GRANT_ORGANIZATIONAL_AUTHORITY_FROM_AGENT_RUNTIME_BINDING"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -4255,7 +4643,7 @@
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
       "sourcePath": "v0.12.0/module-self-healing-model.json",
-      "sourceBlobSha": "4b6b57ebdb14be2e94e1d3b22112357a5f83f147",
+      "sourceBlobSha": "5c15caf0fc8bfadf0c7d7461de6929578204f0e2",
       "content": {
         "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
         "schemaVersion": "0.12.0",
@@ -7279,6 +7667,196 @@
               ],
               "target": "STOP"
             }
+          },
+          {
+            "profileId": "MRP-OPERATION_MODE",
+            "moduleKey": "operationMode",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.operationMode + integrityManifest.operationMode",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "OPERATION_MODE_RUNTIME_POLICY_VALIDATION_FAILURE",
+              "AGENT_RUNTIME_CAPABILITY_BINDING_FAILURE",
+              "HUMAN_ACTIVATION_GOVERNANCE_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_MODE_RUNTIME_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+              "FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+              "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+              "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME",
+              "GRANT_AUTHORITY_OR_PROVIDER_RIGHTS",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_RUNTIME_CAPABILITY_OR_MODE_AUTHORITY_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "MODE_RUNTIME_POLICY_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "MODULE_MATCHES_EXPECTED_BLOB_AND_MODE_RUNTIME_BOUNDARY_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "RUNTIME_OR_MODE_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-AGENT_RUNTIME",
+            "moduleKey": "agentRuntime",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.agentRuntime + integrityManifest.agentRuntime",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "OPERATION_MODE_RUNTIME_POLICY_VALIDATION_FAILURE",
+              "AGENT_RUNTIME_CAPABILITY_BINDING_FAILURE",
+              "HUMAN_ACTIVATION_GOVERNANCE_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_MODE_RUNTIME_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+              "FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+              "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+              "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME",
+              "GRANT_AUTHORITY_OR_PROVIDER_RIGHTS",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_RUNTIME_CAPABILITY_OR_MODE_AUTHORITY_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "MODE_RUNTIME_POLICY_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "MODULE_MATCHES_EXPECTED_BLOB_AND_MODE_RUNTIME_BOUNDARY_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "RUNTIME_OR_MODE_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_OPERATION_MODE_BINDING",
+            "moduleKey": "schemaOperationModeBinding",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaOperationModeBinding + integrityManifest.schemaOperationModeBinding",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+              "SILENTLY_CHANGE_OPERATION_MODE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_AGENT_RUNTIME_BINDING",
+            "moduleKey": "schemaAgentRuntimeBinding",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaAgentRuntimeBinding + integrityManifest.schemaAgentRuntimeBinding",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+              "SILENTLY_CHANGE_OPERATION_MODE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
           }
         ]
       },
@@ -7286,13 +7864,13 @@
     },
     "agentWorkspace": {
       "key": "agentWorkspace",
-      "sourcePath": "v0.10.0/agent-workspace-model.json",
-      "sourceBlobSha": "55ceb2cc0f8bcc7fa034fe62437bbc22bb596ff2",
+      "sourcePath": "v0.12.0/agent-workspace-model.json",
+      "sourceBlobSha": "39bfed8c2d3a780451b81180098beb3546daa960",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.12.0",
         "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
-        "purpose": "Repository-native coordination protocol in which persistent agent identities retrieve immutable jobs from their workspace and submit evidence-backed results for MASTER verification without HUMAN prompt transport.",
+        "purpose": "Persistent repository-native agent identity, job discovery, claim/result handoff and MASTER verification, with activation delegated to an explicit Agent Runtime Adapter rather than to HUMAN workflow operation.",
         "topology": {
           "projectRoot": "projects/{projectSlug}/",
           "agentRegistry": "agents/index.json",
@@ -7350,12 +7928,31 @@
           "identityChangePolicy": "Changing an immutable identity field requires explicit HUMAN re-identification and a new identityRevision before further job claims."
         },
         "activationContract": {
+          "agentRuntimeModelRef": "agent-runtime-model.json",
+          "runtimeBindingRequiredBeforeAgentDispatch": true,
+          "activationCapabilityDerivedFromRuntimeBinding": true,
           "backgroundWakeupAssumed": false,
-          "trigger": "HUMAN, automation or another host-supported activation mechanism must activate the chat/agent runtime.",
-          "minimalActivationIntent": "CHECK_WORKSPACE",
+          "backgroundWakeupEvidenceRequired": true,
+          "trigger": "The bound Agent Runtime Adapter activates or continues the runtime. HUMAN manual activation is never a production execution mechanism.",
+          "manualHumanActivationInExecutionForbidden": true,
+          "manualTestHarnessOnlyInValidation": true,
+          "productionCapabilityGapOutcome": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+          "minimalIdentityBootstrap": {
+            "allowedOnlyWhen": "OPERATION_MODE == VALIDATION AND RUNTIME_ADAPTER.activationCapability == HUMAN_MANUAL_TEST_ONLY",
+            "contentLimit": [
+              "CONTROL_WORKSPACE_REF",
+              "PROJECT_OR_VALIDATION_CONTEXT_ID",
+              "AGENT_ID",
+              "RUNTIME_ADAPTER_ID"
+            ],
+            "fullJobPromptForbidden": true,
+            "fullJobContractCopyForbidden": true
+          },
           "steps": [
+            "RUNTIME_TRIGGER",
             "LOAD_IDENTITY",
             "VERIFY_IDENTITY_STATUS_ACTIVE",
+            "VERIFY_AGENT_RUNTIME_BINDING",
             "LOAD_AGENT_STATE",
             "LOAD_INBOX_INDEX",
             "SELECT_DISCOVERABLE_JOB",
@@ -7363,12 +7960,12 @@
             "VERIFY_JOB_JSON_BLOB",
             "VERIFY_HUMAN_JOB_PROJECTION_BLOB",
             "READ_MASTER_JOB_STATE",
-            "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_AND_RIGHTS",
+            "VERIFY_JOB_ASSIGNMENT_ROLE_SKILLS_MANDATE_RIGHTS_AND_RUNTIME_BINDING",
             "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
             "EXECUTE_ONLY_CLAIMED_JOB",
             "SUBMIT_RESULT_AND_EVIDENCE"
           ],
-          "promptTransportRule": "The HUMAN must not need to copy the job contract into the agent chat after initial identity bootstrap."
+          "promptTransportRule": "The HUMAN must never copy the authoritative job contract or routine job prompt between chats. Repository-native Job JSON remains authority."
         },
         "claimProtocol": {
           "eligibleWhen": [
@@ -7486,7 +8083,15 @@
           "noCrossAgentClaim": true,
           "noSelfAcceptance": true,
           "noAutomaticJobReassignment": true,
-          "noAutomaticIdentityMutation": true
+          "noAutomaticIdentityMutation": true,
+          "operationModeRef": "operation-mode-model.json",
+          "agentRuntimeModelRef": "agent-runtime-model.json",
+          "manualActivationNeverProductionProof": true,
+          "runtimeAdapterCannotGrantAuthority": true,
+          "runtimeAdapterCannotGrantProviderRights": true,
+          "runtimeAdapterCannotGrantEntitlement": true,
+          "executionWithoutAutomatedAgentRuntime": "BLOCK_AGENT_DISPATCH",
+          "humanCopyPasteFallbackForbidden": true
         },
         "discoveryProtocol": {
           "indexRef": "agents/{agentId}/inbox/index.json",
@@ -7504,7 +8109,10 @@
             "VERIFY_IDENTITY_AND_DISPATCH_REVISION"
           ],
           "staleIndexRule": "The index is only a discovery projection. If an entry conflicts with the job contract or MASTER job state, the authoritative artifacts win and the agent must not claim from the stale entry.",
-          "updateRule": "MASTER updates the index with revision-controlled writes and provider readback whenever jobs become discoverable, withdrawn, superseded or accepted."
+          "updateRule": "MASTER updates the index with revision-controlled writes and provider readback whenever jobs become discoverable, withdrawn, superseded or accepted.",
+          "runtimeTriggerPrecedesDiscovery": true,
+          "humanPollingForbiddenInExecution": true,
+          "inboxIndexRequiredForDiscoverability": true
         },
         "jobContractModelRef": "agent-job-contract-model.json",
         "humanJobContract": {
@@ -7529,19 +8137,21 @@
             "CONSTRAINTS_AND_STOP_CONDITIONS"
           ],
           "publicationRule": "MASTER writes JSON and Markdown, verifies both by provider readback, then and only then marks the job READY and exposes it through inbox/index.json."
-        }
+        },
+        "agentRuntimeModelRef": "agent-runtime-model.json",
+        "operationModeModelRef": "operation-mode-model.json"
       },
       "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "agentJobContract": {
       "key": "agentJobContract",
-      "sourcePath": "v0.10.0/agent-job-contract-model.json",
-      "sourceBlobSha": "c8c5b88bbaac2cc682c11c4ad99d1ebf421d2227",
+      "sourcePath": "v0.12.0/agent-job-contract-model.json",
+      "sourceBlobSha": "167432cd27628a6126854961cc448bf52646d399",
       "content": {
         "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.12.0",
         "id": "SAFOR-CANONICAL-AGENT-JOB-CONTRACT",
-        "purpose": "Define the immutable, self-describing execution contract issued by MASTER to one persistent agent identity, plus its mandatory HUMAN-readable Markdown projection.",
+        "purpose": "Define the immutable, self-describing execution contract issued by MASTER to one persistent agent identity, including explicit operation-mode and Agent Runtime binding plus its HUMAN-readable projection.",
         "authority": {
           "authoritativeArtifact": "agents/{agentId}/inbox/{jobId}.json",
           "humanProjection": "agents/{agentId}/inbox/{jobId}.md",
@@ -7557,6 +8167,7 @@
           "BIND_VERSIONED_SKILL_CONTRACTS",
           "PIN_IMMUTABLE_INPUTS",
           "SNAPSHOT_AUTHORIZATION_RESOURCE_ACCESS_AND_GIT_WORKSPACES",
+          "BIND_OPERATION_MODE_AND_AGENT_RUNTIME_CONTRACT",
           "BIND_DISPATCH_WAVE_AND_RESOURCE_LEASES",
           "DECLARE_MACHINE_HUMAN_EVIDENCE_AND_AUDIT_RETURN_TARGETS",
           "DECLARE_ACCEPTANCE_REVIEW_AND_EVIDENCE_REQUIREMENTS",
@@ -7591,12 +8202,13 @@
         "authorizationSemantics": {
           "jobPermissionIsUpperBound": true,
           "actualProviderRightsRemainAuthoritative": true,
-          "executionPredicate": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW",
+          "executionPredicate": "JOB_ALLOWS && ACTIVE_MANDATE_ALLOWS && SAFOR_POLICY_ALLOWS && HOST_PROVIDER_RIGHTS_ALLOW && OPERATION_MODE_ALLOWS && AGENT_RUNTIME_CAPABILITY_ALLOWS",
           "noJsonPermissionGrant": true,
           "repositoryRightsAreExplicit": true,
           "pathRightsAreExplicit": true,
           "branchRightsAreExplicit": true,
-          "mergeDeployRightsAreExplicit": true
+          "mergeDeployRightsAreExplicit": true,
+          "agentRuntimeBindingDoesNotGrantRights": true
         },
         "humanProjectionContract": {
           "format": "MARKDOWN",
@@ -7611,6 +8223,7 @@
             "DEPENDENCIES_AND_INPUTS",
             "AUTHORIZATION",
             "WORKSPACE_AND_GIT",
+            "OPERATION_MODE_AND_AGENT_RUNTIME",
             "SCHEDULING",
             "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
             "VERIFICATION_AND_REVIEW",
@@ -7627,7 +8240,25 @@
           "roleChange": "NEW_JOB",
           "skillChange": "NEW_JOB_OR_PRE_DISPATCH_REBUILD",
           "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB",
-          "directAgentMutationForbidden": true
+          "directAgentMutationForbidden": true,
+          "runtimeBindingChange": "NEW_JOB_OR_PRE_DISPATCH_REBUILD",
+          "operationModeChange": "NEW_GOVERNED_CONTEXT_AND_NEW_JOB_WHEN_SEMANTICS_CHANGE"
+        },
+        "runtimeContract": {
+          "operationModeRequired": true,
+          "agentRuntimeBindingRequiredBeforeAgentDispatch": true,
+          "actualRuntimeCapabilityEvidenceRequired": true,
+          "executionAllowedActivationCapabilities": [
+            "HOST_NATIVE_AUTOMATIC",
+            "EXTERNAL_AUTOMATION"
+          ],
+          "validationManualHarnessAllowed": true,
+          "validationManualHarnessMustBeNonProduction": true,
+          "promptJobTransportForbidden": true,
+          "backgroundWakeupCannotBeAssumed": true,
+          "runtimeBindingCannotGrantAuthority": true,
+          "runtimeBindingCannotGrantProviderRights": true,
+          "missingExecutionAutomationOutcome": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE"
         }
       },
       "selfHealingProfileId": "MRP-AGENT_JOB_CONTRACT"
@@ -12003,12 +12634,12 @@
     },
     "schemaAgentJob": {
       "key": "schemaAgentJob",
-      "sourcePath": "v0.10.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "4131f05fab04f2441d193fad668cb807ff1da04c",
+      "sourcePath": "v0.12.0/schemas/agent-job.schema.json",
+      "sourceBlobSha": "bde7ed3c489eac9a5510f7f089c7ac7f45e04c5c",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
-        "$id": "urn:safor:agent-job:0.10.0",
-        "title": "SAFOR Canonical Agent Job Contract 0.10.0",
+        "$id": "https://safor.dev/schemas/0.12.0/agent-job.schema.json",
+        "title": "SAFOR Agent Job Contract 0.12.0",
         "type": "object",
         "additionalProperties": false,
         "required": [
@@ -12025,6 +12656,7 @@
           "inputs",
           "authorization",
           "workspace",
+          "runtime",
           "scheduling",
           "outputContract",
           "verificationContract",
@@ -12036,7 +12668,7 @@
             "const": "SAFOR_AGENT_JOB"
           },
           "schemaVersion": {
-            "const": "0.10.0"
+            "const": "0.12.0"
           },
           "identity": {
             "$ref": "#/$defs/jobIdentity"
@@ -12092,6 +12724,9 @@
           },
           "humanReadableProjection": {
             "$ref": "#/$defs/humanReadableProjection"
+          },
+          "runtime": {
+            "$ref": "#/$defs/runtime"
           }
         },
         "$defs": {
@@ -13386,12 +14021,155 @@
                 "DEPENDENCIES_AND_INPUTS",
                 "AUTHORIZATION",
                 "WORKSPACE_AND_GIT",
+                "OPERATION_MODE_AND_AGENT_RUNTIME",
                 "SCHEDULING",
                 "EXPECTED_OUTPUTS_AND_RETURN_PATHS",
                 "VERIFICATION_AND_REVIEW",
                 "CONSTRAINTS_AND_STOP_CONDITIONS"
               ]
             }
+          },
+          "runtime": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "operationMode",
+              "operationModeRef",
+              "agentRuntimeBindingRef",
+              "adapterId",
+              "activationCapability",
+              "activationResponsibility",
+              "capabilityEvidenceRefs",
+              "jobPromptTransportForbidden",
+              "runtimeBindingCannotGrantAuthority"
+            ],
+            "properties": {
+              "operationMode": {
+                "enum": [
+                  "DESIGN",
+                  "VALIDATION",
+                  "EXECUTION"
+                ]
+              },
+              "operationModeRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "agentRuntimeBindingRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "adapterId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "activationCapability": {
+                "enum": [
+                  "HOST_NATIVE_AUTOMATIC",
+                  "EXTERNAL_AUTOMATION",
+                  "HUMAN_MANUAL_TEST_ONLY",
+                  "UNAVAILABLE"
+                ]
+              },
+              "activationResponsibility": {
+                "enum": [
+                  "SYSTEM_RUNTIME",
+                  "HUMAN_TEST_HARNESS"
+                ]
+              },
+              "capabilityEvidenceRefs": {
+                "type": "array",
+                "minItems": 1,
+                "uniqueItems": true,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "jobPromptTransportForbidden": {
+                "const": true
+              },
+              "runtimeBindingCannotGrantAuthority": {
+                "const": true
+              },
+              "productionEvidenceEligible": {
+                "type": "boolean"
+              }
+            },
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "operationMode": {
+                      "const": "EXECUTION"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "productionEvidenceEligible"
+                  ],
+                  "properties": {
+                    "activationCapability": {
+                      "enum": [
+                        "HOST_NATIVE_AUTOMATIC",
+                        "EXTERNAL_AUTOMATION"
+                      ]
+                    },
+                    "activationResponsibility": {
+                      "const": "SYSTEM_RUNTIME"
+                    },
+                    "productionEvidenceEligible": {
+                      "const": true
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "operationMode": {
+                      "const": "VALIDATION"
+                    },
+                    "activationCapability": {
+                      "const": "HUMAN_MANUAL_TEST_ONLY"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "productionEvidenceEligible"
+                  ],
+                  "properties": {
+                    "activationResponsibility": {
+                      "const": "HUMAN_TEST_HARNESS"
+                    },
+                    "productionEvidenceEligible": {
+                      "const": false
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "operationMode": {
+                      "enum": [
+                        "DESIGN",
+                        "VALIDATION"
+                      ]
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "productionEvidenceEligible": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            ]
           }
         }
       },
@@ -14335,7 +15113,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.12.0/conformance.json",
-      "sourceBlobSha": "8a2b92678cef0efad96731bd8d668dcefedefdad",
+      "sourceBlobSha": "32e882d101ae07c0de7fd6e9b4e45e3e930c019a",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.12.0",
@@ -15420,12 +16198,132 @@
             "id": "CF-216",
             "statement": "Control workspace strategy is conditional: REMOTE_SEPARATE_SAFOR_MEMORY for REMOTE_GIT and LOCAL_MASTER_CONTROL_ROOT for LOCAL_GIT.",
             "expected": true
+          },
+          {
+            "id": "CF-217",
+            "statement": "Operation Mode model and Operation Mode binding schema are embedded, pinned and referenced by the Kernel.",
+            "expected": true
+          },
+          {
+            "id": "CF-218",
+            "statement": "SAFOR resolves DESIGN, VALIDATION or EXECUTION before every mutating effect.",
+            "expected": true
+          },
+          {
+            "id": "CF-219",
+            "statement": "DESIGN is explicitly Framework/schema/package development and is not represented as HUMAN project Value Creation execution.",
+            "expected": true
+          },
+          {
+            "id": "CF-220",
+            "statement": "VALIDATION requires an explicitly isolated non-production target.",
+            "expected": true
+          },
+          {
+            "id": "CF-221",
+            "statement": "Validation evidence cannot silently satisfy production execution mandate, Work Item acceptance, release authority or business outcome authority.",
+            "expected": true
+          },
+          {
+            "id": "CF-222",
+            "statement": "EXECUTION targets a HUMAN project workspace and is distinct from DESIGN/VALIDATION.",
+            "expected": true
+          },
+          {
+            "id": "CF-223",
+            "statement": "EXECUTION AGENT dispatch permits only HOST_NATIVE_AUTOMATIC or EXTERNAL_AUTOMATION activation/continuation.",
+            "expected": true
+          },
+          {
+            "id": "CF-224",
+            "statement": "HUMAN_MANUAL_TEST_ONLY is restricted to an explicit VALIDATION manual test harness.",
+            "expected": true
+          },
+          {
+            "id": "CF-225",
+            "statement": "Agent Runtime capabilities require actual host/runtime evidence; declarations alone do not satisfy dispatch.",
+            "expected": true
+          },
+          {
+            "id": "CF-226",
+            "statement": "Background wakeup defaults false and requires explicit capability evidence before use.",
+            "expected": true
+          },
+          {
+            "id": "CF-227",
+            "statement": "Provider Adapter and Agent Runtime Adapter remain logically separate bindings.",
+            "expected": true
+          },
+          {
+            "id": "CF-228",
+            "statement": "Agent Runtime Adapter cannot grant provider rights, Operating Model authority, execution mandate, package entitlement, review approval or acceptance.",
+            "expected": true
+          },
+          {
+            "id": "CF-229",
+            "statement": "The canonical Agent Job Contract includes explicit Operation Mode and Agent Runtime binding/capability evidence.",
+            "expected": true
+          },
+          {
+            "id": "CF-230",
+            "statement": "Agent Job transport remains REPOSITORY_PULL and copied job prompts/contracts are forbidden as authority.",
+            "expected": true
+          },
+          {
+            "id": "CF-231",
+            "statement": "HUMAN Decision Gate explicitly forbids routine agent chat activation/wakeup, job transport, inbox polling, result transport and manual dispatch sequencing in EXECUTION.",
+            "expected": true
+          },
+          {
+            "id": "CF-232",
+            "statement": "Missing EXECUTION agent automation fails closed as AGENT_RUNTIME_AUTOMATION_UNAVAILABLE instead of producing a HUMAN workflow task.",
+            "expected": true
+          },
+          {
+            "id": "CF-233",
+            "statement": "EXECUTION cannot silently downgrade to VALIDATION to bypass missing Agent Runtime capability.",
+            "expected": true
+          },
+          {
+            "id": "CF-234",
+            "statement": "Agent Workspace activation is delegated to a verified Agent Runtime binding and no longer treats HUMAN activation as generic production trigger.",
+            "expected": true
+          },
+          {
+            "id": "CF-235",
+            "statement": "SH-24 governs Agent Runtime / Operation Mode failures and forbids capability fabrication or HUMAN-operation fallback.",
+            "expected": true
+          },
+          {
+            "id": "CF-236",
+            "statement": "Every embedded 0.12.0-rc.2 Framework module has exactly one recovery profile; target coverage is 65/65.",
+            "expected": true
+          },
+          {
+            "id": "CF-237",
+            "statement": "Initialization resolves Operation Mode before Creation Type, package resolution or project workspace selection.",
+            "expected": true
+          },
+          {
+            "id": "CF-238",
+            "statement": "EXECUTION may proceed without an Agent Runtime while no AGENT work is required; runtime becomes mandatory before AGENT dispatch.",
+            "expected": true
+          },
+          {
+            "id": "CF-239",
+            "statement": "MANUAL_TEST_HARNESS output is non-production and cannot prove production Agent Runtime automation.",
+            "expected": true
+          },
+          {
+            "id": "CF-240",
+            "statement": "Operation-mode changes cannot create or expand authority, provider rights or runtime capability.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/modular-packages-human-workspace-v0.12.0-rc.1",
-          "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "Modular package distribution, commercial entitlement boundary and HUMAN-owned REMOTE_GIT/LOCAL_GIT workspace architecture implemented. Machine validation required before rc.1 acceptance."
+          "branch": "safor/agent-runtime-modes-v0.12.0-rc.2",
+          "result": "PENDING_MACHINE_VALIDATION",
+          "note": "Operation Mode, Agent Runtime Adapter, HUMAN activation governance, runtime-bound Agent Jobs and SH-24 added. Machine build/validator/test gates pending."
         }
       },
       "selfHealingProfileId": "MRP-CONFORMANCE"
@@ -18767,6 +19665,727 @@
         }
       },
       "selfHealingProfileId": "MRP-SCHEMA_WORKSPACE_BINDING"
+    },
+    "operationMode": {
+      "key": "operationMode",
+      "sourcePath": "v0.12.0/operation-mode-model.json",
+      "sourceBlobSha": "be68a1a35a888e8f570bdb3a9aae7d72fd9dfb48",
+      "content": {
+        "format": "SAFOR_OPERATION_MODE_MODEL",
+        "schemaVersion": "0.12.0",
+        "id": "safor-operation-mode",
+        "purpose": "Separate SAFOR Framework/schema design, isolated validation and real HUMAN project execution so governance and agent activation requirements cannot be conflated.",
+        "modes": {
+          "DESIGN": {
+            "targetClasses": [
+              "FRAMEWORK_REPOSITORY",
+              "PACKAGE_DEVELOPMENT_WORKSPACE"
+            ],
+            "purpose": "Author or revise SAFOR Framework, schemas, policies and package definitions.",
+            "projectValueStreamExecution": false,
+            "isolatedValidation": false,
+            "productionEvidenceEligible": false,
+            "humanOperationalWorkflowForbidden": true,
+            "rules": [
+              "A DESIGN target may be the canonical SAFOR product repository or another explicitly approved Framework/package development workspace.",
+              "DESIGN must not mutate a HUMAN project Value Creation Stream as if executing that project.",
+              "Agent use is optional and still requires a bound Agent Runtime Adapter."
+            ]
+          },
+          "VALIDATION": {
+            "targetClasses": [
+              "ISOLATED_TEST_WORKSPACE"
+            ],
+            "purpose": "Validate SAFOR behavior, schemas, replay, packages or runtime integration in an explicitly isolated test harness.",
+            "projectValueStreamExecution": false,
+            "isolatedValidation": true,
+            "productionEvidenceEligible": false,
+            "humanOperationalWorkflowForbidden": false,
+            "rules": [
+              "Validation targets must be explicitly identified as isolated/non-production.",
+              "HUMAN_MANUAL_TEST_ONLY activation is permitted only here and only when the validation objective requires a manual host test harness.",
+              "Validation evidence may prove SAFOR conformance but cannot silently satisfy production execution mandates, production Work Item acceptance or business outcome authority."
+            ]
+          },
+          "EXECUTION": {
+            "targetClasses": [
+              "HUMAN_PROJECT"
+            ],
+            "purpose": "Execute a real HUMAN project Value Creation Stream under Factory, Operating Model and project authority.",
+            "projectValueStreamExecution": true,
+            "isolatedValidation": false,
+            "productionEvidenceEligible": true,
+            "humanOperationalWorkflowForbidden": true,
+            "requiredAgentActivationCapabilities": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION"
+            ],
+            "forbiddenAgentActivationCapabilities": [
+              "HUMAN_MANUAL_TEST_ONLY",
+              "UNAVAILABLE"
+            ],
+            "rules": [
+              "All project mutations remain inside the HUMAN-selected project workspace.",
+              "Routine agent activation, continuation and result transport are system/runtime responsibilities.",
+              "Missing agent automation blocks AGENT dispatch with AGENT_RUNTIME_AUTOMATION_UNAVAILABLE; it must not become a HUMAN copy/paste or chat-wakeup task."
+            ]
+          }
+        },
+        "resolution": {
+          "resolveBeforeMutatingEffect": true,
+          "deriveBeforeAsk": true,
+          "rules": [
+            {
+              "when": "INTENT_TARGETS_SAFOR_FRAMEWORK_SCHEMA_OR_PACKAGE_DEFINITION_AND_TARGET_IS_DEVELOPMENT_WORKSPACE",
+              "mode": "DESIGN"
+            },
+            {
+              "when": "INTENT_IS_EXPLICIT_TEST_REPLAY_E2E_OR_CONFORMANCE_AND_TARGET_IS_ISOLATED",
+              "mode": "VALIDATION"
+            },
+            {
+              "when": "INTENT_EXECUTES_FACTORY_VALUE_STREAM_FOR_HUMAN_PROJECT",
+              "mode": "EXECUTION"
+            }
+          ],
+          "ambiguousOutcome": "HUMAN_DECISION_ALLOWED",
+          "ambiguityReason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "silentModeFallbackForbidden": true,
+          "silentExecutionToValidationDowngradeForbidden": true
+        },
+        "modeChange": {
+          "materialChangeRequiresGovernedTransition": true,
+          "executionToValidationRequiresExplicitValidationIntentAndIsolatedTarget": true,
+          "validationToExecutionRequiresHumanProjectWorkspaceAndExecutionAuthority": true,
+          "modeChangeCannotCreateAuthority": true,
+          "modeChangeCannotCreateProviderRights": true,
+          "modeChangeCannotCreateAgentRuntimeCapability": true
+        }
+      },
+      "selfHealingProfileId": "MRP-OPERATION_MODE"
+    },
+    "agentRuntime": {
+      "key": "agentRuntime",
+      "sourcePath": "v0.12.0/agent-runtime-model.json",
+      "sourceBlobSha": "435223708e4315f2381a7cf6bb516af0e0651d2b",
+      "content": {
+        "format": "SAFOR_AGENT_RUNTIME_MODEL",
+        "schemaVersion": "0.12.0",
+        "id": "safor-agent-runtime",
+        "purpose": "Abstract how AGENT runtimes are actually activated and continued, independently from repository Provider Adapters and from agent Job Contract authority.",
+        "separation": {
+          "providerAdapterResponsibility": "Repository/collaboration capabilities such as artifacts, branches, change requests, checks and readback.",
+          "agentRuntimeAdapterResponsibility": "AGENT activation, continuation/wakeup, job discovery trigger, runtime observation and result availability.",
+          "sameImplementationMayProvideBoth": true,
+          "bindingsRemainLogicallySeparate": true
+        },
+        "activationCapabilities": [
+          "HOST_NATIVE_AUTOMATIC",
+          "EXTERNAL_AUTOMATION",
+          "HUMAN_MANUAL_TEST_ONLY",
+          "UNAVAILABLE"
+        ],
+        "adapterKinds": [
+          "HOST_NATIVE",
+          "EXTERNAL_ORCHESTRATOR",
+          "LOCAL_AGENT_PROCESS",
+          "CI_AGENT",
+          "MANUAL_TEST_HARNESS",
+          "UNAVAILABLE"
+        ],
+        "requiredObservedCapabilities": [
+          "ACTIVATION",
+          "CONTINUATION",
+          "JOB_DISCOVERY_TRIGGER",
+          "STATE_OBSERVATION",
+          "RESULT_AVAILABILITY"
+        ],
+        "bindingRules": {
+          "actualCapabilityEvidenceRequired": true,
+          "declarationsAreNotProof": true,
+          "backgroundWakeupDefault": false,
+          "backgroundWakeupRequiresEvidence": true,
+          "repositoryNativeJobContractRemainsAuthoritative": true,
+          "promptJobTransportForbidden": true,
+          "runtimeAdapterCannotCreateProviderRights": true,
+          "runtimeAdapterCannotCreateOperatingModelAuthority": true,
+          "runtimeAdapterCannotCreateExecutionMandate": true,
+          "runtimeAdapterCannotCreatePackageEntitlement": true,
+          "runtimeAdapterCannotCreateAcceptance": true
+        },
+        "operationModeCompatibility": {
+          "DESIGN": {
+            "allowedActivationCapabilities": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION",
+              "UNAVAILABLE"
+            ],
+            "manualTestHarnessAllowed": false,
+            "rule": "DESIGN may proceed without AGENT execution. If AGENT execution is requested, automatic/external runtime support is required; manual test harness belongs to VALIDATION."
+          },
+          "VALIDATION": {
+            "allowedActivationCapabilities": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION",
+              "HUMAN_MANUAL_TEST_ONLY",
+              "UNAVAILABLE"
+            ],
+            "manualTestHarnessAllowed": true,
+            "manualHarnessConditions": [
+              "Target is ISOLATED_TEST_WORKSPACE.",
+              "Validation purpose explicitly requires manual host activation behavior.",
+              "Artifacts/evidence are marked NON_PRODUCTION.",
+              "Manual activation cannot be reused as proof of EXECUTION automation."
+            ]
+          },
+          "EXECUTION": {
+            "allowedActivationCapabilities": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION"
+            ],
+            "manualTestHarnessAllowed": false,
+            "missingAutomationOutcome": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+            "rule": "Routine HUMAN activation/wakeup/job transport is forbidden. If no compatible automated runtime exists, AGENT work remains blocked until a compatible runtime adapter is bound."
+          }
+        },
+        "activationProtocol": {
+          "authoritativeJobTransport": "REPOSITORY_PULL",
+          "jobPromptTransportForbidden": true,
+          "allowedIdentityBootstrap": [
+            "AUTOMATIC",
+            "ONE_TIME_MANUAL_TEST_ONLY",
+            "PREPROVISIONED"
+          ],
+          "identityBootstrapContentLimit": [
+            "CONTROL_WORKSPACE_REF",
+            "PROJECT_OR_VALIDATION_CONTEXT_ID",
+            "AGENT_ID",
+            "RUNTIME_ADAPTER_ID"
+          ],
+          "identityBootstrapMustNotContain": [
+            "FULL_JOB_CONTRACT_AS_AUTHORITY",
+            "HUMAN_COPIED_JOB_PROMPT",
+            "NEW_AUTHORITY",
+            "PROVIDER_CREDENTIALS"
+          ],
+          "agentActivationSequence": [
+            "RUNTIME_TRIGGER",
+            "LOAD_IDENTITY",
+            "LOAD_AGENT_STATE",
+            "LOAD_INBOX_INDEX",
+            "SELECT_DISCOVERABLE_JOB",
+            "READ_AUTHORITATIVE_JOB_JSON",
+            "VERIFY_JOB_AND_PROJECTION_BLOBS",
+            "READ_MASTER_JOB_STATE",
+            "VERIFY_ASSIGNMENT_ROLE_SKILLS_MANDATE_RIGHTS_AND_RUNTIME_BINDING",
+            "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+            "EXECUTE_ONLY_CLAIMED_JOB",
+            "SUBMIT_RESULT_AND_EVIDENCE"
+          ]
+        },
+        "humanActivationGovernance": {
+          "humanIsWorkflowOperator": false,
+          "forbiddenHumanRequestsInExecution": [
+            "OPEN_AGENT_CHAT_FOR_ROUTINE_JOB",
+            "WAKE_AGENT_CHAT",
+            "COPY_JOB_PROMPT",
+            "COPY_JOB_CONTRACT",
+            "POLL_AGENT_INBOX",
+            "MOVE_AGENT_RESULT_BETWEEN_CHATS",
+            "MANUALLY_ADVANCE_DISPATCH_SEQUENCE"
+          ],
+          "allowedHumanEscalation": [
+            "SELECT_OR_APPROVE_DIFFERENT_AGENT_RUNTIME_WHEN_NO_SAFE_DETERMINISTIC_BINDING_EXISTS",
+            "APPROVE_NEW_OR_EXPANDED_RUNTIME_AUTHORITY_WHEN_REQUIRED"
+          ],
+          "manualTestHarnessDisclosureRequired": true,
+          "manualTestHarnessMustBeLabeledNonProduction": true
+        },
+        "failClosedOutcomes": {
+          "executionManualOnly": "AGENT_RUNTIME_AUTOMATION_UNAVAILABLE",
+          "runtimeCapabilityUnverified": "AGENT_RUNTIME_CAPABILITY_UNVERIFIED",
+          "backgroundWakeupUnverified": "AGENT_RUNTIME_BACKGROUND_WAKEUP_UNVERIFIED",
+          "modeAdapterMismatch": "AGENT_RUNTIME_MODE_INCOMPATIBLE",
+          "jobPromptTransportRequired": "AGENT_RUNTIME_JOB_PROMPT_TRANSPORT_FORBIDDEN"
+        }
+      },
+      "selfHealingProfileId": "MRP-AGENT_RUNTIME"
+    },
+    "schemaOperationModeBinding": {
+      "key": "schemaOperationModeBinding",
+      "sourcePath": "v0.12.0/schemas/operation-mode-binding.schema.json",
+      "sourceBlobSha": "d4fff431e7024a4c99150339c1ace1b5478b4e03",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.12.0/operation-mode-binding.schema.json",
+        "title": "SAFOR Operation Mode Binding",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "bindingRevision",
+          "mode",
+          "basis",
+          "intentRef",
+          "target",
+          "evidenceRefs"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_OPERATION_MODE_BINDING"
+          },
+          "schemaVersion": {
+            "const": "0.12.0"
+          },
+          "bindingRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "mode": {
+            "enum": [
+              "DESIGN",
+              "VALIDATION",
+              "EXECUTION"
+            ]
+          },
+          "basis": {
+            "enum": [
+              "DERIVED_POLICY",
+              "HUMAN_SELECTED"
+            ]
+          },
+          "intentRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "targetClass",
+                  "targetRef",
+                  "isolated"
+                ],
+                "properties": {
+                  "targetClass": {
+                    "enum": [
+                      "FRAMEWORK_REPOSITORY",
+                      "PACKAGE_DEVELOPMENT_WORKSPACE"
+                    ]
+                  },
+                  "targetRef": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "isolated": {
+                    "const": false
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "targetClass",
+                  "targetRef",
+                  "isolated"
+                ],
+                "properties": {
+                  "targetClass": {
+                    "const": "ISOLATED_TEST_WORKSPACE"
+                  },
+                  "targetRef": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "isolated": {
+                    "const": true
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "targetClass",
+                  "targetRef",
+                  "isolated"
+                ],
+                "properties": {
+                  "targetClass": {
+                    "const": "HUMAN_PROJECT"
+                  },
+                  "targetRef": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "isolated": {
+                    "const": false
+                  }
+                }
+              }
+            ]
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "DESIGN"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "target": {
+                  "properties": {
+                    "targetClass": {
+                      "enum": [
+                        "FRAMEWORK_REPOSITORY",
+                        "PACKAGE_DEVELOPMENT_WORKSPACE"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "VALIDATION"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "target": {
+                  "properties": {
+                    "targetClass": {
+                      "const": "ISOLATED_TEST_WORKSPACE"
+                    },
+                    "isolated": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "const": "EXECUTION"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "target": {
+                  "properties": {
+                    "targetClass": {
+                      "const": "HUMAN_PROJECT"
+                    },
+                    "isolated": {
+                      "const": false
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_OPERATION_MODE_BINDING"
+    },
+    "schemaAgentRuntimeBinding": {
+      "key": "schemaAgentRuntimeBinding",
+      "sourcePath": "v0.12.0/schemas/agent-runtime-binding.schema.json",
+      "sourceBlobSha": "0fbccaf4af7a5a8e8ca8dcbc8cd65d5aa35bbe98",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.12.0/agent-runtime-binding.schema.json",
+        "title": "SAFOR Agent Runtime Binding",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "bindingRevision",
+          "adapterId",
+          "adapterKind",
+          "adapterRef",
+          "activationCapability",
+          "continuationCapability",
+          "supportedOperationModes",
+          "backgroundWakeup",
+          "identityBootstrap",
+          "jobTransport",
+          "stateObservation",
+          "resultAvailability",
+          "actualCapabilityEvidenceRefs"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AGENT_RUNTIME_BINDING"
+          },
+          "schemaVersion": {
+            "const": "0.12.0"
+          },
+          "bindingRevision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "adapterId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "adapterKind": {
+            "enum": [
+              "HOST_NATIVE",
+              "EXTERNAL_ORCHESTRATOR",
+              "LOCAL_AGENT_PROCESS",
+              "CI_AGENT",
+              "MANUAL_TEST_HARNESS",
+              "UNAVAILABLE"
+            ]
+          },
+          "adapterRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "activationCapability": {
+            "enum": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION",
+              "HUMAN_MANUAL_TEST_ONLY",
+              "UNAVAILABLE"
+            ]
+          },
+          "continuationCapability": {
+            "enum": [
+              "HOST_NATIVE_AUTOMATIC",
+              "EXTERNAL_AUTOMATION",
+              "HUMAN_MANUAL_TEST_ONLY",
+              "UNAVAILABLE"
+            ]
+          },
+          "supportedOperationModes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "enum": [
+                "DESIGN",
+                "VALIDATION",
+                "EXECUTION"
+              ]
+            }
+          },
+          "backgroundWakeup": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "supported",
+              "evidenceRef"
+            ],
+            "properties": {
+              "supported": {
+                "type": "boolean"
+              },
+              "evidenceRef": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "identityBootstrap": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "jobContractTransportForbidden"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "AUTOMATIC",
+                  "ONE_TIME_MANUAL_TEST_ONLY",
+                  "PREPROVISIONED",
+                  "UNAVAILABLE"
+                ]
+              },
+              "jobContractTransportForbidden": {
+                "const": true
+              }
+            }
+          },
+          "jobTransport": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode",
+              "promptTransportForbidden"
+            ],
+            "properties": {
+              "mode": {
+                "const": "REPOSITORY_PULL"
+              },
+              "promptTransportForbidden": {
+                "const": true
+              }
+            }
+          },
+          "stateObservation": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "PUSH",
+                  "POLL",
+                  "RUNTIME_NATIVE",
+                  "MANUAL_TEST_ONLY",
+                  "UNAVAILABLE"
+                ]
+              }
+            }
+          },
+          "resultAvailability": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "mode"
+            ],
+            "properties": {
+              "mode": {
+                "enum": [
+                  "PUSH",
+                  "POLL",
+                  "REPOSITORY_READBACK",
+                  "MANUAL_TEST_ONLY",
+                  "UNAVAILABLE"
+                ]
+              }
+            }
+          },
+          "actualCapabilityEvidenceRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "adapterKind": {
+                  "const": "MANUAL_TEST_HARNESS"
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "activationCapability": {
+                  "const": "HUMAN_MANUAL_TEST_ONLY"
+                },
+                "continuationCapability": {
+                  "const": "HUMAN_MANUAL_TEST_ONLY"
+                },
+                "supportedOperationModes": {
+                  "const": [
+                    "VALIDATION"
+                  ]
+                },
+                "identityBootstrap": {
+                  "properties": {
+                    "mode": {
+                      "const": "ONE_TIME_MANUAL_TEST_ONLY"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "backgroundWakeup": {
+                  "properties": {
+                    "supported": {
+                      "const": true
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "backgroundWakeup": {
+                  "properties": {
+                    "evidenceRef": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "supportedOperationModes": {
+                  "contains": {
+                    "const": "EXECUTION"
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "activationCapability": {
+                  "enum": [
+                    "HOST_NATIVE_AUTOMATIC",
+                    "EXTERNAL_AUTOMATION"
+                  ]
+                },
+                "continuationCapability": {
+                  "enum": [
+                    "HOST_NATIVE_AUTOMATIC",
+                    "EXTERNAL_AUTOMATION"
+                  ]
+                }
+              }
+            }
+          }
+        ]
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AGENT_RUNTIME_BINDING"
     }
   },
   "controlWorkspacePolicy": {
