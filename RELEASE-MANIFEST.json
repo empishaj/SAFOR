@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.12.0-rc.1",
+  "version": "0.13.0-rc.1",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
-  "sourceRoot": "v0.12.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.12.0-rc.1.json",
+  "sourceRoot": "v0.13.0",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.1.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.11.0-rc.2",
+  "previousVersion": "0.12.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -74,7 +74,20 @@
     "HUMAN_OWNED_LOCAL_GIT_PROJECT_WORKSPACE",
     "LOCAL_MASTER_CONTROL_ROOT",
     "REMOTE_SEPARATE_SAFOR_MEMORY",
-    "PACKAGE_SOURCE_PROJECT_WORKSPACE_SEPARATION"
+    "PACKAGE_SOURCE_PROJECT_WORKSPACE_SEPARATION",
+    "COMPOSABLE_DOMAIN_PACKAGE_JSON",
+    "INDEPENDENT_FACTORY_SELECTION",
+    "INDEPENDENT_OPERATING_MODEL_SELECTION",
+    "CREATION_PROFILE_DEFAULTS_NOT_LOCKED_PAIRS",
+    "PER_SELECTED_PACKAGE_ENTITLEMENT",
+    "MIXED_FREE_PAID_PACKAGE_PAIR",
+    "EXTERNAL_ENTITLEMENT_EVIDENCE",
+    "DOMAIN_PACKAGE_SHA256_INTEGRITY",
+    "DOMAIN_PACKAGE_FRAMEWORK_RANGE",
+    "DOMAIN_PACKAGE_CREATION_TYPE_SCOPE",
+    "MATERIALIZED_PACKAGE_SELECTION",
+    "MATERIALIZED_PACKAGE_COMPATIBILITY_DECISION",
+    "AUDITABLE_DOMAIN_PACKAGE_BINDINGS"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -95,9 +108,11 @@
     "COMMERCIAL_LICENSE_TERMS_FINALIZATION",
     "COMMERCIAL_ENTITLEMENT_END_TO_END_ACCEPTANCE",
     "MODULAR_PACKAGE_DISTRIBUTION_END_TO_END_ACCEPTANCE",
-    "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE"
+    "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE",
+    "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE"
   ],
   "sourceBaselines": [
+    "v0.13.0",
     "v0.12.0",
     "v0.11.0",
     "v0.10.0"
@@ -105,11 +120,19 @@
   "distributionModel": "FRAMEWORK_PLUS_EXTERNAL_DOMAIN_PACKAGES",
   "freeStarterProfile": {
     "creationType": "SOFTWARE_WEBSITE",
-    "factoryPackageId": "safor.factory.software-delivery",
-    "operatingModelPackageId": "safor.om.saas-engineering",
-    "accessMode": "FREE_PUBLIC"
+    "defaultFactoryPackageId": "safor.factory.software-delivery",
+    "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+    "defaultFactoryAccessMode": "FREE_PUBLIC",
+    "defaultOperatingModelAccessMode": "FREE_PUBLIC",
+    "independentOverridesAllowed": true
   },
   "paidCreationProfiles": [
     "BOOK"
-  ]
+  ],
+  "packageCommercialModel": {
+    "accessDecisionScope": "PER_SELECTED_PACKAGE",
+    "factoryAndOperatingModelIndependentlyPurchasable": true,
+    "mixedFreeAndPaidPairAllowed": true,
+    "entitlementEvidenceExternalToPackageArtifact": true
+  }
 }
