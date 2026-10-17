@@ -529,7 +529,17 @@
         "purpose": "HUMAN chooses the intended creation path before project location; choice determines required Factory/Operating Model package IDs.",
         "domainNeutral": true,
         "humanDecision": "CREATION_TYPE_SELECTION",
-        "modelRef": "initialization-model.json#sequence/INIT-01"
+        "modelRef": "initialization-model.json#sequence/INIT-01",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K02",
@@ -564,7 +574,17 @@
         "purpose": "HUMAN chooses REMOTE_GIT or LOCAL_GIT. Package source/access does not choose project location.",
         "domainNeutral": true,
         "humanDecision": "PROJECT_WORKSPACE_SELECTION",
-        "modelRef": "workspace-model.json"
+        "modelRef": "workspace-model.json",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K07",
@@ -579,7 +599,17 @@
         "purpose": "Select or define the project only inside the verified HUMAN workspace; SAFOR product/package sources are forbidden targets.",
         "domainNeutral": true,
         "humanDecision": "PROJECT_SELECTION",
-        "modelRef": "workspace-model.json"
+        "modelRef": "workspace-model.json",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K09",
@@ -600,7 +630,17 @@
         "purpose": "After setup approval, materialize project/control exclusively in HUMAN-owned workspace(s) and verify by authoritative readback.",
         "domainNeutral": true,
         "humanDecision": "SETUP_APPROVAL",
-        "modelRef": "initialization-model.json#sequence/INIT-11"
+        "modelRef": "initialization-model.json#sequence/INIT-11",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
       },
       {
         "id": "K10A",
