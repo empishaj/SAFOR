@@ -68,6 +68,7 @@
         "domainId",
         "creationType",
         "accessMode",
+        "publicationMode",
         "publicArtifactCommitted",
         "defaultFactory",
         "defaultOperatingModel",
@@ -140,6 +141,13 @@
               "const": true
             }
           }
+        },
+        "publicationMode": {
+          "enum": [
+            "PUBLIC_PRODUCTION",
+            "PUBLIC_TEST_EVALUATION",
+            "COMMERCIAL_PRODUCTION"
+          ]
         }
       }
     }
