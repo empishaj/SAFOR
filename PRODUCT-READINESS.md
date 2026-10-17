@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.12.0-rc.1**
+Current target: **v0.12.0-rc.2**
 
 Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol/domain-package baselines**
 
@@ -34,8 +34,18 @@ Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **38 PASS in CI** |
-| Module-wide Self-Healing exact coverage | **61/61 PASS** |
+| Operation Mode model (DESIGN / VALIDATION / EXECUTION) | PASS by model/validator |
+| Operation Mode binding schema | PASS |
+| Agent Runtime model / adapter contract | PASS by model/validator |
+| Agent Runtime binding schema | PASS |
+| EXECUTION automatic agent activation policy | PASS by unit/validator |
+| HUMAN manual agent activation restricted to VALIDATION | PASS by unit/validator |
+| HUMAN agent-runtime operator fallback forbidden | PASS by Decision Gate/conformance |
+| Runtime-bound Agent Job Contract | PASS by schema/conformance |
+| Operation Mode end-to-end acceptance | OPEN |
+| Agent Runtime automatic EXECUTION end-to-end acceptance | OPEN |
+| Total Python unit tests | **53 PASS in CI** |
+| Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |
