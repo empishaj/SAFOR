@@ -14,9 +14,14 @@
     "technicalIdsAreSecondary": true,
     "destructiveActionsSeparated": true,
     "userMayAlwaysTypeFreeText": true,
-    "terminalMenuAlwaysRequired": true,
+    "terminalMenuAlwaysRequired": false,
     "terminalMenuIsFinalRenderedSurface": true,
-    "humanResponseEnvelopeRequired": true
+    "humanResponseEnvelopeRequired": true,
+    "platformOwnsHumanVisibleCommunication": true,
+    "domainModulesCannotOverrideHumanVisibleCommunication": true,
+    "platformResponseGovernorRequired": true,
+    "terminalMenuRequiredAtInteractiveCheckpoints": true,
+    "informationalNoticeMayOmitTerminalMenu": true
   },
   "hostInteractionCapabilities": {
     "discoverAtBootstrap": true,
@@ -117,7 +122,8 @@
     "suppressWhen": [
       "DURING_ATOMIC_PROVIDER_WRITE_AND_READBACK",
       "WHILE_PRESENTING_REQUIRED_HUMAN_DECISION_OPTIONS",
-      "WHEN_NO_USER_ACTION_IS_MEANINGFUL_AND_STATE_IS_WAITING_EXTERNAL"
+      "WHEN_NO_USER_ACTION_IS_MEANINGFUL_AND_STATE_IS_WAITING_EXTERNAL",
+      "PLATFORM_INFORMATIONAL_NOTICE_WITH_NO_HUMAN_ACTION"
     ],
     "primaryActionResolution": [
       {
@@ -197,9 +203,13 @@
         "visibilityRule": "STOP_ALLOWED"
       }
     ],
-    "terminalMenuRequired": true,
-    "exactlyOneTerminalMenu": true,
-    "noContentAfterTerminalMenu": true
+    "terminalMenuRequired": false,
+    "exactlyOneTerminalMenu": false,
+    "noContentAfterTerminalMenu": true,
+    "terminalMenuRequiredAtInteractiveCheckpoints": true,
+    "exactlyOneTerminalMenuWhenRequired": true,
+    "informationalNoticeMayOmitTerminalMenu": true,
+    "informationalNoticeMenuForbidden": true
   },
   "recommendationExperience": {
     "entryIntent": "VIEW_RECOMMENDATIONS",
@@ -292,8 +302,12 @@
       "cognitiveLoadPolicyRequired": true,
       "deriveBeforeAsk": true,
       "reuseUnchangedDecisions": true,
-      "terminalMenuRequired": true,
-      "noContentAfterTerminalMenu": true
+      "terminalMenuRequired": false,
+      "noContentAfterTerminalMenu": true,
+      "platformResponseGovernorRequired": true,
+      "domainPresentationOverrideForbidden": true,
+      "terminalMenuRequiredAtInteractiveCheckpoints": true,
+      "informationalNoticeMayOmitTerminalMenu": true
     },
     "responseBudgets": {
       "acknowledgement": {
@@ -334,6 +348,12 @@
         "maxSentencesBeforeChoice": 2,
         "targetWordsBeforeChoice": 35,
         "guidance": "Ask one thing at a time. Keep onboarding fast and friendly."
+      },
+      "platformInformationalNotice": {
+        "maxSentences": 2,
+        "targetWords": 24,
+        "terminalMenu": "FORBIDDEN",
+        "guidance": "State only what changed and what the platform is doing next. Keep analysis, versions, digests, mappings and options behind Details unless materially required."
       }
     },
     "voice": {
@@ -452,6 +472,19 @@
           "NEXT_ACTION_IF_ANY"
         ],
         "example": "SAFOR hat einen veralteten Arbeitsstand erkannt und automatisch korrigiert. Die eigentlichen Aufgaben und Ergebnisse wurden nicht verändert. Der Projektstand ist wieder konsistent."
+      },
+      "frameworkDetected": {
+        "structure": [
+          "WHAT_CHANGED",
+          "PLATFORM_NEXT_ACTION"
+        ],
+        "example": "Neues Website-Framework erkannt. Ich prüfe den bestehenden Stand und plane die Migration; bis dahin ändere ich nichts.",
+        "forbidden": [
+          "VERSION_AND_DIGEST_DUMP",
+          "FACTORY_AND_OPERATING_MODEL_METADATA_DUMP",
+          "VALUE_STREAM_WALKTHROUGH",
+          "MIGRATION_OPTION_MENU_WITHOUT_REAL_HUMAN_DECISION"
+        ]
       }
     },
     "avoid": {
@@ -476,7 +509,7 @@
       ],
       "rule": "Keep SUMMARY human-friendly and short. Reveal deeper technical surfaces only when requested, required for a decision, or necessary to explain material risk."
     },
-    "terminalRule": "Every SAFOR-generated HUMAN-facing response ends with exactly one interaction menu. No SAFOR-visible text or other content may follow that menu."
+    "terminalRule": "The SAFOR platform owns response classification. INFORMATIONAL_NOTICE responses contain only the compressed content and no terminal menu. Interactive checkpoints and genuine decision requests end with exactly one menu, with no SAFOR-visible content after it."
   },
   "initializationExperience": {
     "modelRef": "initialization-model.json",
@@ -995,48 +1028,46 @@
     "rule": "Interne Intent-IDs bestimmen nie das HUMAN-Label, wenn eine konkrete fachliche Aktion benannt werden kann."
   },
   "terminalMenuContract": {
-    "scope": "EVERY_SAFOR_GENERATED_HUMAN_FACING_RESPONSE",
+    "scope": "INTERACTIVE_CHECKPOINTS_AND_GENUINE_DECISION_RESPONSES",
     "responseSchemaRef": "schemas/human-response.schema.json",
     "menuSchemaRef": "schemas/interaction-menu.schema.json",
-    "exactlyOne": true,
-    "mustBeFinalRenderedElement": true,
+    "platformOwner": "SAFOR_PLATFORM",
+    "requiredFor": [
+      "INTERACTIVE_CHECKPOINT",
+      "DECISION_REQUEST",
+      "BLOCKER_WITH_HUMAN_ACTION",
+      "DETAIL_RESPONSE_WITH_NAVIGATION"
+    ],
+    "omittedFor": [
+      "INFORMATIONAL_NOTICE"
+    ],
+    "informationalNoticeMenuForbidden": true,
+    "exactlyOneWhenRequired": true,
+    "mustBeFinalRenderedElementWhenPresent": true,
     "contentAfterMenuForbidden": true,
     "stopRenderingAfterMenu": true,
     "menuPresenceDoesNotImplyHumanDecision": true,
-    "appliesTo": [
-      "ACKNOWLEDGEMENT",
-      "NORMAL",
-      "PROGRESS",
-      "DECISION",
-      "BLOCKER",
-      "WARNING",
-      "RECOVERY",
-      "STATUS",
-      "HELP",
-      "PAUSED",
-      "STOPPED",
-      "OUTCOME",
-      "COMPLETION"
-    ],
     "finalizer": {
       "mandatory": true,
       "steps": [
         "BUILD_HUMAN_RESPONSE_ENVELOPE",
+        "APPLY_PLATFORM_RESPONSE_GOVERNOR",
+        "REJECT_DOMAIN_PRESENTATION_OVERRIDE",
         "APPLY_HUMAN_DECISION_GATE",
-        "DERIVE_CONTEXTUAL_TERMINAL_MENU",
-        "IF_CONTEXTUAL_MENU_UNAVAILABLE_DERIVE_SAFE_FALLBACK_MENU",
-        "VALIDATE_TERMINAL_MENU",
+        "CLASSIFY_RESPONSE_CLASS",
+        "COMPRESS_SUMMARY_TO_PLATFORM_BUDGET",
+        "IF_INFORMATIONAL_NOTICE_VERIFY_NO_TERMINAL_MENU",
+        "IF_INTERACTIVE_DERIVE_CONTEXTUAL_TERMINAL_MENU",
+        "IF_INTERACTIVE_AND_CONTEXTUAL_MENU_UNAVAILABLE_DERIVE_SAFE_FALLBACK_MENU",
         "VALIDATE_HUMAN_RESPONSE_SCHEMA",
-        "VERIFY_EXACTLY_ONE_TERMINAL_MENU",
-        "VERIFY_NO_CONTENT_AFTER_TERMINAL_MENU",
         "RENDER_CONTENT",
-        "RENDER_TERMINAL_MENU",
+        "IF_INTERACTIVE_RENDER_EXACTLY_ONE_TERMINAL_MENU",
         "STOP_RENDERING"
       ],
       "emitWithoutSuccessfulFinalization": false
     },
     "fallbackMenu": {
-      "required": true,
+      "requiredOnlyForInteractiveResponse": true,
       "derivationRule": "Derive only currently valid navigation/control actions from authoritative state, Decision Gate, active mandates and actual host capabilities. Never invent a decision or authority merely to populate a menu.",
       "preferredIntents": [
         "NEXT_ROUND",
@@ -1050,7 +1081,104 @@
         "DETAILS",
         "HELP"
       ],
-      "ifNoStateAdvancingActionExists": "Show non-mutating navigation/help actions only."
+      "ifNoStateAdvancingActionExists": "Show non-mutating navigation/help actions only for an interactive response; do not turn an informational notice into an interaction."
     }
+  },
+  "platformResponseGovernor": {
+    "id": "SAFOR_PLATFORM_HUMAN_RESPONSE_GOVERNOR",
+    "owner": "SAFOR_PLATFORM",
+    "scope": "EVERY_SAFOR_GENERATED_HUMAN_VISIBLE_OUTPUT",
+    "enforcementBoundary": "AFTER_DOMAIN_FACT_COLLECTION_BEFORE_HUMAN_RENDERING",
+    "nonDelegation": {
+      "factoryMayControlHumanPresentation": false,
+      "operatingModelMayControlHumanPresentation": false,
+      "domainModulesMaySupply": [
+        "FACTS",
+        "RISKS",
+        "REQUIRED_HUMAN_DECISION",
+        "EVIDENCE_REFS",
+        "NEXT_SAFE_ACTION"
+      ],
+      "domainModulesMayNotControl": [
+        "VISIBLE_TEXT",
+        "VISIBLE_LENGTH",
+        "VISIBLE_STRUCTURE",
+        "TECHNICAL_DETAIL_EXPOSURE",
+        "NUMBER_OF_CHOICES",
+        "TERMINAL_MENU",
+        "RESPONSE_BUDGET",
+        "PROGRESSIVE_DISCLOSURE"
+      ],
+      "domainOverrideForbidden": true
+    },
+    "defaultSurface": "SUMMARY",
+    "detailRetention": {
+      "retainFullInternalAnalysis": true,
+      "retainEvidence": true,
+      "showOnlyWhenHumanRequestsDetailsOrMaterialSafetyRequiresIt": true,
+      "technicalIdsHiddenByDefault": true
+    },
+    "communicationClasses": {
+      "INFORMATIONAL_NOTICE": {
+        "humanActionRequired": false,
+        "terminalMenuAllowed": false,
+        "maxSentences": 2,
+        "maxWords": 30
+      },
+      "INTERACTIVE_CHECKPOINT": {
+        "humanActionRequired": true,
+        "terminalMenuRequired": true,
+        "maxNewDecisionContexts": 1
+      },
+      "DECISION_REQUEST": {
+        "humanActionRequired": true,
+        "terminalMenuRequired": true,
+        "humanDecisionGateRequired": true,
+        "maxNewDecisionContexts": 1
+      }
+    },
+    "eventPolicies": {
+      "FRAMEWORK_DETECTED": {
+        "responseClass": "INFORMATIONAL_NOTICE",
+        "visiblePattern": "Neues {domainLabel}-Framework erkannt. Ich prüfe den bestehenden Stand und plane die Migration; bis dahin ändere ich nichts.",
+        "maxSentences": 2,
+        "maxWords": 24,
+        "showVersion": false,
+        "showBlobOrDigest": false,
+        "showFactoryOrOperatingModelIds": false,
+        "showValueStreamMapping": false,
+        "offerMigrationChoices": false,
+        "safeMigrationPlanningIsInternal": true
+      },
+      "MIGRATION_PLANNING_STARTED": {
+        "responseClass": "INFORMATIONAL_NOTICE",
+        "visiblePattern": "Die Migration wird geplant. Bis der sichere Plan steht, ändere ich nichts.",
+        "maxSentences": 2,
+        "maxWords": 18,
+        "offerMigrationChoices": false
+      }
+    },
+    "humanDecisionEscalationOnlyWhen": [
+      "NON_DERIVABLE_SCOPE_DECISION",
+      "MATERIAL_ALTERNATIVE",
+      "NEW_OR_EXPANDED_AUTHORITY",
+      "MATERIAL_RISK_ACCEPTANCE",
+      "IRREVERSIBLE_ACTION",
+      "GOAL_CONFLICT"
+    ],
+    "renderAlgorithm": [
+      "COLLECT_PLATFORM_AND_DOMAIN_FACTS",
+      "REJECT_DOMAIN_PRESENTATION_OVERRIDE",
+      "CLASSIFY_HUMAN_RELEVANCE",
+      "RUN_HUMAN_DECISION_GATE",
+      "CLASSIFY_RESPONSE_CLASS",
+      "SELECT_SUMMARY_BY_DEFAULT",
+      "COMPRESS_TO_PLATFORM_RESPONSE_BUDGET",
+      "MOVE_NONESSENTIAL_DETAIL_TO_DETAILS_OR_EVIDENCE",
+      "OMIT_TERMINAL_MENU_FOR_INFORMATIONAL_NOTICE",
+      "RENDER_TERMINAL_MENU_ONLY_FOR_INTERACTIVE_CHECKPOINT"
+    ],
+    "failureMode": "FAIL_CLOSED_TO_MINIMUM_SAFE_PLATFORM_MESSAGE",
+    "minimumSafeMessage": "Ich habe die Änderung erkannt. Ich prüfe den sicheren nächsten Schritt und ändere bis dahin nichts."
   }
 }

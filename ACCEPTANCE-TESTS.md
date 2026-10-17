@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 
 ## A. GitHub REMOTE_GIT — free Website happy path
 
@@ -10,10 +10,10 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - The selected owner contains a pre-existing writable `safor-memory`.
 
 **Expected flow**
-1. Upload only `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+1. Upload only `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 2. SAFOR verifies Framework/recovery/deterministic-control integrity.
 3. HUMAN selects **Website**.
-4. SAFOR resolves `safor.factory.website-delivery@1.0.0` and `safor.om.website-team@1.0.0` from public SAFOR Git at immutable revision/blob without asking for a paid entitlement.
+4. SAFOR resolves `safor.factory.website-delivery@1.1.0` and `safor.om.website-team@1.1.0` from public SAFOR Git at immutable revision/blob without asking for a paid entitlement.
 5. SAFOR verifies Factory/Operating Model compatibility.
 6. HUMAN selects **In meinem Git-Repository**.
 7. HUMAN selects GitHub and the HUMAN-controlled owner/project repository.
@@ -322,7 +322,7 @@ For one mutating agent job and one read-only agent job:
 
 Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly and fails closed around integrity/authority boundaries.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.6.json` artifact and verify K00 then K00A complete before provider/project work.
+1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.7.json` artifact and verify K00 then K00A complete before provider/project work.
 2. Create or load a project with a PLANNED work item whose dependency is ACCEPTED, required input object is resolvable, resource declaration is complete and an active execution mandate covers the work item/capability.
 3. Submit a typed `WORK_ITEM_READINESS_REEVALUATION_REQUESTED` event with the next contiguous sequence.
 4. Verify the deterministic transition is `WORK_ITEM_BECOMES_READY`, the work item becomes READY, `execution.readySince` comes from the event timestamp and the resulting canonical state hash is recorded.
@@ -344,7 +344,7 @@ Pass criteria: identical canonical inputs and pinned model revision produce iden
 
 Goal: prove that Work Item ACCEPTED is derived only from the approved Acceptance Contract and authoritative typed evidence/review/authority records.
 
-1. Use the exact `SAFOR-FRAMEWORK-v0.13.0-rc.6.json` artifact.
+1. Use the exact `SAFOR-FRAMEWORK-v0.13.0-rc.7.json` artifact.
 2. Create an executable Work Item with three approved criteria: pinned contribution evidence, independent technical review and explicit risk authority approval.
 3. Verify Planning materializes an ACTIVE Acceptance Contract preserving all three criterion texts and mapping each to typed requirements.
 4. Verify the contractHash matches canonical contract content and P03 approval binds the contract set.
@@ -369,7 +369,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that paid Factory/Operating Model use is licensed independently from organizational authority.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 2. Select **Buch**.
 3. With no commercial package artifacts, verify `PACKAGE_ACCESS_REQUIRED`.
 4. Supply Book Factory/OM as HUMAN-loaded package artifacts but no independently verified entitlements; verify `PACKAGE_ENTITLEMENT_UNVERIFIED`.
@@ -388,7 +388,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that the project can remain on the HUMAN local disk without remote project storage.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+1. Load the exact `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 2. Select **Website** and resolve the FREE_PUBLIC Factory/OM.
 3. Select **Lokal auf meinem Rechner**.
 4. Verify the host exposes actual local filesystem read/write plus Git repository/history/branch/commit capabilities.
@@ -412,9 +412,9 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that the free path is a Website creation product rather than a free Software/SaaS product.
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 2. Select **Website**.
-3. Verify `safor.factory.website-delivery@1.0.0` and `safor.om.website-team@1.0.0` resolve as FREE_PUBLIC.
+3. Verify `safor.factory.website-delivery@1.1.0` and `safor.om.website-team@1.1.0` resolve as FREE_PUBLIC.
 4. Verify the Website Factory covers audience/purpose, content/information architecture, experience design, web implementation, accessibility/responsive/performance verification, publishing, observation and outcome.
 5. Verify public discoverability adds search-visibility evidence conditionally.
 6. Present a request that requires application logic, SaaS/service lifecycle or broader software operations.
@@ -427,7 +427,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that Software/SaaS requires both a paid Factory and a paid Operating Model.
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 2. Select **Software / SaaS**.
 3. With no commercial artifacts, verify `PACKAGE_ACCESS_REQUIRED`.
 4. Supply only the Software Factory plus valid entitlement; verify initialization still blocks because the SaaS Operating Model is missing.
@@ -445,7 +445,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove the paid package chain from commercial basis through protected delivery and digest verification.
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 2. Select **Software / SaaS**.
 3. Provide both paid package artifacts but no verification context; verify paid binding does not succeed.
 4. Verify a `REVOKED`, `SUSPENDED` or `EXPIRED` entitlement cannot authorize package use.
@@ -512,3 +512,23 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 14. Verify the production package catalog still exposes no public model path for paid package identities.
 
 **Pass condition:** both paid domain Frameworks can be tested from public Git without weakening paid-mode semantics or redefining the production distribution source.
+
+## S. Platform-owned HUMAN response governor
+
+**Preconditions**
+- An existing Website project is bound to an older SAFOR Framework.
+- `SAFOR-FRAMEWORK-WEBSITE.json` from the current release is loaded.
+
+**Expected**
+1. The platform recognizes the new Framework and begins safe migration analysis without delegating technical comparison or plan drafting to the HUMAN.
+2. The first visible notice contains at most two sentences and thirty words.
+3. The notice does not expose versions, blob/digest values, package IDs, value-stream mappings or a migration-option menu.
+4. Factory and Operating Model contribute facts/evidence only and cannot override visible wording, length, structure or menu behavior.
+5. Full comparison, mapping and evidence remain retained and are available through Details/Evidence.
+6. A HUMAN decision is requested only if scope, authority, material risk, irreversible action or a genuine alternative requires it.
+
+**Canonical default notice**
+
+```text
+Neues Website-Framework erkannt. Ich prüfe den bestehenden Stand und plane die Migration; bis dahin ändere ich nichts.
+```

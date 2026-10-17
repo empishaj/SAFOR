@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0-rc.7
+
+- Makes HUMAN-visible communication an exclusive SAFOR platform responsibility.
+- Adds a mandatory platform response governor between domain fact collection and HUMAN rendering.
+- Forbids Factory and Operating Model presentation overrides while retaining their domain facts, risks, evidence and legitimate decision requirements.
+- Compresses Framework detection and safe migration-plan drafting into non-interactive informational notices; technical metadata and mappings remain behind Details/Evidence.
+- Distinguishes content-only informational notices from interactive responses with exactly one terminal menu.
+- Adds a pure reference governor, kernel invariants INV-201 through INV-206, conformance CF-261 through CF-267 and regression tests across all domain Frameworks.
+
 ## 0.13.0-rc.6
 
 - Publishes `SAFOR-FRAMEWORK-SAAS.json` as a public test/evaluation artifact.

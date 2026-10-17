@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.6**
+Current target: **v0.13.0-rc.7**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -72,11 +72,15 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **86 PASS in CI** |
+| Current unit and regression suite | **PASS in CI; count derived from workflow logs** |
 | Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |
+| Platform-owned HUMAN response governor | PASS by policy/reference runtime/unit |
+| Domain-module presentation override | FORBIDDEN and regression-tested |
+| Framework-detection informational notice budget | PASS by unit/validator |
+| Platform response governor host end-to-end acceptance | OPEN |
 | HUMAN cognitive-load end-to-end acceptance | OPEN |
 | Persistent Agent Workspace | PASS by schema/conformance |
 | Canonical explicit Agent Job Contract | PASS by schema/conformance |

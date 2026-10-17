@@ -4,7 +4,7 @@
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
 - [x] `python tools/build_domain_framework.py --check` reproduces all public domain Framework distributions.
@@ -71,9 +71,13 @@
 - [x] Project/Bindings/Package Selection/Compatibility/Workspace schemas are 0.13-aware.
 - [x] Deterministic Control and Acceptance suites remain green.
 - [x] Modular package/workspace bootstrap tests pass.
-- [x] Total current unit suite: 86 tests PASS.
+- [x] Current unit and regression suite passes in CI; the test count is derived from workflow logs rather than duplicated in documentation.
 - [x] SH-23 forbids entitlement fabrication, paid-public resolution, workspace redirection and Local-Git bypass.
 - [x] HUMAN Decision Gate and terminal-menu contracts remain intact.
+- [x] The SAFOR platform exclusively owns HUMAN-visible response governance.
+- [x] Factory and Operating Model cannot override visible response text, verbosity, structure, choices or menus.
+- [x] Framework detection and safe migration planning use a compressed non-interactive notice.
+- [x] Full technical migration analysis remains retained behind Details/Evidence.
 - [x] Product licensing strategy is explicitly recorded in `LICENSE-DECISION.md`.
 - [x] Legacy pre-0.12 public package disclosure is explicitly recorded.
 
@@ -97,4 +101,5 @@
 - [ ] Scenario P — Deterministic Acceptance PASS.
 - [ ] Scenario Q — Commercial Package Entitlement PASS.
 - [ ] Scenario R — LOCAL_GIT HUMAN Project Workspace PASS.
+- [ ] Scenario S — platform-owned HUMAN response governor host E2E PASS.
 - [ ] Full governance transition migration completed or remaining non-executable boundary explicitly accepted for GA scope.

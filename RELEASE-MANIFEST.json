@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.6",
+  "version": "0.13.0-rc.7",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.6.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.7.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.5",
+  "previousVersion": "0.13.0-rc.6",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -125,7 +125,12 @@
     "PUBLIC_TEST_SAAS_FRAMEWORK",
     "PUBLIC_TEST_BOOK_CREATION_FRAMEWORK",
     "PAID_MODE_PUBLIC_EVALUATION_MODULES",
-    "ALL_THREE_DOMAIN_FRAMEWORKS_REPRODUCIBLE_IN_CI"
+    "ALL_THREE_DOMAIN_FRAMEWORKS_REPRODUCIBLE_IN_CI",
+    "PLATFORM_OWNED_HUMAN_RESPONSE_GOVERNOR",
+    "DOMAIN_MODULE_PRESENTATION_OVERRIDE_FORBIDDEN",
+    "INFORMATIONAL_NOTICE_COMPRESSION",
+    "SAFE_MIGRATION_PLANNING_INTERNALIZED",
+    "DETAIL_ON_DEMAND_WITH_EVIDENCE_RETENTION"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -149,7 +154,8 @@
     "MODULAR_PACKAGE_DISTRIBUTION_END_TO_END_ACCEPTANCE",
     "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE",
     "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE",
-    "DOMAIN_FRAMEWORK_DISTRIBUTION_END_TO_END_ACCEPTANCE"
+    "DOMAIN_FRAMEWORK_DISTRIBUTION_END_TO_END_ACCEPTANCE",
+    "PLATFORM_RESPONSE_GOVERNOR_HOST_END_TO_END_ACCEPTANCE"
   ],
   "sourceBaselines": [
     "v0.13.0",

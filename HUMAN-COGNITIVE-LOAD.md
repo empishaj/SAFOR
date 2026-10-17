@@ -129,3 +129,15 @@ This is a governance heuristic only. It is explicitly **not** a validated psycho
 Interaction governance never authorizes SAFOR to infer a HUMAN approval.
 
 If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR suppresses nonessential questions and fails closed with only the minimum safe blocker message.
+
+## Platform-owned response governance
+
+HUMAN-visible communication is a SAFOR platform responsibility. Factories and Operating Models may provide domain facts, risks, evidence and legitimate decision requirements, but they may not control visible wording, length, structure, progressive disclosure, choices or menus.
+
+Before every visible output, the platform response governor classifies whether the HUMAN must act. Internal events such as detecting a new Framework, comparing versions or drafting a safe reversible migration plan are absorbed by SAFOR. The default visible notice is compressed, for example:
+
+```text
+Neues Website-Framework erkannt. Ich prüfe den bestehenden Stand und plane die Migration; bis dahin ändere ich nichts.
+```
+
+Versions, digests, package identities, migration mappings and evidence remain retained for audit and are shown only through Details/Evidence or when a material HUMAN decision or safety risk requires them. An informational notice contains no option menu; interactive menus are reserved for genuine checkpoints and decisions.

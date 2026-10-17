@@ -1302,6 +1302,41 @@
       "id": "CF-260",
       "statement": "Publishing public evaluation bytes does not make possession sufficient for entitlement; paid-mode access checks remain normative.",
       "expected": true
+    },
+    {
+      "id": "CF-261",
+      "statement": "HUMAN-visible response governance is owned by the SAFOR platform and is not delegated to a Factory or Operating Model.",
+      "expected": true
+    },
+    {
+      "id": "CF-262",
+      "statement": "Factory and Operating Model may contribute domain facts, risk, evidence and legitimate decision requirements but cannot control visible text, verbosity, structure, choices or terminal menus.",
+      "expected": true
+    },
+    {
+      "id": "CF-263",
+      "statement": "The platform response governor runs after domain fact collection and before every HUMAN-visible render.",
+      "expected": true
+    },
+    {
+      "id": "CF-264",
+      "statement": "Framework detection and safe reversible migration planning produce a compressed non-interactive informational notice rather than a technical report or option menu.",
+      "expected": true
+    },
+    {
+      "id": "CF-265",
+      "statement": "The framework-detection notice is limited to two sentences and twenty-four words and contains no version, digest, package-ID or value-stream dump by default.",
+      "expected": true
+    },
+    {
+      "id": "CF-266",
+      "statement": "Full migration analysis and evidence remain retained behind Details/Evidence and are not lost through HUMAN-facing compression.",
+      "expected": true
+    },
+    {
+      "id": "CF-267",
+      "statement": "SAFOR_HUMAN_RESPONSE distinguishes informational notices without menus from interactive checkpoints with exactly one terminal menu.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
