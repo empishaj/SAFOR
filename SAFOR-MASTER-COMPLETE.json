@@ -131,7 +131,11 @@
     "schemas/transition.schema.json": "schemaTransition",
     "schemas/effect-intent.schema.json": "schemaEffectIntent",
     "schemas/transition-record.schema.json": "schemaTransitionRecord",
-    "schemas/state-snapshot.schema.json": "schemaStateSnapshot"
+    "schemas/state-snapshot.schema.json": "schemaStateSnapshot",
+    "acceptance-model.json": "acceptanceModel",
+    "schemas/acceptance-contract.schema.json": "schemaAcceptanceContract",
+    "schemas/review-decision.schema.json": "schemaReviewDecision",
+    "schemas/authority-decision.schema.json": "schemaAuthorityDecision"
   },
   "integrityManifest": {
     "agentJobContract": {
@@ -403,6 +407,26 @@
       "sourcePath": "v0.11.0/schemas/state-snapshot.schema.json",
       "sourceBlobSha": "94bc759453cac1ad7fed6938c336f5d232c86663",
       "selfHealingProfileId": "MRP-SCHEMA_STATE_SNAPSHOT"
+    },
+    "acceptanceModel": {
+      "sourcePath": "v0.11.0/acceptance-model.json",
+      "sourceBlobSha": "bd01af20b54ec80ad87dc2edd3ebf0b970e6a9d7",
+      "selfHealingProfileId": "MRP-ACCEPTANCE_MODEL"
+    },
+    "schemaAcceptanceContract": {
+      "sourcePath": "v0.11.0/schemas/acceptance-contract.schema.json",
+      "sourceBlobSha": "e608ef0eadac029e8f9f99cf3237e69b50f0fb95",
+      "selfHealingProfileId": "MRP-SCHEMA_ACCEPTANCE_CONTRACT"
+    },
+    "schemaReviewDecision": {
+      "sourcePath": "v0.11.0/schemas/review-decision.schema.json",
+      "sourceBlobSha": "2fb9122b3aa7b0dce4b1aee2c69c0660c5989cd8",
+      "selfHealingProfileId": "MRP-SCHEMA_REVIEW_DECISION"
+    },
+    "schemaAuthorityDecision": {
+      "sourcePath": "v0.11.0/schemas/authority-decision.schema.json",
+      "sourceBlobSha": "b59a5cadc24d2feb3717cb065e1fa27a242dcab5",
+      "selfHealingProfileId": "MRP-SCHEMA_AUTHORITY_DECISION"
     }
   },
   "embeddedModules": {
@@ -18371,6 +18395,490 @@
         }
       },
       "selfHealingProfileId": "MRP-SCHEMA_STATE_SNAPSHOT"
+    },
+    "acceptanceModel": {
+      "key": "acceptanceModel",
+      "sourcePath": "v0.11.0/acceptance-model.json",
+      "sourceBlobSha": "bd01af20b54ec80ad87dc2edd3ebf0b970e6a9d7",
+      "content": {
+        "format": "SAFOR_ACCEPTANCE_MODEL",
+        "schemaVersion": "0.11.0",
+        "id": "safor-deterministic-acceptance",
+        "purpose": "Deterministically evaluate approved Work Item acceptance contracts from replayable evidence, independent review and authority decisions without letting probabilistic actors directly accept work.",
+        "principles": {
+          "acceptanceOwnedByDeterministicKernel": true,
+          "qualitativeJudgmentMustBecomeExplicitReviewOrAuthorityDecision": true,
+          "agentSelfCheckIsNotAcceptanceEvidence": true,
+          "everyCriterionRequiresTypedRequirement": true,
+          "oneActiveContractPerWorkItemRc2": true,
+          "contractImmutableAfterApproval": true,
+          "evidenceMustMatchSubjectAndType": true,
+          "reviewIndependenceEnforced": true,
+          "authorityIdMustMatchExactly": true,
+          "rejectedAuthorityBlocksAcceptance": true
+        },
+        "requirementTypes": {
+          "EVIDENCE": {
+            "satisfiedWhen": "A replay-ledger evidence record matches workItemId/evidenceType and required integrity policy."
+          },
+          "REVIEW": {
+            "satisfiedWhen": "A PASS review record matches workItemId/capability and the configured independence policy."
+          },
+          "AUTHORITY": {
+            "satisfiedWhen": "An APPROVED authority decision matches workItemId/authorityId and no later/equally-current rejecting decision supersedes it."
+          }
+        },
+        "derivationContract": {
+          "sources": [
+            "APPROVED_PLAN",
+            "WORK_ITEM.acceptanceCriteria",
+            "WORK_ITEM.evidenceRequirements",
+            "BOUND_FACTORY.model.evidenceContract",
+            "WORK_ITEM.review",
+            "WORK_ITEM.authorityRequirements"
+          ],
+          "deterministicFirst": true,
+          "qualitativeFallback": "BIND_TO_REVIEW_OR_AUTHORITY_REQUIREMENT",
+          "forbidden": [
+            "LLM_DIRECT_PASS_OF_FREE_TEXT_CRITERION",
+            "AGENT_SELF_ATTESTATION_FOR_INDEPENDENT_REVIEW",
+            "ASSISTANT_CLAIM_FOR_PROVIDER_EVIDENCE",
+            "DELIVERY_AS_OUTCOME_EVIDENCE"
+          ],
+          "approvalRule": "The typed Acceptance Contract is approved with the plan or by a later material-plan decision before becoming ACTIVE."
+        },
+        "evaluationOrder": [
+          "RESOLVE_SINGLE_ACTIVE_CONTRACT",
+          "VERIFY_CONTRACT_HASH_AND_SUBJECT",
+          "VERIFY_EVERY_CRITERION_HAS_REQUIREMENTS",
+          "EVALUATE_EVIDENCE_REQUIREMENTS",
+          "EVALUATE_REVIEW_REQUIREMENTS",
+          "EVALUATE_REVIEW_INDEPENDENCE",
+          "EVALUATE_AUTHORITY_REQUIREMENTS",
+          "VERIFY_NO_ACTIVE_REJECTION",
+          "ACCEPT_ONLY_IF_ALL_PASS"
+        ],
+        "modelRefs": {
+          "acceptanceContractSchema": "schemas/acceptance-contract.schema.json",
+          "reviewDecisionSchema": "schemas/review-decision.schema.json",
+          "authorityDecisionSchema": "schemas/authority-decision.schema.json"
+        }
+      },
+      "selfHealingProfileId": "MRP-ACCEPTANCE_MODEL"
+    },
+    "schemaAcceptanceContract": {
+      "key": "schemaAcceptanceContract",
+      "sourcePath": "v0.11.0/schemas/acceptance-contract.schema.json",
+      "sourceBlobSha": "e608ef0eadac029e8f9f99cf3237e69b50f0fb95",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/acceptance-contract.schema.json",
+        "title": "SAFOR Acceptance Contract",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "contractId",
+          "projectId",
+          "workItemId",
+          "revision",
+          "status",
+          "source",
+          "criteria",
+          "requirements",
+          "policy",
+          "contractHash"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_ACCEPTANCE_CONTRACT"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "contractId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workItemId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "revision": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "status": {
+            "const": "ACTIVE"
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "planRef",
+              "factoryRef",
+              "workItemRef",
+              "approvalDecisionRef"
+            ],
+            "properties": {
+              "planRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "factoryRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "workItemRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "approvalDecisionRef": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "criteria": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "criterionId",
+                "description",
+                "satisfactionMode",
+                "requirementRefs"
+              ],
+              "properties": {
+                "criterionId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "satisfactionMode": {
+                  "const": "ALL"
+                },
+                "requirementRefs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            }
+          },
+          "requirements": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/requirement"
+            }
+          },
+          "policy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "allCriteriaRequired",
+              "selfAcceptanceForbidden",
+              "immutableAfterApproval",
+              "noAssistantClaimAsEvidence",
+              "noDeliveryAsOutcomeEvidence"
+            ],
+            "properties": {
+              "allCriteriaRequired": {
+                "const": true
+              },
+              "selfAcceptanceForbidden": {
+                "const": true
+              },
+              "immutableAfterApproval": {
+                "const": true
+              },
+              "noAssistantClaimAsEvidence": {
+                "const": true
+              },
+              "noDeliveryAsOutcomeEvidence": {
+                "const": true
+              }
+            }
+          },
+          "contractHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          }
+        },
+        "$defs": {
+          "requirement": {
+            "oneOf": [
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "requirementId",
+                  "type",
+                  "evidenceType",
+                  "requiredIntegrity",
+                  "sourceRequirement"
+                ],
+                "properties": {
+                  "requirementId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "const": "EVIDENCE"
+                  },
+                  "evidenceType": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "requiredIntegrity": {
+                    "enum": [
+                      "PINNED",
+                      "ANY_AUTHORITATIVE"
+                    ]
+                  },
+                  "sourceRequirement": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "requirementId",
+                  "type",
+                  "capability",
+                  "requiredDecision",
+                  "independencePolicy",
+                  "sourceRequirement"
+                ],
+                "properties": {
+                  "requirementId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "const": "REVIEW"
+                  },
+                  "capability": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "requiredDecision": {
+                    "const": "PASS"
+                  },
+                  "independencePolicy": {
+                    "enum": [
+                      "NONE",
+                      "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+                    ]
+                  },
+                  "sourceRequirement": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "requirementId",
+                  "type",
+                  "authorityId",
+                  "requiredDecision",
+                  "sourceRequirement"
+                ],
+                "properties": {
+                  "requirementId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "type": {
+                    "const": "AUTHORITY"
+                  },
+                  "authorityId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "requiredDecision": {
+                    "const": "APPROVED"
+                  },
+                  "sourceRequirement": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              }
+            ]
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_ACCEPTANCE_CONTRACT"
+    },
+    "schemaReviewDecision": {
+      "key": "schemaReviewDecision",
+      "sourcePath": "v0.11.0/schemas/review-decision.schema.json",
+      "sourceBlobSha": "2fb9122b3aa7b0dce4b1aee2c69c0660c5989cd8",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/review-decision.schema.json",
+        "title": "SAFOR Review Decision",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "reviewId",
+          "workItemId",
+          "reviewerActorId",
+          "performerActorId",
+          "capability",
+          "independencePolicy",
+          "decision",
+          "evidenceRef",
+          "observedAt",
+          "sourceRevisionRef"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_REVIEW_DECISION"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "reviewId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workItemId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reviewerActorId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "performerActorId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "capability": {
+            "type": "string",
+            "minLength": 1
+          },
+          "independencePolicy": {
+            "enum": [
+              "NONE",
+              "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+            ]
+          },
+          "decision": {
+            "enum": [
+              "PASS",
+              "CHANGES_REQUIRED"
+            ]
+          },
+          "evidenceRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceRevisionRef": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_REVIEW_DECISION"
+    },
+    "schemaAuthorityDecision": {
+      "key": "schemaAuthorityDecision",
+      "sourcePath": "v0.11.0/schemas/authority-decision.schema.json",
+      "sourceBlobSha": "b59a5cadc24d2feb3717cb065e1fa27a242dcab5",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/authority-decision.schema.json",
+        "title": "SAFOR Authority Decision",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "decisionId",
+          "workItemId",
+          "authorityId",
+          "actorId",
+          "decision",
+          "decisionRef",
+          "observedAt",
+          "sourceRevisionRef"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_AUTHORITY_DECISION"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "decisionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workItemId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authorityId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actorId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decision": {
+            "enum": [
+              "APPROVED",
+              "REJECTED"
+            ]
+          },
+          "decisionRef": {
+            "type": "string",
+            "minLength": 1
+          },
+          "observedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "sourceRevisionRef": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_AUTHORITY_DECISION"
     }
   }
 }
