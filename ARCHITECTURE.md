@@ -306,3 +306,61 @@ The pure bootstrap policy receives `evaluatedAt` and trusted identity sets as ex
 `ENTITLED_PACKAGE_SOURCE` requires a time-bounded `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` record. `HUMAN_LOADED_PACKAGE` is still valid for a licensed artifact supplied manually, but the entitlement verification chain remains mandatory.
 
 rc.4 is a protocol/reference implementation. Billing, transaction processing, real entitlement issuance, network package delivery and cryptographic offline-signature verification remain external production services.
+
+
+## Domain-specific single-file Framework distributions
+
+SAFOR separates **internal modularity** from **user-facing distribution**. The Kernel remains shared; each end-user artifact embeds one domain's default Factory and Operating Model.
+
+```text
+                    shared SAFOR kernel
+                          │
+          ┌───────────────┼────────────────┐
+          │               │                │
+          ▼               ▼                ▼
+SAFOR-FRAMEWORK-   SAFOR-FRAMEWORK-  SAFOR-FRAMEWORK-
+WEBSITE.json       SAAS.json          BOOK-CREATION.json
+          │               │                │
+ WEBSITE_CREATION   SAAS_ENGINEERING   BOOK_CREATION
+ Factory default    Factory default    Factory default
+ OM default         OM default         OM default
+```
+
+A domain distribution preselects its `domainId`, Creation Type, default Factory and default Operating Model. The Creation-Type question is therefore suppressed when such a file is loaded.
+
+### Package families and Premium replacement
+
+V2 domain packages declare a stable `packageFamily` in addition to `packageId`.
+
+A Premium replacement may have a different packageId while remaining in the same accepted family. For example:
+
+- `safor.factory.website-delivery` belongs to `safor.factory.website`.
+- `safor.om.website-team` belongs to `safor.om.website`.
+
+The V2 package digest covers the package family, so family identity cannot be changed without invalidating integrity.
+
+### Bidirectional compatibility
+
+Compatibility is evaluated in both directions:
+
+```text
+active domain
+    ↓
+Factory ──requires──▶ Operating Model
+   ▲                      │
+   └──────requires────────┘
+```
+
+A Factory may constrain acceptable Operating Model families and require capabilities, authorities, work-item types or artifact types.
+
+An Operating Model may independently constrain acceptable Factory families and require corresponding Factory exports.
+
+Only when both directions and the active domain pass may the pair bind.
+
+This intentionally rejects cross-domain composition. A Book Factory and a SaaS Engineering Operating Model are incompatible even when some generic capabilities overlap, unless both explicitly support the same active domain and accept each other's package families/contracts.
+
+### Public and commercial distributions
+
+`SAFOR-FRAMEWORK-WEBSITE.json` is reproducibly built from public modules and committed publicly.
+
+`SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json` are defined commercial output filenames. Their completed bytes require protected licensed Factory/Operating Model inputs and therefore are not committed to the public repository.
