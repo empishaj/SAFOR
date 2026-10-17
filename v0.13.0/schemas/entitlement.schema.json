@@ -8,8 +8,10 @@
     "format",
     "schemaVersion",
     "entitlementId",
+    "status",
     "subject",
     "grant",
+    "commercialBasis",
     "validity",
     "issuer",
     "verification"
@@ -123,7 +125,8 @@
         "method",
         "verifierId",
         "evidenceRef",
-        "verifiedAt"
+        "verifiedAt",
+        "result"
       ],
       "properties": {
         "method": {
@@ -143,6 +146,44 @@
         "verifiedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "result": {
+          "const": "VERIFIED"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "SUSPENDED",
+        "REVOKED",
+        "EXPIRED"
+      ]
+    },
+    "commercialBasis": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basisType",
+        "evidenceRef",
+        "sku"
+      ],
+      "properties": {
+        "basisType": {
+          "enum": [
+            "PURCHASE",
+            "SUBSCRIPTION",
+            "CONTRACT",
+            "MANUAL_GRANT"
+          ]
+        },
+        "evidenceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sku": {
+          "type": "string",
+          "minLength": 1
         }
       }
     }
