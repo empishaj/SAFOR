@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.13.0-rc.4
+
+- Adds strict commercial entitlement verification for paid domain packages.
+- Requires entitlement status `ACTIVE`, explicit evaluation time, matching subject and exact package/version.
+- Adds commercial-basis evidence with SKU binding; purchase evidence remains distinct from entitlement.
+- Requires explicitly trusted entitlement issuers and entitlement verifiers instead of trusting identities declared inside records.
+- Adds `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` contract for `ENTITLED_PACKAGE_SOURCE`.
+- Binds protected delivery evidence to entitlementId, packageId, exact version and domain-package digest.
+- Rejects expired/future-issued delivery evidence and untrusted delivery verifiers.
+- Keeps `HUMAN_LOADED_PACKAGE` available for manually delivered licensed artifacts while still enforcing strict entitlement checks.
+- Extends SH-24, INV-181..187 and CF-237..244 for commercial-channel failures.
+- Adds executable reference-policy tests for revoked/expired entitlements, trust mismatch, subject mismatch, missing delivery evidence, digest mismatch and valid protected delivery.
+
+
 ## 0.13.0-rc.3
 
 - Splits the former `SOFTWARE_WEBSITE` path into distinct `WEBSITE` and `SOFTWARE_SAAS` Creation Types.
