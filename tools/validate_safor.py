@@ -43,8 +43,8 @@ manifest = load_json("RELEASE-MANIFEST.json")
 kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")
 
 # Framework identity and release artifact.
-if version != "0.13.0-rc.2":
-    fail(f"VERSION must be 0.13.0-rc.2, got {version}.")
+if version != "0.13.0-rc.3":
+    fail(f"VERSION must be 0.13.0-rc.3, got {version}.")
 if framework.get("format") != "SAFOR_FRAMEWORK_SINGLE_FILE":
     fail("Framework bundle format must be SAFOR_FRAMEWORK_SINGLE_FILE.")
 if framework.get("schemaVersion") != "0.13.0":
