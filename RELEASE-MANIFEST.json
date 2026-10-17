@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.11.0-rc.2",
+  "version": "0.12.0-rc.1",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
-  "sourceRoot": "v0.11.0",
-  "distributable": "SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json",
-  "latestAlias": "SAFOR-MASTER-COMPLETE.json",
-  "previousVersion": "0.11.0-rc.1",
+  "sourceRoot": "v0.12.0",
+  "distributable": "SAFOR-FRAMEWORK-v0.12.0-rc.1.json",
+  "latestAlias": "SAFOR-FRAMEWORK.json",
+  "previousVersion": "0.11.0-rc.2",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -63,12 +63,22 @@
     "AUTHORITY_ACCEPTANCE_GUARD",
     "ACCEPTANCE_CONTRACT_HASH_INTEGRITY",
     "QUALITATIVE_CRITERIA_REQUIRE_EXPLICIT_DECISION",
-    "AGENT_SELFCHECK_NON_AUTHORITATIVE"
+    "AGENT_SELFCHECK_NON_AUTHORITATIVE",
+    "PUBLIC_FRAMEWORK_BUNDLE",
+    "EXTERNAL_FACTORY_AND_OPERATING_MODEL_PACKAGES",
+    "FREE_PUBLIC_WEBSITE_STARTER",
+    "PAID_PACKAGE_ENTITLEMENT_GATING",
+    "PUBLIC_PAID_CONTENT_EXCLUSION",
+    "HUMAN_LOADED_PACKAGE_SUPPORT",
+    "HUMAN_OWNED_REMOTE_GIT_PROJECT_WORKSPACE",
+    "HUMAN_OWNED_LOCAL_GIT_PROJECT_WORKSPACE",
+    "LOCAL_MASTER_CONTROL_ROOT",
+    "REMOTE_SEPARATE_SAFOR_MEMORY",
+    "PACKAGE_SOURCE_PROJECT_WORKSPACE_SEPARATION"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
   "gaBlockers": [
-    "HUMAN_LICENSE_DECISION",
     "GITHUB_END_TO_END_ACCEPTANCE",
     "GITLAB_END_TO_END_ACCEPTANCE",
     "AGENT_WORKSPACE_END_TO_END_ACCEPTANCE",
@@ -81,10 +91,25 @@
     "DETERMINISTIC_CONTROL_END_TO_END_ACCEPTANCE",
     "DETERMINISTIC_REPLAY_ACCEPTANCE",
     "FULL_GOVERNANCE_TRANSITION_MIGRATION",
-    "DETERMINISTIC_ACCEPTANCE_END_TO_END_ACCEPTANCE"
+    "DETERMINISTIC_ACCEPTANCE_END_TO_END_ACCEPTANCE",
+    "COMMERCIAL_LICENSE_TERMS_FINALIZATION",
+    "COMMERCIAL_ENTITLEMENT_END_TO_END_ACCEPTANCE",
+    "MODULAR_PACKAGE_DISTRIBUTION_END_TO_END_ACCEPTANCE",
+    "LOCAL_GIT_WORKSPACE_END_TO_END_ACCEPTANCE"
   ],
   "sourceBaselines": [
+    "v0.12.0",
     "v0.11.0",
     "v0.10.0"
+  ],
+  "distributionModel": "FRAMEWORK_PLUS_EXTERNAL_DOMAIN_PACKAGES",
+  "freeStarterProfile": {
+    "creationType": "SOFTWARE_WEBSITE",
+    "factoryPackageId": "safor.factory.software-delivery",
+    "operatingModelPackageId": "safor.om.saas-engineering",
+    "accessMode": "FREE_PUBLIC"
+  },
+  "paidCreationProfiles": [
+    "BOOK"
   ]
 }
