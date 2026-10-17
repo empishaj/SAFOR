@@ -15,6 +15,7 @@
     "control",
     "valueStream",
     "execution",
+    "acceptance",
     "stateHash",
     "genesisRef"
   ],
@@ -66,6 +67,47 @@
     "genesisRef": {
       "type": "string",
       "minLength": 1
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "contracts",
+        "evidenceRecords",
+        "reviewDecisions",
+        "authorityDecisions"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "contracts": {
+          "type": "array",
+          "items": {
+            "$ref": "acceptance-contract.schema.json"
+          }
+        },
+        "evidenceRecords": {
+          "type": "array",
+          "items": {
+            "$ref": "../../v0.10.0/schemas/evidence-record.schema.json"
+          }
+        },
+        "reviewDecisions": {
+          "type": "array",
+          "items": {
+            "$ref": "review-decision.schema.json"
+          }
+        },
+        "authorityDecisions": {
+          "type": "array",
+          "items": {
+            "$ref": "authority-decision.schema.json"
+          }
+        }
+      }
     }
   }
 }
