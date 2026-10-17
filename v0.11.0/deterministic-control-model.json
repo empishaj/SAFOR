@@ -40,7 +40,7 @@
     "wallClockReadForbidden": true,
     "randomnessForbidden": true,
     "arbitraryCodeFromJsonForbidden": true,
-    "projectionSetRule": "The projection set is a read-only pinned view over authoritative Control, Value-Stream and Execution aggregates. It is not a fourth authoritative domain aggregate."
+    "projectionSetRule": "The projection set is a read-only pinned view over authoritative Control, Value-Stream and Execution aggregates plus replay-derived Acceptance ledger inputs. The Acceptance ledger is a deterministic replay projection, not an independent source of business authority."
   },
   "eventApplication": {
     "orderBy": "sequence",
@@ -70,11 +70,30 @@
       "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION"
     ],
     "deferred": [
-      "FULL_ACCEPTANCE_PREDICATES",
       "FULL_AGENT_LIFECYCLE",
       "FULL_SCHEDULER_REDUCER",
       "FULL_SELF_HEALING_TRANSITIONS",
       "FULL_EVENT_SOURCED_AGGREGATE_REPLACEMENT"
+    ]
+  },
+  "rc2Boundary": {
+    "executableTransitions": [
+      "ACCEPTANCE_CONTRACT_REGISTERED",
+      "ACCEPTANCE_EVIDENCE_RECORDED",
+      "ACCEPTANCE_REVIEW_APPROVED_RECORDED",
+      "ACCEPTANCE_REVIEW_CHANGES_REQUIRED_RECORDED",
+      "ACCEPTANCE_AUTHORITY_APPROVED_RECORDED",
+      "ACCEPTANCE_AUTHORITY_REJECTED_RECORDED",
+      "WORK_ITEM_ACCEPTED"
+    ],
+    "deterministicAcceptanceModelRef": "acceptance-model.json",
+    "remainingDeferred": [
+      "FULL_AGENT_LIFECYCLE",
+      "FULL_SCHEDULER_REDUCER",
+      "FULL_SELF_HEALING_TRANSITIONS",
+      "FULL_EVENT_SOURCED_AGGREGATE_REPLACEMENT",
+      "CONDITIONAL_FACTORY_EVIDENCE_COMPILER",
+      "OUTCOME_ACCEPTANCE"
     ]
   }
 }
