@@ -58,28 +58,31 @@
         },
         {
           "op": "SET_FROM_EVENT",
-          "path": "$subject.readySince",
+          "path": "$subject.execution.readySince",
           "eventPath": "occurredAt"
         },
         {
           "op": "INCREMENT",
-          "path": "$state.revision",
+          "path": "$aggregate.revision",
           "by": 1
         }
       ],
       "effectIntents": []
     },
     {
-      "transitionId": "WORK_ITEM_PAUSED",
-      "priority": 100,
-      "aggregate": "VALUE_STREAM",
-      "subjectType": "WORK_ITEM",
+      "transitionId": "CONTROL_PROJECT_PAUSED",
+      "priority": 200,
+      "aggregate": "CONTROL",
+      "subjectType": "PROJECT",
       "eventTypes": [
-        "PAUSE_WORK_ITEM_REQUESTED"
+        "PAUSE_PROJECT_REQUESTED"
       ],
       "fromStatus": [
         "READY",
-        "RUNNING"
+        "RUNNING",
+        "WAITING_EXTERNAL",
+        "RECONCILE_REQUIRED",
+        "BLOCKED"
       ],
       "guards": {
         "all": [
@@ -87,34 +90,56 @@
             "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
           },
           {
-            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+            "predicate": "FIELD_IN",
+            "args": {
+              "path": "$aggregate.mode",
+              "values": [
+                "BOOTSTRAP",
+                "INITIALIZING",
+                "PLANNING",
+                "AWAITING_AUTHORIZATION",
+                "EXECUTING",
+                "WAITING_OUTCOME",
+                "RECOVERING"
+              ]
+            }
           }
         ]
       },
       "effects": [
         {
+          "op": "SET_FROM_STATE",
+          "path": "$aggregate.resumeMode",
+          "statePath": "$aggregate.mode"
+        },
+        {
           "op": "SET",
-          "path": "$subject.status",
+          "path": "$aggregate.mode",
           "value": "PAUSED"
         },
         {
+          "op": "SET",
+          "path": "$aggregate.status",
+          "value": "WAITING_HUMAN"
+        },
+        {
           "op": "INCREMENT",
-          "path": "$state.revision",
+          "path": "$aggregate.stateRevision",
           "by": 1
         }
       ],
       "effectIntents": []
     },
     {
-      "transitionId": "WORK_ITEM_RESUMED_READY",
-      "priority": 100,
-      "aggregate": "VALUE_STREAM",
-      "subjectType": "WORK_ITEM",
+      "transitionId": "CONTROL_PROJECT_RESUMED_FROM_PAUSE",
+      "priority": 300,
+      "aggregate": "CONTROL",
+      "subjectType": "PROJECT",
       "eventTypes": [
-        "RESUME_WORK_ITEM_REQUESTED"
+        "RESUME_PROJECT_REQUESTED"
       ],
       "fromStatus": [
-        "PAUSED"
+        "WAITING_HUMAN"
       ],
       "guards": {
         "all": [
@@ -122,55 +147,116 @@
             "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
           },
           {
-            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+            "predicate": "FIELD_EQUALS",
+            "args": {
+              "path": "$aggregate.mode",
+              "value": "PAUSED"
+            }
           },
           {
-            "predicate": "ALL_DEPENDENCIES_ACCEPTED"
-          },
-          {
-            "predicate": "ACTIVE_MANDATE_COVERS_WORK_ITEM"
-          },
-          {
-            "predicate": "REQUIRED_INPUTS_RESOLVABLE"
-          },
-          {
-            "predicate": "RESOURCE_DECLARATION_COMPLETE"
+            "predicate": "FIELD_IN",
+            "args": {
+              "path": "$aggregate.resumeMode",
+              "values": [
+                "BOOTSTRAP",
+                "INITIALIZING",
+                "PLANNING",
+                "AWAITING_AUTHORIZATION",
+                "EXECUTING",
+                "WAITING_OUTCOME",
+                "RECOVERING"
+              ]
+            }
           }
         ]
       },
       "effects": [
         {
+          "op": "SET_FROM_STATE",
+          "path": "$aggregate.mode",
+          "statePath": "$aggregate.resumeMode"
+        },
+        {
           "op": "SET",
-          "path": "$subject.status",
+          "path": "$aggregate.resumeMode",
+          "value": null
+        },
+        {
+          "op": "SET",
+          "path": "$aggregate.status",
           "value": "READY"
         },
         {
-          "op": "SET_FROM_EVENT",
-          "path": "$subject.readySince",
-          "eventPath": "occurredAt"
-        },
-        {
           "op": "INCREMENT",
-          "path": "$state.revision",
+          "path": "$aggregate.stateRevision",
           "by": 1
         }
       ],
       "effectIntents": []
     },
     {
-      "transitionId": "WORK_ITEM_STOPPED",
-      "priority": 200,
-      "aggregate": "VALUE_STREAM",
-      "subjectType": "WORK_ITEM",
+      "transitionId": "CONTROL_PROJECT_STOPPED",
+      "priority": 1000,
+      "aggregate": "CONTROL",
+      "subjectType": "PROJECT",
       "eventTypes": [
-        "STOP_WORK_ITEM_REQUESTED"
+        "STOP_PROJECT_REQUESTED"
       ],
       "fromStatus": [
-        "PLANNED",
-        "BLOCKED",
         "READY",
         "RUNNING",
-        "PAUSED"
+        "WAITING_HUMAN",
+        "WAITING_EXTERNAL",
+        "RECONCILE_REQUIRED",
+        "BLOCKED",
+        "FAILED"
+      ],
+      "guards": {
+        "all": [
+          {
+            "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+          }
+        ]
+      },
+      "effects": [
+        {
+          "op": "REVOKE_ACTIVE_MANDATES",
+          "path": "$aggregate.mandates",
+          "eventPath": "occurredAt"
+        },
+        {
+          "op": "SET",
+          "path": "$aggregate.mode",
+          "value": "STOPPED"
+        },
+        {
+          "op": "SET",
+          "path": "$aggregate.status",
+          "value": "WAITING_HUMAN"
+        },
+        {
+          "op": "SET",
+          "path": "$aggregate.resumeMode",
+          "value": null
+        },
+        {
+          "op": "INCREMENT",
+          "path": "$aggregate.stateRevision",
+          "by": 1
+        }
+      ],
+      "effectIntents": []
+    },
+    {
+      "transitionId": "CONTROL_RESUME_FROM_STOP_REQUIRES_AUTHORIZATION",
+      "priority": 200,
+      "aggregate": "CONTROL",
+      "subjectType": "PROJECT",
+      "eventTypes": [
+        "RESUME_PROJECT_REQUESTED"
+      ],
+      "fromStatus": [
+        "WAITING_HUMAN"
       ],
       "guards": {
         "all": [
@@ -178,19 +264,33 @@
             "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
           },
           {
-            "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+            "predicate": "FIELD_EQUALS",
+            "args": {
+              "path": "$aggregate.mode",
+              "value": "STOPPED"
+            }
           }
         ]
       },
       "effects": [
         {
           "op": "SET",
-          "path": "$subject.status",
-          "value": "STOPPED"
+          "path": "$aggregate.mode",
+          "value": "AWAITING_AUTHORIZATION"
+        },
+        {
+          "op": "SET",
+          "path": "$aggregate.status",
+          "value": "WAITING_HUMAN"
+        },
+        {
+          "op": "SET",
+          "path": "$aggregate.resumeMode",
+          "value": null
         },
         {
           "op": "INCREMENT",
-          "path": "$state.revision",
+          "path": "$aggregate.stateRevision",
           "by": 1
         }
       ],
@@ -198,7 +298,7 @@
     },
     {
       "transitionId": "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
-      "priority": 1000,
+      "priority": 900,
       "aggregate": "CONTROL",
       "subjectType": "PROJECT",
       "eventTypes": [
@@ -207,6 +307,7 @@
       "fromStatus": [
         "READY",
         "RUNNING",
+        "WAITING_HUMAN",
         "WAITING_EXTERNAL",
         "BLOCKED"
       ],
@@ -220,24 +321,25 @@
       "effects": [
         {
           "op": "SET",
-          "path": "$state.status",
+          "path": "$aggregate.status",
           "value": "RECONCILE_REQUIRED"
         },
         {
           "op": "SET",
-          "path": "$state.mode",
+          "path": "$aggregate.mode",
           "value": "RECOVERING"
         },
         {
           "op": "INCREMENT",
-          "path": "$state.stateRevision",
+          "path": "$aggregate.stateRevision",
           "by": 1
         }
       ],
       "effectIntents": [
         {
           "effectType": "PROVIDER_READBACK",
-          "reason": "RECONCILE_UNKNOWN_EXTERNAL_MUTATION"
+          "reason": "RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
+          "payload": {}
         }
       ]
     }
