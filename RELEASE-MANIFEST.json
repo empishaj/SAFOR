@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.11.0-rc.1",
+  "version": "0.11.0-rc.2",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.11.0",
-  "distributable": "SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json",
+  "distributable": "SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json",
   "latestAlias": "SAFOR-MASTER-COMPLETE.json",
-  "previousVersion": "0.10.0-rc.2",
+  "previousVersion": "0.11.0-rc.1",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "SOFTWARE_WEBSITE",
@@ -55,7 +55,15 @@
     "EVENT_REPLAY_VERIFICATION",
     "EXTERNAL_EFFECT_INTENTS",
     "IDEMPOTENT_DUPLICATE_EVENTS",
-    "FAIL_CLOSED_TRANSITION_AMBIGUITY"
+    "FAIL_CLOSED_TRANSITION_AMBIGUITY",
+    "DETERMINISTIC_ACCEPTANCE_CONTRACTS",
+    "REPLAYABLE_ACCEPTANCE_LEDGER",
+    "TYPED_ACCEPTANCE_REQUIREMENTS",
+    "INDEPENDENT_REVIEW_ACCEPTANCE_GUARD",
+    "AUTHORITY_ACCEPTANCE_GUARD",
+    "ACCEPTANCE_CONTRACT_HASH_INTEGRITY",
+    "QUALITATIVE_CRITERIA_REQUIRE_EXPLICIT_DECISION",
+    "AGENT_SELFCHECK_NON_AUTHORITATIVE"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -72,7 +80,8 @@
     "TERMINAL_MENU_END_TO_END_ACCEPTANCE",
     "DETERMINISTIC_CONTROL_END_TO_END_ACCEPTANCE",
     "DETERMINISTIC_REPLAY_ACCEPTANCE",
-    "FULL_GOVERNANCE_TRANSITION_MIGRATION"
+    "FULL_GOVERNANCE_TRANSITION_MIGRATION",
+    "DETERMINISTIC_ACCEPTANCE_END_TO_END_ACCEPTANCE"
   ],
   "sourceBaselines": [
     "v0.11.0",
