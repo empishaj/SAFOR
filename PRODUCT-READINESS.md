@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.11.0-rc.1**
+Current target: **v0.11.0-rc.2**
 
 Current modular source: **`v0.11.0/` overlay + retained `v0.10.0/` baseline**
 
@@ -24,6 +24,8 @@ Current modular source: **`v0.11.0/` overlay + retained `v0.10.0/` baseline**
 | Dynamic primary-action labels | PASS by schema/conformance |
 | HUMAN cognitive-load end-to-end acceptance | OPEN |
 | Deterministic Control Kernel unit/replay suite | PASS in CI |
+| Deterministic Acceptance unit/replay suite | PASS in CI (25 total deterministic tests) |
+| Acceptance Contract / Review Independence / Authority validation | PASS by schema/conformance |
 | Deterministic Control end-to-end acceptance | OPEN |
 | Full governance transition migration | OPEN |
 | Bounded self-healing | PASS |
