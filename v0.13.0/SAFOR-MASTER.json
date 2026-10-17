@@ -4,22 +4,22 @@
   "kernelVersion": "0.13.0",
   "definitionId": "safor-master-kernel",
   "maturity": "REFERENCE_BASELINE_S3_COMPOSABLE_DOMAIN_PACKAGES",
-  "purpose": "Portable SAFOR Framework kernel for independently selectable chat-loadable Factory and Operating Model JSON packages, per-package entitlement gating, deterministic compatibility binding, HUMAN-owned remote/local Git workspaces and deterministic governance.",
+  "purpose": "Portable SAFOR Framework kernel for free Website creation plus commercially licensed Software/SaaS and Book domain paths, independently selectable chat-loadable Factory/Operating Model JSON packages, per-package entitlement gating, deterministic compatibility binding, HUMAN-owned workspaces and deterministic governance.",
   "bootstrapContract": {
     "singleFileEntry": true,
     "entryFile": "SAFOR-FRAMEWORK.json",
     "userExperience": [
       "HUMAN loads the SAFOR Framework JSON into a compatible chat.",
       "SAFOR verifies Framework, recovery and deterministic-control integrity before project work.",
-      "HUMAN chooses a creation type; the creation profile supplies default Factory and Operating Model candidates, not an immutable pair.",
-      "Each selected Factory and Operating Model is an independent SAFOR_DOMAIN_PACKAGE JSON artifact.",
-      "The Software / Website starter Factory and starter Operating Model are FREE_PUBLIC and may be resolved automatically from the canonical public SAFOR Git at immutable revision/blob.",
-      "HUMAN may independently replace the default Factory, the default Operating Model, or both with compatible alternatives.",
-      "Package access is resolved independently for Factory and Operating Model; a mixed FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED pair is valid when every paid package has verified entitlement.",
+      "HUMAN chooses WEBSITE, SOFTWARE_SAAS or BOOK.",
+      "WEBSITE defaults to the FREE_PUBLIC Website Factory and Website Operating Model from canonical public SAFOR Git.",
+      "SOFTWARE_SAAS defaults to the commercial Software Factory and SaaS Engineering Operating Model; both selected packages must be PAID_ENTITLEMENT_REQUIRED and independently entitled.",
+      "BOOK likewise requires a paid Factory and paid Operating Model.",
+      "Each selected Factory and Operating Model remains an independent SAFOR_DOMAIN_PACKAGE JSON artifact and must pass integrity, Framework/Creation-Type and pair compatibility checks.",
+      "Creation profiles may permit compatible overrides but commercial profiles cannot be downgraded through a free-package override.",
       "Package possession never proves entitlement; entitlement evidence remains external to the package JSON.",
-      "SAFOR verifies package shape, declared contract digest, Framework range, creation-type support and Factory/Operating Model compatibility before binding.",
       "After package selection and compatibility are materialized, HUMAN chooses REMOTE_GIT or LOCAL_GIT for the project.",
-      "SAFOR product/package repositories remain read-only sources and never implicit project targets."
+      "SAFOR product/package repositories remain sources and never implicit project targets."
     ],
     "noImplicitExecution": true,
     "noImplicitAuthorization": true,
@@ -110,7 +110,9 @@
     "mixedFreeAndPaidPackagePairsAllowed": true,
     "domainPackageEntitlementEvidenceExternal": true,
     "domainPackageIntegrityRequired": true,
-    "packageSelectionRequiresCompatibilityDecision": true
+    "packageSelectionRequiresCompatibilityDecision": true,
+    "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
+    "creationProfileAccessPolicyEnforced": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -239,6 +241,7 @@
       "HUMAN.CREATION_TYPE_SELECTION",
       "PACKAGE_CATALOG.creationProfiles.DEFAULTS",
       "HUMAN_OPTIONAL_FACTORY_AND_OPERATING_MODEL_OVERRIDES",
+      "CREATION_PROFILE_SELECTED_ACCESS_POLICY",
       "FACTORY_PACKAGE_ACCESS_AND_ENTITLEMENT",
       "OPERATING_MODEL_PACKAGE_ACCESS_AND_ENTITLEMENT",
       "DOMAIN_PACKAGE_SHAPE_AND_INTEGRITY",
@@ -273,7 +276,9 @@
       "domainPackageContractDigestRequired": true,
       "domainPackageFrameworkRangeRequired": true,
       "domainPackageCreationTypeSupportRequired": true,
-      "packagePairCompatibilityDecisionRequired": true
+      "packagePairCompatibilityDecisionRequired": true,
+      "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
+      "creationProfileSelectedAccessPolicyRequired": true
     },
     "domainPackageSchemaRef": "schemas/domain-package.schema.json",
     "selectionSchemaRef": "schemas/package-selection.schema.json",
@@ -1726,11 +1731,11 @@
     },
     {
       "id": "INV-160",
-      "rule": "SOFTWARE_WEBSITE binds the declared FREE_PUBLIC starter Factory/Operating Model unless the HUMAN explicitly supplies another compatible entitled pair."
+      "rule": "WEBSITE binds the declared FREE_PUBLIC Website Factory/Operating Model defaults unless the HUMAN explicitly supplies another compatible pair allowed by the Website profile."
     },
     {
       "id": "INV-161",
-      "rule": "BOOK is PAID_ENTITLEMENT_REQUIRED and cannot initialize from public paid package content."
+      "rule": "SOFTWARE_SAAS and BOOK are commercial creation profiles: both selected Factory and Operating Model must be PAID_ENTITLEMENT_REQUIRED and independently entitled before binding."
     },
     {
       "id": "INV-162",
@@ -1762,7 +1767,7 @@
     },
     {
       "id": "INV-169",
-      "rule": "A mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED Factory/Operating Model pair is permitted only when each paid package has its own verified entitlement."
+      "rule": "A mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED pair is permitted only when the active Creation Profile allows mixed access and every paid package has verified entitlement."
     },
     {
       "id": "INV-170",
@@ -1786,7 +1791,27 @@
     },
     {
       "id": "INV-175",
-      "rule": "The free Software / Website starter path remains usable without commercial entitlement for its default Factory and Operating Model, while paid alternatives remain independently purchasable."
+      "rule": "The free WEBSITE starter path remains usable without commercial entitlement for its default Website Factory and Website Operating Model; SOFTWARE_SAAS is not part of the free starter."
+    },
+    {
+      "id": "INV-176",
+      "rule": "WEBSITE and SOFTWARE_SAAS are distinct Creation Types with distinct default Factory/Operating Model identities and commercial policies."
+    },
+    {
+      "id": "INV-177",
+      "rule": "The WEBSITE default pair is safor.factory.website-delivery + safor.om.website-team and both are FREE_PUBLIC."
+    },
+    {
+      "id": "INV-178",
+      "rule": "The SOFTWARE_SAAS default pair is safor.factory.software-delivery + safor.om.saas-engineering and both require independently verified commercial entitlement."
+    },
+    {
+      "id": "INV-179",
+      "rule": "A SOFTWARE_SAAS Factory or Operating Model selection with FREE_PUBLIC access mode is invalid even if technical capability compatibility would otherwise pass."
+    },
+    {
+      "id": "INV-180",
+      "rule": "Historical publicly disclosed Software Factory/SaaS Operating Model versions are legacy bytes and MUST NOT be treated as the current protected commercial package source."
     }
   ],
   "evidencePolicy": {
