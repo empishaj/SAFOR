@@ -13,7 +13,7 @@ If `safor-memory` does not already exist or is not writable, SAFOR stops. It nev
 
 ## Start
 
-1. Load `SAFOR-MASTER-COMPLETE-v0.10.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
+1. Load `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
 2. Choose **GitHub** or **GitLab**.
 3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
 4. Choose the owner/namespace.
@@ -63,7 +63,7 @@ See `AGENT-WORKSPACE.md`.
 
 ## Parallel agent scheduling
 
-SAFOR v0.10 can serve multiple persistent agent chats in parallel. Work is dispatched only as ATOMIC units whose dependencies are accepted, inputs are pinned, required capabilities are available, and mutation/resource domains do not conflict.
+SAFOR v0.11 can serve multiple persistent agent chats in parallel. Work is dispatched only as ATOMIC units whose dependencies are accepted, inputs are pinned, required capabilities are available, and mutation/resource domains do not conflict.
 
 With six active chat agents at one scheduling slot each, the MASTER can dispatch up to six mutually conflict-free READY jobs in one wave. Mutating jobs use dedicated `safor/job/{jobKey}/{agentKey}` branches.
 
@@ -91,7 +91,7 @@ See `AGENT-JOB-CONTRACT.md`.
 
 ## Module-wide self-healing
 
-SAFOR v0.10 gives every embedded module exactly one recovery profile. Recovery is constrained by module authority and repairability:
+SAFOR v0.11 gives every embedded module exactly one recovery profile. Recovery is constrained by module authority and repairability:
 
 - immutable modules: validate/reload expected blobs only,
 - pinned models/packages: restore verified expected versions/blobs,
@@ -105,7 +105,7 @@ See `MODULE-SELF-HEALING.md`.
 
 ## HUMAN cognitive load
 
-SAFOR v0.10 deliberately allows more HUMAN thinking during initialization, Discovery and meaningful planning decisions. After context, plan and authority are known, routine HUMAN load must fall.
+SAFOR v0.11 deliberately allows more HUMAN thinking during initialization, Discovery and meaningful planning decisions. After context, plan and authority are known, routine HUMAN load must fall.
 
 Default targets:
 - Discovery: HIGH
@@ -117,3 +117,7 @@ Default targets:
 Before asking a question SAFOR first tries to derive the answer from approved state/evidence or reuse an unchanged prior decision. Internal orchestration such as job IDs, branches, leases, dispatch waves, readbacks and deterministic agent coordination remains a MASTER responsibility.
 
 See `HUMAN-COGNITIVE-LOAD.md`.
+
+## Deterministic Control Kernel
+
+SAFOR v0.11.0-rc.1 introduces an executable deterministic control substrate for an explicit transition slice. HUMAN, AGENT and PROVIDER observations enter that slice as typed events. The pure reducer evaluates only pinned predicates/transitions, emits state changes plus external effect intents, and verifies replay through canonical state hashes. This rc.1 does not claim that every legacy governance rule has already been migrated.
