@@ -251,6 +251,7 @@ class ComposablePackageTests(unittest.TestCase):
             [{"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": artifact}],
             [entitlement(package_id, "2.0.0", "ENT-WEB-PRO")],
             {"factoryPackageId": package_id},
+            verification_context=verification_context(),
         )
         self.assertEqual("PACKAGE_ACCESS_RESOLVED", result["outcome"])
         self.assertTrue(result["mixedAccessModes"])
