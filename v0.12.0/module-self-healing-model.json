@@ -3021,6 +3021,196 @@
         ],
         "target": "STOP"
       }
+    },
+    {
+      "profileId": "MRP-OPERATION_MODE",
+      "moduleKey": "operationMode",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.operationMode + integrityManifest.operationMode",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "OPERATION_MODE_RUNTIME_POLICY_VALIDATION_FAILURE",
+        "AGENT_RUNTIME_CAPABILITY_BINDING_FAILURE",
+        "HUMAN_ACTIVATION_GOVERNANCE_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "REVALIDATE_MODE_RUNTIME_BASELINE"
+      ],
+      "forbiddenRepairs": [
+        "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+        "FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+        "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+        "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME",
+        "GRANT_AUTHORITY_OR_PROVIDER_RIGHTS",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_RUNTIME_CAPABILITY_OR_MODE_AUTHORITY_INVENTION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "MODE_RUNTIME_POLICY_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "MODULE_MATCHES_EXPECTED_BLOB_AND_MODE_RUNTIME_BOUNDARY_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "RUNTIME_OR_MODE_SEMANTICS_WOULD_CHANGE",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-AGENT_RUNTIME",
+      "moduleKey": "agentRuntime",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "IMMUTABLE_VALIDATE_ONLY",
+      "sourceOfTruth": "embeddedModules.agentRuntime + integrityManifest.agentRuntime",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "OPERATION_MODE_RUNTIME_POLICY_VALIDATION_FAILURE",
+        "AGENT_RUNTIME_CAPABILITY_BINDING_FAILURE",
+        "HUMAN_ACTIVATION_GOVERNANCE_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "REVALIDATE_MODE_RUNTIME_BASELINE"
+      ],
+      "forbiddenRepairs": [
+        "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+        "FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+        "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+        "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME",
+        "GRANT_AUTHORITY_OR_PROVIDER_RIGHTS",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "NO_RUNTIME_CAPABILITY_OR_MODE_AUTHORITY_INVENTION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "MODE_RUNTIME_POLICY_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "MODULE_MATCHES_EXPECTED_BLOB_AND_MODE_RUNTIME_BOUNDARY_VALIDATES"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "RUNTIME_OR_MODE_SEMANTICS_WOULD_CHANGE",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_OPERATION_MODE_BINDING",
+      "moduleKey": "schemaOperationModeBinding",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaOperationModeBinding + integrityManifest.schemaOperationModeBinding",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT"
+      ],
+      "forbiddenRepairs": [
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+        "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+        "SILENTLY_CHANGE_OPERATION_MODE",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "SUBJECT_IDENTITY_KNOWN"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
+    },
+    {
+      "profileId": "MRP-SCHEMA_AGENT_RUNTIME_BINDING",
+      "moduleKey": "schemaAgentRuntimeBinding",
+      "moduleClass": "SCHEMA",
+      "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentRuntimeBinding + integrityManifest.schemaAgentRuntimeBinding",
+      "failureDetectors": [
+        "SCHEMA_MODULE_BLOB_MISMATCH",
+        "SCHEMA_PARSE_FAILURE",
+        "SCHEMA_VERSION_MISMATCH",
+        "SUBJECT_VALIDATION_FAILURE"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_SCHEMA_MODULE",
+        "REVALIDATE_SUBJECT"
+      ],
+      "forbiddenRepairs": [
+        "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+        "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+        "SILENTLY_CHANGE_OPERATION_MODE",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 1,
+      "preconditions": [
+        "EXPECTED_BLOB_IDENTITY_KNOWN",
+        "SUBJECT_IDENTITY_KNOWN"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "POLICY_SCHEMA_VALIDATION",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+      },
+      "escalation": {
+        "when": [
+          "RETRY_BUDGET_EXHAUSTED",
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS"
+        ],
+        "target": "STOP"
+      }
     }
   ]
 }
