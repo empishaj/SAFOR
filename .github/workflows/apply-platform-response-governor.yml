@@ -1,0 +1,49 @@
+name: Apply platform response governor migration
+
+on:
+  push:
+    branches:
+      - safor/platform-response-governor-v0.13.0-rc.7
+
+permissions:
+  contents: write
+
+jobs:
+  migrate:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout migration branch
+        uses: actions/checkout@v4
+        with:
+          ref: safor/platform-response-governor-v0.13.0-rc.7
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Apply platform response governor
+        run: python tools/apply_platform_response_governor.py
+      - name: Check reproducible Framework bundle
+        run: python tools/build_bundle.py --check
+      - name: Check domain Framework distributions
+        run: python tools/build_domain_framework.py --check
+      - name: Validate SAFOR distribution
+        run: python tools/validate_safor.py
+      - name: Run unit and regression tests
+        run: python -m unittest discover -s tests -v
+      - name: Remove one-off migration tooling
+        run: |
+          rm tools/apply_platform_response_governor.py
+          rm .github/workflows/apply-platform-response-governor.yml
+      - name: Commit generated rc.7 changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No generated changes to commit."
+            exit 0
+          fi
+          git commit -m "feat: enforce platform-owned HUMAN response governance"
+          git push origin HEAD:safor/platform-response-governor-v0.13.0-rc.7
