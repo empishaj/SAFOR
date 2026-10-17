@@ -1,0 +1,290 @@
+{
+  "format": "SAFOR_INITIALIZATION_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "safor-initialization-0.13.0",
+  "purpose": "Initialize SAFOR with independently selectable Factory and Operating Model JSON packages, per-package access control, deterministic integrity/compatibility binding and HUMAN-owned project workspaces.",
+  "entryBehavior": {
+    "autoStartAfterBootstrapLoad": true,
+    "firstHumanSurface": "CREATION_TYPE_SELECTION_MENU",
+    "noProjectWorkBeforeComplete": true,
+    "completionPredicate": "FRAMEWORK_VERIFIED_AND_PACKAGES_RESOLVED_AND_COMPATIBLE_AND_PROJECT_WORKSPACE_VERIFIED_AND_CONTROL_WORKSPACE_VERIFIED"
+  },
+  "sequence": [
+    {
+      "id": "INIT-00",
+      "operation": "VERIFY_EMBEDDED_MODULE_RECOVERY_BASELINE",
+      "title": "SAFOR Runtime prüfen",
+      "requiresProvider": false,
+      "passOutcome": "MODULE_RECOVERY_BASELINE_VERIFIED",
+      "failOutcome": "STOP",
+      "checks": [
+        "EMBEDDED_MODULE_KEYS_MATCH_RECOVERY_PROFILE_KEYS_EXACTLY",
+        "ONE_UNIQUE_PROFILE_PER_MODULE",
+        "MODULE_AND_INTEGRITY_MANIFEST_PROFILE_IDS_MATCH",
+        "SELF_HEALING_CONTROL_MODULES_PRESENT_AND_STRUCTURALLY_VALID",
+        "REFERENCE_RESOLUTION_TARGETS_EXIST",
+        "KERNEL_SCHEMA_AND_BUNDLE_VERSIONS_AGREE"
+      ],
+      "selfHealingRef": "module-self-healing-model.json"
+    },
+    {
+      "id": "INIT-00A",
+      "operation": "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
+      "title": "Control Kernel prüfen",
+      "requiresProvider": false,
+      "passOutcome": "DETERMINISTIC_CONTROL_BASELINE_VERIFIED",
+      "failOutcome": "STOP",
+      "checks": [
+        "DETERMINISTIC_CONTROL_MODULES_PRESENT_AND_PINNED",
+        "ACCEPTANCE_MODEL_AND_SCHEMAS_PRESENT_AND_PINNED",
+        "COMPOSABLE_PACKAGE_MODEL_PRESENT",
+        "DOMAIN_PACKAGE_AND_SELECTION_SCHEMAS_PRESENT",
+        "PACKAGE_DISTRIBUTION_MODEL_PRESENT",
+        "ENTITLEMENT_MODEL_PRESENT",
+        "WORKSPACE_MODEL_PRESENT",
+        "PUBLIC_FRAMEWORK_CONTAINS_NO_PAID_DOMAIN_PACKAGE_CONTENT"
+      ],
+      "deterministicControlRef": "deterministic-control-model.json"
+    },
+    {
+      "id": "INIT-01",
+      "operation": "SELECT_CREATION_TYPE",
+      "humanDecision": "CREATION_TYPE_SELECTION",
+      "title": "Was möchtest du erstellen?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "SOFTWARE_WEBSITE",
+            "label": "Software / Website",
+            "accessLabel": "Kostenlos"
+          },
+          {
+            "id": "BOOK",
+            "label": "Buch",
+            "accessLabel": "Lizenz erforderlich"
+          }
+        ]
+      },
+      "rule": "Creation type determines default package candidates only; Factory and Operating Model remain independently selectable and do not grant organizational authority."
+    },
+    {
+      "id": "INIT-02",
+      "operation": "RESOLVE_PACKAGE_SELECTION_PROFILE",
+      "title": "Factory und Operating Model auswählen",
+      "modelRefs": [
+        "package-catalog.json",
+        "composable-package-model.json"
+      ],
+      "outcomes": [
+        "DEFAULT_PACKAGE_CANDIDATES_RESOLVED",
+        "HUMAN_PACKAGE_OVERRIDE_REQUIRED"
+      ],
+      "rule": "Resolve profile defaults first. HUMAN may independently override Factory and/or Operating Model; paid overrides require explicit HUMAN approval."
+    },
+    {
+      "id": "INIT-03",
+      "operation": "RESOLVE_SELECTED_FACTORY_AND_OPERATING_MODEL_ACCESS",
+      "title": "Paket-Zugriff getrennt prüfen",
+      "rules": [
+        "Resolve access separately for selected Factory and selected Operating Model.",
+        "FREE_PUBLIC selected packages may resolve from canonical public SAFOR Git or an explicit HUMAN-loaded artifact.",
+        "PAID_ENTITLEMENT_REQUIRED selected packages require HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus independently verified entitlement for that exact package/version.",
+        "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is allowed when the paid member is entitled.",
+        "Paid package model content may not be read from the public canonical repository."
+      ],
+      "failOutcomes": {
+        "missingPaidPackage": "PACKAGE_ACCESS_REQUIRED",
+        "entitlementUnverified": "PACKAGE_ENTITLEMENT_UNVERIFIED",
+        "publicPaidResolutionAttempt": "STOP"
+      }
+    },
+    {
+      "id": "INIT-04",
+      "operation": "VERIFY_PACKAGE_INTEGRITY_AND_ACCESS",
+      "title": "Domain-Pakete verifizieren",
+      "checks": [
+        "SAFOR_DOMAIN_PACKAGE_SHAPE",
+        "PACKAGE_ID_KIND_MATCH",
+        "DECLARED_CONTRACT_SHA256",
+        "IMMUTABLE_SOURCE_REVISION_OR_TRUSTED_ARTIFACT_VERIFICATION",
+        "FRAMEWORK_VERSION_RANGE",
+        "CREATION_TYPE_SUPPORT",
+        "ACCESS_MODE",
+        "ENTITLEMENT_WHEN_REQUIRED"
+      ],
+      "rule": "Factory and Operating Model are verified independently and are not bindable until artifact integrity, compatibility scope and access evidence are proven."
+    },
+    {
+      "id": "INIT-05",
+      "operation": "VERIFY_FACTORY_OPERATING_MODEL_COMPATIBILITY",
+      "title": "Factory und Operating Model kompatibel binden",
+      "checks": [
+        "FACTORY_KIND_VALID",
+        "OPERATING_MODEL_KIND_VALID",
+        "FACTORY_REQUIRED_CAPABILITIES_COVERED_BY_OPERATING_MODEL",
+        "FACTORY_REQUIRED_AUTHORITIES_COVERED_BY_OPERATING_MODEL",
+        "DECLARED_COUNTERPART_RESTRICTIONS_SATISFIED",
+        "NO_FACTORY_ROLE_ID_COUPLING",
+        "NO_OPERATING_MODEL_FLOW_OWNERSHIP"
+      ],
+      "failOutcome": "FACTORY_OPERATING_MODEL_INCOMPATIBLE"
+    },
+    {
+      "id": "INIT-05A",
+      "operation": "MATERIALIZE_PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+      "title": "Arbeitsmodell festschreiben",
+      "schemas": [
+        "schemas/package-selection.schema.json",
+        "schemas/package-compatibility-decision.schema.json"
+      ],
+      "requires": [
+        "PACKAGE_ACCESS_RESOLVED",
+        "DOMAIN_PACKAGES_INTEGRITY_VERIFIED",
+        "FACTORY_OPERATING_MODEL_COMPATIBLE"
+      ],
+      "outcome": "DOMAIN_PACKAGE_BINDING_READY",
+      "rule": "Persist the selected Factory and Operating Model plus a COMPATIBLE decision before immutable project bindings are materialized."
+    },
+    {
+      "id": "INIT-06",
+      "operation": "SELECT_PROJECT_WORKSPACE_TYPE",
+      "humanDecision": "PROJECT_WORKSPACE_SELECTION",
+      "title": "Wo liegt dein Projekt?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "REMOTE_GIT",
+            "label": "In meinem Git-Repository"
+          },
+          {
+            "id": "LOCAL_GIT",
+            "label": "Lokal auf meinem Rechner"
+          }
+        ]
+      },
+      "rule": "Project location is HUMAN-controlled and independent from package source/access."
+    },
+    {
+      "id": "INIT-07R",
+      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "operation": "SELECT_REMOTE_PROVIDER",
+      "humanDecision": "PROVIDER_SELECTION",
+      "title": "Welchen Git-Anbieter nutzt du?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "GITHUB",
+            "label": "GitHub",
+            "providerPackageId": "safor.provider.github"
+          },
+          {
+            "id": "GITLAB",
+            "label": "GitLab",
+            "providerPackageId": "safor.provider.gitlab"
+          }
+        ]
+      }
+    },
+    {
+      "id": "INIT-08R",
+      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "operation": "VERIFY_REMOTE_PROVIDER_ACCESS",
+      "requires": [
+        "provider.identity.read",
+        "provider.namespace.list",
+        "provider.repository.list",
+        "provider.repository.read",
+        "provider.artifact.read",
+        "provider.artifact.write",
+        "provider.history.read",
+        "provider.branch.read",
+        "provider.branch.write"
+      ],
+      "failOutcome": "WAITING_HUMAN_PROVIDER_ACCESS"
+    },
+    {
+      "id": "INIT-09R",
+      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "operation": "SELECT_REMOTE_OWNER_AND_PROJECT",
+      "humanDecision": "REMOTE_PROJECT_SELECTION",
+      "title": "Welches deiner Projekte verwenden wir?",
+      "rules": [
+        "Project repository must be HUMAN/HUMAN-organization controlled.",
+        "Canonical SAFOR repository is forbidden as project repository.",
+        "Commercial package source is forbidden as project repository.",
+        "Existing or new project is allowed subject to actual provider rights and setup approval."
+      ]
+    },
+    {
+      "id": "INIT-10R",
+      "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+      "operation": "VERIFY_AND_BIND_REMOTE_CONTROL_WORKSPACE",
+      "target": "{selectedOwner}/safor-memory",
+      "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
+      "requires": [
+        "provider.repository.read",
+        "provider.artifact.read",
+        "provider.artifact.write"
+      ],
+      "failOutcome": "WAITING_HUMAN_CONTROL_WORKSPACE",
+      "rule": "Remote safor-memory remains HUMAN-controlled control storage; it is never a project work-artifact repository."
+    },
+    {
+      "id": "INIT-07L",
+      "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+      "operation": "VERIFY_LOCAL_HOST_CAPABILITIES",
+      "requires": [
+        "workspace.local.read",
+        "workspace.local.write",
+        "workspace.git.repository.read",
+        "workspace.git.history.read",
+        "workspace.git.branch.read",
+        "workspace.git.branch.write",
+        "workspace.git.commit.write"
+      ],
+      "failOutcome": "WAITING_HUMAN_LOCAL_HOST_ACCESS",
+      "rule": "Do not claim local capability unless the host actually exposes filesystem and Git operations."
+    },
+    {
+      "id": "INIT-08L",
+      "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+      "operation": "SELECT_OR_DEFINE_LOCAL_GIT_PROJECT",
+      "humanDecision": "LOCAL_PROJECT_SELECTION",
+      "title": "Welchen lokalen Git-Projektordner verwenden wir?",
+      "checks": [
+        "PATH_HUMAN_SELECTED_OR_APPROVED",
+        "GIT_REPOSITORY_PRESENT_OR_SETUP_EXPLICITLY_APPROVED",
+        "READ_WRITE_PROVEN",
+        "CANONICAL_SAFOR_SOURCE_NOT_TARGET"
+      ]
+    },
+    {
+      "id": "INIT-09L",
+      "when": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+      "operation": "BIND_LOCAL_CONTROL_WORKSPACE",
+      "strategy": "LOCAL_MASTER_CONTROL_ROOT",
+      "target": ".safor/",
+      "rule": "The .safor/ root is MASTER-only, Git-tracked and excluded from worker write scopes."
+    },
+    {
+      "id": "INIT-11",
+      "operation": "APPROVE_AND_MATERIALIZE_PROJECT",
+      "humanDecision": "SETUP_APPROVAL",
+      "title": "Projekt starten",
+      "rule": "Materialize project/control only in the HUMAN-selected project/control workspaces. Package sources and canonical SAFOR repository remain read-only sources.",
+      "completionOutcome": "INITIALIZATION_COMPLETE"
+    }
+  ],
+  "packageModelRefs": [
+    "package-catalog.json",
+    "package-distribution-model.json",
+    "commercial-entitlement-model.json",
+    "composable-package-model.json"
+  ],
+  "workspaceModelRef": "workspace-model.json",
+  "humanDecisionGateModelRef": "human-decision-gate-model.json",
+  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
+}
