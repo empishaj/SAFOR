@@ -1,18 +1,43 @@
 # SAFOR Commercial Distribution Decision
 
 Decision date: **2026-10-17**
+Current implementation baseline: **SAFOR 0.13.0-rc.3**
 
 ## Product decision
 
-The HUMAN has selected a modular commercial model:
+The HUMAN has selected a modular commercial model with an explicit boundary between simple Website creation and Software/SaaS engineering:
 
 - The **SAFOR Framework** is publicly distributable.
-- The default **Software / Website starter path** remains free.
-- Factories and Operating Models are independently versioned product packages.
-- A Factory or Operating Model may be **FREE_PUBLIC** or **PAID_ENTITLEMENT_REQUIRED**.
-- **Book** is a paid creation path.
-- Future higher-value Factories and Operating Models may be purchased independently and combined when technically compatible.
-- Paid package content is not embedded in the public Framework artifact.
+- **WEBSITE** is the free entry path.
+- The default Website Factory and Website Operating Model are **FREE_PUBLIC**.
+- **SOFTWARE_SAAS** is a commercial creation path.
+- A Software/SaaS project requires both a **PAID_ENTITLEMENT_REQUIRED Software Factory** and a **PAID_ENTITLEMENT_REQUIRED Operating Model**.
+- Each of those two Software/SaaS packages requires its own independently verified entitlement.
+- **BOOK** is also a commercial creation path and requires paid domain packages.
+- Factories and Operating Models remain independently versioned/licensable products, but a Creation Profile may constrain which access modes are valid.
+- Paid package model content is not embedded in the public Framework artifact and is not resolved from the public canonical repository.
+
+## Free Website starter
+
+The default free Website pair is:
+
+- `safor.factory.website-delivery@1.0.0`
+- `safor.om.website-team@1.0.0`
+
+These packages are deliberately narrower than the Software/SaaS products. They cover website intent, audience/content structure, UX, web implementation, accessibility/responsive/performance verification, publishing, post-publish observation and website outcome assessment.
+
+If Website Discovery reveals application logic, a SaaS/service lifecycle or broader software engineering/operations needs, SAFOR requires an explicit Creation-Type change to `SOFTWARE_SAAS`.
+
+## Commercial Software/SaaS path
+
+The Software/SaaS defaults are:
+
+- `safor.factory.software-delivery`
+- `safor.om.saas-engineering`
+
+Both are catalogued as `PAID_ENTITLEMENT_REQUIRED` and resolve only from a HUMAN-loaded licensed artifact or an entitled package source.
+
+A free Factory or free Operating Model cannot be used to bypass the Software/SaaS commercial profile, even if it would otherwise be technically compatible.
 
 ## Entitlement boundary
 
@@ -33,25 +58,20 @@ All project-specific work remains under HUMAN control:
 
 SAFOR product/package repositories are not project storage.
 
-## Free starter
-
-The default Website starter consists of:
-- `safor.factory.software-delivery`
-- `safor.om.saas-engineering`
-
-These are resolved as FREE_PUBLIC packages from the canonical public SAFOR repository at an immutable revision/blob.
-
-## Paid packages
-
-The Book Factory and Book Operating Model are classified as PAID_ENTITLEMENT_REQUIRED for the 0.12 commercial architecture. Future premium package content must be delivered through HUMAN-loaded licensed artifacts or an entitled package source.
-
 ## Legacy disclosure
 
-Pre-0.12 package prototypes were already committed publicly. Those historical bytes cannot be made confidential retroactively and are not considered a secure commercial distribution channel.
+Software Factory and SaaS Engineering Operating Model versions through **1.6.0** were already committed publicly before this product split. Those historical bytes cannot be made confidential retroactively.
+
+They are therefore:
+- historical/reference artifacts,
+- not the current protected commercial package channel,
+- not catalogued as the current `SOFTWARE_SAAS` package source in rc.3.
+
+New commercial Software/SaaS package content must be delivered through an entitled/private package channel.
 
 ## Still open before GA
 
-This decision establishes the product/licensing architecture but not final legal/commercial operations. The following remain open:
+This decision establishes and machine-enforces the product/licensing architecture. The following commercial operations remain open:
 - final legal license text and terms,
 - pricing and SKU policy,
 - billing/purchase flow,
