@@ -22265,6 +22265,12 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:1505ab18697256466e6b7af4ee1072c66dd7654ffcbc97bf49fd5e7e0390a5d4"
+    "contentDigest": "sha256:691e8a0ef3d2fb91a85307c6495b2d5979e5c712ab8e5455ea9dfc9fe2fe0cfb"
+  },
+  "evaluationAccess": {
+    "mode": "EXTERNAL_TEST_ACCESS_BUNDLE",
+    "file": "SAFOR-TEST-ACCESS-SAAS.json",
+    "embeddedModulesSourceClass": "HUMAN_LOADED_PACKAGE",
+    "productionAuthorization": false
   }
 }
