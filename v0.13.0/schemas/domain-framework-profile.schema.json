@@ -148,8 +148,36 @@
             "PUBLIC_TEST_EVALUATION",
             "COMMERCIAL_PRODUCTION"
           ]
+        },
+        "evaluationAccessFile": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^SAFOR-TEST-ACCESS-[A-Z0-9-]+\\.json$"
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "publicationMode": {
+                "const": "PUBLIC_TEST_EVALUATION"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "evaluationAccessFile"
+            ],
+            "properties": {
+              "evaluationAccessFile": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
     }
   }
 }
