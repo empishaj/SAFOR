@@ -4,6 +4,17 @@ Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**, nicht techni
 
 > Produktstatus: **SAFOR v0.13.0-rc.6 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
 
+## Wichtige Testgrenze
+
+Das Hochladen der JSON-Dateien macht den SAFOR-Vertrag für ein Sprachmodell lesbar. Ein normaler Chat führt den Python-Referenzcode in `runtime/public_evaluation_access.py` jedoch **nicht automatisch** aus, nur weil die Dateien hochgeladen wurden.
+
+Damit gibt es zwei unterschiedliche Prüfmodi:
+
+- Im normalen Chat prüfst du, ob das Modell den SAFOR-Vertrag korrekt versteht und befolgt.
+- Eine deterministische, maschinenverifizierte Zugriffsentscheidung entsteht erst, wenn ein kompatibler SAFOR-Host oder Adapter den Referenzcode tatsächlich aufruft.
+
+Für eine spätere produktive Nutzung ist diese Host-/Runtime-Integration Pflicht. Der manuelle Chat-Test ist wertvoll, ersetzt aber keine technisch erzwungene Entitlement-, Integritäts- und Zustandsprüfung.
+
 ## 1. Entscheide, was du erstellen möchtest
 
 | Pfad | Dateien, die du in denselben Chat lädst | Anzahl | Zugriffsart |
