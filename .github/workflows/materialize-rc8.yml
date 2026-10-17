@@ -38,6 +38,38 @@ jobs:
       - name: Apply canonical rc.8 sources and contracts
         run: python tools/implement_human_notice_rc8.py
 
+      - name: Align onboarding contract and regression
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          guide = Path("START-HIER.md")
+          text = guide.read_text(encoding="utf-8")
+          needle = "Der Chat interpretiert den eingebetteten SAFOR-Vertrag und nutzt ausschließlich die Werkzeuge und Git-Rechte, die der Host tatsächlich bereitstellt."
+          replacement = (
+              "Ein normaler Chat führt den Python-Referenzcode nicht automatisch aus. "
+              "Das ist keine Installationsvoraussetzung: Der Chat interpretiert den eingebetteten SAFOR-Vertrag "
+              "und nutzt ausschließlich die Werkzeuge und Git-Rechte, die der Host tatsächlich bereitstellt."
+          )
+          if needle not in text:
+              raise SystemExit("Expected onboarding paragraph not found")
+          guide.write_text(text.replace(needle, replacement, 1), encoding="utf-8")
+
+          test_file = Path("tests/test_user_onboarding.py")
+          tests = test_file.read_text(encoding="utf-8")
+          start = tests.index("    def test_german_guide_explains_manual_chat_vs_runtime_enforcement")
+          end = tests.index("\n    def test_quickstart", start)
+          new_test = '''    def test_german_guide_explains_declarative_chat_and_optional_reference_runtime(self):
+              self.assertIn("führt den Python-Referenzcode", self.start_here)
+              self.assertIn("nicht automatisch", self.start_here)
+              self.assertIn("nicht erforderlich", self.start_here)
+              self.assertIn("optionale Referenz-", self.start_here)
+              self.assertNotIn("Host-/Runtime-Integration Pflicht", self.start_here)
+          '''
+          test_file.write_text(tests[:start] + new_test + tests[end:], encoding="utf-8")
+          PY
+
       - name: Rebuild generic Framework distribution
         run: python tools/build_bundle.py
 
