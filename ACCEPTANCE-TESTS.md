@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.12.0-rc.2.json`.
 
 ## A. GitHub REMOTE_GIT — free Website happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - The selected owner contains a pre-existing writable `safor-memory`.
 
 **Expected flow**
-1. Upload only `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Upload only `SAFOR-FRAMEWORK-v0.12.0-rc.2.json`.
 2. SAFOR verifies Framework/recovery/deterministic-control integrity.
 3. HUMAN selects **Software / Website**.
 4. SAFOR resolves the FREE_PUBLIC Software Factory and Operating Model from public SAFOR Git at immutable revision/blob without asking for a paid entitlement.
@@ -322,7 +322,7 @@ For one mutating agent job and one read-only agent job:
 
 Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly and fails closed around integrity/authority boundaries.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` artifact and verify K00 then K00A complete before provider/project work.
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.2.json` artifact and verify K00 then K00A complete before provider/project work.
 2. Create or load a project with a PLANNED work item whose dependency is ACCEPTED, required input object is resolvable, resource declaration is complete and an active execution mandate covers the work item/capability.
 3. Submit a typed `WORK_ITEM_READINESS_REEVALUATION_REQUESTED` event with the next contiguous sequence.
 4. Verify the deterministic transition is `WORK_ITEM_BECOMES_READY`, the work item becomes READY, `execution.readySince` comes from the event timestamp and the resulting canonical state hash is recorded.
@@ -344,7 +344,7 @@ Pass criteria: identical canonical inputs and pinned model revision produce iden
 
 Goal: prove that Work Item ACCEPTED is derived only from the approved Acceptance Contract and authoritative typed evidence/review/authority records.
 
-1. Use the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` artifact.
+1. Use the exact `SAFOR-FRAMEWORK-v0.12.0-rc.2.json` artifact.
 2. Create an executable Work Item with three approved criteria: pinned contribution evidence, independent technical review and explicit risk authority approval.
 3. Verify Planning materializes an ACTIVE Acceptance Contract preserving all three criterion texts and mapping each to typed requirements.
 4. Verify the contractHash matches canonical contract content and P03 approval binds the contract set.
@@ -369,7 +369,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that paid Factory/Operating Model use is licensed independently from organizational authority.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.2.json`.
 2. Select **Buch**.
 3. With no commercial package artifacts, verify `PACKAGE_ACCESS_REQUIRED`.
 4. Supply Book Factory/OM as HUMAN-loaded package artifacts but no independently verified entitlements; verify `PACKAGE_ENTITLEMENT_UNVERIFIED`.
@@ -388,7 +388,7 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 
 **Goal:** prove that the project can remain on the HUMAN local disk without remote project storage.
 
-1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.2.json`.
 2. Select **Software / Website** and resolve the FREE_PUBLIC Factory/OM.
 3. Select **Lokal auf meinem Rechner**.
 4. Verify the host exposes actual local filesystem read/write plus Git repository/history/branch/commit capabilities.
@@ -404,3 +404,44 @@ Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no proba
 14. Verify stopping/resuming does not move the project or control state to a remote service implicitly.
 
 **Pass condition:** all project/domain bytes remain in the HUMAN local Git workspace and SAFOR retains its governance/evidence guarantees.
+
+
+## S. Operation Mode and Agent Runtime Governance
+
+**Goal:** prove that SAFOR keeps schema design, validation harnesses and real project execution separate, and never converts missing agent automation into routine HUMAN workflow operation.
+
+### S1 — DESIGN
+
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.2.json`.
+2. State an unambiguous intent to change SAFOR Framework/schema architecture.
+3. Verify SAFOR derives `DESIGN` without asking for Creation Type or HUMAN project workspace.
+4. Verify the canonical SAFOR repository may be bound only as a Framework development target, not as a HUMAN project.
+5. Verify project Value Creation execution state is not materialized implicitly.
+
+### S2 — VALIDATION manual harness
+
+1. Start an explicit E2E/validation intent against an isolated test workspace.
+2. Verify SAFOR derives `VALIDATION`.
+3. Bind an Agent Runtime whose activation capability is `HUMAN_MANUAL_TEST_ONLY` and adapter kind is `MANUAL_TEST_HARNESS`.
+4. Verify the harness is accepted only because the target is isolated and the result is marked non-production.
+5. Verify its evidence cannot satisfy a production execution mandate, production Work Item acceptance or business outcome authority.
+
+### S3 — EXECUTION with insufficient runtime
+
+1. Start a real HUMAN project Value Creation flow and derive `EXECUTION`.
+2. Reach a READY AGENT work item while only `HUMAN_MANUAL_TEST_ONLY` or `UNAVAILABLE` runtime capability exists.
+3. Verify AGENT dispatch is blocked with `AGENT_RUNTIME_AUTOMATION_UNAVAILABLE`.
+4. Verify SAFOR does not ask the HUMAN to open/wake an agent chat, copy the job prompt/contract, poll an inbox, transport a result or advance dispatch manually.
+5. Verify SAFOR does not silently switch to VALIDATION.
+
+### S4 — EXECUTION with automatic runtime
+
+1. Bind a runtime with evidenced `HOST_NATIVE_AUTOMATIC` or `EXTERNAL_AUTOMATION` activation and continuation.
+2. Verify Agent Runtime and Provider Adapter bindings remain logically separate.
+3. Dispatch one repository-native Agent Job without copying its contract through chat.
+4. Verify the Agent Job pins operation mode, runtime binding, activation capability and capability evidence.
+5. Verify the runtime activates/continues the AGENT, the agent pulls its Job from the repository, claims it, and persists the result.
+6. Verify runtime binding grants no provider rights, organizational authority, mandate, entitlement, review approval or acceptance.
+7. Verify MASTER independently reads back and evaluates the result.
+
+**Pass condition:** all four mode/runtime paths behave according to policy, and the production EXECUTION path completes without routine HUMAN agent-runtime operation.
