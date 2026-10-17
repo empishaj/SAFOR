@@ -19,7 +19,11 @@
     "entitlementEvaluatedPerSelectedPackage": true,
     "mixedPairRequiresOnlyPaidPackageEntitlements": true,
     "entitlementEvidenceExternalToPackageArtifact": true,
-    "packageSelectionDoesNotTransferEntitlement": true
+    "packageSelectionDoesNotTransferEntitlement": true,
+    "creationProfileAccessPolicyMustBeSatisfiedBeforeBinding": true,
+    "softwareSaasRequiresFactoryEntitlement": true,
+    "softwareSaasRequiresOperatingModelEntitlement": true,
+    "freeWebsiteDefaultsRequireNoEntitlement": true
   },
   "allowedVerificationMethods": [
     "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
@@ -30,5 +34,10 @@
     "unverifiable": "PACKAGE_ENTITLEMENT_UNVERIFIED",
     "expired": "PACKAGE_ENTITLEMENT_EXPIRED",
     "packageMismatch": "PACKAGE_ENTITLEMENT_SCOPE_MISMATCH"
+  },
+  "profileRules": {
+    "WEBSITE": "Default Website Factory and Website Operating Model are FREE_PUBLIC; paid compatible overrides, if selected, require entitlement only for the paid package.",
+    "SOFTWARE_SAAS": "Both selected Factory and selected Operating Model must be PAID_ENTITLEMENT_REQUIRED and each must have independently verified entitlement.",
+    "BOOK": "Both selected Factory and selected Operating Model must be PAID_ENTITLEMENT_REQUIRED and each must have independently verified entitlement."
   }
 }
