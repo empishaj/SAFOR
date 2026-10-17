@@ -158,7 +158,8 @@
             "requirementId",
             "type",
             "evidenceType",
-            "requiredIntegrity"
+            "requiredIntegrity",
+            "sourceRequirement"
           ],
           "properties": {
             "requirementId": {
@@ -177,6 +178,10 @@
                 "PINNED",
                 "ANY_AUTHORITATIVE"
               ]
+            },
+            "sourceRequirement": {
+              "type": "string",
+              "minLength": 1
             }
           }
         },
@@ -188,7 +193,8 @@
             "type",
             "capability",
             "requiredDecision",
-            "independencePolicy"
+            "independencePolicy",
+            "sourceRequirement"
           ],
           "properties": {
             "requirementId": {
@@ -210,6 +216,10 @@
                 "NONE",
                 "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
               ]
+            },
+            "sourceRequirement": {
+              "type": "string",
+              "minLength": 1
             }
           }
         },
@@ -220,7 +230,8 @@
             "requirementId",
             "type",
             "authorityId",
-            "requiredDecision"
+            "requiredDecision",
+            "sourceRequirement"
           ],
           "properties": {
             "requirementId": {
@@ -236,6 +247,10 @@
             },
             "requiredDecision": {
               "const": "APPROVED"
+            },
+            "sourceRequirement": {
+              "type": "string",
+              "minLength": 1
             }
           }
         }
