@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.11.0/effect-intent.schema.json",
+  "title": "SAFOR Effect Intent",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "effectIntentId",
+    "effectType",
+    "reason",
+    "sourceTransitionId",
+    "sourceEventId",
+    "payload"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_EFFECT_INTENT"
+    },
+    "schemaVersion": {
+      "const": "0.11.0"
+    },
+    "effectIntentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "effectType": {
+      "enum": [
+        "CREATE_BRANCH",
+        "WRITE_FILE",
+        "UPDATE_FILE",
+        "CREATE_PULL_REQUEST",
+        "MERGE_PULL_REQUEST",
+        "PROVIDER_READBACK",
+        "ACTIVATE_AGENT"
+      ]
+    },
+    "reason": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceTransitionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceEventId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "payload": {
+      "type": "object"
+    }
+  }
+}
