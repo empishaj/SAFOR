@@ -13,6 +13,7 @@ from runtime.bootstrap_policy import (
     evaluate_active_conditional_requirements,
     evaluate_domain_package_pair,
     evaluate_domain_framework_pair,
+    resolve_composable_creation_packages,
     validate_domain_package,
     validate_factory_contract_consistency,
 )
@@ -676,6 +677,44 @@ for profile_id, filename, domain_id, creation_type, expected_factory_family, exp
     )
     if not test_pair["compatible"]:
         fail(f"{profile_id} embedded test pair incompatible: {test_pair}")
+
+    evaluation_access = distribution_artifact.get("evaluationAccess", {})
+    access_file = evaluation_access.get("file")
+    if evaluation_access.get("mode") != "EXTERNAL_TEST_ACCESS_BUNDLE":
+        fail(f"{profile_id} evaluation access mode mismatch.")
+    if evaluation_access.get("embeddedModulesSourceClass") != "HUMAN_LOADED_PACKAGE":
+        fail(f"{profile_id} embedded paid test modules must resolve as HUMAN_LOADED_PACKAGE.")
+    if evaluation_access.get("productionAuthorization") is not False:
+        fail(f"{profile_id} evaluation access must not authorize production.")
+    if not access_file:
+        fail(f"{profile_id} evaluation access file missing.")
+        continue
+
+    access_bundle = load_json(access_file)
+    if access_bundle.get("format") != "SAFOR_PUBLIC_EVALUATION_ACCESS_BUNDLE":
+        fail(f"{profile_id} test access bundle format mismatch.")
+    if access_bundle.get("domainId") != domain_id:
+        fail(f"{profile_id} test access domain mismatch.")
+    if access_bundle.get("creationType") != creation_type:
+        fail(f"{profile_id} test access creation type mismatch.")
+    restrictions = access_bundle.get("restrictions", {})
+    if restrictions.get("testPackageVersionsOnly") is not True:
+        fail(f"{profile_id} test access must be restricted to test package versions.")
+    if restrictions.get("productionAuthorization") is not False:
+        fail(f"{profile_id} test access must not authorize production.")
+
+    resolved = resolve_composable_creation_packages(
+        creation_type,
+        catalog,
+        [
+            {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": test_factory},
+            {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": test_om},
+        ],
+        access_bundle.get("entitlements", []),
+        verification_context=access_bundle.get("verificationContext", {}),
+    )
+    if resolved.get("outcome") != "PACKAGE_ACCESS_RESOLVED":
+        fail(f"{profile_id} public evaluation access bundle does not resolve paid test modules: {resolved}")
 
 # Public evaluation bytes must not become production catalog delivery paths.
 for paid_id in (
