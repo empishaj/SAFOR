@@ -1,10 +1,13 @@
-"""Pure SAFOR 0.12 bootstrap policy reference implementation.
+"""Pure SAFOR 0.12/0.13 bootstrap policy reference implementation.
 
 This module evaluates package-access and HUMAN-workspace boundary rules only.
 It performs no provider I/O, filesystem I/O, purchases, entitlement issuance,
 or organizational-authority changes.
 """
 from __future__ import annotations
+
+import hashlib
+import json
 
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
@@ -65,7 +68,7 @@ def entitlement_covers(
 ) -> bool:
     if entitlement.get("format") != "SAFOR_COMMERCIAL_ENTITLEMENT":
         return False
-    if entitlement.get("schemaVersion") != "0.12.0":
+    if entitlement.get("schemaVersion") not in {"0.12.0", "0.13.0"}:
         return False
     grant = entitlement.get("grant", {})
     if grant.get("packageId") != package_id:
@@ -220,3 +223,300 @@ def validate_workspace_binding(
         errors.append("UNKNOWN_PROJECT_WORKSPACE_TYPE")
 
     return {"valid": not errors, "errors": errors}
+
+
+DOMAIN_CONTRACT_FIELDS = (
+    "packageId",
+    "packageKind",
+    "version",
+    "commercial",
+    "compatibility",
+    "exports",
+    "dependencies",
+    "model",
+)
+
+
+def _semver_core(version: str) -> tuple[int, int, int]:
+    core = str(version).split("-", 1)[0]
+    parts = core.split(".")
+    if len(parts) != 3 or not all(part.isdigit() for part in parts):
+        raise ValueError(f"Unsupported semantic version: {version}")
+    return tuple(int(part) for part in parts)
+
+
+def canonical_domain_contract(package: Mapping[str, Any]) -> str:
+    projection = {field: package.get(field) for field in DOMAIN_CONTRACT_FIELDS}
+    return json.dumps(
+        projection,
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    )
+
+
+def compute_domain_package_digest(package: Mapping[str, Any]) -> str:
+    payload = canonical_domain_contract(package).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def validate_domain_package(
+    package: Mapping[str, Any],
+    framework_version: str,
+    creation_type: str,
+) -> Dict[str, Any]:
+    errors: List[str] = []
+    package_id = str(package.get("packageId", ""))
+    package_kind = package.get("packageKind")
+
+    if package.get("format") != "SAFOR_DOMAIN_PACKAGE":
+        errors.append("DOMAIN_PACKAGE_FORMAT_INVALID")
+    if package.get("schemaVersion") != "0.13.0":
+        errors.append("DOMAIN_PACKAGE_SCHEMA_VERSION_INVALID")
+    if package_kind not in {"FACTORY", "OPERATING_MODEL"}:
+        errors.append("DOMAIN_PACKAGE_KIND_INVALID")
+    if package_kind == "FACTORY" and not package_id.startswith("safor.factory."):
+        errors.append("DOMAIN_PACKAGE_ID_KIND_MISMATCH")
+    if package_kind == "OPERATING_MODEL" and not package_id.startswith("safor.om."):
+        errors.append("DOMAIN_PACKAGE_ID_KIND_MISMATCH")
+
+    commercial = package.get("commercial", {})
+    access_mode = commercial.get("accessMode")
+    if access_mode == "FREE_PUBLIC":
+        if commercial.get("entitlementRequired") is not False:
+            errors.append("FREE_PACKAGE_ENTITLEMENT_FLAG_INVALID")
+    elif access_mode == "PAID_ENTITLEMENT_REQUIRED":
+        if commercial.get("entitlementRequired") is not True:
+            errors.append("PAID_PACKAGE_ENTITLEMENT_FLAG_INVALID")
+    else:
+        errors.append("DOMAIN_PACKAGE_ACCESS_MODE_INVALID")
+    if commercial.get("entitlementEvidenceMode") != "EXTERNAL_ONLY":
+        errors.append("DOMAIN_PACKAGE_ENTITLEMENT_MUST_BE_EXTERNAL")
+
+    integrity = package.get("integrity", {})
+    if integrity.get("canonicalization") != "SAFOR_CANONICAL_JSON_V1":
+        errors.append("DOMAIN_PACKAGE_CANONICALIZATION_INVALID")
+    if integrity.get("digestAlgorithm") != "SHA-256":
+        errors.append("DOMAIN_PACKAGE_DIGEST_ALGORITHM_INVALID")
+    if integrity.get("digestScope") != "DECLARED_DOMAIN_CONTRACT":
+        errors.append("DOMAIN_PACKAGE_DIGEST_SCOPE_INVALID")
+    expected_digest = compute_domain_package_digest(package)
+    if integrity.get("contentDigest") != expected_digest:
+        errors.append("DOMAIN_PACKAGE_INTEGRITY_MISMATCH")
+    verification_mode = integrity.get("verificationMode")
+    if verification_mode not in {
+        "CANONICAL_REPOSITORY_READBACK",
+        "TRUSTED_PACKAGE_SOURCE_READBACK",
+        "SIGNED_ARTIFACT",
+    }:
+        errors.append("DOMAIN_PACKAGE_VERIFICATION_MODE_INVALID")
+    if verification_mode == "SIGNED_ARTIFACT" and not integrity.get("signature"):
+        errors.append("DOMAIN_PACKAGE_SIGNATURE_MISSING")
+
+    compatibility = package.get("compatibility", {})
+    supported = compatibility.get("supportedCreationTypes", [])
+    if creation_type not in supported:
+        errors.append("DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED")
+    framework = compatibility.get("framework", {})
+    try:
+        actual = _semver_core(framework_version)
+        minimum = _semver_core(framework.get("minimum", ""))
+        maximum_exclusive = _semver_core(framework.get("maximumExclusive", ""))
+        if not (minimum <= actual < maximum_exclusive):
+            errors.append("DOMAIN_PACKAGE_FRAMEWORK_INCOMPATIBLE")
+    except ValueError:
+        errors.append("DOMAIN_PACKAGE_FRAMEWORK_RANGE_INVALID")
+
+    return {
+        "valid": not errors,
+        "errors": errors,
+        "contentDigest": expected_digest,
+    }
+
+
+def evaluate_domain_package_pair(
+    factory: Mapping[str, Any],
+    operating_model: Mapping[str, Any],
+    framework_version: str,
+    creation_type: str,
+) -> Dict[str, Any]:
+    factory_validation = validate_domain_package(factory, framework_version, creation_type)
+    om_validation = validate_domain_package(operating_model, framework_version, creation_type)
+
+    checks = {
+        "factoryKind": factory.get("packageKind") == "FACTORY",
+        "operatingModelKind": operating_model.get("packageKind") == "OPERATING_MODEL",
+        "frameworkRange": (
+            "DOMAIN_PACKAGE_FRAMEWORK_INCOMPATIBLE" not in factory_validation["errors"]
+            and "DOMAIN_PACKAGE_FRAMEWORK_INCOMPATIBLE" not in om_validation["errors"]
+            and "DOMAIN_PACKAGE_FRAMEWORK_RANGE_INVALID" not in factory_validation["errors"]
+            and "DOMAIN_PACKAGE_FRAMEWORK_RANGE_INVALID" not in om_validation["errors"]
+        ),
+        "creationTypeSupport": (
+            "DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED" not in factory_validation["errors"]
+            and "DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED" not in om_validation["errors"]
+        ),
+        "capabilityCoverage": False,
+        "authorityCoverage": False,
+        "dependencyCoverage": True,
+    }
+
+    factory_counterpart = factory.get("compatibility", {}).get("counterpart", {})
+    required_capabilities = set(factory_counterpart.get(
+        "requiredCapabilities",
+        factory.get("exports", {}).get("capabilities", []),
+    ))
+    required_authorities = set(factory_counterpart.get(
+        "requiredAuthorities",
+        factory.get("exports", {}).get("authorities", []),
+    ))
+    om_exports = operating_model.get("exports", {})
+    available_capabilities = set(om_exports.get("capabilities", []))
+    available_authorities = set(om_exports.get("authorities", []))
+    missing_capabilities = sorted(required_capabilities - available_capabilities)
+    missing_authorities = sorted(required_authorities - available_authorities)
+    checks["capabilityCoverage"] = not missing_capabilities
+    checks["authorityCoverage"] = not missing_authorities
+
+    factory_allowed = factory_counterpart.get("allowedPackageIds")
+    if factory_allowed and operating_model.get("packageId") not in factory_allowed:
+        checks["dependencyCoverage"] = False
+    om_counterpart = operating_model.get("compatibility", {}).get("counterpart", {})
+    om_allowed = om_counterpart.get("allowedPackageIds")
+    if om_allowed and factory.get("packageId") not in om_allowed:
+        checks["dependencyCoverage"] = False
+
+    compatible = (
+        factory_validation["valid"]
+        and om_validation["valid"]
+        and all(checks.values())
+    )
+    return {
+        "compatible": compatible,
+        "checks": checks,
+        "missingCapabilities": missing_capabilities,
+        "missingAuthorities": missing_authorities,
+        "factoryErrors": factory_validation["errors"],
+        "operatingModelErrors": om_validation["errors"],
+    }
+
+
+def _loaded_package_record(
+    loaded_packages: Sequence[Mapping[str, Any]],
+    package_id: str,
+) -> Optional[Mapping[str, Any]]:
+    matches = []
+    for record in loaded_packages:
+        artifact = record.get("artifact") if isinstance(record.get("artifact"), Mapping) else record
+        if artifact.get("packageId") == package_id:
+            matches.append(record)
+    if len(matches) > 1:
+        raise ValueError(f"Multiple loaded package candidates for {package_id}")
+    return matches[0] if matches else None
+
+
+def resolve_composable_creation_packages(
+    creation_type: str,
+    catalog: Mapping[str, Any],
+    loaded_packages: Sequence[Mapping[str, Any]],
+    entitlements: Sequence[Mapping[str, Any]],
+    selection: Optional[Mapping[str, str]] = None,
+) -> Dict[str, Any]:
+    if catalog.get("schemaVersion") != "0.13.0":
+        return {"outcome": "PACKAGE_CATALOG_SCHEMA_UNSUPPORTED", "packages": []}
+
+    profile = _creation_profile(catalog, creation_type)
+    policy = profile.get("selectionPolicy", {})
+    selection = selection or {}
+    factory_id = selection.get("factoryPackageId", profile.get("defaultFactoryPackageId"))
+    om_id = selection.get("operatingModelPackageId", profile.get("defaultOperatingModelPackageId"))
+
+    if factory_id != profile.get("defaultFactoryPackageId") and policy.get("factoryOverrideAllowed") is not True:
+        return {"outcome": "FACTORY_OVERRIDE_FORBIDDEN", "packages": []}
+    if om_id != profile.get("defaultOperatingModelPackageId") and policy.get("operatingModelOverrideAllowed") is not True:
+        return {"outcome": "OPERATING_MODEL_OVERRIDE_FORBIDDEN", "packages": []}
+
+    requested = [("FACTORY", factory_id), ("OPERATING_MODEL", om_id)]
+    resolutions: List[Dict[str, Any]] = []
+    access_modes: Set[str] = set()
+
+    for expected_kind, package_id in requested:
+        try:
+            entry = _catalog_entry(catalog, str(package_id))
+        except ValueError:
+            return {"outcome": "PACKAGE_NOT_IN_CATALOG", "packageId": package_id, "packages": []}
+
+        if entry.get("kind") != expected_kind:
+            return {"outcome": "PACKAGE_KIND_MISMATCH", "packageId": package_id, "packages": []}
+        if creation_type not in entry.get("supportedCreationTypes", []):
+            return {
+                "outcome": "DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED",
+                "packageId": package_id,
+                "packages": [],
+            }
+
+        access_mode = entry.get("accessMode")
+        access_modes.add(str(access_mode))
+        loaded = _loaded_package_record(loaded_packages, str(package_id))
+
+        if access_mode == "FREE_PUBLIC":
+            if loaded is not None:
+                artifact = loaded.get("artifact") if isinstance(loaded.get("artifact"), Mapping) else loaded
+                source_class = loaded.get("sourceClass", "HUMAN_LOADED_PACKAGE")
+                if source_class not in {"HUMAN_LOADED_PACKAGE", "PUBLIC_CANONICAL_REPOSITORY"}:
+                    return {"outcome": "INVALID_FREE_PACKAGE_SOURCE", "packageId": package_id, "packages": []}
+                resolutions.append({
+                    "packageId": package_id,
+                    "kind": expected_kind,
+                    "mode": "USE_LOADED_PACKAGE",
+                    "sourceClass": source_class,
+                    "version": artifact.get("version"),
+                })
+            else:
+                distribution = entry.get("distribution", {})
+                if distribution.get("sourceClass") != "PUBLIC_CANONICAL_REPOSITORY" or not distribution.get("path"):
+                    return {"outcome": "FREE_PUBLIC_SOURCE_INVALID", "packageId": package_id, "packages": []}
+                resolutions.append({
+                    "packageId": package_id,
+                    "kind": expected_kind,
+                    "mode": "RESOLVE_PUBLIC_FREE",
+                    "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+                    "path": distribution["path"],
+                    "version": entry.get("version"),
+                    "requiresImmutableReadback": True,
+                })
+            continue
+
+        if access_mode == "PAID_ENTITLEMENT_REQUIRED":
+            if loaded is None:
+                return {"outcome": "PACKAGE_ACCESS_REQUIRED", "missingPackageId": package_id, "packages": []}
+            artifact = loaded.get("artifact") if isinstance(loaded.get("artifact"), Mapping) else loaded
+            source_class = loaded.get("sourceClass", "HUMAN_LOADED_PACKAGE")
+            if source_class not in {"HUMAN_LOADED_PACKAGE", "ENTITLED_PACKAGE_SOURCE"}:
+                return {"outcome": "PAID_PUBLIC_RESOLUTION_FORBIDDEN", "packageId": package_id, "packages": []}
+            version = str(artifact.get("version", loaded.get("version", "")))
+            if not version:
+                return {"outcome": "PACKAGE_VERSION_MISSING", "packageId": package_id, "packages": []}
+            matching = [e for e in entitlements if entitlement_covers(e, str(package_id), version)]
+            if len(matching) != 1:
+                return {"outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED", "packageId": package_id, "packages": []}
+            resolutions.append({
+                "packageId": package_id,
+                "kind": expected_kind,
+                "mode": "USE_ENTITLED_PACKAGE",
+                "sourceClass": source_class,
+                "version": version,
+                "entitlementId": matching[0].get("entitlementId"),
+            })
+            continue
+
+        return {"outcome": "UNKNOWN_ACCESS_MODE", "packageId": package_id, "packages": []}
+
+    return {
+        "outcome": "PACKAGE_ACCESS_RESOLVED",
+        "creationType": creation_type,
+        "selectedFactoryPackageId": factory_id,
+        "selectedOperatingModelPackageId": om_id,
+        "mixedAccessModes": len(access_modes) > 1,
+        "packages": resolutions,
+    }
