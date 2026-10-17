@@ -356,22 +356,22 @@
     },
     "eventModel": {
       "sourcePath": "v0.11.0/event-model.json",
-      "sourceBlobSha": "d1b92daffba4f37ff782ebe1e3d36a24e687fbac",
+      "sourceBlobSha": "6c243976c27ff22096c15c2adf8aa81cd8c09c23",
       "selfHealingProfileId": "MRP-EVENT_MODEL"
     },
     "predicateRegistry": {
       "sourcePath": "v0.11.0/predicate-registry.json",
-      "sourceBlobSha": "3dac7ab83c022624ea8cc1110ff396e92f5fceb2",
+      "sourceBlobSha": "56ec8ae4b2ffdab03154abc5085313a5b59d79b7",
       "selfHealingProfileId": "MRP-PREDICATE_REGISTRY"
     },
     "transitionRegistry": {
       "sourcePath": "v0.11.0/transition-registry.json",
-      "sourceBlobSha": "45ecc0fa4779848da862b96b43462caae16e2284",
+      "sourceBlobSha": "8fa214239a7bdea7646d736cee4750801f7c1190",
       "selfHealingProfileId": "MRP-TRANSITION_REGISTRY"
     },
     "effectModel": {
       "sourcePath": "v0.11.0/effect-model.json",
-      "sourceBlobSha": "7037e798aa5d2ac5c145368266a5c371b115509e",
+      "sourceBlobSha": "a86645e69f1381da3cd1aaa3c9a2baea240de3d5",
       "selfHealingProfileId": "MRP-EFFECT_MODEL"
     },
     "schemaEvent": {
@@ -386,7 +386,7 @@
     },
     "schemaTransition": {
       "sourcePath": "v0.11.0/schemas/transition.schema.json",
-      "sourceBlobSha": "b088147282d8f12c50d35677c72e869f19c4099c",
+      "sourceBlobSha": "1a34502d14fd3eccb0dcf7646d34549499cfab4f",
       "selfHealingProfileId": "MRP-SCHEMA_TRANSITION"
     },
     "schemaEffectIntent": {
@@ -401,7 +401,7 @@
     },
     "schemaStateSnapshot": {
       "sourcePath": "v0.11.0/schemas/state-snapshot.schema.json",
-      "sourceBlobSha": "c4063e3b0dc7da69fcbe805c78e184d890cec052",
+      "sourceBlobSha": "94bc759453cac1ad7fed6938c336f5d232c86663",
       "selfHealingProfileId": "MRP-SCHEMA_STATE_SNAPSHOT"
     }
   },
@@ -16579,7 +16579,7 @@
     "eventModel": {
       "key": "eventModel",
       "sourcePath": "v0.11.0/event-model.json",
-      "sourceBlobSha": "d1b92daffba4f37ff782ebe1e3d36a24e687fbac",
+      "sourceBlobSha": "6c243976c27ff22096c15c2adf8aa81cd8c09c23",
       "content": {
         "format": "SAFOR_EVENT_MODEL",
         "schemaVersion": "0.11.0",
@@ -16604,7 +16604,14 @@
           "RESUME_PROJECT_REQUESTED",
           "STOP_PROJECT_REQUESTED",
           "EXTERNAL_MUTATION_OUTCOME_UNKNOWN",
-          "MIGRATION_GENESIS_SNAPSHOT"
+          "MIGRATION_GENESIS_SNAPSHOT",
+          "ACCEPTANCE_CONTRACT_REGISTERED",
+          "EVIDENCE_RECORDED",
+          "REVIEW_APPROVED_RECORDED",
+          "REVIEW_CHANGES_REQUIRED_RECORDED",
+          "AUTHORITY_APPROVED_RECORDED",
+          "AUTHORITY_REJECTED_RECORDED",
+          "ACCEPTANCE_REEVALUATION_REQUESTED"
         ]
       },
       "selfHealingProfileId": "MRP-EVENT_MODEL"
@@ -16612,7 +16619,7 @@
     "predicateRegistry": {
       "key": "predicateRegistry",
       "sourcePath": "v0.11.0/predicate-registry.json",
-      "sourceBlobSha": "3dac7ab83c022624ea8cc1110ff396e92f5fceb2",
+      "sourceBlobSha": "56ec8ae4b2ffdab03154abc5085313a5b59d79b7",
       "content": {
         "format": "SAFOR_PREDICATE_REGISTRY",
         "schemaVersion": "0.11.0",
@@ -16679,6 +16686,86 @@
             "id": "SUBJECT_WORK_ITEM_EXISTS",
             "description": "The event subject resolves to exactly one work item.",
             "args": []
+          },
+          {
+            "id": "ACCEPTANCE_CONTRACT_NOT_REGISTERED",
+            "description": "No ACTIVE Acceptance Contract is already registered for the subject work item.",
+            "args": []
+          },
+          {
+            "id": "ACCEPTANCE_CONTRACT_VALID_FOR_SUBJECT",
+            "description": "The event Acceptance Contract hash, subject, approved-plan provenance, criteria and typed requirements are structurally consistent with the subject Work Item.",
+            "args": []
+          },
+          {
+            "id": "EVIDENCE_RECORD_VALID_FOR_SUBJECT",
+            "description": "The event evidence record is authoritative-looking, revision-pinned, and its subjectRef equals the subject Work Item.",
+            "args": []
+          },
+          {
+            "id": "REVIEW_RECORD_VALID_FOR_SUBJECT",
+            "description": "The event review record matches the subject Work Item, event decision type and required schema fields.",
+            "args": []
+          },
+          {
+            "id": "AUTHORITY_DECISION_VALID_FOR_SUBJECT",
+            "description": "The event authority decision matches the subject Work Item, event decision type and required schema fields.",
+            "args": []
+          },
+          {
+            "id": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS",
+            "description": "Exactly one ACTIVE Acceptance Contract exists for the subject Work Item and its hash validates.",
+            "args": []
+          },
+          {
+            "id": "REQUIRED_EVIDENCE_SATISFIED",
+            "description": "Every EVIDENCE requirement referenced by every criterion has a matching replay-ledger evidence record satisfying type, subject and integrity.",
+            "args": []
+          },
+          {
+            "id": "REQUIRED_REVIEWS_SATISFIED",
+            "description": "Every REVIEW requirement referenced by every criterion has a matching PASS review decision for the required capability.",
+            "args": []
+          },
+          {
+            "id": "REVIEW_INDEPENDENCE_SATISFIED",
+            "description": "Every satisfying review respects its configured independence policy.",
+            "args": []
+          },
+          {
+            "id": "REQUIRED_AUTHORITIES_SATISFIED",
+            "description": "Every AUTHORITY requirement referenced by every criterion has a matching APPROVED authority decision.",
+            "args": []
+          },
+          {
+            "id": "NO_REJECTING_AUTHORITY_DECISION",
+            "description": "No recorded REJECTED authority decision exists for a required authority of the active contract.",
+            "args": []
+          },
+          {
+            "id": "ALL_ACCEPTANCE_CRITERIA_SATISFIED",
+            "description": "Every criterion references at least one requirement and every referenced requirement is satisfied.",
+            "args": []
+          },
+          {
+            "id": "REVIEW_EVENT_INDEPENDENCE_VALID",
+            "description": "A review event satisfies its declared independence policy; performer and approving reviewer differ when required.",
+            "args": []
+          },
+          {
+            "id": "EVIDENCE_RECORD_NOT_REGISTERED",
+            "description": "No evidence record with the same evidenceId is already present in the acceptance replay ledger.",
+            "args": []
+          },
+          {
+            "id": "REVIEW_RECORD_NOT_REGISTERED",
+            "description": "No review decision with the same reviewId is already present in the acceptance replay ledger.",
+            "args": []
+          },
+          {
+            "id": "AUTHORITY_DECISION_NOT_REGISTERED",
+            "description": "No authority decision with the same decisionId is already present in the acceptance replay ledger.",
+            "args": []
           }
         ]
       },
@@ -16687,7 +16774,7 @@
     "transitionRegistry": {
       "key": "transitionRegistry",
       "sourcePath": "v0.11.0/transition-registry.json",
-      "sourceBlobSha": "45ecc0fa4779848da862b96b43462caae16e2284",
+      "sourceBlobSha": "8fa214239a7bdea7646d736cee4750801f7c1190",
       "content": {
         "format": "SAFOR_TRANSITION_REGISTRY",
         "schemaVersion": "0.11.0",
@@ -17032,6 +17119,384 @@
                 "payload": {}
               }
             ]
+          },
+          {
+            "transitionId": "ACCEPTANCE_CONTRACT_REGISTERED",
+            "priority": 500,
+            "aggregate": "ACCEPTANCE",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "ACCEPTANCE_CONTRACT_REGISTERED"
+            ],
+            "fromStatus": [
+              "PLANNED",
+              "READY",
+              "ASSIGNED",
+              "IN_PROGRESS",
+              "HANDOFF_READY",
+              "IN_REVIEW",
+              "CHANGES_REQUIRED",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ACCEPTANCE_CONTRACT_NOT_REGISTERED"
+                },
+                {
+                  "predicate": "ACCEPTANCE_CONTRACT_VALID_FOR_SUBJECT"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "APPEND_FROM_EVENT",
+                "path": "$aggregate.contracts",
+                "eventPath": "payload.contract"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "ACCEPTANCE_EVIDENCE_RECORDED",
+            "priority": 400,
+            "aggregate": "ACCEPTANCE",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "EVIDENCE_RECORDED"
+            ],
+            "fromStatus": [
+              "PLANNED",
+              "READY",
+              "ASSIGNED",
+              "IN_PROGRESS",
+              "HANDOFF_READY",
+              "IN_REVIEW",
+              "CHANGES_REQUIRED",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "EVIDENCE_RECORD_NOT_REGISTERED"
+                },
+                {
+                  "predicate": "EVIDENCE_RECORD_VALID_FOR_SUBJECT"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "APPEND_FROM_EVENT",
+                "path": "$aggregate.evidenceRecords",
+                "eventPath": "payload.record"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "ACCEPTANCE_REVIEW_APPROVED_RECORDED",
+            "priority": 600,
+            "aggregate": "VALUE_STREAM",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "REVIEW_APPROVED_RECORDED"
+            ],
+            "fromStatus": [
+              "HANDOFF_READY",
+              "IN_REVIEW"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+                },
+                {
+                  "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
+                },
+                {
+                  "predicate": "REVIEW_RECORD_NOT_REGISTERED"
+                },
+                {
+                  "predicate": "REVIEW_EVENT_INDEPENDENCE_VALID"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "APPEND_FROM_EVENT",
+                "path": "$acceptance.reviewDecisions",
+                "eventPath": "payload.record"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$acceptance.revision",
+                "by": 1
+              },
+              {
+                "op": "SET",
+                "path": "$subject.review.status",
+                "value": "APPROVED"
+              },
+              {
+                "op": "SET",
+                "path": "$subject.status",
+                "value": "IN_REVIEW"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "ACCEPTANCE_REVIEW_CHANGES_REQUIRED_RECORDED",
+            "priority": 700,
+            "aggregate": "VALUE_STREAM",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "REVIEW_CHANGES_REQUIRED_RECORDED"
+            ],
+            "fromStatus": [
+              "HANDOFF_READY",
+              "IN_REVIEW"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+                },
+                {
+                  "predicate": "REVIEW_RECORD_NOT_REGISTERED"
+                },
+                {
+                  "predicate": "REVIEW_RECORD_VALID_FOR_SUBJECT"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "APPEND_FROM_EVENT",
+                "path": "$acceptance.reviewDecisions",
+                "eventPath": "payload.record"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$acceptance.revision",
+                "by": 1
+              },
+              {
+                "op": "SET",
+                "path": "$subject.review.status",
+                "value": "CHANGES_REQUIRED"
+              },
+              {
+                "op": "SET",
+                "path": "$subject.status",
+                "value": "CHANGES_REQUIRED"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "ACCEPTANCE_AUTHORITY_APPROVED_RECORDED",
+            "priority": 400,
+            "aggregate": "ACCEPTANCE",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "AUTHORITY_APPROVED_RECORDED"
+            ],
+            "fromStatus": [
+              "PLANNED",
+              "READY",
+              "ASSIGNED",
+              "IN_PROGRESS",
+              "HANDOFF_READY",
+              "IN_REVIEW",
+              "CHANGES_REQUIRED",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+                },
+                {
+                  "predicate": "AUTHORITY_DECISION_NOT_REGISTERED"
+                },
+                {
+                  "predicate": "AUTHORITY_DECISION_VALID_FOR_SUBJECT"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "APPEND_FROM_EVENT",
+                "path": "$aggregate.authorityDecisions",
+                "eventPath": "payload.record"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "ACCEPTANCE_AUTHORITY_REJECTED_RECORDED",
+            "priority": 400,
+            "aggregate": "ACCEPTANCE",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "AUTHORITY_REJECTED_RECORDED"
+            ],
+            "fromStatus": [
+              "PLANNED",
+              "READY",
+              "ASSIGNED",
+              "IN_PROGRESS",
+              "HANDOFF_READY",
+              "IN_REVIEW",
+              "CHANGES_REQUIRED",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+                },
+                {
+                  "predicate": "AUTHORITY_DECISION_NOT_REGISTERED"
+                },
+                {
+                  "predicate": "AUTHORITY_DECISION_VALID_FOR_SUBJECT"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "APPEND_FROM_EVENT",
+                "path": "$aggregate.authorityDecisions",
+                "eventPath": "payload.record"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "WORK_ITEM_ACCEPTED",
+            "priority": 1000,
+            "aggregate": "VALUE_STREAM",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "ACCEPTANCE_REEVALUATION_REQUESTED"
+            ],
+            "fromStatus": [
+              "HANDOFF_READY",
+              "IN_REVIEW"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS"
+                },
+                {
+                  "predicate": "REQUIRED_EVIDENCE_SATISFIED"
+                },
+                {
+                  "predicate": "REQUIRED_REVIEWS_SATISFIED"
+                },
+                {
+                  "predicate": "REVIEW_INDEPENDENCE_SATISFIED"
+                },
+                {
+                  "predicate": "REQUIRED_AUTHORITIES_SATISFIED"
+                },
+                {
+                  "predicate": "NO_REJECTING_AUTHORITY_DECISION"
+                },
+                {
+                  "predicate": "ALL_ACCEPTANCE_CRITERIA_SATISFIED"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "SET",
+                "path": "$subject.status",
+                "value": "ACCEPTED"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
           }
         ]
       },
@@ -17040,7 +17505,7 @@
     "effectModel": {
       "key": "effectModel",
       "sourcePath": "v0.11.0/effect-model.json",
-      "sourceBlobSha": "7037e798aa5d2ac5c145368266a5c371b115509e",
+      "sourceBlobSha": "a86645e69f1381da3cd1aaa3c9a2baea240de3d5",
       "content": {
         "format": "SAFOR_EFFECT_MODEL",
         "schemaVersion": "0.11.0",
@@ -17060,7 +17525,8 @@
           "INCREMENT",
           "REMOVE_MATCHING",
           "SET_FROM_STATE",
-          "REVOKE_ACTIVE_MANDATES"
+          "REVOKE_ACTIVE_MANDATES",
+          "APPEND_FROM_EVENT"
         ],
         "externalEffectTypes": [
           "CREATE_BRANCH",
@@ -17275,7 +17741,7 @@
     "schemaTransition": {
       "key": "schemaTransition",
       "sourcePath": "v0.11.0/schemas/transition.schema.json",
-      "sourceBlobSha": "b088147282d8f12c50d35677c72e869f19c4099c",
+      "sourceBlobSha": "1a34502d14fd3eccb0dcf7646d34549499cfab4f",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://safor.dev/schemas/0.11.0/transition.schema.json",
@@ -17305,7 +17771,8 @@
             "enum": [
               "CONTROL",
               "VALUE_STREAM",
-              "EXECUTION"
+              "EXECUTION",
+              "ACCEPTANCE"
             ]
           },
           "subjectType": {
@@ -17354,7 +17821,7 @@
         "$defs": {
           "path": {
             "type": "string",
-            "pattern": "^\\$(?:aggregate|subject)(?:\\.[A-Za-z0-9_-]+)+$"
+            "pattern": "^\\$(?:aggregate|subject|control|valueStream|execution|acceptance)(?:\\.[A-Za-z0-9_-]+)+$"
           },
           "stateEffect": {
             "type": "object",
@@ -17480,6 +17947,26 @@
                 "properties": {
                   "op": {
                     "const": "REVOKE_ACTIVE_MANDATES"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "eventPath": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]+$"
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "eventPath"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "APPEND_FROM_EVENT"
                   },
                   "path": {
                     "$ref": "#/$defs/path"
@@ -17688,7 +18175,7 @@
     "schemaStateSnapshot": {
       "key": "schemaStateSnapshot",
       "sourcePath": "v0.11.0/schemas/state-snapshot.schema.json",
-      "sourceBlobSha": "c4063e3b0dc7da69fcbe805c78e184d890cec052",
+      "sourceBlobSha": "94bc759453cac1ad7fed6938c336f5d232c86663",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://safor.dev/schemas/0.11.0/state-snapshot.schema.json",
@@ -17706,6 +18193,7 @@
           "control",
           "valueStream",
           "execution",
+          "acceptance",
           "stateHash",
           "genesisRef"
         ],
@@ -17757,6 +18245,128 @@
           "genesisRef": {
             "type": "string",
             "minLength": 1
+          },
+          "acceptance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "revision",
+              "contracts",
+              "evidenceRecords",
+              "reviewDecisions",
+              "authorityDecisions"
+            ],
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "contracts": {
+                "type": "array",
+                "items": {
+                  "$ref": "acceptance-contract.schema.json"
+                }
+              },
+              "evidenceRecords": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/evidenceRecord"
+                }
+              },
+              "reviewDecisions": {
+                "type": "array",
+                "items": {
+                  "$ref": "review-decision.schema.json"
+                }
+              },
+              "authorityDecisions": {
+                "type": "array",
+                "items": {
+                  "$ref": "authority-decision.schema.json"
+                }
+              }
+            }
+          }
+        },
+        "$defs": {
+          "evidenceRecord": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "format",
+              "schemaVersion",
+              "evidenceId",
+              "evidenceType",
+              "subjectRef",
+              "source",
+              "observedAt",
+              "reference",
+              "integrity",
+              "claims"
+            ],
+            "properties": {
+              "format": {
+                "const": "SAFOR_EVIDENCE_RECORD"
+              },
+              "schemaVersion": {
+                "enum": [
+                  "0.10.0",
+                  "0.11.0"
+                ]
+              },
+              "evidenceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "evidenceType": {
+                "type": "string",
+                "minLength": 1
+              },
+              "subjectRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "source": {
+                "type": "string",
+                "minLength": 1
+              },
+              "observedAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "reference": {
+                "type": "string",
+                "minLength": 1
+              },
+              "integrity": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "stableId",
+                  "revisionRef"
+                ],
+                "properties": {
+                  "stableId": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "revisionRef": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              },
+              "claims": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
       },
