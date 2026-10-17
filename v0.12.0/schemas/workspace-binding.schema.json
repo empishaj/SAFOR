@@ -1,0 +1,193 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.12.0/workspace-binding.schema.json",
+  "title": "SAFOR HUMAN Workspace Binding",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "projectWorkspace",
+    "controlWorkspace",
+    "ownership"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_WORKSPACE_BINDING"
+    },
+    "schemaVersion": {
+      "const": "0.12.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ownership": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "class",
+        "humanControlled"
+      ],
+      "properties": {
+        "class": {
+          "enum": [
+            "HUMAN",
+            "HUMAN_ORGANIZATION"
+          ]
+        },
+        "humanControlled": {
+          "const": true
+        }
+      }
+    },
+    "projectWorkspace": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "provider",
+            "repository",
+            "stableId",
+            "defaultBranch",
+            "capabilityEvidenceRefs"
+          ],
+          "properties": {
+            "type": {
+              "const": "REMOTE_GIT"
+            },
+            "provider": {
+              "enum": [
+                "GITHUB",
+                "GITLAB"
+              ]
+            },
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stableId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "defaultBranch": {
+              "type": "string",
+              "minLength": 1
+            },
+            "capabilityEvidenceRefs": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "type",
+            "path",
+            "gitRoot",
+            "headCommit",
+            "capabilityEvidenceRefs"
+          ],
+          "properties": {
+            "type": {
+              "const": "LOCAL_GIT"
+            },
+            "path": {
+              "type": "string",
+              "minLength": 1
+            },
+            "gitRoot": {
+              "type": "string",
+              "minLength": 1
+            },
+            "headCommit": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "capabilityEvidenceRefs": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        }
+      ]
+    },
+    "controlWorkspace": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "strategy",
+            "repository",
+            "stableId",
+            "capabilityEvidenceRefs"
+          ],
+          "properties": {
+            "strategy": {
+              "const": "REMOTE_SEPARATE_SAFOR_MEMORY"
+            },
+            "repository": {
+              "type": "string",
+              "minLength": 1
+            },
+            "stableId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "capabilityEvidenceRefs": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "strategy",
+            "root",
+            "masterOnly",
+            "gitTracked"
+          ],
+          "properties": {
+            "strategy": {
+              "const": "LOCAL_MASTER_CONTROL_ROOT"
+            },
+            "root": {
+              "const": ".safor/"
+            },
+            "masterOnly": {
+              "const": true
+            },
+            "gitTracked": {
+              "const": true
+            }
+          }
+        }
+      ]
+    }
+  }
+}

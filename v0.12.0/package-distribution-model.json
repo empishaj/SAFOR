@@ -1,0 +1,55 @@
+{
+  "format": "SAFOR_PACKAGE_DISTRIBUTION_MODEL",
+  "schemaVersion": "0.12.0",
+  "id": "safor-package-distribution",
+  "purpose": "Separate public Framework distribution from independently loadable free and commercial Factory/Operating Model packages.",
+  "principles": {
+    "frameworkDoesNotOwnDomainPackages": true,
+    "paidContentExcludedFromPublicFramework": true,
+    "publicMetadataMayDescribePaidPackages": true,
+    "freePackagesMayResolveFromCanonicalPublicRepo": true,
+    "loadedPackagesPinnedBeforeUse": true,
+    "packageSourceNeverImplicitProjectWorkspace": true,
+    "entitlementSeparateFromOrganizationalAuthority": true
+  },
+  "sourceClasses": {
+    "PUBLIC_CANONICAL_REPOSITORY": {
+      "allowedAccessModes": [
+        "FREE_PUBLIC"
+      ],
+      "canonicalRepository": "empishaj/SAFOR",
+      "mutableRefMayNotBePersistedAsPin": true,
+      "requireImmutableProviderRevisionAndBlob": true
+    },
+    "HUMAN_LOADED_PACKAGE": {
+      "allowedAccessModes": [
+        "FREE_PUBLIC",
+        "PAID_ENTITLEMENT_REQUIRED"
+      ],
+      "rule": "Loaded package content must validate and paid content additionally requires independently verified entitlement evidence."
+    },
+    "ENTITLED_PACKAGE_SOURCE": {
+      "allowedAccessModes": [
+        "PAID_ENTITLEMENT_REQUIRED"
+      ],
+      "rule": "Resolve only after entitlement verification; package bytes remain separate from public Framework distribution."
+    },
+    "PROJECT_PINNED_SNAPSHOT": {
+      "discoveryAllowed": false,
+      "rule": "May reproduce an already approved project binding only; never expands package access."
+    }
+  },
+  "resolutionOrder": [
+    "EXPLICIT_HUMAN_LOADED_PACKAGE",
+    "VERIFIED_ENTITLED_PACKAGE_SOURCE",
+    "PUBLIC_CANONICAL_REPOSITORY_FOR_FREE_PUBLIC_ONLY"
+  ],
+  "freeStarterProfile": {
+    "creationType": "SOFTWARE_WEBSITE",
+    "factoryPackageId": "safor.factory.software-delivery",
+    "operatingModelPackageId": "safor.om.saas-engineering",
+    "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+    "autoResolveWhenNotExplicitlyLoaded": true
+  },
+  "paidPathRule": "A PAID_ENTITLEMENT_REQUIRED package is never resolved from PUBLIC_CANONICAL_REPOSITORY and its model content is never embedded in the public Framework bundle."
+}

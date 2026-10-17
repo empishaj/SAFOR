@@ -1,0 +1,30 @@
+{
+  "format": "SAFOR_COMMERCIAL_ENTITLEMENT_MODEL",
+  "schemaVersion": "0.12.0",
+  "id": "safor-commercial-entitlement",
+  "purpose": "Gate commercial package use without changing project decision authority or provider rights.",
+  "accessModes": [
+    "FREE_PUBLIC",
+    "PAID_ENTITLEMENT_REQUIRED"
+  ],
+  "rules": {
+    "freePublicRequiresEntitlement": false,
+    "paidRequiresVerifiedEntitlement": true,
+    "selfAssertedEntitlementForbidden": true,
+    "packagePossessionAloneIsNotVerifiedEntitlement": true,
+    "entitlementCannotGrantOperatingModelAuthority": true,
+    "entitlementCannotGrantProviderRights": true,
+    "entitlementCannotExpandProjectScope": true,
+    "exactPackageAndVersionCoverageRequired": true
+  },
+  "allowedVerificationMethods": [
+    "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
+    "VERIFIED_OFFLINE_SIGNATURE"
+  ],
+  "failOutcomes": {
+    "missing": "PACKAGE_ACCESS_REQUIRED",
+    "unverifiable": "PACKAGE_ENTITLEMENT_UNVERIFIED",
+    "expired": "PACKAGE_ENTITLEMENT_EXPIRED",
+    "packageMismatch": "PACKAGE_ENTITLEMENT_SCOPE_MISMATCH"
+  }
+}

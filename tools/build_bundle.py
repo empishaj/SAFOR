@@ -7,30 +7,30 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 
 MODULE_PATHS = {
-    "kernel": "v0.11.0/SAFOR-MASTER.json",
-    "initialization": "v0.11.0/initialization-model.json",
+    "kernel": "v0.12.0/SAFOR-MASTER.json",
+    "initialization": "v0.12.0/initialization-model.json",
     "interaction": "v0.10.0/interaction-model.json",
     "humanDecisionGate": "v0.10.0/human-decision-gate-model.json",
-    "selfHealing": "v0.11.0/self-healing-model.json",
-    "moduleSelfHealing": "v0.11.0/module-self-healing-model.json",
+    "selfHealing": "v0.12.0/self-healing-model.json",
+    "moduleSelfHealing": "v0.12.0/module-self-healing-model.json",
     "agentWorkspace": "v0.10.0/agent-workspace-model.json",
     "agentJobContract": "v0.10.0/agent-job-contract-model.json",
     "multiAgentScheduler": "v0.10.0/multi-agent-scheduler-model.json",
-    "repositoryPolicy": "v0.10.0/repository-policy.json",
-    "packageRegistry": "v0.10.0/package-registry.json",
+    "repositoryPolicy": "v0.12.0/repository-policy.json",
+    "packageRegistry": "v0.12.0/package-registry.json",
+    "packageDistribution": "v0.12.0/package-distribution-model.json",
+    "commercialEntitlement": "v0.12.0/commercial-entitlement-model.json",
+    "workspaceModel": "v0.12.0/workspace-model.json",
+    "packageCatalog": "v0.12.0/package-catalog.json",
     "providerGithub": "v0.10.0/providers/github/0.5.0/package.json",
     "providerGitlab": "v0.10.0/providers/gitlab/0.5.0/package.json",
-    "operatingModelSaas": "v0.10.0/packages/operating-models/saas-engineering/1.4.0/package.json",
-    "operatingModelBook": "v0.10.0/packages/operating-models/book-authoring/0.5.0/package.json",
-    "factorySoftwareWebsite": "v0.10.0/packages/factories/software-delivery/1.4.0/package.json",
-    "factoryBook": "v0.10.0/packages/factories/book-production/0.5.0/package.json",
     "schemaPackageManifest": "v0.10.0/schemas/package-manifest.schema.json",
     "schemaControlState": "v0.10.0/schemas/control-state.schema.json",
     "schemaValueStreamState": "v0.10.0/schemas/value-stream-state.schema.json",
     "schemaExecutionState": "v0.10.0/schemas/execution-state.schema.json",
     "schemaWorkItem": "v0.10.0/schemas/work-item.schema.json",
-    "schemaProject": "v0.10.0/schemas/project.schema.json",
-    "schemaBindings": "v0.10.0/schemas/bindings.schema.json",
+    "schemaProject": "v0.12.0/schemas/project.schema.json",
+    "schemaBindings": "v0.12.0/schemas/bindings.schema.json",
     "schemaDecisionRecord": "v0.10.0/schemas/decision-record.schema.json",
     "schemaEvidenceRecord": "v0.10.0/schemas/evidence-record.schema.json",
     "schemaInteractionMenu": "v0.10.0/schemas/interaction-menu.schema.json",
@@ -64,7 +64,10 @@ MODULE_PATHS = {
     "schemaAcceptanceContract": "v0.11.0/schemas/acceptance-contract.schema.json",
     "schemaReviewDecision": "v0.11.0/schemas/review-decision.schema.json",
     "schemaAuthorityDecision": "v0.11.0/schemas/authority-decision.schema.json",
-    "conformance": "v0.11.0/conformance.json",
+    "schemaPackageCatalog": "v0.12.0/schemas/package-catalog.schema.json",
+    "schemaEntitlement": "v0.12.0/schemas/entitlement.schema.json",
+    "schemaWorkspaceBinding": "v0.12.0/schemas/workspace-binding.schema.json",
+    "conformance": "v0.12.0/conformance.json",
 }
 
 REFERENCE_RESOLUTION = {
@@ -76,14 +79,18 @@ REFERENCE_RESOLUTION = {
     "agent-workspace-model.json": "agentWorkspace",
     "agent-job-contract-model.json": "agentJobContract",
     "multi-agent-scheduler-model.json": "multiAgentScheduler",
+    "repository-policy.json": "repositoryPolicy",
+    "package-registry.json": "packageRegistry",
+    "package-distribution-model.json": "packageDistribution",
+    "commercial-entitlement-model.json": "commercialEntitlement",
+    "workspace-model.json": "workspaceModel",
+    "package-catalog.json": "packageCatalog",
     "deterministic-control-model.json": "deterministicControl",
     "event-model.json": "eventModel",
     "predicate-registry.json": "predicateRegistry",
     "transition-registry.json": "transitionRegistry",
     "effect-model.json": "effectModel",
     "acceptance-model.json": "acceptanceModel",
-    "repository-policy.json": "repositoryPolicy",
-    "package-registry.json": "packageRegistry",
     "schemas/package-manifest.schema.json": "schemaPackageManifest",
     "schemas/control-state.schema.json": "schemaControlState",
     "schemas/value-stream-state.schema.json": "schemaValueStreamState",
@@ -118,17 +125,18 @@ REFERENCE_RESOLUTION = {
     "schemas/acceptance-contract.schema.json": "schemaAcceptanceContract",
     "schemas/review-decision.schema.json": "schemaReviewDecision",
     "schemas/authority-decision.schema.json": "schemaAuthorityDecision",
+    "schemas/package-catalog.schema.json": "schemaPackageCatalog",
+    "schemas/entitlement.schema.json": "schemaEntitlement",
+    "schemas/workspace-binding.schema.json": "schemaWorkspaceBinding",
     "providers/github/0.5.0/package.json": "providerGithub",
     "providers/gitlab/0.5.0/package.json": "providerGitlab",
-    "packages/operating-models/saas-engineering/1.4.0/package.json": "operatingModelSaas",
-    "packages/operating-models/book-authoring/0.5.0/package.json": "operatingModelBook",
-    "packages/factories/software-delivery/1.4.0/package.json": "factorySoftwareWebsite",
-    "packages/factories/book-production/0.5.0/package.json": "factoryBook",
 }
+
 
 def git_blob_sha(data: bytes) -> str:
     header = f"blob {len(data)}\0".encode("utf-8")
     return hashlib.sha1(header + data).hexdigest()
+
 
 def load_module(key: str, rel_path: str):
     path = ROOT / rel_path
@@ -139,6 +147,7 @@ def load_module(key: str, rel_path: str):
         "sourceBlobSha": git_blob_sha(raw),
         "content": json.loads(raw.decode("utf-8")),
     }
+
 
 def build_bundle():
     modules = {key: load_module(key, path) for key, path in MODULE_PATHS.items()}
@@ -151,86 +160,105 @@ def build_bundle():
         missing = sorted(module_keys - set(recovery_profiles))
         extra = sorted(set(recovery_profiles) - module_keys)
         raise ValueError(f"Module recovery coverage mismatch: missing={missing}, extra={extra}")
+
+    forbidden_domain_keys = {
+        "operatingModelSaas", "operatingModelBook",
+        "factorySoftwareWebsite", "factoryBook",
+    }
+    leaked = sorted(forbidden_domain_keys & module_keys)
+    if leaked:
+        raise ValueError(f"Public Framework must not embed domain package modules: {leaked}")
+
     for key, module in modules.items():
         module["selfHealingProfileId"] = recovery_profiles[key]["profileId"]
+
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     return {
-        "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-        "schemaVersion": "0.11.0",
+        "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
+        "schemaVersion": "0.12.0",
         "bundleVersion": version,
-        "definitionId": "safor-master-complete",
+        "definitionId": "safor-framework",
         "productName": "SAFOR",
         "productExpansion": "Systemic AI Factory Orchestration Runtime",
-        "purpose": "Self-contained SAFOR MASTER distribution for direct upload into a compatible chat.",
+        "purpose": "Public SAFOR Framework distribution. Domain Factories and Operating Models are independently resolved and pinned.",
         "entrypoint": "embeddedModules.kernel.content",
-        "distributionMode": "SELF_CONTAINED_SINGLE_FILE",
+        "distributionMode": "FRAMEWORK_PLUS_EXTERNAL_DOMAIN_PACKAGES",
         "runtimeContract": {
-            "moduleResolutionOrder": ["EMBEDDED_MODULES", "CANONICAL_REPOSITORY_FALLBACK"],
-            "embeddedModulesAuthoritativeForBootstrap": True,
+            "moduleResolutionOrder": [
+                "EMBEDDED_FRAMEWORK_MODULES",
+                "EXTERNAL_DOMAIN_PACKAGE_RESOLUTION",
+            ],
+            "embeddedModulesAuthoritativeForFrameworkBootstrap": True,
             "canonicalRepository": "empishaj/SAFOR",
             "canonicalBranch": "main",
-            "absoluteRuntimePrerequisite": {
-                "repositoryPattern": "{selectedOwner}/safor-memory",
-                "mustPreExist": True,
-                "mustBeReadable": True,
-                "mustBeWritable": True,
-                "autoCreate": False,
-                "onFailure": "STOP",
+            "domainPackagePolicy": {
+                "embeddedDomainPackageContent": False,
+                "freePublicSourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+                "paidPublicResolutionForbidden": True,
+                "paidRequiresVerifiedEntitlement": True,
             },
             "initializationOrder": [
                 "VERIFY_MODULE_RECOVERY_BASELINE",
                 "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
-                "SELECT_PROVIDER",
-                "VERIFY_PROVIDER_READ_WRITE_ACCESS",
-                "SELECT_OWNER_NAMESPACE",
-                "VERIFY_OWNER_ACCESS",
-                "VERIFY_REQUIRED_SAFOR_MEMORY",
                 "SELECT_CREATION_TYPE",
-                "SELECT_PROJECT_MODE",
-                "SELECT_OR_DEFINE_PROJECT",
-                "BIND_REQUIRED_SAFOR_MEMORY",
-                "RESOLVE_CREATION_PROFILE_BINDINGS",
-                "MATERIALIZE_PROJECT_CONTROL",
+                "RESOLVE_PACKAGE_ACCESS_PROFILE",
+                "RESOLVE_REQUIRED_FACTORY_AND_OPERATING_MODEL",
+                "VERIFY_PACKAGE_INTEGRITY_AND_ACCESS",
+                "VERIFY_FACTORY_OPERATING_MODEL_COMPATIBILITY",
+                "SELECT_PROJECT_WORKSPACE_TYPE",
+                "VERIFY_PROJECT_WORKSPACE_CAPABILITIES",
+                "SELECT_OR_DEFINE_HUMAN_PROJECT",
+                "BIND_CONTROL_WORKSPACE",
+                "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
+                "APPROVE_AND_MATERIALIZE_PROJECT",
             ],
-            "mandatoryCreationTypes": [
+            "creationProfiles": [
                 {
                     "id": "SOFTWARE_WEBSITE",
                     "label": "Software / Website",
-                    "factoryModule": "factorySoftwareWebsite",
-                    "operatingModelModule": "operatingModelSaas",
+                    "accessMode": "FREE_PUBLIC",
+                    "packageResolution": "PUBLIC_CANONICAL_REPOSITORY_OR_HUMAN_LOADED",
                 },
                 {
                     "id": "BOOK",
                     "label": "Buch",
-                    "factoryModule": "factoryBook",
-                    "operatingModelModule": "operatingModelBook",
+                    "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+                    "packageResolution": "HUMAN_LOADED_OR_ENTITLED_SOURCE_ONLY",
                 },
             ],
-            "factoryBindingRule": "Discovery, Planning and domain Evidence must always use the discoveryContract, planningContract and evidenceContract from the HUMAN-selected Factory. Cross-factory substitution is forbidden.",
+            "projectWorkspaceRule": "All project-specific work stays in a HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. The canonical SAFOR repository and package sources are never project targets.",
+            "controlWorkspaceRule": "REMOTE_GIT uses a HUMAN-controlled separate safor-memory; LOCAL_GIT uses a Git-tracked MASTER-only .safor/ control root.",
+            "entitlementRule": "Commercial entitlement gates package use only. It never grants organizational authority, provider rights, execution mandate or project scope.",
+            "factoryBindingRule": "Discovery, Planning and domain Evidence use only the resolved, validated and immutable-pinned Factory/Operating Model pair.",
             "chatUiRule": "Use chat-native UI only.",
             "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
-            "humanCognitiveLoadRule": "Use the embedded phase-aware HUMAN Cognitive Load Policy: high load is acceptable for non-derivable Discovery knowledge, then reduce routine HUMAN load after planning; derive/reuse before asking.",
-            "humanDecisionGateRule": "Every HUMAN question or approval passes the embedded Decision Gate. Deterministic internal orchestration and unchanged prior approvals must not be delegated back to the HUMAN.",
-            "humanTerminalMenuRule": "Every SAFOR-generated HUMAN-facing response validates against the embedded HUMAN response schema, contains exactly one interaction menu as the final rendered SAFOR-visible element, and stops rendering immediately after that menu. Menu presence does not itself imply a HUMAN decision.",
-            "deterministicControlRule": "Within the explicit 0.11 executable transition boundary, external HUMAN/AGENT/PROVIDER observations enter as typed events and only the pure embedded deterministic control kernel may materialize authoritative state transitions. External mutations are emitted as effect intents and completion requires later authoritative provider evidence.",
-            "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records. Qualitative criteria require explicit review or authority decisions; agent self-checks and assistant claims are never authoritative acceptance.",
-            "selfHealingRule": "Use the embedded conservative self-healing model.",
-            "moduleSelfHealingRule": "Every embedded module must resolve to exactly one embedded recovery profile. Repairs are constrained by module authority/repairability, failure-class policy, active authority and actual provider rights.",
-            "agentWorkspaceRule": "For AGENT actors, persist identity once and dispatch/receive jobs through the embedded repository-native Agent Workspace Protocol; copied job prompts are not authoritative.",
-            "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection.",
-            "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
-            "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
+            "humanCognitiveLoadRule": "Derive/reuse before asking; keep package mechanics and workspace internals behind Details unless HUMAN action is required.",
+            "humanDecisionGateRule": "Every HUMAN question or approval passes the embedded Decision Gate.",
+            "humanTerminalMenuRule": "Every SAFOR-generated HUMAN-facing response contains exactly one valid terminal interaction menu and renders no SAFOR-visible content after it.",
+            "deterministicControlRule": "Within the executable transition boundary, external observations enter as typed events and only the deterministic control kernel materializes authoritative state transitions.",
+            "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
+            "selfHealingRule": "Use conservative profile-constrained recovery; never invent entitlement, authority, evidence or workspace ownership.",
+            "agentWorkspaceRule": "AGENT work uses persistent identities and repository-native jobs; local .safor/ is never a worker write target.",
+            "multiAgentSchedulerRule": "Dispatch only atomic READY conflict-free work with explicit capacity, leases and isolated Git mutation scope.",
         },
         "productRepository": {
             "repository": "empishaj/SAFOR",
-            "role": "CANONICAL_SAFOR_PRODUCT_REPOSITORY",
+            "role": "PUBLIC_FRAMEWORK_AND_FREE_PACKAGE_SOURCE",
             "independentFromHumanProjectContext": True,
+            "projectTargetForbidden": True,
         },
-        "runtimeMemoryRepository": {
-            "pattern": "{selectedOwner}/safor-memory",
-            "role": "MANDATORY_HUMAN_PROJECT_CONTROL_MEMORY",
-            "preExistingReadWriteRequired": True,
-            "onFailure": "STOP",
+        "controlWorkspacePolicy": {
+            "REMOTE_GIT": {
+                "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
+                "pattern": "{selectedOwner}/safor-memory",
+                "humanControlled": True,
+            },
+            "LOCAL_GIT": {
+                "strategy": "LOCAL_MASTER_CONTROL_ROOT",
+                "root": ".safor/",
+                "humanControlled": True,
+                "masterOnly": True,
+            },
         },
         "referenceResolution": REFERENCE_RESOLUTION,
         "integrityManifest": {
@@ -244,28 +272,30 @@ def build_bundle():
         "embeddedModules": modules,
     }
 
+
 def canonical(obj):
     return json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
 
+
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--check", action="store_true", help="Fail if committed bundle differs from a reproducible build.")
+    parser.add_argument("--check", action="store_true", help="Fail if committed Framework bundle differs from a reproducible build.")
     args = parser.parse_args()
 
     built = build_bundle()
     version = built["bundleVersion"]
-    latest_output = ROOT / "SAFOR-MASTER-COMPLETE.json"
-    versioned_output = ROOT / f"SAFOR-MASTER-COMPLETE-v{version}.json"
+    latest_output = ROOT / "SAFOR-FRAMEWORK.json"
+    versioned_output = ROOT / f"SAFOR-FRAMEWORK-v{version}.json"
 
     if args.check:
         expected = canonical(built)
         for output in (latest_output, versioned_output):
             committed = json.loads(output.read_text(encoding="utf-8"))
             if canonical(committed) != expected:
-                print(f"SAFOR bundle reproducibility: FAIL ({output.name})")
+                print(f"SAFOR Framework reproducibility: FAIL ({output.name})")
                 print("Run: python tools/build_bundle.py")
                 raise SystemExit(1)
-        print("SAFOR bundle reproducibility: PASS")
+        print("SAFOR Framework reproducibility: PASS")
         return
 
     payload = json.dumps(built, indent=2, ensure_ascii=False) + "\n"
@@ -273,7 +303,8 @@ def main():
     versioned_output.write_text(payload, encoding="utf-8")
     print(f"Wrote {latest_output}")
     print(f"Wrote {versioned_output}")
-    print(f"Embedded modules: {len(built['embeddedModules'])}")
+    print(f"Embedded Framework modules: {len(built['embeddedModules'])}")
+
 
 if __name__ == "__main__":
     main()

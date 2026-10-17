@@ -40,3 +40,16 @@ When safe automatic continuation is impossible, SAFOR stops or waits for the HUM
 2. what was already attempted,
 3. the current safe state,
 4. the smallest required HUMAN action.
+
+
+## Project workspace support in 0.12
+
+SAFOR distinguishes package/framework sources from HUMAN project storage.
+
+Supported project workspace classes:
+- **REMOTE_GIT** — GitHub or GitLab project repository controlled by the HUMAN or HUMAN organization; separate writable `safor-memory` is used for control state.
+- **LOCAL_GIT** — HUMAN-selected local Git repository when the chat/host exposes actual local filesystem and Git capabilities; `.safor/` is MASTER-only control state.
+
+SAFOR does not claim local execution when the current host cannot actually access the local filesystem/Git repository.
+
+Paid Factory/Operating Model access additionally requires supported entitlement verification. The 0.12 schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.

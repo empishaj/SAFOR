@@ -1,0 +1,192 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.12.0/bindings.schema.json",
+  "title": "SAFOR Project Bindings 0.12.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "revision",
+    "kernel",
+    "operatingModel",
+    "factory",
+    "providerAdapters",
+    "workspaceBindingRef",
+    "actorAssignments"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PROJECT_BINDINGS"
+    },
+    "schemaVersion": {
+      "const": "0.12.0"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "kernel": {
+      "$ref": "#/$defs/kernelBinding"
+    },
+    "operatingModel": {
+      "$ref": "#/$defs/domainBinding"
+    },
+    "factory": {
+      "$ref": "#/$defs/domainBinding"
+    },
+    "providerAdapters": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/providerBinding"
+      }
+    },
+    "workspaceBindingRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actorAssignments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "roleId",
+          "actorId",
+          "actorKind"
+        ],
+        "properties": {
+          "roleId": {
+            "type": "string"
+          },
+          "actorId": {
+            "type": "string"
+          },
+          "actorKind": {
+            "enum": [
+              "HUMAN",
+              "AGENT",
+              "SERVICE"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "baseBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "version",
+        "sourceClass",
+        "sourceRef",
+        "sourceRevision",
+        "blobSha",
+        "snapshotRef"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceClass": {
+          "enum": [
+            "PUBLIC_CANONICAL_REPOSITORY",
+            "HUMAN_LOADED_PACKAGE",
+            "ENTITLED_PACKAGE_SOURCE",
+            "PROJECT_PINNED_SNAPSHOT"
+          ]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceRevision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshotRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "kernelBinding": {
+      "$ref": "#/$defs/baseBinding"
+    },
+    "providerBinding": {
+      "$ref": "#/$defs/baseBinding"
+    },
+    "domainBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "version",
+        "sourceClass",
+        "sourceRef",
+        "sourceRevision",
+        "blobSha",
+        "snapshotRef",
+        "accessMode",
+        "entitlementEvidenceRef"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceClass": {
+          "enum": [
+            "PUBLIC_CANONICAL_REPOSITORY",
+            "HUMAN_LOADED_PACKAGE",
+            "ENTITLED_PACKAGE_SOURCE",
+            "PROJECT_PINNED_SNAPSHOT"
+          ]
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceRevision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 1
+        },
+        "snapshotRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessMode": {
+          "enum": [
+            "FREE_PUBLIC",
+            "PAID_ENTITLEMENT_REQUIRED"
+          ]
+        },
+        "entitlementEvidenceRef": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

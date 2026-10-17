@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.12.0-rc.1
+
+- Reframes the public artifact as `SAFOR-FRAMEWORK` rather than an all-domain `MASTER-COMPLETE` distribution.
+- Removes all Factory/Operating Model model content from the embedded Framework module set; domain packages are resolved independently.
+- Defines Software / Website as the FREE_PUBLIC starter path resolvable from canonical public SAFOR Git at immutable revision/blob.
+- Defines Book as PAID_ENTITLEMENT_REQUIRED and forbids paid package-content resolution from the public canonical source.
+- Adds public package catalog, package-distribution policy and commercial-entitlement model.
+- Separates entitlement from Operating Model authority, provider rights, mandate and project scope.
+- Adds HUMAN-owned REMOTE_GIT and LOCAL_GIT project workspace models.
+- Keeps separate HUMAN-controlled `safor-memory` for remote projects and adds MASTER-only Git-tracked `.safor/` for local projects.
+- Forbids the canonical SAFOR repository and package sources as project targets.
+- Adds SH-23, INV-148 through INV-165 and CF-194 through CF-216.
+- Changes exact embedded Framework recovery coverage to 61 modules / 61 profiles.
+- Adds 13 modular bootstrap/package/workspace tests; total Python suite is 38 PASS.
+- Records the modular commercial product decision and the legacy disclosure boundary for pre-0.12 public prototypes.
+
+
 ## 0.11.0-rc.2
 
 - Extends the Deterministic Control Kernel through Work Item acceptance.

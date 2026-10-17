@@ -1,0 +1,213 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.12.0/package-catalog.schema.json",
+  "title": "SAFOR Package Catalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "status",
+    "canonicalFrameworkRepository",
+    "entries",
+    "creationProfiles"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PACKAGE_CATALOG"
+    },
+    "schemaVersion": {
+      "const": "0.12.0"
+    },
+    "status": {
+      "const": "PUBLIC_CATALOG"
+    },
+    "canonicalFrameworkRepository": {
+      "type": "string",
+      "minLength": 1
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "creationProfiles": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/creationProfile"
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packageId",
+            "kind",
+            "version",
+            "label",
+            "accessMode",
+            "sku",
+            "distribution"
+          ],
+          "properties": {
+            "packageId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "FACTORY",
+                "OPERATING_MODEL"
+              ]
+            },
+            "version": {
+              "type": "string",
+              "minLength": 1
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "accessMode": {
+              "const": "FREE_PUBLIC"
+            },
+            "sku": {
+              "type": "string",
+              "minLength": 1
+            },
+            "distribution": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "sourceClass",
+                "path"
+              ],
+              "properties": {
+                "sourceClass": {
+                  "const": "PUBLIC_CANONICAL_REPOSITORY"
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "packageId",
+            "kind",
+            "versionPolicy",
+            "label",
+            "accessMode",
+            "sku",
+            "distribution",
+            "legacyDisclosure"
+          ],
+          "properties": {
+            "packageId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "kind": {
+              "enum": [
+                "FACTORY",
+                "OPERATING_MODEL"
+              ]
+            },
+            "versionPolicy": {
+              "const": "COMMERCIAL_CURRENT"
+            },
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "accessMode": {
+              "const": "PAID_ENTITLEMENT_REQUIRED"
+            },
+            "sku": {
+              "type": "string",
+              "minLength": 1
+            },
+            "distribution": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "sourceClass",
+                "publicModelPath"
+              ],
+              "properties": {
+                "sourceClass": {
+                  "const": "ENTITLED_PACKAGE_SOURCE"
+                },
+                "publicModelPath": {
+                  "type": "null"
+                }
+              }
+            },
+            "legacyDisclosure": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "creationProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "creationType",
+        "label",
+        "accessMode",
+        "factoryPackageId",
+        "operatingModelPackageId",
+        "autoResolveFromPublicFrameworkGit"
+      ],
+      "properties": {
+        "creationType": {
+          "enum": [
+            "SOFTWARE_WEBSITE",
+            "BOOK"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "accessMode": {
+          "enum": [
+            "FREE_PUBLIC",
+            "PAID_ENTITLEMENT_REQUIRED"
+          ]
+        },
+        "factoryPackageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operatingModelPackageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "autoResolveFromPublicFrameworkGit": {
+          "type": "boolean"
+        },
+        "missingAccessOutcome": {
+          "enum": [
+            "PACKAGE_ACCESS_REQUIRED"
+          ]
+        }
+      }
+    }
+  }
+}

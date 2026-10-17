@@ -1,127 +1,67 @@
 # SAFOR Quickstart
 
-SAFOR is loaded as one self-contained JSON file and then guides the HUMAN through a controlled project bootstrap.
+## What you need
 
-## Prerequisites
+Always:
+- A compatible chat host.
+- `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` or the latest `SAFOR-FRAMEWORK.json`.
+- A HUMAN-controlled Git project workspace.
 
-- A supported chat host with an available GitHub or GitLab connection.
-- A HUMAN-controlled owner/namespace.
-- A repository named exactly `safor-memory` under that owner.
-- Proven read **and** write access to `{OWNER}/safor-memory`.
+For **Software / Website**:
+- No commercial package entitlement is required for the default starter Factory/Operating Model.
+- SAFOR may resolve the FREE_PUBLIC pair from the canonical public SAFOR Git at an immutable revision/blob.
 
-If `safor-memory` does not already exist or is not writable, SAFOR stops. It never creates that repository automatically.
+For paid creation paths such as **Buch**:
+- The required Factory and Operating Model must be supplied through a HUMAN-loaded or entitled package source.
+- Verified entitlement evidence is mandatory. Merely possessing JSON or stating that it was purchased is not sufficient.
+
+For **REMOTE_GIT** projects:
+- GitHub or GitLab access with the required project read/write capabilities.
+- A HUMAN-controlled `{OWNER}/safor-memory` for SAFOR control state.
+
+For **LOCAL_GIT** projects:
+- Host access to the HUMAN-selected local filesystem and Git repository.
+- Proven read/write, Git history, branch and commit capabilities.
+- No remote `safor-memory` is required; SAFOR uses a Git-tracked MASTER-only `.safor/` control root.
 
 ## Start
 
-1. Load `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
-2. Choose **GitHub** or **GitLab**.
-3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
-4. Choose the owner/namespace.
-5. SAFOR verifies `{OWNER}/safor-memory`.
-6. Choose exactly one creation type:
-   - **Software / Website**
-   - **Buch**
-7. Choose **existing project** or **new project**.
-8. Confirm the resolved Factory, Operating Model and Provider Adapter.
-9. Approve project materialization.
-10. Continue through the chat-native action menu.
+1. Load `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+2. SAFOR verifies its Framework, Self-Healing and deterministic-control integrity.
+3. Choose **Software / Website** or **Buch**.
+4. SAFOR resolves package access before asking where the project lives.
+5. For Website starter, SAFOR resolves the free Factory/OM from public SAFOR Git unless you explicitly loaded another compatible pair.
+6. For paid paths, SAFOR requires valid package artifacts plus independently verified entitlement.
+7. SAFOR verifies Factory/Operating Model compatibility.
+8. Choose **In meinem Git-Repository** or **Lokal auf meinem Rechner**.
+9. SAFOR verifies the actual remote-provider or local Git capabilities.
+10. Select/define the HUMAN project.
+11. SAFOR binds control storage:
+   - Remote → separate HUMAN-owned `safor-memory`
+   - Local → MASTER-only `.safor/`
+12. Approve setup. Only then does SAFOR materialize control state and enter Factory Discovery.
 
-## Factory binding
+## Ownership boundary
 
-The HUMAN-selected creation type remains authoritative:
+The canonical SAFOR repository and any commercial package source are package/framework sources only. They are never valid project targets.
 
-- Software / Website → Software Delivery Factory + SaaS Engineering Operating Model.
-- Buch → Book Production Factory + Book Authoring Operating Model.
+Project code, manuscripts, assets and other Factory-produced work remain in the HUMAN-selected remote or local Git workspace.
 
-Discovery, Planning and domain Evidence always come from that same Factory. SAFOR must not mix contracts across Factories.
+## Package and authority boundary
 
-## Runtime memory vs product source
+Commercial entitlement answers only: **May this package be used?**
 
-- Product source: `empishaj/SAFOR`
-- Project runtime/control memory: `{OWNER}/safor-memory`
+It never grants:
+- Operating Model decision authority,
+- provider permissions,
+- execution mandate,
+- project scope,
+- review/acceptance authority.
 
-These repositories serve different purposes and must not be conflated.
+Technical compatibility and organizational authority are evaluated separately.
 
-## Safety
+## Factory consistency
 
-Do not paste passwords, PATs, private keys or other credentials into chat. Provider rights must be observed through the actual connected provider.
-
-
-## Persistent agent chats
-
-When an Operating Model resolves work to an AGENT actor, SAFOR can create a persistent agent workspace in `safor-memory`.
-
-The agent is initialized once with:
-- control repository,
-- project ID,
-- agent ID.
-
-After that, the HUMAN does **not** copy full job prompts into the agent chat. On activation the agent loads its identity/state, reads the fixed inbox index, verifies the canonical JSON job plus HUMAN-readable job projection, claims it with optimistic concurrency, performs only the authorized scope, and writes its result/evidence back to the repository.
-
-See `AGENT-WORKSPACE.md`.
+Once resolved and pinned, Discovery, Planning and domain Evidence use the same Factory. Factory/Operating Model snapshots are immutable project binding evidence; they cannot be reused to expand commercial access.
 
 
-## Parallel agent scheduling
-
-SAFOR v0.11 can serve multiple persistent agent chats in parallel. Work is dispatched only as ATOMIC units whose dependencies are accepted, inputs are pinned, required capabilities are available, and mutation/resource domains do not conflict.
-
-With six active chat agents at one scheduling slot each, the MASTER can dispatch up to six mutually conflict-free READY jobs in one wave. Mutating jobs use dedicated `safor/job/{jobKey}/{agentKey}` branches.
-
-Every agent job writes:
-- machine result: `outbox/{jobId}.result.json`
-- HUMAN-readable result: `outbox/{jobId}.result.md`
-
-The Markdown report is the default HUMAN view; mutating results also include verifiable Git base/head commits, result commits and changed paths.
-
-See `MULTI-AGENT-SCHEDULER.md`.
-
-
-## Explicit agent job contract
-
-Before an agent job becomes READY, MASTER creates both:
-- `inbox/{jobId}.json` — authoritative execution contract.
-- `inbox/{jobId}.md` — HUMAN-readable projection.
-
-The JSON explicitly contains job/package/work-item identity and sequence, MASTER provenance and timestamps, assigned agent identity revision, the role the agent must assume, versioned skill descriptions/instructions, immutable inputs, granular provider/repository permissions, Git workspace and leases, fixed return paths, acceptance/review requirements and stop conditions.
-
-The agent may not change role, substitute mandatory skills, expand scope/rights, choose ad-hoc output paths or self-accept the result.
-
-See `AGENT-JOB-CONTRACT.md`.
-
-
-## Module-wide self-healing
-
-SAFOR v0.11 gives every embedded module exactly one recovery profile. Recovery is constrained by module authority and repairability:
-
-- immutable modules: validate/reload expected blobs only,
-- pinned models/packages: restore verified expected versions/blobs,
-- derived artifacts: regenerate only from authoritative sources,
-- provider bindings: refresh observed capabilities without permission elevation.
-
-Every repair is persisted with module/profile identity and succeeds only after authoritative readback.
-
-See `MODULE-SELF-HEALING.md`.
-
-
-## HUMAN cognitive load
-
-SAFOR v0.11 deliberately allows more HUMAN thinking during initialization, Discovery and meaningful planning decisions. After context, plan and authority are known, routine HUMAN load must fall.
-
-Default targets:
-- Discovery: HIGH
-- Planning: MEDIUM
-- Scheduling / Agent coordination: VERY LOW
-- Execution / Recovery: LOW
-- Outcome evaluation: MEDIUM
-
-Before asking a question SAFOR first tries to derive the answer from approved state/evidence or reuse an unchanged prior decision. Internal orchestration such as job IDs, branches, leases, dispatch waves, readbacks and deterministic agent coordination remains a MASTER responsibility.
-
-See `HUMAN-COGNITIVE-LOAD.md`.
-
-## Deterministic Control Kernel
-
-SAFOR v0.11.0-rc.2 provides an executable deterministic control substrate for the migrated transition slice and deterministic Work Item acceptance. HUMAN, AGENT and PROVIDER observations enter that slice as typed events. The pure reducer evaluates only pinned predicates/transitions, emits state changes plus external effect intents, and verifies replay through canonical state hashes. This rc.1 does not claim that every legacy governance rule has already been migrated.
-
-### Deterministic Acceptance
-
-Before an executable Work Item can become ACCEPTED, the approved plan must bind a hash-valid Acceptance Contract. Each criterion maps to typed EVIDENCE, REVIEW or AUTHORITY requirements. Provider evidence is replayed with pinned integrity, independent reviews enforce performer/reviewer separation when configured, and explicit authority approvals must match the required authority. Agent self-checks and assistant claims cannot satisfy these gates.

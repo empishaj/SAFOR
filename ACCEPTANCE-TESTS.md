@@ -1,85 +1,97 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact Framework artifact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
 
-## A. GitHub — happy path
+## A. GitHub REMOTE_GIT — free Website happy path
 
 **Preconditions**
 - GitHub connector available.
-- Selected owner contains a pre-existing writable `safor-memory`.
-- Selected owner has at least one writable project repository.
+- HUMAN controls a writable project repository.
+- The selected owner contains a pre-existing writable `safor-memory`.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json`.
-2. SAFOR starts initialization without requiring a separate prompt.
-3. HUMAN selects GitHub.
-4. SAFOR proves baseline read/write capabilities.
-5. HUMAN selects owner.
-6. SAFOR verifies `{OWNER}/safor-memory`.
-7. HUMAN must choose **Software / Website** or **Buch**.
-8. HUMAN chooses existing/new project.
-9. Existing mode shows eligible recently active repositories.
-10. Package bindings match the selected creation type.
-11. Discovery questions come only from the selected Factory.
-12. Planning derives only from that Factory.
+1. Upload only `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+2. SAFOR verifies Framework/recovery/deterministic-control integrity.
+3. HUMAN selects **Software / Website**.
+4. SAFOR resolves the FREE_PUBLIC Software Factory and Operating Model from public SAFOR Git at immutable revision/blob without asking for a paid entitlement.
+5. SAFOR verifies Factory/Operating Model compatibility.
+6. HUMAN selects **In meinem Git-Repository**.
+7. HUMAN selects GitHub and the HUMAN-controlled owner/project repository.
+8. SAFOR proves actual project read/write and Git capabilities.
+9. SAFOR verifies separate HUMAN-controlled `{OWNER}/safor-memory`.
+10. SAFOR persists immutable package pins/access metadata in project control.
+11. Discovery questions come only from the resolved Factory.
+12. Planning derives only from that Factory and approved Operating Model.
 13. Execution Evidence uses only that Factory's evidence contract.
-14. A permitted write is read back before completion is claimed.
-15. Project state is persisted in `safor-memory`.
+14. Domain project writes occur only in the HUMAN project repository and are read back before completion claims.
+15. SAFOR control state persists in `safor-memory`; domain work artifacts do not.
 
 **Pass condition:** all 15 observations are evidenced.
 
-## B. GitHub — missing memory STOP
+## B. REMOTE_GIT — missing/read-only control workspace
 
-**Precondition:** selected owner has no `safor-memory`, or it is read-only.
-
-**Expected**
-- SAFOR says STOP clearly.
-- SAFOR does not auto-create `safor-memory`.
-- SAFOR does not continue to creation type, project selection, Discovery, Planning or Execution.
-
-## C. Factory separation
-
-Run twice:
-- Software / Website
-- Buch
+**Precondition:** package resolution has succeeded, but the selected remote owner has no usable `safor-memory` or it is read-only.
 
 **Expected**
-- Software/Website uses software discovery/planning/evidence contracts.
-- Buch uses book discovery/planning/evidence contracts.
-- No cross-Factory question, work-item contract or domain Evidence is substituted.
+- SAFOR enters `WAITING_HUMAN_CONTROL_WORKSPACE`.
+- SAFOR does not auto-create remote `safor-memory`.
+- SAFOR does not materialize project execution/control or begin Discovery until a valid HUMAN-controlled control workspace exists.
+- Package entitlement/access state is not changed or invented as a recovery shortcut.
+
+## C. Free/Paid package separation
+
+Run two package-resolution paths.
+
+### C1 — Software / Website
+- Access mode is `FREE_PUBLIC`.
+- The default Factory/OM may resolve from the public canonical SAFOR repository.
+- Exact provider revision/blob is pinned before use.
+
+### C2 — Buch
+- Access mode is `PAID_ENTITLEMENT_REQUIRED`.
+- No Book model content is read from the public canonical package source.
+- Without paid package artifacts + independently verified entitlement, SAFOR returns `PACKAGE_ACCESS_REQUIRED` or `PACKAGE_ENTITLEMENT_UNVERIFIED`.
+- With HUMAN-loaded/entitled packages and valid entitlement evidence, SAFOR continues to technical integrity/compatibility checks.
+- Entitlement does not grant any Operating Model authority.
+
+**Pass condition:** public/free and commercial paths remain strictly separated.
 
 ## D. Self-healing
 
-Induce a recoverable stale-revision or transient provider failure.
+Induce a recoverable stale-revision/provider/package-observation failure.
 
 **Expected**
 - SAFOR classifies the failure.
 - Retry stays inside existing authority and budget.
 - Unknown mutation effects reconcile before retry.
 - Recovery success requires authoritative readback.
+- SAFOR never invents entitlement, reads paid content from the public package source, changes HUMAN project location, bypasses Local Git, or grants workers access to `.safor/`.
 - Unsafe/exhausted recovery escalates to HUMAN.
 
-## E. GitLab
+## E. GitLab REMOTE_GIT
 
-Repeat A–D with the GitLab provider adapter.
+Repeat Scenario A with GitLab as the HUMAN project provider. Free Website packages still resolve from the public SAFOR package source independently of the project provider.
 
 ## Evidence to retain
 
 For every test:
-- release bundle blob/commit identity,
+- Framework blob/commit identity,
+- resolved package IDs/versions/source revisions/blob identities,
+- entitlement verification evidence when applicable,
+- HUMAN workspace binding,
 - chat transcript,
-- provider target stable IDs,
+- project/control target stable IDs or local Git identity,
 - mutation/readback references,
 - final SAFOR state,
 - PASS/FAIL decision.
 
-Do not mark GA until GitHub and GitLab happy-path plus safety scenarios are independently recorded as PASS.
+Do not mark GA until remote-provider, Local Git and commercial entitlement scenarios are independently recorded as PASS.
 
 
 ## F. Repository-native Agent Workspace
 
 **Preconditions**
-- A project is initialized in writable `safor-memory`.
+- A project is initialized with a verified control workspace: remote `safor-memory` or local MASTER-only `.safor/`.
 - An AGENT actor is resolved by the Operating Model.
 - The HUMAN approves initial agent identity creation.
 - An active execution mandate covers the assigned work.
@@ -211,7 +223,7 @@ For one mutating agent job and one read-only agent job:
 ## M. Module-wide Self-Healing
 
 **Preconditions**
-- Load the exact v0.9 release bundle.
+- Load the exact v0.12 Framework bundle.
 - Confirm the embedded module set and module recovery profiles are intact.
 - Use a disposable project/control environment for mutation tests.
 
@@ -225,8 +237,8 @@ For one mutating agent job and one read-only agent job:
 5. SAFOR does not rewrite semantics; it reloads/verifies the expected pinned module or STOPs/escalates.
 
 **Verified-restore test**
-6. Simulate a pinned Factory/Operating Model/Registry module mismatch.
-7. SAFOR restores only the expected version/blob from verified source and revalidates bindings.
+6. Simulate a pinned external Factory/Operating Model package mismatch while preserving the approved package identity/access evidence.
+7. SAFOR restores/re-resolves only the expected version/blob from an allowed source, revalidates entitlement when required, and revalidates bindings.
 8. SAFOR does not alter workflow semantics, decision rights or SoD rules.
 
 **Derived-regeneration test**
@@ -258,13 +270,13 @@ For one mutating agent job and one read-only agent job:
 ## N. HUMAN Cognitive Load and Communication
 
 **Preconditions**
-- Start a fresh chat with the exact v0.11 release artifact.
+- Start a fresh chat with the exact v0.12 Framework artifact.
 - Use a realistic project where Discovery requires genuine HUMAN intent and priorities.
 - Retain the interaction transcript plus emitted interaction-menu metadata.
 
 **Expected — initialization and Discovery**
 1. Initialization asks one HUMAN decision context at a time.
-2. HUMAN-controlled choices such as provider/project location/creation type may create MEDIUM load.
+2. HUMAN-controlled choices such as creation type and remote/local project location may create MEDIUM load; package access is derived when possible.
 3. Discovery may reach HIGH load because SAFOR asks meaningful questions about goal, users, value, scope, priorities and constraints.
 4. Discovery does not expose internal IDs, leases, dispatch waves, READY/CLAIMED states or provider-readback mechanics on the default surface.
 5. Every Discovery question carries the legitimate reason `NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT` or another valid Decision-Gate reason.
@@ -274,7 +286,7 @@ For one mutating agent job and one read-only agent job:
 7. Planning presents a summarized interpretation and material tradeoffs before technical detail.
 8. The HUMAN approves the plan once for the pinned plan/scope.
 9. Re-reading or resuming the unchanged plan does not trigger the same approval again.
-10. Deterministic Factory/Operating-Model/Provider binding after creation-type selection does not create a second approval request.
+10. FREE_PUBLIC package resolution and deterministic compatible package binding after creation-type selection do not create redundant approval requests.
 11. Only a materially changed/non-standard/conflicting binding may invoke K10A.
 
 **Expected — execution load reduction**
@@ -310,7 +322,7 @@ For one mutating agent job and one read-only agent job:
 
 Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly and fails closed around integrity/authority boundaries.
 
-1. Load the exact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` artifact and verify K00 then K00A complete before provider/project work.
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` artifact and verify K00 then K00A complete before provider/project work.
 2. Create or load a project with a PLANNED work item whose dependency is ACCEPTED, required input object is resolvable, resource declaration is complete and an active execution mandate covers the work item/capability.
 3. Submit a typed `WORK_ITEM_READINESS_REEVALUATION_REQUESTED` event with the next contiguous sequence.
 4. Verify the deterministic transition is `WORK_ITEM_BECOMES_READY`, the work item becomes READY, `execution.readySince` comes from the event timestamp and the resulting canonical state hash is recorded.
@@ -332,7 +344,7 @@ Pass criteria: identical canonical inputs and pinned model revision produce iden
 
 Goal: prove that Work Item ACCEPTED is derived only from the approved Acceptance Contract and authoritative typed evidence/review/authority records.
 
-1. Use the exact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` artifact.
+1. Use the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` artifact.
 2. Create an executable Work Item with three approved criteria: pinned contribution evidence, independent technical review and explicit risk authority approval.
 3. Verify Planning materializes an ACTIVE Acceptance Contract preserving all three criterion texts and mapping each to typed requirements.
 4. Verify the contractHash matches canonical contract content and P03 approval binds the contract set.
@@ -351,3 +363,44 @@ Goal: prove that Work Item ACCEPTED is derived only from the approved Acceptance
 17. Provide an assistant claim or Agent acceptanceSelfCheck in place of required provider evidence/review/authority; acceptance must not occur.
 
 Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no probabilistic actor can directly self-accept work.
+
+
+## Q. Commercial Package Entitlement
+
+**Goal:** prove that paid Factory/Operating Model use is licensed independently from organizational authority.
+
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+2. Select **Buch**.
+3. With no commercial package artifacts, verify `PACKAGE_ACCESS_REQUIRED`.
+4. Supply Book Factory/OM as HUMAN-loaded package artifacts but no independently verified entitlements; verify `PACKAGE_ENTITLEMENT_UNVERIFIED`.
+5. Attempt to resolve Book package content from `PUBLIC_CANONICAL_REPOSITORY`; verify fail-closed rejection.
+6. Supply valid package artifacts and one verified entitlement per required package/version.
+7. Verify entitlement evidence uses an allowed verifier method and exact package/version coverage.
+8. Verify Factory/OM integrity and technical compatibility are evaluated separately after entitlement.
+9. Verify purchasing/loading the package does not create an Operating Model authority, execution mandate, provider permission, review approval or project scope.
+10. Revoke/expire entitlement before a new binding and verify the paid package cannot be newly bound.
+11. Verify Self-Healing does not fabricate or extend entitlement.
+12. Verify the public Framework integrity manifest contains no paid Factory/OM model module.
+
+**Pass condition:** commercial access is enforceable as a package-binding gate and never becomes organizational authority.
+
+## R. LOCAL_GIT HUMAN Project Workspace
+
+**Goal:** prove that the project can remain on the HUMAN local disk without remote project storage.
+
+1. Load the exact `SAFOR-FRAMEWORK-v0.12.0-rc.1.json`.
+2. Select **Software / Website** and resolve the FREE_PUBLIC Factory/OM.
+3. Select **Lokal auf meinem Rechner**.
+4. Verify the host exposes actual local filesystem read/write plus Git repository/history/branch/commit capabilities.
+5. Select a HUMAN-controlled local Git project path.
+6. With a plain non-Git directory, verify mutating execution is blocked until Git is initialized/selected through explicit setup.
+7. Verify the project workspace binding records `LOCAL_GIT`, Git root and capability evidence.
+8. Verify no remote `safor-memory` is required.
+9. Verify SAFOR creates/binds a Git-tracked `.safor/` control root only after setup approval.
+10. Verify `.safor/` is MASTER-only and absent from all worker write scopes.
+11. Execute one mutating worker job on a dedicated Git branch and verify domain changes remain inside the local HUMAN project repository.
+12. Attempt to redirect project work to `empishaj/SAFOR` or a package-source repository; verify rejection.
+13. Verify Git trace, readback and deterministic state/replay evidence still work.
+14. Verify stopping/resuming does not move the project or control state to a remote service implicitly.
+
+**Pass condition:** all project/domain bytes remain in the HUMAN local Git workspace and SAFOR retains its governance/evidence guarantees.
