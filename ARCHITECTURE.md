@@ -363,4 +363,8 @@ This intentionally rejects cross-domain composition. A Book Factory and a SaaS E
 
 `SAFOR-FRAMEWORK-WEBSITE.json` is reproducibly built from public modules and committed publicly.
 
-`SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json` are defined commercial output filenames. Their completed bytes require protected licensed Factory/Operating Model inputs and therefore are not committed to the public repository.
+In rc.6, `SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json` are deliberately committed as `PUBLIC_TEST_EVALUATION` artifacts. They embed paid-mode prerelease test packages so the complete domain bootstrap and entitlement path can be exercised.
+
+This does **not** turn the public repository into the commercial production source. The production catalog still exposes no public paid-model path and resolves commercial production versions only through `ENTITLED_PACKAGE_SOURCE`.
+
+For evaluation, the embedded modules are treated as `HUMAN_LOADED_PACKAGE` and access is supplied separately by the matching public test access bundle. Possession of the Framework file alone remains insufficient.
