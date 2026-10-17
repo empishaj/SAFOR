@@ -116,7 +116,15 @@
     "commercialEntitlementStatusTimeSubjectAndTrustRequired": true,
     "commercialBasisEvidenceRequired": true,
     "entitledSourceDeliveryEvidenceRequired": true,
-    "commercialDeliveryDigestBindingRequired": true
+    "commercialDeliveryDigestBindingRequired": true,
+    "domainSpecificFrameworkDistributions": true,
+    "sameKernelAcrossDomainDistributions": true,
+    "domainDistributionPreselectsDomainAndDefaults": true,
+    "embeddedDomainDefaultsRemainReplaceable": true,
+    "replacementRequiresSameDomain": true,
+    "replacementRequiresBidirectionalCompatibility": true,
+    "packageFamilyCompatibilityRequiredForV2Packages": true,
+    "crossDomainPackageReplacementForbidden": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -287,12 +295,24 @@
       "commercialBasisEvidenceRequired": true,
       "entitledPackageSourceDeliveryEvidenceRequired": true,
       "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest": true,
-      "humanLoadedPaidPackageStillRequiresEntitlement": true
+      "humanLoadedPaidPackageStillRequiresEntitlement": true,
+      "domainFrameworkProfileCatalogRequired": true,
+      "domainDistributionPreselectsDomain": true,
+      "replacementSameDomainRequired": true,
+      "replacementBidirectionalCounterpartRequired": true,
+      "replacementPackageFamilyConstraintsEnforced": true,
+      "crossDomainReplacementForbidden": true
     },
     "domainPackageSchemaRef": "schemas/domain-package.schema.json",
     "selectionSchemaRef": "schemas/package-selection.schema.json",
     "compatibilityDecisionSchemaRef": "schemas/package-compatibility-decision.schema.json",
-    "composablePackageModelRef": "composable-package-model.json"
+    "composablePackageModelRef": "composable-package-model.json",
+    "domainFrameworkProfileRef": "domain-framework-profiles.json",
+    "domainFrameworkDistributionFiles": [
+      "SAFOR-FRAMEWORK-WEBSITE.json",
+      "SAFOR-FRAMEWORK-SAAS.json",
+      "SAFOR-FRAMEWORK-BOOK-CREATION.json"
+    ]
   },
   "projectMaterialization": {
     "root": "projects/{projectSlug}/",
@@ -1849,6 +1869,46 @@
     {
       "id": "INV-187",
       "rule": "HUMAN_LOADED_PACKAGE may carry a licensed paid artifact without source delivery evidence, but it never bypasses entitlement status, subject, time, issuer or verifier checks."
+    },
+    {
+      "id": "INV-188",
+      "rule": "SAFOR domain distributions share one kernel but may embed different default Factory and Operating Model modules for WEBSITE_CREATION, SAAS_ENGINEERING and BOOK_CREATION."
+    },
+    {
+      "id": "INV-189",
+      "rule": "Loading a SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION preselects its domainId and creationType and MUST suppress redundant HUMAN creation-type selection."
+    },
+    {
+      "id": "INV-190",
+      "rule": "A domain distribution may initialize only when its embedded default Factory and Operating Model both support the distribution domain and pass bidirectional compatibility."
+    },
+    {
+      "id": "INV-191",
+      "rule": "An embedded default Factory or Operating Model remains independently replaceable after initialization; embedding is a default binding, not permanent coupling."
+    },
+    {
+      "id": "INV-192",
+      "rule": "Every replacement Factory and Operating Model must explicitly support the active domainId; replacement may never change domain implicitly."
+    },
+    {
+      "id": "INV-193",
+      "rule": "Factory/Operating Model compatibility is bidirectional: Factory counterpart constraints are checked against the Operating Model and Operating Model counterpart constraints are checked against the Factory."
+    },
+    {
+      "id": "INV-194",
+      "rule": "V2 domain packages carry packageFamily and package-family constraints are enforced independently from exact packageId so compatible Premium versions/families may replace defaults."
+    },
+    {
+      "id": "INV-195",
+      "rule": "A Factory may restrict acceptable Operating Model package families and require capabilities, authorities, work-item types or artifact types from its counterpart."
+    },
+    {
+      "id": "INV-196",
+      "rule": "An Operating Model may restrict acceptable Factory package families and require capabilities, authorities, work-item types or artifact types from its counterpart."
+    },
+    {
+      "id": "INV-197",
+      "rule": "Cross-domain combinations such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model are invalid even when individual capabilities happen to overlap."
     }
   ],
   "evidencePolicy": {
