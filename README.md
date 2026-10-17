@@ -10,7 +10,7 @@ SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-ba
 
 | Creation Type | Factory | Operating Model | Access |
 |---|---|---|---|
-| WEBSITE | `safor.factory.website-delivery@1.0.0` | `safor.om.website-team@1.0.0` | FREE_PUBLIC |
+| WEBSITE | `safor.factory.website-delivery@1.1.0` | `safor.om.website-team@1.1.0` | FREE_PUBLIC |
 | SOFTWARE_SAAS | `safor.factory.software-delivery` | `safor.om.saas-engineering` | **both paid** |
 | BOOK | `safor.factory.book-production` | `safor.om.book-authoring` | **both paid** |
 
@@ -48,8 +48,8 @@ All three use the same SAFOR kernel. Embedded Factory and Operating Model are re
 
 - `SAFOR-FRAMEWORK-v0.13.0-rc.5.json` — versioned public Framework release candidate.
 - `SAFOR-FRAMEWORK.json` — current Framework alias.
-- `v0.13.0/ packages/factories/website-delivery/1.0.0/package.json` — free Website Factory.
-- `v0.13.0/packages/operating-models/website-team/1.0.0/package.json` — free Website Operating Model.
+- `v0.13.0/ packages/factories/website-delivery/1.1.0/package.json` — free Website Factory.
+- `v0.13.0/packages/operating-models/website-team/1.1.0/package.json` — free Website Operating Model.
 
 Software Factory/SaaS OM versions through 1.6.0 remain visible as historical public disclosure. They are not the current protected commercial package channel.
 
