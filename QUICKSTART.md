@@ -14,8 +14,8 @@ For Website work, load `SAFOR-FRAMEWORK-WEBSITE.json`. The Website domain and de
 ### Website — free
 
 Default packages:
-- `safor.factory.website-delivery@1.0.0`
-- `safor.om.website-team@1.0.0`
+- `safor.factory.website-delivery@1.1.0`
+- `safor.om.website-team@1.1.0`
 
 Both are `FREE_PUBLIC` and resolve from canonical public SAFOR Git at immutable revision/blob.
 
