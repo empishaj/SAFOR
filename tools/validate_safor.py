@@ -151,9 +151,9 @@ for ref, target in {
 
 # 0.13 authoritative sources.
 for key in (
-    "kernel","initialization","moduleSelfHealing","packageRegistry","packageDistribution",
+    "kernel","initialization","selfHealing","moduleSelfHealing","packageRegistry","packageDistribution",
     "commercialEntitlement","packageCatalog","schemaBindings","schemaPackageCatalog",
-    "schemaEntitlement","composablePackageModel","schemaDomainPackage",
+    "schemaEntitlement","conformance","composablePackageModel","schemaDomainPackage",
     "schemaPackageSelection","schemaPackageCompatibilityDecision",
 ):
     if not str(modules.get(key, {}).get("sourcePath", "")).startswith("v0.13.0/"):
@@ -351,6 +351,29 @@ for rule in (
 ):
     if entitlement.get("rules", {}).get(rule) is not True:
         fail(f"Commercial entitlement rule {rule} must be true.")
+
+# 0.13 conformance and self-healing coverage.
+self_healing = modules.get("selfHealing", {}).get("content", {})
+failure_classes = {x.get("id"): x for x in self_healing.get("failureClasses", [])}
+if "SH-24" not in failure_classes:
+    fail("Self-Healing must define SH-24 COMPOSABLE_DOMAIN_PACKAGE_FAILURE.")
+for forbidden in (
+    "INVENT_PACKAGE_ENTITLEMENT",
+    "REWRITE_DOMAIN_PACKAGE_TO_MATCH_EXPECTED_DIGEST",
+    "SILENTLY_CHANGE_SELECTED_FACTORY_OR_OPERATING_MODEL",
+    "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS",
+):
+    if forbidden not in self_healing.get("forbiddenAutomaticRepairs", []):
+        fail(f"Self-Healing must forbid {forbidden}.")
+
+conformance = modules.get("conformance", {}).get("content", {})
+if conformance.get("schemaVersion") != "0.13.0":
+    fail("Conformance model must be 0.13.0.")
+assertion_ids = {x.get("id") for x in conformance.get("assertions", [])}
+for n in range(217, 231):
+    assertion = f"CF-{n:03d}"
+    if assertion not in assertion_ids:
+        fail(f"Missing composable-package conformance assertion {assertion}.")
 
 # Workspace boundaries retained.
 workspace = modules.get("workspaceModel", {}).get("content", {})
