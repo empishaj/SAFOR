@@ -1,0 +1,424 @@
+{
+  "format": "SAFOR_INITIALIZATION_MODEL",
+  "schemaVersion": "0.11.0",
+  "id": "SAFOR-GUIDED-INITIALIZATION",
+  "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
+  "entryBehavior": {
+    "autoStartAfterBootstrapLoad": true,
+    "firstHumanSurface": "PROVIDER_SELECTION_MENU",
+    "noProjectWorkBeforeComplete": true,
+    "completionPredicate": "PROVIDER_VERIFIED_AND_OWNER_VERIFIED_AND_SAFOR_MEMORY_VERIFIED_AND_CREATION_TYPE_SELECTED_AND_PROJECT_SELECTED"
+  },
+  "sequence": [
+    {
+      "id": "INIT-00",
+      "operation": "VERIFY_EMBEDDED_MODULE_RECOVERY_BASELINE",
+      "title": "SAFOR Runtime prüfen",
+      "requiresProvider": false,
+      "passOutcome": "MODULE_RECOVERY_BASELINE_VERIFIED",
+      "failOutcome": "STOP",
+      "checks": [
+        "EMBEDDED_MODULE_KEYS_MATCH_RECOVERY_PROFILE_KEYS_EXACTLY",
+        "ONE_UNIQUE_PROFILE_PER_MODULE",
+        "MODULE_AND_INTEGRITY_MANIFEST_PROFILE_IDS_MATCH",
+        "SELF_HEALING_CONTROL_MODULES_PRESENT_AND_STRUCTURALLY_VALID",
+        "REFERENCE_RESOLUTION_TARGETS_EXIST",
+        "KERNEL_SCHEMA_AND_BUNDLE_VERSIONS_AGREE"
+      ],
+      "rule": "Run before any provider/project operation. If recovery-control integrity or exact profile coverage cannot be proven, fail closed and do not attempt heuristic self-repair.",
+      "selfHealingRef": "module-self-healing-model.json"
+    },
+    {
+      "id": "INIT-00A",
+      "operation": "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
+      "title": "Deterministischen Control Kernel prüfen",
+      "requiresProvider": false,
+      "passOutcome": "DETERMINISTIC_CONTROL_BASELINE_VERIFIED",
+      "failOutcome": "STOP",
+      "checks": [
+        "DETERMINISTIC_CONTROL_MODULES_PRESENT_AND_PINNED",
+        "TRANSITION_PREDICATES_RESOLVE_TO_CLOSED_REGISTRY",
+        "TRANSITION_EFFECTS_USE_CLOSED_OPERATION_SET",
+        "STATE_HASHING_AND_REPLAY_CONTRACT_PRESENT",
+        "RC1_EXECUTABLE_TRANSITION_BOUNDARY_EXPLICIT"
+      ],
+      "rule": "Run after module-recovery baseline and before provider/project work. Failure to verify deterministic control modules stops executable deterministic processing.",
+      "deterministicControlRef": "deterministic-control-model.json"
+    },
+    {
+      "id": "INIT-01",
+      "operation": "SELECT_PROVIDER",
+      "humanDecision": "PROVIDER_SELECTION",
+      "title": "Wo arbeiten wir?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "GITHUB",
+            "label": "GitHub",
+            "providerPackageId": "safor.provider.github"
+          },
+          {
+            "id": "GITLAB",
+            "label": "GitLab",
+            "providerPackageId": "safor.provider.gitlab"
+          }
+        ]
+      },
+      "rule": "The HUMAN explicitly selects GitHub or GitLab. Never silently choose a provider merely because a connection exists."
+    },
+    {
+      "id": "INIT-02",
+      "operation": "VERIFY_BASE_PROVIDER_ACCESS",
+      "title": "Zugriff prüfen",
+      "requires": [
+        "provider.identity.read",
+        "provider.namespace.list",
+        "provider.repository.list",
+        "provider.repository.read",
+        "provider.artifact.read",
+        "provider.artifact.write",
+        "provider.history.read",
+        "provider.branch.read",
+        "provider.branch.write"
+      ],
+      "passOutcome": "PROVIDER_ACCESS_VERIFIED",
+      "failOutcome": "WAITING_HUMAN_PROVIDER_ACCESS",
+      "rule": "Verify actual host/provider capabilities. Declarations in JSON are never proof of access.",
+      "humanBlockerMessage": "Bitte verbinde {providerLabel} mit Lese- und Schreibrechten. Ohne diese Rechte kann SAFOR nicht starten.",
+      "blockerMenu": [
+        {
+          "id": "ACCESS_DONE",
+          "label": "Erledigt",
+          "intent": "RECHECK_PROVIDER_ACCESS",
+          "kind": "PRIMARY"
+        },
+        {
+          "id": "SWITCH_PROVIDER",
+          "label": "Anbieter wechseln",
+          "intent": "SELECT_PROVIDER",
+          "kind": "SECONDARY"
+        },
+        {
+          "id": "ACCESS_HELP",
+          "label": "Hilfe",
+          "intent": "HELP_PROVIDER_ACCESS",
+          "kind": "UTILITY"
+        }
+      ],
+      "retryPolicy": {
+        "onHumanSignal": "ACCESS_DONE",
+        "automaticRechecks": 1,
+        "onStillMissing": "WAITING_HUMAN_PROVIDER_ACCESS"
+      },
+      "prohibited": [
+        "ASK_FOR_PASSWORD",
+        "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT",
+        "CLAIM_ACCESS_WITHOUT_PROVIDER_EVIDENCE"
+      ]
+    },
+    {
+      "id": "INIT-03",
+      "operation": "SELECT_OWNER_NAMESPACE",
+      "humanDecision": "OWNER_SELECTION",
+      "title": "Projektort auswählen",
+      "source": "provider.namespace.list",
+      "optionRules": [
+        "Include the authenticated personal namespace when available.",
+        "Include organizations/groups visible to the authenticated identity.",
+        "Prefer namespaces where repository write capability can be verified.",
+        "Show owner display name and provider namespace handle; hide internal stable IDs behind Details."
+      ],
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "maxVisibleOptions": 8,
+        "overflowAction": {
+          "id": "SHOW_MORE_OWNERS",
+          "label": "Mehr anzeigen"
+        }
+      },
+      "humanPrompt": "Wo liegt dein Projekt?"
+    },
+    {
+      "id": "INIT-04",
+      "operation": "VERIFY_OWNER_ACCESS",
+      "title": "Zugriff auf Projektort prüfen",
+      "requires": [
+        "provider.repository.list",
+        "provider.repository.read",
+        "provider.artifact.read",
+        "provider.artifact.write"
+      ],
+      "conditionalRequires": [
+        {
+          "when": "PROJECT_MODE_NEW",
+          "capability": "provider.repository.create"
+        }
+      ],
+      "rule": "Re-verify access in the selected owner namespace because organization/group policy may be stricter than account-level access.",
+      "failMessage": "Hier fehlen noch die nötigen Lese- oder Schreibrechte. Bitte gib sie frei oder wähle einen anderen Projektort."
+    },
+    {
+      "id": "INIT-05",
+      "operation": "VERIFY_REQUIRED_SAFOR_MEMORY",
+      "title": "SAFOR-Arbeitsbereich prüfen",
+      "requires": [
+        "provider.repository.read",
+        "provider.artifact.read",
+        "provider.artifact.write"
+      ],
+      "target": "{selectedOwner}/safor-memory",
+      "passOutcome": "SAFOR_MEMORY_VERIFIED",
+      "failOutcome": "STOP",
+      "rule": "The repository `{selectedOwner}/safor-memory` must already exist and actual read/write access must be proven. SAFOR never creates this repository automatically.",
+      "stopMessage": "Stopp. Unter diesem Owner fehlt ein nutzbares `safor-memory` oder die Lese-/Schreibrechte reichen nicht. Bitte richte `safor-memory` ein und starte SAFOR danach erneut.",
+      "prohibited": [
+        "AUTO_CREATE_SAFOR_MEMORY",
+        "CONTINUE_WITHOUT_SAFOR_MEMORY",
+        "CONTINUE_WITH_READ_ONLY_SAFOR_MEMORY",
+        "ASK_FOR_PASSWORD",
+        "ASK_FOR_PERSONAL_ACCESS_TOKEN_IN_CHAT"
+      ],
+      "humanSummaryName": "SAFOR-Arbeitsbereich"
+    },
+    {
+      "id": "INIT-06",
+      "operation": "SELECT_CREATION_TYPE",
+      "humanDecision": "CREATION_TYPE_SELECTION",
+      "title": "Was möchtest du erstellen?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "SOFTWARE_WEBSITE",
+            "label": "Software / Website",
+            "factoryPackageId": "safor.factory.software-delivery",
+            "operatingModelPackageId": "safor.om.saas-engineering"
+          },
+          {
+            "id": "BOOK",
+            "label": "Buch",
+            "factoryPackageId": "safor.factory.book-production",
+            "operatingModelPackageId": "safor.om.book-authoring"
+          }
+        ]
+      },
+      "rule": "Exactly one creation type is mandatory. Selection determines the Factory and compatible Operating Model used for Discovery, Planning and Evidence."
+    },
+    {
+      "id": "INIT-07",
+      "operation": "SELECT_PROJECT_MODE",
+      "humanDecision": "PROJECT_MODE_SELECTION",
+      "title": "Wie starten wir?",
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "options": [
+          {
+            "id": "EXISTING",
+            "label": "Bestehendes Projekt",
+            "intent": "SELECT_EXISTING_PROJECT"
+          },
+          {
+            "id": "NEW",
+            "label": "Neues Projekt",
+            "intent": "START_NEW_PROJECT"
+          }
+        ]
+      }
+    },
+    {
+      "id": "INIT-08A",
+      "operation": "LIST_RECENT_EXISTING_REPOSITORIES",
+      "when": "PROJECT_MODE_EXISTING",
+      "title": "Welches Projekt nehmen wir?",
+      "source": "provider.repository.list",
+      "activityWindow": {
+        "days": 7,
+        "clock": "HOST_CURRENT_TIME",
+        "normalizedField": "lastActivityAt",
+        "includeOnlyAtOrAfter": "NOW_MINUS_7_DAYS"
+      },
+      "ordering": "lastActivityAt DESC",
+      "maxVisibleRepositories": 8,
+      "repositoryEligibility": [
+        "Repository belongs to or is accessible under the selected owner namespace.",
+        "Repository is not archived unless the HUMAN explicitly requests archived repositories.",
+        "Repository read access is proven.",
+        "Repository write access is proven for the project workflow baseline."
+      ],
+      "emptyState": {
+        "message": "In den letzten 7 Tagen wurde hier kein passendes Repository angefasst.",
+        "actions": [
+          {
+            "id": "SHOW_ALL_REPOS",
+            "label": "Alle Repositories",
+            "intent": "LIST_ALL_REPOSITORIES"
+          },
+          {
+            "id": "START_NEW_PROJECT",
+            "label": "Neues Projekt",
+            "intent": "START_NEW_PROJECT"
+          },
+          {
+            "id": "CHANGE_OWNER",
+            "label": "Owner wechseln",
+            "intent": "SELECT_OWNER_NAMESPACE"
+          }
+        ]
+      },
+      "menu": {
+        "type": "SINGLE_SELECT",
+        "optionLabelPattern": "{repositoryName}",
+        "optionDescriptionPattern": "Zuletzt aktiv: {lastActivityHuman}",
+        "overflowAction": {
+          "id": "SHOW_MORE_REPOS",
+          "label": "Mehr anzeigen"
+        },
+        "utilityActions": [
+          {
+            "id": "SHOW_ALL_REPOS",
+            "label": "Alle Repositories",
+            "intent": "LIST_ALL_REPOSITORIES"
+          },
+          {
+            "id": "CHANGE_OWNER",
+            "label": "Owner wechseln",
+            "intent": "SELECT_OWNER_NAMESPACE"
+          }
+        ]
+      },
+      "selectionVerification": [
+        "Read repository metadata and stable ID.",
+        "Read default branch.",
+        "Re-verify read/write access on the selected repository.",
+        "Persist the stable repository identity only after HUMAN selection."
+      ]
+    },
+    {
+      "id": "INIT-08B",
+      "operation": "DEFINE_NEW_PROJECT",
+      "when": "PROJECT_MODE_NEW",
+      "title": "Wie soll das neue Projekt heißen?",
+      "humanInput": [
+        "projectName"
+      ],
+      "validation": [
+        "Derive and show a valid project slug.",
+        "Check name/slug collision in selected owner namespace.",
+        "Require provider.repository.create before creation.",
+        "Do not create the repository before the HUMAN confirms the proposed project identity and setup scope."
+      ]
+    },
+    {
+      "id": "INIT-09",
+      "operation": "BIND_CONTROL_REPOSITORY",
+      "title": "SAFOR-Struktur vorbereiten",
+      "rule": "Bind the already verified `{selectedOwner}/safor-memory` as the SAFOR control repository. A different control repository is not allowed in this baseline."
+    },
+    {
+      "id": "INIT-10",
+      "operation": "RESOLVE_CREATION_PROFILE_BINDINGS",
+      "title": "Passendes Arbeitsmodell vorbereiten",
+      "rule": "Resolve Provider Adapter and bind the Factory/Operating Model predetermined by CREATION_TYPE_SELECTION. Do not ask for a second approval when the resolved binding exactly matches the approved creation profile and unchanged pinned versions.",
+      "humanDecisionDefault": false,
+      "askHumanOnlyWhen": "RESOLVED_BINDING_DIFFERS_FROM_APPROVED_CREATION_PROFILE_OR_EXISTING_PINNED_BINDING"
+    },
+    {
+      "id": "INIT-11",
+      "operation": "MATERIALIZE_PROJECT_CONTROL",
+      "title": "Projekt starten",
+      "rule": "After SETUP_APPROVAL, write and read back the project control structure including agents/index.json and master/scheduler/state.json. Initialization completes only after provider readback succeeds."
+    }
+  ],
+  "repositoryActivityNormalization": {
+    "purpose": "Normalize 'recently touched' repositories across providers.",
+    "field": "lastActivityAt",
+    "providerRules": {
+      "github": {
+        "preferredFields": [
+          "updated_at",
+          "pushed_at"
+        ],
+        "selectionRule": "Use the most recent trustworthy repository activity timestamp exposed by the provider; prefer updated_at for broad project activity and retain pushed_at as supporting detail when available.",
+        "fallback": "latest_default_branch_commit_at"
+      },
+      "gitlab": {
+        "preferredFields": [
+          "last_activity_at"
+        ],
+        "selectionRule": "Use last_activity_at when available.",
+        "fallback": "latest_default_branch_commit_at"
+      }
+    },
+    "displayRule": "Show only a human-readable relative or local date in the menu; keep raw timestamps in evidence/details."
+  },
+  "permissionSemantics": {
+    "baselineReadWriteIsMandatory": true,
+    "leastPrivilegeStillApplies": true,
+    "explanation": "SAFOR requires proven read/write access for its control and project workflow. Additional provider capabilities are requested only when the selected Factory or operation needs them.",
+    "mandatoryBeforeOwnerSelection": true,
+    "ownerScopedRecheck": true,
+    "newProjectAdditionalCapability": "provider.repository.create",
+    "noProgressOnFailure": true,
+    "safMemoryReadWriteMandatory": true,
+    "safMemoryMissingOutcome": "STOP",
+    "safMemoryAutoCreate": false,
+    "schedulerMaterializationRequired": true
+  },
+  "humanExperience": {
+    "buddyMessages": {
+      "providerPrompt": "Wo möchtest du arbeiten?",
+      "accessPassed": "Passt. Zugriff ist da.",
+      "ownerPrompt": "Wo liegt dein Projekt?",
+      "projectModePrompt": "Bestehend oder neu?",
+      "repoPrompt": "Welches der zuletzt aktiven Projekte nehmen wir?",
+      "ready": "Alles bereit. Der Projektstand kann gespeichert und die Arbeit vorbereitet werden.",
+      "safMemoryPassed": "Alles bereit. Der SAFOR-Arbeitsbereich ist beschreibbar.",
+      "safMemoryStopped": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten.",
+      "creationTypePrompt": "Was möchtest du erstellen?"
+    },
+    "keepTechnicalDetailsBehind": "DETAILS",
+    "menusPreferred": true,
+    "cognitiveLoadRules": [
+      "Initialization may require MEDIUM load because HUMAN-controlled environment choices are not derivable.",
+      "Ask one decision at a time.",
+      "Do not expose internal package/binding mechanics on the default surface.",
+      "Do not ask for a second approval when a binding is deterministic from an already approved creation type."
+    ]
+  },
+  "absolutePrerequisites": {
+    "safMemoryRepository": {
+      "required": true,
+      "exactRepositoryName": "safor-memory",
+      "locationPattern": "{selectedOwner}/safor-memory",
+      "mustExistBeforeProjectSelection": true,
+      "mustBeReadable": true,
+      "mustBeWritable": true,
+      "autoCreateForbidden": true,
+      "failureOutcome": "STOP",
+      "humanMessage": "Für SAFOR brauchst du unter diesem Owner zwingend ein Repository namens `safor-memory` mit Lese- und Schreibrechten. Bitte richte es ein und starte SAFOR danach erneut.",
+      "rule": "Missing repository, unreadable repository or unproven write access is a hard initialization STOP. SAFOR must not create safor-memory automatically and must not continue to creation-type or project selection."
+    }
+  },
+  "creationTypes": {
+    "required": true,
+    "humanDecision": "CREATION_TYPE_SELECTION",
+    "options": [
+      {
+        "id": "SOFTWARE_WEBSITE",
+        "label": "Software / Website",
+        "factoryPackageId": "safor.factory.software-delivery",
+        "operatingModelPackageId": "safor.om.saas-engineering"
+      },
+      {
+        "id": "BOOK",
+        "label": "Buch",
+        "factoryPackageId": "safor.factory.book-production",
+        "operatingModelPackageId": "safor.om.book-authoring"
+      }
+    ],
+    "rule": "The HUMAN must explicitly choose exactly one creation type. No default and no inference from repository contents."
+  },
+  "humanDecisionGateModelRef": "human-decision-gate-model.json",
+  "humanCognitiveLoadPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy"
+}
