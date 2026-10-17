@@ -109,3 +109,7 @@ rc.2 passes only when:
 - replay reproduces the accepted-state hash;
 - contract hash tampering fails closed;
 - no qualitative criterion is accepted without a typed requirement.
+
+## Implementation status
+
+Implemented on branch `safor/deterministic-acceptance-v0.11.0-rc.2`. Machine validation passes: reproducible bundle, SAFOR distribution validator and 25/25 deterministic runtime tests. End-to-end scenario P remains a GA acceptance gate.
