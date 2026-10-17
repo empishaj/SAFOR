@@ -1,0 +1,59 @@
+{
+  "format": "SAFOR_COMPOSABLE_PACKAGE_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "safor-composable-domain-packages",
+  "purpose": "Make Factory and Operating Model independently loadable JSON products that can be mixed only after deterministic access, integrity and compatibility checks.",
+  "principles": {
+    "frameworkIsIndependentProduct": true,
+    "factoryAndOperatingModelAreIndependentPackages": true,
+    "onePackageEqualsOneLoadableJsonArtifact": true,
+    "entitlementEvidenceIsExternalToPackageJson": true,
+    "packagePossessionIsNotEntitlement": true,
+    "websiteStarterDefaultsAreFreePublic": true,
+    "factoryMayBeUpgradedIndependently": true,
+    "operatingModelMayBeUpgradedIndependently": true,
+    "mixedFreeAndPaidPairAllowed": true,
+    "selectedPairMustBeCompatible": true,
+    "projectWorkspaceIndependentFromPackageSource": true
+  },
+  "packageArtifactContract": {
+    "format": "SAFOR_DOMAIN_PACKAGE",
+    "schemaRef": "schemas/domain-package.schema.json",
+    "chatLoadable": true,
+    "singleJsonFile": true,
+    "entitlementEmbedded": false,
+    "integrityDigestScope": "DECLARED_DOMAIN_CONTRACT"
+  },
+  "selectionContract": {
+    "catalogRef": "package-catalog.json",
+    "selectionSchemaRef": "schemas/package-selection.schema.json",
+    "compatibilityDecisionSchemaRef": "schemas/package-compatibility-decision.schema.json",
+    "defaultRule": "Use creation-profile defaults unless HUMAN explicitly selects an allowed alternative.",
+    "accessRule": "Resolve access independently for the selected Factory and selected Operating Model.",
+    "paidOverrideRule": "A paid override requires HUMAN approval and independently verified entitlement for that package only.",
+    "compatibilityRule": "No Factory/Operating Model pair may bind without COMPATIBLE decision."
+  },
+  "resolutionOrder": [
+    "SELECT_CREATION_TYPE",
+    "LOAD_OR_RESOLVE_DEFAULT_PACKAGE_CANDIDATES",
+    "OFFER_OR_ACCEPT_HUMAN_PACKAGE_OVERRIDES",
+    "RESOLVE_FACTORY_ACCESS_INDEPENDENTLY",
+    "RESOLVE_OPERATING_MODEL_ACCESS_INDEPENDENTLY",
+    "VERIFY_DOMAIN_PACKAGE_SHAPE_AND_INTEGRITY",
+    "VERIFY_FRAMEWORK_VERSION_COMPATIBILITY",
+    "VERIFY_CREATION_TYPE_SUPPORT",
+    "VERIFY_FACTORY_OPERATING_MODEL_CAPABILITY_AND_AUTHORITY_COVERAGE",
+    "MATERIALIZE_PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+    "PIN_PACKAGE_BINDINGS",
+    "CONTINUE_TO_PROJECT_WORKSPACE_SELECTION"
+  ],
+  "failureOutcomes": {
+    "missingPackage": "PACKAGE_ACCESS_REQUIRED",
+    "unverifiedEntitlement": "PACKAGE_ENTITLEMENT_UNVERIFIED",
+    "invalidPackage": "DOMAIN_PACKAGE_INVALID",
+    "integrityMismatch": "DOMAIN_PACKAGE_INTEGRITY_MISMATCH",
+    "frameworkIncompatible": "DOMAIN_PACKAGE_FRAMEWORK_INCOMPATIBLE",
+    "pairIncompatible": "FACTORY_OPERATING_MODEL_INCOMPATIBLE",
+    "unsupportedCreationType": "DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED"
+  }
+}
