@@ -31,12 +31,12 @@ jobs:
           set -euo pipefail
           cat .rc8/part* > /tmp/rc8-payload.b64
           echo "244dbf9c48589920b7e0c73034da3c20a087eb00505f49d911c83c863b42b909  /tmp/rc8-payload.b64" | sha256sum -c -
-          base64 --decode /tmp/rc8-payload.b64 | gzip --decompress > /tmp/implement_human_notice_rc8.py
-          echo "7a8cf5c96fce8f31f49fa43723dcb3a9fb6c417732848692fe1c08705d3f25f6  /tmp/implement_human_notice_rc8.py" | sha256sum -c -
-          python -m py_compile /tmp/implement_human_notice_rc8.py
+          base64 --decode /tmp/rc8-payload.b64 | gzip --decompress > tools/implement_human_notice_rc8.py
+          echo "7a8cf5c96fce8f31f49fa43723dcb3a9fb6c417732848692fe1c08705d3f25f6  tools/implement_human_notice_rc8.py" | sha256sum -c -
+          python -m py_compile tools/implement_human_notice_rc8.py
 
       - name: Apply canonical rc.8 sources and contracts
-        run: python /tmp/implement_human_notice_rc8.py
+        run: python tools/implement_human_notice_rc8.py
 
       - name: Rebuild generic Framework distribution
         run: python tools/build_bundle.py
@@ -66,6 +66,8 @@ jobs:
         shell: bash
         run: |
           rm -rf .rc8
+          rm -f tools/implement_human_notice_rc8.py
+          rm -rf tools/__pycache__
           rm -f .github/workflows/materialize-rc8.yml
 
       - name: Commit validated rc.8 implementation
