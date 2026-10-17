@@ -1,0 +1,22 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.response.job-error",
+  "templateVersion": "1.0.0",
+  "responseType": "JOB_ERROR",
+  "responseSchemaRef": "schemas/agent-response.schema.json",
+  "defaultStatus": "FAILED",
+  "defaultChatStatus": "BLOCKED",
+  "pathPattern": "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+  "requiredBindings": ["PROJECT_ID", "JOB_ID", "PACKAGE_ID", "WORK_ITEM_ID", "AGENT_ID", "IDENTITY_REVISION", "JOB_CONTRACT_REF", "JOB_CONTRACT_BLOB_SHA", "TARGET_MASTER_REF"],
+  "payloadTemplate": {
+    "errorClass": "{{ERROR_CLASS}}",
+    "failedStep": "{{FAILED_STEP}}",
+    "reproducibleFinding": "{{FINDING}}",
+    "retryable": false,
+    "safeState": "{{SAFE_STATE}}",
+    "blockedArtifacts": [],
+    "conflict": "{{CONFLICT_OBJECT}}"
+  },
+  "immutableAfterWrite": true
+}

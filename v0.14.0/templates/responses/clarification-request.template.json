@@ -1,0 +1,20 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.response.clarification-request",
+  "templateVersion": "1.0.0",
+  "responseType": "CLARIFICATION_REQUEST",
+  "responseSchemaRef": "schemas/agent-response.schema.json",
+  "defaultStatus": "BLOCKED",
+  "defaultChatStatus": "BLOCKED",
+  "pathPattern": "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+  "requiredBindings": ["PROJECT_ID", "JOB_ID", "PACKAGE_ID", "WORK_ITEM_ID", "AGENT_ID", "IDENTITY_REVISION", "JOB_CONTRACT_REF", "JOB_CONTRACT_BLOB_SHA", "TARGET_MASTER_REF"],
+  "payloadTemplate": {
+    "question": "{{EXACT_QUESTION_FOR_MASTER}}",
+    "affectedJobFields": [],
+    "options": [],
+    "recommendedOption": null,
+    "conflict": "{{CONFLICT_OBJECT}}"
+  },
+  "immutableAfterWrite": true
+}

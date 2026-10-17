@@ -1,0 +1,91 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_CONTRACT_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-TYPED-AGENT-RESPONSES",
+  "purpose": "Define immutable, explicitly typed agent-to-MASTER responses persisted in Git with deterministic paths, independent resolution records and no HUMAN domain conversation.",
+  "authority": {
+    "responseSchema": "schemas/agent-response.schema.json",
+    "responseIndexSchema": "schemas/agent-response-index.schema.json",
+    "resolutionSchema": "schemas/agent-response-resolution.schema.json",
+    "responseRoot": "agents/{agentId}/outbox/{jobId}/",
+    "responsePath": "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+    "responseIndexPath": "agents/{agentId}/outbox/index.json",
+    "masterResolutionPath": "master/response-resolutions/{responseId}.json",
+    "responseImmutableAfterWrite": true,
+    "resolutionNeverMutatesResponse": true
+  },
+  "responseTypes": {
+    "JOB_RESULT": {
+      "templateRef": "templates/responses/job-result.template.json",
+      "purpose": "Submit completed work, artifacts, Git trace, checks and open items.",
+      "blocking": false,
+      "chatStatus": "SUBMITTED",
+      "masterNextActions": [
+        "VERIFY_RESULT",
+        "DISPATCH_REVIEW",
+        "REJECT_FOR_REWORK"
+      ]
+    },
+    "JOB_ERROR": {
+      "templateRef": "templates/responses/job-error.template.json",
+      "purpose": "Report a technical execution failure with reproducible findings and safe-state evidence.",
+      "blocking": true,
+      "chatStatus": "BLOCKED",
+      "masterNextActions": [
+        "PLAN_REPAIR",
+        "CREATE_REWORK_JOB",
+        "CANCEL_JOB"
+      ]
+    },
+    "CLARIFICATION_REQUEST": {
+      "templateRef": "templates/responses/clarification-request.template.json",
+      "purpose": "Report ambiguous, incomplete or contradictory job instructions to MASTER.",
+      "blocking": true,
+      "chatStatus": "BLOCKED",
+      "masterNextActions": [
+        "CLARIFY_JOB",
+        "SUPERSEDE_JOB",
+        "REQUEST_HUMAN_DECISION"
+      ]
+    },
+    "CAPABILITY_MISMATCH": {
+      "templateRef": "templates/responses/capability-mismatch.template.json",
+      "purpose": "Report role, skill, domain, technology or identity incompatibility before unsafe work.",
+      "blocking": true,
+      "chatStatus": "BLOCKED",
+      "masterNextActions": [
+        "REASSIGN",
+        "APPROVE_SKILL_SOURCE",
+        "SUPERSEDE_JOB"
+      ]
+    },
+    "IMPROVEMENT_PROPOSAL": {
+      "templateRef": "templates/responses/improvement-proposal.template.json",
+      "purpose": "Record a non-blocking improvement idea without changing the job or granting authority.",
+      "blocking": false,
+      "chatStatus": "NONE",
+      "masterNextActions": [
+        "ACCEPT_PROPOSAL_SEPARATELY",
+        "DEFER",
+        "REJECT"
+      ]
+    }
+  },
+  "commonInvariants": [
+    "Every response binds projectId, jobId, packageId, workItemId, agentId and identityRevision.",
+    "Every response pins the observed immutable job contract blob and exact response template.",
+    "A response never grants provider rights, expands scope, changes role or changes the job.",
+    "Blocking responses stop the affected execution before further product mutation.",
+    "The agent does not ask the HUMAN domain questions; MASTER owns clarification and escalation.",
+    "The HUMAN-visible agent chat emits only the minimal chatStatus and Git reference.",
+    "MASTER resolution is stored separately and may create a superseding job; the original response remains immutable.",
+    "An improvement proposal is advisory and cannot authorize continuation or mutation."
+  ],
+  "conflictLifecycle": [
+    "OPEN",
+    "ACKNOWLEDGED_BY_MASTER",
+    "RESOLVED_BY_DECISION",
+    "SUPERSEDED_BY_JOB",
+    "CLOSED"
+  ]
+}

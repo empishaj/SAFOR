@@ -1,0 +1,259 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-response:0.14.0",
+  "title": "SAFOR Typed Agent Response 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "responseId",
+    "responseType",
+    "projectId",
+    "jobId",
+    "packageId",
+    "workItemId",
+    "agentId",
+    "identityRevision",
+    "jobContractRef",
+    "observedJobContractBlobSha",
+    "responseContractRef",
+    "targetMasterRef",
+    "createdAt",
+    "status",
+    "summary",
+    "executionControl",
+    "chatStatus",
+    "evidenceRefs",
+    "providerMutationRefs",
+    "payload",
+    "immutable"
+  ],
+  "properties": {
+    "format": {"const": "SAFOR_AGENT_RESPONSE"},
+    "schemaVersion": {"const": "0.14.0"},
+    "responseId": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,191}$"},
+    "responseType": {"enum": ["JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"]},
+    "projectId": {"type": "string", "minLength": 1},
+    "jobId": {"type": "string", "minLength": 1},
+    "packageId": {"type": "string", "minLength": 1},
+    "workItemId": {"type": "string", "minLength": 1},
+    "agentId": {"type": "string", "minLength": 3},
+    "identityRevision": {"type": "integer", "minimum": 1},
+    "jobContractRef": {"$ref": "#/$defs/pointer"},
+    "observedJobContractBlobSha": {"type": "string", "minLength": 7},
+    "responseContractRef": {"$ref": "#/$defs/pointer"},
+    "targetMasterRef": {"type": "string", "minLength": 1},
+    "createdAt": {"type": "string", "format": "date-time"},
+    "status": {"enum": ["SUBMITTED", "BLOCKED", "FAILED", "ADVISORY"]},
+    "summary": {"type": "string", "minLength": 1, "maxLength": 500},
+    "executionControl": {"$ref": "#/$defs/executionControl"},
+    "chatStatus": {"enum": ["SUBMITTED", "BLOCKED", "NONE"]},
+    "evidenceRefs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "providerMutationRefs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "payload": {"type": "object"},
+    "immutable": {"const": true}
+  },
+  "$defs": {
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "ref", "path", "blobSha"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "ref": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "blobSha": {"type": "string", "minLength": 7}
+      }
+    },
+    "executionControl": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["controlsJobLifecycle", "executionStopped", "furtherProductMutationAllowed", "scopeExpansionAllowed", "agentMayAskHumanDomainQuestions"],
+      "properties": {
+        "controlsJobLifecycle": {"type": "boolean"},
+        "executionStopped": {"type": "boolean"},
+        "furtherProductMutationAllowed": {"type": "boolean"},
+        "scopeExpansionAllowed": {"const": false},
+        "agentMayAskHumanDomainQuestions": {"const": false}
+      }
+    },
+    "artifactRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ref", "expectedType"],
+      "properties": {"ref": {"type": "string", "minLength": 1}, "expectedType": {"type": ["string", "null"]}}
+    },
+    "gitTrace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "branch", "baseCommitSha", "headCommitSha", "commitShas", "changedPaths", "changeRequestRef", "providerReadbackRef"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "branch": {"type": "string", "minLength": 1},
+        "baseCommitSha": {"type": "string", "minLength": 7},
+        "headCommitSha": {"type": "string", "minLength": 7},
+        "commitShas": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 7}},
+        "changedPaths": {"type": "array", "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+        "changeRequestRef": {"type": ["string", "null"]},
+        "providerReadbackRef": {"type": "string", "minLength": 1}
+      }
+    },
+    "check": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["checkId", "commandOrMethod", "status", "evidenceRef"],
+      "properties": {
+        "checkId": {"type": "string", "minLength": 1},
+        "commandOrMethod": {"type": "string", "minLength": 1},
+        "status": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "evidenceRef": {"type": ["string", "null"]}
+      }
+    },
+    "conflict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["conflictId", "conflictType", "severity", "description", "blockedStep", "affectedRefs", "suggestedResolution", "status", "responseTemplateVersion"],
+      "properties": {
+        "conflictId": {"type": "string", "minLength": 1},
+        "conflictType": {"enum": ["TECHNICAL_FAILURE", "AMBIGUOUS_JOB", "CONTRADICTORY_JOB", "MISSING_INPUT", "STALE_INPUT", "ROLE_MISMATCH", "SKILL_MISMATCH", "DOMAIN_MISMATCH", "TECHNOLOGY_MISMATCH", "IDENTITY_MISMATCH", "MISSING_PERMISSION", "MISSING_TOOL", "FORBIDDEN_OPERATION"]},
+        "severity": {"enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"]},
+        "description": {"type": "string", "minLength": 1},
+        "blockedStep": {"type": "string", "minLength": 1},
+        "affectedRefs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "suggestedResolution": {"type": "string", "minLength": 1},
+        "status": {"const": "OPEN"},
+        "responseTemplateVersion": {"const": "1.0.0"}
+      }
+    },
+    "capabilitySet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["roleIds", "skillIds", "domainIds", "technologyIds"],
+      "properties": {
+        "roleIds": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "skillIds": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "domainIds": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "technologyIds": {"type": "array", "items": {"type": "string"}, "uniqueItems": true}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"responseType": {"const": "JOB_RESULT"}}, "required": ["responseType"]},
+      "then": {
+        "properties": {
+          "status": {"const": "SUBMITTED"},
+          "chatStatus": {"const": "SUBMITTED"},
+          "executionControl": {"allOf": [{"properties": {"controlsJobLifecycle": {"const": true}, "executionStopped": {"const": true}, "furtherProductMutationAllowed": {"const": false}}}]},
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["completionStatus", "outputs", "gitTrace", "checks", "openItems"],
+            "properties": {
+              "completionStatus": {"const": "COMPLETED"},
+              "outputs": {"type": "array", "minItems": 1, "items": {"$ref": "#/$defs/artifactRef"}},
+              "gitTrace": {"type": "array", "items": {"$ref": "#/$defs/gitTrace"}},
+              "checks": {"type": "array", "items": {"$ref": "#/$defs/check"}},
+              "openItems": {"type": "array", "items": {"type": "string"}}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"responseType": {"const": "JOB_ERROR"}}, "required": ["responseType"]},
+      "then": {
+        "properties": {
+          "status": {"const": "FAILED"},
+          "chatStatus": {"const": "BLOCKED"},
+          "executionControl": {"allOf": [{"properties": {"controlsJobLifecycle": {"const": true}, "executionStopped": {"const": true}, "furtherProductMutationAllowed": {"const": false}}}]},
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["errorClass", "failedStep", "reproducibleFinding", "retryable", "safeState", "blockedArtifacts", "conflict"],
+            "properties": {
+              "errorClass": {"type": "string", "minLength": 1},
+              "failedStep": {"type": "string", "minLength": 1},
+              "reproducibleFinding": {"type": "string", "minLength": 1},
+              "retryable": {"type": "boolean"},
+              "safeState": {"type": "string", "minLength": 1},
+              "blockedArtifacts": {"type": "array", "items": {"type": "string", "minLength": 1}},
+              "conflict": {"$ref": "#/$defs/conflict"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"responseType": {"const": "CLARIFICATION_REQUEST"}}, "required": ["responseType"]},
+      "then": {
+        "properties": {
+          "status": {"const": "BLOCKED"},
+          "chatStatus": {"const": "BLOCKED"},
+          "executionControl": {"allOf": [{"properties": {"controlsJobLifecycle": {"const": true}, "executionStopped": {"const": true}, "furtherProductMutationAllowed": {"const": false}}}]},
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["question", "affectedJobFields", "options", "recommendedOption", "conflict"],
+            "properties": {
+              "question": {"type": "string", "minLength": 1},
+              "affectedJobFields": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+              "options": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "recommendedOption": {"type": ["string", "null"]},
+              "conflict": {"$ref": "#/$defs/conflict"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"responseType": {"const": "CAPABILITY_MISMATCH"}}, "required": ["responseType"]},
+      "then": {
+        "properties": {
+          "status": {"const": "BLOCKED"},
+          "chatStatus": {"const": "BLOCKED"},
+          "executionControl": {"allOf": [{"properties": {"controlsJobLifecycle": {"const": true}, "executionStopped": {"const": true}, "furtherProductMutationAllowed": {"const": false}}}]},
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["expected", "available", "risk", "affectedScope", "conflict"],
+            "properties": {
+              "expected": {"$ref": "#/$defs/capabilitySet"},
+              "available": {"$ref": "#/$defs/capabilitySet"},
+              "risk": {"type": "string", "minLength": 1},
+              "affectedScope": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
+              "conflict": {"$ref": "#/$defs/conflict"}
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {"properties": {"responseType": {"const": "IMPROVEMENT_PROPOSAL"}}, "required": ["responseType"]},
+      "then": {
+        "properties": {
+          "status": {"const": "ADVISORY"},
+          "chatStatus": {"const": "NONE"},
+          "executionControl": {"allOf": [{"properties": {"controlsJobLifecycle": {"const": false}, "executionStopped": {"const": false}, "furtherProductMutationAllowed": {"const": false}}}]},
+          "payload": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["proposalId", "problem", "suggestion", "expectedBenefit", "risk", "affectedProcess", "blocking", "requiresSeparateDecision", "jobScopeChanged"],
+            "properties": {
+              "proposalId": {"type": "string", "minLength": 1},
+              "problem": {"type": "string", "minLength": 1},
+              "suggestion": {"type": "string", "minLength": 1},
+              "expectedBenefit": {"type": "string", "minLength": 1},
+              "risk": {"type": "string", "minLength": 1},
+              "affectedProcess": {"type": "string", "minLength": 1},
+              "blocking": {"const": false},
+              "requiresSeparateDecision": {"const": true},
+              "jobScopeChanged": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  ]
+}
