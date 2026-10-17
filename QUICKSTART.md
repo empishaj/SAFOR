@@ -1,77 +1,92 @@
 # SAFOR Quickstart
 
-## What you need
+For a nontechnical German walkthrough, start with [START-HIER.md](START-HIER.md).
 
-Always:
-- A compatible chat host.
-- The domain Framework file for what you want to create.
-- A HUMAN-controlled Git project workspace.
+## Recommended end-user start
 
-For Website work, load `SAFOR-FRAMEWORK-WEBSITE.json`. The Website domain and default Factory/Operating Model are already embedded, so SAFOR does not ask you to choose Website/SaaS/Book again.
+A normal user loads the domain-specific Framework for the intended result. The domain file already contains the SAFOR Framework, the default Factory and the default Operating Model.
 
-## Domain-specific Frameworks
+| Intended result | Files to load into the same chat | Access |
+|---|---|---|
+| Website | `SAFOR-FRAMEWORK-WEBSITE.json` | Free public path |
+| Software / SaaS evaluation | `SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-TEST-ACCESS-SAAS.json` | Public test access; no production authorization |
+| Book evaluation | `SAFOR-FRAMEWORK-BOOK-CREATION.json` and `SAFOR-TEST-ACCESS-BOOK-CREATION.json` | Public test access; no production authorization |
 
-### Website — free
+Do not load the generic `SAFOR-FRAMEWORK.json` as the normal end-user entrypoint. It is the shared engineering and distribution-building base and intentionally asks for a Creation Type.
+
+## Domain-specific start sequence
+
+1. Load exactly one domain Framework and, for a paid-domain evaluation, its matching test access bundle.
+2. SAFOR verifies the Framework, Self-Healing and deterministic-control baselines.
+3. SAFOR reads the domain and Creation Type from the domain distribution. It does **not** ask the HUMAN to select Website, SaaS or Book again.
+4. SAFOR verifies the embedded default Factory and Operating Model separately.
+5. For SaaS or Book evaluation, SAFOR verifies that the access bundle targets the exact distribution, domain, Creation Type, package IDs and `*-test.1` versions.
+6. The test bundle must keep `productionAuthorization=false`; otherwise access is rejected.
+7. SAFOR verifies package structure, SHA-256 contract digest, Framework range and bidirectional Factory ↔ Operating-Model compatibility.
+8. SAFOR materializes the package selection and compatibility decision.
+9. SAFOR asks whether the HUMAN project is in **REMOTE_GIT** or **LOCAL_GIT**.
+10. SAFOR verifies actual provider or local Git capabilities and binds HUMAN-owned control storage.
+11. Only then does Factory Discovery begin.
+
+A successful public paid-domain evaluation resolves to:
+
+```text
+PUBLIC_EVALUATION_ACCESS_RESOLVED
+→ SELECT_PROJECT_WORKSPACE_TYPE
+```
+
+## Website — free
 
 Default packages:
+
 - `safor.factory.website-delivery@1.1.0`
 - `safor.om.website-team@1.1.0`
 
-Both are `FREE_PUBLIC` and resolve from canonical public SAFOR Git at immutable revision/blob.
+Both are `FREE_PUBLIC`. The Website path covers audience, purpose and scope; content and information architecture; experience design; web implementation; accessibility, responsive and performance verification; optional search-visibility verification; publishing; post-publish observation; and website outcome assessment.
 
-The Website path covers:
-- audience/purpose/scope,
-- content and information architecture,
-- experience design,
-- web implementation,
-- accessibility, responsive and performance verification,
-- optional search-visibility verification,
-- publishing,
-- post-publish observation,
-- website outcome assessment.
+If Discovery reveals application logic, a SaaS/service lifecycle or broader software engineering and operations, the Website Factory stops and requires an explicit switch to **Software / SaaS**.
 
-If the requested result requires application logic, SaaS/service lifecycle or broader software engineering/operations, the Website Factory stops and requires an explicit change to **Software / SaaS**.
+## Software / SaaS — paid-mode public evaluation in rc.6
 
-### Software / SaaS — paid, public test artifact in rc.6
+Load both:
 
-For testing, load `SAFOR-FRAMEWORK-SAAS.json`. Then load `SAFOR-TEST-ACCESS-SAAS.json` to exercise the paid-access gate with the public `1.7.0-test.1` Factory/OM pair.
+- `SAFOR-FRAMEWORK-SAAS.json`
+- `SAFOR-TEST-ACCESS-SAAS.json`
 
-The public test access is not a production license.
+The distribution embeds:
 
-Default product identities:
-- `safor.factory.software-delivery`
-- `safor.om.saas-engineering`
+- `safor.factory.software-delivery@1.7.0-test.1`
+- `safor.om.saas-engineering@1.7.0-test.1`
 
-Both selected packages must be `PAID_ENTITLEMENT_REQUIRED`.
+Both modules remain `PAID_ENTITLEMENT_REQUIRED`. The public access bundle grants only those exact test versions and is not a production license.
 
-You need:
-1. a licensed Software Factory artifact,
-2. a verified entitlement for that Factory/version,
-3. a licensed SaaS Engineering Operating Model artifact,
-4. a separate verified entitlement for that Operating Model/version.
+A production SaaS selection requires a licensed Software Factory artifact, a verified entitlement for that exact Factory/version, a licensed SaaS Engineering Operating Model artifact and a separate verified entitlement for that exact Operating Model/version. A free member cannot be used to bypass the paid-pair policy.
 
-A free Factory or free Operating Model cannot be used to bypass the Software/SaaS commercial profile.
+## Book — paid-mode public evaluation in rc.6
 
-### Buch — paid, public test artifact in rc.6
+Load both:
 
-For testing, load `SAFOR-FRAMEWORK-BOOK-CREATION.json`. Then load `SAFOR-TEST-ACCESS-BOOK-CREATION.json` to exercise the paid-access gate with the public `1.0.0-test.1` Factory/OM pair.
+- `SAFOR-FRAMEWORK-BOOK-CREATION.json`
+- `SAFOR-TEST-ACCESS-BOOK-CREATION.json`
 
-Book likewise requires a paid Factory and paid Operating Model with independent entitlement evidence.
+The distribution embeds:
 
-## Start
+- `safor.factory.book-production@1.0.0-test.1`
+- `safor.om.book-authoring@1.0.0-test.1`
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.6.json`.
-2. SAFOR verifies Framework, Self-Healing and deterministic-control integrity.
-3. Choose **Website**, **Software / SaaS** or **Buch**.
-4. SAFOR resolves the Creation Profile and its selected-package access policy.
-5. SAFOR resolves Factory and Operating Model access separately.
-6. For commercial profiles, SAFOR rejects a free selected member before binding.
-7. Every paid selected package requires its own verified entitlement.
-8. SAFOR verifies package structure, SHA-256 contract digest, Framework range, Creation-Type scope and pair compatibility.
-9. SAFOR materializes the package selection and compatibility decision.
-10. Choose **In meinem Git-Repository** or **Lokal auf meinem Rechner**.
-11. SAFOR verifies actual provider/local Git capabilities and binds HUMAN-owned control storage.
-12. Only then does Factory Discovery begin.
+Book likewise requires independent entitlement evidence for Factory and Operating Model. Its public test access authorizes only the exact test pair and never production use.
+
+## Generic engineering start — advanced
+
+Framework engineers may load `SAFOR-FRAMEWORK-v0.13.0-rc.6.json` or the current alias `SAFOR-FRAMEWORK.json`. This generic base intentionally follows a different sequence:
+
+1. Verify the shared Framework.
+2. Select **Website**, **Software / SaaS** or **Book**.
+3. Resolve the selected Creation Profile.
+4. Resolve Factory and Operating Model from public or entitled package sources.
+5. Apply the same access, integrity, compatibility and workspace gates.
+
+This route is useful for Framework engineering and distribution construction, not for the simplest end-user experience.
 
 ## Commercial boundary
 
@@ -79,40 +94,22 @@ Entitlement answers only: **May this exact package/version be used?**
 
 It never grants organizational authority, provider permissions, project scope, execution mandate or acceptance authority.
 
-Historical public Software Factory/SaaS OM 1.6.0 bytes are legacy disclosure, not the current commercial delivery source.
+For every paid production package SAFOR requires an explicit evaluation timestamp, active subject, trusted issuer IDs, trusted entitlement verifier IDs and trusted delivery verifier IDs. The entitlement must be `ACTIVE`, time-valid, bound to the active subject and exact package/version, and backed by commercial-basis evidence whose SKU matches the grant.
 
+For `ENTITLED_PACKAGE_SOURCE`, the source additionally supplies external delivery evidence binding entitlement ID, package ID, exact version, artifact digest, delivery validity window and trusted delivery verifier. A mismatched or expired record blocks package use. `HUMAN_LOADED_PACKAGE` remains supported for a licensed file supplied manually, but manual loading never bypasses entitlement verification.
 
-## Paid package verification in rc.6
-
-For every paid package SAFOR requires a verification context containing:
-- explicit `evaluatedAt`,
-- active `subjectRef`,
-- trusted entitlement issuer IDs,
-- trusted entitlement verifier IDs,
-- trusted delivery verifier IDs.
-
-The entitlement must be `ACTIVE`, time-valid, bound to the active subject and exact package/version, and backed by commercial-basis evidence whose SKU matches the grant.
-
-For `ENTITLED_PACKAGE_SOURCE`, the package source must additionally return external delivery evidence that binds:
-- entitlement ID,
-- package ID,
-- exact version,
-- domain-package digest,
-- delivery validity window,
-- trusted delivery verifier.
-
-A mismatched or expired delivery record blocks package use. `HUMAN_LOADED_PACKAGE` remains supported for a licensed file supplied manually, but the entitlement checks remain mandatory.
-
+Historical public Software Factory/SaaS Operating Model 1.6.0 bytes are legacy disclosure, not the current commercial delivery source.
 
 ## Replacing Factory or Operating Model
 
 A domain Framework starts with an embedded default Factory and Operating Model. Either module may later be replaced independently, for example by a Premium version.
 
-SAFOR adopts a replacement only when package access/integrity, active Framework version, active Creation Type, active `domainId`, allowed `packageFamily`, Factory → Operating Model requirements and Operating Model → Factory requirements all pass.
+SAFOR adopts a replacement only when package access and integrity, active Framework version, active Creation Type, active `domainId`, allowed `packageFamily`, Factory → Operating Model requirements and Operating Model → Factory requirements all pass.
 
 A different package ID is allowed when it belongs to an accepted family and remains compatible.
 
 Examples:
+
 - Premium Website Factory + Website Operating Model → may be accepted.
 - Website Factory + Premium Website Operating Model → may be accepted.
 - Book Factory + SaaS Engineering Operating Model → rejected.

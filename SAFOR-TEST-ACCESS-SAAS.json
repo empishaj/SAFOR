@@ -5,6 +5,17 @@
   "creationType": "SOFTWARE_SAAS",
   "purpose": "PUBLIC_TEST_EVALUATION_ONLY",
   "subjectRef": "safor-public-evaluation-user",
+  "activationContract": {
+    "requiredDistributionFormat": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
+    "requiredDistributionId": "safor.framework.saas",
+    "requiredDistributionFile": "SAFOR-FRAMEWORK-SAAS.json",
+    "bindingMode": "PUBLIC_TEST_EVALUATION_ONLY",
+    "applyEntitlementsToEmbeddedModules": true,
+    "suppressCreationTypeSelection": true,
+    "onSuccess": "CONTINUE_AT_PROJECT_WORKSPACE_SELECTION",
+    "onMissingDistribution": "REQUEST_REQUIRED_DISTRIBUTION_FILE",
+    "onMismatch": "REJECT_AND_KEEP_PREVIOUS_VALID_BINDING"
+  },
   "verificationContext": {
     "evaluatedAt": "2026-10-17T13:30:00Z",
     "subjectRef": "safor-public-evaluation-user",
