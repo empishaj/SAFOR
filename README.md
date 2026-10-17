@@ -65,9 +65,9 @@ Historical Software Factory/SaaS Operating Model versions remain available throu
 
 ## Repository retention
 
-The default branch contains only current distributables, required build sources, explicit compatibility/disclosure baselines and maintained documentation/runtime/tests. Superseded generated bundles and early prototype trees remain recoverable through Git history instead of being duplicated in the working tree.
+The default branch contains current distributables, required build sources, explicit compatibility/disclosure baselines and maintained documentation/runtime/tests. Superseded generated bundles, prototype trees and non-build source snapshots remain recoverable through Git history instead of being duplicated in the working tree.
 
-Retained source baselines are `v0.6.0` through `v0.13.0`. The executable rc.6 bundle is assembled from `v0.10.0` through `v0.13.0`; `v0.6.0` through `v0.9.0` are retained only as the repository-native agent/workspace evolution lineage. Repository-hygiene tests prevent retired root bundles, pre-v0.6 prototype trees and superseded package worktrees from returning unnoticed.
+The retained source baselines are exactly `v0.10.0`, `v0.11.0`, `v0.12.0` and `v0.13.0`, because the executable rc.6 bundle resolves modules from those four trees. Earlier product evolution remains auditable through commits and merged pull requests. Repository-hygiene tests prevent retired root bundles, non-build version trees and superseded package worktrees from returning unnoticed.
 
 ## Commercial trust chain
 
