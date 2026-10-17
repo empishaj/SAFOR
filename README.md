@@ -4,17 +4,17 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.12.0-rc.1 — Release Candidate**
+> Current maturity: **v0.13.0-rc.1 — Release Candidate**
 
 ## Start here
 
 1. Read [QUICKSTART.md](QUICKSTART.md).
 2. Load `SAFOR-FRAMEWORK.json` into a compatible chat.
 3. Choose what you want to create.
-4. **Software / Website** uses the FREE_PUBLIC starter Factory + Operating Model and may resolve them from the public SAFOR Git.
-5. Paid paths such as **Buch** require separately loaded/entitled Factory and Operating Model packages.
-6. Choose where the HUMAN project lives: **REMOTE_GIT** (GitHub/GitLab) or **LOCAL_GIT**.
-7. Remote projects use a separate HUMAN-controlled `safor-memory`; local projects use protected `.safor/` control state in the local Git workspace.
+4. **Software / Website** starts with a FREE_PUBLIC Factory and a FREE_PUBLIC Operating Model; both are independent `SAFOR_DOMAIN_PACKAGE` JSON artifacts.
+5. You may later replace only the Factory, only the Operating Model, or both with compatible alternatives.
+6. Every selected paid package requires its own externally verified entitlement; free and paid packages may be combined.
+7. Choose where the HUMAN project lives: **REMOTE_GIT** (GitHub/GitLab) or **LOCAL_GIT**. Remote projects use separate HUMAN-controlled `safor-memory`; local projects use protected `.safor/` control state.
 
 ## Repository separation
 
@@ -26,13 +26,14 @@ These concerns are intentionally separate.
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.1.json` — versioned public Framework release candidate.
 - `SAFOR-FRAMEWORK.json` — latest Framework RC alias.
-- `v0.12.0/` — modular package distribution, commercial entitlement policy and HUMAN-owned remote/local workspace model.
+- `v0.13.0/` — composable domain-package contract, independent Factory/Operating Model selection, per-package entitlement, SHA-256 package integrity and compatibility decisions.
+- `v0.12.0/` — modular package/workspace boundary baseline.
 - `v0.11.0/` — deterministic control and deterministic acceptance baseline.
 - `v0.10.0/` and earlier — historical development baselines. Pre-0.12 package prototypes already published there cannot be made confidential retroactively.
 
-Factories and Operating Models are independently loadable packages. Paid package model content is not embedded in the 0.12 public Framework artifact.
+Factories and Operating Models are independently loadable JSON products. Creation Profiles define defaults rather than locked commercial bundles. Paid package model content is not embedded in the public Framework artifact; entitlement evidence remains external to the package JSON.
 
 ## Product documentation
 
@@ -61,6 +62,6 @@ The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR is currently a **Release Candidate**, not General Availability. v0.12.0-rc.1 proves the Framework/package/workspace boundary in machine tests, but real entitlement distribution, local-Git host execution and existing provider/agent end-to-end scenarios remain GA gates.
+SAFOR is currently a **Release Candidate**, not General Availability. v0.13.0-rc.1 proves the composable Factory/Operating-Model contract, per-package commercial gating, declared-contract integrity, compatibility binding and retained Framework/workspace boundaries in machine tests. Real entitlement delivery, Local-Git host execution and provider/agent end-to-end scenarios remain GA gates.
 
-The commercial product decision is now explicit: the Framework and Website starter path are public/free; Factories and Operating Models can be independently licensed, with Book and future premium packages entitlement-gated. Final legal license text, pricing and entitlement-service operations are still open.
+The commercial product decision is explicit: the Framework and Website starter defaults are public/free; Factories and Operating Models are independently selectable and independently licensable. A customer can therefore add a premium Factory, a premium Operating Model, or both without replacing the Framework. Final legal license text, pricing and entitlement-service operations remain open.
