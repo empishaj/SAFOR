@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories and Operating Models.
 
-> Current maturity: **v0.13.0-rc.4 — Release Candidate**
+> Current maturity: **v0.13.0-rc.5 — Release Candidate**
 
 ## Product paths
 
@@ -15,6 +15,18 @@ SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-ba
 | BOOK | `safor.factory.book-production` | `safor.om.book-authoring` | **both paid** |
 
 The Website starter is deliberately narrower than the Software/SaaS path. If Website Discovery reveals application logic, service/SaaS lifecycle or broader software operations, SAFOR requires an explicit switch to `SOFTWARE_SAAS`.
+
+## End-user Framework files
+
+SAFOR stays internally modular, but users load a domain-specific single JSON file:
+
+- `SAFOR-FRAMEWORK-WEBSITE.json` — public/free; embeds Website Factory 1.1.0 and Website Operating Model 1.1.0.
+- `SAFOR-FRAMEWORK-SAAS.json` — commercial SaaS distribution; built with protected licensed Software Factory + SaaS Operating Model inputs.
+- `SAFOR-FRAMEWORK-BOOK-CREATION.json` — commercial Book distribution; built with protected licensed Book Factory + Book Operating Model inputs.
+
+All three use the same SAFOR kernel. Embedded Factory and Operating Model are replaceable defaults. Premium replacements are adopted only when active domain, package families and bidirectional Factory↔Operating-Model compatibility all pass.
+
+`SAFOR-FRAMEWORK.json` remains the generic shared base Framework for engineering and distribution building.
 
 ## Start here
 
@@ -34,7 +46,7 @@ The Website starter is deliberately narrower than the Software/SaaS path. If Web
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.13.0-rc.4.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.5.json` — versioned public Framework release candidate.
 - `SAFOR-FRAMEWORK.json` — current Framework alias.
 - `v0.13.0/ packages/factories/website-delivery/1.0.0/package.json` — free Website Factory.
 - `v0.13.0/packages/operating-models/website-team/1.0.0/package.json` — free Website Operating Model.
