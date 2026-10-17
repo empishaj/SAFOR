@@ -211,3 +211,37 @@ SAFOR v0.11.0-rc.2 moves Work Item acceptance into the deterministic control pla
 Qualitative judgment remains probabilistic where appropriate, but it enters governance as an explicit review or authority-decision record. The kernel never turns free-text LLM confidence into PASS. Independent-review policies are enforced structurally, agent self-checks remain advisory, and a required authority rejection blocks the current contract revision.
 
 The replay-derived acceptance ledger contains pinned copies of contracts, evidence, review decisions and authority decisions. It is not a new business-authority source. The sole rc.2 transition that materializes Work Item status ACCEPTED is `WORK_ITEM_ACCEPTED` after every typed requirement passes. Work Item acceptance remains separate from business/reader outcome success.
+
+
+## 0.12 Framework / Package / Workspace Boundary
+
+SAFOR now separates four independent planes:
+
+1. **Framework** — generic orchestration, deterministic control, agent protocol, interaction and recovery.
+2. **Factory / Operating Model Packages** — separately loaded domain/organizational knowledge.
+3. **Commercial Entitlement** — package-use permission only.
+4. **HUMAN Project Workspace** — the only place where project-specific work is created.
+
+The public Framework does not embed paid Factory or Operating Model model content.
+
+### Free Website starter
+
+`SOFTWARE_WEBSITE` is `FREE_PUBLIC`. The canonical package catalog points to the public Software Delivery Factory and SaaS Engineering Operating Model. SAFOR may resolve them from public SAFOR Git only after pinning an immutable revision/blob.
+
+### Commercial packages
+
+`BOOK` is `PAID_ENTITLEMENT_REQUIRED`. Paid package metadata can be public, but model content resolves only from `HUMAN_LOADED_PACKAGE` or `ENTITLED_PACKAGE_SOURCE` with independently verified entitlement.
+
+Entitlement and organizational authority are orthogonal. Buying an Operating Model never grants any role/authority declared inside it.
+
+### HUMAN-owned workspaces
+
+`REMOTE_GIT` stores domain work in a HUMAN/HUMAN-organization GitHub or GitLab repository and control state in separate HUMAN-owned `safor-memory`.
+
+`LOCAL_GIT` stores domain work in the HUMAN-selected local Git repository. SAFOR maintains Git-tracked MASTER-only control state below `.safor/`; worker jobs are forbidden from writing that prefix.
+
+The SAFOR product repository and package sources are invalid project targets in both modes.
+
+### Legacy disclosure
+
+Package prototypes committed publicly before 0.12 remain part of public Git history and cannot be made confidential retroactively. Commercially protected package versions must therefore be delivered through future entitled/signed package channels and must not rely on secrecy of those legacy prototype versions.
