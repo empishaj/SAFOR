@@ -21493,6 +21493,12 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:8f9f6b823f34acdb47e8fcc3252f6a96aeda866fe841626ec1893ac611c2fd6a"
+    "contentDigest": "sha256:46c026e79636a965f08ceaa8fead6f54e3df1da0b714a355715d0238235194a9"
+  },
+  "evaluationAccess": {
+    "mode": "EXTERNAL_TEST_ACCESS_BUNDLE",
+    "file": "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+    "embeddedModulesSourceClass": "HUMAN_LOADED_PACKAGE",
+    "productionAuthorization": false
   }
 }
