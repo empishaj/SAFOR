@@ -13,7 +13,7 @@ If `safor-memory` does not already exist or is not writable, SAFOR stops. It nev
 
 ## Start
 
-1. Load `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
+1. Load `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` into a new compatible chat. For convenience, `SAFOR-MASTER-COMPLETE.json` is the latest RC alias.
 2. Choose **GitHub** or **GitLab**.
 3. SAFOR verifies the actual provider connection and baseline read/write capabilities.
 4. Choose the owner/namespace.
@@ -120,4 +120,8 @@ See `HUMAN-COGNITIVE-LOAD.md`.
 
 ## Deterministic Control Kernel
 
-SAFOR v0.11.0-rc.1 introduces an executable deterministic control substrate for an explicit transition slice. HUMAN, AGENT and PROVIDER observations enter that slice as typed events. The pure reducer evaluates only pinned predicates/transitions, emits state changes plus external effect intents, and verifies replay through canonical state hashes. This rc.1 does not claim that every legacy governance rule has already been migrated.
+SAFOR v0.11.0-rc.2 provides an executable deterministic control substrate for the migrated transition slice and deterministic Work Item acceptance. HUMAN, AGENT and PROVIDER observations enter that slice as typed events. The pure reducer evaluates only pinned predicates/transitions, emits state changes plus external effect intents, and verifies replay through canonical state hashes. This rc.1 does not claim that every legacy governance rule has already been migrated.
+
+### Deterministic Acceptance
+
+Before an executable Work Item can become ACCEPTED, the approved plan must bind a hash-valid Acceptance Contract. Each criterion maps to typed EVIDENCE, REVIEW or AUTHORITY requirements. Provider evidence is replayed with pinned integrity, independent reviews enforce performer/reviewer separation when configured, and explicit authority approvals must match the required authority. Agent self-checks and assistant claims cannot satisfy these gates.
