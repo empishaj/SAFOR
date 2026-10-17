@@ -4,13 +4,16 @@ import json
 import sys
 from pathlib import Path
 
+ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
 from runtime.bootstrap_policy import (
     compute_domain_package_digest,
     evaluate_domain_package_pair,
     validate_domain_package,
 )
 
-ROOT = Path(__file__).resolve().parents[1]
 errors = []
 
 
