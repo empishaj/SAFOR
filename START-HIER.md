@@ -1,21 +1,21 @@
 # SAFOR testen – Start hier
 
-Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**, nicht technisch analysieren wollen. Du musst keine JSON-Datei öffnen, bearbeiten oder verstehen.
+Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**. Du musst die JSON-Dateien weder bearbeiten noch technisch verstehen. Die genaue Release-Candidate-Version steht in [`VERSION`](VERSION).
 
-> Produktstatus: **SAFOR v0.13.0-rc.7 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
+## Die wichtigste Produktgrenze
 
-## Wichtige Testgrenze
+SAFOR ist eine JSON-basierte Arbeits- und Orchestrierungsanleitung für einen kompatiblen LLM-Chat. Du lädst das passende Domain-Framework in einen normalen Chat. Das Sprachmodell interpretiert die eingebetteten Verträge und nutzt ausschließlich die Werkzeuge, die der Chat tatsächlich bereitstellt.
 
-Das Hochladen der JSON-Dateien macht den SAFOR-Vertrag für ein Sprachmodell lesbar. Ein normaler Chat führt den Python-Referenzcode in `runtime/public_evaluation_access.py` jedoch **nicht automatisch** aus, nur weil die Dateien hochgeladen wurden.
+Für diese normale Nutzung musst du **keine zusätzliche SAFOR-Runtime, keinen Daemon und keine separate Benutzeroberfläche installieren**.
 
-Damit gibt es zwei unterschiedliche Prüfmodi:
+Die Python-Module unter `runtime/` sind optionale Referenzimplementierungen für CI, Tests und Hosts, die Regeln zusätzlich maschinell erzwingen wollen. Ein normaler Chat führt diese Module nicht automatisch aus. Deshalb gilt weiterhin:
 
-- Im normalen Chat prüfst du, ob das Modell den SAFOR-Vertrag korrekt versteht und befolgt.
-- Eine deterministische, maschinenverifizierte Zugriffsentscheidung entsteht erst, wenn ein kompatibler SAFOR-Host oder Adapter den Referenzcode tatsächlich aufruft.
+- JSON kann keine Providerrechte erzeugen.
+- Ein Chat muss die benötigten Git-/Dateiwerkzeuge tatsächlich besitzen.
+- Branch-Protection, CI, Reviews und optionale Hostadapter können die deklarativen Regeln technisch verstärken.
+- Fehlende maschinelle Erzwingung darf nie als vorhandene technische Sperre ausgegeben werden.
 
-Für eine spätere produktive Nutzung ist diese Host-/Runtime-Integration Pflicht. Der manuelle Chat-Test ist wertvoll, ersetzt aber keine technisch erzwungene Entitlement-, Integritäts- und Zustandsprüfung.
-
-## 1. Entscheide, was du erstellen möchtest
+## 1. Wähle genau einen Produktpfad
 
 | Pfad | Dateien, die du in denselben Chat lädst | Anzahl | Zugriffsart |
 |---|---|---:|---|
@@ -23,27 +23,11 @@ Für eine spätere produktive Nutzung ist diese Host-/Runtime-Integration Pflich
 | Software / SaaS testen | `SAFOR-FRAMEWORK-SAAS.json` **und** `SAFOR-TEST-ACCESS-SAAS.json` | 2 | öffentlicher Testzugang |
 | Buch testen | `SAFOR-FRAMEWORK-BOOK-CREATION.json` **und** `SAFOR-TEST-ACCESS-BOOK-CREATION.json` | 2 | öffentlicher Testzugang |
 
-Die Domain-Framework-Datei enthält bereits das SAFOR-Framework, die passende Factory und das passende Operating Model. Bei den bezahlten Pfaden ist die zweite Datei **nur der Test-Zugriffsnachweis**. Sie ist keine weitere Factory und kein weiteres Operating Model.
-
-## 2. Lade nur die Dateien deines gewählten Pfades
-
-Für einen SaaS-Test lädst du gemeinsam hoch:
-
-- `SAFOR-FRAMEWORK-SAAS.json`
-- `SAFOR-TEST-ACCESS-SAAS.json`
-
-Für einen Buch-Test lädst du gemeinsam hoch:
-
-- `SAFOR-FRAMEWORK-BOOK-CREATION.json`
-- `SAFOR-TEST-ACCESS-BOOK-CREATION.json`
-
-Für eine Website lädst du nur `SAFOR-FRAMEWORK-WEBSITE.json` hoch.
+Das Domain-Framework enthält den SAFOR-Kern, die passende Factory und das passende Operating Model. Beim SaaS- und Buch-Test ist die zweite Datei ausschließlich der Test-Zugriffsnachweis. Sie ist weder eine weitere Factory noch ein weiteres Operating Model.
 
 Lade nicht gleichzeitig Website-, SaaS- und Buch-Frameworks. SAFOR soll genau eine aktive Domain besitzen.
 
-## 3. Sende diesen Startauftrag
-
-Kopiere nach dem Hochladen der Datei oder Dateien folgenden Text in den Chat:
+## 2. Sende den Startauftrag
 
 ```text
 Arbeite mit dem geladenen SAFOR-Domain-Framework.
@@ -53,36 +37,55 @@ Führe mich danach in verständlicher Sprache Schritt für Schritt durch die Ein
 Verändere nichts im öffentlichen SAFOR-Repository.
 ```
 
-Danach beschreibst du dein Vorhaben in normaler Sprache, zum Beispiel:
+Danach beschreibst du dein Ziel in normaler Sprache. Beispiele:
 
 ```text
 Ich möchte eine SaaS-Anwendung entwickeln, mit der kleine Unternehmen ihre Wartungsverträge verwalten können.
 ```
 
-oder:
-
 ```text
 Ich möchte ein Fachbuch über systemische KI-Integration für Engineering-Führungskräfte erstellen.
 ```
 
-Die sichtbare Kommunikation wird zentral durch die SAFOR-Plattform verdichtet. Factory und Operating Model liefern fachliche Fakten, dürfen aber weder die Antwortlänge noch Menüs oder technische Detailtiefe bestimmen. Reine Statusmeldungen wie eine erkannte Framework-Änderung bleiben kurz; Details erscheinen nur auf Nachfrage oder bei einer echten Entscheidung.
+## 3. MASTER und Subagenten
 
-## 4. Daran erkennst du einen korrekten Start
+Der **MASTER** ist deine einzige fachliche und organisatorische Schnittstelle. Mit ihm besprichst du Ziel, Planung, Roadmap, Status, Risiken, Freigaben und Konfliktentscheidungen.
 
-SAFOR muss sich in dieser Reihenfolge verhalten:
+Für einen neuen Subagenten erstellt der MASTER einmalig einen Initialisierungsprompt. Diesen fügst du einmal in einen eigenen, fortgeführten Agenten-Chat ein. Danach gilt für jeden Folgejob:
 
-1. Es erkennt die bereits ausgewählte Domain aus der Domain-Framework-Datei.
-2. Es prüft die Integrität der eingebetteten Factory und des eingebetteten Operating Models.
-3. Beim SaaS- oder Buch-Test bindet es ausschließlich den exakt passenden Test-Zugriffsnachweis.
-4. Es bestätigt ausdrücklich, dass der Testzugang **keine Produktionsberechtigung** erteilt.
-5. Es fragt nicht erneut nach Website, SaaS oder Buch.
-6. Es fragt, ob dein Projekt in einem eigenen Remote-Git-Repository oder in einem lokalen Git-Projekt liegen soll.
-7. Es verwendet das öffentliche Repository `empishaj/SAFOR` niemals als dein Projekt-Repository.
-8. Erst nach erfolgreicher Workspace-Prüfung beginnt die fachliche Discovery.
-9. Es stellt nur Fragen, die es nicht sicher aus deinen bisherigen Angaben ableiten kann.
-10. Es erklärt Stopps und notwendige nächste Schritte in verständlicher Sprache.
+```text
+GO
+```
 
-Beim erfolgreichen öffentlichen SaaS- oder Buch-Test lautet der technische Übergang:
+Nur dieses bewusste HUMAN-`GO` startet einen normalen Agenten-Chat. Ein Git-Push, ein Scheduler, Polling, eine Automation oder ein Host-Ereignis startet ihn nicht.
+
+Der Subagent lädt nach `GO` selbst:
+
+1. seine gepinnte Identität,
+2. seinen kleinen persönlichen Inbox-Index,
+3. den konkret zugewiesenen Job,
+4. den autoritativen MASTER-Jobstatus,
+5. nur die im Job referenzierten Eingaben.
+
+Er erhält keinen neuen Fachprompt vom HUMAN. Fachliche Rückfragen, Fehler, Konflikte und Ergebnisse schreibt er als typisierte Git-Responses an den MASTER. Im Agenten-Chat zeigt er nur eine kurze Start-, Abschluss-, Blocker- oder Reidentifikationsmeldung.
+
+## 4. Daran erkennst du einen korrekten Projektstart
+
+SAFOR muss:
+
+1. die bereits ausgewählte Domain aus der Domain-Datei erkennen;
+2. Factory und Operating Model auf Integrität und Kompatibilität prüfen;
+3. beim SaaS- oder Buch-Test ausschließlich den exakt passenden Testzugang binden;
+4. ausdrücklich erklären, dass der Testzugang keine Produktionsberechtigung erteilt;
+5. nicht erneut nach Website, SaaS oder Buch fragen;
+6. ein eigenes Remote-Git- oder – bei real vorhandenen lokalen Werkzeugen – Local-Git-Projekt verwenden;
+7. das öffentliche Repository `empishaj/SAFOR` niemals als dein Arbeitsprojekt verwenden;
+8. tatsächliche Provider- und Schreibrechte prüfen, statt sie aus JSON abzuleiten;
+9. erst nach erfolgreicher Workspace-Prüfung mit der fachlichen Discovery beginnen;
+10. nur Informationen erfragen, die nicht sicher aus dem vorhandenen Kontext ableitbar sind;
+11. Stopps, Blocker und den kleinsten notwendigen nächsten Schritt verständlich erklären.
+
+Beim erfolgreichen öffentlichen SaaS- oder Buch-Test ist der technische Übergang:
 
 ```text
 PUBLIC_EVALUATION_ACCESS_RESOLVED
@@ -91,48 +94,83 @@ PUBLIC_EVALUATION_ACCESS_RESOLVED
 
 Diese technischen Bezeichner dürfen im normalen Dialog hinter einer verständlichen Zusammenfassung verborgen bleiben.
 
-## 5. Vier schnelle Akzeptanztests
+## 5. Daran erkennst du einen korrekten Agentenlauf
+
+Nach `GO` erscheint höchstens eine kurze Meldung wie:
+
+```text
+GO bestätigt | Agent: Nova Dev (agent-dev-003) | Job: WP-014-IMPL | Status: RUNNING | Zielbranch: safor/job/wp-014/agent-dev-003
+```
+
+Bei Abschluss:
+
+```text
+Job WP-014-IMPL abgeschlossen | Status: SUBMITTED | Ergebnis: <Git-Referenz>
+```
+
+Bei Blockierung:
+
+```text
+Job WP-014-IMPL blockiert | Status: BLOCKED | Meldung: <Git-Referenz> | MASTER-Klärung erforderlich
+```
+
+Ein Subagent darf nicht im Chat mit dir über fachliche Details verhandeln. Du fragst den MASTER nach Status und Entscheidungen.
+
+## 6. Schnelle Akzeptanztests
 
 ### Test A – korrekter SaaS-Pfad
 
 Lade `SAFOR-FRAMEWORK-SAAS.json` und `SAFOR-TEST-ACCESS-SAAS.json`.
 
-Erwartung: SAFOR akzeptiert ausschließlich die Factory `safor.factory.software-delivery@1.7.0-test.1` und das Operating Model `safor.om.saas-engineering@1.7.0-test.1`, kennzeichnet den Zugriff als Test und wechselt zur Workspace-Auswahl.
+Erwartung: SAFOR akzeptiert ausschließlich die vorgesehenen SaaS-Testpakete, kennzeichnet den Zugriff als Test und wechselt zur Workspace-Auswahl.
 
 ### Test B – fehlender Testzugang
 
 Lade nur `SAFOR-FRAMEWORK-SAAS.json`.
 
-Erwartung: SAFOR startet nicht stillschweigend mit den bezahlten Modulen. Es fordert konkret `SAFOR-TEST-ACCESS-SAAS.json` an und bleibt bis dahin in einem sicheren Wartezustand.
+Erwartung: SAFOR startet die bezahlten Module nicht stillschweigend. Es fordert den passenden Testzugang an und bleibt in einem sicheren Wartezustand.
 
 ### Test C – falscher Testzugang
 
 Lade `SAFOR-FRAMEWORK-SAAS.json` zusammen mit `SAFOR-TEST-ACCESS-BOOK-CREATION.json`.
 
-Erwartung: SAFOR lehnt die Kombination wegen Domain-, Creation-Type-, Distribution- und Paketversionskonflikten ab. Es darf den Buch-Zugriff niemals für SaaS verwenden.
+Erwartung: SAFOR lehnt die Kombination wegen Domain-, Creation-Type-, Distribution- und Paketversionskonflikten ab.
 
 ### Test D – unpassender Modulaustausch
 
 Starte den Buch-Pfad und versuche anschließend, ein SaaS-Operating-Model als Ersatz zu laden.
 
-Erwartung: SAFOR lehnt den Austausch ab und behält die letzte gültige Buch-Bindung. Ein Modulwechsel darf weder die aktive Domain stillschweigend ändern noch die Gegenstelle automatisch ersetzen.
+Erwartung: SAFOR lehnt den Austausch ab und behält die letzte gültige Buch-Bindung.
 
-## 6. Typische Fehler vermeiden
+### Test E – Agent ohne `GO`
 
-- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.7.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
-- Bearbeite die JSON-Dateien nicht. Jede Änderung kann Integritäts- oder Zugriffsprüfungen ungültig machen.
-- Verwende dein eigenes Git-Projekt. Das SAFOR-Repository ist Produktquelle, nicht Arbeitsbereich deines Vorhabens.
+Öffne einen initialisierten Agenten-Chat, aber sende nicht `GO`.
+
+Erwartung: Der Agent claimt keinen Job und verändert kein Repository.
+
+### Test F – Agent mit Rollen- oder Rechtekonflikt
+
+Sende `GO`, während Rolle, Skill, gepinnter Input oder tatsächliches Schreibrecht nicht passt.
+
+Erwartung: Der Agent stoppt vor unzulässiger Produktmutation, schreibt eine typisierte Response an den MASTER und zeigt nur den knappen `BLOCKED`-Status.
+
+## 7. Typische Fehler vermeiden
+
+- Verwende als Endanwender das Domain-Framework, nicht die generische Engineering-Distribution.
+- Bearbeite die JSON-Dateien nicht; Änderungen können Integritätsprüfungen ungültig machen.
+- Verwende dein eigenes Git-Projekt. Das SAFOR-Repository ist Produktquelle, nicht dein Arbeitsbereich.
 - Interpretiere den öffentlichen Testzugang nicht als Kauf- oder Produktionsnachweis.
-- Lade für einen Test genau eine Domain und den dazugehörigen Zugriffsnachweis.
+- Lade genau eine Domain und gegebenenfalls deren passenden Zugriffsnachweis.
+- Kopiere keine Jobtexte zwischen MASTER- und Agenten-Chats. Nach der einmaligen Initialisierung reicht `GO`.
 
-## 7. Unterschied zur späteren Kaufversion
+## 8. Kaufversion und technische Durchsetzung
 
-Die Produktstruktur bleibt gleich: ein Domain-Framework enthält Framework, Factory und Operating Model. In der Kaufversion stammt der Zugriffs- und Liefernachweis jedoch aus einem geschützten, verifizierten kommerziellen Kanal und ist an den Käufer beziehungsweise die Organisation sowie an die exakte Paketversion gebunden.
-
-Die öffentlichen Dateien `SAFOR-TEST-ACCESS-SAAS.json` und `SAFOR-TEST-ACCESS-BOOK-CREATION.json` setzen ausdrücklich:
+Die öffentlichen Testdateien setzen ausdrücklich:
 
 ```text
 productionAuthorization = false
 ```
 
-Sie können daher niemals eine produktive Lizenz ersetzen.
+Sie können keine Produktionslizenz ersetzen. Eine spätere Kaufversion verwendet verifizierte Entitlement- und Liefernachweise für die exakte Paketversion.
+
+Optionale Hostadapter können Lizenz-, Integritäts-, Claim- und Zustandsregeln zusätzlich maschinell erzwingen. Diese Verstärkung ändert nicht das Endkundenerlebnis: SAFOR bleibt im normalen kompatiblen Chat über die geladenen JSON-Verträge nutzbar.
