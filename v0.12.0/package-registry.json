@@ -1,0 +1,75 @@
+{
+  "format": "SAFOR_PACKAGE_REGISTRY",
+  "schemaVersion": "0.12.0",
+  "status": "FRAMEWORK_REGISTRY",
+  "catalogRef": "package-catalog.json",
+  "technicalPackages": [
+    {
+      "packageId": "safor.om.saas-engineering",
+      "kind": "OPERATING_MODEL",
+      "version": "1.4.0",
+      "accessMode": "FREE_PUBLIC",
+      "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+      "path": "v0.10.0/packages/operating-models/saas-engineering/1.4.0/package.json"
+    },
+    {
+      "packageId": "safor.factory.software-delivery",
+      "kind": "FACTORY",
+      "version": "1.4.0",
+      "accessMode": "FREE_PUBLIC",
+      "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+      "path": "v0.10.0/packages/factories/software-delivery/1.4.0/package.json"
+    },
+    {
+      "packageId": "safor.provider.github",
+      "kind": "PROVIDER_ADAPTER",
+      "version": "0.5.0",
+      "accessMode": "FRAMEWORK_INTERNAL",
+      "sourceClass": "EMBEDDED_FRAMEWORK",
+      "path": "v0.10.0/providers/github/0.5.0/package.json"
+    },
+    {
+      "packageId": "safor.provider.gitlab",
+      "kind": "PROVIDER_ADAPTER",
+      "version": "0.5.0",
+      "accessMode": "FRAMEWORK_INTERNAL",
+      "sourceClass": "EMBEDDED_FRAMEWORK",
+      "path": "v0.10.0/providers/gitlab/0.5.0/package.json"
+    }
+  ],
+  "externalCommercialRequirements": [
+    {
+      "packageId": "safor.factory.book-production",
+      "kind": "FACTORY",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "sku": "SAFOR-BOOK-FACTORY",
+      "publicContentResolutionForbidden": true
+    },
+    {
+      "packageId": "safor.om.book-authoring",
+      "kind": "OPERATING_MODEL",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "sku": "SAFOR-BOOK-OM",
+      "publicContentResolutionForbidden": true
+    }
+  ],
+  "creationProfiles": [
+    {
+      "creationType": "SOFTWARE_WEBSITE",
+      "label": "Software / Website",
+      "accessMode": "FREE_PUBLIC",
+      "factoryPackageId": "safor.factory.software-delivery",
+      "operatingModelPackageId": "safor.om.saas-engineering",
+      "resolutionPolicy": "AUTO_RESOLVE_PUBLIC_FREE_IF_NOT_EXPLICITLY_LOADED"
+    },
+    {
+      "creationType": "BOOK",
+      "label": "Buch",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "factoryPackageId": "safor.factory.book-production",
+      "operatingModelPackageId": "safor.om.book-authoring",
+      "resolutionPolicy": "REQUIRE_HUMAN_LOADED_OR_ENTITLED_SOURCE"
+    }
+  ],
+  "selectionRule": "HUMAN selects creation type. SAFOR resolves the declared Factory/Operating Model pair subject to access, entitlement, integrity and compatibility. Project workspace selection is a later independent decision."
+}
