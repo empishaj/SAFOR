@@ -1,6 +1,6 @@
 # End-to-End Acceptance Tests
 
-These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json`.
+These tests are required before SAFOR General Availability. Run each scenario in a **fresh chat** using the exact release artifact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json`.
 
 ## A. GitHub — happy path
 
@@ -10,7 +10,7 @@ These tests are required before SAFOR General Availability. Run each scenario in
 - Selected owner has at least one writable project repository.
 
 **Expected flow**
-1. Upload only `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json`.
+1. Upload only `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json`.
 2. SAFOR starts initialization without requiring a separate prompt.
 3. HUMAN selects GitHub.
 4. SAFOR proves baseline read/write capabilities.
@@ -310,7 +310,7 @@ For one mutating agent job and one read-only agent job:
 
 Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly and fails closed around integrity/authority boundaries.
 
-1. Load the exact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` artifact and verify K00 then K00A complete before provider/project work.
+1. Load the exact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` artifact and verify K00 then K00A complete before provider/project work.
 2. Create or load a project with a PLANNED work item whose dependency is ACCEPTED, required input object is resolvable, resource declaration is complete and an active execution mandate covers the work item/capability.
 3. Submit a typed `WORK_ITEM_READINESS_REEVALUATION_REQUESTED` event with the next contiguous sequence.
 4. Verify the deterministic transition is `WORK_ITEM_BECOMES_READY`, the work item becomes READY, `execution.readySince` comes from the event timestamp and the resulting canonical state hash is recorded.
@@ -327,3 +327,27 @@ Goal: demonstrate that the executable rc.1 transition slice behaves reproducibly
 15. Verify no transition JSON contains executable code fields and the reference reducer imports no provider/network/LLM/random/time execution facility.
 
 Pass criteria: identical canonical inputs and pinned model revision produce identical logical transition outputs/state hashes; replay reproduces the stored hash; integrity/authority ambiguities never auto-advance state.
+
+## Scenario P — Deterministic Acceptance
+
+Goal: prove that Work Item ACCEPTED is derived only from the approved Acceptance Contract and authoritative typed evidence/review/authority records.
+
+1. Use the exact `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` artifact.
+2. Create an executable Work Item with three approved criteria: pinned contribution evidence, independent technical review and explicit risk authority approval.
+3. Verify Planning materializes an ACTIVE Acceptance Contract preserving all three criterion texts and mapping each to typed requirements.
+4. Verify the contractHash matches canonical contract content and P03 approval binds the contract set.
+5. Record pinned contribution evidence with matching subject/evidenceType/revisionRef.
+6. Record a PASS review from a reviewer different from the performer and with the required capability.
+7. Record APPROVED for the exact required authorityId.
+8. Request acceptance reevaluation; verify only `WORK_ITEM_ACCEPTED` changes the Work Item to ACCEPTED.
+9. Repeat without evidence; acceptance must not occur.
+10. Attempt approving self-review under `PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER`; the review record must not satisfy acceptance.
+11. Record CHANGES_REQUIRED; Work Item must deterministically transition to CHANGES_REQUIRED.
+12. Repeat without required authority approval; acceptance must not occur.
+13. Record REJECTED for the required authority; acceptance must remain blocked for the current contract revision.
+14. Tamper with approved criterion text after contract hash creation; contract registration must fail closed.
+15. Replay the full accepted sequence from genesis; the resulting state hash must exactly match sequential execution.
+16. Attempt to reuse the same evidenceId/reviewId/decisionId under a different eventId; the duplicate record must not be appended.
+17. Provide an assistant claim or Agent acceptanceSelfCheck in place of required provider evidence/review/authority; acceptance must not occur.
+
+Pass criteria: ACCEPTED is reproducible, replayable and authority-safe; no probabilistic actor can directly self-accept work.

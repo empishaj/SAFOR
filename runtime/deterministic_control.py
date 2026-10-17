@@ -10,7 +10,7 @@ import hashlib
 import json
 from typing import Any, Dict, Iterable, List, Mapping, MutableMapping, Optional, Tuple
 
-MODEL_VERSION = "0.11.0-rc.1"
+MODEL_VERSION = "0.11.0-rc.2"
 
 
 def canonical_json(value: Any) -> str:
@@ -48,7 +48,7 @@ def _get_event_path(event: Mapping[str, Any], path: str) -> Any:
 
 
 def _aggregate_key(name: str) -> str:
-    mapping = {"CONTROL": "control", "VALUE_STREAM": "valueStream", "EXECUTION": "execution"}
+    mapping = {"CONTROL": "control", "VALUE_STREAM": "valueStream", "EXECUTION": "execution", "ACCEPTANCE": "acceptance"}
     if name not in mapping:
         raise ValueError(f"Unknown aggregate: {name}")
     return mapping[name]
@@ -103,6 +103,9 @@ def _resolve_read_path(
     elif path.startswith("$execution."):
         current = snapshot["execution"]
         parts = path[len("$execution."):].split(".")
+    elif path.startswith("$acceptance."):
+        current = snapshot["acceptance"]
+        parts = path[len("$acceptance."):].split(".")
     else:
         raise KeyError(f"Unsupported state path: {path}")
     for part in parts:
@@ -124,8 +127,20 @@ def _resolve_mutable_parent(
     elif path.startswith("$subject."):
         current = _find_mutable_work_item(snapshot, event)
         parts = path[len("$subject."):].split(".")
+    elif path.startswith("$control."):
+        current = snapshot["control"]
+        parts = path[len("$control."):].split(".")
+    elif path.startswith("$valueStream."):
+        current = snapshot["valueStream"]
+        parts = path[len("$valueStream."):].split(".")
+    elif path.startswith("$execution."):
+        current = snapshot["execution"]
+        parts = path[len("$execution."):].split(".")
+    elif path.startswith("$acceptance."):
+        current = snapshot["acceptance"]
+        parts = path[len("$acceptance."):].split(".")
     else:
-        raise KeyError(f"Effects may mutate only $aggregate or $subject paths: {path}")
+        raise KeyError(f"Unsupported mutation path: {path}")
     if not parts:
         raise KeyError(f"Invalid mutation path: {path}")
     for part in parts[:-1]:
@@ -198,6 +213,376 @@ def _predicate_resource_declaration_complete(snapshot: Mapping[str, Any], event:
     return all(isinstance(resource.get(key), list) for key in ("readSet", "writeSet", "exclusiveKeys"))
 
 
+def acceptance_contract_hash(contract: Mapping[str, Any]) -> str:
+    material = copy.deepcopy(dict(contract))
+    material.pop("contractHash", None)
+    return canonical_hash(material)
+
+
+def _acceptance_ledger(snapshot: Mapping[str, Any]) -> Mapping[str, Any]:
+    ledger = snapshot.get("acceptance", {})
+    if not isinstance(ledger, Mapping):
+        return {}
+    return ledger
+
+
+def _active_contracts(snapshot: Mapping[str, Any], work_item_id: str) -> List[Mapping[str, Any]]:
+    return [
+        contract
+        for contract in _acceptance_ledger(snapshot).get("contracts", [])
+        if isinstance(contract, Mapping)
+        and contract.get("workItemId") == work_item_id
+        and contract.get("status") == "ACTIVE"
+    ]
+
+
+def _contract_requirements(contract: Mapping[str, Any], requirement_type: Optional[str] = None) -> List[Mapping[str, Any]]:
+    requirements = [x for x in contract.get("requirements", []) if isinstance(x, Mapping)]
+    if requirement_type is not None:
+        requirements = [x for x in requirements if x.get("type") == requirement_type]
+    return requirements
+
+
+def _contract_valid_for_item(
+    snapshot: Mapping[str, Any],
+    event: Mapping[str, Any],
+    contract: Mapping[str, Any],
+) -> bool:
+    item = _find_work_item(snapshot, event)
+    if item is None or not isinstance(contract, Mapping):
+        return False
+    if contract.get("format") != "SAFOR_ACCEPTANCE_CONTRACT" or contract.get("schemaVersion") != "0.11.0":
+        return False
+    if contract.get("projectId") != snapshot.get("projectId") or contract.get("workItemId") != item.get("id"):
+        return False
+    if contract.get("status") != "ACTIVE" or not isinstance(contract.get("revision"), int) or contract.get("revision") < 1:
+        return False
+    if contract.get("contractHash") != acceptance_contract_hash(contract):
+        return False
+
+    source = contract.get("source")
+    if not isinstance(source, Mapping) or any(not source.get(key) for key in ("planRef", "factoryRef", "workItemRef", "approvalDecisionRef")):
+        return False
+
+    criteria = contract.get("criteria")
+    requirements = contract.get("requirements")
+    if not isinstance(criteria, list) or not criteria or not isinstance(requirements, list) or not requirements:
+        return False
+
+    requirement_ids = [x.get("requirementId") for x in requirements if isinstance(x, Mapping)]
+    if len(requirement_ids) != len(requirements) or any(not x for x in requirement_ids) or len(set(requirement_ids)) != len(requirement_ids):
+        return False
+    requirement_map = {x["requirementId"]: x for x in requirements}
+    allowed_types = {"EVIDENCE", "REVIEW", "AUTHORITY"}
+    if any(x.get("type") not in allowed_types or not x.get("sourceRequirement") for x in requirements):
+        return False
+
+    criterion_ids = []
+    criterion_descriptions = []
+    referenced = set()
+    for criterion in criteria:
+        if not isinstance(criterion, Mapping):
+            return False
+        criterion_id = criterion.get("criterionId")
+        description = criterion.get("description")
+        refs = criterion.get("requirementRefs")
+        if not criterion_id or not description or criterion.get("satisfactionMode") != "ALL":
+            return False
+        if not isinstance(refs, list) or not refs or len(set(refs)) != len(refs):
+            return False
+        if any(ref not in requirement_map for ref in refs):
+            return False
+        criterion_ids.append(criterion_id)
+        criterion_descriptions.append(description)
+        referenced.update(refs)
+    if len(set(criterion_ids)) != len(criterion_ids):
+        return False
+    if referenced != set(requirement_map):
+        return False
+
+    work_item_criteria = item.get("acceptanceCriteria", [])
+    if sorted(criterion_descriptions) != sorted(work_item_criteria):
+        return False
+
+    source_requirements = {x.get("sourceRequirement") for x in requirements}
+    if not set(item.get("evidenceRequirements", [])).issubset(source_requirements):
+        return False
+
+    authority_requirements = {x.get("authorityId") for x in requirements if x.get("type") == "AUTHORITY"}
+    if not set(item.get("authorityRequirements", [])).issubset(authority_requirements):
+        return False
+
+    review = item.get("review", {})
+    review_requirements = [x for x in requirements if x.get("type") == "REVIEW"]
+    review_required = bool(review.get("required"))
+    if review_required != bool(review_requirements):
+        return False
+    if review_required:
+        policy = review.get("independencePolicy")
+        if any(x.get("independencePolicy") != policy for x in review_requirements):
+            return False
+
+    for requirement in requirements:
+        requirement_type = requirement.get("type")
+        if requirement_type == "EVIDENCE":
+            if not requirement.get("evidenceType") or requirement.get("requiredIntegrity") not in {"PINNED", "ANY_AUTHORITATIVE"}:
+                return False
+        elif requirement_type == "REVIEW":
+            if not requirement.get("capability") or requirement.get("requiredDecision") != "PASS":
+                return False
+            if requirement.get("independencePolicy") not in {"NONE", "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"}:
+                return False
+        elif requirement_type == "AUTHORITY":
+            if not requirement.get("authorityId") or requirement.get("requiredDecision") != "APPROVED":
+                return False
+
+    policy = contract.get("policy")
+    if not isinstance(policy, Mapping):
+        return False
+    for key in ("allCriteriaRequired", "selfAcceptanceForbidden", "immutableAfterApproval", "noAssistantClaimAsEvidence", "noDeliveryAsOutcomeEvidence"):
+        if policy.get(key) is not True:
+            return False
+    return True
+
+
+def _active_contract(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> Optional[Mapping[str, Any]]:
+    item = _find_work_item(snapshot, event)
+    if item is None:
+        return None
+    contracts = _active_contracts(snapshot, item.get("id", ""))
+    if len(contracts) != 1:
+        return None
+    return contracts[0] if _contract_valid_for_item(snapshot, event, contracts[0]) else None
+
+
+def _event_record(event: Mapping[str, Any]) -> Optional[Mapping[str, Any]]:
+    payload = event.get("payload", {})
+    record = payload.get("record") if isinstance(payload, Mapping) else None
+    return record if isinstance(record, Mapping) else None
+
+
+def _evidence_record_valid(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    item = _find_work_item(snapshot, event)
+    record = _event_record(event)
+    if item is None or record is None:
+        return False
+    if record.get("format") != "SAFOR_EVIDENCE_RECORD" or record.get("schemaVersion") not in {"0.10.0", "0.11.0"}:
+        return False
+    if record.get("subjectRef") != item.get("id") or not record.get("evidenceId") or not record.get("evidenceType"):
+        return False
+    if not record.get("source") or not record.get("reference"):
+        return False
+    if "ASSISTANT" in str(record.get("source", "")).upper():
+        return False
+    integrity = record.get("integrity")
+    if not isinstance(integrity, Mapping):
+        return False
+    return integrity.get("stableId") is not None or integrity.get("revisionRef") is not None
+
+
+def _review_record_valid(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    item = _find_work_item(snapshot, event)
+    record = _event_record(event)
+    if item is None or record is None:
+        return False
+    expected_decision = {
+        "REVIEW_APPROVED_RECORDED": "PASS",
+        "REVIEW_CHANGES_REQUIRED_RECORDED": "CHANGES_REQUIRED",
+    }.get(event.get("eventType"))
+    if expected_decision is None:
+        return False
+    if record.get("format") != "SAFOR_REVIEW_DECISION" or record.get("schemaVersion") != "0.11.0":
+        return False
+    if record.get("workItemId") != item.get("id") or record.get("decision") != expected_decision:
+        return False
+    if not record.get("reviewId") or not record.get("reviewerActorId") or not record.get("capability"):
+        return False
+    if not record.get("evidenceRef") or not record.get("sourceRevisionRef"):
+        return False
+    current_performer = item.get("assignment", {}).get("performerActorId")
+    if current_performer is not None and record.get("performerActorId") != current_performer:
+        return False
+    contract = _active_contract(snapshot, event)
+    if contract is None:
+        return False
+    capabilities = {x.get("capability") for x in _contract_requirements(contract, "REVIEW")}
+    return record.get("capability") in capabilities
+
+
+def _review_event_independence_valid(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    item = _find_work_item(snapshot, event)
+    record = _event_record(event)
+    contract = _active_contract(snapshot, event)
+    if item is None or record is None or contract is None:
+        return False
+    matching = [
+        req for req in _contract_requirements(contract, "REVIEW")
+        if req.get("capability") == record.get("capability")
+    ]
+    if not matching:
+        return False
+    requires_independence = (
+        item.get("review", {}).get("independencePolicy") == "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+        or any(req.get("independencePolicy") == "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER" for req in matching)
+    )
+    if requires_independence:
+        performer = record.get("performerActorId")
+        reviewer = record.get("reviewerActorId")
+        return bool(performer) and bool(reviewer) and performer != reviewer
+    return True
+
+
+def _authority_record_valid(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    item = _find_work_item(snapshot, event)
+    record = _event_record(event)
+    if item is None or record is None:
+        return False
+    expected_decision = {
+        "AUTHORITY_APPROVED_RECORDED": "APPROVED",
+        "AUTHORITY_REJECTED_RECORDED": "REJECTED",
+    }.get(event.get("eventType"))
+    if expected_decision is None:
+        return False
+    if record.get("format") != "SAFOR_AUTHORITY_DECISION" or record.get("schemaVersion") != "0.11.0":
+        return False
+    if record.get("workItemId") != item.get("id") or record.get("decision") != expected_decision:
+        return False
+    if not record.get("decisionId") or not record.get("authorityId") or not record.get("actorId"):
+        return False
+    if not record.get("decisionRef") or not record.get("sourceRevisionRef"):
+        return False
+    contract = _active_contract(snapshot, event)
+    if contract is None:
+        return False
+    authority_ids = {x.get("authorityId") for x in _contract_requirements(contract, "AUTHORITY")}
+    return record.get("authorityId") in authority_ids
+
+
+def _evidence_satisfies(snapshot: Mapping[str, Any], work_item_id: str, requirement: Mapping[str, Any]) -> bool:
+    for record in _acceptance_ledger(snapshot).get("evidenceRecords", []):
+        if not isinstance(record, Mapping):
+            continue
+        if record.get("subjectRef") != work_item_id or record.get("evidenceType") != requirement.get("evidenceType"):
+            continue
+        if "ASSISTANT" in str(record.get("source", "")).upper():
+            continue
+        integrity = record.get("integrity", {})
+        if requirement.get("requiredIntegrity") == "PINNED":
+            if integrity.get("revisionRef"):
+                return True
+        elif integrity.get("stableId") is not None or integrity.get("revisionRef") is not None:
+            return True
+    return False
+
+
+def _review_satisfies(snapshot: Mapping[str, Any], work_item_id: str, requirement: Mapping[str, Any], enforce_independence: bool) -> bool:
+    for record in _acceptance_ledger(snapshot).get("reviewDecisions", []):
+        if not isinstance(record, Mapping):
+            continue
+        if record.get("workItemId") != work_item_id or record.get("capability") != requirement.get("capability"):
+            continue
+        if record.get("decision") != "PASS":
+            continue
+        if not record.get("sourceRevisionRef"):
+            continue
+        if enforce_independence and requirement.get("independencePolicy") == "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER":
+            if not record.get("performerActorId") or record.get("performerActorId") == record.get("reviewerActorId"):
+                continue
+        return True
+    return False
+
+
+def _authority_satisfies(snapshot: Mapping[str, Any], work_item_id: str, requirement: Mapping[str, Any]) -> bool:
+    return any(
+        isinstance(record, Mapping)
+        and record.get("workItemId") == work_item_id
+        and record.get("authorityId") == requirement.get("authorityId")
+        and record.get("decision") == "APPROVED"
+        and record.get("sourceRevisionRef")
+        for record in _acceptance_ledger(snapshot).get("authorityDecisions", [])
+    )
+
+
+def _requirement_satisfied(snapshot: Mapping[str, Any], work_item_id: str, requirement: Mapping[str, Any]) -> bool:
+    if requirement.get("type") == "EVIDENCE":
+        return _evidence_satisfies(snapshot, work_item_id, requirement)
+    if requirement.get("type") == "REVIEW":
+        return _review_satisfies(snapshot, work_item_id, requirement, enforce_independence=True)
+    if requirement.get("type") == "AUTHORITY":
+        return _authority_satisfies(snapshot, work_item_id, requirement)
+    return False
+
+
+def _required_evidence_satisfied(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    contract = _active_contract(snapshot, event)
+    item = _find_work_item(snapshot, event)
+    if contract is None or item is None:
+        return False
+    return all(_evidence_satisfies(snapshot, item["id"], req) for req in _contract_requirements(contract, "EVIDENCE"))
+
+
+def _required_reviews_satisfied(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    contract = _active_contract(snapshot, event)
+    item = _find_work_item(snapshot, event)
+    if contract is None or item is None:
+        return False
+    return all(_review_satisfies(snapshot, item["id"], req, enforce_independence=False) for req in _contract_requirements(contract, "REVIEW"))
+
+
+def _review_independence_satisfied(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    contract = _active_contract(snapshot, event)
+    item = _find_work_item(snapshot, event)
+    if contract is None or item is None:
+        return False
+    return all(_review_satisfies(snapshot, item["id"], req, enforce_independence=True) for req in _contract_requirements(contract, "REVIEW"))
+
+
+def _required_authorities_satisfied(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    contract = _active_contract(snapshot, event)
+    item = _find_work_item(snapshot, event)
+    if contract is None or item is None:
+        return False
+    return all(_authority_satisfies(snapshot, item["id"], req) for req in _contract_requirements(contract, "AUTHORITY"))
+
+
+def _no_rejecting_authority_decision(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    contract = _active_contract(snapshot, event)
+    item = _find_work_item(snapshot, event)
+    if contract is None or item is None:
+        return False
+    required_ids = {req.get("authorityId") for req in _contract_requirements(contract, "AUTHORITY")}
+    return not any(
+        isinstance(record, Mapping)
+        and record.get("workItemId") == item.get("id")
+        and record.get("authorityId") in required_ids
+        and record.get("decision") == "REJECTED"
+        for record in _acceptance_ledger(snapshot).get("authorityDecisions", [])
+    )
+
+
+def _all_acceptance_criteria_satisfied(snapshot: Mapping[str, Any], event: Mapping[str, Any]) -> bool:
+    contract = _active_contract(snapshot, event)
+    item = _find_work_item(snapshot, event)
+    if contract is None or item is None:
+        return False
+    req_map = {req.get("requirementId"): req for req in _contract_requirements(contract)}
+    for criterion in contract.get("criteria", []):
+        refs = criterion.get("requirementRefs", [])
+        if not refs:
+            return False
+        if not all(ref in req_map and _requirement_satisfied(snapshot, item["id"], req_map[ref]) for ref in refs):
+            return False
+    return True
+
+
+def _record_id_not_registered(snapshot: Mapping[str, Any], event: Mapping[str, Any], list_name: str, id_field: str) -> bool:
+    record = _event_record(event)
+    if record is None or not record.get(id_field):
+        return False
+    existing = _acceptance_ledger(snapshot).get(list_name, [])
+    return not any(isinstance(x, Mapping) and x.get(id_field) == record.get(id_field) for x in existing)
+
+
 def _evaluate_predicate(
     predicate_id: str,
     args: Mapping[str, Any],
@@ -220,6 +605,41 @@ def _evaluate_predicate(
         return _predicate_inputs_resolvable(snapshot, event), None
     if predicate_id == "RESOURCE_DECLARATION_COMPLETE":
         return _predicate_resource_declaration_complete(snapshot, event), None
+    if predicate_id == "ACCEPTANCE_CONTRACT_NOT_REGISTERED":
+        item = _find_work_item(snapshot, event)
+        return item is not None and len(_active_contracts(snapshot, item.get("id", ""))) == 0, None
+    if predicate_id == "ACCEPTANCE_CONTRACT_VALID_FOR_SUBJECT":
+        payload = event.get("payload", {})
+        contract = payload.get("contract") if isinstance(payload, Mapping) else None
+        return isinstance(contract, Mapping) and _contract_valid_for_item(snapshot, event, contract), None
+    if predicate_id == "EVIDENCE_RECORD_VALID_FOR_SUBJECT":
+        return _evidence_record_valid(snapshot, event), None
+    if predicate_id == "REVIEW_RECORD_VALID_FOR_SUBJECT":
+        return _review_record_valid(snapshot, event), None
+    if predicate_id == "REVIEW_EVENT_INDEPENDENCE_VALID":
+        return _review_event_independence_valid(snapshot, event), None
+    if predicate_id == "AUTHORITY_DECISION_VALID_FOR_SUBJECT":
+        return _authority_record_valid(snapshot, event), None
+    if predicate_id == "EVIDENCE_RECORD_NOT_REGISTERED":
+        return _record_id_not_registered(snapshot, event, "evidenceRecords", "evidenceId"), None
+    if predicate_id == "REVIEW_RECORD_NOT_REGISTERED":
+        return _record_id_not_registered(snapshot, event, "reviewDecisions", "reviewId"), None
+    if predicate_id == "AUTHORITY_DECISION_NOT_REGISTERED":
+        return _record_id_not_registered(snapshot, event, "authorityDecisions", "decisionId"), None
+    if predicate_id == "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS":
+        return _active_contract(snapshot, event) is not None, None
+    if predicate_id == "REQUIRED_EVIDENCE_SATISFIED":
+        return _required_evidence_satisfied(snapshot, event), None
+    if predicate_id == "REQUIRED_REVIEWS_SATISFIED":
+        return _required_reviews_satisfied(snapshot, event), None
+    if predicate_id == "REVIEW_INDEPENDENCE_SATISFIED":
+        return _review_independence_satisfied(snapshot, event), None
+    if predicate_id == "REQUIRED_AUTHORITIES_SATISFIED":
+        return _required_authorities_satisfied(snapshot, event), None
+    if predicate_id == "NO_REJECTING_AUTHORITY_DECISION":
+        return _no_rejecting_authority_decision(snapshot, event), None
+    if predicate_id == "ALL_ACCEPTANCE_CRITERIA_SATISFIED":
+        return _all_acceptance_criteria_satisfied(snapshot, event), None
     if predicate_id == "FIELD_EQUALS":
         value = _resolve_read_path(args["path"], snapshot, transition["aggregate"], event)
         return value == args.get("value"), f"actual={value!r}"
@@ -281,6 +701,13 @@ def _apply_effect(
         if not isinstance(current, list):
             raise ValueError(f"APPEND_UNIQUE target is not a list: {effect['path']}")
         value = copy.deepcopy(effect.get("value"))
+        if value not in current:
+            current.append(value)
+    elif op == "APPEND_FROM_EVENT":
+        current = parent.get(key)
+        if not isinstance(current, list):
+            raise ValueError(f"APPEND_FROM_EVENT target is not a list: {effect['path']}")
+        value = copy.deepcopy(_get_event_path(event, effect["eventPath"]))
         if value not in current:
             current.append(value)
     elif op == "REMOVE_MATCHING":

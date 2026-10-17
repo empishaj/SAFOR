@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.11.0/acceptance-contract.schema.json",
+  "title": "SAFOR Acceptance Contract",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "contractId",
+    "projectId",
+    "workItemId",
+    "revision",
+    "status",
+    "source",
+    "criteria",
+    "requirements",
+    "policy",
+    "contractHash"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_ACCEPTANCE_CONTRACT"
+    },
+    "schemaVersion": {
+      "const": "0.11.0"
+    },
+    "contractId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workItemId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "const": "ACTIVE"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "planRef",
+        "factoryRef",
+        "workItemRef",
+        "approvalDecisionRef"
+      ],
+      "properties": {
+        "planRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "factoryRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workItemRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "approvalDecisionRef": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "criterionId",
+          "description",
+          "satisfactionMode",
+          "requirementRefs"
+        ],
+        "properties": {
+          "criterionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "satisfactionMode": {
+            "const": "ALL"
+          },
+          "requirementRefs": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/requirement"
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allCriteriaRequired",
+        "selfAcceptanceForbidden",
+        "immutableAfterApproval",
+        "noAssistantClaimAsEvidence",
+        "noDeliveryAsOutcomeEvidence"
+      ],
+      "properties": {
+        "allCriteriaRequired": {
+          "const": true
+        },
+        "selfAcceptanceForbidden": {
+          "const": true
+        },
+        "immutableAfterApproval": {
+          "const": true
+        },
+        "noAssistantClaimAsEvidence": {
+          "const": true
+        },
+        "noDeliveryAsOutcomeEvidence": {
+          "const": true
+        }
+      }
+    },
+    "contractHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    }
+  },
+  "$defs": {
+    "requirement": {
+      "oneOf": [
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requirementId",
+            "type",
+            "evidenceType",
+            "requiredIntegrity",
+            "sourceRequirement"
+          ],
+          "properties": {
+            "requirementId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "const": "EVIDENCE"
+            },
+            "evidenceType": {
+              "type": "string",
+              "minLength": 1
+            },
+            "requiredIntegrity": {
+              "enum": [
+                "PINNED",
+                "ANY_AUTHORITATIVE"
+              ]
+            },
+            "sourceRequirement": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requirementId",
+            "type",
+            "capability",
+            "requiredDecision",
+            "independencePolicy",
+            "sourceRequirement"
+          ],
+          "properties": {
+            "requirementId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "const": "REVIEW"
+            },
+            "capability": {
+              "type": "string",
+              "minLength": 1
+            },
+            "requiredDecision": {
+              "const": "PASS"
+            },
+            "independencePolicy": {
+              "enum": [
+                "NONE",
+                "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+              ]
+            },
+            "sourceRequirement": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requirementId",
+            "type",
+            "authorityId",
+            "requiredDecision",
+            "sourceRequirement"
+          ],
+          "properties": {
+            "requirementId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "const": "AUTHORITY"
+            },
+            "authorityId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "requiredDecision": {
+              "const": "APPROVED"
+            },
+            "sourceRequirement": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    }
+  }
+}

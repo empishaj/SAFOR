@@ -285,6 +285,22 @@
       "automaticRepair": "RESTORE_VERIFIED_DETERMINISTIC_CONTROL_MODULES_OR_REPLAY_DERIVED_PROJECTION",
       "defaultRetryBudget": 1,
       "requiresHuman": "WHEN_AUTHORITATIVE_STATE_DIVERGENCE_OR_MISSING_EVENT_CANNOT_BE_RECONCILED_FROM_VERIFIED_EVIDENCE"
+    },
+    {
+      "id": "SH-22",
+      "name": "DETERMINISTIC_ACCEPTANCE_FAILURE",
+      "examples": [
+        "Acceptance Contract hash mismatch",
+        "acceptance criterion has no typed requirement",
+        "evidence subject/type/integrity mismatch",
+        "independent review violated by self-review",
+        "required authority approval absent or rejected",
+        "duplicate acceptance record identity",
+        "acceptance replay divergence"
+      ],
+      "automaticRepair": "RESTORE_VERIFIED_ACCEPTANCE_MODEL_OR_REPLAY_DERIVED_ACCEPTANCE_LEDGER",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_APPROVED_ACCEPTANCE_CONTRACT_OR_REQUIRED_HUMAN_AUTHORITY_MUST_CHANGE"
     }
   ],
   "eligibilityRules": [
@@ -307,7 +323,10 @@
     "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative.",
     "Deterministic-control recovery may restore only pinned verified control definitions or regenerate/replay declared derived projection state; it may never invent a missing event, HUMAN decision, provider outcome or historical transition.",
     "Replay divergence is an integrity failure. Automatic recovery may not overwrite authoritative evidence merely to make hashes match.",
-    "Unknown predicates, arbitrary executable transition expressions and ambiguous authoritative transitions fail closed."
+    "Unknown predicates, arbitrary executable transition expressions and ambiguous authoritative transitions fail closed.",
+    "Acceptance recovery may restore only pinned acceptance definitions or replay/regenerate the derived acceptance ledger from verified events; it may never fabricate evidence, PASS reviews, approvals or requirement satisfaction.",
+    "A failed independent-review or authority requirement is a business/governance fact, not a repairable presentation defect.",
+    "Acceptance Contract mutation after approval requires a new governed contract revision; Self-Healing must not edit requirements to make work pass."
   ],
   "forbiddenAutomaticRepairs": [
     "FORCE_PUSH",
@@ -336,7 +355,13 @@
     "ALTER_EVENT_SEQUENCE_TO_FORCE_REPLAY",
     "AUTO_SELECT_AMBIGUOUS_AUTHORITATIVE_TRANSITION",
     "EXECUTE_ARBITRARY_CODE_FROM_TRANSITION_MODEL",
-    "OVERWRITE_AUTHORITATIVE_STATE_TO_MATCH_REPLAY"
+    "OVERWRITE_AUTHORITATIVE_STATE_TO_MATCH_REPLAY",
+    "FABRICATE_ACCEPTANCE_EVIDENCE",
+    "FABRICATE_REVIEW_PASS",
+    "FABRICATE_AUTHORITY_APPROVAL",
+    "RELAX_REVIEW_INDEPENDENCE",
+    "REMOVE_ACCEPTANCE_REQUIREMENT_TO_PASS",
+    "REWRITE_APPROVED_ACCEPTANCE_CONTRACT_HASH"
   ],
   "retryPolicy": {
     "key": "failureFingerprint",

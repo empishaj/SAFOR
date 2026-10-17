@@ -15,6 +15,7 @@
     "control",
     "valueStream",
     "execution",
+    "acceptance",
     "stateHash",
     "genesisRef"
   ],
@@ -66,6 +67,128 @@
     "genesisRef": {
       "type": "string",
       "minLength": 1
+    },
+    "acceptance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "revision",
+        "contracts",
+        "evidenceRecords",
+        "reviewDecisions",
+        "authorityDecisions"
+      ],
+      "properties": {
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "contracts": {
+          "type": "array",
+          "items": {
+            "$ref": "acceptance-contract.schema.json"
+          }
+        },
+        "evidenceRecords": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/evidenceRecord"
+          }
+        },
+        "reviewDecisions": {
+          "type": "array",
+          "items": {
+            "$ref": "review-decision.schema.json"
+          }
+        },
+        "authorityDecisions": {
+          "type": "array",
+          "items": {
+            "$ref": "authority-decision.schema.json"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "evidenceRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "schemaVersion",
+        "evidenceId",
+        "evidenceType",
+        "subjectRef",
+        "source",
+        "observedAt",
+        "reference",
+        "integrity",
+        "claims"
+      ],
+      "properties": {
+        "format": {
+          "const": "SAFOR_EVIDENCE_RECORD"
+        },
+        "schemaVersion": {
+          "enum": [
+            "0.10.0",
+            "0.11.0"
+          ]
+        },
+        "evidenceId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "evidenceType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "subjectRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "reference": {
+          "type": "string",
+          "minLength": 1
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "stableId",
+            "revisionRef"
+          ],
+          "properties": {
+            "stableId": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "revisionRef": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          }
+        },
+        "claims": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
     }
   }
 }

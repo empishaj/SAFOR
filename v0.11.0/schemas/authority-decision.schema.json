@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.11.0/authority-decision.schema.json",
+  "title": "SAFOR Authority Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "decisionId",
+    "workItemId",
+    "authorityId",
+    "actorId",
+    "decision",
+    "decisionRef",
+    "observedAt",
+    "sourceRevisionRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AUTHORITY_DECISION"
+    },
+    "schemaVersion": {
+      "const": "0.11.0"
+    },
+    "decisionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workItemId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "authorityId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actorId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decision": {
+      "enum": [
+        "APPROVED",
+        "REJECTED"
+      ]
+    },
+    "decisionRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceRevisionRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}
