@@ -61,11 +61,11 @@ jobs:
           start = tests.index("    def test_german_guide_explains_manual_chat_vs_runtime_enforcement")
           end = tests.index("\n    def test_quickstart", start)
           new_test = '''    def test_german_guide_explains_declarative_chat_and_optional_reference_runtime(self):
-              self.assertIn("führt den Python-Referenzcode", self.start_here)
-              self.assertIn("nicht automatisch", self.start_here)
-              self.assertIn("nicht erforderlich", self.start_here)
-              self.assertIn("optionale Referenz-", self.start_here)
-              self.assertNotIn("Host-/Runtime-Integration Pflicht", self.start_here)
+                  self.assertIn("führt den Python-Referenzcode", self.start_here)
+                  self.assertIn("nicht automatisch", self.start_here)
+                  self.assertIn("nicht erforderlich", self.start_here)
+                  self.assertIn("optionale Referenz-", self.start_here)
+                  self.assertNotIn("Host-/Runtime-Integration Pflicht", self.start_here)
           '''
           test_file.write_text(tests[:start] + new_test + tests[end:], encoding="utf-8")
           PY
