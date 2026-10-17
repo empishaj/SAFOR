@@ -4,9 +4,18 @@
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.4.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.5.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
+- [x] `python tools/build_domain_framework.py --check` reproduces all public domain Framework distributions.
+- [x] `SAFOR-FRAMEWORK-WEBSITE.json` embeds Website Factory/OM 1.1.0 and the exact current shared Framework.
+- [x] Domain Framework profiles define WEBSITE, SAAS and BOOK_CREATION.
+- [x] SaaS and Book completed distributions require protected commercial module inputs and are not public.
+- [x] V2 domain-package digest covers `packageFamily`.
+- [x] V2 domain packages declare `domainIds`.
+- [x] Factory → Operating Model and Operating Model → Factory constraints are both enforced.
+- [x] Same-family Premium replacements can use different package IDs.
+- [x] Cross-domain replacement is rejected without changing the active domain/counterpart.
 - [x] `python tools/validate_safor.py` passes.
 - [x] CI is green on the tested 0.13 branch head.
 - [x] Public Framework embeds no Factory/Operating Model domain package content.
@@ -58,7 +67,7 @@
 - [x] Project/Bindings/Package Selection/Compatibility/Workspace schemas are 0.13-aware.
 - [x] Deterministic Control and Acceptance suites remain green.
 - [x] Modular package/workspace bootstrap tests pass.
-- [x] Total current unit suite: 73 tests PASS.
+- [x] Total current unit suite: 82 tests PASS.
 - [x] SH-23 forbids entitlement fabrication, paid-public resolution, workspace redirection and Local-Git bypass.
 - [x] HUMAN Decision Gate and terminal-menu contracts remain intact.
 - [x] Product licensing strategy is explicitly recorded in `LICENSE-DECISION.md`.
