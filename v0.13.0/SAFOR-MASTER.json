@@ -112,7 +112,11 @@
     "domainPackageIntegrityRequired": true,
     "packageSelectionRequiresCompatibilityDecision": true,
     "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-    "creationProfileAccessPolicyEnforced": true
+    "creationProfileAccessPolicyEnforced": true,
+    "commercialEntitlementStatusTimeSubjectAndTrustRequired": true,
+    "commercialBasisEvidenceRequired": true,
+    "entitledSourceDeliveryEvidenceRequired": true,
+    "commercialDeliveryDigestBindingRequired": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -278,7 +282,12 @@
       "domainPackageCreationTypeSupportRequired": true,
       "packagePairCompatibilityDecisionRequired": true,
       "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-      "creationProfileSelectedAccessPolicyRequired": true
+      "creationProfileSelectedAccessPolicyRequired": true,
+      "entitlementStatusTimeSubjectAndTrustRequired": true,
+      "commercialBasisEvidenceRequired": true,
+      "entitledPackageSourceDeliveryEvidenceRequired": true,
+      "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest": true,
+      "humanLoadedPaidPackageStillRequiresEntitlement": true
     },
     "domainPackageSchemaRef": "schemas/domain-package.schema.json",
     "selectionSchemaRef": "schemas/package-selection.schema.json",
@@ -1812,6 +1821,34 @@
     {
       "id": "INV-180",
       "rule": "Historical publicly disclosed Software Factory/SaaS Operating Model versions are legacy bytes and MUST NOT be treated as the current protected commercial package source."
+    },
+    {
+      "id": "INV-181",
+      "rule": "A paid package entitlement is usable only when status is ACTIVE and evaluatedAt lies within its validity interval."
+    },
+    {
+      "id": "INV-182",
+      "rule": "A paid entitlement must match the active HUMAN/organization subject, exact package/version grant and commercial-basis SKU; purchase evidence alone is not entitlement."
+    },
+    {
+      "id": "INV-183",
+      "rule": "Entitlement issuer and entitlement verifier trust are supplied by explicit trusted configuration and MUST NOT be inferred from identities declared inside the entitlement record."
+    },
+    {
+      "id": "INV-184",
+      "rule": "ENTITLED_PACKAGE_SOURCE requires external commercial delivery evidence before delivered package bytes may be used."
+    },
+    {
+      "id": "INV-185",
+      "rule": "Commercial delivery evidence binds entitlementId, packageId, exact version and declared-contract artifact digest and must be valid at the explicit evaluation timestamp."
+    },
+    {
+      "id": "INV-186",
+      "rule": "A delivery verifier must be explicitly trusted; self-declared delivery verification is insufficient."
+    },
+    {
+      "id": "INV-187",
+      "rule": "HUMAN_LOADED_PACKAGE may carry a licensed paid artifact without source delivery evidence, but it never bypasses entitlement status, subject, time, issuer or verifier checks."
     }
   ],
   "evidencePolicy": {

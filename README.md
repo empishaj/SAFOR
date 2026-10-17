@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories and Operating Models.
 
-> Current maturity: **v0.13.0-rc.3 — Release Candidate**
+> Current maturity: **v0.13.0-rc.4 — Release Candidate**
 
 ## Product paths
 
@@ -34,7 +34,7 @@ The Website starter is deliberately narrower than the Software/SaaS path. If Web
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.13.0-rc.3.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.4.json` — versioned public Framework release candidate.
 - `SAFOR-FRAMEWORK.json` — current Framework alias.
 - `v0.13.0/ packages/factories/website-delivery/1.0.0/package.json` — free Website Factory.
 - `v0.13.0/packages/operating-models/website-team/1.0.0/package.json` — free Website Operating Model.
@@ -55,3 +55,16 @@ The same validation runs in GitHub Actions.
 SAFOR remains a **Release Candidate**, not General Availability. The Framework/package/licensing boundary is machine-enforced, while real commercial package delivery, entitlement infrastructure and provider/agent end-to-end acceptance remain GA gates.
 
 See [LICENSE-DECISION.md](LICENSE-DECISION.md), [PRODUCT-READINESS.md](PRODUCT-READINESS.md) and [ACCEPTANCE-TESTS.md](ACCEPTANCE-TESTS.md).
+
+
+## Commercial trust chain
+
+Paid package access in rc.4 is not satisfied by possession of JSON or a purchase receipt alone.
+
+The required chain is:
+
+`commercial basis → ACTIVE entitlement → trusted entitlement verification → protected delivery evidence (for ENTITLED_PACKAGE_SOURCE) → package digest verification → compatibility → immutable binding`
+
+Strict entitlement verification requires an explicit evaluation timestamp, matching HUMAN/organization subject, trusted issuer, trusted entitlement verifier, matching SKU/package/version and valid entitlement interval.
+
+An `ENTITLED_PACKAGE_SOURCE` additionally supplies `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` binding the entitlement ID, exact package/version and artifact digest through a trusted delivery verifier. A HUMAN may still manually load a licensed paid package, but manual loading never bypasses entitlement verification.

@@ -328,11 +328,15 @@
         "selected package does not support active Creation Type",
         "paid selected Factory or Operating Model lacks independently verified entitlement",
         "Factory/Operating Model capability or authority compatibility fails",
-        "materialized package selection or compatibility decision is missing or inconsistent"
+        "materialized package selection or compatibility decision is missing or inconsistent",
+        "entitlement is revoked, suspended, expired, not yet valid or bound to a different subject",
+        "entitlement issuer or verifier is not trusted by the active verification context",
+        "ENTITLED_PACKAGE_SOURCE lacks delivery evidence",
+        "commercial package delivery evidence is expired or binds the wrong entitlement/package/version/digest"
       ],
-      "automaticRepair": "RELOAD_VERIFIED_PACKAGE_METADATA_OR_REOBSERVE_PACKAGE_SOURCE_WITHOUT_CHANGING_HUMAN_SELECTION",
+      "automaticRepair": "REOBSERVE_TRUSTED_ENTITLEMENT_OR_DELIVERY_SOURCE_AND_REVERIFY_WITHOUT_CHANGING_SUBJECT_SELECTION_ENTITLEMENT_OR_PACKAGE_BYTES",
       "defaultRetryBudget": 1,
-      "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
+      "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
     }
   ],
   "eligibilityRules": [
@@ -408,7 +412,14 @@
     "INVENT_PACKAGE_ENTITLEMENT",
     "REWRITE_DOMAIN_PACKAGE_TO_MATCH_EXPECTED_DIGEST",
     "SILENTLY_CHANGE_SELECTED_FACTORY_OR_OPERATING_MODEL",
-    "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS"
+    "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS",
+    "INVENT_COMMERCIAL_BASIS_EVIDENCE",
+    "TREAT_REVOKED_SUSPENDED_OR_EXPIRED_ENTITLEMENT_AS_ACTIVE",
+    "TRUST_ENTITLEMENT_ISSUER_FROM_SELF_DECLARED_RECORD",
+    "TRUST_ENTITLEMENT_OR_DELIVERY_VERIFIER_FROM_SELF_DECLARED_RECORD",
+    "INVENT_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+    "IGNORE_COMMERCIAL_DELIVERY_EXPIRY",
+    "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE"
   ],
   "retryPolicy": {
     "key": "failureFingerprint",

@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
   "schemaVersion": "0.13.0",
-  "bundleVersion": "0.13.0-rc.3",
+  "bundleVersion": "0.13.0-rc.4",
   "definitionId": "safor-framework",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -30,7 +30,10 @@
       "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
       "entitlementEvidenceExternal": true,
       "declaredContractDigestRequired": true,
-      "compatibilityDecisionRequiredBeforeBinding": true
+      "compatibilityDecisionRequiredBeforeBinding": true,
+      "strictEntitlementVerificationRequired": true,
+      "entitledSourceDeliveryEvidenceRequired": true,
+      "deliveryDigestBindingRequired": true
     },
     "initializationOrder": [
       "VERIFY_MODULE_RECOVERY_BASELINE",
@@ -79,7 +82,7 @@
     ],
     "projectWorkspaceRule": "All project-specific work stays in a HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. The canonical SAFOR repository and package sources are never project targets.",
     "controlWorkspaceRule": "REMOTE_GIT uses a HUMAN-controlled separate safor-memory; LOCAL_GIT uses a Git-tracked MASTER-only .safor/ control root.",
-    "entitlementRule": "Commercial entitlement gates each selected paid package independently. SOFTWARE_SAAS requires a paid Factory and paid Operating Model, each with separate verified entitlement. Entitlement never grants organizational authority, provider rights, execution mandate or project scope.",
+    "entitlementRule": "Commercial entitlement gates each selected paid package independently. Strict verification requires ACTIVE status, explicit evaluatedAt, subject match, trusted issuer/verifier and commercial-basis evidence. ENTITLED_PACKAGE_SOURCE additionally requires trusted time-valid delivery evidence bound to entitlement, package/version and artifact digest. SOFTWARE_SAAS still requires separate entitlements for Factory and Operating Model.",
     "factoryBindingRule": "Discovery, Planning and domain Evidence use only the independently selected, access-verified, digest-verified, COMPATIBLE and immutable-pinned Factory/Operating Model pair.",
     "chatUiRule": "Use chat-native UI only.",
     "humanCommunicationRule": "Use the embedded HUMAN buddy profile.",
@@ -90,7 +93,8 @@
     "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
     "selfHealingRule": "Use conservative profile-constrained recovery; never invent entitlement, authority, evidence or workspace ownership.",
     "agentWorkspaceRule": "AGENT work uses persistent identities and repository-native jobs; local .safor/ is never a worker write target.",
-    "multiAgentSchedulerRule": "Dispatch only atomic READY conflict-free work with explicit capacity, leases and isolated Git mutation scope."
+    "multiAgentSchedulerRule": "Dispatch only atomic READY conflict-free work with explicit capacity, leases and isolated Git mutation scope.",
+    "commercialVerificationContextRule": "Pure package-access policy receives evaluatedAt, subjectRef, trustedIssuerIds, trustedEntitlementVerifierIds and trustedDeliveryVerifierIds explicitly; it never reads the wall clock or trusts identities declared only inside commercial records."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -179,12 +183,12 @@
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.13.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "358801b80da076d1c5de3c3f900f6f6fbd99bc57",
+      "sourceBlobSha": "5d9dea35d3a6c3da74e00aee893faca4f0b4fd4d",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "sourcePath": "v0.13.0/initialization-model.json",
-      "sourceBlobSha": "f6d62de438c3299c056ed216c40ba20a47b4efbd",
+      "sourceBlobSha": "ecddfa1cfeb8e2c4cfb3c7accc321fde3686f08e",
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
@@ -199,7 +203,7 @@
     },
     "selfHealing": {
       "sourcePath": "v0.13.0/self-healing-model.json",
-      "sourceBlobSha": "1d18f8e070abf1d5807c323d03ee58f6771962af",
+      "sourceBlobSha": "83851de59e4644571d012b12df7c84995978c88b",
       "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "moduleSelfHealing": {
@@ -364,7 +368,7 @@
     },
     "conformance": {
       "sourcePath": "v0.13.0/conformance.json",
-      "sourceBlobSha": "2373bef49254676ce10e5539bd96da224e653a43",
+      "sourceBlobSha": "3c4443b5a7d2a101905e7fe94f60df730692af91",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "schemaHumanResponse": {
@@ -449,12 +453,12 @@
     },
     "packageDistribution": {
       "sourcePath": "v0.13.0/package-distribution-model.json",
-      "sourceBlobSha": "14498641f64dbf53452a59a6f2b1f1e1a82fdff6",
+      "sourceBlobSha": "1845088c64ec53a5c5b4f999b06d891816b8d512",
       "selfHealingProfileId": "MRP-PACKAGE_DISTRIBUTION"
     },
     "commercialEntitlement": {
       "sourcePath": "v0.13.0/commercial-entitlement-model.json",
-      "sourceBlobSha": "b3e6775a95d2fcc39a18eb4fd8dc3beb741bae1b",
+      "sourceBlobSha": "4db451f55736c88e1896033c75c3d5d4e96eb134",
       "selfHealingProfileId": "MRP-COMMERCIAL_ENTITLEMENT"
     },
     "workspaceModel": {
@@ -474,7 +478,7 @@
     },
     "schemaEntitlement": {
       "sourcePath": "v0.13.0/schemas/entitlement.schema.json",
-      "sourceBlobSha": "b54998100f1354c0e2c96ece21ea4737565545f9",
+      "sourceBlobSha": "1e960674a18215d657a00bb7a5edc80cb8928057",
       "selfHealingProfileId": "MRP-SCHEMA_ENTITLEMENT"
     },
     "schemaWorkspaceBinding": {
@@ -507,7 +511,7 @@
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.13.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "358801b80da076d1c5de3c3f900f6f6fbd99bc57",
+      "sourceBlobSha": "5d9dea35d3a6c3da74e00aee893faca4f0b4fd4d",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.13.0",
@@ -622,7 +626,11 @@
           "domainPackageIntegrityRequired": true,
           "packageSelectionRequiresCompatibilityDecision": true,
           "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-          "creationProfileAccessPolicyEnforced": true
+          "creationProfileAccessPolicyEnforced": true,
+          "commercialEntitlementStatusTimeSubjectAndTrustRequired": true,
+          "commercialBasisEvidenceRequired": true,
+          "entitledSourceDeliveryEvidenceRequired": true,
+          "commercialDeliveryDigestBindingRequired": true
         },
         "moduleArchitecture": {
           "layers": [
@@ -788,7 +796,12 @@
             "domainPackageCreationTypeSupportRequired": true,
             "packagePairCompatibilityDecisionRequired": true,
             "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-            "creationProfileSelectedAccessPolicyRequired": true
+            "creationProfileSelectedAccessPolicyRequired": true,
+            "entitlementStatusTimeSubjectAndTrustRequired": true,
+            "commercialBasisEvidenceRequired": true,
+            "entitledPackageSourceDeliveryEvidenceRequired": true,
+            "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest": true,
+            "humanLoadedPaidPackageStillRequiresEntitlement": true
           },
           "domainPackageSchemaRef": "schemas/domain-package.schema.json",
           "selectionSchemaRef": "schemas/package-selection.schema.json",
@@ -2322,6 +2335,34 @@
           {
             "id": "INV-180",
             "rule": "Historical publicly disclosed Software Factory/SaaS Operating Model versions are legacy bytes and MUST NOT be treated as the current protected commercial package source."
+          },
+          {
+            "id": "INV-181",
+            "rule": "A paid package entitlement is usable only when status is ACTIVE and evaluatedAt lies within its validity interval."
+          },
+          {
+            "id": "INV-182",
+            "rule": "A paid entitlement must match the active HUMAN/organization subject, exact package/version grant and commercial-basis SKU; purchase evidence alone is not entitlement."
+          },
+          {
+            "id": "INV-183",
+            "rule": "Entitlement issuer and entitlement verifier trust are supplied by explicit trusted configuration and MUST NOT be inferred from identities declared inside the entitlement record."
+          },
+          {
+            "id": "INV-184",
+            "rule": "ENTITLED_PACKAGE_SOURCE requires external commercial delivery evidence before delivered package bytes may be used."
+          },
+          {
+            "id": "INV-185",
+            "rule": "Commercial delivery evidence binds entitlementId, packageId, exact version and declared-contract artifact digest and must be valid at the explicit evaluation timestamp."
+          },
+          {
+            "id": "INV-186",
+            "rule": "A delivery verifier must be explicitly trusted; self-declared delivery verification is insufficient."
+          },
+          {
+            "id": "INV-187",
+            "rule": "HUMAN_LOADED_PACKAGE may carry a licensed paid artifact without source delivery evidence, but it never bypasses entitlement status, subject, time, issuer or verifier checks."
           }
         ],
         "evidencePolicy": {
@@ -2483,7 +2524,7 @@
     "initialization": {
       "key": "initialization",
       "sourcePath": "v0.13.0/initialization-model.json",
-      "sourceBlobSha": "f6d62de438c3299c056ed216c40ba20a47b4efbd",
+      "sourceBlobSha": "ecddfa1cfeb8e2c4cfb3c7accc321fde3686f08e",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
         "schemaVersion": "0.13.0",
@@ -2581,15 +2622,26 @@
               "Resolve access separately for selected Factory and selected Operating Model.",
               "WEBSITE defaults are FREE_PUBLIC and may resolve from canonical public SAFOR Git at immutable revision/blob.",
               "SOFTWARE_SAAS and BOOK require BOTH selected packages to be PAID_ENTITLEMENT_REQUIRED; a free override cannot satisfy those creation profiles.",
-              "Every selected PAID_ENTITLEMENT_REQUIRED package requires HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus independently verified entitlement for that exact package/version.",
-              "Mixed FREE_PUBLIC/PAID pairs remain possible only for creation profiles whose selectedPackageAccessPolicy allows them.",
+              "Every paid package requires strict entitlement verification against explicit evaluatedAt, subjectRef, trusted issuer IDs and trusted entitlement verifier IDs.",
+              "Entitlement status must be ACTIVE, commercial basis evidence must exist, SKU must match the grant, validity must cover evaluatedAt, and subject/package/version must match exactly.",
+              "ENTITLED_PACKAGE_SOURCE additionally requires verified delivery evidence binding entitlementId, packageId, version and artifact digest, from a trusted delivery verifier and inside its delivery validity window.",
+              "HUMAN_LOADED_PACKAGE remains supported for licensed manual delivery but never bypasses strict entitlement verification.",
               "Paid package model content may not be read from the public canonical repository."
             ],
             "failOutcomes": {
               "missingPaidPackage": "PACKAGE_ACCESS_REQUIRED",
               "entitlementUnverified": "PACKAGE_ENTITLEMENT_UNVERIFIED",
               "publicPaidResolutionAttempt": "STOP",
-              "creationProfilePaidPairViolation": "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES"
+              "creationProfilePaidPairViolation": "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES",
+              "entitlementStatusInvalid": "PACKAGE_ENTITLEMENT_STATUS_INVALID",
+              "entitlementExpired": "PACKAGE_ENTITLEMENT_EXPIRED",
+              "entitlementSubjectMismatch": "PACKAGE_ENTITLEMENT_SUBJECT_MISMATCH",
+              "entitlementIssuerUntrusted": "PACKAGE_ENTITLEMENT_ISSUER_UNTRUSTED",
+              "entitlementVerifierUntrusted": "PACKAGE_ENTITLEMENT_VERIFIER_UNTRUSTED",
+              "deliveryEvidenceMissing": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_REQUIRED",
+              "deliveryEvidenceInvalid": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID",
+              "deliveryExpired": "COMMERCIAL_PACKAGE_DELIVERY_EXPIRED",
+              "deliveryDigestMismatch": "COMMERCIAL_PACKAGE_DELIVERY_DIGEST_MISMATCH"
             }
           },
           {
@@ -2604,9 +2656,13 @@
               "FRAMEWORK_VERSION_RANGE",
               "CREATION_TYPE_SUPPORT",
               "ACCESS_MODE",
-              "ENTITLEMENT_WHEN_REQUIRED"
+              "ENTITLEMENT_WHEN_REQUIRED",
+              "ENTITLEMENT_STATUS_TIME_SUBJECT_AND_TRUST_WHEN_REQUIRED",
+              "COMMERCIAL_BASIS_EVIDENCE_WHEN_REQUIRED",
+              "ENTITLED_SOURCE_DELIVERY_EVIDENCE_WHEN_REQUIRED",
+              "DELIVERY_ARTIFACT_DIGEST_MATCH_WHEN_REQUIRED"
             ],
-            "rule": "Factory and Operating Model are verified independently and are not bindable until artifact integrity, compatibility scope and access evidence are proven."
+            "rule": "Factory and Operating Model are independently bindable only after package integrity, creation/framework scope, strict commercial entitlement and protected-source delivery evidence (when applicable) have been proven."
           },
           {
             "id": "INIT-05",
@@ -3982,7 +4038,7 @@
     "selfHealing": {
       "key": "selfHealing",
       "sourcePath": "v0.13.0/self-healing-model.json",
-      "sourceBlobSha": "1d18f8e070abf1d5807c323d03ee58f6771962af",
+      "sourceBlobSha": "83851de59e4644571d012b12df7c84995978c88b",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
         "schemaVersion": "0.13.0",
@@ -4313,11 +4369,15 @@
               "selected package does not support active Creation Type",
               "paid selected Factory or Operating Model lacks independently verified entitlement",
               "Factory/Operating Model capability or authority compatibility fails",
-              "materialized package selection or compatibility decision is missing or inconsistent"
+              "materialized package selection or compatibility decision is missing or inconsistent",
+              "entitlement is revoked, suspended, expired, not yet valid or bound to a different subject",
+              "entitlement issuer or verifier is not trusted by the active verification context",
+              "ENTITLED_PACKAGE_SOURCE lacks delivery evidence",
+              "commercial package delivery evidence is expired or binds the wrong entitlement/package/version/digest"
             ],
-            "automaticRepair": "RELOAD_VERIFIED_PACKAGE_METADATA_OR_REOBSERVE_PACKAGE_SOURCE_WITHOUT_CHANGING_HUMAN_SELECTION",
+            "automaticRepair": "REOBSERVE_TRUSTED_ENTITLEMENT_OR_DELIVERY_SOURCE_AND_REVERIFY_WITHOUT_CHANGING_SUBJECT_SELECTION_ENTITLEMENT_OR_PACKAGE_BYTES",
             "defaultRetryBudget": 1,
-            "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
+            "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
           }
         ],
         "eligibilityRules": [
@@ -4393,7 +4453,14 @@
           "INVENT_PACKAGE_ENTITLEMENT",
           "REWRITE_DOMAIN_PACKAGE_TO_MATCH_EXPECTED_DIGEST",
           "SILENTLY_CHANGE_SELECTED_FACTORY_OR_OPERATING_MODEL",
-          "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS"
+          "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS",
+          "INVENT_COMMERCIAL_BASIS_EVIDENCE",
+          "TREAT_REVOKED_SUSPENDED_OR_EXPIRED_ENTITLEMENT_AS_ACTIVE",
+          "TRUST_ENTITLEMENT_ISSUER_FROM_SELF_DECLARED_RECORD",
+          "TRUST_ENTITLEMENT_OR_DELIVERY_VERIFIER_FROM_SELF_DECLARED_RECORD",
+          "INVENT_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+          "IGNORE_COMMERCIAL_DELIVERY_EXPIRY",
+          "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -14786,7 +14853,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.13.0/conformance.json",
-      "sourceBlobSha": "2373bef49254676ce10e5539bd96da224e653a43",
+      "sourceBlobSha": "3c4443b5a7d2a101905e7fe94f60df730692af91",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.13.0",
@@ -15970,6 +16037,46 @@
           {
             "id": "CF-236",
             "statement": "Historical public Software Factory/SaaS Operating Model bytes are legacy disclosure and are not the current protected commercial package source.",
+            "expected": true
+          },
+          {
+            "id": "CF-237",
+            "statement": "Paid entitlement verification requires ACTIVE status, explicit evaluation time and matching subject/package/version.",
+            "expected": true
+          },
+          {
+            "id": "CF-238",
+            "statement": "Commercial-basis evidence exists separately from entitlement and its SKU matches the entitlement grant; purchase evidence alone never authorizes package use.",
+            "expected": true
+          },
+          {
+            "id": "CF-239",
+            "statement": "Entitlement issuer and verifier identities are accepted only from explicit trusted verification context, never from self-declared record fields.",
+            "expected": true
+          },
+          {
+            "id": "CF-240",
+            "statement": "ENTITLED_PACKAGE_SOURCE requires SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE before package use.",
+            "expected": true
+          },
+          {
+            "id": "CF-241",
+            "statement": "Commercial delivery evidence binds entitlementId, packageId, exact version and artifact digest.",
+            "expected": true
+          },
+          {
+            "id": "CF-242",
+            "statement": "Commercial delivery evidence is rejected when expired, future-issued or verified by an untrusted delivery verifier.",
+            "expected": true
+          },
+          {
+            "id": "CF-243",
+            "statement": "Delivery artifactDigest equals the selected domain package declared-contract digest; digest mismatch fails closed.",
+            "expected": true
+          },
+          {
+            "id": "CF-244",
+            "statement": "HUMAN_LOADED_PACKAGE remains allowed for paid manual delivery but still requires strict verified entitlement.",
             "expected": true
           }
         ],
@@ -18491,7 +18598,7 @@
     "packageDistribution": {
       "key": "packageDistribution",
       "sourcePath": "v0.13.0/package-distribution-model.json",
-      "sourceBlobSha": "14498641f64dbf53452a59a6f2b1f1e1a82fdff6",
+      "sourceBlobSha": "1845088c64ec53a5c5b4f999b06d891816b8d512",
       "content": {
         "format": "SAFOR_PACKAGE_DISTRIBUTION_MODEL",
         "schemaVersion": "0.13.0",
@@ -18514,7 +18621,11 @@
           "compatibilityDecisionRequiredBeforeBinding": true,
           "websiteStarterIsFreePublic": true,
           "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-          "creationProfileMayConstrainSelectedAccessModes": true
+          "creationProfileMayConstrainSelectedAccessModes": true,
+          "commercialDeliveryEvidenceRequiredForEntitledSource": true,
+          "deliveryArtifactDigestMustMatchPackageIntegrity": true,
+          "trustedDeliveryVerifierRequired": true,
+          "deliveryEvidenceExternalToPackageArtifact": true
         },
         "sourceClasses": {
           "PUBLIC_CANONICAL_REPOSITORY": {
@@ -18530,13 +18641,21 @@
               "FREE_PUBLIC",
               "PAID_ENTITLEMENT_REQUIRED"
             ],
-            "rule": "Loaded package content must validate and paid content additionally requires independently verified entitlement evidence."
+            "rule": "Loaded package content must validate. Paid content may be manually supplied by the HUMAN, but it still requires strict active entitlement verification; manual loading never self-authorizes use."
           },
           "ENTITLED_PACKAGE_SOURCE": {
             "allowedAccessModes": [
               "PAID_ENTITLEMENT_REQUIRED"
             ],
-            "rule": "Resolve only after entitlement verification; package bytes remain separate from public Framework distribution."
+            "requires": [
+              "STRICT_VERIFIED_ENTITLEMENT",
+              "SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+              "TRUSTED_DELIVERY_VERIFIER",
+              "DELIVERY_TIME_VALID",
+              "DELIVERY_PACKAGE_VERSION_MATCH",
+              "DELIVERY_ARTIFACT_DIGEST_MATCH"
+            ],
+            "rule": "Resolve package bytes only after strict entitlement verification. Delivery evidence must bind the entitlement, exact package/version and artifact digest. Package bytes remain separate from the public Framework."
           },
           "PROJECT_PINNED_SNAPSHOT": {
             "discoveryAllowed": false,
@@ -18544,8 +18663,9 @@
           }
         },
         "resolutionOrder": [
+          "STRICT_ENTITLEMENT_VERIFICATION_FOR_PAID_SELECTION",
           "EXPLICIT_HUMAN_LOADED_PACKAGE",
-          "VERIFIED_ENTITLED_PACKAGE_SOURCE",
+          "VERIFIED_ENTITLED_PACKAGE_SOURCE_WITH_DELIVERY_EVIDENCE",
           "PUBLIC_CANONICAL_REPOSITORY_FOR_FREE_PUBLIC_ONLY"
         ],
         "freeStarterProfile": {
@@ -18571,6 +18691,21 @@
             "defaultOperatingModelPackageId": "safor.om.book-authoring",
             "publicModelResolutionForbidden": true
           }
+        },
+        "commercialDeliveryContract": {
+          "sequence": [
+            "VERIFY_COMMERCIAL_BASIS_AND_ENTITLEMENT",
+            "VERIFY_ENTITLEMENT_STATUS_TIME_SUBJECT_AND_TRUST",
+            "AUTHORIZE_ENTITLED_SOURCE_READ",
+            "VERIFY_DELIVERY_EVIDENCE",
+            "VERIFY_DOMAIN_PACKAGE_DIGEST",
+            "CONTINUE_TO_PACKAGE_COMPATIBILITY_AND_BINDING"
+          ],
+          "noPublicFallback": true,
+          "noDeliveryWithoutEntitlement": true,
+          "noBindingFromExpiredDeliveryEvidence": true,
+          "noDigestSubstitution": true,
+          "humanLoadedLicensedArtifactSupported": true
         }
       },
       "selfHealingProfileId": "MRP-PACKAGE_DISTRIBUTION"
@@ -18578,12 +18713,12 @@
     "commercialEntitlement": {
       "key": "commercialEntitlement",
       "sourcePath": "v0.13.0/commercial-entitlement-model.json",
-      "sourceBlobSha": "b3e6775a95d2fcc39a18eb4fd8dc3beb741bae1b",
+      "sourceBlobSha": "4db451f55736c88e1896033c75c3d5d4e96eb134",
       "content": {
         "format": "SAFOR_COMMERCIAL_ENTITLEMENT_MODEL",
         "schemaVersion": "0.13.0",
         "id": "safor-commercial-entitlement",
-        "purpose": "Gate commercial use independently for each selected Factory or Operating Model package without changing project decision authority, provider rights or the other package's access mode.",
+        "purpose": "Gate commercial package use through a verifiable chain from commercial basis to active entitlement, trusted verification, protected package delivery evidence, artifact integrity and immutable binding without granting organizational authority.",
         "accessModes": [
           "FREE_PUBLIC",
           "PAID_ENTITLEMENT_REQUIRED"
@@ -18604,7 +18739,19 @@
           "creationProfileAccessPolicyMustBeSatisfiedBeforeBinding": true,
           "softwareSaasRequiresFactoryEntitlement": true,
           "softwareSaasRequiresOperatingModelEntitlement": true,
-          "freeWebsiteDefaultsRequireNoEntitlement": true
+          "freeWebsiteDefaultsRequireNoEntitlement": true,
+          "entitlementStatusMustBeActive": true,
+          "entitlementValidityEvaluatedAtExplicitTimestamp": true,
+          "entitlementSubjectMustMatchActiveHumanOrOrganization": true,
+          "entitlementIssuerMustBeTrusted": true,
+          "entitlementVerifierMustBeTrusted": true,
+          "commercialBasisEvidenceRequired": true,
+          "commercialBasisSkuMustMatchGrant": true,
+          "entitledPackageSourceRequiresDeliveryEvidence": true,
+          "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest": true,
+          "deliveryVerifierMustBeTrusted": true,
+          "deliveryEvidenceMustBeTimeValid": true,
+          "humanLoadedPaidPackageMayBypassDeliveryChannelButNeverEntitlement": true
         },
         "allowedVerificationMethods": [
           "AUTHORIZED_ENTITLEMENT_PROVIDER_READBACK",
@@ -18613,13 +18760,64 @@
         "failOutcomes": {
           "missing": "PACKAGE_ACCESS_REQUIRED",
           "unverifiable": "PACKAGE_ENTITLEMENT_UNVERIFIED",
+          "statusInvalid": "PACKAGE_ENTITLEMENT_STATUS_INVALID",
+          "notYetValid": "PACKAGE_ENTITLEMENT_NOT_YET_VALID",
           "expired": "PACKAGE_ENTITLEMENT_EXPIRED",
-          "packageMismatch": "PACKAGE_ENTITLEMENT_SCOPE_MISMATCH"
+          "subjectMismatch": "PACKAGE_ENTITLEMENT_SUBJECT_MISMATCH",
+          "issuerUntrusted": "PACKAGE_ENTITLEMENT_ISSUER_UNTRUSTED",
+          "verifierUntrusted": "PACKAGE_ENTITLEMENT_VERIFIER_UNTRUSTED",
+          "commercialBasisInvalid": "PACKAGE_ENTITLEMENT_COMMERCIAL_BASIS_INVALID",
+          "packageMismatch": "PACKAGE_ENTITLEMENT_SCOPE_MISMATCH",
+          "deliveryEvidenceMissing": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_REQUIRED",
+          "deliveryEvidenceInvalid": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID",
+          "deliveryExpired": "COMMERCIAL_PACKAGE_DELIVERY_EXPIRED",
+          "deliveryDigestMismatch": "COMMERCIAL_PACKAGE_DELIVERY_DIGEST_MISMATCH"
         },
         "profileRules": {
           "WEBSITE": "Default Website Factory and Website Operating Model are FREE_PUBLIC; paid compatible overrides, if selected, require entitlement only for the paid package.",
           "SOFTWARE_SAAS": "Both selected Factory and selected Operating Model must be PAID_ENTITLEMENT_REQUIRED and each must have independently verified entitlement.",
           "BOOK": "Both selected Factory and selected Operating Model must be PAID_ENTITLEMENT_REQUIRED and each must have independently verified entitlement."
+        },
+        "trustContract": {
+          "rule": "Trust is explicit input to verification; SAFOR never infers trusted issuers/verifiers from fields inside an entitlement or delivery record.",
+          "requiredVerificationContext": [
+            "evaluatedAt",
+            "subjectRef",
+            "trustedIssuerIds",
+            "trustedEntitlementVerifierIds",
+            "trustedDeliveryVerifierIds"
+          ],
+          "noWallClockInPurePolicy": true,
+          "noSelfDeclaredTrust": true
+        },
+        "commercialLifecycle": [
+          "COMMERCIAL_BASIS_RECORDED",
+          "ENTITLEMENT_ISSUED",
+          "ENTITLEMENT_EXTERNALLY_VERIFIED",
+          "PACKAGE_DELIVERY_AUTHORIZED",
+          "PACKAGE_DELIVERY_EVIDENCE_VERIFIED",
+          "DOMAIN_PACKAGE_INTEGRITY_VERIFIED",
+          "PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+          "IMMUTABLE_PROJECT_BINDING"
+        ],
+        "deliveryEvidenceContract": {
+          "format": "SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+          "schemaVersion": "0.13.0",
+          "requiredFields": [
+            "deliveryId",
+            "entitlementId",
+            "packageId",
+            "version",
+            "artifactDigest",
+            "sourceRef",
+            "issuedAt",
+            "expiresAt",
+            "verifierId",
+            "result"
+          ],
+          "result": "VERIFIED",
+          "digestRule": "artifactDigest equals the selected SAFOR_DOMAIN_PACKAGE declared-contract digest and therefore binds delivered content to the verified entitlement/package/version.",
+          "sourceRule": "Required for ENTITLED_PACKAGE_SOURCE. HUMAN_LOADED_PACKAGE remains supported for licensed manual delivery but still requires strict entitlement verification."
         }
       },
       "selfHealingProfileId": "MRP-COMMERCIAL_ENTITLEMENT"
@@ -19146,7 +19344,7 @@
     "schemaEntitlement": {
       "key": "schemaEntitlement",
       "sourcePath": "v0.13.0/schemas/entitlement.schema.json",
-      "sourceBlobSha": "b54998100f1354c0e2c96ece21ea4737565545f9",
+      "sourceBlobSha": "1e960674a18215d657a00bb7a5edc80cb8928057",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "https://safor.dev/schemas/0.13.0/entitlement.schema.json",
@@ -19157,8 +19355,10 @@
           "format",
           "schemaVersion",
           "entitlementId",
+          "status",
           "subject",
           "grant",
+          "commercialBasis",
           "validity",
           "issuer",
           "verification"
@@ -19272,7 +19472,8 @@
               "method",
               "verifierId",
               "evidenceRef",
-              "verifiedAt"
+              "verifiedAt",
+              "result"
             ],
             "properties": {
               "method": {
@@ -19292,6 +19493,44 @@
               "verifiedAt": {
                 "type": "string",
                 "format": "date-time"
+              },
+              "result": {
+                "const": "VERIFIED"
+              }
+            }
+          },
+          "status": {
+            "enum": [
+              "ACTIVE",
+              "SUSPENDED",
+              "REVOKED",
+              "EXPIRED"
+            ]
+          },
+          "commercialBasis": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "basisType",
+              "evidenceRef",
+              "sku"
+            ],
+            "properties": {
+              "basisType": {
+                "enum": [
+                  "PURCHASE",
+                  "SUBSCRIPTION",
+                  "CONTRACT",
+                  "MANUAL_GRANT"
+                ]
+              },
+              "evidenceRef": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sku": {
+                "type": "string",
+                "minLength": 1
               }
             }
           }

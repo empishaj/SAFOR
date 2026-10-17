@@ -24,7 +24,13 @@ def entitlement(package_id, version, entitlement_id):
         "format": "SAFOR_COMMERCIAL_ENTITLEMENT",
         "schemaVersion": "0.13.0",
         "entitlementId": entitlement_id,
+        "status": "ACTIVE",
         "subject": {"subjectType": "HUMAN", "subjectRef": "human-1"},
+        "commercialBasis": {
+            "basisType": "PURCHASE",
+            "evidenceRef": "order://" + entitlement_id,
+            "sku": "TEST-SKU",
+        },
         "grant": {
             "sku": "TEST-SKU",
             "packageId": package_id,
@@ -38,7 +44,19 @@ def entitlement(package_id, version, entitlement_id):
             "verifierId": "license-verifier",
             "evidenceRef": "license://" + entitlement_id,
             "verifiedAt": "2026-10-17T00:00:01Z",
+            "result": "VERIFIED",
         },
+    }
+
+
+
+def verification_context():
+    return {
+        "evaluatedAt": "2026-10-17T12:00:00Z",
+        "subjectRef": "human-1",
+        "trustedIssuerIds": ["safor-licensing"],
+        "trustedEntitlementVerifierIds": ["license-verifier"],
+        "trustedDeliveryVerifierIds": ["delivery-verifier"],
     }
 
 
@@ -136,6 +154,7 @@ class ComposablePackageTests(unittest.TestCase):
             [],
             [],
             {"factoryPackageId": package_id},
+            verification_context=verification_context(),
         )
         self.assertEqual(
             "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES",
@@ -166,7 +185,8 @@ class ComposablePackageTests(unittest.TestCase):
             entitlement(om["packageId"], om["version"], "ENT-SW-OM"),
         ]
         result = resolve_composable_creation_packages(
-            "SOFTWARE_SAAS", self.catalog, loaded, entitlements
+            "SOFTWARE_SAAS", self.catalog, loaded, entitlements,
+            verification_context=verification_context(),
         )
         self.assertEqual("PACKAGE_ACCESS_RESOLVED", result["outcome"])
         self.assertFalse(result["mixedAccessModes"])
@@ -196,6 +216,7 @@ class ComposablePackageTests(unittest.TestCase):
                 {"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": om},
             ],
             [entitlement(factory["packageId"], factory["version"], "ENT-SW-F")],
+            verification_context=verification_context(),
         )
         self.assertEqual("PACKAGE_ENTITLEMENT_UNVERIFIED", result["outcome"])
         self.assertEqual("safor.om.saas-engineering", result["packageId"])
@@ -230,25 +251,26 @@ class ComposablePackageTests(unittest.TestCase):
             [{"sourceClass": "HUMAN_LOADED_PACKAGE", "artifact": artifact}],
             [entitlement(package_id, "2.0.0", "ENT-WEB-PRO")],
             {"factoryPackageId": package_id},
+            verification_context=verification_context(),
         )
         self.assertEqual("PACKAGE_ACCESS_RESOLVED", result["outcome"])
         self.assertTrue(result["mixedAccessModes"])
 
     def test_free_website_packages_have_valid_integrity_and_framework_range(self):
         for pkg in (self.website_factory, self.website_om):
-            result = validate_domain_package(pkg, "0.13.0-rc.3", "WEBSITE")
+            result = validate_domain_package(pkg, "0.13.0-rc.4", "WEBSITE")
             self.assertTrue(result["valid"], result["errors"])
 
     def test_website_package_tampering_is_detected(self):
         tampered = copy.deepcopy(self.website_factory)
         tampered["model"]["tampered"] = True
-        result = validate_domain_package(tampered, "0.13.0-rc.3", "WEBSITE")
+        result = validate_domain_package(tampered, "0.13.0-rc.4", "WEBSITE")
         self.assertFalse(result["valid"])
         self.assertIn("DOMAIN_PACKAGE_INTEGRITY_MISMATCH", result["errors"])
 
     def test_free_website_factory_and_operating_model_are_compatible(self):
         result = evaluate_domain_package_pair(
-            self.website_factory, self.website_om, "0.13.0-rc.3", "WEBSITE"
+            self.website_factory, self.website_om, "0.13.0-rc.4", "WEBSITE"
         )
         self.assertTrue(result["compatible"], result)
 
@@ -259,7 +281,7 @@ class ComposablePackageTests(unittest.TestCase):
         ]
         om["integrity"]["contentDigest"] = compute_domain_package_digest(om)
         result = evaluate_domain_package_pair(
-            self.website_factory, om, "0.13.0-rc.3", "WEBSITE"
+            self.website_factory, om, "0.13.0-rc.4", "WEBSITE"
         )
         self.assertFalse(result["compatible"])
         self.assertIn("accessibility_verification", result["missingCapabilities"])
@@ -271,7 +293,7 @@ class ComposablePackageTests(unittest.TestCase):
         ]
         om["integrity"]["contentDigest"] = compute_domain_package_digest(om)
         base = evaluate_domain_package_pair(
-            self.website_factory, om, "0.13.0-rc.3", "WEBSITE"
+            self.website_factory, om, "0.13.0-rc.4", "WEBSITE"
         )
         self.assertTrue(base["compatible"], base)
         active = evaluate_active_conditional_requirements(
@@ -288,13 +310,13 @@ class ComposablePackageTests(unittest.TestCase):
         invalid = copy.deepcopy(self.website_factory)
         invalid["packageId"] = "safor.om.not-a-factory"
         invalid["integrity"]["contentDigest"] = compute_domain_package_digest(invalid)
-        result = validate_domain_package(invalid, "0.13.0-rc.3", "WEBSITE")
+        result = validate_domain_package(invalid, "0.13.0-rc.4", "WEBSITE")
         self.assertFalse(result["valid"])
         self.assertIn("DOMAIN_PACKAGE_ID_KIND_MISMATCH", result["errors"])
 
     def test_creation_type_scope_is_enforced(self):
         result = validate_domain_package(
-            self.website_factory, "0.13.0-rc.3", "SOFTWARE_SAAS"
+            self.website_factory, "0.13.0-rc.4", "SOFTWARE_SAAS"
         )
         self.assertFalse(result["valid"])
         self.assertIn("DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED", result["errors"])

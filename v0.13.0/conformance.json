@@ -1182,6 +1182,46 @@
       "id": "CF-236",
       "statement": "Historical public Software Factory/SaaS Operating Model bytes are legacy disclosure and are not the current protected commercial package source.",
       "expected": true
+    },
+    {
+      "id": "CF-237",
+      "statement": "Paid entitlement verification requires ACTIVE status, explicit evaluation time and matching subject/package/version.",
+      "expected": true
+    },
+    {
+      "id": "CF-238",
+      "statement": "Commercial-basis evidence exists separately from entitlement and its SKU matches the entitlement grant; purchase evidence alone never authorizes package use.",
+      "expected": true
+    },
+    {
+      "id": "CF-239",
+      "statement": "Entitlement issuer and verifier identities are accepted only from explicit trusted verification context, never from self-declared record fields.",
+      "expected": true
+    },
+    {
+      "id": "CF-240",
+      "statement": "ENTITLED_PACKAGE_SOURCE requires SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE before package use.",
+      "expected": true
+    },
+    {
+      "id": "CF-241",
+      "statement": "Commercial delivery evidence binds entitlementId, packageId, exact version and artifact digest.",
+      "expected": true
+    },
+    {
+      "id": "CF-242",
+      "statement": "Commercial delivery evidence is rejected when expired, future-issued or verified by an untrusted delivery verifier.",
+      "expected": true
+    },
+    {
+      "id": "CF-243",
+      "statement": "Delivery artifactDigest equals the selected domain package declared-contract digest; digest mismatch fails closed.",
+      "expected": true
+    },
+    {
+      "id": "CF-244",
+      "statement": "HUMAN_LOADED_PACKAGE remains allowed for paid manual delivery but still requires strict verified entitlement.",
+      "expected": true
     }
   ],
   "lastManualVerification": {

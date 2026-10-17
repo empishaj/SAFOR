@@ -9,8 +9,7 @@ SAFOR is deny-by-default and evidence-driven.
 - Provider permissions come from the actual GitHub/GitLab connection, never from JSON declarations.
 - `{OWNER}/safor-memory` must be readable and writable before SAFOR proceeds.
 - External mutations require authoritative provider readback before they are treated as completed.
-- Website Factory 1.6 requires security requirements before implementation, threat assessment during design, secure-build evidence, post-release vulnerability response and fail-closed conditional risk authorities.
-- Dependency inventory and build provenance are required; SBOM evidence is required when third-party components are present.
+- The free Website Factory uses its dedicated Website quality boundary; the broader secure software lifecycle belongs to the commercial Software/SaaS Factory.
 - Unknown mutation effects transition to reconciliation before any retry.
 - Self-healing may not bypass HUMAN gates, reviews, separation of duties, or active mandate scope.
 - Force-push, history rewrite, destructive repository deletion, and invented evidence are forbidden automatic repairs.
@@ -21,9 +20,21 @@ Do not post secrets or exploitable details in a public issue. Contact the reposi
 
 ## Supported version
 
-Security hardening currently targets SAFOR v0.13.0-rc.3 and the free Website Factory/Operating Model 1.0.0 pair.
+Security hardening currently targets SAFOR v0.13.0-rc.4 and the free Website Factory/Operating Model 1.0.0 pair.
 
 
 ## Commercial package boundary
 
 Current Software/SaaS package content is never resolved from the public canonical repository. Historical public 1.6 bytes are disclosure-only and do not satisfy the rc.3 commercial package source contract. SOFTWARE_SAAS additionally fails closed if either selected domain package is FREE_PUBLIC or lacks independent entitlement evidence.
+
+
+### Commercial entitlement and delivery trust
+
+- A purchase receipt is not an entitlement.
+- An entitlement record is not trusted merely because it names an issuer/verifier.
+- Trust anchors are supplied externally as explicit trusted issuer/verifier identities.
+- Paid entitlement status must be ACTIVE and valid for the explicit evaluation timestamp and active subject.
+- `ENTITLED_PACKAGE_SOURCE` must return separate delivery evidence binding entitlement, package ID/version and artifact digest.
+- Expired delivery evidence, untrusted delivery verifier or digest mismatch fails closed.
+- The pure reference policy reads no wall clock and performs no network/provider calls.
+- rc.4 models and validates the trust chain but does not claim that a production billing/licensing backend or cryptographic offline-signature verifier has been deployed.

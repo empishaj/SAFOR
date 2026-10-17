@@ -20,7 +20,11 @@
     "compatibilityDecisionRequiredBeforeBinding": true,
     "websiteStarterIsFreePublic": true,
     "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
-    "creationProfileMayConstrainSelectedAccessModes": true
+    "creationProfileMayConstrainSelectedAccessModes": true,
+    "commercialDeliveryEvidenceRequiredForEntitledSource": true,
+    "deliveryArtifactDigestMustMatchPackageIntegrity": true,
+    "trustedDeliveryVerifierRequired": true,
+    "deliveryEvidenceExternalToPackageArtifact": true
   },
   "sourceClasses": {
     "PUBLIC_CANONICAL_REPOSITORY": {
@@ -36,13 +40,21 @@
         "FREE_PUBLIC",
         "PAID_ENTITLEMENT_REQUIRED"
       ],
-      "rule": "Loaded package content must validate and paid content additionally requires independently verified entitlement evidence."
+      "rule": "Loaded package content must validate. Paid content may be manually supplied by the HUMAN, but it still requires strict active entitlement verification; manual loading never self-authorizes use."
     },
     "ENTITLED_PACKAGE_SOURCE": {
       "allowedAccessModes": [
         "PAID_ENTITLEMENT_REQUIRED"
       ],
-      "rule": "Resolve only after entitlement verification; package bytes remain separate from public Framework distribution."
+      "requires": [
+        "STRICT_VERIFIED_ENTITLEMENT",
+        "SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+        "TRUSTED_DELIVERY_VERIFIER",
+        "DELIVERY_TIME_VALID",
+        "DELIVERY_PACKAGE_VERSION_MATCH",
+        "DELIVERY_ARTIFACT_DIGEST_MATCH"
+      ],
+      "rule": "Resolve package bytes only after strict entitlement verification. Delivery evidence must bind the entitlement, exact package/version and artifact digest. Package bytes remain separate from the public Framework."
     },
     "PROJECT_PINNED_SNAPSHOT": {
       "discoveryAllowed": false,
@@ -50,8 +62,9 @@
     }
   },
   "resolutionOrder": [
+    "STRICT_ENTITLEMENT_VERIFICATION_FOR_PAID_SELECTION",
     "EXPLICIT_HUMAN_LOADED_PACKAGE",
-    "VERIFIED_ENTITLED_PACKAGE_SOURCE",
+    "VERIFIED_ENTITLED_PACKAGE_SOURCE_WITH_DELIVERY_EVIDENCE",
     "PUBLIC_CANONICAL_REPOSITORY_FOR_FREE_PUBLIC_ONLY"
   ],
   "freeStarterProfile": {
@@ -77,5 +90,20 @@
       "defaultOperatingModelPackageId": "safor.om.book-authoring",
       "publicModelResolutionForbidden": true
     }
+  },
+  "commercialDeliveryContract": {
+    "sequence": [
+      "VERIFY_COMMERCIAL_BASIS_AND_ENTITLEMENT",
+      "VERIFY_ENTITLEMENT_STATUS_TIME_SUBJECT_AND_TRUST",
+      "AUTHORIZE_ENTITLED_SOURCE_READ",
+      "VERIFY_DELIVERY_EVIDENCE",
+      "VERIFY_DOMAIN_PACKAGE_DIGEST",
+      "CONTINUE_TO_PACKAGE_COMPATIBILITY_AND_BINDING"
+    ],
+    "noPublicFallback": true,
+    "noDeliveryWithoutEntitlement": true,
+    "noBindingFromExpiredDeliveryEvidence": true,
+    "noDigestSubstitution": true,
+    "humanLoadedLicensedArtifactSupported": true
   }
 }

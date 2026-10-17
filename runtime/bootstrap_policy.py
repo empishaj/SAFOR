@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import datetime, timezone
 
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Set
 
@@ -512,18 +513,157 @@ def _loaded_package_record(
     return matches[0] if matches else None
 
 
+
+def _parse_timestamp(value: str) -> datetime:
+    text = str(value)
+    if text.endswith("Z"):
+        text = text[:-1] + "+00:00"
+    parsed = datetime.fromisoformat(text)
+    if parsed.tzinfo is None:
+        raise ValueError("Timestamp must be timezone-aware")
+    return parsed.astimezone(timezone.utc)
+
+
+def validate_commercial_entitlement(
+    entitlement: Mapping[str, Any],
+    package_id: str,
+    version: str,
+    verification_context: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Strict rc.4 commercial entitlement verification.
+
+    Time, subject and trust are supplied explicitly so this policy function stays
+    pure and never reads the wall clock or invents trusted identities.
+    """
+    if entitlement.get("format") != "SAFOR_COMMERCIAL_ENTITLEMENT" or entitlement.get("schemaVersion") != "0.13.0":
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED"}
+
+    if entitlement.get("status") != "ACTIVE":
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_STATUS_INVALID"}
+
+    grant = entitlement.get("grant", {})
+    if grant.get("packageId") != package_id or not _version_grant_matches(str(grant.get("versionRange", "")), version):
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_SCOPE_MISMATCH"}
+
+    expected_subject = verification_context.get("subjectRef")
+    subject = entitlement.get("subject", {})
+    if not expected_subject or subject.get("subjectRef") != expected_subject:
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_SUBJECT_MISMATCH"}
+
+    issuer = entitlement.get("issuer", {})
+    trusted_issuers = set(verification_context.get("trustedIssuerIds", []))
+    if not trusted_issuers or issuer.get("issuerId") not in trusted_issuers:
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_ISSUER_UNTRUSTED"}
+
+    verification = entitlement.get("verification", {})
+    trusted_verifiers = set(verification_context.get("trustedEntitlementVerifierIds", []))
+    if verification.get("method") not in ALLOWED_ENTITLEMENT_VERIFIERS:
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED"}
+    if verification.get("result") != "VERIFIED":
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED"}
+    if not trusted_verifiers or verification.get("verifierId") not in trusted_verifiers:
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_VERIFIER_UNTRUSTED"}
+    if not verification.get("evidenceRef"):
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED"}
+
+    basis = entitlement.get("commercialBasis", {})
+    if (
+        basis.get("basisType") not in {"PURCHASE", "SUBSCRIPTION", "CONTRACT", "MANUAL_GRANT"}
+        or not basis.get("evidenceRef")
+        or basis.get("sku") != grant.get("sku")
+    ):
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_COMMERCIAL_BASIS_INVALID"}
+
+    evaluated_at_raw = verification_context.get("evaluatedAt")
+    try:
+        evaluated_at = _parse_timestamp(str(evaluated_at_raw))
+        valid_from = _parse_timestamp(str(entitlement.get("validity", {}).get("validFrom")))
+        valid_until_raw = entitlement.get("validity", {}).get("validUntil")
+        verified_at = _parse_timestamp(str(verification.get("verifiedAt")))
+        if evaluated_at < valid_from:
+            return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_NOT_YET_VALID"}
+        if valid_until_raw is not None and evaluated_at >= _parse_timestamp(str(valid_until_raw)):
+            return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_EXPIRED"}
+        if verified_at > evaluated_at:
+            return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_VERIFICATION_TIME_INVALID"}
+    except (TypeError, ValueError):
+        return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_TIME_INVALID"}
+
+    return {
+        "valid": True,
+        "outcome": "PACKAGE_ENTITLEMENT_VERIFIED",
+        "entitlementId": entitlement.get("entitlementId"),
+        "issuerId": issuer.get("issuerId"),
+        "verifierId": verification.get("verifierId"),
+    }
+
+
+def validate_commercial_delivery_evidence(
+    delivery_evidence: Mapping[str, Any],
+    artifact: Mapping[str, Any],
+    entitlement: Mapping[str, Any],
+    verification_context: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Validate evidence produced by an entitled/private package delivery source."""
+    if delivery_evidence.get("format") != "SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE":
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
+    if delivery_evidence.get("schemaVersion") != "0.13.0":
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
+    if delivery_evidence.get("result") != "VERIFIED":
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
+    if delivery_evidence.get("entitlementId") != entitlement.get("entitlementId"):
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_ENTITLEMENT_MISMATCH"}
+    if delivery_evidence.get("packageId") != artifact.get("packageId"):
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_PACKAGE_MISMATCH"}
+    if delivery_evidence.get("version") != artifact.get("version"):
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_PACKAGE_MISMATCH"}
+
+    artifact_digest = compute_domain_package_digest(artifact)
+    if artifact.get("integrity", {}).get("contentDigest") != artifact_digest:
+        return {"valid": False, "outcome": "DOMAIN_PACKAGE_INTEGRITY_MISMATCH"}
+    if delivery_evidence.get("artifactDigest") != artifact_digest:
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_DIGEST_MISMATCH"}
+
+    verifier_id = delivery_evidence.get("verifierId")
+    trusted_delivery_verifiers = set(verification_context.get("trustedDeliveryVerifierIds", []))
+    if not trusted_delivery_verifiers or verifier_id not in trusted_delivery_verifiers:
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_VERIFIER_UNTRUSTED"}
+    if not delivery_evidence.get("sourceRef") or not delivery_evidence.get("deliveryId"):
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
+
+    try:
+        evaluated_at = _parse_timestamp(str(verification_context.get("evaluatedAt")))
+        issued_at = _parse_timestamp(str(delivery_evidence.get("issuedAt")))
+        expires_at = _parse_timestamp(str(delivery_evidence.get("expiresAt")))
+        if issued_at > evaluated_at:
+            return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_TIME_INVALID"}
+        if evaluated_at >= expires_at:
+            return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EXPIRED"}
+    except (TypeError, ValueError):
+        return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_TIME_INVALID"}
+
+    return {
+        "valid": True,
+        "outcome": "COMMERCIAL_PACKAGE_DELIVERY_VERIFIED",
+        "deliveryId": delivery_evidence.get("deliveryId"),
+        "artifactDigest": artifact_digest,
+        "verifierId": verifier_id,
+    }
+
 def resolve_composable_creation_packages(
     creation_type: str,
     catalog: Mapping[str, Any],
     loaded_packages: Sequence[Mapping[str, Any]],
     entitlements: Sequence[Mapping[str, Any]],
     selection: Optional[Mapping[str, str]] = None,
+    verification_context: Optional[Mapping[str, Any]] = None,
 ) -> Dict[str, Any]:
     if catalog.get("schemaVersion") != "0.13.0":
         return {"outcome": "PACKAGE_CATALOG_SCHEMA_UNSUPPORTED", "packages": []}
 
     profile = _creation_profile(catalog, creation_type)
     policy = profile.get("selectionPolicy", {})
+    verification_context = verification_context or {}
     selection = selection or {}
     factory_id = selection.get("factoryPackageId", profile.get("defaultFactoryPackageId"))
     om_id = selection.get("operatingModelPackageId", profile.get("defaultOperatingModelPackageId"))
@@ -605,17 +745,65 @@ def resolve_composable_creation_packages(
             version = str(artifact.get("version", loaded.get("version", "")))
             if not version:
                 return {"outcome": "PACKAGE_VERSION_MISSING", "packageId": package_id, "packages": []}
-            matching = [e for e in entitlements if entitlement_covers(e, str(package_id), version)]
-            if len(matching) != 1:
+            candidates = [
+                e for e in entitlements
+                if e.get("grant", {}).get("packageId") == str(package_id)
+                and _version_grant_matches(str(e.get("grant", {}).get("versionRange", "")), version)
+            ]
+            if not candidates:
                 return {"outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED", "packageId": package_id, "packages": []}
-            resolutions.append({
+
+            verified = []
+            failures = []
+            for candidate in candidates:
+                decision = validate_commercial_entitlement(
+                    candidate, str(package_id), version, verification_context
+                )
+                if decision["valid"]:
+                    verified.append((candidate, decision))
+                else:
+                    failures.append(decision["outcome"])
+            if len(verified) != 1:
+                outcome = failures[0] if failures else "PACKAGE_ENTITLEMENT_UNVERIFIED"
+                return {"outcome": outcome, "packageId": package_id, "packages": []}
+
+            matched_entitlement, entitlement_decision = verified[0]
+            delivery_decision = None
+            if source_class == "ENTITLED_PACKAGE_SOURCE":
+                delivery_evidence = loaded.get("deliveryEvidence")
+                if not isinstance(delivery_evidence, Mapping):
+                    return {
+                        "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_REQUIRED",
+                        "packageId": package_id,
+                        "packages": [],
+                    }
+                delivery_decision = validate_commercial_delivery_evidence(
+                    delivery_evidence,
+                    artifact,
+                    matched_entitlement,
+                    verification_context,
+                )
+                if not delivery_decision["valid"]:
+                    return {
+                        "outcome": delivery_decision["outcome"],
+                        "packageId": package_id,
+                        "packages": [],
+                    }
+
+            resolution = {
                 "packageId": package_id,
                 "kind": expected_kind,
                 "mode": "USE_ENTITLED_PACKAGE",
                 "sourceClass": source_class,
                 "version": version,
-                "entitlementId": matching[0].get("entitlementId"),
-            })
+                "entitlementId": matched_entitlement.get("entitlementId"),
+                "entitlementVerifierId": entitlement_decision.get("verifierId"),
+            }
+            if delivery_decision is not None:
+                resolution["deliveryId"] = delivery_decision.get("deliveryId")
+                resolution["deliveryArtifactDigest"] = delivery_decision.get("artifactDigest")
+                resolution["deliveryVerifierId"] = delivery_decision.get("verifierId")
+            resolutions.append(resolution)
             continue
 
         return {"outcome": "UNKNOWN_ACCESS_MODE", "packageId": package_id, "packages": []}

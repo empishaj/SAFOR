@@ -4,7 +4,7 @@
 
 Always:
 - A compatible chat host.
-- `SAFOR-FRAMEWORK-v0.13.0-rc.3.json` or the latest `SAFOR-FRAMEWORK.json`.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.4.json` or the latest `SAFOR-FRAMEWORK.json`.
 - A HUMAN-controlled Git project workspace.
 
 ## Choose a creation type
@@ -52,7 +52,7 @@ Book likewise requires a paid Factory and paid Operating Model with independent 
 
 ## Start
 
-1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.3.json`.
+1. Load `SAFOR-FRAMEWORK-v0.13.0-rc.4.json`.
 2. SAFOR verifies Framework, Self-Healing and deterministic-control integrity.
 3. Choose **Website**, **Software / SaaS** or **Buch**.
 4. SAFOR resolves the Creation Profile and its selected-package access policy.
@@ -72,3 +72,25 @@ Entitlement answers only: **May this exact package/version be used?**
 It never grants organizational authority, provider permissions, project scope, execution mandate or acceptance authority.
 
 Historical public Software Factory/SaaS OM 1.6.0 bytes are legacy disclosure, not the current commercial delivery source.
+
+
+## Paid package verification in rc.4
+
+For every paid package SAFOR requires a verification context containing:
+- explicit `evaluatedAt`,
+- active `subjectRef`,
+- trusted entitlement issuer IDs,
+- trusted entitlement verifier IDs,
+- trusted delivery verifier IDs.
+
+The entitlement must be `ACTIVE`, time-valid, bound to the active subject and exact package/version, and backed by commercial-basis evidence whose SKU matches the grant.
+
+For `ENTITLED_PACKAGE_SOURCE`, the package source must additionally return external delivery evidence that binds:
+- entitlement ID,
+- package ID,
+- exact version,
+- domain-package digest,
+- delivery validity window,
+- trusted delivery verifier.
+
+A mismatched or expired delivery record blocks package use. `HUMAN_LOADED_PACKAGE` remains supported for a licensed file supplied manually, but the entitlement checks remain mandatory.
