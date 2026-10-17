@@ -191,3 +191,15 @@ CLOSING            LOW
 Every question passes the HUMAN Decision Gate. SAFOR derives/reuses before asking and keeps internal orchestration behind the interaction abstraction layer.
 
 See [HUMAN-COGNITIVE-LOAD.md](HUMAN-COGNITIVE-LOAD.md).
+
+## Deterministic Control Kernel
+
+SAFOR separates probabilistic work from authoritative governance. HUMANs, AGENTs and providers may create artifacts, evidence, reviews and typed events; within the migrated executable transition slice they do not directly mutate authoritative SAFOR state.
+
+The deterministic control path is:
+
+`Projection Set + Typed Event + Pinned Models -> Predicate Evaluation -> One Transition -> New Projection Set + Effect Intents`.
+
+The reducer is pure: no provider I/O, no LLM invocation, no wall-clock reads, no randomness and no arbitrary executable code from JSON. External mutations are emitted as effect intents and become facts only after provider outcome/readback events. Duplicate identical events are idempotent, divergent duplicates are integrity failures, transition ambiguity fails closed, and replay must reproduce the canonical state hash.
+
+v0.11.0-rc.1 deliberately migrates only an explicit transition slice. Existing Factory, Operating Model, Agent Workspace, Scheduler and HUMAN-governance semantics remain valid and are not falsely labeled executable until migrated.

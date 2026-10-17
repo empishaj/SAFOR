@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.11.0/state-snapshot.schema.json",
+  "title": "SAFOR Deterministic Projection Set Snapshot",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "modelRevision",
+    "lastAppliedEventSequence",
+    "lastAppliedEventId",
+    "processedEvents",
+    "control",
+    "valueStream",
+    "execution",
+    "stateHash",
+    "genesisRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_STATE_SNAPSHOT"
+    },
+    "schemaVersion": {
+      "const": "0.11.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "modelRevision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lastAppliedEventSequence": {
+      "type": "integer",
+      "minimum": -1
+    },
+    "lastAppliedEventId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "processedEvents": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^sha256:[0-9a-f]{64}$"
+      }
+    },
+    "control": {
+      "type": "object"
+    },
+    "valueStream": {
+      "type": "object"
+    },
+    "execution": {
+      "type": "object"
+    },
+    "stateHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "genesisRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

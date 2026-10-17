@@ -18,7 +18,7 @@ def load_json(path):
 
 bundle = load_json("SAFOR-MASTER-COMPLETE.json")
 manifest = load_json("RELEASE-MANIFEST.json")
-modular_master = load_json("v0.10.0/SAFOR-MASTER.json")
+modular_master = load_json("v0.11.0/SAFOR-MASTER.json")
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 if bundle.get("format") != "SAFOR_MASTER_COMPLETE_SINGLE_FILE":
@@ -33,7 +33,9 @@ required_modules = {
     "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu","schemaHumanResponse",
     "humanDecisionGate","schemaHumanCognitiveLoadPolicy","schemaHumanDecisionGate","schemaSelfHealingRecord","schemaModuleRecoveryProfile","moduleSelfHealing","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
     "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
-    "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
+    "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease",
+    "deterministicControl","eventModel","predicateRegistry","transitionRegistry","effectModel",
+    "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord","schemaStateSnapshot","conformance"
 }
 missing = sorted(required_modules - set(modules))
 if missing:
@@ -100,8 +102,8 @@ for key, module in modules.items():
     manifest_entry = integrity_manifest.get(key, {})
     if manifest_entry.get("selfHealingProfileId") != expected_pid:
         fail(f"Integrity manifest {key} selfHealingProfileId mismatch.")
-    if not str(module.get("sourcePath","")).startswith("v0.10.0/"):
-        fail(f"Embedded module {key} must come from v0.10.0 source.")
+    if not str(module.get("sourcePath","")).startswith(("v0.10.0/","v0.11.0/")):
+        fail(f"Embedded module {key} must come from an allowed 0.10/0.11 source baseline.")
 
 recovery_schema = modules.get("schemaModuleRecoveryProfile", {}).get("content", {})
 schema_required = set(recovery_schema.get("required", []))
@@ -157,12 +159,18 @@ if kernel.get("controlPlane", {}).get("startActionId") != "K00":
     fail("Kernel startActionId must be K00 module-recovery preflight.")
 if actions.get("K00", {}).get("modelRef") != "module-self-healing-model.json":
     fail("K00 must bind module-self-healing-model.json.")
+if actions.get("K00A", {}).get("modelRef") != "deterministic-control-model.json":
+    fail("K00A must bind deterministic-control-model.json.")
 initialization = modules.get("initialization", {}).get("content", {})
 sequence = initialization.get("sequence", [])
 if not sequence or sequence[0].get("id") != "INIT-00":
     fail("Initialization must begin with INIT-00 module-recovery preflight.")
 if sequence and sequence[0].get("failOutcome") != "STOP":
     fail("INIT-00 recovery preflight must fail closed to STOP.")
+if len(sequence) < 2 or sequence[1].get("id") != "INIT-00A":
+    fail("Initialization second step must be INIT-00A deterministic-control preflight.")
+if len(sequence) >= 2 and sequence[1].get("failOutcome") != "STOP":
+    fail("INIT-00A deterministic-control preflight must fail closed to STOP.")
 if actions.get("D01", {}).get("modelRef") != "BOUND_FACTORY.model.discoveryContract":
     fail("D01 must bind Factory discoveryContract.")
 if actions.get("P01", {}).get("modelRef") != "BOUND_FACTORY.model.planningContract":
@@ -184,13 +192,13 @@ if kernel.get("schemas", {}).get("moduleRecoveryProfile") != "schemas/module-rec
     fail("Kernel must reference module recovery profile schema.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 126)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 136)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 160)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 176)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -203,7 +211,7 @@ for principle in ("moduleProfileRequired","exactModuleCoverageRequired","failClo
     if self_healing.get("principles", {}).get(principle) is not True:
         fail(f"Self-healing principle {principle} must be true.")
 failure_classes = {x.get("id"): x for x in self_healing.get("failureClasses", [])}
-for n in range(10, 21):
+for n in range(10, 22):
     cid = f"SH-{n:02d}"
     if cid not in failure_classes:
         fail(f"Missing module-aware self-healing failure class {cid}.")
@@ -683,10 +691,10 @@ if manifest.get("distributable") != expected_versioned:
     fail("Release manifest distributable mismatch.")
 if manifest.get("latestAlias") != "SAFOR-MASTER-COMPLETE.json":
     fail("Release manifest latest alias mismatch.")
-if manifest.get("sourceRoot") != "v0.10.0":
-    fail("Release manifest source root must be v0.10.0.")
-if bundle.get("schemaVersion") != "0.10.0":
-    fail("Complete bundle schemaVersion must be 0.10.0.")
+if manifest.get("sourceRoot") != "v0.11.0":
+    fail("Release manifest source root must be v0.11.0.")
+if bundle.get("schemaVersion") != "0.11.0":
+    fail("Complete bundle schemaVersion must be 0.11.0.")
 versioned_bundle = load_json(expected_versioned)
 if versioned_bundle != bundle:
     fail("Versioned release artifact must exactly match SAFOR-MASTER-COMPLETE.json.")
@@ -735,6 +743,74 @@ for path in ROOT.rglob("*"):
     for pattern in legacy_patterns:
         if pattern in text_content:
             fail(f"Legacy branding remains in file content: {rel} ({pattern})")
+
+
+# SAFOR 0.11 deterministic-control validation
+required_v011_modules = {
+    "kernel","initialization","selfHealing","moduleSelfHealing","conformance",
+    "deterministicControl","eventModel","predicateRegistry","transitionRegistry","effectModel",
+    "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord","schemaStateSnapshot"
+}
+for key in required_v011_modules:
+    if not str(modules.get(key, {}).get("sourcePath", "")).startswith("v0.11.0/"):
+        fail(f"Deterministic-control module {key} must be sourced from v0.11.0.")
+
+deterministic = modules.get("deterministicControl", {}).get("content", {})
+pure = deterministic.get("pureReducerContract", {})
+for field in ("sameCanonicalInputsSameLogicalOutput","inputMutationForbidden","providerIoForbidden","llmInvocationForbidden","wallClockReadForbidden","randomnessForbidden","arbitraryCodeFromJsonForbidden"):
+    if pure.get(field) is not True:
+        fail(f"Deterministic reducer contract {field} must be true.")
+if deterministic.get("principle") != "PROBABILISTIC_WORK_DETERMINISTIC_GOVERNANCE":
+    fail("Deterministic control principle mismatch.")
+
+predicate_registry = modules.get("predicateRegistry", {}).get("content", {})
+allowed_predicates = {p.get("id") for p in predicate_registry.get("predicates", [])}
+if not predicate_registry.get("executionPolicy", {}).get("closedRegistry"):
+    fail("Predicate registry must be closed.")
+transition_registry = modules.get("transitionRegistry", {}).get("content", {})
+allowed_effect_ops = set(modules.get("effectModel", {}).get("content", {}).get("stateEffectOperations", []))
+required_transitions = {
+    "WORK_ITEM_BECOMES_READY",
+    "CONTROL_PROJECT_PAUSED",
+    "CONTROL_PROJECT_RESUMED_FROM_PAUSE",
+    "CONTROL_PROJECT_STOPPED",
+    "CONTROL_RESUME_FROM_STOP_REQUIRES_AUTHORIZATION",
+    "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
+}
+actual_transitions = {t.get("transitionId") for t in transition_registry.get("transitions", [])}
+if not required_transitions.issubset(actual_transitions):
+    fail("Transition registry missing rc.1 deterministic transitions.")
+
+def walk_guard(expr):
+    if not isinstance(expr, dict):
+        fail("Transition guard must be an object.")
+        return
+    if "predicate" in expr:
+        if expr.get("predicate") not in allowed_predicates:
+            fail(f"Transition references unknown predicate {expr.get('predicate')}.")
+        return
+    for op in ("all","any"):
+        if op in expr:
+            for child in expr.get(op, []):
+                walk_guard(child)
+            return
+    if "not" in expr:
+        walk_guard(expr["not"])
+        return
+    fail("Transition guard uses unsupported expression form.")
+
+for transition in transition_registry.get("transitions", []):
+    walk_guard(transition.get("guards", {}))
+    for effect in transition.get("effects", []):
+        if effect.get("op") not in allowed_effect_ops:
+            fail(f"Transition {transition.get('transitionId')} uses unknown effect op {effect.get('op')}.")
+
+if kernel.get("deterministicControlModelRef") != "deterministic-control-model.json":
+    fail("Kernel must reference deterministic-control-model.json.")
+if kernel.get("controlPlane", {}).get("crossCuttingGuards", {}).get("deterministicControlKernel", {}).get("appliesBefore") != "EVERY_AUTHORITATIVE_STATE_TRANSITION_IN_MIGRATED_EXECUTABLE_SLICE":
+    fail("Kernel deterministic transition guard scope mismatch.")
+if runtime.get("deterministicControlRule") is None:
+    fail("Complete bundle runtime contract missing deterministicControlRule.")
 
 if errors:
     print("SAFOR validation: FAIL")

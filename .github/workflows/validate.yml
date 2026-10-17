@@ -26,3 +26,5 @@ jobs:
         run: python tools/build_bundle.py --check
       - name: Validate SAFOR distribution
         run: python tools/validate_safor.py
+      - name: Run deterministic control tests
+        run: python -m unittest discover -s tests -v

@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.10.0-rc.1**
+Current target: **v0.11.0-rc.1**
 
-Current modular source: **`v0.10.0/`**
+Current modular source: **`v0.11.0/` overlay + retained `v0.10.0/` baseline**
 
 ## Release-candidate gates
 
@@ -23,6 +23,9 @@ Current modular source: **`v0.10.0/`**
 | HUMAN-domain terminology abstraction | PASS by schema/conformance |
 | Dynamic primary-action labels | PASS by schema/conformance |
 | HUMAN cognitive-load end-to-end acceptance | OPEN |
+| Deterministic Control Kernel unit/replay suite | PASS in CI |
+| Deterministic Control end-to-end acceptance | OPEN |
+| Full governance transition migration | OPEN |
 | Bounded self-healing | PASS |
 | Module-wide self-healing coverage | PASS by schema/conformance |
 | Exact one-profile-per-module binding | PASS by validator contract |

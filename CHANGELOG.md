@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.11.0-rc.1
+
+- Introduces the Deterministic Control Kernel: probabilistic work is separated from authoritative governance transitions.
+- Adds typed events, a closed predicate registry, declarative transition registry and external effect intents.
+- Adds a pure Python reference reducer with canonical SHA-256 state hashing, duplicate-event idempotency and replay verification.
+- Implements the first executable transition slice: READY derivation, project pause/resume, STOP mandate revocation, resume-after-STOP authorization boundary, and unknown external mutation reconciliation.
+- Adds deterministic-control Self-Healing failure class SH-21, 54-module exact recovery coverage, kernel preflight K00A/INIT-00A and conformance CF-160 through CF-175.
+- Explicitly limits rc.1 determinism claims to the migrated transition slice; full governance migration remains a GA blocker.
+
+
 ## 0.10.0-rc.2
 
 - Requires every SAFOR-generated HUMAN-facing response to terminate with exactly one interaction menu.

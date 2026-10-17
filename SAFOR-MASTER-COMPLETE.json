@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_MASTER_COMPLETE_SINGLE_FILE",
-  "schemaVersion": "0.10.0",
-  "bundleVersion": "0.10.0-rc.2",
+  "schemaVersion": "0.11.0",
+  "bundleVersion": "0.11.0-rc.1",
   "definitionId": "safor-master-complete",
   "productName": "SAFOR",
   "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -26,6 +26,7 @@
     },
     "initializationOrder": [
       "VERIFY_MODULE_RECOVERY_BASELINE",
+      "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
       "SELECT_PROVIDER",
       "VERIFY_PROVIDER_READ_WRITE_ACCESS",
       "SELECT_OWNER_NAMESPACE",
@@ -63,7 +64,8 @@
     "canonicalAgentJobRule": "Every AGENT dispatch uses the embedded canonical Agent Job Contract with explicit package/sequence lineage, MASTER provenance, role, versioned skills, immutable inputs, granular authorization, Git workspace, fixed return routes, verification contract and a provider-readback HUMAN job Markdown projection.",
     "multiAgentSchedulerRule": "Dispatch AGENT work only through the embedded conflict-aware scheduler: atomic READY work, explicit capacity, immutable read inputs, conflict-free resource leases and dedicated job branches.",
     "humanReadableAgentResultRule": "Every agent job persists machine-readable JSON plus a Git-persisted HUMAN-readable Markdown result; mutating jobs also provide provider-verifiable Git commit/path traceability.",
-    "humanTerminalMenuRule": "Every SAFOR-generated HUMAN-facing response validates against the embedded HUMAN response schema, contains exactly one interaction menu as the final rendered SAFOR-visible element, and stops rendering immediately after that menu. Menu presence does not itself imply a HUMAN decision."
+    "humanTerminalMenuRule": "Every SAFOR-generated HUMAN-facing response validates against the embedded HUMAN response schema, contains exactly one interaction menu as the final rendered SAFOR-visible element, and stops rendering immediately after that menu. Menu presence does not itself imply a HUMAN decision.",
+    "deterministicControlRule": "Within the explicit 0.11 rc.1 executable transition slice, external HUMAN/AGENT/PROVIDER observations enter as typed events and only the pure embedded deterministic control kernel may materialize authoritative state transitions. External mutations are emitted as effect intents and completion requires later authoritative provider evidence."
   },
   "productRepository": {
     "repository": "empishaj/SAFOR",
@@ -117,7 +119,18 @@
     "packages/operating-models/book-authoring/0.5.0/package.json": "operatingModelBook",
     "packages/factories/software-delivery/1.4.0/package.json": "factorySoftwareWebsite",
     "packages/factories/book-production/0.5.0/package.json": "factoryBook",
-    "schemas/human-response.schema.json": "schemaHumanResponse"
+    "schemas/human-response.schema.json": "schemaHumanResponse",
+    "deterministic-control-model.json": "deterministicControl",
+    "event-model.json": "eventModel",
+    "predicate-registry.json": "predicateRegistry",
+    "transition-registry.json": "transitionRegistry",
+    "effect-model.json": "effectModel",
+    "schemas/event.schema.json": "schemaEvent",
+    "schemas/predicate.schema.json": "schemaPredicate",
+    "schemas/transition.schema.json": "schemaTransition",
+    "schemas/effect-intent.schema.json": "schemaEffectIntent",
+    "schemas/transition-record.schema.json": "schemaTransitionRecord",
+    "schemas/state-snapshot.schema.json": "schemaStateSnapshot"
   },
   "integrityManifest": {
     "agentJobContract": {
@@ -131,8 +144,8 @@
       "selfHealingProfileId": "MRP-AGENT_WORKSPACE"
     },
     "conformance": {
-      "sourcePath": "v0.10.0/conformance.json",
-      "sourceBlobSha": "7d2f7bbb595418200db8a63cd7ef1c085c8dd363",
+      "sourcePath": "v0.11.0/conformance.json",
+      "sourceBlobSha": "603807a2b0667c3ddeedece1c2ea5cffe695447c",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "factoryBook": {
@@ -151,8 +164,8 @@
       "selfHealingProfileId": "MRP-HUMAN_DECISION_GATE"
     },
     "initialization": {
-      "sourcePath": "v0.10.0/initialization-model.json",
-      "sourceBlobSha": "0235ad42b011812c8a262d0f5e9c9e7414f2d8bd",
+      "sourcePath": "v0.11.0/initialization-model.json",
+      "sourceBlobSha": "2a300e94b06004cf999b080a8c12ef4b7d1b4d72",
       "selfHealingProfileId": "MRP-INITIALIZATION"
     },
     "interaction": {
@@ -161,13 +174,13 @@
       "selfHealingProfileId": "MRP-INTERACTION"
     },
     "kernel": {
-      "sourcePath": "v0.10.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "6c2445e9d6fb4606c15631d3db480065930996a5",
+      "sourcePath": "v0.11.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "20f7cf1b460e4debb4dbfb29d6cd1aa69a85bd36",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "moduleSelfHealing": {
-      "sourcePath": "v0.10.0/module-self-healing-model.json",
-      "sourceBlobSha": "05fc04ad75a4a25ba61715609dd59142a6fdfae9",
+      "sourcePath": "v0.11.0/module-self-healing-model.json",
+      "sourceBlobSha": "e97b6191d13fd96ad49960866ad482d71caab6a9",
       "selfHealingProfileId": "MRP-MODULE_SELF_HEALING"
     },
     "multiAgentScheduler": {
@@ -326,28 +339,83 @@
       "selfHealingProfileId": "MRP-SCHEMA_WORK_ITEM"
     },
     "selfHealing": {
-      "sourcePath": "v0.10.0/self-healing-model.json",
-      "sourceBlobSha": "d0f648f1ef60d21ea46e122b83cbc708209d6377",
+      "sourcePath": "v0.11.0/self-healing-model.json",
+      "sourceBlobSha": "7d5b43a60fd47dba428f65b7ebd5da352524cc66",
       "selfHealingProfileId": "MRP-SELF_HEALING"
     },
     "schemaHumanResponse": {
       "sourcePath": "v0.10.0/schemas/human-response.schema.json",
       "sourceBlobSha": "f71604dbd780dc1e000b687227bc7449ced3764d",
       "selfHealingProfileId": "MRP-SCHEMA_HUMAN_RESPONSE"
+    },
+    "deterministicControl": {
+      "sourcePath": "v0.11.0/deterministic-control-model.json",
+      "sourceBlobSha": "2e25c64a05fe1dab36d6983e7c7032254456ebd7",
+      "selfHealingProfileId": "MRP-DETERMINISTIC_CONTROL"
+    },
+    "eventModel": {
+      "sourcePath": "v0.11.0/event-model.json",
+      "sourceBlobSha": "d1b92daffba4f37ff782ebe1e3d36a24e687fbac",
+      "selfHealingProfileId": "MRP-EVENT_MODEL"
+    },
+    "predicateRegistry": {
+      "sourcePath": "v0.11.0/predicate-registry.json",
+      "sourceBlobSha": "3dac7ab83c022624ea8cc1110ff396e92f5fceb2",
+      "selfHealingProfileId": "MRP-PREDICATE_REGISTRY"
+    },
+    "transitionRegistry": {
+      "sourcePath": "v0.11.0/transition-registry.json",
+      "sourceBlobSha": "45ecc0fa4779848da862b96b43462caae16e2284",
+      "selfHealingProfileId": "MRP-TRANSITION_REGISTRY"
+    },
+    "effectModel": {
+      "sourcePath": "v0.11.0/effect-model.json",
+      "sourceBlobSha": "7037e798aa5d2ac5c145368266a5c371b115509e",
+      "selfHealingProfileId": "MRP-EFFECT_MODEL"
+    },
+    "schemaEvent": {
+      "sourcePath": "v0.11.0/schemas/event.schema.json",
+      "sourceBlobSha": "f52e71975874d4c0a71119287bbe96df242264e0",
+      "selfHealingProfileId": "MRP-SCHEMA_EVENT"
+    },
+    "schemaPredicate": {
+      "sourcePath": "v0.11.0/schemas/predicate.schema.json",
+      "sourceBlobSha": "f8c455c3326dfb04a2095c05e790957f02056fce",
+      "selfHealingProfileId": "MRP-SCHEMA_PREDICATE"
+    },
+    "schemaTransition": {
+      "sourcePath": "v0.11.0/schemas/transition.schema.json",
+      "sourceBlobSha": "b088147282d8f12c50d35677c72e869f19c4099c",
+      "selfHealingProfileId": "MRP-SCHEMA_TRANSITION"
+    },
+    "schemaEffectIntent": {
+      "sourcePath": "v0.11.0/schemas/effect-intent.schema.json",
+      "sourceBlobSha": "e1ff3fde5d96b8911cfcaacedc8f29edead7f63b",
+      "selfHealingProfileId": "MRP-SCHEMA_EFFECT_INTENT"
+    },
+    "schemaTransitionRecord": {
+      "sourcePath": "v0.11.0/schemas/transition-record.schema.json",
+      "sourceBlobSha": "d31208df0547f08be398cd649ecfe5998b239267",
+      "selfHealingProfileId": "MRP-SCHEMA_TRANSITION_RECORD"
+    },
+    "schemaStateSnapshot": {
+      "sourcePath": "v0.11.0/schemas/state-snapshot.schema.json",
+      "sourceBlobSha": "c4063e3b0dc7da69fcbe805c78e184d890cec052",
+      "selfHealingProfileId": "MRP-SCHEMA_STATE_SNAPSHOT"
     }
   },
   "embeddedModules": {
     "kernel": {
       "key": "kernel",
-      "sourcePath": "v0.10.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "6c2445e9d6fb4606c15631d3db480065930996a5",
+      "sourcePath": "v0.11.0/SAFOR-MASTER.json",
+      "sourceBlobSha": "20f7cf1b460e4debb4dbfb29d6cd1aa69a85bd36",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
-        "schemaVersion": "0.10.0",
-        "kernelVersion": "0.10.0",
+        "schemaVersion": "0.11.0",
+        "kernelVersion": "0.11.0",
         "definitionId": "safor-master-kernel",
         "maturity": "REFERENCE_BASELINE_S2_MODULAR_DOMAIN_AGNOSTIC",
-        "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel. A user loads this single JSON into a compatible LLM chat; the kernel discovers actual host capabilities, binds a repository provider, resolves project-specific packages, materializes control structures, and guides the project without embedding a specific domain workflow.",
+        "purpose": "Portable, domain-agnostic SAFOR bootstrap and orchestration kernel with an executable deterministic governance substrate over probabilistic HUMAN, AGENT and PROVIDER actors.",
         "bootstrapContract": {
           "singleFileEntry": true,
           "entryFile": "SAFOR-MASTER.json",
@@ -418,13 +486,27 @@
           "humanAsDecisionMakerNotWorkflowOperator": true,
           "terminalMenuOnEveryHumanResponse": true,
           "terminalMenuIsFinalRenderedSurface": true,
-          "humanResponseEnvelopeRequired": true
+          "humanResponseEnvelopeRequired": true,
+          "probabilisticWorkDeterministicGovernance": true,
+          "deterministicControlKernelRequired": true,
+          "typedEventsForExecutableTransitions": true,
+          "externalActorsCannotMutateAuthoritativeStateDirectly": true,
+          "pureReducerRequired": true,
+          "externalEffectsSeparatedFromStateDecision": true,
+          "replayVerificationRequired": true,
+          "transitionAmbiguityFailsClosed": true,
+          "arbitraryCodeInTransitionModelsForbidden": true,
+          "deterministicRcBoundaryMustBeExplicit": true
         },
         "moduleArchitecture": {
           "layers": [
             {
               "id": "MASTER_KERNEL",
               "responsibility": "Generic orchestration, state transitions, evidence, authorization, reconciliation, package loading and invariants."
+            },
+            {
+              "id": "DETERMINISTIC_CONTROL_KERNEL",
+              "responsibility": "Pure typed-event transition evaluation, closed predicates, declarative state effects, external effect intents, canonical state hashing and replay verification."
             },
             {
               "id": "OPERATING_MODEL",
@@ -491,7 +573,11 @@
             "Every SAFOR-generated HUMAN-facing response must validate against the HUMAN response contract and terminate with exactly one interaction menu.",
             "The terminal interaction menu is a presentation/navigation surface and does not itself imply that a HUMAN decision is required.",
             "No SAFOR-visible content may be rendered after the terminal menu; the HUMAN response finalizer stops rendering immediately after it.",
-            "If contextual menu derivation fails, only a safe state-derived non-authority-expanding fallback menu may be generated."
+            "If contextual menu derivation fails, only a safe state-derived non-authority-expanding fallback menu may be generated.",
+            "Within the migrated executable transition slice, authoritative state transitions are owned only by the deterministic control kernel; HUMAN, AGENT and PROVIDER actors contribute typed events/evidence instead of direct authoritative state changes.",
+            "The deterministic reducer is pure: it performs no provider/LLM calls, reads no wall clock, uses no randomness and never executes arbitrary code from JSON.",
+            "External mutations are emitted only as effect intents. Completion requires a later provider outcome/readback event.",
+            "Non-migrated 0.10 governance semantics remain valid but must not be falsely represented as executable deterministic transitions in rc.1."
           ]
         },
         "packageSystem": {
@@ -677,7 +763,13 @@
           "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json",
           "humanCognitiveLoadPolicy": "schemas/human-cognitive-load-policy.schema.json",
           "humanDecisionGate": "schemas/human-decision-gate.schema.json",
-          "humanResponse": "schemas/human-response.schema.json"
+          "humanResponse": "schemas/human-response.schema.json",
+          "event": "schemas/event.schema.json",
+          "predicate": "schemas/predicate.schema.json",
+          "transition": "schemas/transition.schema.json",
+          "effectIntent": "schemas/effect-intent.schema.json",
+          "transitionRecord": "schemas/transition-record.schema.json",
+          "stateSnapshot": "schemas/state-snapshot.schema.json"
         },
         "controlPlane": {
           "startActionId": "K00",
@@ -686,6 +778,7 @@
               "id": "BOOTSTRAP",
               "actions": [
                 "K00",
+                "K00A",
                 "K01",
                 "K02",
                 "K03",
@@ -782,6 +875,13 @@
               "purpose": "Before provider or project work, verify exact embedded-module/recovery-profile coverage and fail-closed integrity of the recovery-control modules.",
               "domainNeutral": true,
               "modelRef": "module-self-healing-model.json"
+            },
+            {
+              "id": "K00A",
+              "operation": "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
+              "purpose": "Verify pinned event, predicate, transition, effect, snapshot and replay-control modules before any executable deterministic state transition.",
+              "domainNeutral": true,
+              "modelRef": "deterministic-control-model.json"
             },
             {
               "id": "K01",
@@ -1271,6 +1371,23 @@
                 "TRANSLATE_TO_HUMAN_DOMAIN_LANGUAGE",
                 "PRESENT_ONE_DECISION_CONTEXT"
               ]
+            },
+            "deterministicControlKernel": {
+              "modelRef": "deterministic-control-model.json",
+              "eventModelRef": "event-model.json",
+              "transitionRegistryRef": "transition-registry.json",
+              "predicateRegistryRef": "predicate-registry.json",
+              "effectModelRef": "effect-model.json",
+              "appliesBefore": "EVERY_AUTHORITATIVE_STATE_TRANSITION_IN_MIGRATED_EXECUTABLE_SLICE",
+              "failClosedOn": [
+                "STATE_HASH_MISMATCH",
+                "EVENT_SEQUENCE_GAP",
+                "DIVERGENT_DUPLICATE_EVENT",
+                "UNKNOWN_PREDICATE",
+                "AMBIGUOUS_TRANSITION",
+                "REPLAY_DIVERGENCE"
+              ],
+              "rule": "External actors submit typed events/evidence. The deterministic control kernel alone evaluates guards and produces the next authoritative state within the migrated executable slice."
             }
           }
         },
@@ -1774,6 +1891,46 @@
           {
             "id": "INV-125",
             "rule": "If contextual terminal-menu derivation fails, SAFOR may regenerate only a safe derived fallback menu from authoritative state and actual capabilities; it must not invent authority, scope, approval or state transitions to create menu options."
+          },
+          {
+            "id": "INV-126",
+            "rule": "Within the migrated executable transition slice, no HUMAN, AGENT, provider or LLM output may directly mutate authoritative SAFOR state; it must first enter as a typed event/evidence input."
+          },
+          {
+            "id": "INV-127",
+            "rule": "The deterministic reducer is a pure function over a pinned projection set, typed event and pinned models; provider I/O, LLM invocation, wall-clock reads, randomness and arbitrary JSON code execution are forbidden inside the reducer."
+          },
+          {
+            "id": "INV-128",
+            "rule": "Transition candidates are selected from the pinned registry in canonical priority/order; more than one applicable authoritative transition is a fail-closed control failure."
+          },
+          {
+            "id": "INV-129",
+            "rule": "Event replay order is determined by contiguous event sequence, not by timestamps; a duplicate identical event is idempotent and a divergent duplicate event is an integrity failure."
+          },
+          {
+            "id": "INV-130",
+            "rule": "External mutations are represented as effect intents and are never treated as completed until a later provider outcome/readback event provides authoritative evidence."
+          },
+          {
+            "id": "INV-131",
+            "rule": "An unknown external mutation outcome deterministically transitions Control State to RECONCILE_REQUIRED/RECOVERING and emits provider readback intent before any retry."
+          },
+          {
+            "id": "INV-132",
+            "rule": "Canonical state hashing excludes only the stateHash field itself; identical canonical inputs and pinned model revision must yield the same logical output and state hash."
+          },
+          {
+            "id": "INV-133",
+            "rule": "Replay from a verified genesis snapshot through the ordered event sequence must reproduce the stored projection-set state hash or fail closed with replay divergence."
+          },
+          {
+            "id": "INV-134",
+            "rule": "Migration of pre-0.11 projects starts from a verified MIGRATION_GENESIS_SNAPSHOT; SAFOR must never fabricate historical events."
+          },
+          {
+            "id": "INV-135",
+            "rule": "SAFOR 0.11.0-rc.1 claims determinism only for transitions explicitly listed by the deterministic-control model; non-migrated governance rules remain normative but non-executable until migrated."
           }
         ],
         "evidencePolicy": {
@@ -1838,7 +1995,7 @@
         "distribution": {
           "canonicalSource": {
             "repository": "empishaj/SAFOR",
-            "root": "v0.10.0",
+            "root": "v0.11.0",
             "registry": "package-registry.json"
           },
           "resolutionPolicy": "When external package material is needed, read the canonical source through an actually available provider connection, capture the exact provider revision/blob identity, validate it, then pin and snapshot it into the project. A mutable branch name alone is never a persisted package pin.",
@@ -1903,17 +2060,22 @@
         "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
         "agentJobContractModelRef": "agent-job-contract-model.json",
         "moduleSelfHealingModelRef": "module-self-healing-model.json",
-        "humanDecisionGateModelRef": "human-decision-gate-model.json"
+        "humanDecisionGateModelRef": "human-decision-gate-model.json",
+        "deterministicControlModelRef": "deterministic-control-model.json",
+        "eventModelRef": "event-model.json",
+        "predicateRegistryRef": "predicate-registry.json",
+        "transitionRegistryRef": "transition-registry.json",
+        "effectModelRef": "effect-model.json"
       },
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
       "key": "initialization",
-      "sourcePath": "v0.10.0/initialization-model.json",
-      "sourceBlobSha": "0235ad42b011812c8a262d0f5e9c9e7414f2d8bd",
+      "sourcePath": "v0.11.0/initialization-model.json",
+      "sourceBlobSha": "2a300e94b06004cf999b080a8c12ef4b7d1b4d72",
       "content": {
         "format": "SAFOR_INITIALIZATION_MODEL",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.11.0",
         "id": "SAFOR-GUIDED-INITIALIZATION",
         "purpose": "Mandatory guided initialization after SAFOR-MASTER.json is loaded. Establish provider, proven read/write access, owner namespace and project mode before package resolution or project materialization.",
         "entryBehavior": {
@@ -1940,6 +2102,23 @@
             ],
             "rule": "Run before any provider/project operation. If recovery-control integrity or exact profile coverage cannot be proven, fail closed and do not attempt heuristic self-repair.",
             "selfHealingRef": "module-self-healing-model.json"
+          },
+          {
+            "id": "INIT-00A",
+            "operation": "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
+            "title": "Deterministischen Control Kernel prüfen",
+            "requiresProvider": false,
+            "passOutcome": "DETERMINISTIC_CONTROL_BASELINE_VERIFIED",
+            "failOutcome": "STOP",
+            "checks": [
+              "DETERMINISTIC_CONTROL_MODULES_PRESENT_AND_PINNED",
+              "TRANSITION_PREDICATES_RESOLVE_TO_CLOSED_REGISTRY",
+              "TRANSITION_EFFECTS_USE_CLOSED_OPERATION_SET",
+              "STATE_HASHING_AND_REPLAY_CONTRACT_PRESENT",
+              "RC1_EXECUTABLE_TRANSITION_BOUNDARY_EXPLICIT"
+            ],
+            "rule": "Run after module-recovery baseline and before provider/project work. Failure to verify deterministic control modules stops executable deterministic processing.",
+            "deterministicControlRef": "deterministic-control-model.json"
           },
           {
             "id": "INIT-01",
@@ -3518,11 +3697,11 @@
     },
     "selfHealing": {
       "key": "selfHealing",
-      "sourcePath": "v0.10.0/self-healing-model.json",
-      "sourceBlobSha": "d0f648f1ef60d21ea46e122b83cbc708209d6377",
+      "sourcePath": "v0.11.0/self-healing-model.json",
+      "sourceBlobSha": "7d5b43a60fd47dba428f65b7ebd5da352524cc66",
       "content": {
         "format": "SAFOR_SELF_HEALING_MODEL",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.11.0",
         "id": "SAFOR-CONSERVATIVE-SELF-HEALING",
         "purpose": "Detect recoverable execution/control failures, classify them, apply only pre-authorized low-risk repairs, verify the result through authoritative evidence, and escalate to the HUMAN when safe automatic recovery is not possible.",
         "principles": {
@@ -3792,6 +3971,21 @@
             "automaticRepair": "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE_AND_SAFE_TERMINAL_MENU",
             "defaultRetryBudget": 1,
             "requiresHuman": "ONLY_IF_A_VALID_NON_AUTHORITY_EXPANDING_FALLBACK_MENU_CANNOT_BE_DERIVED"
+          },
+          {
+            "id": "SH-21",
+            "name": "DETERMINISTIC_CONTROL_FAILURE",
+            "examples": [
+              "projection state hash mismatch",
+              "event sequence gap",
+              "divergent duplicate event",
+              "unknown predicate identifier",
+              "ambiguous authoritative transition",
+              "replay state hash divergence"
+            ],
+            "automaticRepair": "RESTORE_VERIFIED_DETERMINISTIC_CONTROL_MODULES_OR_REPLAY_DERIVED_PROJECTION",
+            "defaultRetryBudget": 1,
+            "requiresHuman": "WHEN_AUTHORITATIVE_STATE_DIVERGENCE_OR_MISSING_EVENT_CANNOT_BE_RECONCILED_FROM_VERIFIED_EVIDENCE"
           }
         ],
         "eligibilityRules": [
@@ -3811,7 +4005,10 @@
           "Interaction recovery may simplify or suppress a nonessential question, but may never infer a HUMAN decision, approval, risk acceptance or new authority.",
           "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate.",
           "A terminal-menu repair may only regenerate derived HUMAN presentation artifacts and must not mutate authoritative project state to manufacture an available action.",
-          "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative."
+          "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative.",
+          "Deterministic-control recovery may restore only pinned verified control definitions or regenerate/replay declared derived projection state; it may never invent a missing event, HUMAN decision, provider outcome or historical transition.",
+          "Replay divergence is an integrity failure. Automatic recovery may not overwrite authoritative evidence merely to make hashes match.",
+          "Unknown predicates, arbitrary executable transition expressions and ambiguous authoritative transitions fail closed."
         ],
         "forbiddenAutomaticRepairs": [
           "FORCE_PUSH",
@@ -3835,7 +4032,12 @@
           "INFER_HUMAN_APPROVAL_DURING_INTERACTION_RECOVERY",
           "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE",
           "INVENT_AUTHORITY_OR_STATE_TRANSITION_TO_POPULATE_TERMINAL_MENU",
-          "REMOVE_TERMINAL_MENU_REQUIREMENT_TO_CONTINUE_RENDERING"
+          "REMOVE_TERMINAL_MENU_REQUIREMENT_TO_CONTINUE_RENDERING",
+          "FABRICATE_MISSING_EVENT",
+          "ALTER_EVENT_SEQUENCE_TO_FORCE_REPLAY",
+          "AUTO_SELECT_AMBIGUOUS_AUTHORITATIVE_TRANSITION",
+          "EXECUTE_ARBITRARY_CODE_FROM_TRANSITION_MODEL",
+          "OVERWRITE_AUTHORITATIVE_STATE_TO_MATCH_REPLAY"
         ],
         "retryPolicy": {
           "key": "failureFingerprint",
@@ -3912,11 +4114,11 @@
     },
     "moduleSelfHealing": {
       "key": "moduleSelfHealing",
-      "sourcePath": "v0.10.0/module-self-healing-model.json",
-      "sourceBlobSha": "05fc04ad75a4a25ba61715609dd59142a6fdfae9",
+      "sourcePath": "v0.11.0/module-self-healing-model.json",
+      "sourceBlobSha": "e97b6191d13fd96ad49960866ad482d71caab6a9",
       "content": {
         "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.11.0",
         "id": "SAFOR-MODULE-WIDE-SELF-HEALING",
         "purpose": "Provide one explicit, bounded recovery profile for every embedded SAFOR module so failures are detected and repaired according to module authority, derivability and risk without semantic invention.",
         "coverageContract": {
@@ -6100,6 +6302,532 @@
                 "AUTHORITATIVE_READBACK_FAILS"
               ],
               "target": "HUMAN"
+            }
+          },
+          {
+            "profileId": "MRP-DETERMINISTIC_CONTROL",
+            "moduleKey": "deterministicControl",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.deterministicControl + integrityManifest.deterministicControl",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "DETERMINISTIC_CONTROL_VALIDATION_FAILURE",
+              "UNKNOWN_PREDICATE_REFERENCE",
+              "AMBIGUOUS_TRANSITION_MODEL",
+              "REPLAY_CONTROL_MODEL_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_DETERMINISTIC_CONTROL_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVENT",
+              "REWRITE_EVENT_HISTORY",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "EXECUTE_ARBITRARY_MODEL_CODE",
+              "AUTO_SELECT_AMBIGUOUS_TRANSITION",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_AUTHORITATIVE_EVENT_OR_STATE_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "DETERMINISTIC_MODEL_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DETERMINISTIC_CONTROL_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "CONTROL_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-EVENT_MODEL",
+            "moduleKey": "eventModel",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.eventModel + integrityManifest.eventModel",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "DETERMINISTIC_CONTROL_VALIDATION_FAILURE",
+              "UNKNOWN_PREDICATE_REFERENCE",
+              "AMBIGUOUS_TRANSITION_MODEL",
+              "REPLAY_CONTROL_MODEL_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_DETERMINISTIC_CONTROL_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVENT",
+              "REWRITE_EVENT_HISTORY",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "EXECUTE_ARBITRARY_MODEL_CODE",
+              "AUTO_SELECT_AMBIGUOUS_TRANSITION",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_AUTHORITATIVE_EVENT_OR_STATE_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "DETERMINISTIC_MODEL_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DETERMINISTIC_CONTROL_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "CONTROL_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-PREDICATE_REGISTRY",
+            "moduleKey": "predicateRegistry",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.predicateRegistry + integrityManifest.predicateRegistry",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "DETERMINISTIC_CONTROL_VALIDATION_FAILURE",
+              "UNKNOWN_PREDICATE_REFERENCE",
+              "AMBIGUOUS_TRANSITION_MODEL",
+              "REPLAY_CONTROL_MODEL_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_DETERMINISTIC_CONTROL_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVENT",
+              "REWRITE_EVENT_HISTORY",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "EXECUTE_ARBITRARY_MODEL_CODE",
+              "AUTO_SELECT_AMBIGUOUS_TRANSITION",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_AUTHORITATIVE_EVENT_OR_STATE_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "DETERMINISTIC_MODEL_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DETERMINISTIC_CONTROL_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "CONTROL_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-TRANSITION_REGISTRY",
+            "moduleKey": "transitionRegistry",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.transitionRegistry + integrityManifest.transitionRegistry",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "DETERMINISTIC_CONTROL_VALIDATION_FAILURE",
+              "UNKNOWN_PREDICATE_REFERENCE",
+              "AMBIGUOUS_TRANSITION_MODEL",
+              "REPLAY_CONTROL_MODEL_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_DETERMINISTIC_CONTROL_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVENT",
+              "REWRITE_EVENT_HISTORY",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "EXECUTE_ARBITRARY_MODEL_CODE",
+              "AUTO_SELECT_AMBIGUOUS_TRANSITION",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_AUTHORITATIVE_EVENT_OR_STATE_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "DETERMINISTIC_MODEL_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DETERMINISTIC_CONTROL_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "CONTROL_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-EFFECT_MODEL",
+            "moduleKey": "effectModel",
+            "moduleClass": "RUNTIME_MODEL",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "IMMUTABLE_VALIDATE_ONLY",
+            "sourceOfTruth": "embeddedModules.effectModel + integrityManifest.effectModel",
+            "failureDetectors": [
+              "MODULE_BLOB_MISMATCH",
+              "DETERMINISTIC_CONTROL_VALIDATION_FAILURE",
+              "UNKNOWN_PREDICATE_REFERENCE",
+              "AMBIGUOUS_TRANSITION_MODEL",
+              "REPLAY_CONTROL_MODEL_MISMATCH"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_EMBEDDED_MODULE",
+              "REVALIDATE_DETERMINISTIC_CONTROL_BASELINE"
+            ],
+            "forbiddenRepairs": [
+              "INVENT_MISSING_EVENT",
+              "REWRITE_EVENT_HISTORY",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "EXECUTE_ARBITRARY_MODEL_CODE",
+              "AUTO_SELECT_AMBIGUOUS_TRANSITION",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "NO_AUTHORITATIVE_EVENT_OR_STATE_INVENTION"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "DETERMINISTIC_MODEL_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "DETERMINISTIC_CONTROL_MODULE_MATCHES_EXPECTED_BLOB_AND_VALIDATES"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "CONTROL_SEMANTICS_WOULD_CHANGE",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_EVENT",
+            "moduleKey": "schemaEvent",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaEvent + integrityManifest.schemaEvent",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_MISSING_EVENT",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_PREDICATE",
+            "moduleKey": "schemaPredicate",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaPredicate + integrityManifest.schemaPredicate",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_MISSING_EVENT",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_TRANSITION",
+            "moduleKey": "schemaTransition",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaTransition + integrityManifest.schemaTransition",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_MISSING_EVENT",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_EFFECT_INTENT",
+            "moduleKey": "schemaEffectIntent",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaEffectIntent + integrityManifest.schemaEffectIntent",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_MISSING_EVENT",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_TRANSITION_RECORD",
+            "moduleKey": "schemaTransitionRecord",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaTransitionRecord + integrityManifest.schemaTransitionRecord",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_MISSING_EVENT",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
+            }
+          },
+          {
+            "profileId": "MRP-SCHEMA_STATE_SNAPSHOT",
+            "moduleKey": "schemaStateSnapshot",
+            "moduleClass": "SCHEMA",
+            "authorityType": "EMBEDDED_BOOTSTRAP_AUTHORITY",
+            "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+            "sourceOfTruth": "embeddedModules.schemaStateSnapshot + integrityManifest.schemaStateSnapshot",
+            "failureDetectors": [
+              "SCHEMA_MODULE_BLOB_MISMATCH",
+              "SCHEMA_PARSE_FAILURE",
+              "SCHEMA_VERSION_MISMATCH",
+              "SUBJECT_VALIDATION_FAILURE"
+            ],
+            "automaticRepairs": [
+              "RELOAD_VERIFIED_SCHEMA_MODULE",
+              "REVALIDATE_SUBJECT"
+            ],
+            "forbiddenRepairs": [
+              "AUTO_COERCE_AUTHORITATIVE_SUBJECT_TO_PASS_SCHEMA",
+              "INVENT_MISSING_EVENT",
+              "EXPAND_AUTHORITY_OR_SCOPE",
+              "ACCEPT_UNVERIFIED_STATE"
+            ],
+            "retryBudget": 1,
+            "preconditions": [
+              "EXPECTED_BLOB_IDENTITY_KNOWN",
+              "SUBJECT_IDENTITY_KNOWN"
+            ],
+            "verification": {
+              "requiredEvidence": [
+                "AUTHORITATIVE_READBACK",
+                "EXPECTED_STATE_MATCH",
+                "POLICY_SCHEMA_VALIDATION",
+                "REPAIR_RECORD_PERSISTED"
+              ],
+              "successPredicate": "SCHEMA_BLOB_MATCHES_EXPECTED_AND_TARGET_VALIDATION_RESULT_IS_EXPLICIT"
+            },
+            "escalation": {
+              "when": [
+                "RETRY_BUDGET_EXHAUSTED",
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS"
+              ],
+              "target": "STOP"
             }
           }
         ]
@@ -14334,11 +15062,11 @@
     },
     "conformance": {
       "key": "conformance",
-      "sourcePath": "v0.10.0/conformance.json",
-      "sourceBlobSha": "7d2f7bbb595418200db8a63cd7ef1c085c8dd363",
+      "sourcePath": "v0.11.0/conformance.json",
+      "sourceBlobSha": "603807a2b0667c3ddeedece1c2ea5cffe695447c",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
-        "schemaVersion": "0.10.0",
+        "schemaVersion": "0.11.0",
         "purpose": "Declarative architecture checks for the modular SAFOR MASTER baseline.",
         "assertions": [
           {
@@ -15135,12 +15863,92 @@
             "id": "CF-159",
             "statement": "The HUMAN response finalizer is mandatory, validates response and menu before emission, renders the terminal menu last and stops rendering immediately after it.",
             "expected": true
+          },
+          {
+            "id": "CF-160",
+            "statement": "Kernel binds an explicit deterministic-control model and applies it before every authoritative state transition in the migrated executable slice.",
+            "expected": true
+          },
+          {
+            "id": "CF-161",
+            "statement": "External HUMAN, AGENT and PROVIDER actors contribute typed events/evidence and cannot directly mutate authoritative state within the migrated executable slice.",
+            "expected": true
+          },
+          {
+            "id": "CF-162",
+            "statement": "The deterministic reducer is pure with respect to providers, LLMs, wall clock, randomness and arbitrary executable JSON expressions.",
+            "expected": true
+          },
+          {
+            "id": "CF-163",
+            "statement": "The predicate registry is closed; unknown predicate identifiers fail closed.",
+            "expected": true
+          },
+          {
+            "id": "CF-164",
+            "statement": "Transition candidate ordering is deterministic and more than one applicable authoritative transition is a control failure.",
+            "expected": true
+          },
+          {
+            "id": "CF-165",
+            "statement": "Event sequence is authoritative for replay ordering; timestamps do not order state application.",
+            "expected": true
+          },
+          {
+            "id": "CF-166",
+            "statement": "A duplicate event with identical canonical content is idempotent; the same eventId with different canonical content is an integrity failure.",
+            "expected": true
+          },
+          {
+            "id": "CF-167",
+            "statement": "Canonical state hashing excludes only stateHash and identical canonical inputs/pinned models yield identical resulting state hash.",
+            "expected": true
+          },
+          {
+            "id": "CF-168",
+            "statement": "Replay from a verified genesis snapshot must reproduce the stored projection-set hash or fail closed.",
+            "expected": true
+          },
+          {
+            "id": "CF-169",
+            "statement": "Pre-0.11 migration uses a verified MIGRATION_GENESIS_SNAPSHOT and never fabricates historical events.",
+            "expected": true
+          },
+          {
+            "id": "CF-170",
+            "statement": "External provider mutations are represented as effect intents; an effect intent is never completion evidence.",
+            "expected": true
+          },
+          {
+            "id": "CF-171",
+            "statement": "Unknown external mutation outcome transitions Control State to RECOVERING/RECONCILE_REQUIRED and emits provider readback intent.",
+            "expected": true
+          },
+          {
+            "id": "CF-172",
+            "statement": "STOP transition revokes all active execution mandates and records revokedAt from the triggering event.",
+            "expected": true
+          },
+          {
+            "id": "CF-173",
+            "statement": "RESUME after STOP transitions to AWAITING_AUTHORIZATION rather than restoring prior execution authority.",
+            "expected": true
+          },
+          {
+            "id": "CF-174",
+            "statement": "READY transition requires accepted dependencies, resolvable inputs, active mandate coverage and schema-complete resource declaration.",
+            "expected": true
+          },
+          {
+            "id": "CF-175",
+            "statement": "SAFOR 0.11.0-rc.1 exposes an explicit executable-transition boundary and does not claim un-migrated governance rules are already deterministic.",
+            "expected": true
           }
         ],
         "lastManualVerification": {
-          "branch": "safor/terminal-menu-v0.10.0-rc.2",
+          "branch": "safor/deterministic-control-v0.11.0-rc.1",
           "result": "PENDING_MACHINE_VALIDATION_AND_E2E",
-          "note": "Terminal-menu response contract, finalizer, recovery behavior and conformance assertions implemented. Machine validation and end-to-end terminal rendering acceptance remain required."
+          "note": "Deterministic Control Kernel rc.1 model, pure reducer, replay semantics and initial transition slice implemented. Machine validation and deterministic CI tests are required before release-candidate acceptance."
         }
       },
       "selfHealingProfileId": "MRP-CONFORMANCE"
@@ -15266,6 +16074,1278 @@
         }
       },
       "selfHealingProfileId": "MRP-SCHEMA_HUMAN_RESPONSE"
+    },
+    "deterministicControl": {
+      "key": "deterministicControl",
+      "sourcePath": "v0.11.0/deterministic-control-model.json",
+      "sourceBlobSha": "2e25c64a05fe1dab36d6983e7c7032254456ebd7",
+      "content": {
+        "format": "SAFOR_DETERMINISTIC_CONTROL_MODEL",
+        "schemaVersion": "0.11.0",
+        "id": "safor-deterministic-control",
+        "purpose": "Pure deterministic governance substrate over probabilistic HUMAN, AGENT and PROVIDER actors.",
+        "principle": "PROBABILISTIC_WORK_DETERMINISTIC_GOVERNANCE",
+        "authorityBoundary": {
+          "externalActorsMayProduce": [
+            "EVENTS",
+            "EVIDENCE",
+            "ARTIFACTS",
+            "REVIEWS",
+            "PROVIDER_OUTCOMES"
+          ],
+          "externalActorsMayNotProduceAuthoritatively": [
+            "STATE_TRANSITION",
+            "MANDATE",
+            "ACCEPTANCE",
+            "AUTHORITY_EXPANSION"
+          ],
+          "authoritativeStateTransitionOwner": "DETERMINISTIC_CONTROL_KERNEL"
+        },
+        "modelRefs": {
+          "eventModel": "event-model.json",
+          "predicateRegistry": "predicate-registry.json",
+          "transitionRegistry": "transition-registry.json",
+          "effectModel": "effect-model.json",
+          "eventSchema": "schemas/event.schema.json",
+          "transitionSchema": "schemas/transition.schema.json",
+          "effectIntentSchema": "schemas/effect-intent.schema.json",
+          "transitionRecordSchema": "schemas/transition-record.schema.json",
+          "stateSnapshotSchema": "schemas/state-snapshot.schema.json"
+        },
+        "pureReducerContract": {
+          "signature": "reduce(projectionSet,event,pinnedModels)->transitionResult",
+          "sameCanonicalInputsSameLogicalOutput": true,
+          "inputMutationForbidden": true,
+          "providerIoForbidden": true,
+          "llmInvocationForbidden": true,
+          "wallClockReadForbidden": true,
+          "randomnessForbidden": true,
+          "arbitraryCodeFromJsonForbidden": true,
+          "projectionSetRule": "The projection set is a read-only pinned view over authoritative Control, Value-Stream and Execution aggregates. It is not a fourth authoritative domain aggregate."
+        },
+        "eventApplication": {
+          "orderBy": "sequence",
+          "occurredAtIsOrderingInput": false,
+          "contiguousSequenceRequired": true,
+          "duplicateSameCanonicalEvent": "IDEMPOTENT_NO_OP",
+          "duplicateDivergentEvent": "INTEGRITY_FAILURE",
+          "ambiguousTransition": "CONTROL_FAILURE"
+        },
+        "hashing": {
+          "algorithm": "SHA-256",
+          "canonicalization": "UTF8_SORTED_OBJECT_KEYS_COMPACT_JSON_ARRAY_ORDER_PRESERVED",
+          "stateHashExcludesField": "stateHash"
+        },
+        "replay": {
+          "genesisRequired": true,
+          "migrationRule": "Existing pre-0.11 projects begin with a verified MIGRATION_GENESIS_SNAPSHOT; historical events MUST NOT be fabricated.",
+          "successPredicate": "REPLAYED_PROJECTION_SET_HASH_EQUALS_STORED_STATE_HASH"
+        },
+        "rc1Boundary": {
+          "executableTransitions": [
+            "WORK_ITEM_BECOMES_READY",
+            "CONTROL_PROJECT_PAUSED",
+            "CONTROL_PROJECT_RESUMED_FROM_PAUSE",
+            "CONTROL_PROJECT_STOPPED",
+            "CONTROL_RESUME_FROM_STOP_REQUIRES_AUTHORIZATION",
+            "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION"
+          ],
+          "deferred": [
+            "FULL_ACCEPTANCE_PREDICATES",
+            "FULL_AGENT_LIFECYCLE",
+            "FULL_SCHEDULER_REDUCER",
+            "FULL_SELF_HEALING_TRANSITIONS",
+            "FULL_EVENT_SOURCED_AGGREGATE_REPLACEMENT"
+          ]
+        }
+      },
+      "selfHealingProfileId": "MRP-DETERMINISTIC_CONTROL"
+    },
+    "eventModel": {
+      "key": "eventModel",
+      "sourcePath": "v0.11.0/event-model.json",
+      "sourceBlobSha": "d1b92daffba4f37ff782ebe1e3d36a24e687fbac",
+      "content": {
+        "format": "SAFOR_EVENT_MODEL",
+        "schemaVersion": "0.11.0",
+        "id": "safor-event-model",
+        "purpose": "Typed append-only observation model for HUMAN, AGENT, PROVIDER and KERNEL facts entering the deterministic control plane.",
+        "rules": {
+          "appendOnly": true,
+          "eventIdImmutable": true,
+          "sequenceAuthoritativeForReplay": true,
+          "occurredAtNotUsedForOrdering": true,
+          "sourceCannotAuthorizeTransition": true,
+          "evidenceDoesNotMutateStateDirectly": true,
+          "duplicateSameIdSameCanonicalPayload": "IDEMPOTENT_NO_OP",
+          "duplicateSameIdDifferentCanonicalPayload": "INTEGRITY_FAILURE"
+        },
+        "eventTypes": [
+          "WORK_ITEM_READINESS_REEVALUATION_REQUESTED",
+          "DEPENDENCY_ACCEPTED",
+          "MANDATE_GRANTED",
+          "INPUT_AVAILABLE",
+          "PAUSE_PROJECT_REQUESTED",
+          "RESUME_PROJECT_REQUESTED",
+          "STOP_PROJECT_REQUESTED",
+          "EXTERNAL_MUTATION_OUTCOME_UNKNOWN",
+          "MIGRATION_GENESIS_SNAPSHOT"
+        ]
+      },
+      "selfHealingProfileId": "MRP-EVENT_MODEL"
+    },
+    "predicateRegistry": {
+      "key": "predicateRegistry",
+      "sourcePath": "v0.11.0/predicate-registry.json",
+      "sourceBlobSha": "3dac7ab83c022624ea8cc1110ff396e92f5fceb2",
+      "content": {
+        "format": "SAFOR_PREDICATE_REGISTRY",
+        "schemaVersion": "0.11.0",
+        "id": "safor-predicate-registry",
+        "purpose": "Closed, versioned predicate vocabulary for deterministic SAFOR transition guards. Arbitrary executable expressions are forbidden.",
+        "executionPolicy": {
+          "closedRegistry": true,
+          "arbitraryCodeForbidden": true,
+          "unknownPredicateOutcome": "CONTROL_FAILURE",
+          "pureEvaluationRequired": true,
+          "externalIoForbidden": true,
+          "llmInvocationForbidden": true
+        },
+        "predicates": [
+          {
+            "id": "ALL_DEPENDENCIES_ACCEPTED",
+            "description": "Every dependency of the subject work item is ACCEPTED.",
+            "args": []
+          },
+          {
+            "id": "ACTIVE_MANDATE_COVERS_WORK_ITEM",
+            "description": "At least one active unrevoked Control-State mandate covers the subject work item and every required capability.",
+            "args": []
+          },
+          {
+            "id": "REQUIRED_INPUTS_RESOLVABLE",
+            "description": "All subject work-item input refs resolve to value-stream objects with a non-null artifactRef.",
+            "args": []
+          },
+          {
+            "id": "RESOURCE_DECLARATION_COMPLETE",
+            "description": "The subject work item contains a schema-complete execution.resourceAccess declaration with readSet, writeSet and exclusiveKeys arrays.",
+            "args": []
+          },
+          {
+            "id": "FIELD_EQUALS",
+            "description": "A resolved state/event field equals the provided literal value.",
+            "args": [
+              "path",
+              "value"
+            ]
+          },
+          {
+            "id": "FIELD_IN",
+            "description": "A resolved state/event field is a member of the provided literal set.",
+            "args": [
+              "path",
+              "values"
+            ]
+          },
+          {
+            "id": "EVENT_TYPE_IS",
+            "description": "The event type equals the provided value.",
+            "args": [
+              "value"
+            ]
+          },
+          {
+            "id": "EVENT_SEQUENCE_CONTIGUOUS",
+            "description": "The event sequence is exactly lastAppliedEventSequence + 1.",
+            "args": []
+          },
+          {
+            "id": "SUBJECT_WORK_ITEM_EXISTS",
+            "description": "The event subject resolves to exactly one work item.",
+            "args": []
+          }
+        ]
+      },
+      "selfHealingProfileId": "MRP-PREDICATE_REGISTRY"
+    },
+    "transitionRegistry": {
+      "key": "transitionRegistry",
+      "sourcePath": "v0.11.0/transition-registry.json",
+      "sourceBlobSha": "45ecc0fa4779848da862b96b43462caae16e2284",
+      "content": {
+        "format": "SAFOR_TRANSITION_REGISTRY",
+        "schemaVersion": "0.11.0",
+        "id": "safor-transition-registry",
+        "purpose": "Executable rc.1 transition slice for deterministic SAFOR governance.",
+        "deterministicSelection": {
+          "sort": [
+            "priority DESC",
+            "transitionId ASC"
+          ],
+          "maximumApplicableTransitions": 1,
+          "zeroMatchOutcome": "NO_TRANSITION",
+          "multipleMatchOutcome": "AMBIGUOUS_TRANSITION_CONTROL_FAILURE"
+        },
+        "transitions": [
+          {
+            "transitionId": "WORK_ITEM_BECOMES_READY",
+            "priority": 100,
+            "aggregate": "VALUE_STREAM",
+            "subjectType": "WORK_ITEM",
+            "eventTypes": [
+              "WORK_ITEM_READINESS_REEVALUATION_REQUESTED",
+              "DEPENDENCY_ACCEPTED",
+              "MANDATE_GRANTED",
+              "INPUT_AVAILABLE"
+            ],
+            "fromStatus": [
+              "PLANNED",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "SUBJECT_WORK_ITEM_EXISTS"
+                },
+                {
+                  "predicate": "ALL_DEPENDENCIES_ACCEPTED"
+                },
+                {
+                  "predicate": "ACTIVE_MANDATE_COVERS_WORK_ITEM"
+                },
+                {
+                  "predicate": "REQUIRED_INPUTS_RESOLVABLE"
+                },
+                {
+                  "predicate": "RESOURCE_DECLARATION_COMPLETE"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "SET",
+                "path": "$subject.status",
+                "value": "READY"
+              },
+              {
+                "op": "SET_FROM_EVENT",
+                "path": "$subject.execution.readySince",
+                "eventPath": "occurredAt"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.revision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "CONTROL_PROJECT_PAUSED",
+            "priority": 200,
+            "aggregate": "CONTROL",
+            "subjectType": "PROJECT",
+            "eventTypes": [
+              "PAUSE_PROJECT_REQUESTED"
+            ],
+            "fromStatus": [
+              "READY",
+              "RUNNING",
+              "WAITING_EXTERNAL",
+              "RECONCILE_REQUIRED",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "FIELD_IN",
+                  "args": {
+                    "path": "$aggregate.mode",
+                    "values": [
+                      "BOOTSTRAP",
+                      "INITIALIZING",
+                      "PLANNING",
+                      "AWAITING_AUTHORIZATION",
+                      "EXECUTING",
+                      "WAITING_OUTCOME",
+                      "RECOVERING"
+                    ]
+                  }
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "SET_FROM_STATE",
+                "path": "$aggregate.resumeMode",
+                "statePath": "$aggregate.mode"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.mode",
+                "value": "PAUSED"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.status",
+                "value": "WAITING_HUMAN"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.stateRevision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "CONTROL_PROJECT_RESUMED_FROM_PAUSE",
+            "priority": 300,
+            "aggregate": "CONTROL",
+            "subjectType": "PROJECT",
+            "eventTypes": [
+              "RESUME_PROJECT_REQUESTED"
+            ],
+            "fromStatus": [
+              "WAITING_HUMAN"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "FIELD_EQUALS",
+                  "args": {
+                    "path": "$aggregate.mode",
+                    "value": "PAUSED"
+                  }
+                },
+                {
+                  "predicate": "FIELD_IN",
+                  "args": {
+                    "path": "$aggregate.resumeMode",
+                    "values": [
+                      "BOOTSTRAP",
+                      "INITIALIZING",
+                      "PLANNING",
+                      "AWAITING_AUTHORIZATION",
+                      "EXECUTING",
+                      "WAITING_OUTCOME",
+                      "RECOVERING"
+                    ]
+                  }
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "SET_FROM_STATE",
+                "path": "$aggregate.mode",
+                "statePath": "$aggregate.resumeMode"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.resumeMode",
+                "value": null
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.status",
+                "value": "READY"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.stateRevision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "CONTROL_PROJECT_STOPPED",
+            "priority": 1000,
+            "aggregate": "CONTROL",
+            "subjectType": "PROJECT",
+            "eventTypes": [
+              "STOP_PROJECT_REQUESTED"
+            ],
+            "fromStatus": [
+              "READY",
+              "RUNNING",
+              "WAITING_HUMAN",
+              "WAITING_EXTERNAL",
+              "RECONCILE_REQUIRED",
+              "BLOCKED",
+              "FAILED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "REVOKE_ACTIVE_MANDATES",
+                "path": "$aggregate.mandates",
+                "eventPath": "occurredAt"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.mode",
+                "value": "STOPPED"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.status",
+                "value": "WAITING_HUMAN"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.resumeMode",
+                "value": null
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.stateRevision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "CONTROL_RESUME_FROM_STOP_REQUIRES_AUTHORIZATION",
+            "priority": 200,
+            "aggregate": "CONTROL",
+            "subjectType": "PROJECT",
+            "eventTypes": [
+              "RESUME_PROJECT_REQUESTED"
+            ],
+            "fromStatus": [
+              "WAITING_HUMAN"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                },
+                {
+                  "predicate": "FIELD_EQUALS",
+                  "args": {
+                    "path": "$aggregate.mode",
+                    "value": "STOPPED"
+                  }
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "SET",
+                "path": "$aggregate.mode",
+                "value": "AWAITING_AUTHORIZATION"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.status",
+                "value": "WAITING_HUMAN"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.resumeMode",
+                "value": null
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.stateRevision",
+                "by": 1
+              }
+            ],
+            "effectIntents": []
+          },
+          {
+            "transitionId": "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
+            "priority": 900,
+            "aggregate": "CONTROL",
+            "subjectType": "PROJECT",
+            "eventTypes": [
+              "EXTERNAL_MUTATION_OUTCOME_UNKNOWN"
+            ],
+            "fromStatus": [
+              "READY",
+              "RUNNING",
+              "WAITING_HUMAN",
+              "WAITING_EXTERNAL",
+              "BLOCKED"
+            ],
+            "guards": {
+              "all": [
+                {
+                  "predicate": "EVENT_SEQUENCE_CONTIGUOUS"
+                }
+              ]
+            },
+            "effects": [
+              {
+                "op": "SET",
+                "path": "$aggregate.status",
+                "value": "RECONCILE_REQUIRED"
+              },
+              {
+                "op": "SET",
+                "path": "$aggregate.mode",
+                "value": "RECOVERING"
+              },
+              {
+                "op": "INCREMENT",
+                "path": "$aggregate.stateRevision",
+                "by": 1
+              }
+            ],
+            "effectIntents": [
+              {
+                "effectType": "PROVIDER_READBACK",
+                "reason": "RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
+                "payload": {}
+              }
+            ]
+          }
+        ]
+      },
+      "selfHealingProfileId": "MRP-TRANSITION_REGISTRY"
+    },
+    "effectModel": {
+      "key": "effectModel",
+      "sourcePath": "v0.11.0/effect-model.json",
+      "sourceBlobSha": "7037e798aa5d2ac5c145368266a5c371b115509e",
+      "content": {
+        "format": "SAFOR_EFFECT_MODEL",
+        "schemaVersion": "0.11.0",
+        "id": "safor-effect-model",
+        "purpose": "Separate deterministic state decisions from nondeterministic provider/host mutations.",
+        "principles": {
+          "reducerNeverExecutesExternalEffect": true,
+          "effectIntentIsNotCompletionEvidence": true,
+          "providerOutcomeReturnsAsEvent": true,
+          "unknownMutationOutcomeRequiresReconciliation": true,
+          "readbackRequiredForMutationCompletion": true
+        },
+        "stateEffectOperations": [
+          "SET",
+          "SET_FROM_EVENT",
+          "APPEND_UNIQUE",
+          "INCREMENT",
+          "REMOVE_MATCHING",
+          "SET_FROM_STATE",
+          "REVOKE_ACTIVE_MANDATES"
+        ],
+        "externalEffectTypes": [
+          "CREATE_BRANCH",
+          "WRITE_FILE",
+          "UPDATE_FILE",
+          "CREATE_PULL_REQUEST",
+          "MERGE_PULL_REQUEST",
+          "PROVIDER_READBACK",
+          "ACTIVATE_AGENT"
+        ],
+        "providerOutcomes": [
+          "EFFECT_SUCCEEDED",
+          "EFFECT_FAILED",
+          "EFFECT_OUTCOME_UNKNOWN"
+        ]
+      },
+      "selfHealingProfileId": "MRP-EFFECT_MODEL"
+    },
+    "schemaEvent": {
+      "key": "schemaEvent",
+      "sourcePath": "v0.11.0/schemas/event.schema.json",
+      "sourceBlobSha": "f52e71975874d4c0a71119287bbe96df242264e0",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/event.schema.json",
+        "title": "SAFOR Event",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "eventId",
+          "sequence",
+          "eventType",
+          "occurredAt",
+          "source",
+          "subject",
+          "correlationId",
+          "causationId",
+          "payload",
+          "evidenceRefs"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_EVENT"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "eventId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sequence": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "eventType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "occurredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "source": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "actorId"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "HUMAN",
+                  "AGENT",
+                  "PROVIDER",
+                  "KERNEL",
+                  "MIGRATION"
+                ]
+              },
+              "actorId": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            }
+          },
+          "subject": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "type",
+              "ref"
+            ],
+            "properties": {
+              "type": {
+                "enum": [
+                  "PROJECT",
+                  "WORK_ITEM",
+                  "JOB",
+                  "EFFECT",
+                  "MODULE"
+                ]
+              },
+              "ref": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "correlationId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "causationId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "payload": {
+            "type": "object"
+          },
+          "evidenceRefs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_EVENT"
+    },
+    "schemaPredicate": {
+      "key": "schemaPredicate",
+      "sourcePath": "v0.11.0/schemas/predicate.schema.json",
+      "sourceBlobSha": "f8c455c3326dfb04a2095c05e790957f02056fce",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/predicate.schema.json",
+        "title": "SAFOR Predicate Expression",
+        "type": "object",
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "required": [
+              "predicate"
+            ],
+            "properties": {
+              "predicate": {
+                "type": "string",
+                "pattern": "^[A-Z][A-Z0-9_]*$"
+              },
+              "args": {
+                "type": "object",
+                "default": {}
+              }
+            }
+          },
+          {
+            "additionalProperties": false,
+            "required": [
+              "all"
+            ],
+            "properties": {
+              "all": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#"
+                }
+              }
+            }
+          },
+          {
+            "additionalProperties": false,
+            "required": [
+              "any"
+            ],
+            "properties": {
+              "any": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "$ref": "#"
+                }
+              }
+            }
+          },
+          {
+            "additionalProperties": false,
+            "required": [
+              "not"
+            ],
+            "properties": {
+              "not": {
+                "$ref": "#"
+              }
+            }
+          }
+        ]
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_PREDICATE"
+    },
+    "schemaTransition": {
+      "key": "schemaTransition",
+      "sourcePath": "v0.11.0/schemas/transition.schema.json",
+      "sourceBlobSha": "b088147282d8f12c50d35677c72e869f19c4099c",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/transition.schema.json",
+        "title": "SAFOR Transition Definition",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "transitionId",
+          "priority",
+          "aggregate",
+          "subjectType",
+          "eventTypes",
+          "fromStatus",
+          "guards",
+          "effects",
+          "effectIntents"
+        ],
+        "properties": {
+          "transitionId": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]*$"
+          },
+          "priority": {
+            "type": "integer"
+          },
+          "aggregate": {
+            "enum": [
+              "CONTROL",
+              "VALUE_STREAM",
+              "EXECUTION"
+            ]
+          },
+          "subjectType": {
+            "enum": [
+              "PROJECT",
+              "WORK_ITEM",
+              "JOB",
+              "EFFECT",
+              "MODULE"
+            ]
+          },
+          "eventTypes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "fromStatus": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "guards": {
+            "$ref": "predicate.schema.json"
+          },
+          "effects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/stateEffect"
+            }
+          },
+          "effectIntents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/effectIntentTemplate"
+            }
+          }
+        },
+        "$defs": {
+          "path": {
+            "type": "string",
+            "pattern": "^\\$(?:aggregate|subject)(?:\\.[A-Za-z0-9_-]+)+$"
+          },
+          "stateEffect": {
+            "type": "object",
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "value"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "SET"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "value": {}
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "eventPath"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "SET_FROM_EVENT"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "eventPath": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]+$"
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "by"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "INCREMENT"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "by": {
+                    "type": "number"
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "value"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "APPEND_UNIQUE"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "value": {}
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "match"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "REMOVE_MATCHING"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "match": {
+                    "type": "object"
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "statePath"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "SET_FROM_STATE"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "statePath": {
+                    "$ref": "#/$defs/path"
+                  }
+                }
+              },
+              {
+                "additionalProperties": false,
+                "required": [
+                  "op",
+                  "path",
+                  "eventPath"
+                ],
+                "properties": {
+                  "op": {
+                    "const": "REVOKE_ACTIVE_MANDATES"
+                  },
+                  "path": {
+                    "$ref": "#/$defs/path"
+                  },
+                  "eventPath": {
+                    "type": "string",
+                    "pattern": "^[A-Za-z0-9_.-]+$"
+                  }
+                }
+              }
+            ]
+          },
+          "effectIntentTemplate": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "effectType",
+              "reason"
+            ],
+            "properties": {
+              "effectType": {
+                "enum": [
+                  "CREATE_BRANCH",
+                  "WRITE_FILE",
+                  "UPDATE_FILE",
+                  "CREATE_PULL_REQUEST",
+                  "MERGE_PULL_REQUEST",
+                  "PROVIDER_READBACK",
+                  "ACTIVATE_AGENT"
+                ]
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1
+              },
+              "payload": {
+                "type": "object",
+                "default": {}
+              }
+            }
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_TRANSITION"
+    },
+    "schemaEffectIntent": {
+      "key": "schemaEffectIntent",
+      "sourcePath": "v0.11.0/schemas/effect-intent.schema.json",
+      "sourceBlobSha": "e1ff3fde5d96b8911cfcaacedc8f29edead7f63b",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/effect-intent.schema.json",
+        "title": "SAFOR Effect Intent",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "effectIntentId",
+          "effectType",
+          "reason",
+          "sourceTransitionId",
+          "sourceEventId",
+          "payload"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_EFFECT_INTENT"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "effectIntentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "effectType": {
+            "enum": [
+              "CREATE_BRANCH",
+              "WRITE_FILE",
+              "UPDATE_FILE",
+              "CREATE_PULL_REQUEST",
+              "MERGE_PULL_REQUEST",
+              "PROVIDER_READBACK",
+              "ACTIVATE_AGENT"
+            ]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceTransitionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceEventId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "payload": {
+            "type": "object"
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_EFFECT_INTENT"
+    },
+    "schemaTransitionRecord": {
+      "key": "schemaTransitionRecord",
+      "sourcePath": "v0.11.0/schemas/transition-record.schema.json",
+      "sourceBlobSha": "d31208df0547f08be398cd649ecfe5998b239267",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/transition-record.schema.json",
+        "title": "SAFOR Transition Record",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "transitionRecordId",
+          "transitionId",
+          "eventId",
+          "preStateHash",
+          "postStateHash",
+          "guardResults",
+          "effectIntents",
+          "modelRevision",
+          "outcome"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_TRANSITION_RECORD"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "transitionRecordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transitionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "eventId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "preStateHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "postStateHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "guardResults": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "predicate",
+                "result"
+              ],
+              "properties": {
+                "predicate": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "result": {
+                  "type": "boolean"
+                },
+                "detail": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "effectIntents": {
+            "type": "array",
+            "items": {
+              "$ref": "effect-intent.schema.json"
+            }
+          },
+          "modelRevision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "outcome": {
+            "enum": [
+              "APPLIED",
+              "IDEMPOTENT_NO_OP",
+              "NO_TRANSITION",
+              "CONTROL_FAILURE",
+              "INTEGRITY_FAILURE"
+            ]
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_TRANSITION_RECORD"
+    },
+    "schemaStateSnapshot": {
+      "key": "schemaStateSnapshot",
+      "sourcePath": "v0.11.0/schemas/state-snapshot.schema.json",
+      "sourceBlobSha": "c4063e3b0dc7da69fcbe805c78e184d890cec052",
+      "content": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "$id": "https://safor.dev/schemas/0.11.0/state-snapshot.schema.json",
+        "title": "SAFOR Deterministic Projection Set Snapshot",
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "format",
+          "schemaVersion",
+          "projectId",
+          "modelRevision",
+          "lastAppliedEventSequence",
+          "lastAppliedEventId",
+          "processedEvents",
+          "control",
+          "valueStream",
+          "execution",
+          "stateHash",
+          "genesisRef"
+        ],
+        "properties": {
+          "format": {
+            "const": "SAFOR_STATE_SNAPSHOT"
+          },
+          "schemaVersion": {
+            "const": "0.11.0"
+          },
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "modelRevision": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastAppliedEventSequence": {
+            "type": "integer",
+            "minimum": -1
+          },
+          "lastAppliedEventId": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "processedEvents": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          },
+          "control": {
+            "type": "object"
+          },
+          "valueStream": {
+            "type": "object"
+          },
+          "execution": {
+            "type": "object"
+          },
+          "stateHash": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "genesisRef": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "selfHealingProfileId": "MRP-SCHEMA_STATE_SNAPSHOT"
     }
   }
 }
