@@ -93,3 +93,18 @@ The only legitimate HUMAN escalation is a material choice such as selecting/conf
 - Self-Healing cannot fabricate runtime capability or switch mode to bypass missing automation.
 - Machine policy tests cover mode/runtime combinations.
 - Existing deterministic-control, acceptance, package and workspace tests remain green.
+
+## Implementation status
+
+Implemented on branch `safor/agent-runtime-modes-v0.12.0-rc.2`.
+
+Machine gates:
+- `python tools/build_bundle.py --check` — PASS
+- `python tools/validate_safor.py` — PASS
+- `python -m unittest discover -s tests -v` — PASS, 53 tests
+- embedded Framework recovery coverage — PASS, 65 modules / 65 profiles
+- Operation Mode / Agent Runtime policy tests — PASS, 15 tests
+- final CI before documentation sync — SUCCESS (run 39026579978)
+
+Remaining empirical gate:
+- Scenario S, especially automatic Agent Runtime execution without HUMAN chat operation.
