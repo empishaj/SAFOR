@@ -8,7 +8,7 @@
 - [ ] `python tools/build_bundle.py --check` passes.
 - [ ] `python tools/validate_safor.py` passes.
 - [ ] CI is green on the exact release commit.
-- [ ] `SAFOR-MASTER-COMPLETE-v0.11.0-rc.1.json` is rebuilt from canonical `v0.11.0/` overlay plus pinned `v0.10.0/` baseline.
+- [ ] `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` is rebuilt from canonical `v0.11.0/` overlay plus pinned `v0.10.0/` baseline.
 - [ ] `SAFOR-MASTER-COMPLETE.json` exactly matches the versioned release artifact.
 - [ ] All embedded module references resolve.
 - [ ] Runtime memory requirement is exactly `{OWNER}/safor-memory`.
@@ -72,6 +72,13 @@
 - [ ] All transition predicates resolve to the closed registry and all effects use the closed operation set.
 - [ ] 54 embedded modules map exactly to 54 recovery profiles.
 
+- [x] Acceptance Contracts preserve every approved criterion and bind typed requirements.
+- [x] Independent review cannot be satisfied by the performer when separation is required.
+- [x] Required authority rejection blocks acceptance.
+- [x] Agent self-check cannot satisfy independent review/provider evidence/authority requirements.
+- [x] 58 embedded modules map exactly to 58 recovery profiles.
+- [x] 25 deterministic-control/acceptance tests pass in CI.
+
 ## Additional gates for General Availability
 
 - [ ] GitHub blank-chat end-to-end acceptance passes according to `ACCEPTANCE-TESTS.md`.
@@ -86,3 +93,5 @@
 
 - [ ] Deterministic Control end-to-end acceptance passes according to scenario O.
 - [ ] Full governance transition migration is completed or the remaining non-executable boundary is explicitly accepted for GA scope.
+
+- [ ] Deterministic Acceptance end-to-end acceptance passes according to scenario P.
