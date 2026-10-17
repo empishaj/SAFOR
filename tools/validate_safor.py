@@ -30,7 +30,7 @@ required_modules = {
     "providerGithub","providerGitlab","operatingModelSaas","operatingModelBook",
     "factorySoftwareWebsite","factoryBook","schemaPackageManifest","schemaControlState",
     "schemaValueStreamState","schemaExecutionState","schemaWorkItem","schemaProject",
-    "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu",
+    "schemaBindings","schemaDecisionRecord","schemaEvidenceRecord","schemaInteractionMenu","schemaHumanResponse",
     "humanDecisionGate","schemaHumanCognitiveLoadPolicy","schemaHumanDecisionGate","schemaSelfHealingRecord","schemaModuleRecoveryProfile","moduleSelfHealing","agentWorkspace","schemaAgentRegistry","schemaAgentIdentity",
     "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
     "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease","conformance"
@@ -119,6 +119,8 @@ if runtime.get("canonicalRepository") != "empishaj/SAFOR":
     fail("Canonical product repository must be empishaj/SAFOR.")
 if runtime.get("canonicalBranch") != "main":
     fail("Canonical product branch must be main.")
+if "exactly one interaction menu" not in runtime.get("humanTerminalMenuRule", ""):
+    fail("Runtime contract must require exactly one terminal HUMAN interaction menu.")
 
 memory = runtime.get("absoluteRuntimePrerequisite", {})
 if memory.get("repositoryPattern") != "{selectedOwner}/safor-memory":
@@ -182,13 +184,13 @@ if kernel.get("schemas", {}).get("moduleRecoveryProfile") != "schemas/module-rec
     fail("Kernel must reference module recovery profile schema.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 121)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 126)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 154)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 160)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -201,7 +203,7 @@ for principle in ("moduleProfileRequired","exactModuleCoverageRequired","failClo
     if self_healing.get("principles", {}).get(principle) is not True:
         fail(f"Self-healing principle {principle} must be true.")
 failure_classes = {x.get("id"): x for x in self_healing.get("failureClasses", [])}
-for n in range(10, 20):
+for n in range(10, 21):
     cid = f"SH-{n:02d}"
     if cid not in failure_classes:
         fail(f"Missing module-aware self-healing failure class {cid}.")
@@ -608,6 +610,34 @@ for action_id in ("D01","O01"):
 if actions.get("D01", {}).get("humanInteractionContract", {}).get("targetLoad") != "HIGH":
     fail("D01 DISCOVERY target HUMAN load must be HIGH.")
 
+human_response_schema = modules.get("schemaHumanResponse", {}).get("content", {})
+for field in ("format","schemaVersion","responseId","phase","surface","content","terminalMenu","renderingContract"):
+    if field not in human_response_schema.get("required", []):
+        fail(f"HUMAN response schema missing required field {field}.")
+terminal_menu_ref = human_response_schema.get("properties", {}).get("terminalMenu", {}).get("$ref")
+if terminal_menu_ref != "interaction-menu.schema.json":
+    fail("HUMAN response schema terminalMenu must reference interaction-menu.schema.json.")
+render_contract = human_response_schema.get("properties", {}).get("renderingContract", {}).get("properties", {})
+for field, expected in (
+    ("terminalElement", "terminalMenu"),
+    ("exactlyOneTerminalMenu", True),
+    ("contentAfterTerminalElementForbidden", True),
+    ("stopRenderingAfterTerminalMenu", True),
+):
+    node = render_contract.get(field, {})
+    if node.get("const") != expected:
+        fail(f"HUMAN response rendering contract {field} mismatch.")
+
+interaction = modules.get("interaction", {}).get("content", {})
+terminal_contract = interaction.get("terminalMenuContract", {})
+for field in ("exactlyOne","mustBeFinalRenderedElement","contentAfterMenuForbidden","stopRenderingAfterMenu","menuPresenceDoesNotImplyHumanDecision"):
+    if terminal_contract.get(field) is not True:
+        fail(f"Interaction terminalMenuContract {field} must be true.")
+if terminal_contract.get("responseSchemaRef") != "schemas/human-response.schema.json":
+    fail("Interaction terminalMenuContract must reference HUMAN response schema.")
+if terminal_contract.get("finalizer", {}).get("emitWithoutSuccessfulFinalization") is not False:
+    fail("HUMAN response finalizer must fail closed.")
+
 interaction_menu_schema = modules.get("schemaInteractionMenu", {}).get("content", {})
 context_required = interaction_menu_schema.get("properties", {}).get("context", {}).get("required", [])
 for field in ("phase","cognitiveLoadTarget","interactionReason","decisionRequired","technicalDetailExposure","decisionGateOutcome","heuristicLoadEstimate","reusedDecisionRef"):
@@ -625,6 +655,13 @@ for field in ("defaultDecision","legitimateReasons","mustNotAskHumanFor","evalua
 
 if "SH-19" not in failure_classes:
     fail("Self-healing failure taxonomy must include SH-19 HUMAN interaction governance failure.")
+interaction_profile = profile_by_key.get("interaction", {})
+for detector in ("TERMINAL_MENU_MISSING","TERMINAL_MENU_NOT_LAST","MULTIPLE_TERMINAL_MENUS","TERMINAL_MENU_INVALID","POST_MENU_CONTENT_DETECTED"):
+    if detector not in interaction_profile.get("failureDetectors", []):
+        fail(f"Terminal-menu interaction recovery detector missing {detector}.")
+if "schemaHumanResponse" not in profile_by_key:
+    fail("Module self-healing missing HUMAN response schema recovery profile.")
+
 for module_key in ("humanDecisionGate","schemaHumanCognitiveLoadPolicy","schemaHumanDecisionGate"):
     if module_key not in profile_by_key:
         fail(f"Module self-healing missing HUMAN governance recovery profile {module_key}.")
