@@ -17,7 +17,8 @@
     "INCREMENT",
     "REMOVE_MATCHING",
     "SET_FROM_STATE",
-    "REVOKE_ACTIVE_MANDATES"
+    "REVOKE_ACTIVE_MANDATES",
+    "APPEND_FROM_EVENT"
   ],
   "externalEffectTypes": [
     "CREATE_BRANCH",
