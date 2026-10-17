@@ -245,3 +245,40 @@ The SAFOR product repository and package sources are invalid project targets in 
 ### Legacy disclosure
 
 Package prototypes committed publicly before 0.12 remain part of public Git history and cannot be made confidential retroactively. Commercially protected package versions must therefore be delivered through future entitled/signed package channels and must not rely on secrecy of those legacy prototype versions.
+
+
+## Operation Mode and Agent Runtime
+
+### Operation Mode
+
+Operation Mode is governance state and is resolved before mutating effects.
+
+`DESIGN` authorizes Framework/schema/package development targets. It does not represent execution of a HUMAN project Value Creation Stream.
+
+`VALIDATION` requires an isolated non-production target. Manual chat activation can exist only as an explicit validation harness and its evidence cannot silently satisfy production mandates, acceptance, release authority or business outcomes.
+
+`EXECUTION` targets a HUMAN-controlled project workspace. AGENT dispatch requires verified automatic/runtime-mediated activation.
+
+A mode change never creates authority, provider rights or runtime capability. In particular, EXECUTION may not silently downgrade to VALIDATION to bypass a missing runtime.
+
+### Agent Runtime Adapter
+
+The Agent Runtime Adapter is independent from the Provider Adapter:
+
+- **Provider Adapter**: repository/artifact/branch/PR/check/readback capabilities.
+- **Agent Runtime Adapter**: activation, continuation/wakeup, job-discovery trigger, state observation and result availability.
+
+Supported activation capability classes are:
+
+- `HOST_NATIVE_AUTOMATIC`
+- `EXTERNAL_AUTOMATION`
+- `HUMAN_MANUAL_TEST_ONLY`
+- `UNAVAILABLE`
+
+The repository-native Agent Job Contract remains authoritative. The runtime mechanism never grants provider rights, Operating Model authority, mandate, entitlement, review approval or acceptance.
+
+### HUMAN boundary
+
+In EXECUTION the HUMAN is a decision-maker, not an agent-runtime operator. Routine chat wakeup, copied Job Contracts, inbox polling, result transport and manual dispatch sequencing are explicitly prohibited HUMAN fallback mechanisms.
+
+If AGENT work is needed but no automated runtime exists, SAFOR returns `AGENT_RUNTIME_AUTOMATION_UNAVAILABLE` and blocks that dispatch until a compatible runtime is bound.
