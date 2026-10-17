@@ -35,7 +35,8 @@ required_modules = {
     "schemaAgentState","schemaAgentInboxIndex","schemaAgentJob","schemaAgentJobState","schemaAgentResult",
     "agentJobContract","multiAgentScheduler","schemaSchedulerState","schemaDispatchWave","schemaResourceLease",
     "deterministicControl","eventModel","predicateRegistry","transitionRegistry","effectModel",
-    "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord","schemaStateSnapshot","conformance"
+    "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord","schemaStateSnapshot",
+    "acceptanceModel","schemaAcceptanceContract","schemaReviewDecision","schemaAuthorityDecision","conformance"
 }
 missing = sorted(required_modules - set(modules))
 if missing:
@@ -192,13 +193,13 @@ if kernel.get("schemas", {}).get("moduleRecoveryProfile") != "schemas/module-rec
     fail("Kernel must reference module recovery profile schema.")
 
 invariants = {x.get("id") for x in kernel.get("invariants", [])}
-for inv in tuple(f"INV-{n:03d}" for n in range(37, 136)):
+for inv in tuple(f"INV-{n:03d}" for n in range(37, 148)):
     if inv not in invariants:
         fail(f"Missing required invariant {inv}.")
 
 conformance = modules.get("conformance", {}).get("content", {})
 assertions = {x.get("id"): x for x in conformance.get("assertions", [])}
-for cf in tuple(f"CF-{n:03d}" for n in range(46, 176)):
+for cf in tuple(f"CF-{n:03d}" for n in range(46, 194)):
     if assertions.get(cf, {}).get("expected") is not True:
         fail(f"Missing/passing conformance assertion {cf}.")
 
@@ -211,7 +212,7 @@ for principle in ("moduleProfileRequired","exactModuleCoverageRequired","failClo
     if self_healing.get("principles", {}).get(principle) is not True:
         fail(f"Self-healing principle {principle} must be true.")
 failure_classes = {x.get("id"): x for x in self_healing.get("failureClasses", [])}
-for n in range(10, 22):
+for n in range(10, 23):
     cid = f"SH-{n:02d}"
     if cid not in failure_classes:
         fail(f"Missing module-aware self-healing failure class {cid}.")
@@ -749,7 +750,8 @@ for path in ROOT.rglob("*"):
 required_v011_modules = {
     "kernel","initialization","selfHealing","moduleSelfHealing","conformance",
     "deterministicControl","eventModel","predicateRegistry","transitionRegistry","effectModel",
-    "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord","schemaStateSnapshot"
+    "schemaEvent","schemaPredicate","schemaTransition","schemaEffectIntent","schemaTransitionRecord","schemaStateSnapshot",
+    "acceptanceModel","schemaAcceptanceContract","schemaReviewDecision","schemaAuthorityDecision"
 }
 for key in required_v011_modules:
     if not str(modules.get(key, {}).get("sourcePath", "")).startswith("v0.11.0/"):
@@ -776,10 +778,17 @@ required_transitions = {
     "CONTROL_PROJECT_STOPPED",
     "CONTROL_RESUME_FROM_STOP_REQUIRES_AUTHORIZATION",
     "CONTROL_RECONCILE_UNKNOWN_EXTERNAL_MUTATION",
+    "ACCEPTANCE_CONTRACT_REGISTERED",
+    "ACCEPTANCE_EVIDENCE_RECORDED",
+    "ACCEPTANCE_REVIEW_APPROVED_RECORDED",
+    "ACCEPTANCE_REVIEW_CHANGES_REQUIRED_RECORDED",
+    "ACCEPTANCE_AUTHORITY_APPROVED_RECORDED",
+    "ACCEPTANCE_AUTHORITY_REJECTED_RECORDED",
+    "WORK_ITEM_ACCEPTED",
 }
 actual_transitions = {t.get("transitionId") for t in transition_registry.get("transitions", [])}
 if not required_transitions.issubset(actual_transitions):
-    fail("Transition registry missing rc.1 deterministic transitions.")
+    fail("Transition registry missing required deterministic transitions.")
 
 def walk_guard(expr):
     if not isinstance(expr, dict):
@@ -812,6 +821,99 @@ if kernel.get("controlPlane", {}).get("crossCuttingGuards", {}).get("determinist
 if runtime.get("deterministicControlRule") is None:
     fail("Complete bundle runtime contract missing deterministicControlRule.")
 
+
+# SAFOR 0.11 rc.2 deterministic acceptance validation
+acceptance = modules.get("acceptanceModel", {}).get("content", {})
+for principle in (
+    "acceptanceOwnedByDeterministicKernel",
+    "qualitativeJudgmentMustBecomeExplicitReviewOrAuthorityDecision",
+    "agentSelfCheckIsNotAcceptanceEvidence",
+    "everyCriterionRequiresTypedRequirement",
+    "contractImmutableAfterApproval",
+    "reviewIndependenceEnforced",
+    "authorityIdMustMatchExactly",
+    "rejectedAuthorityBlocksAcceptance",
+):
+    if acceptance.get("principles", {}).get(principle) is not True:
+        fail(f"Acceptance principle {principle} must be true.")
+
+if kernel.get("acceptanceModelRef") != "acceptance-model.json":
+    fail("Kernel must reference acceptance-model.json.")
+for key, expected in (
+    ("acceptanceContract", "schemas/acceptance-contract.schema.json"),
+    ("reviewDecision", "schemas/review-decision.schema.json"),
+    ("authorityDecision", "schemas/authority-decision.schema.json"),
+):
+    if kernel.get("schemas", {}).get(key) != expected:
+        fail(f"Kernel acceptance schema reference {key} mismatch.")
+
+if actions.get("P01", {}).get("acceptanceModelRef") != "acceptance-model.json#derivationContract":
+    fail("P01 must materialize Acceptance Contracts from the Acceptance Model.")
+if "WORK_ITEM_ACCEPTANCE_CONTRACTS" not in actions.get("P03", {}).get("approvalIncludes", []):
+    fail("P03 plan approval must include Work Item Acceptance Contracts.")
+if actions.get("E05", {}).get("modelRef") != "acceptance-model.json":
+    fail("E05 must bind deterministic acceptance-model.json.")
+if actions.get("E05", {}).get("factoryEvidenceContractRef") != "BOUND_FACTORY.model.evidenceContract":
+    fail("E05 must retain the bound Factory evidence contract as domain input.")
+
+acceptance_schema = modules.get("schemaAcceptanceContract", {}).get("content", {})
+for field in ("contractId","projectId","workItemId","revision","status","source","criteria","requirements","policy","contractHash"):
+    if field not in acceptance_schema.get("required", []):
+        fail(f"Acceptance Contract schema missing required field {field}.")
+criterion_schema = acceptance_schema.get("properties", {}).get("criteria", {}).get("items", {})
+if "requirementRefs" not in criterion_schema.get("required", []):
+    fail("Acceptance criterion must require typed requirementRefs.")
+
+snapshot_schema = modules.get("schemaStateSnapshot", {}).get("content", {})
+if "acceptance" not in snapshot_schema.get("required", []):
+    fail("Deterministic State Snapshot must include acceptance ledger.")
+for field in ("revision","contracts","evidenceRecords","reviewDecisions","authorityDecisions"):
+    if field not in snapshot_schema.get("properties", {}).get("acceptance", {}).get("required", []):
+        fail(f"Acceptance ledger missing required field {field}.")
+
+if "APPEND_FROM_EVENT" not in allowed_effect_ops:
+    fail("Effect model must include APPEND_FROM_EVENT.")
+
+transition_by_id = {t.get("transitionId"): t for t in transition_registry.get("transitions", [])}
+accept_transition = transition_by_id.get("WORK_ITEM_ACCEPTED", {})
+accept_guards = {g.get("predicate") for g in accept_transition.get("guards", {}).get("all", [])}
+for predicate in (
+    "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS",
+    "REQUIRED_EVIDENCE_SATISFIED",
+    "REQUIRED_REVIEWS_SATISFIED",
+    "REVIEW_INDEPENDENCE_SATISFIED",
+    "REQUIRED_AUTHORITIES_SATISFIED",
+    "NO_REJECTING_AUTHORITY_DECISION",
+    "ALL_ACCEPTANCE_CRITERIA_SATISFIED",
+):
+    if predicate not in accept_guards:
+        fail(f"WORK_ITEM_ACCEPTED missing guard {predicate}.")
+review_guards = {g.get("predicate") for g in transition_by_id.get("ACCEPTANCE_REVIEW_APPROVED_RECORDED", {}).get("guards", {}).get("all", [])}
+if "REVIEW_EVENT_INDEPENDENCE_VALID" not in review_guards:
+    fail("Review approval transition must enforce reviewer independence.")
+
+if "SH-22" not in failure_classes:
+    fail("Self-healing failure taxonomy must include SH-22 deterministic acceptance failure.")
+for module_key in ("acceptanceModel","schemaAcceptanceContract","schemaReviewDecision","schemaAuthorityDecision"):
+    if module_key not in profile_by_key:
+        fail(f"Module self-healing missing acceptance recovery profile {module_key}.")
+
+rc2 = deterministic.get("rc2Boundary", {})
+for transition_id in (
+    "ACCEPTANCE_CONTRACT_REGISTERED",
+    "ACCEPTANCE_EVIDENCE_RECORDED",
+    "ACCEPTANCE_REVIEW_APPROVED_RECORDED",
+    "ACCEPTANCE_REVIEW_CHANGES_REQUIRED_RECORDED",
+    "ACCEPTANCE_AUTHORITY_APPROVED_RECORDED",
+    "ACCEPTANCE_AUTHORITY_REJECTED_RECORDED",
+    "WORK_ITEM_ACCEPTED",
+):
+    if transition_id not in rc2.get("executableTransitions", []):
+        fail(f"Deterministic rc.2 boundary missing {transition_id}.")
+
+if runtime.get("deterministicAcceptanceRule") is None:
+    fail("Complete bundle runtime contract missing deterministicAcceptanceRule.")
+
 if errors:
     print("SAFOR validation: FAIL")
     for error in errors:
@@ -834,3 +936,5 @@ print("- Profile-constrained recovery / fail-closed recovery control: verified")
 print("- Phase-aware HUMAN cognitive-load governance: verified")
 print("- Derive-before-ask / unchanged-decision reuse: verified")
 print("- HUMAN Decision Gate and domain-language abstraction: verified")
+print("- Deterministic Control Kernel: typed events / closed predicates / replay verified")
+print("- Deterministic Acceptance: contracts / evidence / review independence / authority gates verified")
