@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.12.0-rc.1**
+Current target: **v0.13.0-rc.1**
 
-Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol/domain-package baselines**
+Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
 ## Release-candidate gates
 
@@ -12,7 +12,15 @@ Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0
 | Framework/domain-package separation | PASS by builder/validator |
 | Paid Factory/OM content excluded from Framework bundle | PASS |
 | Package catalog metadata | PASS |
-| Software/Website FREE_PUBLIC starter profile | PASS by unit/validator |
+| Software/Website FREE_PUBLIC starter defaults | PASS by unit/validator |
+| Factory independently replaceable from Operating Model | PASS by unit/validator |
+| Operating Model independently replaceable from Factory | PASS by unit/validator |
+| Mixed FREE_PUBLIC/PAID package pair | PASS by unit |
+| Per-selected-package entitlement | PASS by unit/validator |
+| External entitlement evidence boundary | PASS by schema/policy |
+| Domain-package SHA-256 declared-contract integrity | PASS by unit/validator |
+| Framework/Creation-Type package scope | PASS by unit/validator |
+| Materialized package selection + compatibility decision | PASS by schema/validator |
 | Public immutable-resolution requirement for free packages | PASS by schema/policy |
 | Book PAID_ENTITLEMENT_REQUIRED profile | PASS by unit/validator |
 | Self-asserted entitlement forbidden | PASS by unit/policy |
@@ -34,8 +42,8 @@ Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0
 | Deterministic Control Kernel unit/replay suite | PASS |
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
-| Total Python unit tests | **38 PASS in CI** |
-| Module-wide Self-Healing exact coverage | **61/61 PASS** |
+| Total Python unit tests | **48 PASS in CI** |
+| Module-wide Self-Healing exact coverage | **65/65 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |
@@ -59,7 +67,7 @@ Current source baselines: **`v0.12.0/` Framework/package/workspace overlay + `v0
 
 ## Maturity meaning
 
-**Release Candidate** means the architecture, package/workspace boundaries and machine-level invariants are internally coherent and reproducibly validated. It does not mean the commercial entitlement channel, Local Git host path or all provider/agent scenarios have been empirically proven end to end.
+**Release Candidate** means the architecture, composable package/workspace boundaries and machine-level invariants are internally coherent and reproducibly validated. It does not mean the commercial entitlement channel, Local Git host path or all provider/agent scenarios have been empirically proven end to end.
 
 ## Commercial boundary
 
