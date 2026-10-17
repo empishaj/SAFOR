@@ -20,12 +20,12 @@ Do not post secrets or exploitable details in a public issue. Contact the reposi
 
 ## Supported version
 
-Security hardening currently targets SAFOR v0.13.0-rc.4 and the free Website Factory/Operating Model 1.0.0 pair.
+Security hardening currently targets SAFOR v0.13.0-rc.6 and the free Website Factory/Operating Model 1.0.0 pair.
 
 
 ## Commercial package boundary
 
-Current Software/SaaS package content is never resolved from the public canonical repository. Historical public 1.6 bytes are disclosure-only and do not satisfy the rc.3 commercial package source contract. SOFTWARE_SAAS additionally fails closed if either selected domain package is FREE_PUBLIC or lacks independent entitlement evidence.
+Commercial **production** Software/SaaS and Book package content is never resolved from the public canonical repository. rc.6 additionally publishes explicitly marked prerelease test/evaluation package bytes and domain Frameworks for testing; those bytes do not satisfy the production commercial package source contract. SOFTWARE_SAAS additionally fails closed if either selected domain package is FREE_PUBLIC or lacks independent entitlement evidence.
 
 
 ### Commercial entitlement and delivery trust
@@ -38,3 +38,11 @@ Current Software/SaaS package content is never resolved from the public canonica
 - Expired delivery evidence, untrusted delivery verifier or digest mismatch fails closed.
 - The pure reference policy reads no wall clock and performs no network/provider calls.
 - rc.4 models and validates the trust chain but does not claim that a production billing/licensing backend or cryptographic offline-signature verifier has been deployed.
+
+
+### Public evaluation safety
+
+- Public test packages use prerelease `*-test.1` versions and explicit `PUBLIC_TEST_EVALUATION` provenance.
+- Test access bundles set `productionAuthorization=false`.
+- Public possession of test Framework/package bytes never proves entitlement for production packages.
+- Production catalog entries remain `ENTITLED_PACKAGE_SOURCE` with no public model path.
