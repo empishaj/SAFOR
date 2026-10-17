@@ -226,8 +226,20 @@ def validate_workspace_binding(
     return {"valid": not errors, "errors": errors}
 
 
-DOMAIN_CONTRACT_FIELDS = (
+DOMAIN_CONTRACT_FIELDS_V1 = (
     "packageId",
+    "packageKind",
+    "version",
+    "commercial",
+    "compatibility",
+    "exports",
+    "dependencies",
+    "model",
+)
+
+DOMAIN_CONTRACT_FIELDS_V2 = (
+    "packageId",
+    "packageFamily",
     "packageKind",
     "version",
     "commercial",
@@ -247,7 +259,15 @@ def _semver_core(version: str) -> tuple[int, int, int]:
 
 
 def canonical_domain_contract(package: Mapping[str, Any]) -> str:
-    projection = {field: package.get(field) for field in DOMAIN_CONTRACT_FIELDS}
+    canonicalization = package.get("integrity", {}).get(
+        "canonicalization", "SAFOR_CANONICAL_JSON_V1"
+    )
+    fields = (
+        DOMAIN_CONTRACT_FIELDS_V2
+        if canonicalization == "SAFOR_CANONICAL_JSON_V2"
+        else DOMAIN_CONTRACT_FIELDS_V1
+    )
+    projection = {field: package.get(field) for field in fields}
     return json.dumps(
         projection,
         ensure_ascii=False,
@@ -295,7 +315,10 @@ def validate_domain_package(
         errors.append("DOMAIN_PACKAGE_ENTITLEMENT_MUST_BE_EXTERNAL")
 
     integrity = package.get("integrity", {})
-    if integrity.get("canonicalization") != "SAFOR_CANONICAL_JSON_V1":
+    if integrity.get("canonicalization") not in {
+        "SAFOR_CANONICAL_JSON_V1",
+        "SAFOR_CANONICAL_JSON_V2",
+    }:
         errors.append("DOMAIN_PACKAGE_CANONICALIZATION_INVALID")
     if integrity.get("digestAlgorithm") != "SHA-256":
         errors.append("DOMAIN_PACKAGE_DIGEST_ALGORITHM_INVALID")
@@ -335,6 +358,93 @@ def validate_domain_package(
     }
 
 
+
+def _evaluate_counterpart_contract(
+    source: Mapping[str, Any],
+    target: Mapping[str, Any],
+) -> Dict[str, Any]:
+    counterpart = source.get("compatibility", {}).get("counterpart", {})
+    target_exports = target.get("exports", {})
+    missing_capabilities = sorted(
+        set(counterpart.get("requiredCapabilities", []))
+        - set(target_exports.get("capabilities", []))
+    )
+    missing_authorities = sorted(
+        set(counterpart.get("requiredAuthorities", []))
+        - set(target_exports.get("authorities", []))
+    )
+    missing_work_item_types = sorted(
+        set(counterpart.get("requiredWorkItemTypes", []))
+        - set(target_exports.get("workItemTypes", []))
+    )
+    missing_artifact_types = sorted(
+        set(counterpart.get("requiredArtifactTypes", []))
+        - set(target_exports.get("artifactTypes", []))
+    )
+    allowed_ids = set(counterpart.get("allowedPackageIds", []))
+    allowed_families = set(counterpart.get("allowedPackageFamilies", []))
+    id_allowed = not allowed_ids or target.get("packageId") in allowed_ids
+    family_allowed = (
+        not allowed_families
+        or target.get("packageFamily") in allowed_families
+    )
+    kind_allowed = (
+        not counterpart.get("requiredKind")
+        or target.get("packageKind") == counterpart.get("requiredKind")
+    )
+    return {
+        "compatible": (
+            kind_allowed
+            and id_allowed
+            and family_allowed
+            and not missing_capabilities
+            and not missing_authorities
+            and not missing_work_item_types
+            and not missing_artifact_types
+        ),
+        "kindAllowed": kind_allowed,
+        "idAllowed": id_allowed,
+        "familyAllowed": family_allowed,
+        "missingCapabilities": missing_capabilities,
+        "missingAuthorities": missing_authorities,
+        "missingWorkItemTypes": missing_work_item_types,
+        "missingArtifactTypes": missing_artifact_types,
+    }
+
+
+def evaluate_domain_framework_pair(
+    factory: Mapping[str, Any],
+    operating_model: Mapping[str, Any],
+    framework_version: str,
+    creation_type: str,
+    domain_id: str,
+) -> Dict[str, Any]:
+    """Strict compatibility for domain-specific SAFOR Framework distributions."""
+    base = evaluate_domain_package_pair(
+        factory, operating_model, framework_version, creation_type
+    )
+    factory_domains = set(factory.get("compatibility", {}).get("domainIds", []))
+    om_domains = set(operating_model.get("compatibility", {}).get("domainIds", []))
+    family_presence = bool(factory.get("packageFamily")) and bool(
+        operating_model.get("packageFamily")
+    )
+    domain_match = domain_id in factory_domains and domain_id in om_domains
+
+    errors = []
+    if not family_presence:
+        errors.append("DOMAIN_PACKAGE_FAMILY_REQUIRED")
+    if not domain_match:
+        errors.append("DOMAIN_FRAMEWORK_DOMAIN_MISMATCH")
+
+    return {
+        **base,
+        "compatible": base["compatible"] and family_presence and domain_match,
+        "domainId": domain_id,
+        "domainMatch": domain_match,
+        "packageFamiliesPresent": family_presence,
+        "domainErrors": errors,
+    }
+
 def evaluate_domain_package_pair(
     factory: Mapping[str, Any],
     operating_model: Mapping[str, Any],
@@ -362,30 +472,16 @@ def evaluate_domain_package_pair(
         "dependencyCoverage": True,
     }
 
-    factory_counterpart = factory.get("compatibility", {}).get("counterpart", {})
-    required_capabilities = set(factory_counterpart.get(
-        "requiredCapabilities",
-        factory.get("exports", {}).get("capabilities", []),
-    ))
-    required_authorities = set(factory_counterpart.get(
-        "requiredAuthorities",
-        factory.get("exports", {}).get("authorities", []),
-    ))
-    om_exports = operating_model.get("exports", {})
-    available_capabilities = set(om_exports.get("capabilities", []))
-    available_authorities = set(om_exports.get("authorities", []))
-    missing_capabilities = sorted(required_capabilities - available_capabilities)
-    missing_authorities = sorted(required_authorities - available_authorities)
+    factory_to_om = _evaluate_counterpart_contract(factory, operating_model)
+    om_to_factory = _evaluate_counterpart_contract(operating_model, factory)
+
+    missing_capabilities = factory_to_om["missingCapabilities"]
+    missing_authorities = factory_to_om["missingAuthorities"]
     checks["capabilityCoverage"] = not missing_capabilities
     checks["authorityCoverage"] = not missing_authorities
-
-    factory_allowed = factory_counterpart.get("allowedPackageIds")
-    if factory_allowed and operating_model.get("packageId") not in factory_allowed:
-        checks["dependencyCoverage"] = False
-    om_counterpart = operating_model.get("compatibility", {}).get("counterpart", {})
-    om_allowed = om_counterpart.get("allowedPackageIds")
-    if om_allowed and factory.get("packageId") not in om_allowed:
-        checks["dependencyCoverage"] = False
+    checks["dependencyCoverage"] = (
+        factory_to_om["compatible"] and om_to_factory["compatible"]
+    )
 
     compatible = (
         factory_validation["valid"]
@@ -399,6 +495,8 @@ def evaluate_domain_package_pair(
         "missingAuthorities": missing_authorities,
         "factoryErrors": factory_validation["errors"],
         "operatingModelErrors": om_validation["errors"],
+        "factoryToOperatingModel": factory_to_om,
+        "operatingModelToFactory": om_to_factory,
     }
 
 
