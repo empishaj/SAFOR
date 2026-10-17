@@ -2,14 +2,15 @@
 
 ## Current maturity
 
-SAFOR v0.13.0-rc.3 is a **Release Candidate**.
+SAFOR v0.13.0-rc.4 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
 ## Supported creation types
 
-- Software / Website
-- Buch
+- Website — free starter
+- Software / SaaS — commercial
+- Buch — commercial
 
 Additional Factories are not implicitly supported until they are published, bound and validated.
 
@@ -69,4 +70,4 @@ Paid Factory/Operating Model access additionally requires supported entitlement 
 
 **Book** remains commercial.
 
-Current paid package delivery infrastructure remains a GA-readiness gate.
+rc.4 provides the machine-enforced entitlement/delivery contract and reference verification logic. A production billing system, entitlement issuer/verifier service and protected package delivery service remain GA-readiness work.
