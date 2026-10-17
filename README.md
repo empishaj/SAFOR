@@ -4,32 +4,35 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories.
 
-> Current maturity: **v0.11.0-rc.2 — Release Candidate**
+> Current maturity: **v0.12.0-rc.1 — Release Candidate**
 
 ## Start here
 
 1. Read [QUICKSTART.md](QUICKSTART.md).
-2. Load `SAFOR-MASTER-COMPLETE.json` into a compatible chat.
-3. Connect GitHub or GitLab.
-4. SAFOR requires a pre-existing writable `{OWNER}/safor-memory`; otherwise it stops.
-5. Choose **Software / Website** or **Buch**.
-6. Continue through the native chat actions.
+2. Load `SAFOR-FRAMEWORK.json` into a compatible chat.
+3. Choose what you want to create.
+4. **Software / Website** uses the FREE_PUBLIC starter Factory + Operating Model and may resolve them from the public SAFOR Git.
+5. Paid paths such as **Buch** require separately loaded/entitled Factory and Operating Model packages.
+6. Choose where the HUMAN project lives: **REMOTE_GIT** (GitHub/GitLab) or **LOCAL_GIT**.
+7. Remote projects use a separate HUMAN-controlled `safor-memory`; local projects use protected `.safor/` control state in the local Git workspace.
 
 ## Repository separation
 
-- **`empishaj/SAFOR`** — canonical SAFOR product source, runtime definition, Factories, Operating Models, Provider Adapters, schemas and distribution.
-- **`{OWNER}/safor-memory`** — mandatory project-scoped runtime/control memory used after SAFOR is loaded.
-- **Project repository** — domain work artifacts such as software, website content or book manuscripts.
+- **`empishaj/SAFOR`** — public SAFOR Framework source, package catalog, free starter package source, Provider Adapters, schemas and historical development baselines. It is never a HUMAN project workspace.
+- **`{OWNER}/safor-memory`** — HUMAN-controlled remote control workspace used only for REMOTE_GIT projects.
+- **HUMAN project workspace** — either a HUMAN-controlled remote Git repository or a HUMAN-controlled local Git repository; all domain work artifacts stay here.
 
 These concerns are intentionally separate.
 
 ## Distribution
 
-- `SAFOR-MASTER-COMPLETE-v0.11.0-rc.2.json` — immutable-name release-candidate distribution.
-- `SAFOR-MASTER-COMPLETE.json` — latest release-candidate alias.
-- `v0.11.0/` — deterministic-control overlay with typed events, closed predicates, executable transitions, replay/hash contracts and deterministic Acceptance Contracts over Evidence, independent Review and Authority decisions.
-- `v0.10.0/` — retained compatible baseline for unchanged Factory, Operating Model, Agent Workspace, Scheduler and HUMAN interaction modules.
-- `v0.9.0/`, `v0.8.0/`, `v0.7.0/`, `v0.6.0/`, `v0.5.0/` and `v0.4.0/` — retained historical source baselines.
+- `SAFOR-FRAMEWORK-v0.12.0-rc.1.json` — versioned public Framework release candidate.
+- `SAFOR-FRAMEWORK.json` — latest Framework RC alias.
+- `v0.12.0/` — modular package distribution, commercial entitlement policy and HUMAN-owned remote/local workspace model.
+- `v0.11.0/` — deterministic control and deterministic acceptance baseline.
+- `v0.10.0/` and earlier — historical development baselines. Pre-0.12 package prototypes already published there cannot be made confidential retroactively.
+
+Factories and Operating Models are independently loadable packages. Paid package model content is not embedded in the 0.12 public Framework artifact.
 
 ## Product documentation
 
@@ -58,4 +61,6 @@ The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR is currently a **Release Candidate**, not General Availability. v0.11.0-rc.2 extends the executable deterministic control substrate through Work Item acceptance. It still does not claim that every legacy governance rule has been migrated. GA requires clean GitHub/GitLab, Agent Workspace, canonical Job Contract, module-wide self-healing, HUMAN cognitive-load acceptance, six-agent parallel scheduling and Git-trace/HUMAN-result acceptance plus an explicit HUMAN licensing/distribution decision.
+SAFOR is currently a **Release Candidate**, not General Availability. v0.12.0-rc.1 proves the Framework/package/workspace boundary in machine tests, but real entitlement distribution, local-Git host execution and existing provider/agent end-to-end scenarios remain GA gates.
+
+The commercial product decision is now explicit: the Framework and Website starter path are public/free; Factories and Operating Models can be independently licensed, with Book and future premium packages entitlement-gated. Final legal license text, pricing and entitlement-service operations are still open.
