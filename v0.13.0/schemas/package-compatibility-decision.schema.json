@@ -1,0 +1,125 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.13.0/package-compatibility-decision.schema.json",
+  "title": "SAFOR Package Compatibility Decision 0.13.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "decisionId",
+    "creationType",
+    "frameworkVersion",
+    "factory",
+    "operatingModel",
+    "checks",
+    "outcome"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PACKAGE_COMPATIBILITY_DECISION"
+    },
+    "schemaVersion": {
+      "const": "0.13.0"
+    },
+    "decisionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creationType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frameworkVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "factory": {
+      "$ref": "#/$defs/boundPackage"
+    },
+    "operatingModel": {
+      "$ref": "#/$defs/boundPackage"
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "factoryKind",
+        "operatingModelKind",
+        "frameworkRange",
+        "creationTypeSupport",
+        "capabilityCoverage",
+        "authorityCoverage",
+        "dependencyCoverage"
+      ],
+      "properties": {
+        "factoryKind": {
+          "type": "boolean"
+        },
+        "operatingModelKind": {
+          "type": "boolean"
+        },
+        "frameworkRange": {
+          "type": "boolean"
+        },
+        "creationTypeSupport": {
+          "type": "boolean"
+        },
+        "capabilityCoverage": {
+          "type": "boolean"
+        },
+        "authorityCoverage": {
+          "type": "boolean"
+        },
+        "dependencyCoverage": {
+          "type": "boolean"
+        }
+      }
+    },
+    "missingCapabilities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "missingAuthorities": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string"
+      }
+    },
+    "outcome": {
+      "enum": [
+        "COMPATIBLE",
+        "INCOMPATIBLE"
+      ]
+    }
+  },
+  "$defs": {
+    "boundPackage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "version",
+        "contentDigest"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "contentDigest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,64 @@
+{
+  "format": "SAFOR_PACKAGE_DISTRIBUTION_MODEL",
+  "schemaVersion": "0.13.0",
+  "id": "safor-package-distribution",
+  "purpose": "Separate public Framework distribution from independently selectable, chat-loadable Factory and Operating Model JSON packages with per-package access and immutable compatibility binding.",
+  "principles": {
+    "frameworkDoesNotOwnDomainPackages": true,
+    "paidContentExcludedFromPublicFramework": true,
+    "publicMetadataMayDescribePaidPackages": true,
+    "freePackagesMayResolveFromCanonicalPublicRepo": true,
+    "loadedPackagesPinnedBeforeUse": true,
+    "packageSourceNeverImplicitProjectWorkspace": true,
+    "entitlementSeparateFromOrganizationalAuthority": true,
+    "factoryAndOperatingModelIndependentlySelectable": true,
+    "creationProfilesProvideDefaultsOnly": true,
+    "accessEvaluatedPerSelectedPackage": true,
+    "mixedFreeAndPaidPairAllowed": true,
+    "entitlementEvidenceExternalToPackageArtifact": true,
+    "domainPackageIntegrityRequired": true,
+    "compatibilityDecisionRequiredBeforeBinding": true
+  },
+  "sourceClasses": {
+    "PUBLIC_CANONICAL_REPOSITORY": {
+      "allowedAccessModes": [
+        "FREE_PUBLIC"
+      ],
+      "canonicalRepository": "empishaj/SAFOR",
+      "mutableRefMayNotBePersistedAsPin": true,
+      "requireImmutableProviderRevisionAndBlob": true
+    },
+    "HUMAN_LOADED_PACKAGE": {
+      "allowedAccessModes": [
+        "FREE_PUBLIC",
+        "PAID_ENTITLEMENT_REQUIRED"
+      ],
+      "rule": "Loaded package content must validate and paid content additionally requires independently verified entitlement evidence."
+    },
+    "ENTITLED_PACKAGE_SOURCE": {
+      "allowedAccessModes": [
+        "PAID_ENTITLEMENT_REQUIRED"
+      ],
+      "rule": "Resolve only after entitlement verification; package bytes remain separate from public Framework distribution."
+    },
+    "PROJECT_PINNED_SNAPSHOT": {
+      "discoveryAllowed": false,
+      "rule": "May reproduce an already approved project binding only; never expands package access."
+    }
+  },
+  "resolutionOrder": [
+    "EXPLICIT_HUMAN_LOADED_PACKAGE",
+    "VERIFIED_ENTITLED_PACKAGE_SOURCE",
+    "PUBLIC_CANONICAL_REPOSITORY_FOR_FREE_PUBLIC_ONLY"
+  ],
+  "freeStarterProfile": {
+    "creationType": "SOFTWARE_WEBSITE",
+    "defaultFactoryPackageId": "safor.factory.software-delivery",
+    "defaultOperatingModelPackageId": "safor.om.saas-engineering",
+    "sourceClass": "PUBLIC_CANONICAL_REPOSITORY",
+    "autoResolveDefaultsWhenNotExplicitlyOverridden": true
+  },
+  "paidPathRule": "A PAID_ENTITLEMENT_REQUIRED selected package is never resolved from PUBLIC_CANONICAL_REPOSITORY; its model content is never embedded in the public Framework bundle and it must carry separately verifiable entitlement evidence before use.",
+  "selectionRule": "Resolve profile defaults first, then apply any HUMAN-approved Factory and/or Operating Model override. Access is evaluated independently for each selected package.",
+  "mixedAccessRule": "FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may be paired. Only the paid member requires commercial entitlement, and the resulting pair still requires technical compatibility."
+}

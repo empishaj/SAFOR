@@ -1,5 +1,22 @@
 # Changelog
 
+## 0.13.0-rc.1
+
+- Introduces `SAFOR_DOMAIN_PACKAGE` as the standalone JSON contract for Factory and Operating Model products.
+- Changes Creation Profiles from locked package/access bundles to default Factory/Operating Model candidates with independent HUMAN overrides.
+- Resolves access and commercial entitlement separately for the selected Factory and selected Operating Model.
+- Allows technically compatible mixed FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED pairs, requiring entitlement only for each selected paid package.
+- Keeps entitlement evidence external to package JSON so possession or modification of the artifact cannot self-authorize access.
+- Adds SHA-256 integrity over the declared canonical domain contract and enforces Framework-version and Creation-Type compatibility.
+- Adds explicit package-selection and Factory/Operating-Model compatibility-decision schemas.
+- Extends project bindings with package selection, compatibility decision, digest, selection origin, integrity-verification and entitlement-evidence references.
+- Migrates the free Website Factory and SaaS Engineering Operating Model to 1.5.0 / SAFOR_DOMAIN_PACKAGE / Framework 0.13 compatibility.
+- Corrects the legacy `saf.*` package-ID mismatch by defining the domain package namespace as `safor.factory.*` and `safor.om.*`.
+- Adds SH-24, INV-166 through INV-175 and CF-217 through CF-230.
+- Extends exact Framework recovery coverage to 65 modules / 65 profiles.
+- Adds 10 composable-package tests; total Python suite is 48 tests.
+
+
 ## 0.12.0-rc.1
 
 - Reframes the public artifact as `SAFOR-FRAMEWORK` rather than an all-domain `MASTER-COMPLETE` distribution.
