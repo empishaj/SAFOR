@@ -247,41 +247,31 @@ The SAFOR product repository and package sources are invalid project targets in 
 Package prototypes committed publicly before 0.12 remain part of public Git history and cannot be made confidential retroactively. Commercially protected package versions must therefore be delivered through future entitled/signed package channels and must not rely on secrecy of those legacy prototype versions.
 
 
-## Website Factory 1.6 value-creation stream
 
-The free Software/Website starter is no longer modeled as a simple development pipeline. Factory 1.6 treats delivery, operations and outcome learning as one governed value stream:
+## rc.3 Creation-Type product boundary
+
+SAFOR now distinguishes Website creation from Software/SaaS product engineering at the Creation-Type level.
 
 ```text
-PRODUCT_DEFINITION
-  → QUALITY_SECURITY_REQUIREMENTS
-  → SOLUTION_DESIGN + THREAT_MODEL
-  → IMPLEMENTATION_BATCH
-      ↳ continuous build/test/security/supply-chain evidence
-  → INDEPENDENT_VERIFICATION ─┐
-  → SECURITY_VERIFICATION ────┤
-                              ▼
-                            RELEASE
-                              ↓
-                          DEPLOYMENT
-                              ↓
-                          ACTIVATION
-                              ↓
-                        OPERATE_OBSERVE
-                         ↙      ↓       ↘
-            INCIDENT_RECOVERY  OUTCOME  VULNERABILITY_RESPONSE
-                 (conditional)           (conditional)
+SAFOR Framework
+│
+├── WEBSITE                         FREE_PUBLIC defaults
+│   ├── safor.factory.website-delivery@1.0.0
+│   └── safor.om.website-team@1.0.0
+│
+├── SOFTWARE_SAAS                   COMMERCIAL
+│   ├── safor.factory.software-delivery
+│   └── safor.om.saas-engineering
+│       both selected packages must be PAID_ENTITLEMENT_REQUIRED
+│       + one independent entitlement per package/version
+│
+└── BOOK                            COMMERCIAL
+    ├── safor.factory.book-production
+    └── safor.om.book-authoring
 ```
 
-Release means a verified immutable candidate exists. Deployment means that artifact is materialized in a target environment. Activation means intended users/traffic can use it. Operate/Observe establishes health and production behavior. None of those facts prove business value; Outcome Assessment uses a separate measurement contract.
+The Website Factory deliberately owns only the website value stream: audience/purpose, content and information architecture, experience design, web implementation, web-quality verification, publishing, observation and outcome. It explicitly escalates to `SOFTWARE_SAAS` when discovery reveals application/service lifecycle requirements.
 
-### Mandatory vs conditional requirements
+The Software/SaaS Factory and Operating Model remain independently licensed package identities, but the Creation Profile prevents a free package from satisfying either commercial slot.
 
-Package compatibility checks only unconditional capabilities/authorities. Capabilities and authorities needed solely for incidents, vulnerability response, architecture exceptions or material-risk production release become fail-closed requirements when their declared trigger becomes active. This prevents an unused conditional authority from unnecessarily rejecting an otherwise valid Factory/Operating-Model pair.
-
-### Risk-based review
-
-Factory 1.6 classifies changes as LOW, STANDARD, ELEVATED or CRITICAL. LOW-risk changes may rely on author self-check plus automated gates; higher risk classes require independent review and, where applicable, specialist or authority decisions. Any review used as authoritative acceptance evidence still obeys separation of duties.
-
-### Product quality and security
-
-Planning evaluates a nine-characteristic ISO/IEC 25010:2023-aligned quality model, while secure-development concerns begin before coding. Web projects conditionally add accessibility, responsive/browser compatibility, performance, privacy and public-discoverability concerns. Build provenance, dependency inventory and SBOM evidence (when third-party components exist) connect the produced artifact back to its inputs and build process.
+Historical Software Factory/SaaS OM versions through 1.6.0 remain public repository history and are not the current protected commercial distribution source.
