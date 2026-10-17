@@ -40,9 +40,13 @@
         "TRANSITION_PREDICATES_RESOLVE_TO_CLOSED_REGISTRY",
         "TRANSITION_EFFECTS_USE_CLOSED_OPERATION_SET",
         "STATE_HASHING_AND_REPLAY_CONTRACT_PRESENT",
-        "RC1_EXECUTABLE_TRANSITION_BOUNDARY_EXPLICIT"
+        "RC1_EXECUTABLE_TRANSITION_BOUNDARY_EXPLICIT",
+        "ACCEPTANCE_MODEL_AND_SCHEMAS_PRESENT_AND_PINNED",
+        "ACCEPTANCE_TRANSITIONS_REFERENCE_CLOSED_PREDICATES",
+        "ACCEPTANCE_CONTRACT_HASH_POLICY_PRESENT",
+        "INDEPENDENT_REVIEW_AND_AUTHORITY_GUARDS_PRESENT"
       ],
-      "rule": "Run after module-recovery baseline and before provider/project work. Failure to verify deterministic control modules stops executable deterministic processing.",
+      "rule": "Run after module-recovery baseline and before provider/project work. Failure to verify deterministic control or deterministic acceptance modules stops executable deterministic processing.",
       "deterministicControlRef": "deterministic-control-model.json"
     },
     {
