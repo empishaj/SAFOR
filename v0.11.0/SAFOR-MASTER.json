@@ -85,7 +85,13 @@
     "replayVerificationRequired": true,
     "transitionAmbiguityFailsClosed": true,
     "arbitraryCodeInTransitionModelsForbidden": true,
-    "deterministicRcBoundaryMustBeExplicit": true
+    "deterministicRcBoundaryMustBeExplicit": true,
+    "typedAcceptanceContracts": true,
+    "deterministicAcceptanceEvaluation": true,
+    "qualitativeAcceptanceRequiresExplicitReviewOrAuthority": true,
+    "agentSelfCheckNeverAuthoritativeAcceptance": true,
+    "acceptanceContractImmutableAfterApproval": true,
+    "acceptanceDoesNotImplyOutcome": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -104,6 +110,10 @@
       {
         "id": "FACTORY",
         "responsibility": "Domain-specific value stream, artifact types, work-item types, transformations, quality requirements and outcome model."
+      },
+      {
+        "id": "DETERMINISTIC_ACCEPTANCE",
+        "responsibility": "Approved typed Acceptance Contracts bind Factory evidence, qualitative review and authority requirements so Work Item acceptance can be evaluated deterministically without converting probabilistic judgment into direct state authority."
       },
       {
         "id": "PROJECT_INSTANCE",
@@ -166,7 +176,12 @@
       "Within the migrated executable transition slice, authoritative state transitions are owned only by the deterministic control kernel; HUMAN, AGENT and PROVIDER actors contribute typed events/evidence instead of direct authoritative state changes.",
       "The deterministic reducer is pure: it performs no provider/LLM calls, reads no wall clock, uses no randomness and never executes arbitrary code from JSON.",
       "External mutations are emitted only as effect intents. Completion requires a later provider outcome/readback event.",
-      "Non-migrated 0.10 governance semantics remain valid but must not be falsely represented as executable deterministic transitions in rc.1."
+      "Non-migrated 0.10 governance semantics remain valid but must not be falsely represented as executable deterministic transitions in rc.1.",
+      "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance evaluation.",
+      "Free-text or qualitative acceptance criteria may not be directly marked PASS by an LLM; they must resolve to typed EVIDENCE, REVIEW or AUTHORITY requirements in the approved Acceptance Contract.",
+      "Agent acceptanceSelfCheck is advisory only and cannot satisfy required independent review or authority approval.",
+      "A Work Item may become ACCEPTED only through the deterministic acceptance transition after all requirements of its hash-valid ACTIVE Acceptance Contract are satisfied.",
+      "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED."
     ]
   },
   "packageSystem": {
@@ -358,7 +373,10 @@
     "transition": "schemas/transition.schema.json",
     "effectIntent": "schemas/effect-intent.schema.json",
     "transitionRecord": "schemas/transition-record.schema.json",
-    "stateSnapshot": "schemas/state-snapshot.schema.json"
+    "stateSnapshot": "schemas/state-snapshot.schema.json",
+    "acceptanceContract": "schemas/acceptance-contract.schema.json",
+    "reviewDecision": "schemas/review-decision.schema.json",
+    "authorityDecision": "schemas/authority-decision.schema.json"
   },
   "controlPlane": {
     "startActionId": "K00",
@@ -663,7 +681,9 @@
         "operation": "INSTANTIATE_VALUE_STREAM",
         "purpose": "Create the plan strictly from the same bound Factory planningContract, confirmed Discovery and Factory flow graph.",
         "domainNeutral": true,
-        "modelRef": "BOUND_FACTORY.model.planningContract"
+        "modelRef": "BOUND_FACTORY.model.planningContract",
+        "acceptanceModelRef": "acceptance-model.json#derivationContract",
+        "acceptanceRule": "Planning must materialize one typed Acceptance Contract per executable Work Item from the approved Factory evidence contract, Work Item criteria/review/authority requirements and plan provenance. Qualitative criteria must bind to REVIEW or AUTHORITY."
       },
       {
         "id": "P02",
@@ -687,7 +707,12 @@
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
         },
-        "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active."
+        "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active.",
+        "approvalIncludes": [
+          "PLAN",
+          "WORK_ITEM_ACCEPTANCE_CONTRACTS"
+        ],
+        "acceptanceRule": "Plan approval pins the Acceptance Contract set. A material acceptance-contract change requires governed replan/new approval."
       },
       {
         "id": "E01",
@@ -730,9 +755,11 @@
       {
         "id": "E05",
         "operation": "EVALUATE_WORK_ITEM",
-        "purpose": "Evaluate acceptance against Factory acceptance criteria, the bound Factory evidenceContract, review independence and applicable gates.",
+        "purpose": "Evaluate Work Item acceptance deterministically from the approved hash-valid Acceptance Contract and replayed Evidence/Review/Authority records; never infer qualitative PASS from LLM output.",
         "domainNeutral": true,
-        "modelRef": "BOUND_FACTORY.model.evidenceContract"
+        "modelRef": "acceptance-model.json",
+        "factoryEvidenceContractRef": "BOUND_FACTORY.model.evidenceContract",
+        "rule": "Only WORK_ITEM_ACCEPTED may materialize ACCEPTED in the migrated rc.2 slice, and only when every typed requirement is satisfied."
       },
       {
         "id": "E06",
@@ -977,6 +1004,20 @@
           "REPLAY_DIVERGENCE"
         ],
         "rule": "External actors submit typed events/evidence. The deterministic control kernel alone evaluates guards and produces the next authoritative state within the migrated executable slice."
+      },
+      "deterministicAcceptance": {
+        "modelRef": "acceptance-model.json",
+        "appliesBefore": "EVERY_WORK_ITEM_ACCEPTED_TRANSITION",
+        "requiredChecks": [
+          "SINGLE_ACTIVE_HASH_VALID_ACCEPTANCE_CONTRACT",
+          "ALL_CRITERIA_TYPED",
+          "REQUIRED_EVIDENCE_SATISFIED",
+          "REQUIRED_REVIEW_SATISFIED",
+          "REVIEW_INDEPENDENCE_SATISFIED",
+          "REQUIRED_AUTHORITIES_SATISFIED",
+          "NO_REQUIRED_AUTHORITY_REJECTION"
+        ],
+        "failClosed": true
       }
     }
   },
@@ -1520,6 +1561,54 @@
     {
       "id": "INV-135",
       "rule": "SAFOR 0.11.0-rc.1 claims determinism only for transitions explicitly listed by the deterministic-control model; non-migrated governance rules remain normative but non-executable until migrated."
+    },
+    {
+      "id": "INV-136",
+      "rule": "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance may be evaluated."
+    },
+    {
+      "id": "INV-137",
+      "rule": "Every approved acceptance criterion must be preserved in the Acceptance Contract and reference at least one typed EVIDENCE, REVIEW or AUTHORITY requirement."
+    },
+    {
+      "id": "INV-138",
+      "rule": "A free-text or qualitative criterion may never be directly converted to PASS by an LLM; it must be satisfied through explicit typed evidence, review or authority decision."
+    },
+    {
+      "id": "INV-139",
+      "rule": "A Work Item may enter ACCEPTED only through WORK_ITEM_ACCEPTED with a hash-valid active contract and all typed requirements satisfied."
+    },
+    {
+      "id": "INV-140",
+      "rule": "Evidence used for acceptance must match the Work Item subject and declared evidence type; PINNED requirements require a concrete revisionRef."
+    },
+    {
+      "id": "INV-141",
+      "rule": "When independent review is required, performer and approving reviewer must differ; self-review cannot satisfy the Acceptance Contract."
+    },
+    {
+      "id": "INV-142",
+      "rule": "Agent acceptanceSelfCheck is advisory and can never substitute for required independent review, provider evidence or authority decision."
+    },
+    {
+      "id": "INV-143",
+      "rule": "A recorded REJECTED decision for a required authority blocks acceptance for the current Acceptance Contract revision."
+    },
+    {
+      "id": "INV-144",
+      "rule": "An approved Acceptance Contract is immutable. Material changes require a new governed contract revision and approval; Self-Healing may not relax requirements."
+    },
+    {
+      "id": "INV-145",
+      "rule": "Acceptance ledger records are replay-derived pinned copies of source artifacts/events and must not become an independent writable source of business authority."
+    },
+    {
+      "id": "INV-146",
+      "rule": "Duplicate acceptance record identities under different events must not be appended to the deterministic acceptance ledger."
+    },
+    {
+      "id": "INV-147",
+      "rule": "Work Item ACCEPTED and VALUE_SUPPORTED are distinct; deterministic acceptance does not establish business or reader outcome success."
     }
   ],
   "evidencePolicy": {
@@ -1654,5 +1743,6 @@
   "eventModelRef": "event-model.json",
   "predicateRegistryRef": "predicate-registry.json",
   "transitionRegistryRef": "transition-registry.json",
-  "effectModelRef": "effect-model.json"
+  "effectModelRef": "effect-model.json",
+  "acceptanceModelRef": "acceptance-model.json"
 }
