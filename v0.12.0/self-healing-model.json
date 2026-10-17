@@ -317,6 +317,22 @@
       "automaticRepair": "REFRESH_DERIVED_PACKAGE_CATALOG_OR_REOBSERVE_WORKSPACE_CAPABILITIES_ONLY",
       "defaultRetryBudget": 1,
       "requiresHuman": "WHEN_PACKAGE_PURCHASE_OR_ENTITLEMENT_OR_PROJECT_LOCATION_OR_LOCAL_HOST_ACCESS_MUST_CHANGE"
+    },
+    {
+      "id": "SH-24",
+      "name": "AGENT_RUNTIME_OR_OPERATION_MODE_GOVERNANCE_FAILURE",
+      "examples": [
+        "EXECUTION requires AGENT work but only HUMAN_MANUAL_TEST_ONLY runtime is available",
+        "Agent runtime capability or background wakeup is asserted without host/runtime evidence",
+        "A HUMAN is asked to open/wake a routine production agent chat",
+        "A HUMAN is asked to copy a Job Contract or job prompt between chats",
+        "EXECUTION is silently downgraded to VALIDATION to bypass missing automation",
+        "MANUAL_TEST_HARNESS is used against a non-isolated target",
+        "Agent Runtime Adapter is treated as provider-rights or organizational-authority source"
+      ],
+      "automaticRepair": "REOBSERVE_RUNTIME_CAPABILITIES_OR_REBIND_ALREADY_AUTHORIZED_COMPATIBLE_RUNTIME_ONLY",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "ONLY_WHEN_A_MATERIAL_RUNTIME_TARGET_OR_AUTHORITY_CHOICE_CANNOT_BE_DERIVED_SAFELY"
     }
   ],
   "eligibilityRules": [
@@ -346,7 +362,12 @@
     "Commercial recovery may re-read public catalog metadata or re-observe actual entitlement/workspace evidence, but may never create, forge, extend or infer entitlement.",
     "Workspace recovery may not move project artifacts to SAFOR product/package repositories or to a different location without explicit HUMAN selection.",
     "LOCAL_GIT recovery may not silently downgrade to non-Git filesystem execution.",
-    "Paid package resolution failure cannot be repaired by reading historical/public prototype package content."
+    "Paid package resolution failure cannot be repaired by reading historical/public prototype package content.",
+    "Agent runtime capability may be re-observed from authoritative host/runtime evidence but never fabricated.",
+    "EXECUTION may not be silently downgraded to VALIDATION as recovery for missing runtime automation.",
+    "Manual HUMAN agent activation is never an automatic recovery path for EXECUTION.",
+    "A VALIDATION manual test harness must remain isolated and explicitly non-production.",
+    "Recovery may rebind an already authorized compatible Agent Runtime Adapter only when the binding is deterministic and does not expand rights or authority."
   ],
   "forbiddenAutomaticRepairs": [
     "FORCE_PUSH",
@@ -388,7 +409,15 @@
     "USE_SAFOR_PRODUCT_REPOSITORY_AS_PROJECT_TARGET",
     "USE_PACKAGE_SOURCE_AS_PROJECT_TARGET",
     "BYPASS_LOCAL_GIT_REQUIREMENT",
-    "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT"
+    "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT",
+    "FABRICATE_AGENT_RUNTIME_CAPABILITY",
+    "FABRICATE_BACKGROUND_WAKEUP_SUPPORT",
+    "ASK_HUMAN_TO_OPERATE_AGENT_RUNTIME_AS_RECOVERY",
+    "SILENTLY_DOWNGRADE_EXECUTION_TO_VALIDATION",
+    "TREAT_MANUAL_TEST_HARNESS_AS_PRODUCTION_RUNTIME",
+    "COPY_JOB_CONTRACT_TO_HUMAN_AS_RUNTIME_FALLBACK",
+    "GRANT_PROVIDER_RIGHTS_FROM_AGENT_RUNTIME_BINDING",
+    "GRANT_ORGANIZATIONAL_AUTHORITY_FROM_AGENT_RUNTIME_BINDING"
   ],
   "retryPolicy": {
     "key": "failureFingerprint",
