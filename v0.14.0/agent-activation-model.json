@@ -1,8 +1,8 @@
 {
   "format": "SAFOR_AGENT_ACTIVATION_MODEL",
   "schemaVersion": "0.14.0",
-  "id": "SAFOR-HUMAN-GO-CHAT-ACTIVATION",
-  "purpose": "Define one-time agent chat identity bootstrap and subsequent deliberate HUMAN-GO activation without job prompt transport or automatic chat wake-up.",
+  "id": "SAFOR-INBOX-PULL-HUMAN-GO-ACTIVATION",
+  "purpose": "Define one-time agent identity bootstrap and subsequent deliberate HUMAN-GO activation in which the agent pulls its assigned job from its personal Git inbox.",
   "scope": {
     "normalChatAgents": true,
     "serviceAgentsSeparate": true,
@@ -12,13 +12,13 @@
   },
   "identityInvariants": [
     "A CHAT_AGENT has one stable agentId and a separate HUMAN-readable displayName.",
-    "displayName must not equal agentId after normalization.",
-    "The identity is bound to projectId, masterId, controlRepository and workspaceRoot.",
-    "Uncertain or lost chat continuity changes the effective state to REIDENTIFICATION_REQUIRED.",
-    "Identity must never be guessed from job content, display name or repository location."
+    "The agent identity is bound to projectId, masterId, controlRepository, workspaceRoot and personal inbox path.",
+    "The one-time initialization prompt establishes which pinned identity and personal inbox this chat must use; host session attestation is not required.",
+    "The agent identity must never be inferred from job content, display name, repository location or an arbitrary inbox entry.",
+    "An inactive identity, stale identityRevision, foreign inbox or foreign job assignment fails closed before claim."
   ],
   "initializationProtocol": {
-    "performedOncePerContinuedChat": true,
+    "performedOncePerContinuedChat": false,
     "preparedBy": "MASTER",
     "humanAction": "PASTE_MASTER_GENERATED_INITIALIZATION_PROMPT_ONCE",
     "requiredBindings": [
@@ -35,13 +35,15 @@
       "READ_PINNED_IDENTITY",
       "VERIFY_IDENTITY_BLOB",
       "VERIFY_PROJECT_AND_MASTER_BINDING",
-      "VERIFY_CHAT_BINDING_STATUS_BOUND",
+      "VERIFY_IDENTITY_STATUS_ACTIVE",
+      "VERIFY_PERSONAL_INBOX_BINDING",
       "READ_AGENT_STATE",
       "READ_PERSONAL_INBOX_INDEX",
       "CONFIRM_READY_FOR_HUMAN_GO"
     ],
     "jobPromptTransportRequired": false,
-    "onValidationFailure": "REIDENTIFICATION_REQUIRED"
+    "onValidationFailure": "IDENTITY_OR_INBOX_REINITIALIZATION_REQUIRED",
+    "performedOncePerAgentChatBootstrap": true
   },
   "chatAgentActivationContract": {
     "activationMode": "HUMAN_GO_REQUIRED",
@@ -49,7 +51,7 @@
     "trimWhitespace": true,
     "caseSensitive": false,
     "additionalTextAllowed": false,
-    "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+    "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
     "backgroundWakeupAssumed": false,
     "gitEventActivationAllowed": false,
     "pollingActivationAllowed": false,
@@ -58,16 +60,17 @@
     "schedulerMayActivateChat": false,
     "schedulerOutcomeBeforeGo": "WAITING_HUMAN_GO",
     "activationEvidenceRequiredBeforeClaim": true,
-    "activationEvidenceAuthority": "CHAT_LOCAL_ASSERTION_NOT_CRYPTOGRAPHIC_HUMAN_SIGNATURE",
-    "claimMode": "ATOMIC_COMPARE_AND_SWAP_WITH_SINGLE_USE_GO_EVIDENCE",
-    "stringSubstringEvidenceForbidden": true
+    "activationEvidenceAuthority": "DIRECT_HUMAN_GO_BOUND_TO_PINNED_IDENTITY_AND_PERSONAL_INBOX",
+    "claimMode": "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
+    "stringSubstringEvidenceForbidden": true,
+    "hostSessionAttestationRequired": false
   },
   "onHumanGo": {
     "allowedReadsInOrder": [
       "PINNED_IDENTITY",
       "AGENT_STATE",
       "PERSONAL_INBOX_INDEX",
-      "SELECTED_JOB_CONTRACT",
+      "SELECTED_INBOX_JOB_CONTRACT",
       "SELECTED_MASTER_JOB_STATE",
       "JOB_REFERENCED_INPUTS_ONLY"
     ],
@@ -79,10 +82,11 @@
     ],
     "preClaimChecks": [
       "IDENTITY_ACTIVE",
-      "CHAT_BINDING_BOUND",
       "IDENTITY_REVISION_MATCH",
+      "PERSONAL_INBOX_PROJECT_AND_AGENT_MATCH",
       "DISCOVERABLE_JOB_AVAILABLE",
       "JOB_AGENT_ASSIGNMENT_MATCH",
+      "JOB_IDENTITY_REVISION_MATCH",
       "JOB_DISPATCH_REVISION_MATCH",
       "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
       "ROLE_AND_SKILL_MATCH",
@@ -93,20 +97,19 @@
   },
   "reidentificationProtocol": {
     "triggers": [
-      "CHAT_HISTORY_MISSING_OR_UNCERTAIN",
-      "CHAT_BINDING_ID_MISMATCH",
+      "PINNED_IDENTITY_UNAVAILABLE_OR_BLOB_MISMATCH",
       "IDENTITY_REVISION_MISMATCH",
       "CONTROL_REPOSITORY_UNAVAILABLE",
-      "IDENTITY_BLOB_MISMATCH",
-      "AGENT_CANNOT_PROVE_OWN_IDENTITY"
+      "PERSONAL_INBOX_PROJECT_OR_AGENT_MISMATCH",
+      "AGENT_CANNOT_PROVE_PINNED_IDENTITY"
     ],
     "effect": [
       "NO_JOB_CLAIM",
       "NO_PRODUCT_MUTATION",
       "NO_RESPONSE_PATH_GUESSING",
-      "EMIT_MINIMAL_REIDENTIFICATION_STATUS"
+      "EMIT_MINIMAL_REINITIALIZATION_STATUS"
     ],
-    "requiredHumanPath": "RETURN_TO_MASTER_FOR_NEW_INITIALIZATION_PROMPT"
+    "requiredHumanPath": "RELOAD_MASTER_GENERATED_AGENT_INITIALIZATION_PROMPT"
   },
   "goEvidenceContract": {
     "format": "SAFOR_HUMAN_GO_EVIDENCE",
@@ -116,8 +119,6 @@
       "projectId",
       "agentId",
       "identityRevision",
-      "chatBindingId",
-      "sessionId",
       "targetJobId",
       "targetDispatchRevision",
       "intent",
@@ -128,7 +129,7 @@
     ],
     "constants": {
       "intent": "GO",
-      "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+      "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
       "singleUse": true,
       "jobPromptTransported": false
     },
@@ -141,7 +142,6 @@
       "projectId",
       "agentId",
       "identityRevision",
-      "chatBindingId",
       "targetJobId",
       "targetDispatchRevision",
       "activationId"
@@ -169,13 +169,15 @@
       "FULL_COMMITTED_STATE_READ_BACK",
       "READBACK_STATE_EQUALS_PROPOSED_STATE",
       "CANONICAL_STATE_DIGEST_MATCH",
-      "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+      "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
       "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
       "READBACK_REF_PRESENT",
       "READBACK_BLOB_IDENTITY_PRESENT"
     ],
     "persistActivationConsumptionInsideCasState": true,
     "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
-    "proposedStateIsNonAuthoritativeUntilReadback": true
+    "proposedStateIsNonAuthoritativeUntilReadback": true,
+    "inboxJobIsAuthoritativeDispatch": true,
+    "hostSessionBindingRequired": false
   }
 }
