@@ -2,7 +2,7 @@
 
 Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**, nicht technisch analysieren wollen. Du musst keine JSON-Datei öffnen, bearbeiten oder verstehen.
 
-> Produktstatus: **SAFOR v0.14.0-rc.3 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
+> Produktstatus: **SAFOR v0.14.0-rc.5 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
 
 ## Ausführungsmodell
 
@@ -94,7 +94,7 @@ Diese technischen Bezeichner dürfen im normalen Dialog hinter einer verständli
 
 Lade `SAFOR-FRAMEWORK-SAAS.json` und `SAFOR-TEST-ACCESS-SAAS.json`.
 
-Erwartung: SAFOR akzeptiert ausschließlich die Factory `safor.factory.software-delivery@1.7.0-test.1` und das Operating Model `safor.om.saas-engineering@1.7.0-test.1`, kennzeichnet den Zugriff als Test und wechselt zur Workspace-Auswahl.
+Erwartung: SAFOR akzeptiert ausschließlich die Factory `safor.factory.software-delivery@1.8.0-test.1` und das Operating Model `safor.om.saas-engineering@1.8.0-test.1`, kennzeichnet den Zugriff als Test und wechselt zur Workspace-Auswahl.
 
 ### Test B – fehlender Testzugang
 
@@ -104,9 +104,9 @@ Erwartung: SAFOR startet nicht stillschweigend mit den bezahlten Modulen. Es for
 
 ### Test C – falscher Testzugang
 
-Lade `SAFOR-FRAMEWORK-SAAS.json` zusammen mit `SAFOR-TEST-ACCESS-SAAS.json`.
+Lade `SAFOR-FRAMEWORK-SAAS.json` zusammen mit `SAFOR-TEST-ACCESS-BOOK-CREATION.json`.
 
-Erwartung: SAFOR lehnt die Kombination wegen Domain-, Creation-Type-, Distribution- und Paketversionskonflikten ab. Es darf den Buch-Zugriff niemals für SaaS verwenden.
+Erwartung: SAFOR lehnt die Kombination wegen Domain-, Creation-Type-, Distribution- und Paketkonflikten ab. Der Buch-Testzugang darf niemals einen SaaS-Pfad autorisieren.
 
 ### Test D – unpassender Modulaustausch
 
@@ -116,7 +116,7 @@ Erwartung: SAFOR lehnt den Austausch ab und behält die letzte gültige Buch-Bin
 
 ## 6. Typische Fehler vermeiden
 
-- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.14.0-rc.3.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
+- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.14.0-rc.5.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
 - Bearbeite die JSON-Dateien nicht. Jede Änderung kann Integritäts- oder Zugriffsprüfungen ungültig machen.
 - Verwende dein eigenes Git-Projekt. Das SAFOR-Repository ist Produktquelle, nicht Arbeitsbereich deines Vorhabens.
 - Interpretiere den öffentlichen Testzugang nicht als Kauf- oder Produktionsnachweis.
