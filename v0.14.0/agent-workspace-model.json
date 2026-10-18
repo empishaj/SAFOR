@@ -2,7 +2,7 @@
   "format": "SAFOR_AGENT_WORKSPACE_MODEL",
   "schemaVersion": "0.14.0",
   "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
-  "purpose": "Repository-native coordination for persistent chat agents activated only by HUMAN GO and returning typed Git responses to MASTER.",
+  "purpose": "Repository-native coordination in which MASTER dispatches work by writing immutable jobs into each agent's personal inbox; the agent pulls the next eligible job after explicit HUMAN GO.",
   "topology": {
     "projectRoot": "projects/{projectSlug}/",
     "agentRegistry": "agents/index.json",
@@ -40,10 +40,14 @@
     "actualProviderRightsRemainAuthoritative": true
   },
   "normalFlow": [
-    "MASTER_WRITES_JOB_AND_INDEX_AS_WAITING_HUMAN_GO",
-    "HUMAN_TYPES_GO_IN_BOUND_AGENT_CHAT",
-    "AGENT_LOADS_IDENTITY_STATE_INDEX_JOB_AND_REFERENCED_INPUTS_ONLY",
-    "AGENT_BINDS_GO_EVIDENCE",
+    "MASTER_WRITES_IMMUTABLE_JOB_TO_PERSONAL_INBOX",
+    "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
+    "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
+    "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
+    "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_PERSONAL_INBOX_INDEX",
+    "AGENT_SELECTS_NEXT_ELIGIBLE_PERSONAL_INBOX_JOB",
+    "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
+    "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
     "AGENT_RUNS_PREFLIGHT",
     "AGENT_CLAIMS_WITH_OPTIMISTIC_CONCURRENCY",
     "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
@@ -62,6 +66,19 @@
     "noDirectDefaultBranchMutation": true,
     "noResponseAsProviderPermission": true,
     "noSilentJobMutation": true,
-    "noFullRepositoryScanInNormalFlow": true
+    "noFullRepositoryScanInNormalFlow": true,
+    "noHostSessionAttestationDependency": true,
+    "identityComesFromPinnedInitializationNotJob": true
+  },
+  "dispatchContract": {
+    "sender": "MASTER",
+    "transport": "PERSONAL_AGENT_INBOX_IN_GIT",
+    "authoritativeJobPath": "agents/{agentId}/inbox/{jobId}.json",
+    "discoverabilityIndexPath": "agents/{agentId}/inbox/index.json",
+    "receiver": "ASSIGNED_AGENT_ONLY",
+    "activation": "EXPLICIT_HUMAN_GO",
+    "jobPromptTransportRequired": false,
+    "hostSessionBindingRequired": false,
+    "rule": "A job is dispatched when MASTER writes the immutable job contract and corresponding personal inbox index entry. The agent never waits for a copied job prompt and never scans globally for work."
   }
 }
