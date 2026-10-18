@@ -82,7 +82,14 @@
       "path": "v0.14.0/SAFOR-MASTER.json",
       "summary": "Align executable HUMAN communication instructions with notice-versus-interactive menu semantics.",
       "plannedWorkPackage": "WP-A3_HUMAN_RESPONSE_CLASSIFICATION",
-      "status": "PLANNED_NOT_STARTED"
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "implementationCommit": "64a27d915a1dd8b8764ba64a2610ad6cf2cd08c6",
+        "focusedValidationRun": 39123612721,
+        "standardValidationRun": 39123612702,
+        "focusedValidationResult": "PASS",
+        "standardValidationResult": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION"
+      }
     },
     {
       "findingId": "RC4-REVIEW-004",
@@ -147,11 +154,11 @@
     "noopBranchIdenticalToSourceCandidate": true
   },
   "stepResult": {
-    "workPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
+    "workPackage": "WP-A3_HUMAN_RESPONSE_CLASSIFICATION",
     "state": "COMPLETED",
     "validation": "FOCUSED_SOURCE_VALIDATION_PASS",
     "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION",
-    "nextWorkPackage": "WP-A3_HUMAN_RESPONSE_CLASSIFICATION",
+    "nextWorkPackage": "WP-A4_GO_CLAIM_STATE_INTEGRITY",
     "nextWorkPackageAuthorized": false
   }
 }
