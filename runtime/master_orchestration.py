@@ -153,31 +153,8 @@ def expire_resource_lease(lease: Mapping[str, Any], *, observed_at: str) -> dict
 def _status_entry(job: Mapping[str, Any]) -> dict[str, Any]:
     return {'subjectId': job['jobId'], 'label': job['jobKey'], 'status': job['lifecycleStatus'], 'ref': dict(_pointer(job['masterJobStateRef'], 'masterJobStateRef'))}
 
-def _parse_time(value: str | None) -> datetime | None:
-    if value is None:
-        return None
-    try:
-        return datetime.fromisoformat(str(value).replace('Z', '+00:00'))
-    except ValueError as exc:
-        raise MasterOrchestrationError('STATUS_TIMESTAMP_INVALID') from exc
-
-def _verified_response_by_job(response_status_entries: Sequence[Mapping[str, Any]]) -> dict[str, list[Mapping[str, Any]]]:
-    result: dict[str, list[Mapping[str, Any]]] = {}
-    for raw in response_status_entries:
-        entry = _mapping(raw, 'responseStatusEntry')
-        job_id = str(entry.get('jobId', '')).strip()
-        if not job_id:
-            raise MasterOrchestrationError('RESPONSE_STATUS_JOB_ID_MISSING')
-        if entry.get('readbackStatus') != 'VERIFIED_READBACK':
-            continue
-        if entry.get('schemaValid') is not True or entry.get('jobBindingValid') is not True:
-            continue
-        _pointer(entry.get('responseRef'), 'responseRef')
-        result.setdefault(job_id, []).append(entry)
-    return result
-
-def build_compact_project_status(*, project_id: str, project_slug: str, revision: int, roadmap_ref: Mapping[str, Any], agent_status_index_ref: Mapping[str, Any], agent_status_entries: Sequence[Mapping[str, Any]], job_status_entries: Sequence[Mapping[str, Any]], review_status_entries: Sequence[Mapping[str, Any]], blocker_status_entries: Sequence[Mapping[str, Any]], source_refs: Sequence[Mapping[str, Any]], observed_at: str, stale_after: str | None, response_status_entries: Sequence[Mapping[str, Any]] = (), provider_readback_verified: bool | None = None, source_revisions_consistent: bool = True, stale_reason: str | None=None, full_repository_scan_performed: bool=False) -> dict[str, Any]:
-    """Build routine status only from compact, read-back-verified projections."""
+def build_compact_project_status(*, project_id: str, project_slug: str, revision: int, roadmap_ref: Mapping[str, Any], agent_status_index_ref: Mapping[str, Any], agent_status_entries: Sequence[Mapping[str, Any]], job_status_entries: Sequence[Mapping[str, Any]], review_status_entries: Sequence[Mapping[str, Any]], blocker_status_entries: Sequence[Mapping[str, Any]], source_refs: Sequence[Mapping[str, Any]], observed_at: str, stale_after: str | None, stale_reason: str | None=None, full_repository_scan_performed: bool=False) -> dict[str, Any]:
+    """Build routine status strictly from compact indices."""
     if full_repository_scan_performed:
         raise MasterOrchestrationError('FULL_REPOSITORY_SCAN_FOR_ROUTINE_STATUS_FORBIDDEN')
     _pointer(roadmap_ref, 'roadmapRef')
@@ -188,7 +165,6 @@ def build_compact_project_status(*, project_id: str, project_slug: str, revision
     agents = [_mapping(entry, 'agentStatusEntry') for entry in agent_status_entries]
     reviews = [_mapping(entry, 'reviewStatusEntry') for entry in review_status_entries]
     blockers = [_mapping(entry, 'blockerStatusEntry') for entry in blocker_status_entries]
-    verified_responses = _verified_response_by_job(response_status_entries)
     agents_to_start: list[dict[str, Any]] = []
     for agent in agents:
         startable = agent.get('startableJob')
@@ -206,25 +182,8 @@ def build_compact_project_status(*, project_id: str, project_slug: str, revision
     verified = status('VERIFIED')
     accepted = status('ACCEPTED')
     integrated = status('INTEGRATED')
-
-    missing_response_jobs: list[str] = []
-    waived_response_jobs: list[str] = []
-    verified_response_jobs: list[str] = []
-    for job in jobs:
-        if job.get('expectsResponse') is not True:
-            continue
-        job_id = str(job.get('jobId', ''))
-        expectation = job.get('responseExpectation') or {}
-        if expectation.get('status') == 'WAIVED_BY_DECISION':
-            _pointer(expectation.get('decisionRef'), 'responseExpectationDecisionRef')
-            waived_response_jobs.append(job_id)
-            continue
-        if verified_responses.get(job_id):
-            verified_response_jobs.append(job_id)
-        else:
-            missing_response_jobs.append(job_id)
-    all_responses = not missing_response_jobs
-
+    expected_response_jobs = [job for job in jobs if job.get('expectsResponse') is True]
+    all_responses = all((job.get('lifecycleStatus') in _TERMINAL_FOR_RESPONSE_EXPECTATION for job in expected_response_jobs))
     if agents_to_start:
         next_action = 'Send GO in each listed bound agent chat.'
     elif open_blockers:
@@ -235,21 +194,6 @@ def build_compact_project_status(*, project_id: str, project_slug: str, revision
         next_action = None
     else:
         next_action = 'Plan the next safe work package.'
-    counts = {'registeredAgents': len(agents), 'agentsToStart': len(agents_to_start), 'runningJobs': len(running), 'submittedJobs': len(submitted), 'verifiedJobs': len(verified), 'acceptedJobs': len(accepted), 'integratedJobs': len(integrated), 'blockedJobs': len(blocked_jobs), 'openReviews': len(open_reviews), 'openBlockers': len(open_blockers), 'verifiedResponseJobs': len(verified_response_jobs), 'missingResponseJobs': len(missing_response_jobs), 'waivedResponseJobs': len(waived_response_jobs)}
-
-    observed = _parse_time(observed_at)
-    deadline = _parse_time(stale_after)
-    reasons: list[str] = []
-    if stale_reason:
-        reasons.append(stale_reason)
-    if observed is not None and deadline is not None and observed > deadline:
-        reasons.append('staleAfter exceeded')
-    if source_revisions_consistent is not True:
-        reasons.append('source revisions inconsistent')
-    if reasons:
-        freshness_status = 'STALE'
-    elif provider_readback_verified is True:
-        freshness_status = 'CURRENT'
-    else:
-        freshness_status = 'UNKNOWN'
-    return {'format': 'SAFOR_PROJECT_STATUS_INDEX', 'schemaVersion': '0.14.0', 'projectId': project_id, 'projectSlug': project_slug, 'revision': revision, 'authoritative': False, 'fullRepositoryScanPerformed': False, 'roadmapRef': dict(roadmap_ref), 'counts': counts, 'agentsToStart': agents_to_start, 'runningJobs': running, 'submittedJobs': submitted, 'verifiedJobs': verified, 'acceptedJobs': accepted, 'integratedJobs': integrated, 'blockedJobs': blocked_jobs, 'openReviews': open_reviews, 'openBlockers': open_blockers, 'allExpectedResponsesReceived': all_responses, 'verifiedResponseJobIds': verified_response_jobs, 'missingResponseJobIds': missing_response_jobs, 'waivedResponseJobIds': waived_response_jobs, 'nextHumanAction': next_action, 'agentStatusIndexRef': dict(agent_status_index_ref), 'sourceRefs': [dict(ref) for ref in source_refs], 'freshness': {'status': freshness_status, 'observedAt': observed_at, 'staleAfter': stale_after, 'staleReason': reasons[0] if reasons else None, 'staleReasons': reasons, 'providerReadbackVerified': provider_readback_verified, 'sourceRevisionsConsistent': source_revisions_consistent}, 'updatedAt': observed_at}
+    counts = {'registeredAgents': len(agents), 'agentsToStart': len(agents_to_start), 'runningJobs': len(running), 'submittedJobs': len(submitted), 'verifiedJobs': len(verified), 'acceptedJobs': len(accepted), 'integratedJobs': len(integrated), 'blockedJobs': len(blocked_jobs), 'openReviews': len(open_reviews), 'openBlockers': len(open_blockers)}
+    freshness_status = 'STALE' if stale_reason else 'CURRENT'
+    return {'format': 'SAFOR_PROJECT_STATUS_INDEX', 'schemaVersion': '0.14.0', 'projectId': project_id, 'projectSlug': project_slug, 'revision': revision, 'authoritative': False, 'fullRepositoryScanPerformed': False, 'roadmapRef': dict(roadmap_ref), 'counts': counts, 'agentsToStart': agents_to_start, 'runningJobs': running, 'submittedJobs': submitted, 'verifiedJobs': verified, 'acceptedJobs': accepted, 'integratedJobs': integrated, 'blockedJobs': blocked_jobs, 'openReviews': open_reviews, 'openBlockers': open_blockers, 'allExpectedResponsesReceived': all_responses, 'nextHumanAction': next_action, 'agentStatusIndexRef': dict(agent_status_index_ref), 'sourceRefs': [dict(ref) for ref in source_refs], 'freshness': {'status': freshness_status, 'observedAt': observed_at, 'staleAfter': stale_after, 'staleReason': stale_reason}, 'updatedAt': observed_at}

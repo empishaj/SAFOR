@@ -39,16 +39,7 @@
     "SCOPE_NEGOTIATION",
     "MULTI_OPTION_DECISION",
     "UNPERSISTED_ERROR_DETAIL",
-    "JOB_PROMPT",
-    "MENU",
-    "FACTORY_PRESENTATION_OVERRIDE",
-    "OPERATING_MODEL_PRESENTATION_OVERRIDE"
+    "JOB_PROMPT"
   ],
-  "terminalRule": "After SUBMITTED, BLOCKED or REIDENTIFICATION_REQUIRED no additional chat content is allowed in the same turn.",
-  "owner": "SAFOR_PLATFORM",
-  "rendering": {
-    "singleLine": true,
-    "menuForbidden": true,
-    "substantiveContentStoredInGit": true
-  }
+  "terminalRule": "After SUBMITTED, BLOCKED or REIDENTIFICATION_REQUIRED no additional chat content is allowed in the same turn."
 }
