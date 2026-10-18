@@ -18,6 +18,10 @@ jobs:
           python-version: "3.12"
       - name: Validate audit and active contracts
         run: python tools/validate_audit_remediation.py
+      - name: Validate release facts
+        run: python tools/validate_release_facts.py
+      - name: Validate traceability
+        run: python tools/validate_traceability.py
       - name: Run inbox-pull orchestration regressions
         run: |
           python -m unittest             tests.test_agent_activation_v014             tests.test_go_evidence_v014             tests.test_go_claim_integrity_v014             tests.test_agent_job_v014             tests.test_master_scheduler_v014             tests.test_audit_remediation_rc3 -v
