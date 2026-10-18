@@ -129,7 +129,7 @@ class AgentJobV014Tests(unittest.TestCase):
                 self.assertFalse(output['containsDomainDetail'])
 
     def test_blocked_chat_requires_git_reference(self):
-        with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_REQUIRES_JOB_AND_DETAILS_REF'):
+        with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT'):
             render_agent_chat_output(status='BLOCKED', project_id='project-001', agent_id='agent-dev-003', display_name='Nova Dev', job_key='wp-014-impl')
 if __name__ == '__main__':
     unittest.main()

@@ -1,6 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.14.0-rc.2**
+Current target: **v0.14.0-rc.4**
+
+Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The rc.4 Framework distributions and checksums are reproducible and automated validation is green; real-Git E2E, cross-host and migration acceptance remain separate open gates.
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -15,7 +17,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | WEBSITE FREE_PUBLIC Factory + Operating Model defaults | PASS by unit/validator |
 | Website single-file domain Framework | PASS by reproducible builder/CI |
 | Domain Framework preselects domain + creation type | PASS by model/unit/validator |
-| Website defaults family-aware at 1.1.0 | PASS |
+| Website defaults family-aware at 1.2.0 | PASS by canonical package/profile facts |
 | Package-family compatibility for Premium replacements | PASS by runtime/unit |
 | Bidirectional Factory ↔ Operating Model compatibility | PASS by runtime/unit |
 | Operating Model required Factory work-item/artifact contract | PASS by unit |
@@ -73,7 +75,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
 | Current unit and regression suite | **PASS in CI; count derived from workflow logs** |
-| Module-wide Self-Healing exact coverage | **75/75 PASS** |
+| Module-wide Self-Healing exact coverage | **93/93 PASS** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |
@@ -120,8 +122,10 @@ The licensing **architecture/product decision is complete**. Final legal license
 
 GA requires all OPEN gates above to be resolved or explicitly removed from GA scope through a governed HUMAN product decision, with evidence retained at immutable release revisions.
 
-## rc.9 reference-project evidence
+## Historical reference-project evidence and rc.4 candidate migration
 
-The `safomwebsite` control plane migration is provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It contributes a complete nine-agent registry, HUMAN-GO-only identity overlays, personal inbox/response indexes, typed response bindings, a compact MASTER status index and an authoritative current-state pointer. The product repository remained unchanged during this control-plane migration.
+The historical `safomwebsite` control-plane migration remains provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It is retained as legacy baseline evidence only; it does **not** prove migration to `0.14.0-rc.4`.
 
-This closes only the reference-project migration blocker. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.
+The rc.4 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
+
+Therefore `V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE` remains open for rc.4. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.

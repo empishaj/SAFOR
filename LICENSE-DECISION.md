@@ -1,7 +1,7 @@
 # SAFOR Commercial Distribution Decision
 
 Decision date: **2026-10-17**
-Current implementation baseline: **SAFOR 0.14.0-rc.2**
+Current implementation baseline: **SAFOR 0.14.0-rc.3**
 
 ## Product decision
 

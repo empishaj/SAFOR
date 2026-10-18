@@ -3,7 +3,7 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.14.0-rc.2"
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 
 def load(path):

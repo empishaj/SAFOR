@@ -1,0 +1,73 @@
+{
+  "format": "SAFOR_RELEASE_EVIDENCE",
+  "schemaVersion": "0.14.0",
+  "product": "SAFOR",
+  "version": "0.14.0-rc.4",
+  "status": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+  "createdAt": "2026-10-18T12:05:49Z",
+  "sourceCommitBeforeMaterialization": "e443b1d0083c4454adb5c8ed660d593e0fa7fe5d",
+  "integrationBranch": "safor/review-remediation-0.14.0-rc.4",
+  "workflow": {
+    "repository": "empishaj/SAFOR",
+    "runId": "39125871541",
+    "runAttempt": "1"
+  },
+  "validatedCommands": [
+    "python tools/build_bundle.py --check",
+    "python tools/build_domain_framework.py --check",
+    "python tools/validate_safor.py",
+    "python tools/validate_audit_remediation.py",
+    "python tools/validate_release_facts.py",
+    "python tools/validate_traceability.py",
+    "python -m unittest discover -s tests -v",
+    "sha256sum --check SHA256SUMS-0.14.0-rc.4.txt"
+  ],
+  "artifacts": [
+    {
+      "path": "SAFOR-FRAMEWORK.json",
+      "sha256": "eb980c5fa6a2d6e98acb945a2bfe9e51555c65b91e9e561dcec51f1298954435",
+      "bytes": 1012462
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
+      "sha256": "eb980c5fa6a2d6e98acb945a2bfe9e51555c65b91e9e561dcec51f1298954435",
+      "bytes": 1012462
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "sha256": "bf655d11d734581fe2b9b594de06783c4a5be55cb178807f91753052b2a94211",
+      "bytes": 1094661
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-SAAS.json",
+      "sha256": "131bbbdfead10eee8ddd51b6fcd29132c988edfa5e1e3def5f16ee1e9350f74c",
+      "bytes": 1119712
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "sha256": "fce929227b765f5847403ce2b986861788c0ee0c920747bb514775f7620a8a48",
+      "bytes": 1091141
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-SAAS.json",
+      "sha256": "f5e8b7aa994e164cbff4e462611b8fbf7374514b15d0f196c07ca70fe781ffc0",
+      "bytes": 3664
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "sha256": "250e3731d015380bda4db94854a3ee8e70c86c530a7cbcdf3d0ee65da6c1164c",
+      "bytes": 3634
+    }
+  ],
+  "truthBoundary": [
+    "Automated PASS is not a fresh-chat real-Git E2E PASS.",
+    "Provider claim semantics require actual host/provider CAS and full committed-state readback.",
+    "JSON does not create provider permissions or force a non-conforming host.",
+    "The rc.4 reference-project migration remains NOT_STARTED until isolated real-Git E2E passes.",
+    "Cognitive-load reduction remains an empirical product claim requiring measurement."
+  ],
+  "materializedAt": "2026-10-18T12:05:49Z",
+  "artifactCount": 7,
+  "checksumFile": "SHA256SUMS-0.14.0-rc.4.txt",
+  "automatedValidationCompletedAt": "2026-10-18T12:05:51Z"
+}

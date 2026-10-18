@@ -1,0 +1,93 @@
+{
+  "format": "SAFOR_RELEASE_FACTS",
+  "schemaVersion": "1.0",
+  "targetVersion": "0.14.0-rc.4",
+  "previousVersion": "0.14.0-rc.3",
+  "frameworkSchemaVersion": "0.14.0",
+  "status": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+  "sourceRoot": "v0.14.0",
+  "moduleCount": 93,
+  "recoveryProfileCount": 93,
+  "domainDefaults": {
+    "WEBSITE": {
+      "creationType": "WEBSITE",
+      "accessMode": "FREE_PUBLIC",
+      "factoryPackageId": "safor.factory.website-delivery",
+      "factoryVersion": "1.2.0",
+      "operatingModelPackageId": "safor.om.website-team",
+      "operatingModelVersion": "1.2.0",
+      "publicationMode": "PUBLIC_PRODUCTION"
+    },
+    "SAAS": {
+      "creationType": "SOFTWARE_SAAS",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "factoryPackageId": "safor.factory.software-delivery",
+      "factoryVersion": "1.8.0-test.1",
+      "operatingModelPackageId": "safor.om.saas-engineering",
+      "operatingModelVersion": "1.8.0-test.1",
+      "publicationMode": "PUBLIC_TEST_EVALUATION"
+    },
+    "BOOK_CREATION": {
+      "creationType": "BOOK",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "factoryPackageId": "safor.factory.book-production",
+      "factoryVersion": "1.1.0-test.1",
+      "operatingModelPackageId": "safor.om.book-authoring",
+      "operatingModelVersion": "1.1.0-test.1",
+      "publicationMode": "PUBLIC_TEST_EVALUATION"
+    }
+  },
+  "releaseArtifacts": {
+    "state": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+    "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
+    "latestAlias": "SAFOR-FRAMEWORK.json",
+    "evidence": "RELEASE-EVIDENCE-0.14.0-rc.4.json",
+    "notes": "RELEASE-NOTES-0.14.0-rc.4.md",
+    "checksums": "SHA256SUMS-0.14.0-rc.4.txt",
+    "expectedDistributionArtifactCount": 7,
+    "workflowRunId": "39125871541"
+  },
+  "traceability": {
+    "releaseTarget": "0.14.0-rc.4",
+    "design": "PASS",
+    "implementation": "PASS",
+    "automatedTest": "PASS",
+    "bundle": "PASS",
+    "realGitE2E": "NOT_VERIFIED",
+    "crossHost": "NOT_VERIFIED"
+  },
+  "referenceProjectMigration": {
+    "historicalBaselineMigration": {
+      "status": "COMPLETED",
+      "scope": "LEGACY_RC8_CONTROL_PLANE_MIGRATION",
+      "evidence": {
+        "status": "COMPLETED",
+        "projectId": "67454821-9325-41f3-ac41-d72121cfec5f",
+        "projectSlug": "safomwebsite",
+        "controlRepository": "empishaj/safor-memory",
+        "mergeCommit": "85e08eab15b18a86868090d7b18573b9e2484aea",
+        "pullRequest": 4,
+        "currentStateRef": "projects/safomwebsite/state/current.json",
+        "currentStateBlobSha": "8e0d00bb8e7f1aedf70043be761f6378eb924f81",
+        "agentRegistryRef": "projects/safomwebsite/agents/index.json",
+        "agentRegistryBlobSha": "466dcdb608cb22592d97a575b9687c8c513beb7f",
+        "migrationAuditRef": "projects/safomwebsite/audit/rc8-migration-validation.json",
+        "migrationAuditBlobSha": "bc18643d0c23d60094cd5c350bba68f0607d27a8",
+        "agentCount": 9,
+        "typedResponseTemplateCount": 5,
+        "historicalArtifactsPreserved": true,
+        "productRepository": "empishaj/safomwebsite",
+        "productRepositoryHeadUnchangedAtMigration": "1026ff2176d739aeedc506e5970b48528aa8ad23"
+      }
+    },
+    "candidateMigration": {
+      "targetVersion": "0.14.0-rc.4",
+      "status": "NOT_STARTED",
+      "prerequisites": [
+        "V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE"
+      ],
+      "historicalArtifactsMustBePreserved": true,
+      "productRepositoryMutationAllowedBeforeGate": false
+    }
+  }
+}

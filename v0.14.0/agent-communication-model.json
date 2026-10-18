@@ -29,7 +29,8 @@
     "STARTED": "GO bestätigt | Agent: {displayName} ({agentId}) | Job: {jobKey} | Status: RUNNING | Zielbranch: {targetBranch}",
     "SUBMITTED": "Job {jobKey} abgeschlossen | Status: SUBMITTED | Ergebnis: {detailsRef}",
     "BLOCKED": "Job {jobKey} blockiert | Status: BLOCKED | Meldung: {detailsRef} | MASTER-Klärung erforderlich",
-    "REIDENTIFICATION_REQUIRED": "Agentenidentität unsicher | Status: REIDENTIFICATION_REQUIRED | Bitte im MASTER-Chat neue Initialisierung anfordern"
+    "REIDENTIFICATION_REQUIRED": "Agentenidentität unsicher | Status: REIDENTIFICATION_REQUIRED | Bitte im MASTER-Chat neue Initialisierung anfordern",
+    "BLOCKED_PERSISTENCE_FAILURE": "Job {jobKey} blockiert | Status: BLOCKED | Rückmeldung nicht gespeichert | MASTER-Klärung erforderlich"
   },
   "forbiddenContent": [
     "DOMAIN_QUESTION",
@@ -50,5 +51,47 @@
     "singleLine": true,
     "menuForbidden": true,
     "substantiveContentStoredInGit": true
+  },
+  "persistenceFailureFallback": {
+    "status": "BLOCKED",
+    "authoritative": false,
+    "allowedOnlyWhen": "CONTROL_RESPONSE_WRITE_OR_READBACK_UNAVAILABLE",
+    "requiredFields": [
+      "jobId",
+      "agentId",
+      "attemptId",
+      "phase",
+      "reasonCode"
+    ],
+    "detailsRef": null,
+    "persistenceState": "FAILED",
+    "rules": [
+      "Never invent a Git response reference.",
+      "Do not repeat an already provider-verified product commit.",
+      "After provider recovery, persist only the missing response and reconcile its index.",
+      "Keep the chat fallback to one line and route the HUMAN to MASTER."
+    ]
+  },
+  "persistenceXorContract": {
+    "appliesToStatus": "BLOCKED",
+    "variants": {
+      "PERSISTED_RESPONSE": {
+        "detailsRef": "REQUIRED_NONEMPTY",
+        "persistence": "MUST_BE_NULL",
+        "authoritativeResponsePersisted": true
+      },
+      "PERSISTENCE_FAILURE": {
+        "detailsRef": "MUST_BE_NULL",
+        "persistenceState": "FAILED",
+        "authoritativeResponsePersisted": false,
+        "requiredFields": [
+          "attemptId",
+          "phase",
+          "reasonCode"
+        ]
+      }
+    },
+    "mutuallyExclusive": true,
+    "ambiguousCombinationOutcome": "REJECT"
   }
 }

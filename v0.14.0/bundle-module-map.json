@@ -92,7 +92,9 @@
     "schemaEntitlement": "v0.14.0/schemas/entitlement.schema.json",
     "schemaWorkspaceBinding": "v0.14.0/schemas/workspace-binding.schema.json",
     "schemaPackageSelection": "v0.14.0/schemas/package-selection.schema.json",
-    "schemaPackageCompatibilityDecision": "v0.14.0/schemas/package-compatibility-decision.schema.json"
+    "schemaPackageCompatibilityDecision": "v0.14.0/schemas/package-compatibility-decision.schema.json",
+    "creationTypeVocabulary": "v0.14.0/creation-type-vocabulary.json",
+    "domainFrameworkProfiles": "v0.14.0/domain-framework-profiles.json"
   },
   "referenceResolution": {
     "SAFOR-MASTER.json": "kernel",
@@ -195,7 +197,9 @@
     "schemas/project-status-index.schema.json": "schemaProjectStatusIndex",
     "schemas/requirements-traceability.schema.json": "schemaRequirementsTraceability",
     "providers/github/0.6.0/package.json": "providerGithub",
-    "providers/gitlab/0.6.0/package.json": "providerGitlab"
+    "providers/gitlab/0.6.0/package.json": "providerGitlab",
+    "creation-type-vocabulary.json": "creationTypeVocabulary",
+    "domain-framework-profiles.json": "domainFrameworkProfiles"
   },
   "v014AuthoritativeKeys": [
     "acceptanceModel",
@@ -208,7 +212,9 @@
     "commercialEntitlement",
     "composablePackageModel",
     "conformance",
+    "creationTypeVocabulary",
     "deterministicControl",
+    "domainFrameworkProfiles",
     "effectModel",
     "eventModel",
     "executionAttempt",

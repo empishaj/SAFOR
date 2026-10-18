@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.14.0-rc.2",
+  "version": "0.14.0-rc.4",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.14.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.2.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.9",
+  "previousVersion": "0.14.0-rc.3",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -43,7 +43,7 @@
     "UNCHANGED_HUMAN_DECISION_REUSE",
     "HUMAN_DOMAIN_LANGUAGE_ABSTRACTION",
     "DYNAMIC_PRIMARY_ACTION_LABELS",
-    "TERMINAL_HUMAN_INTERACTION_MENU",
+    "RESPONSE_CLASS_DERIVED_TERMINAL_MENU",
     "MANDATORY_HUMAN_RESPONSE_FINALIZER",
     "HUMAN_RESPONSE_SCHEMA",
     "TERMINAL_MENU_SELF_HEALING",
@@ -165,7 +165,17 @@
     "EVIDENCE_DIMENSIONED_33_REQUIREMENT_TRACEABILITY",
     "V014_UPGRADED_DOMAIN_PACKAGES",
     "V014_UPGRADED_PROVIDER_ADAPTERS",
-    "ALL_V014_FRAMEWORK_DISTRIBUTIONS_REPRODUCIBLE"
+    "ALL_V014_FRAMEWORK_DISTRIBUTIONS_REPRODUCIBLE",
+    "CANONICAL_V014_CREATION_TYPE_VOCABULARY",
+    "EXPLICIT_LEGACY_CREATION_TYPE_MIGRATION",
+    "SEMANTIC_REFERENCE_LINTING",
+    "VERSIONED_ACTIVE_INVARIANTS",
+    "DISCRIMINATED_CONTROL_WORKSPACE_POLICY",
+    "PERSISTENCE_FAILURE_CHAT_FALLBACK_XOR",
+    "EXACT_STATE_PROVIDER_CONFIRMED_GO_CLAIM_PROTOCOL",
+    "RELEASE_DOCUMENTATION_DRIFT_GUARD",
+    "CANONICAL_RELEASE_FACTS",
+    "RC4_TRACEABILITY_PENDING_UNTIL_MATERIALIZATION"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -284,27 +294,42 @@
     "CAPABILITY_MISMATCH",
     "IMPROVEMENT_PROPOSAL"
   ],
-  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.2.json",
-  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.2.md",
-  "checksumFile": "SHA256SUMS-0.14.0-rc.2.txt",
+  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.4.json",
+  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.4.md",
+  "checksumFile": "SHA256SUMS-0.14.0-rc.4.txt",
   "referenceProjectMigration": {
-    "status": "COMPLETED",
-    "projectId": "67454821-9325-41f3-ac41-d72121cfec5f",
-    "projectSlug": "safomwebsite",
-    "controlRepository": "empishaj/safor-memory",
-    "mergeCommit": "85e08eab15b18a86868090d7b18573b9e2484aea",
-    "pullRequest": 4,
-    "currentStateRef": "projects/safomwebsite/state/current.json",
-    "currentStateBlobSha": "8e0d00bb8e7f1aedf70043be761f6378eb924f81",
-    "agentRegistryRef": "projects/safomwebsite/agents/index.json",
-    "agentRegistryBlobSha": "466dcdb608cb22592d97a575b9687c8c513beb7f",
-    "migrationAuditRef": "projects/safomwebsite/audit/rc8-migration-validation.json",
-    "migrationAuditBlobSha": "bc18643d0c23d60094cd5c350bba68f0607d27a8",
-    "agentCount": 9,
-    "typedResponseTemplateCount": 5,
-    "historicalArtifactsPreserved": true,
-    "productRepository": "empishaj/safomwebsite",
-    "productRepositoryHeadUnchangedAtMigration": "1026ff2176d739aeedc506e5970b48528aa8ad23"
+    "historicalBaselineMigration": {
+      "status": "COMPLETED",
+      "scope": "LEGACY_RC8_CONTROL_PLANE_MIGRATION",
+      "evidence": {
+        "status": "COMPLETED",
+        "projectId": "67454821-9325-41f3-ac41-d72121cfec5f",
+        "projectSlug": "safomwebsite",
+        "controlRepository": "empishaj/safor-memory",
+        "mergeCommit": "85e08eab15b18a86868090d7b18573b9e2484aea",
+        "pullRequest": 4,
+        "currentStateRef": "projects/safomwebsite/state/current.json",
+        "currentStateBlobSha": "8e0d00bb8e7f1aedf70043be761f6378eb924f81",
+        "agentRegistryRef": "projects/safomwebsite/agents/index.json",
+        "agentRegistryBlobSha": "466dcdb608cb22592d97a575b9687c8c513beb7f",
+        "migrationAuditRef": "projects/safomwebsite/audit/rc8-migration-validation.json",
+        "migrationAuditBlobSha": "bc18643d0c23d60094cd5c350bba68f0607d27a8",
+        "agentCount": 9,
+        "typedResponseTemplateCount": 5,
+        "historicalArtifactsPreserved": true,
+        "productRepository": "empishaj/safomwebsite",
+        "productRepositoryHeadUnchangedAtMigration": "1026ff2176d739aeedc506e5970b48528aa8ad23"
+      }
+    },
+    "candidateMigration": {
+      "targetVersion": "0.14.0-rc.4",
+      "status": "NOT_STARTED",
+      "prerequisites": [
+        "V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE"
+      ],
+      "historicalArtifactsMustBePreserved": true,
+      "productRepositoryMutationAllowedBeforeGate": false
+    }
   },
   "distributionArtifactCount": 7,
   "frameworkSchemaVersion": "0.14.0",
@@ -326,5 +351,31 @@
       "F-11": "OPEN_EMPIRICAL_USABILITY_EVIDENCE",
       "F-12": "RESOLVED_BY_IMPLEMENTATION_DECISION_RECORD"
     }
-  }
+  },
+  "auditRemediation": {
+    "sourceRelease": "0.14.0-rc.2",
+    "targetRelease": "0.14.0-rc.4",
+    "baseCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
+    "findings": {
+      "AUDIT-RC2-01": "RESOLVED_AUTOMATED_SCHEMA_AND_DOMAIN_TESTS",
+      "AUDIT-RC2-02": "RESOLVED_SEMANTIC_REFERENCE_LINTER",
+      "AUDIT-RC2-03": "RESOLVED_ACTIVE_SUPERSEDED_INVARIANT_MODEL",
+      "AUDIT-RC2-04": "RESOLVED_DISCRIMINATED_CONTROL_WORKSPACE_POLICY",
+      "AUDIT-RC2-05": "RESOLVED_AUTOMATED_PERSISTENCE_FAILURE_CONTRACT",
+      "AUDIT-RC2-06": "CONTRACT_AND_AUTOMATED_TESTS_RESOLVED_REAL_PROVIDER_E2E_OPEN",
+      "AUDIT-RC2-07": "OPEN_REAL_GIT_E2E_AND_REFERENCE_MIGRATION",
+      "AUDIT-RC2-08": "RESOLVED_AUTOMATED_DOCUMENTATION_DRIFT_GUARD",
+      "AUDIT-RC2-09": "OPEN_EMPIRICAL_CONTEXT_AND_USABILITY_EVIDENCE"
+    },
+    "rc4ReviewRemediation": {
+      "RC4-REVIEW-001": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING",
+      "RC4-REVIEW-002": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING",
+      "RC4-REVIEW-003": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING",
+      "RC4-REVIEW-004": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING",
+      "RC4-REVIEW-005": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING"
+    }
+  },
+  "embeddedModuleCount": 93,
+  "releaseFactsRef": "RELEASE-FACTS.json",
+  "releaseArtifactsState": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
 }

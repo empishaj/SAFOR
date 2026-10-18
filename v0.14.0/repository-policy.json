@@ -1,6 +1,6 @@
 {
   "kind": "SAFOR_REPOSITORY_BOUNDARY_POLICY",
-  "version": "0.12.0",
+  "version": "0.14.0",
   "policyId": "SAFOR-WORKSPACE-BOUNDARY-V3",
   "denyByDefault": true,
   "principles": {
@@ -192,7 +192,9 @@
       "masterOnly": true,
       "gitTracked": true
     },
-    "rule": "Remote projects use a separate HUMAN-controlled safor-memory. Local projects use a protected .safor/ control root inside the HUMAN local Git workspace."
+    "rule": "Historical compatibility projection only; current execution uses controlWorkspacePolicy.",
+    "status": "DEPRECATED_NON_EXECUTABLE",
+    "supersededBy": "controlWorkspacePolicy"
   },
   "agentWorkspaceOwnership": {
     "modelRef": "agent-workspace-model.json",
@@ -245,5 +247,27 @@
     "immutableAfterDispatch": true,
     "providerReadbackBeforeReady": true,
     "agentMutationForbidden": true
+  },
+  "controlWorkspacePolicy": {
+    "discriminator": "PROJECT_WORKSPACE_TYPE",
+    "REMOTE_GIT": {
+      "strategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
+      "target": "{selectedOwner}/safor-memory",
+      "mustPreExist": true,
+      "mustBeReadable": true,
+      "mustBeWritable": true,
+      "autoCreate": false,
+      "onMissingOrInsufficientAccess": "WAITING_HUMAN_CONTROL_WORKSPACE"
+    },
+    "LOCAL_GIT": {
+      "strategy": "LOCAL_MASTER_CONTROL_ROOT",
+      "target": ".safor/",
+      "mustBeGitTracked": true,
+      "masterOnly": true,
+      "workerWritesForbidden": true,
+      "remoteMemoryRequired": false,
+      "onMissingCapabilities": "WAITING_HUMAN_LOCAL_HOST_ACCESS"
+    },
+    "rule": "Exactly one branch applies. Remote and local control prerequisites must never be combined."
   }
 }

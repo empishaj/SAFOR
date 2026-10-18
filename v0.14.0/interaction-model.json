@@ -307,7 +307,8 @@
       "platformResponseGovernorRequired": true,
       "domainPresentationOverrideForbidden": true,
       "terminalMenuRequiredAtInteractiveCheckpoints": true,
-      "informationalNoticeMayOmitTerminalMenu": true
+      "informationalNoticeMayOmitTerminalMenu": true,
+      "terminalMenuPolicy": "DERIVED_FROM_RESPONSE_CLASS"
     },
     "responseBudgets": {
       "acknowledgement": {
@@ -444,7 +445,9 @@
           "STOP",
           "REQUIRED_FIX"
         ],
-        "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAFOR danach neu."
+        "example": "Remote-Git ist blockiert: Das benötigte safor-memory fehlt oder ist nicht beschreibbar. Richte den Remote-Control-Workspace ein oder wähle den lokalen Git-Pfad.",
+        "appliesWhen": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+        "legacyName": true
       },
       "creationType": {
         "structure": [
@@ -485,6 +488,14 @@
           "VALUE_STREAM_WALKTHROUGH",
           "MIGRATION_OPTION_MENU_WITHOUT_REAL_HUMAN_DECISION"
         ]
+      },
+      "localControlWorkspaceStop": {
+        "appliesWhen": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+        "structure": [
+          "STOP",
+          "REQUIRED_FIX"
+        ],
+        "example": "Lokaler Git-Zugriff ist blockiert: Dateisystem-/Git-Rechte oder der geschützte .safor/-Control-Root fehlen. Remote-safor-memory ist dafür nicht erforderlich."
       }
     },
     "avoid": {
@@ -528,7 +539,8 @@
             "label": "GitLab",
             "intent": "SELECT_PROVIDER_GITLAB"
           }
-        ]
+        ],
+        "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT"
       },
       {
         "id": "ACCESS",
@@ -550,7 +562,8 @@
             "intent": "HELP_PROVIDER_ACCESS",
             "kind": "UTILITY"
           }
-        ]
+        ],
+        "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT"
       },
       {
         "id": "OWNER",
@@ -558,22 +571,24 @@
         "preferredSurface": "NATIVE_SINGLE_SELECT",
         "dynamicOptions": "PROVIDER_NAMESPACES",
         "maxVisibleOptions": 8,
-        "overflowLabel": "Mehr anzeigen"
+        "overflowLabel": "Mehr anzeigen",
+        "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT"
       },
       {
         "id": "SAFOR_MEMORY",
         "prompt": "Ich prüfe den SAFOR-Arbeitsbereich.",
         "preferredSurface": "NATIVE_MARKDOWN",
         "successMessage": "Passt. `safor-memory` ist da und beschreibbar.",
-        "stopMessage": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten kann SAFOR nicht arbeiten. Bitte richte es unter diesem Owner ein und starte SAFOR danach erneut.",
-        "failureBehavior": "STOP",
+        "stopMessage": "Für den Remote-Git-Pfad fehlt ein beschreibbares `safor-memory`. Der lokale Git-Pfad verwendet stattdessen `.safor/`.",
+        "failureBehavior": "WAITING_HUMAN_CONTROL_WORKSPACE",
         "actions": [
           {
             "label": "Details",
             "intent": "DETAILS",
             "kind": "UTILITY"
           }
-        ]
+        ],
+        "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT"
       },
       {
         "id": "CREATION_TYPE",
@@ -581,8 +596,12 @@
         "preferredSurface": "NATIVE_SINGLE_SELECT",
         "options": [
           {
-            "label": "Software / Website",
-            "intent": "SELECT_CREATION_TYPE_SOFTWARE_WEBSITE"
+            "label": "Website",
+            "intent": "SELECT_CREATION_TYPE_WEBSITE"
+          },
+          {
+            "label": "Software / SaaS",
+            "intent": "SELECT_CREATION_TYPE_SOFTWARE_SAAS"
           },
           {
             "label": "Buch",
@@ -623,26 +642,31 @@
             "label": "Owner wechseln",
             "intent": "SELECT_OWNER_NAMESPACE"
           }
-        ]
+        ],
+        "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT"
       },
       {
         "id": "NEW_PROJECT",
         "prompt": "Wie soll das neue Projekt heißen?",
         "preferredSurface": "FREE_TEXT",
-        "next": "SHOW_DERIVED_PROJECT_IDENTITY_FOR_CONFIRMATION"
+        "next": "SHOW_DERIVED_PROJECT_IDENTITY_FOR_CONFIRMATION",
+        "when": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT"
       }
     ],
     "interactionRules": [
       "Ask exactly one initialization decision at a time.",
-      "Do not continue after SAFOR_MEMORY failure; the run is STOPPED.",
       "Creation type is mandatory and must be selected before project mode.",
       "Use only the selected Factory for later Discovery, Planning and domain Evidence.",
       "Do not expose package, schema, permission-scope or stable-ID detail unless the HUMAN opens Details.",
       "Repository menu defaults to the previous 7 days; the HUMAN may explicitly request all repositories.",
       "Keep choices clickable when the host supports native controls.",
       "Use only chat-native UI surfaces.",
-      "Use HUMAN domain language on the default surface; keep Owner/Factory/Operating Model/Provider/READY/Readback and similar internal terms behind Details unless materially required."
-    ]
+      "Use HUMAN domain language on the default surface; keep Owner/Factory/Operating Model/Provider/READY/Readback and similar internal terms behind Details unless materially required.",
+      "Remote Git requires verified read/write access to a separate HUMAN-controlled safor-memory.",
+      "Local Git requires verified local filesystem/Git rights and a MASTER-only Git-tracked .safor/ root; no remote memory is required.",
+      "Creation Type options are WEBSITE, SOFTWARE_SAAS and BOOK unless a domain distribution preselects one."
+    ],
+    "workspaceBranchRule": "After workspace selection, render and execute only steps whose when condition matches the selected PROJECT_WORKSPACE_TYPE. Never surface REMOTE_GIT blockers in LOCAL_GIT or LOCAL_GIT blockers in REMOTE_GIT."
   },
   "nativeUiPolicy": {
     "mode": "CHAT_NATIVE_UI_ONLY",
@@ -1180,5 +1204,37 @@
     ],
     "failureMode": "FAIL_CLOSED_TO_MINIMUM_SAFE_PLATFORM_MESSAGE",
     "minimumSafeMessage": "Ich habe die Änderung erkannt. Ich prüfe den sicheren nächsten Schritt und ändere bis dahin nichts."
+  },
+  "responseClassification": {
+    "id": "SAFOR_PLATFORM_RESPONSE_CLASSIFICATION",
+    "authority": "SAFOR_PLATFORM",
+    "schemaRef": "schemas/human-response.schema.json",
+    "classes": {
+      "INFORMATIONAL_NOTICE": {
+        "interactive": false,
+        "terminalMenu": "FORBIDDEN",
+        "renderMode": "CONTENT_ONLY"
+      },
+      "INTERACTIVE_CHECKPOINT": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      },
+      "DECISION_REQUEST": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      },
+      "BLOCKER": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      },
+      "DETAIL_RESPONSE": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      }
+    }
   }
 }

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import runpy
 import sys
 from pathlib import Path
 
@@ -14,7 +15,7 @@ from runtime.bootstrap_policy import evaluate_domain_framework_pair, validate_do
 from runtime.public_evaluation_access import resolve_public_evaluation_access
 from tools.build_domain_framework import build_distribution, validate_distribution
 
-VERSION = "0.14.0-rc.2"
+VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 SCHEMA = "0.14.0"
 errors = []
 
@@ -178,6 +179,8 @@ if conformance.get("schemaVersion") != SCHEMA:
 traceability = load("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json")
 if len(traceability.get("requirements", [])) != 33:
     fail("Traceability must contain exactly 33 requirements")
+
+runpy.run_path(str(ROOT / 'tools/validate_audit_remediation.py'), run_name='__main__')
 
 if errors:
     print("SAFOR validation: FAIL")

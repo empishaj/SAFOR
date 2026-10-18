@@ -1,0 +1,253 @@
+{
+  "format": "SAFOR_REVIEW_REMEDIATION_BASELINE",
+  "schemaVersion": "1.0",
+  "targetRelease": "0.14.0-rc.4",
+  "createdAt": "2026-10-18T12:55:02+02:00",
+  "repository": "empishaj/SAFOR",
+  "authorization": {
+    "source": "DIRECT_HUMAN_INPUT_IN_CURRENT_MASTER_CHAT",
+    "authorityType": "HUMAN_STEPWISE_IMPLEMENTATION_AUTHORIZATION",
+    "scopeAuthorizedNow": [
+      "WP-A0_BASELINE_FREEZE_AND_REPOSITORY_HYGIENE"
+    ],
+    "nextStepRequiresNewHumanAuthorization": true,
+    "cryptographicHumanSignatureClaimed": false
+  },
+  "sourceCandidate": {
+    "release": "0.14.0-rc.3",
+    "pullRequest": 28,
+    "branch": "safor/audit-remediation-0.14.0-rc.3",
+    "baseBranch": "main",
+    "baseCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
+    "headCommit": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "headTree": "d02ae0191c2ea0175b32943ecc64660a97bcdee4",
+    "standardValidationRun": 39119507945,
+    "pullRequestValidationRun": 39119616040,
+    "automatedValidationState": "PASS",
+    "mergeStateAtFreeze": "OPEN_MERGEABLE_NOT_MERGED",
+    "currentDisposition": "FROZEN_AS_DRAFT_FOR_REVIEW_REMEDIATION"
+  },
+  "remediationBranch": {
+    "branch": "safor/review-remediation-0.14.0-rc.4",
+    "createdFromExactCommit": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "historyRewriteForbidden": true,
+    "forcePushForbidden": true,
+    "publishedFrameworkJsonManualEditingForbidden": true,
+    "canonicalSourcesAndBuildersOnly": true
+  },
+  "reviewFindings": [
+    {
+      "findingId": "RC4-REVIEW-001",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovW",
+      "sourceCommentDatabaseId": 4306690303,
+      "path": "v0.14.0/conformance.json",
+      "summary": "Supersede contradictory legacy conformance assertions instead of marking them ACTIVE.",
+      "plannedWorkPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "conformanceBlobSha": "7b2922b6d36926eb2f09269865c70a80a919bc66",
+        "validatorCommit": "29ab04f68689a702efe789243d4a947ac5d37d58",
+        "regressionTestCommit": "ba05f3e54a731c0d26f966dc7b7d03fcc0f6c033",
+        "focusedValidationRun": 39121653512,
+        "focusedValidationJob": 117658303914,
+        "result": "PASS"
+      }
+    },
+    {
+      "findingId": "RC4-REVIEW-002",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovZ",
+      "sourceCommentDatabaseId": 4306690309,
+      "path": "v0.14.0/SAFOR-MASTER.json",
+      "summary": "Remove unconditional remote-memory instructions and discriminate initialization by workspace type.",
+      "plannedWorkPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "masterCommit": "15362f8bf41af1482070df956258b8769eee8c52",
+        "initializationCommit": "c2fd93b1d1eb48a032030eef43366e0343fea950",
+        "interactionCommit": "2496f2ec26799524ff766e5c3c7d85bbde57380b",
+        "validatorCommit": "eec1c084765d364063b7a3f860d7b1302a189f33",
+        "regressionTestCommit": "4229dac66a7f50c866e740225882f578abcd96c7",
+        "focusedWorkflowCommit": "f592d29f518fed242234dc2d7a7a03db4217c9d0",
+        "focusedValidationRun": 39122125892,
+        "result": "PASS"
+      }
+    },
+    {
+      "findingId": "RC4-REVIEW-003",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovb",
+      "sourceCommentDatabaseId": 4306690312,
+      "path": "v0.14.0/SAFOR-MASTER.json",
+      "summary": "Align executable HUMAN communication instructions with notice-versus-interactive menu semantics.",
+      "plannedWorkPackage": "WP-A3_HUMAN_RESPONSE_CLASSIFICATION",
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "implementationCommit": "64a27d915a1dd8b8764ba64a2610ad6cf2cd08c6",
+        "focusedValidationRun": 39123612721,
+        "standardValidationRun": 39123612702,
+        "focusedValidationResult": "PASS",
+        "standardValidationResult": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION"
+      }
+    },
+    {
+      "findingId": "RC4-REVIEW-004",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovf",
+      "sourceCommentDatabaseId": 4306690317,
+      "path": "runtime/go_evidence.py",
+      "summary": "Validate the complete proposed claim state and its bindings against provider readback before confirming authority.",
+      "plannedWorkPackage": "WP-A4_GO_CLAIM_STATE_INTEGRITY",
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "runtimeCommit": "d3c19ef270d15e3e358784865651577d786c02d0",
+        "activationModelCommit": "6fc117643bf3ca765fec984ba2b6fede4b66d442",
+        "githubProviderCommit": "7d2e0283ccce13e4e04f396a664d6254d6ece3f0",
+        "gitlabProviderCommit": "a6ae5109ac09feb98f0a74a3d6d73c582bec0e3e",
+        "regressionUpdateCommit": "8915c382b2ca981896459c4c30d04b98f9830c09",
+        "negativeTestCommit": "cb47522bafbe4b98560405822e92224b573717bf",
+        "validatorCommit": "e7e7e66b3c5b4d08e4b6badea7b0d8df1f600ef6",
+        "conformanceCommit": "419a246969c898274fae20a9ae049877422d180c",
+        "focusedValidationRun": 39123909160,
+        "standardValidationRun": 39123909101,
+        "focusedValidationResult": "PASS",
+        "standardValidationResult": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION"
+      }
+    },
+    {
+      "findingId": "RC4-REVIEW-005",
+      "severity": "P2",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovi",
+      "sourceCommentDatabaseId": 4306690322,
+      "path": "v0.14.0/schemas/agent-chat-output.schema.json",
+      "summary": "Make detailsRef and persistence failure mutually exclusive for BLOCKED outputs.",
+      "plannedWorkPackage": "WP-A5_PERSISTENCE_FALLBACK_XOR",
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "schemaCommit": "b9ac25dc8d1005c49d518261115c401d6692a492",
+        "communicationModelCommit": "e7b9130af2119c3d9d69deb19eb87de278d8429b",
+        "runtimeCommit": "2320f62d89d817b964f72495930cc9d260e18cd3",
+        "negativeTestCommit": "ec64edc05dbc9651fa6d861c988967e9f7a45cf5",
+        "validatorCommit": "94d3b0147906216451596c168c2b6049456eaa53",
+        "conformanceCommit": "ec2f102b74ab345b10fd99ba559fd5109f887b3f",
+        "focusedWorkflowCommit": "f75bd9fcae099c5090cb723c94d40c2352e3b0c0",
+        "focusedValidationRun": 39124416576,
+        "focusedValidationJob": 117666434792,
+        "focusedValidationResult": "PASS",
+        "standardValidationState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION"
+      }
+    }
+  ],
+  "additionalKnownDrift": [
+    {
+      "id": "RC4-DRIFT-001",
+      "summary": "Requirements traceability still identifies releaseTarget 0.14.0-rc.2 on the rc.3 candidate.",
+      "plannedWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_SYNC",
+      "status": "COMPLETED_SOURCE_VALIDATED"
+    },
+    {
+      "id": "RC4-DRIFT-002",
+      "summary": "Product readiness and release manifest must be checked for default-package and migration-status consistency.",
+      "plannedWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_SYNC",
+      "status": "COMPLETED_SOURCE_VALIDATED"
+    }
+  ],
+  "repositoryHygiene": {
+    "unexpectedBranch": "noop",
+    "comparedToCommit": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "comparisonResult": "IDENTICAL",
+    "uniqueCommits": 0,
+    "deletionStatus": "PENDING_SAFE_REF_DELETE_CAPABILITY",
+    "safetyDecision": "DO_NOT_FORCE_MOVE_OR_REPURPOSE_THE_BRANCH"
+  },
+  "explicitNonGoalsUntilLaterHumanGates": [
+    "MERGE_TO_MAIN",
+    "MIGRATE_SAFOMWEBSITE",
+    "MUTATE_SAFOR_MEMORY_REFERENCE_PROJECT",
+    "RUN_FRESH_CHAT_REAL_GIT_E2E",
+    "CLAIM_CROSS_HOST_ACCEPTANCE",
+    "CLAIM_GENERAL_AVAILABILITY",
+    "CLAIM_COMMERCIAL_PRODUCTION_APPROVAL"
+  ],
+  "readbackEvidence": {
+    "initialBaselineCommit": "cc1ea196dde40d02997936d14ce3b3c34e72a71b",
+    "initialBaselineTree": "eccfdd489790c4d4bb1cf4d62a9a959cb55f9997",
+    "baselineFileBlobSha": "e53a668f7baa3ddbe095e8c4544903328f4bca5f",
+    "branchParentVerified": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "reviewThreadCount": 5,
+    "allReviewThreadsOpenAtFreeze": true,
+    "pullRequest28Draft": true,
+    "noopBranchIdenticalToSourceCandidate": true
+  },
+  "stepResult": {
+    "workPackage": "WP-A7_RC4_BUILD_AND_INDEPENDENT_REVIEW_PREPARATION",
+    "state": "COMPLETED",
+    "validation": "MATERIALIZED_FULL_SUITE_AND_STANDARD_CI_PASS",
+    "nextWorkPackage": "INDEPENDENT_REVIEW_EXACT_RC4_HEAD",
+    "nextWorkPackageAuthorized": false
+  },
+  "releaseFactsRemediation": {
+    "status": "COMPLETED_SOURCE_VALIDATED",
+    "targetVersion": "0.14.0-rc.4",
+    "releaseFactsRef": "RELEASE-FACTS.json",
+    "evidence": {
+      "versionCommit": "35e279ddb49c1e794d3d101bb387c1589cc18fec",
+      "releaseFactsCommit": "60cdc36e298797664b58b037fa54c7a6df025b1e",
+      "manifestCommit": "734dde86ea42ec617282238b1c82813ab2368b06",
+      "traceabilityCommit": "6f425ca4b882f4764781b7bc13e8dc88a638d8aa",
+      "readinessCommit": "9b9234f8a52448f12fc7494790b41b17cca9c358",
+      "releaseTestCommit": "90ea561957839de99946c7b7be372004027c6041",
+      "releaseFactsValidatorCommit": "2c85d5e9a4e03f4da42ff90a011d30c2c3c54d2c",
+      "releaseFactsTestCommit": "5b6056648cf6f6e0d05e55826d00b2baf53d3782",
+      "traceabilityValidatorCommit": "4dd32dccba6b795150b6ade48cf118b44799ab2d",
+      "auditValidatorCommit": "623a6a0b2265395a6c6535a076bbfa2b782ade39",
+      "focusedWorkflowCommit": "033fd8fc49140c5abd205168b3b124f222aabf89",
+      "focusedValidationRun": 39125182998,
+      "focusedValidationJob": 117668691615,
+      "focusedValidationResult": "PASS",
+      "standardValidationRun": 39125183005,
+      "standardValidationResult": "EXPECTED_FAILURE_UNTIL_WP_A7_MATERIALIZATION"
+    }
+  },
+  "wpA7": {
+    "status": "COMPLETED_MATERIALIZED_CI_GREEN_REVIEW_PREPARED",
+    "targetVersion": "0.14.0-rc.4",
+    "materializationWorkflow": {
+      "runId": 39125871541,
+      "result": "SUCCESS",
+      "sourceHead": "e443b1d0083c4454adb5c8ed660d593e0fa7fe5d",
+      "materializationCommit": "ddda500",
+      "testCount": 265,
+      "testsResult": "PASS",
+      "checksumCount": 7,
+      "checksumsResult": "PASS"
+    },
+    "postMaterializationHygiene": {
+      "supersededFrameworkRemoved": "SAFOR-FRAMEWORK-v0.14.0-rc.3.json",
+      "commit": "fa0fcd5b19b2689fd988b279e83d9ae66d896c10",
+      "standardValidationRun": 39125945182,
+      "standardValidationResult": "SUCCESS"
+    },
+    "releaseArtifacts": [
+      "SAFOR-FRAMEWORK.json",
+      "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
+      "SAFOR-FRAMEWORK-WEBSITE.json",
+      "SAFOR-FRAMEWORK-SAAS.json",
+      "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "SAFOR-TEST-ACCESS-SAAS.json",
+      "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "RELEASE-EVIDENCE-0.14.0-rc.4.json",
+      "RELEASE-NOTES-0.14.0-rc.4.md",
+      "SHA256SUMS-0.14.0-rc.4.txt"
+    ],
+    "remainingEvidenceBoundary": [
+      "INDEPENDENT_REVIEW_OF_EXACT_HEAD_REQUIRED",
+      "REAL_GIT_E2E_NOT_VERIFIED",
+      "CROSS_HOST_NOT_VERIFIED",
+      "REFERENCE_PROJECT_RC4_MIGRATION_NOT_STARTED",
+      "COGNITIVE_LOAD_EMPIRICAL_NOT_VERIFIED",
+      "GA_NOT_AUTHORIZED"
+    ]
+  }
+}

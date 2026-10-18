@@ -335,7 +335,7 @@
     "optionalReferenceRuntimeDoesNotBlockInitialization": true
   },
   "agentBootstrapContract": {
-    "modelRef": "agent-bootstrap-model.json",
+    "modelRef": "agent-activation-model.json",
     "masterPreparesIdentityAndPrompt": true,
     "humanInsertsPromptOnce": true,
     "futureActivation": "HUMAN_GO_ONLY",
@@ -354,5 +354,45 @@
     "idempotentMaterializationRequired": true,
     "duplicateActiveAuthorityForbidden": true,
     "onUnknownExternalEffect": "RECONCILE_REQUIRED"
+  },
+  "creationTypeVocabularyRef": "creation-type-vocabulary.json",
+  "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy",
+  "workspaceBranchContract": {
+    "discriminator": "PROJECT_WORKSPACE_TYPE",
+    "mutuallyExclusive": true,
+    "commonPreWorkspaceSteps": [
+      "INIT-00",
+      "INIT-00A",
+      "INIT-01",
+      "INIT-02",
+      "INIT-03",
+      "INIT-04",
+      "INIT-05",
+      "INIT-06"
+    ],
+    "REMOTE_GIT": {
+      "sequence": [
+        "INIT-07R",
+        "INIT-08R",
+        "INIT-09R",
+        "INIT-10R",
+        "INIT-11"
+      ],
+      "controlWorkspace": "{selectedOwner}/safor-memory",
+      "remoteMemoryRequired": true,
+      "localControlRootRequired": false
+    },
+    "LOCAL_GIT": {
+      "sequence": [
+        "INIT-07L",
+        "INIT-08L",
+        "INIT-09L",
+        "INIT-11"
+      ],
+      "controlWorkspace": ".safor/",
+      "remoteMemoryRequired": false,
+      "localControlRootRequired": true
+    },
+    "rule": "After PROJECT_WORKSPACE_TYPE is selected, execute exactly one branch. Requirements from the other branch are non-applicable and must not block initialization."
   }
 }

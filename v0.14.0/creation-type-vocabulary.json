@@ -1,0 +1,37 @@
+{
+  "format": "SAFOR_CREATION_TYPE_VOCABULARY",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-CREATION-TYPES-0.14",
+  "authority": "CANONICAL_FOR_NEW_V014_PROJECTS",
+  "activeCreationTypes": [
+    "WEBSITE",
+    "SOFTWARE_SAAS",
+    "BOOK"
+  ],
+  "rules": [
+    "Every new v0.14 project descriptor uses exactly one active Creation Type.",
+    "Domain Framework profiles, project schemas, package selection and Factory/Operating Model compatibility use the same active vocabulary.",
+    "Legacy Creation Types are never silently rewritten."
+  ],
+  "legacyCreationTypes": {
+    "SOFTWARE_WEBSITE": {
+      "status": "LEGACY_ONLY",
+      "migrationMode": "EXPLICIT_CONTEXTUAL_MIGRATION",
+      "automaticReplacementForbidden": true,
+      "decisionRules": [
+        {
+          "when": "BOUND_FACTORY_FAMILY == safor.factory.website",
+          "targetCreationType": "WEBSITE"
+        },
+        {
+          "when": "BOUND_FACTORY_FAMILY == safor.factory.saas",
+          "targetCreationType": "SOFTWARE_SAAS"
+        },
+        {
+          "when": "DOMAIN_CONTEXT_OR_FACTORY_BINDING_AMBIGUOUS",
+          "outcome": "MIGRATION_DECISION_REQUIRED"
+        }
+      ]
+    }
+  }
+}

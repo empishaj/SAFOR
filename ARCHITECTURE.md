@@ -226,7 +226,7 @@ The public Framework does not embed paid Factory or Operating Model model conten
 
 ### Free Website starter
 
-`SOFTWARE_WEBSITE` is `FREE_PUBLIC`. The canonical package catalog points to the public Software Delivery Factory and SaaS Engineering Operating Model. SAFOR may resolve them from public SAFOR Git only after pinning an immutable revision/blob.
+`WEBSITE` is `FREE_PUBLIC`. The canonical package catalog points to the public Software Delivery Factory and SaaS Engineering Operating Model. SAFOR may resolve them from public SAFOR Git only after pinning an immutable revision/blob.
 
 ### Commercial packages
 

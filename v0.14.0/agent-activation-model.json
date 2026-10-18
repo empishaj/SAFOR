@@ -148,6 +148,34 @@
     ],
     "singleUseEnforced": true,
     "providerCompareAndSwapRequired": true,
-    "onConflict": "RECONCILE_REQUIRED"
+    "onConflict": "RECONCILE_REQUIRED",
+    "authoritativeSequence": [
+      "READ_PINNED_JOB_STATE",
+      "VALIDATE_GO_EVIDENCE",
+      "BUILD_EXACT_PROPOSED_CLAIM_STATE",
+      "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_STATE",
+      "CALCULATE_CANONICAL_PROPOSED_STATE_DIGEST",
+      "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
+      "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+      "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
+      "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE"
+    ],
+    "inMemoryConsumptionAuthoritative": false,
+    "claimSuccessRequiresProviderReadback": true,
+    "casFailureOutcome": "RECONCILE_REQUIRED",
+    "activationConsumptionAuthority": "CAS_COMMITTED_JOB_STATE_VERIFIED_BY_PROVIDER_READBACK",
+    "claimSuccessRequires": [
+      "CAS_SUCCEEDED",
+      "FULL_COMMITTED_STATE_READ_BACK",
+      "READBACK_STATE_EQUALS_PROPOSED_STATE",
+      "CANONICAL_STATE_DIGEST_MATCH",
+      "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+      "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
+      "READBACK_REF_PRESENT",
+      "READBACK_BLOB_IDENTITY_PRESENT"
+    ],
+    "persistActivationConsumptionInsideCasState": true,
+    "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
+    "proposedStateIsNonAuthoritativeUntilReadback": true
   }
 }

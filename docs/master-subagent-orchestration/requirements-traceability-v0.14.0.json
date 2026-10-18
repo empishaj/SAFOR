@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_REQUIREMENTS_TRACEABILITY",
   "schemaVersion": "0.14.0",
-  "releaseTarget": "0.14.0-rc.2",
+  "releaseTarget": "0.14.0-rc.4",
   "source": {
     "document": "HUMAN NOTICE – SAFOR: Master–Subagent-Orchestrierung über Git",
     "date": "2026-10-17",
@@ -1603,7 +1603,7 @@
       ]
     }
   ],
-  "status": "APPROVED_FOR_IMPLEMENTATION_BY_CURRENT_HUMAN_REQUEST",
+  "status": "RC4_SOURCE_REMEDIATION_COMPLETE_RELEASE_MATERIALIZATION_PENDING",
   "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
   "schemaRef": "v0.14.0/schemas/requirements-traceability.schema.json",
   "summary": {
@@ -1619,9 +1619,20 @@
     "bundlePass": 33
   },
   "ciEvidence": {
-    "repository": "empishaj/SAFOR",
-    "workflowRunId": "39113701629",
-    "runAttempt": "1",
-    "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_HEAD"
+    "priorMaterializedRelease": {
+      "releaseTarget": "0.14.0-rc.2",
+      "repository": "empishaj/SAFOR",
+      "workflowRunId": "39113701629",
+      "runAttempt": "1",
+      "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_PRIOR_MATERIALIZED_HEAD"
+    },
+    "currentCandidate": {
+      "releaseTarget": "0.14.0-rc.4",
+      "repository": "empishaj/SAFOR",
+      "workflowRunId": "39125871541",
+      "runAttempt": "1",
+      "sourceCommitBeforeMaterialization": "e443b1d0083c4454adb5c8ed660d593e0fa7fe5d",
+      "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_WORKTREE"
+    }
   }
 }

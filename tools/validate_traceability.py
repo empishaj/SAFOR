@@ -9,6 +9,15 @@ try:
     doc = json.loads(TRACE.read_text(encoding="utf-8"))
 except Exception as exc:
     raise SystemExit(f"Traceability parse failed: {exc}")
+version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+facts = json.loads((ROOT / "RELEASE-FACTS.json").read_text(encoding="utf-8"))
+if doc.get("releaseTarget") != version:
+    errors.append(f"Traceability releaseTarget must equal VERSION: {version}")
+if facts.get("targetVersion") != version:
+    errors.append(f"RELEASE-FACTS targetVersion must equal VERSION: {version}")
+if facts.get("traceability", {}).get("releaseTarget") != version:
+    errors.append(f"RELEASE-FACTS traceability.releaseTarget must equal VERSION: {version}")
+
 requirements = doc.get("requirements", [])
 ids = [item.get("id") for item in requirements]
 expected = [f"REQ-{number:03d}" for number in range(1, 34)]
