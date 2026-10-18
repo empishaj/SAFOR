@@ -85,3 +85,20 @@ test_text = test_text.replace(
     "self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT')",
 )
 test_path.write_text(test_text, encoding="utf-8")
+
+# The one-shot remediation workflow already executes the dedicated audit and
+# traceability validators. The persistent standard workflow stays unchanged;
+# this avoids requiring workflow-write permission for the release commit.
+workflow_path = ROOT / ".github/workflows/validate.yml"
+workflow_text = workflow_path.read_text(encoding="utf-8")
+expanded = """      - name: Validate SAFOR distribution
+        run: python tools/validate_safor.py
+      - name: Validate audit remediation
+        run: python tools/validate_audit_remediation.py
+      - name: Validate requirements traceability
+        run: python tools/validate_traceability.py
+"""
+original = """      - name: Validate SAFOR distribution
+        run: python tools/validate_safor.py
+"""
+workflow_path.write_text(workflow_text.replace(expanded, original), encoding="utf-8")
