@@ -2,7 +2,7 @@
   "format": "SAFOR_REVIEW_REMEDIATION_BASELINE",
   "schemaVersion": "1.0",
   "targetRelease": "0.14.0-rc.4",
-  "createdAt": "2026-10-18T00:00:00+02:00",
+  "createdAt": "2026-10-18T12:55:02+02:00",
   "repository": "empishaj/SAFOR",
   "authorization": {
     "source": "DIRECT_HUMAN_INPUT_IN_CURRENT_MASTER_CHAT",
@@ -24,7 +24,8 @@
     "standardValidationRun": 39119507945,
     "pullRequestValidationRun": 39119616040,
     "automatedValidationState": "PASS",
-    "mergeStateAtFreeze": "OPEN_MERGEABLE_NOT_MERGED"
+    "mergeStateAtFreeze": "OPEN_MERGEABLE_NOT_MERGED",
+    "currentDisposition": "FROZEN_AS_DRAFT_FOR_REVIEW_REMEDIATION"
   },
   "remediationBranch": {
     "branch": "safor/review-remediation-0.14.0-rc.4",
@@ -117,9 +118,19 @@
     "CLAIM_GENERAL_AVAILABILITY",
     "CLAIM_COMMERCIAL_PRODUCTION_APPROVAL"
   ],
+  "readbackEvidence": {
+    "initialBaselineCommit": "cc1ea196dde40d02997936d14ce3b3c34e72a71b",
+    "initialBaselineTree": "eccfdd489790c4d4bb1cf4d62a9a959cb55f9997",
+    "baselineFileBlobSha": "e53a668f7baa3ddbe095e8c4544903328f4bca5f",
+    "branchParentVerified": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "reviewThreadCount": 5,
+    "allReviewThreadsOpenAtFreeze": true,
+    "pullRequest28Draft": true,
+    "noopBranchIdenticalToSourceCandidate": true
+  },
   "stepResult": {
     "workPackage": "WP-A0_BASELINE_FREEZE_AND_REPOSITORY_HYGIENE",
-    "state": "COMPLETED_PENDING_READBACK",
+    "state": "COMPLETED",
     "nextWorkPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
     "nextWorkPackageAuthorized": false
   }
