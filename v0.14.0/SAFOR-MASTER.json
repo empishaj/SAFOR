@@ -581,6 +581,7 @@
           "K08",
           "K09",
           "K10",
+          "K10A",
           "K11"
         ]
       },
@@ -772,8 +773,10 @@
       {
         "id": "K10",
         "operation": "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
-        "purpose": "Persist immutable package pins, access evidence and workspace binding; entitlement never changes organizational authority.",
-        "domainNeutral": true
+        "purpose": "Build and persist a verified non-authoritative package/workspace binding proposal with immutable pins and access evidence. The proposal does not replace an active binding until K10A is satisfied or not required and K11 materializes the approved setup.",
+        "domainNeutral": true,
+        "bindingAuthority": "PROPOSAL_ONLY_UNTIL_K10A_SATISFIED_OR_NOT_REQUIRED_AND_K11",
+        "activeBindingMutationAllowed": false
       },
       {
         "id": "K11",
@@ -791,7 +794,13 @@
           "technicalDetailExposure": "SUMMARY",
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
-        }
+        },
+        "preconditions": [
+          "K10_BINDING_PROPOSAL_VALID",
+          "K10A_APPROVED_OR_NOT_REQUIRED_OR_REUSED",
+          "SETUP_APPROVAL_ACTIVE"
+        ],
+        "bindingMaterializationAuthority": "FIRST_STEP_ALLOWED_TO_ACTIVATE_THE_K10_PROPOSED_BINDING"
       },
       {
         "id": "K10A",
@@ -800,7 +809,7 @@
         "domainNeutral": true,
         "humanDecision": "PACKAGE_BINDING_APPROVAL",
         "modelRef": "human-decision-gate-model.json",
-        "executeWhen": "K10 detected a non-standard, changed or conflicting binding that cannot be safely derived/reused.",
+        "executeWhen": "K10 produced a compatible and authorized binding proposal that materially differs from the approved creation-profile defaults or existing pinned binding and no reusable prior PACKAGE_BINDING_APPROVAL covers the changed inputs.",
         "humanInteractionContract": {
           "gateRef": "human-decision-gate-model.json",
           "phase": "BOOTSTRAP",
@@ -810,7 +819,19 @@
           "technicalDetailExposure": "SUMMARY",
           "deriveBeforeAsk": true,
           "reuseUnchangedDecision": true
-        }
+        },
+        "skipWhen": [
+          "PROPOSED_BINDING_EQUALS_APPROVED_CREATION_PROFILE_DEFAULTS_WITH_NO_MATERIAL_CHANGE",
+          "PROPOSED_BINDING_EQUALS_EXISTING_APPROVED_PINNED_BINDING_AND_PRIOR_DECISION_IS_REUSABLE"
+        ],
+        "blockBeforeAskWhen": [
+          "PACKAGE_ACCESS_OR_INTEGRITY_INVALID",
+          "DOMAIN_OR_PACKAGE_FAMILY_INCOMPATIBLE",
+          "COUNTERPART_REQUIREMENTS_UNSATISFIED"
+        ],
+        "onApproved": "AUTHORIZE_K11_TO_MATERIALIZE_PROPOSED_BINDING",
+        "onDenied": "STOP_WITHOUT_CHANGING_LAST_VALID_BINDING",
+        "activeBindingMutationAllowed": false
       },
       {
         "id": "R01",
@@ -1208,7 +1229,42 @@
           "WORKER_TARGETS_MASTER_CONTROL_ROOT"
         ]
       }
-    }
+    },
+    "conditionalActionRoutes": [
+      {
+        "id": "BOOTSTRAP-K10A-PACKAGE-BINDING",
+        "phase": "BOOTSTRAP",
+        "predecessor": "K10",
+        "actionId": "K10A",
+        "successor": "K11",
+        "evaluationOrder": [
+          "VERIFY_K10_PROPOSAL_ACCESS_AND_COMPATIBILITY",
+          "COMPARE_WITH_APPROVED_CREATION_PROFILE_DEFAULTS",
+          "COMPARE_WITH_EXISTING_PINNED_BINDING_IF_ANY",
+          "ATTEMPT_REUSE_OF_UNCHANGED_VALID_PACKAGE_BINDING_DECISION",
+          "CLASSIFY_K10A_ROUTE"
+        ],
+        "routes": {
+          "SKIP_DEFAULT_BINDING": {
+            "when": "Proposed Factory and Operating Model equal the approved creation-profile defaults and no material binding/risk/authority change exists.",
+            "effect": "SKIP_K10A_AND_CONTINUE_TO_K11"
+          },
+          "REUSE_UNCHANGED_BINDING_DECISION": {
+            "when": "The proposed binding equals an existing approved pinned binding and the prior PACKAGE_BINDING_APPROVAL remains reusable under the HUMAN decision-gate policy.",
+            "effect": "REUSE_EXISTING_DECISION_AND_CONTINUE_TO_K11"
+          },
+          "REQUIRE_HUMAN_APPROVAL": {
+            "when": "The proposed binding is compatible and authorized but materially differs from the approved creation-profile defaults or existing pinned binding and no reusable approval covers the changed inputs.",
+            "effect": "EXECUTE_K10A_BEFORE_K11"
+          },
+          "BLOCK_INVALID_BINDING": {
+            "when": "Package access, integrity, domain/family compatibility or counterpart requirements fail.",
+            "effect": "BLOCK_BEFORE_K10A_AND_PRESERVE_LAST_VALID_BINDING"
+          }
+        },
+        "invariant": "K10A is reachable but never unconditional. Invalid bindings are not presented as approvable choices."
+      }
+    ]
   },
   "invariants": [
     {
@@ -2459,6 +2515,11 @@
       "id": "INV-RC5-003",
       "status": "ACTIVE",
       "rule": "MASTER dispatches a subagent job by writing the immutable Agent Job JSON to agents/{agentId}/inbox/{jobId}.json and updating agents/{agentId}/inbox/index.json; no job prompt must be transported through chat."
+    },
+    {
+      "id": "INV-RC5-004",
+      "status": "ACTIVE",
+      "rule": "K10A is an explicit reachable optional BOOTSTRAP step between K10 and K11. Default or unchanged approved bindings skip/reuse without a new HUMAN question; materially changed compatible bindings require PACKAGE_BINDING_APPROVAL; invalid bindings block before K10A; K10 alone never activates a new binding."
     }
   ],
   "evidencePolicy": {
