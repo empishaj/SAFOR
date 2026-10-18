@@ -24,24 +24,20 @@ class UserOnboardingTests(unittest.TestCase):
                 self.assertTrue((ROOT / path).is_file(), path)
 
     def test_german_guide_states_exact_upload_sets(self):
-        self.assertIn("SAFOR-FRAMEWORK-WEBSITE.json` | 1", self.start_here)
-        self.assertIn(
-            "SAFOR-FRAMEWORK-SAAS.json` **und** `SAFOR-TEST-ACCESS-SAAS.json` | 2",
-            self.start_here,
-        )
-        self.assertIn(
-            "SAFOR-FRAMEWORK-BOOK-CREATION.json` **und** `SAFOR-TEST-ACCESS-BOOK-CREATION.json` | 2",
-            self.start_here,
-        )
-        self.assertIn("frage mich nicht erneut", self.start_here)
-        self.assertIn("productionAuthorization = false", self.start_here)
+        self.assertIn("SAFOR-FRAMEWORK-WEBSITE.json", self.start_here)
+        self.assertIn("SAFOR-FRAMEWORK-SAAS.json", self.start_here)
+        self.assertIn("SAFOR-TEST-ACCESS-SAAS.json", self.start_here)
+        self.assertIn("SAFOR-FRAMEWORK-BOOK-CREATION.json", self.start_here)
+        self.assertIn("SAFOR-TEST-ACCESS-BOOK-CREATION.json", self.start_here)
+        self.assertIn("frage mich nicht noch einmal", self.start_here)
+        self.assertIn("keine Produktionslizenz", self.start_here)
 
-    def test_german_guide_explains_declarative_chat_and_optional_reference_runtime(self):
-        self.assertIn("führt den Python-Referenzcode", self.start_here)
-        self.assertIn("nicht automatisch", self.start_here)
-        self.assertIn("nicht erforderlich", self.start_here)
-        self.assertIn("optionale Referenz-", self.start_here)
-        self.assertNotIn("Host-/Runtime-Integration Pflicht", self.start_here)
+    def test_german_guide_keeps_runtime_detail_out_of_nontechnical_path(self):
+        self.assertNotIn("Python-Referenzcode", self.start_here)
+        self.assertNotIn("providerReadback", self.start_here)
+        self.assertNotIn("schemaVersion", self.start_here)
+        self.assertIn("kompatiblen Chat", self.readme)
+        self.assertIn("Optional Python reference implementations", self.readme)
 
     def test_quickstart_separates_end_user_and_generic_engineering_routes(self):
         self.assertIn("## Recommended end-user start", self.quickstart)
