@@ -130,6 +130,31 @@ def validate():
     if policy.get("REMOTE_GIT", {}).get("target") != "{selectedOwner}/safor-memory":
         errors.append("REMOTE_GIT memory target mismatch")
 
+    initialization = load("v0.14.0/initialization-model.json")
+    branch_contract = initialization.get("workspaceBranchContract", {})
+    if branch_contract.get("discriminator") != "PROJECT_WORKSPACE_TYPE" or branch_contract.get("mutuallyExclusive") is not True:
+        errors.append("initialization workspace branches are not mutually exclusive")
+    if branch_contract.get("REMOTE_GIT", {}).get("remoteMemoryRequired") is not True:
+        errors.append("REMOTE_GIT initialization does not require remote memory")
+    if branch_contract.get("LOCAL_GIT", {}).get("remoteMemoryRequired") is not False:
+        errors.append("LOCAL_GIT initialization still requires remote memory")
+    if branch_contract.get("LOCAL_GIT", {}).get("controlWorkspace") != ".safor/":
+        errors.append("LOCAL_GIT control workspace mismatch")
+    required_behaviors = kernel.get("humanCommunication", {}).get("requiredBehavior", [])
+    for behavior in required_behaviors:
+        lower = behavior.lower()
+        if "safor-memory" in lower and "remote_git" not in lower and "local_git" not in lower:
+            errors.append(f"unscoped safor-memory HUMAN instruction remains: {behavior}")
+    interaction = load("v0.14.0/interaction-model.json")
+    init_exp = interaction.get("initializationExperience", {})
+    if "Never surface REMOTE_GIT blockers in LOCAL_GIT" not in init_exp.get("workspaceBranchRule", ""):
+        errors.append("interaction model lacks workspace-specific rendering rule")
+    message_patterns = interaction.get("humanCommunication", {}).get("messagePatterns", {})
+    if message_patterns.get("safMemoryStop", {}).get("appliesWhen") != "PROJECT_WORKSPACE_TYPE == REMOTE_GIT":
+        errors.append("legacy safMemoryStop pattern is not scoped to REMOTE_GIT")
+    if message_patterns.get("localControlWorkspaceStop", {}).get("appliesWhen") != "PROJECT_WORKSPACE_TYPE == LOCAL_GIT":
+        errors.append("LOCAL_GIT blocker message pattern missing")
+
     communication = load("v0.14.0/agent-communication-model.json")
     if communication.get("persistenceFailureFallback", {}).get("detailsRef", "missing") is not None:
         errors.append("persistence fallback may not invent detailsRef")
