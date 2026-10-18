@@ -44,6 +44,7 @@ _REQUIRED_BOOTSTRAP_FIELDS = {
     "IDENTITY_REF",
     "AGENT_STATE_REF",
     "INBOX_INDEX_REF",
+    "INBOX_INDEX_LOCATION",
     "COMMUNICATION_CONTRACT_REF",
 }
 
@@ -123,8 +124,21 @@ def validate_chat_agent_identity(identity: Mapping[str, Any]) -> None:
     if inbox_binding.get("identityRevision") != identity.get("identityRevision"):
         raise AgentIdentityError("INBOX_BINDING_IDENTITY_REVISION_MISMATCH")
     inbox_ref = _mapping(inbox_binding.get("inboxIndexRef"), "inboxIndexRef")
-    if not str(inbox_ref.get("path", "")).endswith(f"agents/{agent_id}/inbox/index.json"):
-        raise AgentIdentityError("INBOX_BINDING_PATH_INVALID")
+    inbox_location = _mapping(
+        inbox_binding.get("inboxIndexLocation"), "inboxIndexLocation"
+    )
+    expected_suffix = f"agents/{agent_id}/inbox/index.json"
+    if not str(inbox_ref.get("path", "")).endswith(expected_suffix):
+        raise AgentIdentityError("INBOX_BINDING_BOOTSTRAP_PATH_INVALID")
+    if not str(inbox_location.get("path", "")).endswith(expected_suffix):
+        raise AgentIdentityError("INBOX_BINDING_LOCATION_PATH_INVALID")
+    if inbox_location.get("path") != inbox_ref.get("path"):
+        raise AgentIdentityError("INBOX_BOOTSTRAP_AND_LOCATION_PATH_MISMATCH")
+    control_repository = _mapping(identity.get("controlRepository"), "controlRepository")
+    if inbox_location.get("repository") != control_repository.get("repository"):
+        raise AgentIdentityError("INBOX_LOCATION_REPOSITORY_MISMATCH")
+    if inbox_location.get("ref") != control_repository.get("ref"):
+        raise AgentIdentityError("INBOX_LOCATION_REF_MISMATCH")
     if inbox_binding.get("jobPathPattern") != "agents/{agentId}/inbox/{jobId}.json":
         raise AgentIdentityError("INBOX_JOB_PATH_PATTERN_INVALID")
 

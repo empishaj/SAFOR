@@ -1893,7 +1893,7 @@
       "id": "CF-RC5-001",
       "status": "ACTIVE",
       "semanticKey": "AGENT_INBOX_PULL_ACTIVATION",
-      "statement": "After explicit HUMAN GO, an initialized chat agent reads its pinned identity and personal inbox index, selects the next eligible assigned job, and never receives the job through the GO message.",
+      "statement": "After explicit HUMAN GO, an initialized chat agent reads its pinned identity and the current personal inbox index from the stable bound inboxIndexLocation, selects the next eligible assigned job, and never receives the job through the GO message. The immutable inboxIndexRef is bootstrap provenance only.",
       "expected": true
     },
     {
@@ -1915,6 +1915,13 @@
       "status": "ACTIVE",
       "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
       "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-005",
+      "status": "ACTIVE",
+      "semanticKey": "MUTABLE_INBOX_INDEX_STABLE_IDENTITY",
+      "statement": "A persistent Agent Identity separates immutable inbox bootstrap evidence from the mutable personal inbox locator: MASTER may update inbox/index.json for dispatch without changing identityRevision, and agents must never use the bootstrap blob for current job discovery.",
       "expected": true
     }
   ],

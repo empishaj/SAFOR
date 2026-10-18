@@ -51,6 +51,11 @@ class AgentActivationV014Tests(unittest.TestCase):
                     "path": "projects/example/agents/agent-dev-003/inbox/index.json",
                     "blobSha": "inbox123",
                 },
+                "inboxIndexLocation": {
+                    "repository": "example/safor-memory",
+                    "ref": "main",
+                    "path": "projects/example/agents/agent-dev-003/inbox/index.json",
+                },
                 "jobPathPattern": "agents/{agentId}/inbox/{jobId}.json",
                 "agentId": "agent-dev-003",
                 "identityRevision": 2,
@@ -74,6 +79,7 @@ class AgentActivationV014Tests(unittest.TestCase):
                     "IDENTITY_REF",
                     "AGENT_STATE_REF",
                     "INBOX_INDEX_REF",
+                    "INBOX_INDEX_LOCATION",
                     "COMMUNICATION_CONTRACT_REF",
                 ],
                 "onGo": [
@@ -197,6 +203,29 @@ class AgentActivationV014Tests(unittest.TestCase):
         invalid["activationContract"]["automationActivationAllowed"] = True
         with self.assertRaisesRegex(
             AgentIdentityError, "AUTOMATIONACTIVATIONALLOWED_MUST_BE_FALSE"
+        ):
+            validate_chat_agent_identity(invalid)
+
+    def test_inbox_location_is_stable_while_bootstrap_blob_is_provenance(self):
+        validate_chat_agent_identity(self.identity)
+        self.identity["inboxBinding"]["inboxIndexRef"]["blobSha"] = "oldbootstrapblob"
+        validate_chat_agent_identity(self.identity)
+
+    def test_inbox_location_must_match_personal_inbox_path(self):
+        invalid = copy.deepcopy(self.identity)
+        invalid["inboxBinding"]["inboxIndexLocation"]["path"] = (
+            "projects/example/agents/other-agent/inbox/index.json"
+        )
+        with self.assertRaisesRegex(
+            AgentIdentityError, "INBOX_BINDING_LOCATION_PATH_INVALID"
+        ):
+            validate_chat_agent_identity(invalid)
+
+    def test_inbox_location_must_match_control_repository(self):
+        invalid = copy.deepcopy(self.identity)
+        invalid["inboxBinding"]["inboxIndexLocation"]["repository"] = "other/control"
+        with self.assertRaisesRegex(
+            AgentIdentityError, "INBOX_LOCATION_REPOSITORY_MISMATCH"
         ):
             validate_chat_agent_identity(invalid)
 

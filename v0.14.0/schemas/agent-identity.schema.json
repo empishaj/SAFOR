@@ -267,7 +267,7 @@
         },
         "initialBootstrapFields": {
           "type": "array",
-          "minItems": 8,
+          "minItems": 9,
           "uniqueItems": true,
           "items": {
             "enum": [
@@ -278,6 +278,7 @@
               "IDENTITY_REF",
               "AGENT_STATE_REF",
               "INBOX_INDEX_REF",
+              "INBOX_INDEX_LOCATION",
               "COMMUNICATION_CONTRACT_REF"
             ]
           }
@@ -314,13 +315,15 @@
       "additionalProperties": false,
       "required": [
         "inboxIndexRef",
+        "inboxIndexLocation",
         "jobPathPattern",
         "agentId",
         "identityRevision"
       ],
       "properties": {
         "inboxIndexRef": {
-          "$ref": "#/$defs/immutableRef"
+          "$ref": "#/$defs/immutableRef",
+          "description": "Immutable bootstrap evidence for the inbox index observed when this identity was established. It is provenance only and MUST NOT be used to discover later jobs."
         },
         "jobPathPattern": {
           "const": "agents/{agentId}/inbox/{jobId}.json"
@@ -332,8 +335,37 @@
         "identityRevision": {
           "type": "integer",
           "minimum": 1
+        },
+        "inboxIndexLocation": {
+          "$ref": "#/$defs/mutableInboxIndexLocation"
         }
       }
+    },
+    "mutableInboxIndexLocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "ref",
+        "path"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Mutable branch/ref from which the current inbox index is read."
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^projects/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?/agents/[A-Za-z0-9][A-Za-z0-9._:-]{2,127}/inbox/index\\.json$"
+        }
+      },
+      "description": "Stable locator for the current mutable personal inbox index. No blob SHA is pinned because MASTER updates this projection for every dispatch."
     }
   }
 }

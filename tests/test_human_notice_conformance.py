@@ -38,7 +38,10 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertTrue({"agentId", "displayName", "inboxBinding", "activationContract", "communicationContractRef"}.issubset(required))
         inbox_binding = schema["$defs"]["inboxBinding"]
         self.assertIn("inboxIndexRef", inbox_binding["required"])
+        self.assertIn("inboxIndexLocation", inbox_binding["required"])
         self.assertIn("identityRevision", inbox_binding["required"])
+        self.assertIn("mutableInboxIndexLocation", schema["$defs"])
+        self.assertNotIn("blobSha", schema["$defs"]["mutableInboxIndexLocation"]["required"])
         activation = schema["allOf"][0]["then"]["properties"]["activationContract"]["allOf"][0]["properties"]
         self.assertEqual("HUMAN_GO_REQUIRED", activation["activationMode"]["const"])
         self.assertFalse(activation["automationActivationAllowed"]["const"])

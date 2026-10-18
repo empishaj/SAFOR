@@ -302,7 +302,7 @@
       },
       "agentActivation": {
         "sourcePath": "v0.14.0/agent-activation-model.json",
-        "sourceBlobSha": "34eb778cc70372e1afcba0e0b13b3fcb6d8dcd98",
+        "sourceBlobSha": "340ca7a191febbd6d8086ee6be887b45e3dcec5a",
         "selfHealingProfileId": "MRP-AGENTACTIVATION"
       },
       "agentCommunication": {
@@ -317,7 +317,7 @@
       },
       "agentWorkspace": {
         "sourcePath": "v0.14.0/agent-workspace-model.json",
-        "sourceBlobSha": "f29ff4cf34870173eabb73de08827e66664348da",
+        "sourceBlobSha": "c2b92b2d3aeb743585418aa52639029642c26a0e",
         "selfHealingProfileId": "MRP-AGENTWORKSPACE"
       },
       "agentJobContract": {
@@ -482,7 +482,7 @@
       },
       "schemaAgentIdentity": {
         "sourcePath": "v0.14.0/schemas/agent-identity.schema.json",
-        "sourceBlobSha": "99288784141b8048e6b5abddac8331dca802e151",
+        "sourceBlobSha": "2fca92a36616dfce1125b0fbf9c4badfac51622e",
         "selfHealingProfileId": "MRP-SCHEMAAGENTIDENTITY"
       },
       "schemaAgentInboxIndex": {
@@ -507,7 +507,7 @@
       },
       "schemaAgentInitialization": {
         "sourcePath": "v0.14.0/schemas/agent-initialization.schema.json",
-        "sourceBlobSha": "4208c0ce48f728c455634dec9c549e306f90da8a",
+        "sourceBlobSha": "b57a7f69c852705cd01503d1c4108d91512cadc1",
         "selfHealingProfileId": "MRP-SCHEMAAGENTINITIALIZATION"
       },
       "schemaAgentChatOutput": {
@@ -582,7 +582,7 @@
       },
       "templateAgentInitialization": {
         "sourcePath": "v0.14.0/templates/agent-initialization.template.json",
-        "sourceBlobSha": "90f20e319a487e56879dc08ea6f73e281c254df3",
+        "sourceBlobSha": "66d645e30b4f58f858a91fa88a0ee755abac4aee",
         "selfHealingProfileId": "MRP-TEMPLATEAGENTINITIALIZATION"
       },
       "templateAgentJobHuman": {
@@ -692,7 +692,7 @@
       },
       "conformance": {
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "b0cae33b2c1c1b10b25443c850f7617739ddfa61",
+        "sourceBlobSha": "8957b3bf0b857dcca70fd14164185502d9668146",
         "selfHealingProfileId": "MRP-CONFORMANCE"
       },
       "composablePackageModel": {
@@ -5305,7 +5305,7 @@
       "agentActivation": {
         "key": "agentActivation",
         "sourcePath": "v0.14.0/agent-activation-model.json",
-        "sourceBlobSha": "34eb778cc70372e1afcba0e0b13b3fcb6d8dcd98",
+        "sourceBlobSha": "340ca7a191febbd6d8086ee6be887b45e3dcec5a",
         "content": {
           "format": "SAFOR_AGENT_ACTIVATION_MODEL",
           "schemaVersion": "0.14.0",
@@ -5321,6 +5321,8 @@
           "identityInvariants": [
             "A CHAT_AGENT has one stable agentId and a separate HUMAN-readable displayName.",
             "The agent identity is bound to projectId, masterId, controlRepository, workspaceRoot and personal inbox path.",
+            "The immutable inboxIndexRef proves the personal inbox bootstrap binding; it is provenance only and never the source for later job discovery.",
+            "The stable inboxIndexLocation identifies the mutable MASTER-owned personal inbox projection; current jobs are always read from this location with provider readback.",
             "The one-time initialization prompt establishes which pinned identity and personal inbox this chat must use; host session attestation is not required.",
             "The agent identity must never be inferred from job content, display name, repository location or an arbitrary inbox entry.",
             "An inactive identity, stale identityRevision, foreign inbox or foreign job assignment fails closed before claim."
@@ -5337,6 +5339,7 @@
               "IDENTITY_REF",
               "AGENT_STATE_REF",
               "INBOX_INDEX_REF",
+              "INBOX_INDEX_LOCATION",
               "COMMUNICATION_CONTRACT_REF"
             ],
             "validationSteps": [
@@ -5344,9 +5347,11 @@
               "VERIFY_IDENTITY_BLOB",
               "VERIFY_PROJECT_AND_MASTER_BINDING",
               "VERIFY_IDENTITY_STATUS_ACTIVE",
-              "VERIFY_PERSONAL_INBOX_BINDING",
+              "VERIFY_PERSONAL_INBOX_BOOTSTRAP_REF",
+              "VERIFY_PERSONAL_INBOX_LOCATION",
               "READ_AGENT_STATE",
-              "READ_PERSONAL_INBOX_INDEX",
+              "READ_CURRENT_PERSONAL_INBOX_INDEX_FROM_LOCATION",
+              "VERIFY_CURRENT_INBOX_PROJECT_AGENT_AND_IDENTITY_REVISION",
               "CONFIRM_READY_FOR_HUMAN_GO"
             ],
             "jobPromptTransportRequired": false,
@@ -5371,13 +5376,16 @@
             "activationEvidenceAuthority": "DIRECT_HUMAN_GO_BOUND_TO_PINNED_IDENTITY_AND_PERSONAL_INBOX",
             "claimMode": "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
             "stringSubstringEvidenceForbidden": true,
-            "hostSessionAttestationRequired": false
+            "hostSessionAttestationRequired": false,
+            "currentInboxSource": "BOUND_MUTABLE_INBOX_INDEX_LOCATION",
+            "bootstrapInboxBlobMayBecomeStaleAfterDispatch": true,
+            "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true
           },
           "onHumanGo": {
             "allowedReadsInOrder": [
               "PINNED_IDENTITY",
               "AGENT_STATE",
-              "PERSONAL_INBOX_INDEX",
+              "CURRENT_PERSONAL_INBOX_INDEX_AT_BOUND_LOCATION",
               "SELECTED_INBOX_JOB_CONTRACT",
               "SELECTED_MASTER_JOB_STATE",
               "JOB_REFERENCED_INPUTS_ONLY"
@@ -5392,6 +5400,7 @@
               "IDENTITY_ACTIVE",
               "IDENTITY_REVISION_MATCH",
               "PERSONAL_INBOX_PROJECT_AND_AGENT_MATCH",
+              "CURRENT_INBOX_READ_FROM_BOUND_LOCATION",
               "DISCOVERABLE_JOB_AVAILABLE",
               "JOB_AGENT_ASSIGNMENT_MATCH",
               "JOB_IDENTITY_REVISION_MATCH",
@@ -5409,7 +5418,8 @@
               "IDENTITY_REVISION_MISMATCH",
               "CONTROL_REPOSITORY_UNAVAILABLE",
               "PERSONAL_INBOX_PROJECT_OR_AGENT_MISMATCH",
-              "AGENT_CANNOT_PROVE_PINNED_IDENTITY"
+              "AGENT_CANNOT_PROVE_PINNED_IDENTITY",
+              "PERSONAL_INBOX_LOCATION_MISMATCH"
             ],
             "effect": [
               "NO_JOB_CLAIM",
@@ -5694,7 +5704,7 @@
       "agentWorkspace": {
         "key": "agentWorkspace",
         "sourcePath": "v0.14.0/agent-workspace-model.json",
-        "sourceBlobSha": "f29ff4cf34870173eabb73de08827e66664348da",
+        "sourceBlobSha": "c2b92b2d3aeb743585418aa52639029642c26a0e",
         "content": {
           "format": "SAFOR_AGENT_WORKSPACE_MODEL",
           "schemaVersion": "0.14.0",
@@ -5714,7 +5724,9 @@
             "evidenceRoot": "agents/{agentId}/evidence/{jobId}/",
             "auditRoot": "agents/{agentId}/audit/{jobId}/",
             "masterJobState": "master/jobs/{jobId}.json",
-            "masterResponseResolution": "master/response-resolutions/{responseId}.json"
+            "masterResponseResolution": "master/response-resolutions/{responseId}.json",
+            "inboxIndexSemantics": "MUTABLE_MASTER_OWNED_DISCOVERABILITY_PROJECTION_AT_STABLE_LOCATION",
+            "inboxBootstrapRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
           },
           "ownership": {
             "MASTER_ONLY": [
@@ -5741,7 +5753,7 @@
             "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
             "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
             "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
-            "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_PERSONAL_INBOX_INDEX",
+            "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_CURRENT_PERSONAL_INBOX_INDEX_FROM_BOUND_LOCATION",
             "AGENT_SELECTS_NEXT_ELIGIBLE_PERSONAL_INBOX_JOB",
             "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
             "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
@@ -5765,7 +5777,9 @@
             "noSilentJobMutation": true,
             "noFullRepositoryScanInNormalFlow": true,
             "noHostSessionAttestationDependency": true,
-            "identityComesFromPinnedInitializationNotJob": true
+            "identityComesFromPinnedInitializationNotJob": true,
+            "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
+            "identityRemainsStableWhenInboxIndexChanges": true
           },
           "dispatchContract": {
             "sender": "MASTER",
@@ -5776,7 +5790,9 @@
             "activation": "EXPLICIT_HUMAN_GO",
             "jobPromptTransportRequired": false,
             "hostSessionBindingRequired": false,
-            "rule": "A job is dispatched when MASTER writes the immutable job contract and corresponding personal inbox index entry. The agent never waits for a copied job prompt and never scans globally for work."
+            "rule": "A job is dispatched when MASTER writes the immutable job contract and updates the personal inbox index at the stable bound locator. The identity's bootstrap inbox blob is provenance only and may become stale after dispatch; it is never used for current job discovery. The agent never waits for a copied job prompt and never scans globally for work.",
+            "discoverabilityIndexLocationSemantics": "STABLE_REPOSITORY_REF_PATH_LOCATOR_WITH_MUTABLE_CONTENT",
+            "bootstrapIndexRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
           }
         },
         "selfHealingProfileId": "MRP-AGENTWORKSPACE"
@@ -15819,7 +15835,7 @@
       "schemaAgentIdentity": {
         "key": "schemaAgentIdentity",
         "sourcePath": "v0.14.0/schemas/agent-identity.schema.json",
-        "sourceBlobSha": "99288784141b8048e6b5abddac8331dca802e151",
+        "sourceBlobSha": "2fca92a36616dfce1125b0fbf9c4badfac51622e",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-identity:0.14.0",
@@ -16089,7 +16105,7 @@
                 },
                 "initialBootstrapFields": {
                   "type": "array",
-                  "minItems": 8,
+                  "minItems": 9,
                   "uniqueItems": true,
                   "items": {
                     "enum": [
@@ -16100,6 +16116,7 @@
                       "IDENTITY_REF",
                       "AGENT_STATE_REF",
                       "INBOX_INDEX_REF",
+                      "INBOX_INDEX_LOCATION",
                       "COMMUNICATION_CONTRACT_REF"
                     ]
                   }
@@ -16136,13 +16153,15 @@
               "additionalProperties": false,
               "required": [
                 "inboxIndexRef",
+                "inboxIndexLocation",
                 "jobPathPattern",
                 "agentId",
                 "identityRevision"
               ],
               "properties": {
                 "inboxIndexRef": {
-                  "$ref": "#/$defs/immutableRef"
+                  "$ref": "#/$defs/immutableRef",
+                  "description": "Immutable bootstrap evidence for the inbox index observed when this identity was established. It is provenance only and MUST NOT be used to discover later jobs."
                 },
                 "jobPathPattern": {
                   "const": "agents/{agentId}/inbox/{jobId}.json"
@@ -16154,8 +16173,37 @@
                 "identityRevision": {
                   "type": "integer",
                   "minimum": 1
+                },
+                "inboxIndexLocation": {
+                  "$ref": "#/$defs/mutableInboxIndexLocation"
                 }
               }
+            },
+            "mutableInboxIndexLocation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "repository",
+                "ref",
+                "path"
+              ],
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ref": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Mutable branch/ref from which the current inbox index is read."
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1,
+                  "pattern": "^projects/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?/agents/[A-Za-z0-9][A-Za-z0-9._:-]{2,127}/inbox/index\\.json$"
+                }
+              },
+              "description": "Stable locator for the current mutable personal inbox index. No blob SHA is pinned because MASTER updates this projection for every dispatch."
             }
           }
         },
@@ -17929,7 +17977,7 @@
       "schemaAgentInitialization": {
         "key": "schemaAgentInitialization",
         "sourcePath": "v0.14.0/schemas/agent-initialization.schema.json",
-        "sourceBlobSha": "4208c0ce48f728c455634dec9c549e306f90da8a",
+        "sourceBlobSha": "b57a7f69c852705cd01503d1c4108d91512cadc1",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-initialization:0.14.0",
@@ -17946,6 +17994,7 @@
             "identityRef",
             "agentStateRef",
             "inboxIndexRef",
+            "inboxIndexLocation",
             "communicationContractRef",
             "controlRepository",
             "startupProtocol",
@@ -17983,7 +18032,8 @@
               "$ref": "#/$defs/pointer"
             },
             "inboxIndexRef": {
-              "$ref": "#/$defs/pointer"
+              "$ref": "#/$defs/pointer",
+              "description": "Immutable bootstrap snapshot of the inbox index used when the chat was initialized."
             },
             "communicationContractRef": {
               "$ref": "#/$defs/pointer"
@@ -18083,6 +18133,9 @@
             },
             "immutable": {
               "const": true
+            },
+            "inboxIndexLocation": {
+              "$ref": "#/$defs/mutableInboxIndexLocation"
             }
           },
           "$defs": {
@@ -18113,6 +18166,30 @@
                   "minLength": 7
                 }
               }
+            },
+            "mutableInboxIndexLocation": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "repository",
+                "ref",
+                "path"
+              ],
+              "properties": {
+                "repository": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "ref": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "description": "Mutable locator used to fetch the current personal inbox index on every HUMAN GO."
             }
           }
         },
@@ -21397,7 +21474,7 @@
       "templateAgentInitialization": {
         "key": "templateAgentInitialization",
         "sourcePath": "v0.14.0/templates/agent-initialization.template.json",
-        "sourceBlobSha": "90f20e319a487e56879dc08ea6f73e281c254df3",
+        "sourceBlobSha": "66d645e30b4f58f858a91fa88a0ee755abac4aee",
         "content": {
           "format": "SAFOR_AGENT_INITIALIZATION_TEMPLATE",
           "schemaVersion": "0.14.0",
@@ -21412,6 +21489,7 @@
             "IDENTITY_REF",
             "AGENT_STATE_REF",
             "INBOX_INDEX_REF",
+            "INBOX_INDEX_LOCATION",
             "COMMUNICATION_CONTRACT_REF"
           ],
           "renderingRules": {
@@ -21422,16 +21500,18 @@
             "mustRequireProviderReadback": true,
             "mustFailClosedOnIdentityUncertainty": true,
             "hostSessionAttestationRequired": false,
-            "personalInboxIsJobTransport": true
+            "personalInboxIsJobTransport": true,
+            "bootstrapInboxRefIsProvenanceOnly": true,
+            "currentInboxReadUsesMutableLocation": true
           },
           "promptTemplate": [
             "Du bist der persistente SAFOR-Subagent {{DISPLAY_NAME}} mit der technischen ID {{AGENT_ID}} im Projekt {{PROJECT_ID}}.",
-            "Dein Control Repository ist {{CONTROL_REPOSITORY}}. Deine Identität ist {{IDENTITY_REF}} und deine persönliche Job-INBOX ist über {{INBOX_INDEX_REF}} gebunden.",
-            "Lies beim Start ausschließlich deine gepinnte Identität {{IDENTITY_REF}}, deinen Zustand {{AGENT_STATE_REF}}, deinen persönlichen Inbox-Index {{INBOX_INDEX_REF}} und den Kommunikationsvertrag {{COMMUNICATION_CONTRACT_REF}}.",
-            "Validiere Identity Blob, Projekt, MASTER, agentId, identityRevision und dass der Inbox-Index genau zu deiner Identität gehört. Eine Host-Session-ID oder extern attestierte Chat-Binding-ID ist dafür nicht erforderlich.",
-            "Nach erfolgreicher Initialisierung wartest du. MASTER übergibt dir neue Arbeit ausschließlich dadurch, dass er einen unveränderlichen Job in deine persönliche INBOX schreibt und den Inbox-Index aktualisiert.",
+            "Dein Control Repository ist {{CONTROL_REPOSITORY}}. Deine gepinnte Identität ist {{IDENTITY_REF}}. {{INBOX_INDEX_REF}} ist der unveränderliche Bootstrap-Nachweis deiner persönlichen INBOX; aktuelle Jobs liest du immer über {{INBOX_INDEX_LOCATION}}.",
+            "Lies beim ersten Start deine gepinnte Identität {{IDENTITY_REF}}, deinen Zustand {{AGENT_STATE_REF}}, den Bootstrap-INBOX-Nachweis {{INBOX_INDEX_REF}}, den aktuellen persönlichen Inbox-Index über {{INBOX_INDEX_LOCATION}} und den Kommunikationsvertrag {{COMMUNICATION_CONTRACT_REF}}.",
+            "Validiere Identity Blob, Projekt, MASTER, agentId, identityRevision sowie dass Bootstrap-Ref und aktueller Inbox-Locator zu genau deiner persönlichen INBOX gehören. Der aktuelle Inbox-Index ist eine veränderliche MASTER-Projektion; sein Blob muss daher nicht dem Bootstrap-Blob entsprechen.",
+            "Nach erfolgreicher Initialisierung wartest du. MASTER übergibt dir neue Arbeit ausschließlich dadurch, dass er einen unveränderlichen Job in deine persönliche INBOX schreibt und den aktuellen Inbox-Index am gebundenen Locator aktualisiert.",
             "Für jeden Folgejob schreibt der HUMAN in diesem Chat ausschließlich GO. GO ist nur das Startsignal und enthält niemals den Job selbst.",
-            "Nach GO liest du deinen persönlichen Inbox-Index, wählst den nächsten für deine aktive Identity Revision freigegebenen Job, liest dessen autoritativen Jobvertrag und den MASTER-Jobstatus und prüfst Zuweisung, Dispatch Revision, Rolle, Skills, Mandat und tatsächliche Providerrechte.",
+            "Nach GO liest du den aktuellen persönlichen Inbox-Index über {{INBOX_INDEX_LOCATION}}, wählst den nächsten für deine aktive Identity Revision freigegebenen Job, liest dessen autoritativen Jobvertrag und den MASTER-Jobstatus und prüfst Zuweisung, Dispatch Revision, Rolle, Skills, Mandat und tatsächliche Providerrechte.",
             "Erst danach claimst du genau diesen Inbox-Job atomar. Git-Push, Inbox-Erstellung, Polling, Scheduler oder Host-Trigger aktivieren dich nicht.",
             "Lies nur die im Job gepinnten Inputs. Keine globale Repository-Suche und keine fremden Agenten-Inboxen.",
             "Fachliche Rückfragen, Konflikte, Fehler, Ergebnisse und Verbesserungsvorschläge schreibst du typisiert an den MASTER in die im Job angegebenen OUTBOX-Ziele. Du führst darüber kein Fachgespräch mit dem HUMAN.",
@@ -24028,7 +24108,7 @@
       "conformance": {
         "key": "conformance",
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "b0cae33b2c1c1b10b25443c850f7617739ddfa61",
+        "sourceBlobSha": "8957b3bf0b857dcca70fd14164185502d9668146",
         "content": {
           "format": "SAFOR_CONFORMANCE_SUITE",
           "schemaVersion": "0.14.0",
@@ -25924,7 +26004,7 @@
               "id": "CF-RC5-001",
               "status": "ACTIVE",
               "semanticKey": "AGENT_INBOX_PULL_ACTIVATION",
-              "statement": "After explicit HUMAN GO, an initialized chat agent reads its pinned identity and personal inbox index, selects the next eligible assigned job, and never receives the job through the GO message.",
+              "statement": "After explicit HUMAN GO, an initialized chat agent reads its pinned identity and the current personal inbox index from the stable bound inboxIndexLocation, selects the next eligible assigned job, and never receives the job through the GO message. The immutable inboxIndexRef is bootstrap provenance only.",
               "expected": true
             },
             {
@@ -25946,6 +26026,13 @@
               "status": "ACTIVE",
               "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
               "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC5-005",
+              "status": "ACTIVE",
+              "semanticKey": "MUTABLE_INBOX_INDEX_STABLE_IDENTITY",
+              "statement": "A persistent Agent Identity separates immutable inbox bootstrap evidence from the mutable personal inbox locator: MASTER may update inbox/index.json for dispatch without changing identityRevision, and agents must never use the bootstrap blob for current job discovery.",
               "expected": true
             }
           ],
@@ -28383,6 +28470,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:7952bf9d0a29b9a3c48ae65deb0596dbc5524b8629117c5bdafa9a3bb8c3e6b0"
+    "contentDigest": "sha256:c9270209a2cb3c8c3a28bc8931649c661c00f4d9df5b9155d738eba6d76bf11e"
   }
 }
