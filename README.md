@@ -10,7 +10,7 @@ SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-ba
 
 SAFOR is loaded as JSON into an ordinary compatible LLM chat. No customer-installed runtime is required. The chat follows the declarative contract and uses only real host/Git capabilities. Optional Python reference implementations support validation and stronger host integration but are not an end-user prerequisite.
 
-MASTER is the only fachliche and organizational HUMAN interface. An agent does not conduct domain discussion with the HUMAN; it writes substantive results, questions, conflicts and evidence to the contracted Git targets and renders only minimal operational status in its bound chat.
+MASTER is the only fachliche and organizational HUMAN interface. An agent does not conduct domain discussion with the HUMAN; it writes substantive results, questions, conflicts and evidence to the contracted Git targets and renders only minimal operational status in its initialized agent chat.
 
 ## Start here
 

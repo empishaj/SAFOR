@@ -5,20 +5,40 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACTS = [
-    "SAFOR-FRAMEWORK.json",
-    "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
-    "SAFOR-FRAMEWORK-WEBSITE.json",
-    "SAFOR-FRAMEWORK-SAAS.json",
-    "SAFOR-FRAMEWORK-BOOK-CREATION.json",
-    "SAFOR-TEST-ACCESS-SAAS.json",
-    "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
-]
+
+
+def current_version() -> str:
+    return (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+
+
+def artifact_paths(version: str) -> list[str]:
+    return [
+        "SAFOR-FRAMEWORK.json",
+        f"SAFOR-FRAMEWORK-v{version}.json",
+        "SAFOR-FRAMEWORK-WEBSITE.json",
+        "SAFOR-FRAMEWORK-SAAS.json",
+        "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+        "SAFOR-TEST-ACCESS-SAAS.json",
+        "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+    ]
+
+
+def evidence_path(version: str) -> str:
+    return f"RELEASE-EVIDENCE-{version}.json"
+
+
+def notes_path(version: str) -> str:
+    return f"RELEASE-NOTES-{version}.md"
+
+
+def checksum_path(version: str) -> str:
+    return f"SHA256SUMS-{version}.txt"
 
 
 def now() -> str:
@@ -37,9 +57,9 @@ def run(*args: str) -> None:
     subprocess.run(list(args), cwd=ROOT, check=True)
 
 
-def artifact_records():
+def artifact_records(version: str):
     records = []
-    for path in ARTIFACTS:
+    for path in artifact_paths(version):
         raw = (ROOT / path).read_bytes()
         records.append({
             "path": path,
@@ -49,31 +69,33 @@ def artifact_records():
     return records
 
 
-def write_checksums(records) -> None:
+def write_checksums(records, version: str) -> None:
     lines = [f'{item["sha256"]}  {item["path"]}' for item in records]
-    (ROOT / "SHA256SUMS-0.14.0-rc.4.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    (ROOT / checksum_path(version)).write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def write_release_notes() -> None:
-    text = """# SAFOR 0.14.0-rc.4 Release Notes
+def write_release_notes(version: str) -> None:
+    text = f"""# SAFOR {version} Release Notes
 
 ## Purpose
 
-This release candidate integrates the rc.3 review remediation and produces a reproducible rc.4 distribution without changing SAFOR's chat-first product boundary.
+This release candidate makes the MASTER-to-subagent communication path operationally match the intended SAFOR model: MASTER writes the job into the assigned agent's personal Git INBOX and the initialized agent pulls that job after explicit HUMAN `GO`.
 
-## Corrected contracts
+## Agent orchestration correction
 
-- Legacy conformance assertions are explicitly superseded and active rules are scope-aware.
-- REMOTE_GIT and LOCAL_GIT initialization are mutually exclusive; LOCAL_GIT does not require remote safor-memory.
-- HUMAN response menus are derived from the platform response class; informational notices are menu-free.
-- HUMAN-GO claim authority requires exact full-state provider readback, canonical digest equality and bound identity/job/chat/dispatch fields.
-- BLOCKED agent output enforces a strict persistence XOR: persisted details reference or persistence-failure object, never both.
-- VERSION, release facts, manifest, readiness and 33-requirement traceability are synchronized to rc.4.
-- The historical safomwebsite migration remains legacy evidence; rc.4 candidate migration remains NOT_STARTED until isolated real-Git E2E passes.
+- MASTER dispatches an immutable Agent Job to `agents/{{agentId}}/inbox/{{jobId}}.json` and updates `agents/{{agentId}}/inbox/index.json`.
+- The job itself is never transported in the HUMAN `GO` message.
+- After `GO`, the agent reads its pinned ACTIVE identity, its personal INBOX index, the selected authoritative Job JSON, MASTER job state and only the job-pinned inputs.
+- Execution identity is proven from project, agentId, identityRevision, personal INBOX binding, Job assignment and dispatchRevision.
+- Host-side `sessionId` or `chatBindingId` attestation is not required.
+- Foreign INBOX, stale identityRevision, foreign Job assignment or stale dispatchRevision fail closed before claim.
+- Git pushes, polling, inbox creation, automation, scheduler activity and background host events still never activate a normal chat agent.
+- Provider compare-and-swap and exact provider readback remain mandatory for authoritative claim confirmation.
+- Substantive Agent-to-MASTER communication remains typed and persisted in the Agent OUTBOX.
 
 ## Distribution files
 
-- `SAFOR-FRAMEWORK-v0.14.0-rc.4.json`
+- `SAFOR-FRAMEWORK-v{version}.json`
 - `SAFOR-FRAMEWORK.json`
 - `SAFOR-FRAMEWORK-WEBSITE.json`
 - `SAFOR-FRAMEWORK-SAAS.json`
@@ -83,15 +105,15 @@ This release candidate integrates the rc.3 review remediation and produces a rep
 
 ## Evidence boundary
 
-Automated source, schema, reproducibility and regression PASS does not constitute fresh-chat real-Git E2E, cross-host equivalence, rc.4 safomwebsite migration acceptance, empirical cognitive-load evidence, commercial GA or General Availability.
+Automated source, schema, reproducibility and regression PASS proves the Framework contracts and reference runtime agree. It does not prove behavior of every external LLM host, provider permission, commercial production readiness, empirical cognitive-load impact or General Availability.
 """
-    (ROOT / "RELEASE-NOTES-0.14.0-rc.4.md").write_text(text, encoding="utf-8")
+    (ROOT / notes_path(version)).write_text(text, encoding="utf-8")
 
 
 def prepare(run_id: str, source_sha: str) -> None:
-    version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    if version != "0.14.0-rc.4":
-        raise SystemExit(f"Expected 0.14.0-rc.4, got {version}")
+    version = current_version()
+    if not re.fullmatch(r"0\.14\.0-rc\.\d+", version):
+        raise SystemExit(f"Unsupported release version: {version}")
 
     run("python", "tools/build_bundle.py")
     for profile in ("WEBSITE", "SAAS", "BOOK_CREATION"):
@@ -102,9 +124,9 @@ def prepare(run_id: str, source_sha: str) -> None:
         if old_versioned.name != current_versioned:
             old_versioned.unlink()
 
-    records = artifact_records()
-    write_checksums(records)
-    write_release_notes()
+    records = artifact_records(version)
+    write_checksums(records, version)
+    write_release_notes(version)
 
     evidence = {
         "format": "SAFOR_RELEASE_EVIDENCE",
@@ -114,7 +136,7 @@ def prepare(run_id: str, source_sha: str) -> None:
         "status": "MATERIALIZED_VALIDATION_PENDING",
         "createdAt": now(),
         "sourceCommitBeforeMaterialization": source_sha,
-        "integrationBranch": "safor/review-remediation-0.14.0-rc.4",
+        "integrationBranch": os.environ.get("GITHUB_REF_NAME", "LOCAL"),
         "workflow": {
             "repository": "empishaj/SAFOR",
             "runId": str(run_id),
@@ -123,25 +145,26 @@ def prepare(run_id: str, source_sha: str) -> None:
         "validatedCommands": [],
         "artifacts": records,
         "truthBoundary": [
-            "Automated PASS is not a fresh-chat real-Git E2E PASS.",
-            "Provider claim semantics require actual host/provider CAS and full committed-state readback.",
-            "JSON does not create provider permissions or force a non-conforming host.",
-            "The rc.4 reference-project migration remains NOT_STARTED until isolated real-Git E2E passes.",
-            "Cognitive-load reduction remains an empirical product claim requiring measurement.",
+            "Automated PASS is not proof of behavior on every external LLM host.",
+            "Normal chat agents still require explicit HUMAN GO before pulling and claiming an INBOX job.",
+            "Host sessionId/chatBindingId attestation is intentionally not required for normal chat-agent execution identity.",
+            "Provider claim authority still requires actual compare-and-swap and exact provider readback.",
+            "JSON does not create provider permissions or expand authority.",
         ],
         "materializedAt": now(),
         "artifactCount": len(records),
-        "checksumFile": "SHA256SUMS-0.14.0-rc.4.txt",
+        "checksumFile": checksum_path(version),
         "automatedValidationCompletedAt": None,
     }
-    write_json("RELEASE-EVIDENCE-0.14.0-rc.4.json", evidence)
+    write_json(evidence_path(version), evidence)
 
 
 def finalize(run_id: str, source_sha: str) -> None:
+    version = current_version()
     facts = load("RELEASE-FACTS.json")
     manifest = load("RELEASE-MANIFEST.json")
     trace = load("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json")
-    evidence = load("RELEASE-EVIDENCE-0.14.0-rc.4.json")
+    evidence = load(evidence_path(version))
     readiness_path = ROOT / "PRODUCT-READINESS.md"
     readiness = readiness_path.read_text(encoding="utf-8")
 
@@ -160,7 +183,7 @@ def finalize(run_id: str, source_sha: str) -> None:
     trace["summary"]["automatedTestPass"] = 33
     trace["summary"]["bundlePass"] = 33
     trace["ciEvidence"]["currentCandidate"] = {
-        "releaseTarget": "0.14.0-rc.4",
+        "releaseTarget": version,
         "repository": "empishaj/SAFOR",
         "workflowRunId": str(run_id),
         "runAttempt": os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
@@ -168,22 +191,16 @@ def finalize(run_id: str, source_sha: str) -> None:
         "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_WORKTREE",
     }
 
-    pending_line = (
-        "Materialization state: **PENDING WP-A7**. Source-contract remediation is validated, "
-        "but rc.4 Framework artifacts, checksums and full release CI are not release evidence until WP-A7 completes."
-    )
     final_line = (
         "Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. "
-        "The rc.4 Framework distributions and checksums are reproducible and automated validation is green; "
-        "real-Git E2E, cross-host and migration acceptance remain separate open gates."
+        f"The {version} Framework distributions and checksums are reproducible and automated validation is green."
     )
-    if pending_line in readiness:
-        readiness = readiness.replace(pending_line, final_line)
-    elif final_line not in readiness:
-        readiness = readiness.replace(
-            "Current target: **v0.14.0-rc.4**",
-            "Current target: **v0.14.0-rc.4**\n\n" + final_line,
-        )
+    readiness = re.sub(
+        r"Materialization state: \*\*[^\n]+",
+        final_line,
+        readiness,
+        count=1,
+    )
 
     evidence["status"] = "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
     evidence["workflow"]["runId"] = str(run_id)
@@ -196,14 +213,14 @@ def finalize(run_id: str, source_sha: str) -> None:
         "python tools/validate_release_facts.py",
         "python tools/validate_traceability.py",
         "python -m unittest discover -s tests -v",
-        "sha256sum --check SHA256SUMS-0.14.0-rc.4.txt",
+        f"sha256sum --check {checksum_path(version)}",
     ]
     evidence["automatedValidationCompletedAt"] = now()
 
     write_json("RELEASE-FACTS.json", facts)
     write_json("RELEASE-MANIFEST.json", manifest)
     write_json("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json", trace)
-    write_json("RELEASE-EVIDENCE-0.14.0-rc.4.json", evidence)
+    write_json(evidence_path(version), evidence)
     readiness_path.write_text(readiness, encoding="utf-8")
 
 

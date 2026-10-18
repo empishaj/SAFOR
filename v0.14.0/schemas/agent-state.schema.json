@@ -90,22 +90,13 @@
       "type": "object",
       "additionalProperties": false,
       "required": [
-        "sessionId",
-        "chatBindingId",
+        "activationId",
         "activationEvidenceRef",
         "activatedAt",
         "selectedJobId",
         "selectedDispatchRevision"
       ],
       "properties": {
-        "sessionId": {
-          "type": "string",
-          "minLength": 1
-        },
-        "chatBindingId": {
-          "type": "string",
-          "minLength": 1
-        },
         "activationEvidenceRef": {
           "type": "string",
           "minLength": 1
@@ -121,8 +112,13 @@
         "selectedDispatchRevision": {
           "type": "integer",
           "minimum": 1
+        },
+        "activationId": {
+          "type": "string",
+          "minLength": 8
         }
-      }
+      },
+      "description": "Logical HUMAN-GO activation context; it is not a host chat/session attestation."
     },
     "currentJob": {
       "type": "object",

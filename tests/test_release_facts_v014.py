@@ -14,7 +14,7 @@ class ReleaseFactsV014Tests(unittest.TestCase):
         facts = self.load("RELEASE-FACTS.json")
         manifest = self.load("RELEASE-MANIFEST.json")
         trace = self.load("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json")
-        self.assertEqual("0.14.0-rc.4", version)
+        self.assertEqual("0.14.0-rc.5", version)
         self.assertEqual(version, facts["targetVersion"])
         self.assertEqual(version, manifest["version"])
         self.assertEqual(version, trace["releaseTarget"])
@@ -25,10 +25,10 @@ class ReleaseFactsV014Tests(unittest.TestCase):
         state = facts["releaseArtifacts"]["state"]
         self.assertIn(
             state,
-            {"PENDING_WP_A7", "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"},
+            {"PENDING_MATERIALIZATION", "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"},
         )
-        if state == "PENDING_WP_A7":
-            self.assertEqual("PENDING_WP_A7_MATERIALIZATION", manifest["releaseArtifactsState"])
+        if state == "PENDING_MATERIALIZATION":
+            self.assertEqual("PENDING_RELEASE_MATERIALIZATION", manifest["releaseArtifactsState"])
         else:
             self.assertEqual("MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS", manifest["releaseArtifactsState"])
 
@@ -46,13 +46,13 @@ class ReleaseFactsV014Tests(unittest.TestCase):
         migration = self.load("RELEASE-FACTS.json")["referenceProjectMigration"]
         self.assertEqual("COMPLETED", migration["historicalBaselineMigration"]["status"])
         self.assertEqual("NOT_STARTED", migration["candidateMigration"]["status"])
-        self.assertEqual("0.14.0-rc.4", migration["candidateMigration"]["targetVersion"])
+        self.assertEqual(version := (ROOT / "VERSION").read_text(encoding="utf-8").strip(), migration["candidateMigration"]["targetVersion"])
         self.assertIn(
             "V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE",
             migration["candidateMigration"]["prerequisites"],
         )
 
-    def test_rc4_traceability_matches_materialization_state(self):
+    def test_current_traceability_matches_materialization_state(self):
         facts = self.load("RELEASE-FACTS.json")
         trace = self.load("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json")
         expected = (

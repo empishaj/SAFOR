@@ -111,7 +111,7 @@ if activation.get("activationMode") != "HUMAN_GO_REQUIRED" or activation.get("ac
 for field in ("backgroundWakeupAssumed", "gitEventActivationAllowed", "pollingActivationAllowed", "automationActivationAllowed", "hostTriggerActivationAllowed", "schedulerMayActivateChat"):
     if activation.get(field) is not False:
         fail(f"Forbidden activation trigger enabled: {field}")
-if activation.get("claimMode") != "ATOMIC_COMPARE_AND_SWAP_WITH_SINGLE_USE_GO_EVIDENCE":
+if activation.get("claimMode") != "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE":
     fail("Atomic single-use GO claim mode missing")
 
 responses = modules.get("agentResponseContract", {}).get("content", {}).get("responseTypes", {})
@@ -130,7 +130,7 @@ if master_status.get("principles", {}).get("fullRepositoryScanForRoutineStatusFo
     fail("MASTER routine full-scan prohibition missing")
 
 identity_schema = modules.get("schemaAgentIdentity", {}).get("content", {})
-if not {"agentId", "displayName", "chatBinding", "activationContract"}.issubset(set(identity_schema.get("required", []))):
+if not {"agentId", "displayName", "inboxBinding", "activationContract"}.issubset(set(identity_schema.get("required", []))):
     fail("Agent identity required fields incomplete")
 job_schema = modules.get("schemaAgentJob", {}).get("content", {})
 if not {"domainContext", "responseContracts", "communicationContract"}.issubset(set(job_schema.get("required", []))):

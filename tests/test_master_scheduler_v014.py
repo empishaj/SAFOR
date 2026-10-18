@@ -13,8 +13,8 @@ class MasterSchedulerV014Tests(unittest.TestCase):
     def pointer(self, path):
         return {'repository': 'example/safor-memory', 'ref': 'commit123', 'path': path, 'blobSha': 'blob1234'}
 
-    def agent(self, agent_id, display_name, capabilities, *, active=0, maximum=1, binding='BOUND'):
-        return {'agentId': agent_id, 'displayName': display_name, 'agentKind': 'CHAT_AGENT', 'identityStatus': 'ACTIVE', 'chatBindingStatus': binding, 'dispatchEnabled': True, 'capabilityIds': capabilities, 'maxConcurrentJobs': maximum, 'activeJobs': active}
+    def agent(self, agent_id, display_name, capabilities, *, active=0, maximum=1, inbox='BOUND'):
+        return {'agentId': agent_id, 'displayName': display_name, 'agentKind': 'CHAT_AGENT', 'identityStatus': 'ACTIVE', 'inboxBindingStatus': inbox, 'dispatchEnabled': True, 'capabilityIds': capabilities, 'maxConcurrentJobs': maximum, 'activeJobs': active}
 
     def work(self, work_id, job_key, capabilities, *, priority=0, domains=None, keys=None, branch=None, scope='DECLARED', mutating=True, author=None, prohibited=None):
         return {'workItemId': work_id, 'jobKey': job_key, 'executionUnit': 'ATOMIC', 'status': 'READY', 'dependenciesAccepted': True, 'immutableInputs': True, 'mandateActive': True, 'providerRightsVerified': True, 'requiredCapabilities': capabilities, 'prohibitedAgentIds': prohibited or [], 'reviewOfAuthorAgentId': author, 'priority': priority, 'readySince': '2026-10-17T20:00:00Z', 'mutation': {'mutating': mutating, 'scope': scope, 'conflictDomains': domains or [], 'exclusiveKeys': keys or [], 'jobBranch': branch or f'safor/job/{job_key}/assigned-agent'}}
@@ -65,8 +65,8 @@ class MasterSchedulerV014Tests(unittest.TestCase):
         self.assertEqual(len(result['assignments']), 1)
         self.assertEqual(result['blockedWork'][0]['reasonCode'], 'CAPACITY_EXHAUSTED')
 
-    def test_unbound_chat_agent_is_not_eligible(self):
-        result = select_dispatch_wave(work_items=[self.work('WI-1', 'wi-1', ['code'], domains=['src/a'])], agents=[self.agent('agent-a', 'Nova Dev', ['code'], binding='UNVERIFIED')])
+    def test_agent_without_bound_personal_inbox_is_not_eligible(self):
+        result = select_dispatch_wave(work_items=[self.work('WI-1', 'wi-1', ['code'], domains=['src/a'])], agents=[self.agent('agent-a', 'Nova Dev', ['code'], inbox='MISSING')])
         self.assertEqual(result['assignments'], [])
         self.assertEqual(result['blockedWork'][0]['reasonCode'], 'NO_ELIGIBLE_AGENT')
 

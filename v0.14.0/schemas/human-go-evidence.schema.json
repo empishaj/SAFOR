@@ -11,8 +11,6 @@
     "projectId",
     "agentId",
     "identityRevision",
-    "chatBindingId",
-    "sessionId",
     "targetJobId",
     "targetDispatchRevision",
     "intent",
@@ -44,14 +42,6 @@
       "type": "integer",
       "minimum": 1
     },
-    "chatBindingId": {
-      "type": "string",
-      "minLength": 3
-    },
-    "sessionId": {
-      "type": "string",
-      "minLength": 1
-    },
     "targetJobId": {
       "type": "string",
       "minLength": 1
@@ -64,7 +54,7 @@
       "const": "GO"
     },
     "source": {
-      "const": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT"
+      "const": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT"
     },
     "observedAt": {
       "type": "string",

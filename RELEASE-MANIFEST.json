@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.14.0-rc.4",
+  "version": "0.14.0-rc.5",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.14.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.5.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.14.0-rc.3",
+  "previousVersion": "0.14.0-rc.4",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -134,11 +134,9 @@
     "DECLARATIVE_ORDINARY_LLM_CHAT_PRIMARY_MODE",
     "NO_CUSTOMER_INSTALLED_RUNTIME_REQUIRED",
     "OPTIONAL_REFERENCE_RUNTIME_ONLY",
-    "ONE_TIME_AGENT_CHAT_BINDING",
     "HUMAN_GO_ONLY_AGENT_ACTIVATION",
     "GIT_EVENT_AGENT_WAKEUP_FORBIDDEN",
     "DISTINCT_AGENT_DISPLAY_NAMES",
-    "FAIL_CLOSED_AGENT_REBIND",
     "TYPED_AGENT_RESPONSE_FAMILY",
     "JOB_RESULT_RESPONSE",
     "JOB_ERROR_RESPONSE",
@@ -175,7 +173,11 @@
     "EXACT_STATE_PROVIDER_CONFIRMED_GO_CLAIM_PROTOCOL",
     "RELEASE_DOCUMENTATION_DRIFT_GUARD",
     "CANONICAL_RELEASE_FACTS",
-    "RC4_TRACEABILITY_PENDING_UNTIL_MATERIALIZATION"
+    "ONE_TIME_AGENT_IDENTITY_BOOTSTRAP",
+    "PERSONAL_AGENT_INBOX_JOB_TRANSPORT",
+    "HUMAN_GO_INBOX_PULL_ACTIVATION",
+    "HOST_SESSION_ATTESTATION_NOT_REQUIRED",
+    "IDENTITY_REVISION_AND_INBOX_BOUND_CLAIM"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -283,9 +285,11 @@
     "referenceRuntimeRole": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION"
   },
   "agentActivation": {
-    "mode": "HUMAN_GO_ONLY",
+    "mode": "HUMAN_GO_INBOX_PULL",
     "command": "GO",
-    "gitAndAutomationWakeupForbidden": true
+    "jobTransport": "PERSONAL_AGENT_INBOX",
+    "gitAndAutomationWakeupForbidden": true,
+    "hostSessionAttestationRequired": false
   },
   "agentResponseTypes": [
     "JOB_RESULT",
@@ -294,9 +298,9 @@
     "CAPABILITY_MISMATCH",
     "IMPROVEMENT_PROPOSAL"
   ],
-  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.4.json",
-  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.4.md",
-  "checksumFile": "SHA256SUMS-0.14.0-rc.4.txt",
+  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.5.json",
+  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.5.md",
+  "checksumFile": "SHA256SUMS-0.14.0-rc.5.txt",
   "referenceProjectMigration": {
     "historicalBaselineMigration": {
       "status": "COMPLETED",
@@ -322,7 +326,7 @@
       }
     },
     "candidateMigration": {
-      "targetVersion": "0.14.0-rc.4",
+      "targetVersion": "0.14.0-rc.5",
       "status": "NOT_STARTED",
       "prerequisites": [
         "V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE"
@@ -354,7 +358,7 @@
   },
   "auditRemediation": {
     "sourceRelease": "0.14.0-rc.2",
-    "targetRelease": "0.14.0-rc.4",
+    "targetRelease": "0.14.0-rc.5",
     "baseCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
     "findings": {
       "AUDIT-RC2-01": "RESOLVED_AUTOMATED_SCHEMA_AND_DOMAIN_TESTS",
@@ -373,6 +377,10 @@
       "RC4-REVIEW-003": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING",
       "RC4-REVIEW-004": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING",
       "RC4-REVIEW-005": "RESOLVED_SOURCE_VALIDATED_RELEASE_BUILD_PENDING"
+    },
+    "rc5InboxPull": {
+      "status": "SOURCE_VALIDATED_MATERIALIZATION_PENDING",
+      "purpose": "Replace unverifiable host chat/session binding with pinned agent identity plus MASTER-written personal inbox job transport."
     }
   },
   "embeddedModuleCount": 93,

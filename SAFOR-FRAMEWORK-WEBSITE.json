@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
   "schemaVersion": "0.14.0",
-  "distributionVersion": "0.14.0-rc.4",
+  "distributionVersion": "0.14.0-rc.5",
   "distributionId": "safor.framework.website",
   "fileName": "SAFOR-FRAMEWORK-WEBSITE.json",
   "publicationMode": "PUBLIC_PRODUCTION",
@@ -15,7 +15,7 @@
   "framework": {
     "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
     "schemaVersion": "0.14.0",
-    "bundleVersion": "0.14.0-rc.4",
+    "bundleVersion": "0.14.0-rc.5",
     "definitionId": "safor-framework",
     "productName": "SAFOR",
     "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -277,7 +277,7 @@
     "integrityManifest": {
       "kernel": {
         "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "9a8158eb5603c1e91821e7f785246df51a991056",
+        "sourceBlobSha": "800c2585fbf7e2b02b1c5b676929cc53e4d0b32e",
         "selfHealingProfileId": "MRP-KERNEL"
       },
       "initialization": {
@@ -302,7 +302,7 @@
       },
       "agentActivation": {
         "sourcePath": "v0.14.0/agent-activation-model.json",
-        "sourceBlobSha": "1f6295664eafdec46c1f0517c970504b2fee44fb",
+        "sourceBlobSha": "34eb778cc70372e1afcba0e0b13b3fcb6d8dcd98",
         "selfHealingProfileId": "MRP-AGENTACTIVATION"
       },
       "agentCommunication": {
@@ -317,7 +317,7 @@
       },
       "agentWorkspace": {
         "sourcePath": "v0.14.0/agent-workspace-model.json",
-        "sourceBlobSha": "b8a18f8be9fa30fa86f9698c7bc890ea29ea3167",
+        "sourceBlobSha": "f29ff4cf34870173eabb73de08827e66664348da",
         "selfHealingProfileId": "MRP-AGENTWORKSPACE"
       },
       "agentJobContract": {
@@ -392,12 +392,12 @@
       },
       "providerGithub": {
         "sourcePath": "v0.14.0/providers/github/0.6.0/package.json",
-        "sourceBlobSha": "bbbfbb4b9bdfb94f6865d2ae504e9b18fbc9584b",
+        "sourceBlobSha": "1b3253da907af63b74bc7d06a978b8d63c3ba13c",
         "selfHealingProfileId": "MRP-PROVIDERGITHUB"
       },
       "providerGitlab": {
         "sourcePath": "v0.14.0/providers/gitlab/0.6.0/package.json",
-        "sourceBlobSha": "346fb767966cefcf785b0b801b6502de4ae7588d",
+        "sourceBlobSha": "192a8f3890f8347171a65acd27b338a334a35c65",
         "selfHealingProfileId": "MRP-PROVIDERGITLAB"
       },
       "schemaPackageManifest": {
@@ -477,12 +477,12 @@
       },
       "schemaAgentRegistry": {
         "sourcePath": "v0.14.0/schemas/agent-registry.schema.json",
-        "sourceBlobSha": "00e79b671ea607fa096c2636163983b69ae71c59",
+        "sourceBlobSha": "cbb3ed1f346e64dd806a5186b0d0f5cb1abb4d0c",
         "selfHealingProfileId": "MRP-SCHEMAAGENTREGISTRY"
       },
       "schemaAgentIdentity": {
         "sourcePath": "v0.14.0/schemas/agent-identity.schema.json",
-        "sourceBlobSha": "c625b51400570ffd229d14797bc5f6fbfd5a9fe8",
+        "sourceBlobSha": "99288784141b8048e6b5abddac8331dca802e151",
         "selfHealingProfileId": "MRP-SCHEMAAGENTIDENTITY"
       },
       "schemaAgentInboxIndex": {
@@ -492,7 +492,7 @@
       },
       "schemaAgentState": {
         "sourcePath": "v0.14.0/schemas/agent-state.schema.json",
-        "sourceBlobSha": "0c934727ede1e809ad13d16046d8f433f06ee8f8",
+        "sourceBlobSha": "93e797b5e35831ffb33f009ffb95fbd4af40b0c5",
         "selfHealingProfileId": "MRP-SCHEMAAGENTSTATE"
       },
       "schemaAgentJob": {
@@ -502,7 +502,7 @@
       },
       "schemaAgentJobState": {
         "sourcePath": "v0.14.0/schemas/agent-job-state.schema.json",
-        "sourceBlobSha": "6189dc0991dbbde595f060d507443cd99fea6ec5",
+        "sourceBlobSha": "8c7ada43a3bda06057b0cd673c032b927955dcc2",
         "selfHealingProfileId": "MRP-SCHEMAAGENTJOBSTATE"
       },
       "schemaAgentInitialization": {
@@ -562,7 +562,7 @@
       },
       "schemaHumanGoEvidence": {
         "sourcePath": "v0.14.0/schemas/human-go-evidence.schema.json",
-        "sourceBlobSha": "7e1042aef565b86db41523aa34b183f6521f57f7",
+        "sourceBlobSha": "01e8ac6d9acdfa329e0ed25b95edc7125dab5be3",
         "selfHealingProfileId": "MRP-SCHEMAHUMANGOEVIDENCE"
       },
       "schemaExecutionAttempt": {
@@ -582,7 +582,7 @@
       },
       "templateAgentInitialization": {
         "sourcePath": "v0.14.0/templates/agent-initialization.template.json",
-        "sourceBlobSha": "ac40970d85581c0b24502dbf3d1410bc21444ce2",
+        "sourceBlobSha": "90f20e319a487e56879dc08ea6f73e281c254df3",
         "selfHealingProfileId": "MRP-TEMPLATEAGENTINITIALIZATION"
       },
       "templateAgentJobHuman": {
@@ -692,7 +692,7 @@
       },
       "conformance": {
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "b0584da6e9606897b00089295e87ad1259d61bb2",
+        "sourceBlobSha": "b0cae33b2c1c1b10b25443c850f7617739ddfa61",
         "selfHealingProfileId": "MRP-CONFORMANCE"
       },
       "composablePackageModel": {
@@ -745,7 +745,7 @@
       "kernel": {
         "key": "kernel",
         "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "9a8158eb5603c1e91821e7f785246df51a991056",
+        "sourceBlobSha": "800c2585fbf7e2b02b1c5b676929cc53e4d0b32e",
         "content": {
           "format": "SAFOR_MASTER_BOOTSTRAP",
           "schemaVersion": "0.14.0",
@@ -886,8 +886,8 @@
             "referenceRuntimeOptional": true,
             "humanGoIsExclusiveSubagentActivation": true,
             "gitEventsNeverActivateSubagents": true,
-            "oneTimeAgentChatBinding": true,
-            "agentIdentityRebindFailsClosed": true,
+            "oneTimeAgentChatBinding": false,
+            "agentIdentityRebindFailsClosed": false,
             "distinctAgentDisplayNameRequired": true,
             "typedAgentResponseFamilyRequired": true,
             "allAgentJobsBindAllResponseTemplates": true,
@@ -912,7 +912,11 @@
             "workspaceSpecificCapabilityVerification": true,
             "terminalMenuRequiredForInteractiveResponses": true,
             "canonicalCreationTypeVocabularyRequired": true,
-            "providerConfirmedClaimRequired": true
+            "providerConfirmedClaimRequired": true,
+            "oneTimeAgentIdentityBootstrap": true,
+            "agentIdentityAndInboxBindingFailClosed": true,
+            "personalInboxIsAuthoritativeJobTransport": true,
+            "hostSessionAttestationRequiredForChatAgents": false
           },
           "moduleArchitecture": {
             "layers": [
@@ -966,7 +970,7 @@
               },
               {
                 "id": "AGENT_WORKSPACE_PROTOCOL",
-                "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
+                "responsibility": "Persistent repository-native agent identity, MASTER-to-personal-INBOX job dispatch, HUMAN-GO activation, atomic claim, result handoff and MASTER verification."
               },
               {
                 "id": "HUMAN_INTERACTION_GOVERNANCE",
@@ -982,7 +986,7 @@
               },
               {
                 "id": "AGENT_CHAT_BOOTSTRAP",
-                "responsibility": "Create one persistent agent identity/chat binding and enforce HUMAN-GO-only activation with fail-closed rebind."
+                "responsibility": "Establish one pinned agent identity and personal inbox binding per agent chat; future jobs are pulled from that inbox after HUMAN GO without requiring host session attestation."
               },
               {
                 "id": "AGENT_RESPONSE_CONTRACT",
@@ -1007,7 +1011,7 @@
               "OPERATING_MODEL maps abstract capabilities and authorities to roles/mandates, but must not define the value-stream order.",
               "PROJECT_INSTANCE maps roles to concrete human or agent actors and pins package versions.",
               "PROVIDER_ADAPTER maps provider-neutral capabilities to provider semantics and actual host tools; unavailable tools remain unavailable.",
-              "AGENT_WORKSPACE_PROTOCOL transports work through repository artifacts, never through copied prompts as authority.",
+              "AGENT_WORKSPACE_PROTOCOL transports work through the assigned agent's personal Git INBOX; copied job prompts are never authority.",
               "Agent-local runtime state and MASTER job lifecycle are separate authorities and must not overwrite each other.",
               "MULTI_AGENT_SCHEDULER may dispatch only ATOMIC READY work whose dependency/join predicates are satisfied.",
               "Parallel dispatch requires explicit resource declarations, free agent capacity and a conflict-free lease set.",
@@ -3027,7 +3031,11 @@
             {
               "id": "INV-209",
               "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat.",
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "INV-RC5-001"
+              ],
+              "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
             },
             {
               "id": "INV-210",
@@ -3037,7 +3045,11 @@
             {
               "id": "INV-211",
               "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain.",
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "INV-RC5-002"
+              ],
+              "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
             },
             {
               "id": "INV-212",
@@ -3150,8 +3162,12 @@
             },
             {
               "id": "INV-233",
-              "status": "ACTIVE",
-              "rule": "A normal chat subagent may be activated only by explicit HUMAN GO in its bound chat. Git, polling, automation, another chat and background host events never activate it."
+              "status": "SUPERSEDED",
+              "rule": "A normal chat subagent may be activated only by explicit HUMAN GO in its bound chat. Git, polling, automation, another chat and background host events never activate it.",
+              "supersededBy": [
+                "INV-RC5-001"
+              ],
+              "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
             },
             {
               "id": "INV-234",
@@ -3160,8 +3176,12 @@
             },
             {
               "id": "INV-235",
-              "status": "ACTIVE",
-              "rule": "The canonical fail-closed identity status for a chat that cannot prove its binding is REIDENTIFICATION_REQUIRED."
+              "status": "SUPERSEDED",
+              "rule": "The canonical fail-closed identity status for a chat that cannot prove its binding is REIDENTIFICATION_REQUIRED.",
+              "supersededBy": [
+                "INV-RC5-002"
+              ],
+              "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
             },
             {
               "id": "INV-236",
@@ -3172,6 +3192,21 @@
               "id": "INV-237",
               "status": "ACTIVE",
               "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap against the expected state revision, provider readback and persisted activation consumption. In-memory consumption alone is never authoritative."
+            },
+            {
+              "id": "INV-RC5-001",
+              "status": "ACTIVE",
+              "rule": "A normal chat subagent starts work only after explicit HUMAN GO; after GO it pulls the next eligible job from its own MASTER-written personal INBOX. Git, polling, automation, another chat or background host events never count as GO."
+            },
+            {
+              "id": "INV-RC5-002",
+              "status": "ACTIVE",
+              "rule": "A chat agent proves execution identity from its pinned ACTIVE identity, identityRevision and personal inbox binding. Host sessionId/chatBindingId attestation is not required; foreign inbox, stale revision or foreign job assignment fails closed."
+            },
+            {
+              "id": "INV-RC5-003",
+              "status": "ACTIVE",
+              "rule": "MASTER dispatches a subagent job by writing the immutable Agent Job JSON to agents/{agentId}/inbox/{jobId}.json and updating agents/{agentId}/inbox/index.json; no job prompt must be transported through chat."
             }
           ],
           "evidencePolicy": {
@@ -3367,12 +3402,16 @@
           },
           "agentActivationProtocol": {
             "modelRef": "agent-activation-model.json",
-            "mode": "HUMAN_GO_ONLY",
+            "mode": "HUMAN_GO_INBOX_PULL",
             "acceptedCommand": "GO",
             "gitEventWakeupForbidden": true,
             "automationWakeupForbidden": true,
-            "oneTimeChatBindingRequired": true,
-            "rebindWhenIdentityUncertain": true
+            "oneTimeChatBindingRequired": false,
+            "rebindWhenIdentityUncertain": false,
+            "oneTimeIdentityBootstrapRequired": true,
+            "personalInboxPullRequired": true,
+            "hostSessionAttestationRequired": false,
+            "reinitializeWhenPinnedIdentityOrInboxBindingInvalid": true
           },
           "agentResponseProtocol": {
             "modelRef": "agent-response-contract-model.json",
@@ -5266,12 +5305,12 @@
       "agentActivation": {
         "key": "agentActivation",
         "sourcePath": "v0.14.0/agent-activation-model.json",
-        "sourceBlobSha": "1f6295664eafdec46c1f0517c970504b2fee44fb",
+        "sourceBlobSha": "34eb778cc70372e1afcba0e0b13b3fcb6d8dcd98",
         "content": {
           "format": "SAFOR_AGENT_ACTIVATION_MODEL",
           "schemaVersion": "0.14.0",
-          "id": "SAFOR-HUMAN-GO-CHAT-ACTIVATION",
-          "purpose": "Define one-time agent chat identity bootstrap and subsequent deliberate HUMAN-GO activation without job prompt transport or automatic chat wake-up.",
+          "id": "SAFOR-INBOX-PULL-HUMAN-GO-ACTIVATION",
+          "purpose": "Define one-time agent identity bootstrap and subsequent deliberate HUMAN-GO activation in which the agent pulls its assigned job from its personal Git inbox.",
           "scope": {
             "normalChatAgents": true,
             "serviceAgentsSeparate": true,
@@ -5281,13 +5320,13 @@
           },
           "identityInvariants": [
             "A CHAT_AGENT has one stable agentId and a separate HUMAN-readable displayName.",
-            "displayName must not equal agentId after normalization.",
-            "The identity is bound to projectId, masterId, controlRepository and workspaceRoot.",
-            "Uncertain or lost chat continuity changes the effective state to REIDENTIFICATION_REQUIRED.",
-            "Identity must never be guessed from job content, display name or repository location."
+            "The agent identity is bound to projectId, masterId, controlRepository, workspaceRoot and personal inbox path.",
+            "The one-time initialization prompt establishes which pinned identity and personal inbox this chat must use; host session attestation is not required.",
+            "The agent identity must never be inferred from job content, display name, repository location or an arbitrary inbox entry.",
+            "An inactive identity, stale identityRevision, foreign inbox or foreign job assignment fails closed before claim."
           ],
           "initializationProtocol": {
-            "performedOncePerContinuedChat": true,
+            "performedOncePerContinuedChat": false,
             "preparedBy": "MASTER",
             "humanAction": "PASTE_MASTER_GENERATED_INITIALIZATION_PROMPT_ONCE",
             "requiredBindings": [
@@ -5304,13 +5343,15 @@
               "READ_PINNED_IDENTITY",
               "VERIFY_IDENTITY_BLOB",
               "VERIFY_PROJECT_AND_MASTER_BINDING",
-              "VERIFY_CHAT_BINDING_STATUS_BOUND",
+              "VERIFY_IDENTITY_STATUS_ACTIVE",
+              "VERIFY_PERSONAL_INBOX_BINDING",
               "READ_AGENT_STATE",
               "READ_PERSONAL_INBOX_INDEX",
               "CONFIRM_READY_FOR_HUMAN_GO"
             ],
             "jobPromptTransportRequired": false,
-            "onValidationFailure": "REIDENTIFICATION_REQUIRED"
+            "onValidationFailure": "IDENTITY_OR_INBOX_REINITIALIZATION_REQUIRED",
+            "performedOncePerAgentChatBootstrap": true
           },
           "chatAgentActivationContract": {
             "activationMode": "HUMAN_GO_REQUIRED",
@@ -5318,7 +5359,7 @@
             "trimWhitespace": true,
             "caseSensitive": false,
             "additionalTextAllowed": false,
-            "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+            "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
             "backgroundWakeupAssumed": false,
             "gitEventActivationAllowed": false,
             "pollingActivationAllowed": false,
@@ -5327,16 +5368,17 @@
             "schedulerMayActivateChat": false,
             "schedulerOutcomeBeforeGo": "WAITING_HUMAN_GO",
             "activationEvidenceRequiredBeforeClaim": true,
-            "activationEvidenceAuthority": "CHAT_LOCAL_ASSERTION_NOT_CRYPTOGRAPHIC_HUMAN_SIGNATURE",
-            "claimMode": "ATOMIC_COMPARE_AND_SWAP_WITH_SINGLE_USE_GO_EVIDENCE",
-            "stringSubstringEvidenceForbidden": true
+            "activationEvidenceAuthority": "DIRECT_HUMAN_GO_BOUND_TO_PINNED_IDENTITY_AND_PERSONAL_INBOX",
+            "claimMode": "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
+            "stringSubstringEvidenceForbidden": true,
+            "hostSessionAttestationRequired": false
           },
           "onHumanGo": {
             "allowedReadsInOrder": [
               "PINNED_IDENTITY",
               "AGENT_STATE",
               "PERSONAL_INBOX_INDEX",
-              "SELECTED_JOB_CONTRACT",
+              "SELECTED_INBOX_JOB_CONTRACT",
               "SELECTED_MASTER_JOB_STATE",
               "JOB_REFERENCED_INPUTS_ONLY"
             ],
@@ -5348,10 +5390,11 @@
             ],
             "preClaimChecks": [
               "IDENTITY_ACTIVE",
-              "CHAT_BINDING_BOUND",
               "IDENTITY_REVISION_MATCH",
+              "PERSONAL_INBOX_PROJECT_AND_AGENT_MATCH",
               "DISCOVERABLE_JOB_AVAILABLE",
               "JOB_AGENT_ASSIGNMENT_MATCH",
+              "JOB_IDENTITY_REVISION_MATCH",
               "JOB_DISPATCH_REVISION_MATCH",
               "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
               "ROLE_AND_SKILL_MATCH",
@@ -5362,20 +5405,19 @@
           },
           "reidentificationProtocol": {
             "triggers": [
-              "CHAT_HISTORY_MISSING_OR_UNCERTAIN",
-              "CHAT_BINDING_ID_MISMATCH",
+              "PINNED_IDENTITY_UNAVAILABLE_OR_BLOB_MISMATCH",
               "IDENTITY_REVISION_MISMATCH",
               "CONTROL_REPOSITORY_UNAVAILABLE",
-              "IDENTITY_BLOB_MISMATCH",
-              "AGENT_CANNOT_PROVE_OWN_IDENTITY"
+              "PERSONAL_INBOX_PROJECT_OR_AGENT_MISMATCH",
+              "AGENT_CANNOT_PROVE_PINNED_IDENTITY"
             ],
             "effect": [
               "NO_JOB_CLAIM",
               "NO_PRODUCT_MUTATION",
               "NO_RESPONSE_PATH_GUESSING",
-              "EMIT_MINIMAL_REIDENTIFICATION_STATUS"
+              "EMIT_MINIMAL_REINITIALIZATION_STATUS"
             ],
-            "requiredHumanPath": "RETURN_TO_MASTER_FOR_NEW_INITIALIZATION_PROMPT"
+            "requiredHumanPath": "RELOAD_MASTER_GENERATED_AGENT_INITIALIZATION_PROMPT"
           },
           "goEvidenceContract": {
             "format": "SAFOR_HUMAN_GO_EVIDENCE",
@@ -5385,8 +5427,6 @@
               "projectId",
               "agentId",
               "identityRevision",
-              "chatBindingId",
-              "sessionId",
               "targetJobId",
               "targetDispatchRevision",
               "intent",
@@ -5397,7 +5437,7 @@
             ],
             "constants": {
               "intent": "GO",
-              "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+              "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
               "singleUse": true,
               "jobPromptTransported": false
             },
@@ -5410,7 +5450,6 @@
               "projectId",
               "agentId",
               "identityRevision",
-              "chatBindingId",
               "targetJobId",
               "targetDispatchRevision",
               "activationId"
@@ -5438,14 +5477,16 @@
               "FULL_COMMITTED_STATE_READ_BACK",
               "READBACK_STATE_EQUALS_PROPOSED_STATE",
               "CANONICAL_STATE_DIGEST_MATCH",
-              "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+              "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
               "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
               "READBACK_REF_PRESENT",
               "READBACK_BLOB_IDENTITY_PRESENT"
             ],
             "persistActivationConsumptionInsideCasState": true,
             "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
-            "proposedStateIsNonAuthoritativeUntilReadback": true
+            "proposedStateIsNonAuthoritativeUntilReadback": true,
+            "inboxJobIsAuthoritativeDispatch": true,
+            "hostSessionBindingRequired": false
           }
         },
         "selfHealingProfileId": "MRP-AGENTACTIVATION"
@@ -5653,12 +5694,12 @@
       "agentWorkspace": {
         "key": "agentWorkspace",
         "sourcePath": "v0.14.0/agent-workspace-model.json",
-        "sourceBlobSha": "b8a18f8be9fa30fa86f9698c7bc890ea29ea3167",
+        "sourceBlobSha": "f29ff4cf34870173eabb73de08827e66664348da",
         "content": {
           "format": "SAFOR_AGENT_WORKSPACE_MODEL",
           "schemaVersion": "0.14.0",
           "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
-          "purpose": "Repository-native coordination for persistent chat agents activated only by HUMAN GO and returning typed Git responses to MASTER.",
+          "purpose": "Repository-native coordination in which MASTER dispatches work by writing immutable jobs into each agent's personal inbox; the agent pulls the next eligible job after explicit HUMAN GO.",
           "topology": {
             "projectRoot": "projects/{projectSlug}/",
             "agentRegistry": "agents/index.json",
@@ -5696,10 +5737,14 @@
             "actualProviderRightsRemainAuthoritative": true
           },
           "normalFlow": [
-            "MASTER_WRITES_JOB_AND_INDEX_AS_WAITING_HUMAN_GO",
-            "HUMAN_TYPES_GO_IN_BOUND_AGENT_CHAT",
-            "AGENT_LOADS_IDENTITY_STATE_INDEX_JOB_AND_REFERENCED_INPUTS_ONLY",
-            "AGENT_BINDS_GO_EVIDENCE",
+            "MASTER_WRITES_IMMUTABLE_JOB_TO_PERSONAL_INBOX",
+            "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
+            "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
+            "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
+            "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_PERSONAL_INBOX_INDEX",
+            "AGENT_SELECTS_NEXT_ELIGIBLE_PERSONAL_INBOX_JOB",
+            "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
+            "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
             "AGENT_RUNS_PREFLIGHT",
             "AGENT_CLAIMS_WITH_OPTIMISTIC_CONCURRENCY",
             "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
@@ -5718,7 +5763,20 @@
             "noDirectDefaultBranchMutation": true,
             "noResponseAsProviderPermission": true,
             "noSilentJobMutation": true,
-            "noFullRepositoryScanInNormalFlow": true
+            "noFullRepositoryScanInNormalFlow": true,
+            "noHostSessionAttestationDependency": true,
+            "identityComesFromPinnedInitializationNotJob": true
+          },
+          "dispatchContract": {
+            "sender": "MASTER",
+            "transport": "PERSONAL_AGENT_INBOX_IN_GIT",
+            "authoritativeJobPath": "agents/{agentId}/inbox/{jobId}.json",
+            "discoverabilityIndexPath": "agents/{agentId}/inbox/index.json",
+            "receiver": "ASSIGNED_AGENT_ONLY",
+            "activation": "EXPLICIT_HUMAN_GO",
+            "jobPromptTransportRequired": false,
+            "hostSessionBindingRequired": false,
+            "rule": "A job is dispatched when MASTER writes the immutable job contract and corresponding personal inbox index entry. The agent never waits for a copied job prompt and never scans globally for work."
           }
         },
         "selfHealingProfileId": "MRP-AGENTWORKSPACE"
@@ -11673,7 +11731,7 @@
       "providerGithub": {
         "key": "providerGithub",
         "sourcePath": "v0.14.0/providers/github/0.6.0/package.json",
-        "sourceBlobSha": "bbbfbb4b9bdfb94f6865d2ae504e9b18fbc9584b",
+        "sourceBlobSha": "1b3253da907af63b74bc7d06a978b8d63c3ba13c",
         "content": {
           "format": "SAFOR_PACKAGE_MANIFEST",
           "schemaVersion": "0.14.0",
@@ -11828,7 +11886,7 @@
                 "COMPARE_AND_SWAP_SUCCEEDED",
                 "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
                 "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
-                "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+                "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
                 "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
                 "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
                 "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
@@ -11838,7 +11896,9 @@
               "onCasConflict": "RECONCILE_REQUIRED",
               "inMemoryStateNeverAuthoritative": true,
               "onReadbackMismatch": "RECONCILE_REQUIRED",
-              "proposedStateNeverAuthoritativeBeforeReadback": true
+              "proposedStateNeverAuthoritativeBeforeReadback": true,
+              "hostSessionBindingRequired": false,
+              "identityAuthority": "PINNED_AGENT_IDENTITY_PLUS_PERSONAL_INBOX_ASSIGNMENT"
             }
           }
         },
@@ -11847,7 +11907,7 @@
       "providerGitlab": {
         "key": "providerGitlab",
         "sourcePath": "v0.14.0/providers/gitlab/0.6.0/package.json",
-        "sourceBlobSha": "346fb767966cefcf785b0b801b6502de4ae7588d",
+        "sourceBlobSha": "192a8f3890f8347171a65acd27b338a334a35c65",
         "content": {
           "format": "SAFOR_PACKAGE_MANIFEST",
           "schemaVersion": "0.14.0",
@@ -12001,7 +12061,7 @@
                 "COMPARE_AND_SWAP_SUCCEEDED",
                 "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
                 "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
-                "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+                "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
                 "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
                 "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
                 "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
@@ -12011,7 +12071,9 @@
               "onCasConflict": "RECONCILE_REQUIRED",
               "inMemoryStateNeverAuthoritative": true,
               "onReadbackMismatch": "RECONCILE_REQUIRED",
-              "proposedStateNeverAuthoritativeBeforeReadback": true
+              "proposedStateNeverAuthoritativeBeforeReadback": true,
+              "hostSessionBindingRequired": false,
+              "identityAuthority": "PINNED_AGENT_IDENTITY_PLUS_PERSONAL_INBOX_ASSIGNMENT"
             }
           }
         },
@@ -15296,7 +15358,7 @@
       "schemaAgentRegistry": {
         "key": "schemaAgentRegistry",
         "sourcePath": "v0.14.0/schemas/agent-registry.schema.json",
-        "sourceBlobSha": "00e79b671ea607fa096c2636163983b69ae71c59",
+        "sourceBlobSha": "cbb3ed1f346e64dd806a5186b0d0f5cb1abb4d0c",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-registry:0.14.0",
@@ -15378,7 +15440,7 @@
                 "identityRef",
                 "workspaceRoot",
                 "identityStatus",
-                "chatBindingStatus",
+                "inboxBindingStatus",
                 "registeredAt",
                 "registeredBy",
                 "scheduling",
@@ -15419,15 +15481,6 @@
                     "REIDENTIFICATION_REQUIRED"
                   ]
                 },
-                "chatBindingStatus": {
-                  "enum": [
-                    "BOUND",
-                    "UNVERIFIED",
-                    "LOST",
-                    "REVOKED",
-                    "NOT_APPLICABLE"
-                  ]
-                },
                 "registeredAt": {
                   "type": "string",
                   "format": "date-time"
@@ -15459,6 +15512,15 @@
                     "LEGACY_SNAPSHOT",
                     "SUPERSEDED"
                   ]
+                },
+                "inboxBindingStatus": {
+                  "enum": [
+                    "BOUND",
+                    "MISSING",
+                    "STALE",
+                    "REVOKED",
+                    "NOT_APPLICABLE"
+                  ]
                 }
               }
             }
@@ -15469,7 +15531,7 @@
       "schemaAgentIdentity": {
         "key": "schemaAgentIdentity",
         "sourcePath": "v0.14.0/schemas/agent-identity.schema.json",
-        "sourceBlobSha": "c625b51400570ffd229d14797bc5f6fbfd5a9fe8",
+        "sourceBlobSha": "99288784141b8048e6b5abddac8331dca802e151",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-identity:0.14.0",
@@ -15492,7 +15554,7 @@
             "initializedBy",
             "roleIds",
             "capabilityIds",
-            "chatBinding",
+            "inboxBinding",
             "activationContract",
             "communicationContractRef"
           ],
@@ -15569,14 +15631,14 @@
               },
               "uniqueItems": true
             },
-            "chatBinding": {
-              "$ref": "#/$defs/chatBinding"
-            },
             "activationContract": {
               "$ref": "#/$defs/activationContract"
             },
             "communicationContractRef": {
               "$ref": "#/$defs/immutableRef"
+            },
+            "inboxBinding": {
+              "$ref": "#/$defs/inboxBinding"
             }
           },
           "allOf": [
@@ -15617,6 +15679,9 @@
                           },
                           "jobPromptTransportRequired": {
                             "const": false
+                          },
+                          "source": {
+                            "const": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT"
                           }
                         }
                       }
@@ -15681,49 +15746,6 @@
                 }
               }
             },
-            "chatBinding": {
-              "type": "object",
-              "additionalProperties": false,
-              "required": [
-                "bindingId",
-                "bindingMode",
-                "status",
-                "establishedAt",
-                "initializedFromPromptRef",
-                "expectedSessionContinuity",
-                "onUncertain"
-              ],
-              "properties": {
-                "bindingId": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "bindingMode": {
-                  "const": "CONTINUED_CHAT_HISTORY"
-                },
-                "status": {
-                  "enum": [
-                    "BOUND",
-                    "UNVERIFIED",
-                    "LOST",
-                    "REVOKED"
-                  ]
-                },
-                "establishedAt": {
-                  "type": "string",
-                  "format": "date-time"
-                },
-                "initializedFromPromptRef": {
-                  "$ref": "#/$defs/immutableRef"
-                },
-                "expectedSessionContinuity": {
-                  "const": true
-                },
-                "onUncertain": {
-                  "const": "REIDENTIFICATION_REQUIRED"
-                }
-              }
-            },
             "activationContract": {
               "type": "object",
               "additionalProperties": false,
@@ -15760,8 +15782,7 @@
                   "type": "boolean"
                 },
                 "source": {
-                  "type": "string",
-                  "minLength": 1
+                  "const": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT"
                 },
                 "backgroundWakeupAssumed": {
                   "type": "boolean"
@@ -15803,8 +15824,8 @@
                     "enum": [
                       "LOAD_IDENTITY",
                       "VERIFY_IDENTITY_STATUS_ACTIVE",
-                      "VERIFY_CHAT_BINDING_BOUND",
                       "LOAD_AGENT_STATE",
+                      "VERIFY_PERSONAL_INBOX_BINDING",
                       "LOAD_PERSONAL_INBOX_INDEX",
                       "SELECT_DISCOVERABLE_JOB",
                       "READ_AUTHORITATIVE_JOB_JSON",
@@ -15819,6 +15840,32 @@
                 },
                 "jobPromptTransportRequired": {
                   "type": "boolean"
+                }
+              }
+            },
+            "inboxBinding": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "inboxIndexRef",
+                "jobPathPattern",
+                "agentId",
+                "identityRevision"
+              ],
+              "properties": {
+                "inboxIndexRef": {
+                  "$ref": "#/$defs/immutableRef"
+                },
+                "jobPathPattern": {
+                  "const": "agents/{agentId}/inbox/{jobId}.json"
+                },
+                "agentId": {
+                  "type": "string",
+                  "minLength": 3
+                },
+                "identityRevision": {
+                  "type": "integer",
+                  "minimum": 1
                 }
               }
             }
@@ -16015,7 +16062,7 @@
       "schemaAgentState": {
         "key": "schemaAgentState",
         "sourcePath": "v0.14.0/schemas/agent-state.schema.json",
-        "sourceBlobSha": "0c934727ede1e809ad13d16046d8f433f06ee8f8",
+        "sourceBlobSha": "93e797b5e35831ffb33f009ffb95fbd4af40b0c5",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-state:0.14.0",
@@ -16108,22 +16155,13 @@
               "type": "object",
               "additionalProperties": false,
               "required": [
-                "sessionId",
-                "chatBindingId",
+                "activationId",
                 "activationEvidenceRef",
                 "activatedAt",
                 "selectedJobId",
                 "selectedDispatchRevision"
               ],
               "properties": {
-                "sessionId": {
-                  "type": "string",
-                  "minLength": 1
-                },
-                "chatBindingId": {
-                  "type": "string",
-                  "minLength": 1
-                },
                 "activationEvidenceRef": {
                   "type": "string",
                   "minLength": 1
@@ -16139,8 +16177,13 @@
                 "selectedDispatchRevision": {
                   "type": "integer",
                   "minimum": 1
+                },
+                "activationId": {
+                  "type": "string",
+                  "minLength": 8
                 }
-              }
+              },
+              "description": "Logical HUMAN-GO activation context; it is not a host chat/session attestation."
             },
             "currentJob": {
               "type": "object",
@@ -17339,7 +17382,7 @@
       "schemaAgentJobState": {
         "key": "schemaAgentJobState",
         "sourcePath": "v0.14.0/schemas/agent-job-state.schema.json",
-        "sourceBlobSha": "6189dc0991dbbde595f060d507443cd99fea6ec5",
+        "sourceBlobSha": "8c7ada43a3bda06057b0cd673c032b927955dcc2",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-job-state:0.14.0",
@@ -17369,7 +17412,6 @@
             "transitionHistory",
             "updatedAt",
             "dispatchRevision",
-            "chatBindingId",
             "consumedActivationIds"
           ],
           "properties": {
@@ -17515,10 +17557,6 @@
             "dispatchRevision": {
               "type": "integer",
               "minimum": 1
-            },
-            "chatBindingId": {
-              "type": "string",
-              "minLength": 3
             },
             "consumedActivationIds": {
               "type": "array",
@@ -20658,7 +20696,7 @@
       "schemaHumanGoEvidence": {
         "key": "schemaHumanGoEvidence",
         "sourcePath": "v0.14.0/schemas/human-go-evidence.schema.json",
-        "sourceBlobSha": "7e1042aef565b86db41523aa34b183f6521f57f7",
+        "sourceBlobSha": "01e8ac6d9acdfa329e0ed25b95edc7125dab5be3",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:human-go-evidence:0.14.0",
@@ -20672,8 +20710,6 @@
             "projectId",
             "agentId",
             "identityRevision",
-            "chatBindingId",
-            "sessionId",
             "targetJobId",
             "targetDispatchRevision",
             "intent",
@@ -20705,14 +20741,6 @@
               "type": "integer",
               "minimum": 1
             },
-            "chatBindingId": {
-              "type": "string",
-              "minLength": 3
-            },
-            "sessionId": {
-              "type": "string",
-              "minLength": 1
-            },
             "targetJobId": {
               "type": "string",
               "minLength": 1
@@ -20725,7 +20753,7 @@
               "const": "GO"
             },
             "source": {
-              "const": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT"
+              "const": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT"
             },
             "observedAt": {
               "type": "string",
@@ -21081,13 +21109,13 @@
       "templateAgentInitialization": {
         "key": "templateAgentInitialization",
         "sourcePath": "v0.14.0/templates/agent-initialization.template.json",
-        "sourceBlobSha": "ac40970d85581c0b24502dbf3d1410bc21444ce2",
+        "sourceBlobSha": "90f20e319a487e56879dc08ea6f73e281c254df3",
         "content": {
           "format": "SAFOR_AGENT_INITIALIZATION_TEMPLATE",
           "schemaVersion": "0.14.0",
           "templateId": "safor.template.agent-chat-initialization",
           "templateVersion": "1.0.0",
-          "purpose": "MASTER-generated one-time prompt for binding a new persistent CHAT_AGENT conversation.",
+          "purpose": "MASTER-generated one-time prompt that gives a persistent CHAT_AGENT its pinned identity and personal Git inbox. Future jobs are pulled from that inbox after HUMAN GO.",
           "requiredBindings": [
             "PROJECT_ID",
             "AGENT_ID",
@@ -21104,17 +21132,21 @@
             "includeJobContent": false,
             "includeDomainTaskPrompt": false,
             "mustRequireProviderReadback": true,
-            "mustFailClosedOnIdentityUncertainty": true
+            "mustFailClosedOnIdentityUncertainty": true,
+            "hostSessionAttestationRequired": false,
+            "personalInboxIsJobTransport": true
           },
           "promptTemplate": [
             "Du bist der persistente SAFOR-Subagent {{DISPLAY_NAME}} mit der technischen ID {{AGENT_ID}} im Projekt {{PROJECT_ID}}.",
-            "Dein Control Repository ist {{CONTROL_REPOSITORY}}.",
-            "Lies zuerst ausschließlich deine gepinnte Identität {{IDENTITY_REF}}, deinen Zustand {{AGENT_STATE_REF}}, deinen persönlichen Inbox-Index {{INBOX_INDEX_REF}} und den Kommunikationsvertrag {{COMMUNICATION_CONTRACT_REF}}.",
-            "Validiere Blob-/Versionsreferenzen, Projektbindung, Identity Revision und ChatBinding. Bei fehlender oder unsicherer Bindung: stoppe fail-closed und melde REIDENTIFICATION_REQUIRED. Rate niemals deine Identität.",
-            "Nach erfolgreicher Erstinitialisierung wartest du. Für jeden Folgejob gibt der HUMAN in diesem selben Chat ausschließlich GO.",
-            "Ein Git-Push, Polling, Scheduler oder Host-Trigger aktiviert dich nicht. Ohne genaues HUMAN-GO claimst du keinen Job und führst keine schreibende Operation aus.",
-            "Nach GO liest du nur deinen kleinen Inbox-Index, den ausgewählten Job, dessen MASTER-Status und explizit gepinnte Inputs. Keine globale Suche und keine fremden Agenten-Inboxen.",
-            "Fachliche Rückfragen, Konflikte, Fehler, Ergebnisse und Verbesserungsvorschläge schreibst du typisiert an den MASTER in die im Job angegebenen Git-Ziele. Du führst darüber kein Fachgespräch mit dem HUMAN.",
+            "Dein Control Repository ist {{CONTROL_REPOSITORY}}. Deine Identität ist {{IDENTITY_REF}} und deine persönliche Job-INBOX ist über {{INBOX_INDEX_REF}} gebunden.",
+            "Lies beim Start ausschließlich deine gepinnte Identität {{IDENTITY_REF}}, deinen Zustand {{AGENT_STATE_REF}}, deinen persönlichen Inbox-Index {{INBOX_INDEX_REF}} und den Kommunikationsvertrag {{COMMUNICATION_CONTRACT_REF}}.",
+            "Validiere Identity Blob, Projekt, MASTER, agentId, identityRevision und dass der Inbox-Index genau zu deiner Identität gehört. Eine Host-Session-ID oder extern attestierte Chat-Binding-ID ist dafür nicht erforderlich.",
+            "Nach erfolgreicher Initialisierung wartest du. MASTER übergibt dir neue Arbeit ausschließlich dadurch, dass er einen unveränderlichen Job in deine persönliche INBOX schreibt und den Inbox-Index aktualisiert.",
+            "Für jeden Folgejob schreibt der HUMAN in diesem Chat ausschließlich GO. GO ist nur das Startsignal und enthält niemals den Job selbst.",
+            "Nach GO liest du deinen persönlichen Inbox-Index, wählst den nächsten für deine aktive Identity Revision freigegebenen Job, liest dessen autoritativen Jobvertrag und den MASTER-Jobstatus und prüfst Zuweisung, Dispatch Revision, Rolle, Skills, Mandat und tatsächliche Providerrechte.",
+            "Erst danach claimst du genau diesen Inbox-Job atomar. Git-Push, Inbox-Erstellung, Polling, Scheduler oder Host-Trigger aktivieren dich nicht.",
+            "Lies nur die im Job gepinnten Inputs. Keine globale Repository-Suche und keine fremden Agenten-Inboxen.",
+            "Fachliche Rückfragen, Konflikte, Fehler, Ergebnisse und Verbesserungsvorschläge schreibst du typisiert an den MASTER in die im Job angegebenen OUTBOX-Ziele. Du führst darüber kein Fachgespräch mit dem HUMAN.",
             "Im Chat gibst du nur den erlaubten minimalen READY-, STARTED-, SUBMITTED-, BLOCKED- oder REIDENTIFICATION_REQUIRED-Status aus."
           ]
         },
@@ -23708,7 +23740,7 @@
       "conformance": {
         "key": "conformance",
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "b0584da6e9606897b00089295e87ad1259d61bb2",
+        "sourceBlobSha": "b0cae33b2c1c1b10b25443c850f7617739ddfa61",
         "content": {
           "format": "SAFOR_CONFORMANCE_SUITE",
           "schemaVersion": "0.14.0",
@@ -24116,10 +24148,11 @@
               "expected": true,
               "status": "SUPERSEDED",
               "supersededBy": [
-                "CF-270",
+                "CF-RC5-001",
+                "CF-RC5-003",
                 "CF-271"
               ],
-              "supersessionReason": "Generic external-trigger wording replaced by exclusive HUMAN-GO and explicit background-trigger prohibition.",
+              "supersessionReason": "Activation semantics now distinguish HUMAN-GO inbox pull from forbidden background activation; no host-bound chat proof is required.",
               "semanticKey": "AGENT_ACTIVATION_TRIGGER"
             },
             {
@@ -25381,7 +25414,12 @@
               "id": "CF-270",
               "statement": "Chat-bound subagents are activated only by explicit HUMAN GO in the same bound chat.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-RC5-001",
+                "CF-RC5-003"
+              ],
+              "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
             },
             {
               "id": "CF-271",
@@ -25393,7 +25431,11 @@
               "id": "CF-272",
               "statement": "Every active chat agent has stable agentId, distinct displayName and fail-closed rebind policy.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-RC5-002"
+              ],
+              "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
             },
             {
               "id": "CF-273",
@@ -25447,7 +25489,12 @@
               "id": "CF-302",
               "statement": "A HUMAN-GO transition requires structured single-use evidence bound to project, agent, identity, chat, job and dispatch revision.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-RC5-001",
+                "CF-RC5-002"
+              ],
+              "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
             },
             {
               "id": "CF-303",
@@ -25569,16 +25616,48 @@
             },
             {
               "id": "CF-RC4-004",
-              "status": "ACTIVE",
+              "status": "SUPERSEDED",
               "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
               "statement": "A HUMAN-GO claim becomes authoritative only when provider CAS succeeds and full committed job-state readback exactly matches the prepared state by canonical digest and bound project/job/agent/identity/chat/dispatch fields; the activationId is already persisted in consumedActivationIds.",
-              "expected": true
+              "expected": true,
+              "supersededBy": [
+                "CF-RC5-004"
+              ],
+              "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
             },
             {
               "id": "CF-RC4-005",
               "status": "ACTIVE",
               "semanticKey": "AGENT_CHAT_PERSISTENCE_XOR",
               "statement": "For BLOCKED agent chat output, exactly one persistence representation is valid: either a non-empty detailsRef with persistence=null, or detailsRef=null with a FAILED control-repository persistence object; both together are forbidden.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC5-001",
+              "status": "ACTIVE",
+              "semanticKey": "AGENT_INBOX_PULL_ACTIVATION",
+              "statement": "After explicit HUMAN GO, an initialized chat agent reads its pinned identity and personal inbox index, selects the next eligible assigned job, and never receives the job through the GO message.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC5-002",
+              "status": "ACTIVE",
+              "semanticKey": "AGENT_EXECUTION_IDENTITY",
+              "statement": "Normal chat-agent execution identity is bound by projectId, agentId, identityRevision and personal inbox/job assignment; host sessionId or chatBindingId attestation is not required.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC5-003",
+              "status": "ACTIVE",
+              "semanticKey": "MASTER_AGENT_JOB_TRANSPORT",
+              "statement": "MASTER dispatches work by writing immutable agents/{agentId}/inbox/{jobId}.json and updating agents/{agentId}/inbox/index.json; Git events do not activate the agent.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC5-004",
+              "status": "ACTIVE",
+              "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
+              "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
               "expected": true
             }
           ],
@@ -28016,6 +28095,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:1d251fd4f725ec483fcee9b0fc0d427cd851a294a562c8cf2201915a8fa128a4"
+    "contentDigest": "sha256:2281beb05839a9f2f2243d11413f46d607bb43f078a5212cf560840bcdd30981"
   }
 }

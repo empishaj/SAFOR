@@ -12,18 +12,17 @@ class GoEvidenceV014Tests(unittest.TestCase):
             "format": "SAFOR_HUMAN_GO_EVIDENCE", "schemaVersion": "0.14.0",
             "activationId": "activation-001", "projectId": "project-001",
             "agentId": "agent-a", "identityRevision": 2,
-            "chatBindingId": "binding-a-r2", "sessionId": "session-001",
             "targetJobId": "job-001", "targetDispatchRevision": 3,
-            "intent": "GO", "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+            "intent": "GO", "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
             "observedAt": "2026-10-18T08:00:00Z", "singleUse": True,
             "jobPromptTransported": False,
         }
 
     def expected(self):
-        return {"projectId": "project-001", "agentId": "agent-a", "identityRevision": 2, "chatBindingId": "binding-a-r2", "targetJobId": "job-001", "targetDispatchRevision": 3}
+        return {"projectId": "project-001", "agentId": "agent-a", "identityRevision": 2, "targetJobId": "job-001", "targetDispatchRevision": 3}
 
     def state(self):
-        return {"format": "SAFOR_AGENT_JOB_STATE", "schemaVersion": "0.14.0", "projectId": "project-001", "jobId": "job-001", "assignedAgentId": "agent-a", "assignedIdentityRevision": 2, "chatBindingId": "binding-a-r2", "dispatchRevision": 3, "revision": 7, "lifecycleStatus": "WAITING_HUMAN_GO", "goEvidenceRef": None, "consumedActivationIds": [], "transitionHistory": [], "updatedAt": "2026-10-18T07:59:00Z"}
+        return {"format": "SAFOR_AGENT_JOB_STATE", "schemaVersion": "0.14.0", "projectId": "project-001", "jobId": "job-001", "assignedAgentId": "agent-a", "assignedIdentityRevision": 2, "dispatchRevision": 3, "revision": 7, "lifecycleStatus": "WAITING_HUMAN_GO", "goEvidenceRef": None, "consumedActivationIds": [], "transitionHistory": [], "updatedAt": "2026-10-18T07:59:00Z"}
 
     def ref(self):
         return {"repository": "example/safor-memory", "ref": "commit123", "path": "projects/example/evidence/go.json", "blobSha": "blob1234"}
@@ -36,7 +35,7 @@ class GoEvidenceV014Tests(unittest.TestCase):
             validate_human_go_evidence({"value": "not-a-governed-evidence-but-contains-go"}, expected=self.expected())
 
     def test_foreign_job_agent_binding_and_dispatch_fail(self):
-        for field, value in (("targetJobId", "job-other"), ("agentId", "agent-other"), ("chatBindingId", "binding-other"), ("targetDispatchRevision", 2)):
+        for field, value in (("targetJobId", "job-other"), ("agentId", "agent-other"), ("identityRevision", 1), ("targetDispatchRevision", 2)):
             evidence = self.evidence(); evidence[field] = value
             with self.subTest(field=field), self.assertRaisesRegex(GoEvidenceValidationError, f"GO_EVIDENCE_BINDING_MISMATCH:{field}"):
                 validate_human_go_evidence(evidence, expected=self.expected())

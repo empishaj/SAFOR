@@ -50,7 +50,7 @@ _REQUIRED_BOOTSTRAP_FIELDS = {
 _REQUIRED_GO_STEPS = {
     "LOAD_IDENTITY",
     "VERIFY_IDENTITY_STATUS_ACTIVE",
-    "VERIFY_CHAT_BINDING_BOUND",
+    "VERIFY_PERSONAL_INBOX_BINDING",
     "LOAD_AGENT_STATE",
     "LOAD_PERSONAL_INBOX_INDEX",
     "SELECT_DISCOVERABLE_JOB",
@@ -117,17 +117,16 @@ def validate_chat_agent_identity(identity: Mapping[str, Any]) -> None:
     if _normalized(agent_id) == _normalized(display_name):
         raise AgentIdentityError("DISPLAY_NAME_MUST_DIFFER_FROM_AGENT_ID")
 
-    binding = _mapping(identity.get("chatBinding"), "chatBinding")
-    if binding.get("bindingMode") != "CONTINUED_CHAT_HISTORY":
-        raise AgentIdentityError("CHAT_BINDING_MODE_INVALID")
-    if binding.get("status") != "BOUND":
-        raise AgentIdentityError("REIDENTIFICATION_REQUIRED")
-    if binding.get("expectedSessionContinuity") is not True:
-        raise AgentIdentityError("CHAT_CONTINUITY_CONTRACT_INVALID")
-    if binding.get("onUncertain") != "REIDENTIFICATION_REQUIRED":
-        raise AgentIdentityError("REIDENTIFICATION_POLICY_INVALID")
-    if not str(binding.get("bindingId", "")).strip():
-        raise AgentIdentityError("CHAT_BINDING_ID_MISSING")
+    inbox_binding = _mapping(identity.get("inboxBinding"), "inboxBinding")
+    if inbox_binding.get("agentId") != agent_id:
+        raise AgentIdentityError("INBOX_BINDING_AGENT_MISMATCH")
+    if inbox_binding.get("identityRevision") != identity.get("identityRevision"):
+        raise AgentIdentityError("INBOX_BINDING_IDENTITY_REVISION_MISMATCH")
+    inbox_ref = _mapping(inbox_binding.get("inboxIndexRef"), "inboxIndexRef")
+    if not str(inbox_ref.get("path", "")).endswith(f"agents/{agent_id}/inbox/index.json"):
+        raise AgentIdentityError("INBOX_BINDING_PATH_INVALID")
+    if inbox_binding.get("jobPathPattern") != "agents/{agentId}/inbox/{jobId}.json":
+        raise AgentIdentityError("INBOX_JOB_PATH_PATTERN_INVALID")
 
     activation = _mapping(identity.get("activationContract"), "activationContract")
     expected_false = (
@@ -186,7 +185,6 @@ def evaluate_human_go_activation(
     agent_state: Mapping[str, Any],
     inbox_index: Mapping[str, Any],
     human_message: str,
-    session_id: str,
     activation_id: str,
     observed_at: str,
 ) -> dict[str, Any]:
@@ -205,8 +203,6 @@ def evaluate_human_go_activation(
 
     agent_id = str(identity["agentId"])
     revision = int(identity["identityRevision"])
-    binding_id = str(_mapping(identity["chatBinding"], "chatBinding")["bindingId"])
-
     if agent_state.get("format") != "SAFOR_AGENT_STATE":
         reason = "AGENT_STATE_FORMAT_INVALID"
     elif agent_state.get("schemaVersion") != "0.14.0":
@@ -281,12 +277,10 @@ def evaluate_human_go_activation(
         "projectId": identity["projectId"],
         "agentId": agent_id,
         "identityRevision": revision,
-        "chatBindingId": binding_id,
-        "sessionId": session_id,
         "targetJobId": selected["jobId"],
         "targetDispatchRevision": selected["dispatchRevision"],
         "intent": "GO",
-        "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+        "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
         "observedAt": observed_at,
         "singleUse": True,
         "jobPromptTransported": False,
@@ -294,7 +288,7 @@ def evaluate_human_go_activation(
     return ActivationDecision(
         allowed=True,
         outcome="PREFLIGHT_REQUIRED",
-        reason_code="HUMAN_GO_BOUND_TO_SELECTED_JOB",
+        reason_code="HUMAN_GO_BOUND_TO_PERSONAL_INBOX_JOB",
         selected_job=selected,
         activation_evidence=evidence,
         required_reads=_ALLOWED_READS,

@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_REQUIREMENTS_TRACEABILITY",
   "schemaVersion": "0.14.0",
-  "releaseTarget": "0.14.0-rc.4",
+  "releaseTarget": "0.14.0-rc.5",
   "source": {
     "document": "HUMAN NOTICE – SAFOR: Master–Subagent-Orchestrierung über Git",
     "date": "2026-10-17",
@@ -340,7 +340,7 @@
       "statement": "Bei fehlender Historie, unsicherer Chatbindung oder Zugriffsverlust stoppt der Agent und verlangt erneute MASTER-vorbereitete Identitätsbindung.",
       "source": "HUMAN_NOTICE_5.1",
       "acceptance": [
-        "ChatBinding und Reidentification Policy sind explizit.",
+        "Persistente Agentenidentität und persönliche INBOX-Bindung sind explizit; Host-Session-Attestation ist keine Ausführungsvoraussetzung.",
         "Unsichere oder abweichende Bindung erzeugt capability_mismatch oder job_error ohne Produktmutation."
       ],
       "workPackages": [
@@ -1603,7 +1603,7 @@
       ]
     }
   ],
-  "status": "RC4_SOURCE_REMEDIATION_COMPLETE_RELEASE_MATERIALIZATION_PENDING",
+  "status": "RC5_INBOX_PULL_SOURCE_VALIDATED_MATERIALIZATION_PENDING",
   "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
   "schemaRef": "v0.14.0/schemas/requirements-traceability.schema.json",
   "summary": {
@@ -1627,11 +1627,11 @@
       "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_PRIOR_MATERIALIZED_HEAD"
     },
     "currentCandidate": {
-      "releaseTarget": "0.14.0-rc.4",
+      "releaseTarget": "0.14.0-rc.5",
       "repository": "empishaj/SAFOR",
-      "workflowRunId": "39125871541",
+      "workflowRunId": "39129067804",
       "runAttempt": "1",
-      "sourceCommitBeforeMaterialization": "e443b1d0083c4454adb5c8ed660d593e0fa7fe5d",
+      "sourceCommitBeforeMaterialization": "8d498783a51f1e57cc5fd092d8140bc61640dcff",
       "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_WORKTREE"
     }
   }

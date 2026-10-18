@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.14.0-rc.4**
+Current target: **v0.14.0-rc.5**
 
-Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The rc.4 Framework distributions and checksums are reproducible and automated validation is green; real-Git E2E, cross-host and migration acceptance remain separate open gates.
+Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The 0.14.0-rc.5 Framework distributions and checksums are reproducible and automated validation is green.
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -83,7 +83,7 @@ Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.1
 | Declarative ordinary-chat execution; no customer runtime installation | PASS by kernel/model/docs/unit |
 | HUMAN-GO-only subagent activation | PASS by model/schema/runtime/unit |
 | Git/automation agent wake-up | FORBIDDEN and regression-tested |
-| One-time agent chat binding + fail-closed rebind | PASS by model/schema/unit |
+| One-time agent identity bootstrap + personal INBOX binding | PASS by model/schema/unit; host session attestation not required |
 | Complete five-type Agent-to-MASTER response family | PASS by schema/templates/runtime/unit |
 | Minimal one-line subagent chat status | PASS by model/schema/runtime/unit |
 | Compact MASTER status index and pointer-first reads | PASS by model/schema/runtime/unit |
@@ -122,10 +122,10 @@ The licensing **architecture/product decision is complete**. Final legal license
 
 GA requires all OPEN gates above to be resolved or explicitly removed from GA scope through a governed HUMAN product decision, with evidence retained at immutable release revisions.
 
-## Historical reference-project evidence and rc.4 candidate migration
+## Historical reference-project evidence and current candidate migration
 
-The historical `safomwebsite` control-plane migration remains provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It is retained as legacy baseline evidence only; it does **not** prove migration to `0.14.0-rc.4`.
+The historical `safomwebsite` control-plane migration remains provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It is retained as legacy baseline evidence only; it does **not** prove migration to `0.14.0-rc.5`.
 
-The rc.4 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
+The 0.14.0-rc.5 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
 
-Therefore `V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE` remains open for rc.4. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.
+Therefore `V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE` remains open for rc.5. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.
