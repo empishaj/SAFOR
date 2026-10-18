@@ -223,7 +223,7 @@ For one mutating agent job and one read-only agent job:
 ## M. Module-wide Self-Healing
 
 **Preconditions**
-- Load the exact v0.13.0-rc.2 Framework bundle.
+- Load the exact v0.14.0-rc.5 Framework bundle.
 - Confirm the embedded module set and module recovery profiles are intact.
 - Use a disposable project/control environment for mutation tests.
 
@@ -270,7 +270,7 @@ For one mutating agent job and one read-only agent job:
 ## N. HUMAN Cognitive Load and Communication
 
 **Preconditions**
-- Start a fresh chat with the exact v0.13.0-rc.2 Framework artifact.
+- Start a fresh chat with the exact v0.14.0-rc.5 Framework artifact.
 - Use a realistic project where Discovery requires genuine HUMAN intent and priorities.
 - Retain the interaction transcript plus emitted interaction-menu metadata.
 
