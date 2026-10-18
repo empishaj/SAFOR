@@ -63,7 +63,8 @@
       "type": [
         "string",
         "null"
-      ]
+      ],
+      "minLength": 1
     },
     "text": {
       "type": "string",
@@ -141,6 +142,30 @@
         "required": [
           "persistence"
         ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "BLOCKED"
+          },
+          "detailsRef": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "status",
+          "detailsRef"
+        ]
+      },
+      "then": {
+        "properties": {
+          "persistence": {
+            "type": "null"
+          }
+        }
       }
     },
     {
