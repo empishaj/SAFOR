@@ -1670,7 +1670,12 @@
       "id": "CF-270",
       "statement": "Chat-bound subagents are activated only by explicit HUMAN GO in the same bound chat.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-RC5-001",
+        "CF-RC5-003"
+      ],
+      "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
     },
     {
       "id": "CF-271",
@@ -1682,7 +1687,11 @@
       "id": "CF-272",
       "statement": "Every active chat agent has stable agentId, distinct displayName and fail-closed rebind policy.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-RC5-002"
+      ],
+      "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
     },
     {
       "id": "CF-273",
@@ -1736,7 +1745,12 @@
       "id": "CF-302",
       "statement": "A HUMAN-GO transition requires structured single-use evidence bound to project, agent, identity, chat, job and dispatch revision.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-RC5-001",
+        "CF-RC5-002"
+      ],
+      "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
     },
     {
       "id": "CF-303",
@@ -1858,16 +1872,48 @@
     },
     {
       "id": "CF-RC4-004",
-      "status": "ACTIVE",
+      "status": "SUPERSEDED",
       "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
       "statement": "A HUMAN-GO claim becomes authoritative only when provider CAS succeeds and full committed job-state readback exactly matches the prepared state by canonical digest and bound project/job/agent/identity/chat/dispatch fields; the activationId is already persisted in consumedActivationIds.",
-      "expected": true
+      "expected": true,
+      "supersededBy": [
+        "CF-RC5-004"
+      ],
+      "supersessionReason": "rc.5 replaces unverifiable host chat/session binding with pinned identity plus personal inbox job transport."
     },
     {
       "id": "CF-RC4-005",
       "status": "ACTIVE",
       "semanticKey": "AGENT_CHAT_PERSISTENCE_XOR",
       "statement": "For BLOCKED agent chat output, exactly one persistence representation is valid: either a non-empty detailsRef with persistence=null, or detailsRef=null with a FAILED control-repository persistence object; both together are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-001",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_INBOX_PULL_ACTIVATION",
+      "statement": "After explicit HUMAN GO, an initialized chat agent reads its pinned identity and personal inbox index, selects the next eligible assigned job, and never receives the job through the GO message.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-002",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_EXECUTION_IDENTITY",
+      "statement": "Normal chat-agent execution identity is bound by projectId, agentId, identityRevision and personal inbox/job assignment; host sessionId or chatBindingId attestation is not required.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-003",
+      "status": "ACTIVE",
+      "semanticKey": "MASTER_AGENT_JOB_TRANSPORT",
+      "statement": "MASTER dispatches work by writing immutable agents/{agentId}/inbox/{jobId}.json and updating agents/{agentId}/inbox/index.json; Git events do not activate the agent.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-004",
+      "status": "ACTIVE",
+      "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
+      "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
       "expected": true
     }
   ],
