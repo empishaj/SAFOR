@@ -15,6 +15,18 @@ AND active SAFOR authority/policy
 AND actual host/provider rights
 ```
 
+## Attempt and retry semantics
+
+SAFOR distinguishes the first repair execution from a retry.
+
+- **INITIAL** is the first profile-constrained repair execution for one `failureFingerprint`. It is `attemptNumber: 1` and does **not** consume retry budget.
+- **RETRY** starts at `attemptNumber: 2`. It consumes `additionalRetryBudget` and requires a reference to the prior attempt plus authoritative readback proving that the prior mutation did **not** take effect.
+- **RECONCILIATION** is read-only evidence collection. It is not a repair attempt, does not consume retry budget and may not mutate state.
+- If the prior external effect is unknown, the state is `RECONCILE_REQUIRED`; SAFOR may not issue the mutation again.
+- If an upstream product mutation is proven applied but response persistence failed, SAFOR may continue only with the missing response/control persistence effect. The proven product mutation is never replayed.
+
+For SAFOR 0.14 every module recovery profile has `initialAutomaticAttemptBudget: 1` and `additionalRetryBudget: 0`. Therefore module-wide self-healing can make one automatic initial repair attempt, but it cannot automatically execute a second repair mutation for the same failure fingerprint.
+
 ## Recovery modes
 
 - `IMMUTABLE_VALIDATE_ONLY` — validate or reload the expected pinned blob; never rewrite semantics.
@@ -82,7 +94,7 @@ Every repair record stores:
 - failure class/fingerprint
 - pre-state references
 - profile-constrained selected action
-- retry attempt
+- attempt kind/number, prior-attempt reference and retry authorization when applicable
 - required success evidence
 - resulting evidence
 - outcome

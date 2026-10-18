@@ -181,7 +181,7 @@ def build_bundle():
             "humanTerminalMenuRule": "Platform informational notices are content-only and non-interactive. Interactive checkpoints and genuine decisions contain exactly one terminal menu and render no SAFOR-visible content after it.",
             "deterministicControlRule": "Within the executable transition boundary, external observations enter as typed events and only the deterministic control kernel materializes authoritative state transitions.",
             "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
-            "selfHealingRule": "Use conservative profile-constrained recovery; never invent entitlement, authority, evidence or workspace ownership.",
+            "selfHealingRule": "Use one profile-constrained INITIAL recovery attempt separately from retry accounting. SAFOR 0.14 module profiles permit zero additional retries; unknown effects reconcile read-only, and a proven product mutation is never replayed.",
             "agentWorkspaceRule": "AGENT work uses persistent chat-bound identities and repository-native jobs; local .safor/ is never a worker write target.",
             "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate, claim or start a subagent job; Git and automation events never wake an agent.",
             "agentResponseRule": "Every dispatched job binds all five typed response templates and exact separate Git return targets before READY.",
