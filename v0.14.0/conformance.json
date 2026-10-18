@@ -864,7 +864,7 @@
     },
     {
       "id": "CF-140",
-      "statement": "Normal K10 creation-profile binding is deterministic and has no unconditional HUMAN decision; K10A exists only for non-standard, changed or conflicting bindings.",
+      "statement": "Normal K10 binding remains a non-authoritative deterministic proposal and creates no unconditional HUMAN decision; K10A is explicitly reachable between K10 and K11 but executes only for compatible material changes that cannot reuse a prior approval.",
       "expected": true,
       "status": "ACTIVE"
     },
@@ -1922,6 +1922,13 @@
       "status": "ACTIVE",
       "semanticKey": "AGENT_MASTER_CLAIM_AUTHORITY_SEPARATION",
       "statement": "Normal subagents never CAS or mutate master/jobs/{jobId}.json. Agent claim authority is persisted only in agent-owned state; MASTER advances the MASTER-owned lifecycle separately from provider-verified agent claim evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-006",
+      "status": "ACTIVE",
+      "semanticKey": "CONDITIONAL_PACKAGE_BINDING_APPROVAL_ROUTE",
+      "statement": "BOOTSTRAP routes K10 → K10A? → K11 deterministically: default bindings skip K10A, unchanged approved bindings reuse the prior decision, compatible material changes require PACKAGE_BINDING_APPROVAL, invalid bindings block before K10A, and K10 alone never activates a changed binding.",
       "expected": true
     }
   ],
