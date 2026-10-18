@@ -184,6 +184,33 @@ def validate():
     communication = load("v0.14.0/agent-communication-model.json")
     if communication.get("persistenceFailureFallback", {}).get("detailsRef", "missing") is not None:
         errors.append("persistence fallback may not invent detailsRef")
+
+    xor_contract = communication.get("persistenceXorContract", {})
+    if xor_contract.get("mutuallyExclusive") is not True:
+        errors.append("persistence fallback XOR is not declared mutually exclusive")
+    persisted_variant = xor_contract.get("variants", {}).get("PERSISTED_RESPONSE", {})
+    failed_variant = xor_contract.get("variants", {}).get("PERSISTENCE_FAILURE", {})
+    if persisted_variant.get("persistence") != "MUST_BE_NULL":
+        errors.append("persisted response may still carry persistence failure data")
+    if failed_variant.get("detailsRef") != "MUST_BE_NULL":
+        errors.append("persistence failure may still carry detailsRef")
+
+    chat_schema = load("v0.14.0/schemas/agent-chat-output.schema.json")
+    blocked_null = False
+    blocked_ref = False
+    for clause in chat_schema.get("allOf", []):
+        condition = clause.get("if", {}).get("properties", {})
+        then_props = clause.get("then", {}).get("properties", {})
+        if condition.get("status", {}).get("const") != "BLOCKED":
+            continue
+        details_type = condition.get("detailsRef", {}).get("type")
+        persistence_type = then_props.get("persistence", {}).get("type")
+        if details_type == "null" and persistence_type == "object":
+            blocked_null = True
+        if details_type == "string" and persistence_type == "null":
+            blocked_ref = True
+    if not blocked_null or not blocked_ref:
+        errors.append("agent chat output schema does not enforce BLOCKED persistence XOR")
     activation = load("v0.14.0/agent-activation-model.json").get("atomicClaimContract", {})
     required = [
         "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
