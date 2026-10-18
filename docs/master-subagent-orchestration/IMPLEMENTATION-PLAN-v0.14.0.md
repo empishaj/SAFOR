@@ -1,5 +1,8 @@
 # SAFOR v0.14.0-rc.2 – Umsetzungsplan Master–Subagent-Orchestrierung
 
+> **HISTORISCHES PLANUNGSARTEFAKT.** Dieses Dokument beschreibt einen früheren Umsetzungsstand und ist **nicht** der aktuelle Ausführungsvertrag. Für den aktuellen rc.5-Stand gelten `VERSION`, `RELEASE-FACTS.json`, `RELEASE-MANIFEST.json`, `v0.14.0/SAFOR-MASTER.json`, `v0.14.0/agent-activation-model.json` und `v0.14.0/agent-workspace-model.json`. Insbesondere wurde die frühere Host-Chat-Binding-Voraussetzung durch gepinnte Agentenidentität + persönliche INBOX ersetzt.
+
+
 **Status:** zur Umsetzung freigegeben durch den HUMAN im aktuellen MASTER-Chat  
 **Basis:** `empishaj/SAFOR@29a9bcc5c84fe348f94c63b08852fda28135fe50`  
 **Umsetzungsbranch:** `safor/master-subagent-orchestration-v0.14.0-rc.2`  
