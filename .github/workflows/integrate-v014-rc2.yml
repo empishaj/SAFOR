@@ -1,3 +1,4 @@
+# integration retry 2
 name: Integrate SAFOR 0.14.0-rc.2
 
 on:
@@ -76,6 +77,7 @@ jobs:
             git push origin HEAD:safor/integrate-v0.14.0-rc.2
             exit 1
           fi
+          rm -f INTEGRATION-FAILURE-v0.14.0-rc.2.md
           git add -A
           git commit -m "SAFOR v0.14 KWP-00/01: establish rc.9-based integration baseline"
           git push origin HEAD:safor/integrate-v0.14.0-rc.2
