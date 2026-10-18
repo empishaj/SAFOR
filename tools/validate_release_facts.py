@@ -48,12 +48,31 @@ def main() -> None:
     for field, expected in expected_refs.items():
         if manifest.get(field) != expected:
             errors.append(f"manifest {field} differs from release facts")
-    if artifacts.get("state") != "PENDING_WP_A7":
-        errors.append("release facts artifact state must remain PENDING_WP_A7 before materialization")
-    if manifest.get("releaseArtifactsState") != "PENDING_WP_A7_MATERIALIZATION":
-        errors.append("manifest artifact state is not pending WP-A7")
-    if "Materialization state: **PENDING WP-A7**" not in readiness:
-        errors.append("PRODUCT-READINESS does not disclose pending rc.4 materialization")
+    artifact_state = artifacts.get("state")
+    allowed_artifact_states = {
+        "PENDING_WP_A7",
+        "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+    }
+    if artifact_state not in allowed_artifact_states:
+        errors.append(f"unsupported release artifact state: {artifact_state}")
+    if artifact_state == "PENDING_WP_A7":
+        if manifest.get("releaseArtifactsState") != "PENDING_WP_A7_MATERIALIZATION":
+            errors.append("manifest artifact state is not pending WP-A7")
+        if "Materialization state: **PENDING WP-A7**" not in readiness:
+            errors.append("PRODUCT-READINESS does not disclose pending rc.4 materialization")
+    if artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+        if manifest.get("releaseArtifactsState") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+            errors.append("manifest artifact state is not materialized/pass")
+        if "Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**" not in readiness:
+            errors.append("PRODUCT-READINESS does not disclose materialized/pass state")
+        for required_path in (
+            artifacts.get("distributable"),
+            artifacts.get("evidence"),
+            artifacts.get("notes"),
+            artifacts.get("checksums"),
+        ):
+            if not required_path or not (ROOT / required_path).is_file():
+                errors.append(f"materialized release artifact missing: {required_path}")
 
     module_count = len(module_map.get("modulePaths", {}))
     recovery_count = len(recovery.get("moduleProfiles", []))
@@ -115,20 +134,30 @@ def main() -> None:
         errors.append("traceability must contain 33 requirements")
     pending_tests = sum(1 for item in requirements if item.get("coverage", {}).get("automatedTest") == "PENDING")
     pending_bundles = sum(1 for item in requirements if item.get("coverage", {}).get("bundle") == "PENDING")
-    if pending_tests != 33:
-        errors.append("all rc.4 requirement automated-test dimensions must be PENDING before WP-A7")
-    if pending_bundles != 33:
-        errors.append("all rc.4 requirement bundle dimensions must be PENDING before WP-A7")
+    pass_tests = sum(1 for item in requirements if item.get("coverage", {}).get("automatedTest") == "PASS")
+    pass_bundles = sum(1 for item in requirements if item.get("coverage", {}).get("bundle") == "PASS")
+    if artifact_state == "PENDING_WP_A7":
+        if pending_tests != 33 or pending_bundles != 33:
+            errors.append("all rc.4 automated-test/bundle dimensions must be PENDING before WP-A7")
+    if artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+        if pass_tests != 33 or pass_bundles != 33:
+            errors.append("all rc.4 automated-test/bundle dimensions must be PASS after WP-A7")
     if any(item.get("coverage", {}).get("realGitE2E") != "NOT_VERIFIED" for item in requirements):
         errors.append("real-Git E2E must remain NOT_VERIFIED")
     if any(item.get("coverage", {}).get("crossHost") != "NOT_VERIFIED" for item in requirements):
         errors.append("cross-host must remain NOT_VERIFIED")
 
     summary = trace.get("summary", {})
-    if summary.get("automatedTestPass") != 0 or summary.get("automatedTestPendingUntilCI") != 33:
-        errors.append("traceability automated-test summary is inconsistent")
-    if summary.get("bundlePass") != 0 or summary.get("bundlePendingUntilMaterialization") != 33:
-        errors.append("traceability bundle summary is inconsistent")
+    if artifact_state == "PENDING_WP_A7":
+        if summary.get("automatedTestPass") != 0 or summary.get("automatedTestPendingUntilCI") != 33:
+            errors.append("traceability automated-test pending summary is inconsistent")
+        if summary.get("bundlePass") != 0 or summary.get("bundlePendingUntilMaterialization") != 33:
+            errors.append("traceability bundle pending summary is inconsistent")
+    if artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+        if summary.get("automatedTestPass") != 33 or summary.get("automatedTestPendingUntilCI") != 0:
+            errors.append("traceability automated-test pass summary is inconsistent")
+        if summary.get("bundlePass") != 33 or summary.get("bundlePendingUntilMaterialization") != 0:
+            errors.append("traceability bundle pass summary is inconsistent")
     if summary.get("percentageClaimForbidden") is not True:
         errors.append("traceability must continue to forbid false percentage claims")
 
@@ -141,7 +170,7 @@ def main() -> None:
     print(
         f"SAFOR release facts validation: PASS "
         f"({version}; {module_count}/{recovery_count} modules/recovery; "
-        "rc.4 build evidence pending WP-A7)"
+        f"artifactState={artifact_state})"
     )
 
 
