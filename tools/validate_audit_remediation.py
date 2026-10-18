@@ -114,7 +114,7 @@ def validate():
             continue
         if set(item.get("supersededBy") or ()) != expected_successors:
             errors.append(f"legacy conformance assertion {legacy_id} successor set mismatch")
-    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-RC4-004", "CF-267", "CF-270", "CF-271", "CF-229", "CF-231", "CF-232"):
+    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-RC4-004", "CF-RC4-005", "CF-267", "CF-270", "CF-271", "CF-229", "CF-231", "CF-232"):
         if conformance_by_id.get(active_id, {}).get("status") != "ACTIVE":
             errors.append(f"current conformance assertion {active_id} is not ACTIVE")
     if conformance_by_id.get("CF-RC4-001", {}).get("applicability", {}).get("workspaceType") != ["REMOTE_GIT"]:
@@ -211,6 +211,8 @@ def validate():
             blocked_ref = True
     if not blocked_null or not blocked_ref:
         errors.append("agent chat output schema does not enforce BLOCKED persistence XOR")
+    if conformance_by_id.get("CF-RC4-005", {}).get("semanticKey") != "AGENT_CHAT_PERSISTENCE_XOR":
+        errors.append("persistence XOR conformance assertion missing")
     activation = load("v0.14.0/agent-activation-model.json").get("atomicClaimContract", {})
     required = [
         "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
