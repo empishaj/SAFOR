@@ -58,7 +58,7 @@ An agent is eligible only when:
 
 - identity status is `ACTIVE`;
 - registry dispatch is enabled;
-- a normal chat identity has `BOUND` chat binding;
+- a normal chat agent has `inboxBindingStatus=BOUND`;
 - required role and capabilities match;
 - at least one scheduling slot is free;
 - separation of duties remains satisfiable;
@@ -162,7 +162,7 @@ The author cannot perform a configured independent review of the same contributi
 After safe publication, MASTER provides a compact list:
 
 ```text
-Display name | agentId | jobKey | bound chat | instruction = GO
+Display name | agentId | jobKey | initialized agent chat | instruction = GO
 ```
 
 The HUMAN does not transport the job body. Each agent retrieves it through its own index.
