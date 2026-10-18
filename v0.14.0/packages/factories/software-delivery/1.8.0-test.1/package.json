@@ -1,0 +1,993 @@
+{
+  "format": "SAFOR_DOMAIN_PACKAGE",
+  "schemaVersion": "0.14.0",
+  "packageId": "safor.factory.software-delivery",
+  "packageKind": "FACTORY",
+  "version": "1.8.0-test.1",
+  "name": "Software Value Creation, Delivery and Operations Factory",
+  "description": "Provider-neutral software value-creation factory from product intent through secure design, small-batch implementation, continuous verification, release, deployment, activation, operation, recovery and measurable outcome learning. It requests abstract capabilities and authorities and contains no role IDs.",
+  "commercial": {
+    "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+    "sku": "SAFOR-SOFTWARE-FACTORY-TEST",
+    "entitlementRequired": true,
+    "entitlementEvidenceMode": "EXTERNAL_ONLY",
+    "independentlySelectable": true
+  },
+  "compatibility": {
+    "framework": {
+      "minimum": "0.14.0",
+      "maximumExclusive": "0.15.0"
+    },
+    "supportedCreationTypes": [
+      "SOFTWARE_SAAS"
+    ],
+    "counterpart": {
+      "requiredKind": "OPERATING_MODEL",
+      "requiredCapabilities": [
+        "business_intent",
+        "scope_definition",
+        "requirement_definition",
+        "quality_requirement_definition",
+        "security_requirement_definition",
+        "solution_design",
+        "threat_modeling",
+        "code_contribution",
+        "build_automation",
+        "dependency_governance",
+        "continuous_verification",
+        "technical_review",
+        "test_evidence",
+        "security_evidence",
+        "release_readiness",
+        "deployment_execution",
+        "activation_execution",
+        "observability_evidence",
+        "outcome_assessment"
+      ],
+      "requiredAuthorities": [
+        "product_scope_approval",
+        "business_outcome_acceptance"
+      ],
+      "allowedPackageFamilies": [
+        "safor.om.saas"
+      ],
+      "requiredWorkItemTypes": [],
+      "requiredArtifactTypes": []
+    },
+    "domainIds": [
+      "SAAS_ENGINEERING"
+    ]
+  },
+  "exports": {
+    "capabilities": [
+      "business_intent",
+      "scope_definition",
+      "requirement_definition",
+      "quality_requirement_definition",
+      "security_requirement_definition",
+      "solution_design",
+      "threat_modeling",
+      "code_contribution",
+      "build_automation",
+      "dependency_governance",
+      "continuous_verification",
+      "technical_review",
+      "test_evidence",
+      "security_evidence",
+      "release_readiness",
+      "deployment_execution",
+      "activation_execution",
+      "observability_evidence",
+      "outcome_assessment",
+      "incident_response",
+      "recovery_execution",
+      "vulnerability_response"
+    ],
+    "authorities": [
+      "product_scope_approval",
+      "business_outcome_acceptance",
+      "architecture_exception_approval",
+      "quality_risk_decision",
+      "production_release_approval"
+    ],
+    "workItemTypes": [
+      "PRODUCT_DEFINITION",
+      "QUALITY_SECURITY_REQUIREMENTS",
+      "SOLUTION_DESIGN",
+      "IMPLEMENTATION_BATCH",
+      "INDEPENDENT_VERIFICATION",
+      "SECURITY_VERIFICATION",
+      "RELEASE",
+      "DEPLOYMENT",
+      "ACTIVATION",
+      "OPERATE_OBSERVE",
+      "INCIDENT_RECOVERY",
+      "VULNERABILITY_RESPONSE",
+      "OUTCOME_ASSESSMENT"
+    ],
+    "artifactTypes": [
+      "BUSINESS_INTENT",
+      "REQUIREMENT",
+      "QUALITY_REQUIREMENTS",
+      "SECURITY_REQUIREMENTS",
+      "SOLUTION_DESIGN",
+      "THREAT_MODEL",
+      "CONTRIBUTION",
+      "BUILD_EVIDENCE",
+      "DEPENDENCY_INVENTORY",
+      "SBOM",
+      "BUILD_PROVENANCE",
+      "CONTINUOUS_VERIFICATION_EVIDENCE",
+      "TEST_EVIDENCE",
+      "QUALITY_EVIDENCE",
+      "SECURITY_EVIDENCE",
+      "RELEASE_ARTIFACT",
+      "RELEASE_READINESS_EVIDENCE",
+      "DEPLOYMENT",
+      "ACTIVATION",
+      "OBSERVABILITY_EVIDENCE",
+      "OPERATIONAL_STATUS",
+      "INCIDENT_RECORD",
+      "RECOVERY_EVIDENCE",
+      "VULNERABILITY_RESPONSE_EVIDENCE",
+      "OUTCOME"
+    ],
+    "providerCapabilities": []
+  },
+  "dependencies": [],
+  "integrity": {
+    "canonicalization": "SAFOR_CANONICAL_JSON_V2",
+    "digestAlgorithm": "SHA-256",
+    "digestScope": "DECLARED_DOMAIN_CONTRACT",
+    "contentDigest": "sha256:4a7e5598135783148cc837eec2a2a44b217d885c5ef072f6237fee0bec40201a",
+    "verificationMode": "CANONICAL_REPOSITORY_READBACK"
+  },
+  "model": {
+    "maturity": "REFERENCE_STARTER_PRODUCTION_ALIGNED",
+    "designBasis": {
+      "intent": "Model software delivery as a value-creation and operations stream rather than a post-design implementation pipeline.",
+      "externalAlignment": [
+        {
+          "id": "NIST_SSDF",
+          "scope": "Security requirements, secure design, provenance and vulnerability response"
+        },
+        {
+          "id": "OWASP_SAMM",
+          "scope": "Threat assessment, secure build/deployment, verification and operations"
+        },
+        {
+          "id": "ISO_IEC_25010_2023",
+          "scope": "Risk-based product-quality planning and evaluation"
+        },
+        {
+          "id": "SLSA_PROVENANCE",
+          "scope": "Build provenance and artifact traceability"
+        },
+        {
+          "id": "CONTINUOUS_DELIVERY",
+          "scope": "Small batches, automated verification, deployable artifacts and fast feedback"
+        }
+      ],
+      "nonNormativeRule": "External references guide planning dimensions; project-specific acceptance criteria remain explicit SAFOR contracts and must not be inferred solely from a named standard."
+    },
+    "compatibilityContract": {
+      "mandatoryCapabilities": [
+        "business_intent",
+        "scope_definition",
+        "requirement_definition",
+        "quality_requirement_definition",
+        "security_requirement_definition",
+        "solution_design",
+        "threat_modeling",
+        "code_contribution",
+        "build_automation",
+        "dependency_governance",
+        "continuous_verification",
+        "technical_review",
+        "test_evidence",
+        "security_evidence",
+        "release_readiness",
+        "deployment_execution",
+        "activation_execution",
+        "observability_evidence",
+        "outcome_assessment"
+      ],
+      "conditionalCapabilities": [
+        {
+          "capabilityId": "incident_response",
+          "when": "INCIDENT_OR_SERVICE_DEGRADATION"
+        },
+        {
+          "capabilityId": "recovery_execution",
+          "when": "INCIDENT_OR_SERVICE_DEGRADATION"
+        },
+        {
+          "capabilityId": "vulnerability_response",
+          "when": "POST_RELEASE_VULNERABILITY_OR_SECURITY_DEFECT"
+        }
+      ],
+      "mandatoryAuthorities": [
+        "product_scope_approval",
+        "business_outcome_acceptance"
+      ],
+      "conditionalAuthorities": [
+        {
+          "authorityId": "architecture_exception_approval",
+          "when": "ELEVATED_ARCHITECTURE_RISK"
+        },
+        {
+          "authorityId": "quality_risk_decision",
+          "when": "CRITICAL_QUALITY_OR_SECURITY_DEVIATION"
+        },
+        {
+          "authorityId": "production_release_approval",
+          "when": "PRODUCTION_AND_MATERIAL_RISK"
+        }
+      ],
+      "rule": "Package compatibility requires all mandatory capabilities/authorities. Conditional requirements are checked fail-closed only when their trigger becomes active."
+    },
+    "flowGraph": {
+      "nonLinear": true,
+      "nodes": [
+        {
+          "id": "SW-01",
+          "workItemType": "PRODUCT_DEFINITION",
+          "requiresCapabilities": [
+            "business_intent",
+            "scope_definition",
+            "requirement_definition"
+          ],
+          "requiredAuthorities": [
+            "product_scope_approval"
+          ],
+          "produces": [
+            "BUSINESS_INTENT",
+            "REQUIREMENT"
+          ],
+          "dependsOn": []
+        },
+        {
+          "id": "SW-02",
+          "workItemType": "QUALITY_SECURITY_REQUIREMENTS",
+          "requiresCapabilities": [
+            "quality_requirement_definition",
+            "security_requirement_definition"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "QUALITY_REQUIREMENTS",
+            "SECURITY_REQUIREMENTS"
+          ],
+          "dependsOn": [
+            "SW-01"
+          ]
+        },
+        {
+          "id": "SW-03",
+          "workItemType": "SOLUTION_DESIGN",
+          "requiresCapabilities": [
+            "solution_design",
+            "threat_modeling"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "ELEVATED_ARCHITECTURE_RISK",
+              "authorityId": "architecture_exception_approval"
+            }
+          ],
+          "produces": [
+            "SOLUTION_DESIGN",
+            "THREAT_MODEL"
+          ],
+          "dependsOn": [
+            "SW-02"
+          ]
+        },
+        {
+          "id": "SW-04",
+          "workItemType": "IMPLEMENTATION_BATCH",
+          "requiresCapabilities": [
+            "code_contribution",
+            "build_automation",
+            "dependency_governance",
+            "continuous_verification"
+          ],
+          "reviewPolicyRef": "reviewPolicy",
+          "requiredAuthorities": [],
+          "produces": [
+            "CONTRIBUTION",
+            "BUILD_EVIDENCE",
+            "DEPENDENCY_INVENTORY",
+            "SBOM",
+            "BUILD_PROVENANCE",
+            "CONTINUOUS_VERIFICATION_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-03"
+          ]
+        },
+        {
+          "id": "SW-05",
+          "workItemType": "INDEPENDENT_VERIFICATION",
+          "requiresCapabilities": [
+            "test_evidence"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "TEST_EVIDENCE",
+            "QUALITY_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-04"
+          ]
+        },
+        {
+          "id": "SW-06",
+          "workItemType": "SECURITY_VERIFICATION",
+          "requiresCapabilities": [
+            "security_evidence"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "CRITICAL_SECURITY_DEVIATION",
+              "authorityId": "quality_risk_decision"
+            }
+          ],
+          "produces": [
+            "SECURITY_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-04"
+          ]
+        },
+        {
+          "id": "SW-07",
+          "workItemType": "RELEASE",
+          "requiresCapabilities": [
+            "release_readiness"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "PRODUCTION_AND_MATERIAL_RISK",
+              "authorityId": "production_release_approval"
+            }
+          ],
+          "produces": [
+            "RELEASE_ARTIFACT",
+            "RELEASE_READINESS_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-05",
+            "SW-06"
+          ],
+          "joinPolicy": "ALL_DEPENDENCIES_ACCEPTED"
+        },
+        {
+          "id": "SW-08",
+          "workItemType": "DEPLOYMENT",
+          "requiresCapabilities": [
+            "deployment_execution"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "DEPLOYMENT"
+          ],
+          "dependsOn": [
+            "SW-07"
+          ]
+        },
+        {
+          "id": "SW-09",
+          "workItemType": "ACTIVATION",
+          "requiresCapabilities": [
+            "activation_execution"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "ACTIVATION"
+          ],
+          "dependsOn": [
+            "SW-08"
+          ]
+        },
+        {
+          "id": "SW-10",
+          "workItemType": "OPERATE_OBSERVE",
+          "requiresCapabilities": [
+            "observability_evidence"
+          ],
+          "requiredAuthorities": [],
+          "produces": [
+            "OBSERVABILITY_EVIDENCE",
+            "OPERATIONAL_STATUS"
+          ],
+          "dependsOn": [
+            "SW-09"
+          ]
+        },
+        {
+          "id": "SW-11",
+          "workItemType": "INCIDENT_RECOVERY",
+          "activationCondition": "INCIDENT_OR_SERVICE_DEGRADATION",
+          "requiresCapabilities": [
+            "incident_response",
+            "recovery_execution"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "CRITICAL_QUALITY_OR_SECURITY_DEVIATION",
+              "authorityId": "quality_risk_decision"
+            }
+          ],
+          "produces": [
+            "INCIDENT_RECORD",
+            "RECOVERY_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-10"
+          ]
+        },
+        {
+          "id": "SW-12",
+          "workItemType": "VULNERABILITY_RESPONSE",
+          "activationCondition": "POST_RELEASE_VULNERABILITY_OR_SECURITY_DEFECT",
+          "requiresCapabilities": [
+            "vulnerability_response"
+          ],
+          "requiredAuthorities": [],
+          "conditionalAuthorities": [
+            {
+              "when": "CRITICAL_SECURITY_DEVIATION",
+              "authorityId": "quality_risk_decision"
+            }
+          ],
+          "produces": [
+            "VULNERABILITY_RESPONSE_EVIDENCE"
+          ],
+          "dependsOn": [
+            "SW-10"
+          ]
+        },
+        {
+          "id": "SW-13",
+          "workItemType": "OUTCOME_ASSESSMENT",
+          "requiresCapabilities": [
+            "outcome_assessment"
+          ],
+          "requiredAuthorities": [
+            "business_outcome_acceptance"
+          ],
+          "produces": [
+            "OUTCOME"
+          ],
+          "dependsOn": [
+            "SW-10"
+          ]
+        }
+      ]
+    },
+    "discoveryContract": {
+      "creationType": "SOFTWARE_SAAS",
+      "purpose": "Understand the user problem, intended value, solution form and minimum useful first release while deriving technical quality/security questions only when project context makes them material.",
+      "requiredFields": [
+        {
+          "id": "targetUsers",
+          "prompt": "Wer soll die Software oder Website hauptsächlich nutzen?"
+        },
+        {
+          "id": "userProblem",
+          "prompt": "Welches konkrete Problem soll sie lösen?"
+        },
+        {
+          "id": "valueHypothesis",
+          "prompt": "Woran erkennen wir später, dass sie echten Nutzen liefert?"
+        },
+        {
+          "id": "solutionForm",
+          "prompt": "Was soll entstehen?",
+          "options": [
+            "WEBSITE",
+            "WEB_APP",
+            "SERVICE_API",
+            "APPLICATION",
+            "OTHER"
+          ]
+        },
+        {
+          "id": "firstRelease",
+          "prompt": "Was ist die kleinste wirklich nutzbare erste Version?"
+        }
+      ],
+      "conditionalFields": [
+        {
+          "id": "dataSensitivity",
+          "when": "PERSONAL_OR_SENSITIVE_DATA_POSSIBLE",
+          "prompt": "Welche sensiblen oder personenbezogenen Daten werden verarbeitet?"
+        },
+        {
+          "id": "availabilityExpectation",
+          "when": "PRODUCTION_SERVICE_OR_BUSINESS_CRITICAL",
+          "prompt": "Welche Verfügbarkeit und Wiederherstellbarkeit ist für den Nutzungskontext notwendig?"
+        },
+        {
+          "id": "publicDiscoverability",
+          "when": "solutionForm == WEBSITE",
+          "prompt": "Soll die Website öffentlich über Suchmaschinen auffindbar sein?"
+        },
+        {
+          "id": "regulatedContext",
+          "when": "REGULATORY_OR_CONTRACTUAL_CONSTRAINT_POSSIBLE",
+          "prompt": "Gibt es rechtliche, regulatorische oder vertragliche Vorgaben, die wir berücksichtigen müssen?"
+        }
+      ],
+      "decisionLoadRule": "Derive from approved context before asking; ask conditional fields only when they materially affect requirements, risk or acceptance.",
+      "completionPredicate": "ALL_REQUIRED_FIELDS_CONFIRMED_AND_ACTIVE_CONDITIONAL_FIELDS_RESOLVED",
+      "outputArtifactType": "BUSINESS_INTENT"
+    },
+    "qualityPlanningContract": {
+      "referenceModel": "ISO_IEC_25010_2023_ALIGNED",
+      "characteristics": [
+        "FUNCTIONAL_SUITABILITY",
+        "PERFORMANCE_EFFICIENCY",
+        "COMPATIBILITY",
+        "INTERACTION_CAPABILITY",
+        "RELIABILITY",
+        "SECURITY",
+        "MAINTAINABILITY",
+        "FLEXIBILITY",
+        "SAFETY"
+      ],
+      "rule": "Planning must explicitly mark each characteristic RELEVANT, NOT_RELEVANT_WITH_REASON, or DEFERRED_WITH_RISK_DECISION; every RELEVANT characteristic receives measurable acceptance/evidence requirements.",
+      "webConditionalProfiles": [
+        {
+          "when": "solutionForm IN [WEBSITE,WEB_APP]",
+          "require": [
+            "ACCESSIBILITY",
+            "RESPONSIVE_BEHAVIOR",
+            "BROWSER_DEVICE_COMPATIBILITY",
+            "WEB_PERFORMANCE"
+          ]
+        },
+        {
+          "when": "solutionForm IN [WEBSITE,WEB_APP] AND ACCESSIBILITY_APPLIES",
+          "defaults": {
+            "standard": "WCAG_2_2",
+            "targetLevel": "AA"
+          },
+          "rule": "Target may be raised or replaced by applicable jurisdiction/contract; the selected target is recorded, never silently assumed."
+        },
+        {
+          "when": "solutionForm == WEBSITE AND publicDiscoverability == true",
+          "require": [
+            "CRAWLABILITY",
+            "INDEXABILITY",
+            "METADATA",
+            "CANONICALIZATION",
+            "SITEMAP_ROBOTS_POLICY"
+          ]
+        },
+        {
+          "when": "PERSONAL_OR_SENSITIVE_DATA_PROCESSED",
+          "require": [
+            "PRIVACY_REQUIREMENTS",
+            "DATA_MINIMIZATION",
+            "RETENTION_AND_DELETION_RULES"
+          ]
+        }
+      ]
+    },
+    "securityEngineeringContract": {
+      "shiftLeft": true,
+      "requirementsRequired": true,
+      "threatAssessment": {
+        "default": "LIGHTWEIGHT_RISK_MODEL",
+        "elevateWhen": [
+          "INTERNET_FACING",
+          "AUTHENTICATION",
+          "PERSONAL_OR_SENSITIVE_DATA",
+          "MATERIAL_BUSINESS_RISK",
+          "PAYMENT_OR_FINANCIAL_FLOW"
+        ],
+        "evidence": "THREAT_MODEL"
+      },
+      "secureBuild": {
+        "repeatableBuildRequired": true,
+        "dependencyInventoryRequired": true,
+        "sbomRequiredWhen": "THIRD_PARTY_DEPENDENCIES_PRESENT",
+        "secretDetectionRequired": true,
+        "staticAnalysis": "RISK_BASED",
+        "dynamicSecurityTesting": "WHEN_RUNTIME_ATTACK_SURFACE_EXISTS",
+        "provenanceRequired": true
+      },
+      "postRelease": {
+        "vulnerabilityResponseRequired": true,
+        "unsafeUnresolvedCriticalFindingOutcome": "BLOCK_OR_EXPLICIT_QUALITY_RISK_DECISION"
+      }
+    },
+    "continuousVerificationContract": {
+      "perChangeMinimum": [
+        "BUILD",
+        "UNIT_OR_EQUIVALENT_FAST_TESTS",
+        "STATIC_QUALITY_CHECKS",
+        "SECRET_SCAN",
+        "DEPENDENCY_STATUS_CHECK"
+      ],
+      "addWhenApplicable": [
+        "COMPONENT_TESTS",
+        "INTEGRATION_TESTS",
+        "CONTRACT_TESTS",
+        "UI_TESTS",
+        "ACCESSIBILITY_AUTOMATION",
+        "SECURITY_TESTS",
+        "PERFORMANCE_TESTS"
+      ],
+      "fastFeedbackRequired": true,
+      "rule": "Implementation batches produce verification evidence continuously; SW-05 is independent/non-functional acceptance verification, not the first time software is tested."
+    },
+    "supplyChainContract": {
+      "dependencyInventoryRequired": true,
+      "sbomPolicy": "REQUIRED_WHEN_THIRD_PARTY_COMPONENTS_PRESENT",
+      "buildProvenanceRequired": true,
+      "artifactIntegrityRequired": true,
+      "dependencyRiskReview": "RISK_BASED_AND_CONTINUOUS",
+      "rule": "Released artifacts must be traceable to immutable source/input identities and a recorded build process."
+    },
+    "reviewPolicy": {
+      "riskClassificationRequired": true,
+      "levels": {
+        "LOW": {
+          "independentReviewRequired": false,
+          "minimum": [
+            "AUTHOR_SELF_CHECK",
+            "AUTOMATED_GATES"
+          ]
+        },
+        "STANDARD": {
+          "independentReviewRequired": true,
+          "reviewCapability": "technical_review",
+          "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+        },
+        "ELEVATED": {
+          "independentReviewRequired": true,
+          "reviewCapability": "technical_review",
+          "specialistReviewWhenApplicable": true,
+          "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+        },
+        "CRITICAL": {
+          "independentReviewRequired": true,
+          "reviewCapability": "technical_review",
+          "specialistReviewRequired": true,
+          "authorityDecisionRequired": true,
+          "independencePolicy": "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+        }
+      },
+      "classificationSignals": [
+        "CHANGE_BLAST_RADIUS",
+        "SECURITY_IMPACT",
+        "DATA_SENSITIVITY",
+        "IRREVERSIBILITY",
+        "PRODUCTION_CRITICALITY",
+        "ARCHITECTURE_IMPACT"
+      ],
+      "rule": "Independent review is risk-based rather than universally mandatory; any review used as authoritative acceptance evidence must satisfy separation-of-duties requirements."
+    },
+    "deliverySemantics": {
+      "release": "An immutable candidate artifact exists and all release criteria/evidence are satisfied.",
+      "deployment": "The approved release artifact is materialized in the target environment and deployment/readback checks pass.",
+      "activation": "The deployed capability is intentionally made available to its intended users or traffic.",
+      "operateObserve": "Post-activation health, reliability, security-relevant signals and service behavior are observed from authoritative sources.",
+      "rule": "Release, deployment and activation are separate facts and must not be substituted for one another."
+    },
+    "operationsContract": {
+      "postDeploymentVerification": [
+        "SMOKE_OR_HEALTH_CHECK",
+        "CONFIGURATION_READBACK",
+        "OBSERVABILITY_SIGNAL_AVAILABLE"
+      ],
+      "observabilityMinimum": [
+        "HEALTH",
+        "ERRORS",
+        "LATENCY_OR_RESPONSE_BEHAVIOR_WHEN_RELEVANT",
+        "RESOURCE_OR_CAPACITY_SIGNAL_WHEN_RELEVANT"
+      ],
+      "incidentRecovery": {
+        "activationCondition": "INCIDENT_OR_SERVICE_DEGRADATION",
+        "require": [
+          "INCIDENT_RECORD",
+          "MITIGATION_OR_RECOVERY_ACTION",
+          "AUTHORITATIVE_HEALTH_READBACK"
+        ],
+        "unknownExternalMutation": "RECONCILE_BEFORE_RETRY"
+      },
+      "vulnerabilityResponse": {
+        "activationCondition": "POST_RELEASE_VULNERABILITY_OR_SECURITY_DEFECT",
+        "require": [
+          "IMPACT_ASSESSMENT",
+          "REMEDIATION_OR_RISK_DECISION",
+          "VERIFICATION_EVIDENCE"
+        ]
+      }
+    },
+    "outcomeModel": {
+      "deliveryTerminalArtifact": "ACTIVATION",
+      "operationalEvidenceArtifact": "OPERATIONAL_STATUS",
+      "outcomeArtifact": "OUTCOME",
+      "rule": "Delivery, activation and healthy operation are not evidence that the declared value hypothesis has been achieved.",
+      "measurementContract": {
+        "requiredFields": [
+          "metric",
+          "baselineOrBaselineResolution",
+          "targetOrDecisionThreshold",
+          "observationWindow",
+          "dataSource",
+          "decisionRule",
+          "uncertaintyHandling"
+        ],
+        "allowedDecisions": [
+          "VALUE_SUPPORTED",
+          "VALUE_NOT_SUPPORTED",
+          "INCONCLUSIVE",
+          "CONTINUE_OBSERVATION",
+          "ITERATE",
+          "ABANDON"
+        ],
+        "rule": "Outcome decisions require authoritative measurement evidence and an explicit decision rule; missing or weak evidence yields INCONCLUSIVE or CONTINUE_OBSERVATION rather than invented success."
+      }
+    },
+    "reworkPolicy": {
+      "selective": true,
+      "preserveAcceptedUnaffectedWork": true,
+      "defaultMaximumAttempts": 3,
+      "defaultPolicyClass": "CONFIGURABLE_SAFETY_DEFAULT_NOT_DOMAIN_TRUTH",
+      "overrideDimensions": [
+        "RISK_CLASS",
+        "COST_OF_FAILURE",
+        "REVERSIBILITY",
+        "WORK_ITEM_TYPE",
+        "HUMAN_POLICY"
+      ],
+      "onExhausted": "REPLAN_REQUIRED"
+    },
+    "planningContract": {
+      "creationType": "SOFTWARE_SAAS",
+      "sourceInputs": [
+        "DISCOVERY_RECORD",
+        "BUSINESS_INTENT",
+        "REQUIREMENT"
+      ],
+      "requiredPlanningPerspectives": [
+        "PRODUCT",
+        "QUALITY",
+        "SECURITY",
+        "ARCHITECTURE",
+        "ENGINEERING",
+        "SUPPLY_CHAIN",
+        "VERIFICATION",
+        "RELEASE",
+        "DEPLOYMENT",
+        "OPERATIONS",
+        "OUTCOME"
+      ],
+      "deriveWorkItemsFrom": "flowGraph",
+      "requiredForEachWorkItem": [
+        "objective",
+        "requiredCapabilities",
+        "dependencies",
+        "expectedOutputs",
+        "acceptanceCriteria",
+        "evidenceRequirements",
+        "riskClass",
+        "execution",
+        "execution.resourceAccess",
+        "execution.parallelizationDecision"
+      ],
+      "conditionalRules": [
+        {
+          "when": "solutionForm IN [WEBSITE,WEB_APP]",
+          "addPlanningConcerns": [
+            "RESPONSIVE_BEHAVIOR",
+            "ACCESSIBILITY",
+            "BROWSER_DEVICE_COMPATIBILITY",
+            "WEB_PERFORMANCE",
+            "FRONTEND_BUILD_AND_DELIVERY"
+          ]
+        },
+        {
+          "when": "solutionForm == WEBSITE AND publicDiscoverability == true",
+          "addPlanningConcerns": [
+            "SEO_TECHNICAL_FOUNDATIONS"
+          ]
+        },
+        {
+          "when": "PERSONAL_OR_SENSITIVE_DATA_PROCESSED",
+          "addPlanningConcerns": [
+            "PRIVACY_ENGINEERING",
+            "DATA_LIFECYCLE"
+          ]
+        },
+        {
+          "when": "PRODUCTION_SERVICE_OR_BUSINESS_CRITICAL",
+          "addPlanningConcerns": [
+            "RELIABILITY_TARGETS",
+            "RECOVERY_OBJECTIVES",
+            "OBSERVABILITY"
+          ]
+        }
+      ],
+      "rule": "Planning is derived only from confirmed discovery, active conditional context and this factory. Security, quality, supply-chain and operations requirements are planned before implementation rather than appended after coding."
+    },
+    "evidenceContract": {
+      "creationType": "SOFTWARE_SAAS",
+      "rule": "Evidence is work-item-type specific and must come from provider/artifact readback or another authoritative bound source. Automated evidence and explicit HUMAN/reviewer decisions remain distinguishable.",
+      "byWorkItemType": {
+        "PRODUCT_DEFINITION": [
+          "DISCOVERY_RECORD",
+          "SCOPE_DECISION"
+        ],
+        "QUALITY_SECURITY_REQUIREMENTS": [
+          "QUALITY_REQUIREMENTS",
+          "SECURITY_REQUIREMENTS",
+          "REQUIREMENT_REVIEW_EVIDENCE"
+        ],
+        "SOLUTION_DESIGN": [
+          "SOLUTION_DESIGN_ARTIFACT",
+          "THREAT_MODEL",
+          "DESIGN_REVIEW_OR_EXCEPTION_WHEN_REQUIRED"
+        ],
+        "IMPLEMENTATION_BATCH": [
+          "CONTRIBUTION_REFERENCE",
+          "BUILD_EVIDENCE",
+          "DEPENDENCY_INVENTORY",
+          "SBOM_WHEN_REQUIRED",
+          "BUILD_PROVENANCE",
+          "CONTINUOUS_VERIFICATION_EVIDENCE",
+          "RISK_APPROPRIATE_TECHNICAL_REVIEW"
+        ],
+        "INDEPENDENT_VERIFICATION": [
+          "TEST_RESULT_EVIDENCE",
+          "QUALITY_CHARACTERISTIC_EVIDENCE"
+        ],
+        "SECURITY_VERIFICATION": [
+          "SECURITY_REVIEW_EVIDENCE",
+          "UNRESOLVED_FINDING_DISPOSITION"
+        ],
+        "RELEASE": [
+          "IMMUTABLE_RELEASE_ARTIFACT_REFERENCE",
+          "RELEASE_READINESS_EVIDENCE",
+          "REQUIRED_RELEASE_DECISION_WHEN_TRIGGERED"
+        ],
+        "DEPLOYMENT": [
+          "DEPLOYMENT_READBACK",
+          "POST_DEPLOYMENT_HEALTH_CHECK"
+        ],
+        "ACTIVATION": [
+          "ACTIVATION_OR_TRAFFIC_EVIDENCE"
+        ],
+        "OPERATE_OBSERVE": [
+          "OBSERVABILITY_EVIDENCE",
+          "OPERATIONAL_STATUS"
+        ],
+        "INCIDENT_RECOVERY": [
+          "INCIDENT_RECORD",
+          "RECOVERY_ACTION_EVIDENCE",
+          "RECOVERED_HEALTH_READBACK"
+        ],
+        "VULNERABILITY_RESPONSE": [
+          "VULNERABILITY_IMPACT_ASSESSMENT",
+          "REMEDIATION_OR_RISK_DECISION",
+          "POST_REMEDIATION_VERIFICATION"
+        ],
+        "OUTCOME_ASSESSMENT": [
+          "OUTCOME_MEASUREMENT_EVIDENCE",
+          "BUSINESS_OUTCOME_DECISION"
+        ]
+      },
+      "conditionalEvidence": [
+        {
+          "when": "solutionForm IN [WEBSITE,WEB_APP]",
+          "require": [
+            "RESPONSIVE_VERIFICATION",
+            "ACCESSIBILITY_EVIDENCE",
+            "WEB_PERFORMANCE_EVIDENCE"
+          ]
+        },
+        {
+          "when": "solutionForm == WEBSITE AND publicDiscoverability == true",
+          "require": [
+            "SEO_TECHNICAL_EVIDENCE"
+          ]
+        },
+        {
+          "when": "THIRD_PARTY_DEPENDENCIES_PRESENT",
+          "require": [
+            "SBOM",
+            "DEPENDENCY_RISK_EVIDENCE"
+          ]
+        },
+        {
+          "when": "PERSONAL_OR_SENSITIVE_DATA_PROCESSED",
+          "require": [
+            "PRIVACY_REQUIREMENT_EVIDENCE"
+          ]
+        },
+        {
+          "when": "INCIDENT_OR_SERVICE_DEGRADATION",
+          "require": [
+            "RECOVERY_EVIDENCE"
+          ]
+        },
+        {
+          "when": "POST_RELEASE_VULNERABILITY_OR_SECURITY_DEFECT",
+          "require": [
+            "VULNERABILITY_RESPONSE_EVIDENCE"
+          ]
+        }
+      ],
+      "forbiddenSubstitutions": [
+        "ASSISTANT_CLAIM_FOR_PROVIDER_EVIDENCE",
+        "AUTHOR_SELF_ATTESTATION_FOR_REQUIRED_INDEPENDENT_REVIEW",
+        "DELIVERY_AS_OUTCOME_EVIDENCE",
+        "DEPLOYMENT_AS_ACTIVATION_EVIDENCE",
+        "HEALTHY_OPERATION_AS_VALUE_OUTCOME_EVIDENCE",
+        "UNVERIFIED_BUILD_AS_RELEASE_ARTIFACT",
+        "MISSING_SECURITY_EVIDENCE_AS_ASSUMED_LOW_RISK"
+      ]
+    },
+    "schedulingContract": {
+      "atomicDispatchOnly": true,
+      "compositeDecompositionRequired": true,
+      "resourceAccessRequired": true,
+      "immutableReadInputsRequired": true,
+      "unknownMutationConflict": "SERIALIZE",
+      "dedicatedGitBranchForMutations": true,
+      "branchLifetimePolicy": "SHORT_LIVED_INTEGRATE_OR_CLOSE_PROMPTLY",
+      "naturalParallelism": [
+        {
+          "after": "SW-04",
+          "nodes": [
+            "SW-05",
+            "SW-06"
+          ],
+          "joinAt": "SW-07"
+        },
+        {
+          "after": "SW-10",
+          "conditionalNodes": [
+            "SW-11",
+            "SW-12"
+          ],
+          "parallelWith": "SW-13_WHEN_OBSERVATION_WINDOW_ALLOWS"
+        }
+      ],
+      "decompositionRule": "Implementation is decomposed into small ATOMIC batches only when each child has independently verifiable outputs and conservative non-overlapping mutation domains; shared integration is explicit downstream work.",
+      "integrationRule": "Release/integration waits for ACCEPTED mandatory dependencies and required integration evidence; conditional incident/vulnerability work is event-driven and never fabricated as complete.",
+      "dependencyGraphRule": "Scheduling dependencies form an acyclic directed graph; learning creates a new planning cycle instead of a cyclic work-item dependency."
+    },
+    "learningContract": {
+      "source": [
+        "OUTCOME",
+        "OPERATIONAL_STATUS",
+        "INCIDENT_RECORD",
+        "VULNERABILITY_RESPONSE_EVIDENCE",
+        "USER_FEEDBACK"
+      ],
+      "decisions": [
+        "CONTINUE",
+        "ITERATE",
+        "REFRAME",
+        "REPLAN",
+        "ABANDON"
+      ],
+      "rule": "Learning does not mutate an approved historical plan. Material change creates a new planning revision with preserved lineage."
+    }
+  },
+  "provenance": {
+    "publisher": "SAFOR",
+    "sourceRef": "Successor to safor.factory.software-delivery@1.7.0-test.1; upgraded for SAFOR 0.14 contracts. PUBLIC_TEST_EVALUATION successor to software-delivery@1.6.0 for SAFOR-FRAMEWORK-SAAS.json testing; not the protected commercial production package."
+  },
+  "packageFamily": "safor.factory.saas"
+}
