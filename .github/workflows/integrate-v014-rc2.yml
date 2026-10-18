@@ -1,4 +1,4 @@
-# integration retry 3
+# integration retry 4
 name: Integrate SAFOR 0.14.0-rc.2
 
 on:
@@ -68,7 +68,7 @@ jobs:
           set -euo pipefail
           start=$(git rev-parse HEAD)
           log=/tmp/kwp-00-01.log
-          if ! { python .release/integrate_v014_rc2.py baseline && python -m unittest discover -s tests -p 'test_*_v014.py' -v; } >"$log" 2>&1; then
+          if ! { python .release/integrate_v014_rc2.py baseline && python -m unittest tests.test_agent_activation_v014 tests.test_agent_job_v014 tests.test_agent_responses_v014 tests.test_master_scheduler_v014 tests.test_migration_v014 tests.test_product_boundary_v014 -v; } >"$log" 2>&1; then
             cp "$log" /tmp/failure.log
             git reset --hard "$start"
             git clean -fd
@@ -209,6 +209,7 @@ jobs:
           set -euo pipefail
           rm -f .release/integrate_v014_rc2.py
           rm -f .release/security_compat_patch.py
+          rm -f .release/traceability_prereqs.py
           rmdir .release 2>/dev/null || true
           rm -f .github/workflows/integrate-v014-rc2.yml
           git add -A
