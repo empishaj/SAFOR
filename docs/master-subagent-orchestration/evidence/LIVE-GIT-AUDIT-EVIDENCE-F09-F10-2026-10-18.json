@@ -1,0 +1,127 @@
+{
+  "format": "SAFOR_LIVE_GIT_AUDIT_EVIDENCE",
+  "schemaVersion": "0.14.0",
+  "evidenceId": "LIVE-GIT-F09-F10-2026-10-18",
+  "observedAt": "2026-10-18T17:15:00Z",
+  "framework": {
+    "repository": "empishaj/SAFOR",
+    "commit": "b08860f63e0816d8a76071c461a23d3fb49d20a6",
+    "version": "0.14.0-rc.5"
+  },
+  "isolation": {
+    "controlRepository": "empishaj/safor-memory",
+    "controlBranch": "e2e-rc5-f02-control-20261018",
+    "controlBaseCommit": "55c6c10d327f2e0e961fbc0e779099d49dbbe274",
+    "productRepository": "empishaj/memory",
+    "productBranch": "e2e-rc5-f02-product-20261018",
+    "productBaseCommit": "ca587d3d008669c97da9a5f738a317dcedf7241d",
+    "defaultBranchesMutated": false,
+    "referenceProjectMutated": false
+  },
+  "findings": {
+    "F-09": {
+      "outcome": "PASS_ISOLATED_LIVE_GITHUB_PROVIDER",
+      "scope": [
+        "All five typed Agent-to-MASTER response variants persisted to GitHub.",
+        "Every response was read back byte-equivalent from the provider.",
+        "A compact response index containing all five responses was persisted and read back.",
+        "A partial-write condition was intentionally materialized with a proven product commit and absent control response.",
+        "Recovery persisted the response only after product readback; no second product mutation occurred."
+      ],
+      "evidence": {
+        "jobBinding": {
+          "commit": "ad78896a4dcf038cb9417898528a2e8101a50031",
+          "blob": "b8b4ee1007fddf464355b759e18e9364d9fe8f99"
+        },
+        "responses": [
+          {
+            "type": "JOB_RESULT",
+            "commit": "fe31740ac3b2ffe653e3ac0e34bbfe9f09358159",
+            "blob": "ee4de0226f2cdf5cc33d3db9b525f385b5b026b0"
+          },
+          {
+            "type": "JOB_ERROR",
+            "commit": "9dd49ac50067152d7e8c9c4a99ba601875d5374b",
+            "blob": "bb944a89113ea613fb0e8522c268cdef5aec43a7"
+          },
+          {
+            "type": "CLARIFICATION_REQUEST",
+            "commit": "754178766348237a52d00e26388fca8c76b58232",
+            "blob": "57590809aa932156b1e2fa74547fbde61c98a503"
+          },
+          {
+            "type": "CAPABILITY_MISMATCH",
+            "commit": "3835c7480e1d278b7d36c056c06be0a7867fffc1",
+            "blob": "474e052feb094c980b25514723ffab9c6cd3a3e4"
+          },
+          {
+            "type": "IMPROVEMENT_PROPOSAL",
+            "commit": "ef674c9b0dc577f27fa25fc3ab12ecc5055b7ccb",
+            "blob": "1728db10578d9df5deebf5151c24362e8893b954"
+          }
+        ],
+        "responseIndex": {
+          "commit": "4f867614695639eb603d8f191b15bb4c97be07e6",
+          "blob": "2bfa7500e9567ab05d22e8c4d99cac7327300cbf"
+        },
+        "partialWrite": {
+          "productCommit": "c724b17eff112b04567217b8d5522fd748f6ace6",
+          "productBlob": "5b19e16106f8db33832d149056ee323f4e048265",
+          "pendingAttemptCommit": "3153b6471179ee022ecc23f78f63cc6bf230a823",
+          "responseOnlyCommit": "29275c85feedb2467f0cf27ccedfdd790bec945a",
+          "completedAttemptCommit": "eca250989335dd3b207805244c8069aa0b09444c",
+          "productHeadBeforeResponseRetry": "c724b17eff112b04567217b8d5522fd748f6ace6",
+          "productHeadAfterResponseRetry": "c724b17eff112b04567217b8d5522fd748f6ace6",
+          "productMutationReplayed": false
+        }
+      }
+    },
+    "F-10": {
+      "outcome": "PASS_ISOLATED_LIVE_GITHUB_PROVIDER",
+      "scope": [
+        "Optimistic concurrency was exercised against GitHub using stale blob identity.",
+        "The first CAS writer succeeded and the stale second writer was rejected with provider HTTP 409.",
+        "The winning blob remained authoritative after the rejected stale write.",
+        "A lossless v0.14 migration fixture preserved legacy artifacts and materialized one active v0.14 authority chain.",
+        "Migration replay performed no target mutation because all expected target/source blob identities were already present.",
+        "All tracked migration source and target blobs remained byte-identical after replay evidence was persisted."
+      ],
+      "evidence": {
+        "cas": {
+          "baselineCommit": "002e053bb0778511d3744b19b2f55fa31b111ad1",
+          "firstWriterCommit": "28b448c5b739856c0aa2fb0c1ae152ea6bd4c660",
+          "winningBlob": "c43837a029757c8e0eac0201f4a9e49b5d43250c",
+          "staleSecondWriterRejected": true,
+          "providerStatus": 409
+        },
+        "migration": {
+          "manifestBlob": "06b36856f17ae8fc9276ff72f447bde990ef3a45",
+          "replayEvidenceCommit": "b56dcb8d8c45a36a17088986fa7db1f5b24e861f",
+          "replayEvidenceBlob": "30ec5910aed929b1487def24dd1eb51a44bf7491",
+          "replayDecision": "NO_TARGET_MUTATION_REQUIRED",
+          "allTrackedBlobsUnchanged": true,
+          "duplicateActiveAuthorityCreated": false,
+          "sourceArtifactsMutated": false,
+          "sourceArtifactsDeleted": false
+        }
+      }
+    }
+  },
+  "truthBoundary": {
+    "closesAuditFindings": [
+      "F-09",
+      "F-10"
+    ],
+    "doesNotClose": [
+      "F-02 full HUMAN-GO real-Git end-to-end chain",
+      "F-06 full Agent Workspace end-to-end chain",
+      "F-11 empirical usability/cognitive-load evidence",
+      "cross-host acceptance",
+      "reference-project rc.5 migration",
+      "General Availability"
+    ],
+    "humanGoEvidenceFabricated": false,
+    "crossHostClaimed": false,
+    "referenceProjectMigrationClaimed": false
+  }
+}

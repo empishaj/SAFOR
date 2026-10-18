@@ -142,12 +142,36 @@ def main() -> None:
     if artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
         if pass_tests != 33 or pass_bundles != 33:
             errors.append("all current automated-test/bundle dimensions must be PASS after materialization")
-    if any(item.get("coverage", {}).get("realGitE2E") != "NOT_VERIFIED" for item in requirements):
-        errors.append("real-Git E2E must remain NOT_VERIFIED")
+    real_git_pass = [
+        item for item in requirements
+        if item.get("coverage", {}).get("realGitE2E") == "PASS"
+    ]
+    for item in real_git_pass:
+        refs = item.get("realGitE2EEvidence") or []
+        if not refs:
+            errors.append(f"{item.get('id')}: realGitE2E PASS requires realGitE2EEvidence")
+            continue
+        for ref in refs:
+            evidence_path = str(ref).split("#", 1)[0]
+            if not (ROOT / evidence_path).exists():
+                errors.append(f"{item.get('id')}: missing real-Git E2E evidence file {evidence_path}")
+    if any(
+        item.get("coverage", {}).get("realGitE2E") not in {"PASS", "NOT_VERIFIED"}
+        for item in requirements
+    ):
+        errors.append("current rc.5 real-Git E2E coverage must be PASS or NOT_VERIFIED")
+    global_real_git = facts.get("traceability", {}).get("realGitE2E")
+    if len(real_git_pass) == len(requirements):
+        if global_real_git != "PASS":
+            errors.append("global real-Git E2E must be PASS only when all requirements are verified")
+    elif global_real_git != "NOT_VERIFIED":
+        errors.append("global real-Git E2E must remain NOT_VERIFIED until all requirements are verified")
     if any(item.get("coverage", {}).get("crossHost") != "NOT_VERIFIED" for item in requirements):
         errors.append("cross-host must remain NOT_VERIFIED")
 
     summary = trace.get("summary", {})
+    if summary.get("realGitE2EVerified") != len(real_git_pass):
+        errors.append("traceability real-Git E2E verified summary is inconsistent")
     if artifact_state == "PENDING_MATERIALIZATION":
         if summary.get("automatedTestPass") != 0 or summary.get("automatedTestPendingUntilCI") != 33:
             errors.append("traceability automated-test pending summary is inconsistent")

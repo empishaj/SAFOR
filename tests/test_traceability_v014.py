@@ -18,7 +18,12 @@ class TraceabilityV014Tests(unittest.TestCase):
                 self.assertTrue(item["implementationEvidence"])
                 self.assertTrue(item["automatedTests"])
                 self.assertTrue(item["bundleModuleKeys"])
-                self.assertEqual("NOT_VERIFIED", item["coverage"]["realGitE2E"])
+                self.assertIn(item["coverage"]["realGitE2E"], {"PASS", "NOT_VERIFIED"})
+                if item["coverage"]["realGitE2E"] == "PASS":
+                    refs = item.get("realGitE2EEvidence") or []
+                    self.assertTrue(refs)
+                    for ref in refs:
+                        self.assertTrue((ROOT / ref.split("#", 1)[0]).exists())
                 self.assertEqual("NOT_VERIFIED", item["coverage"]["crossHost"])
 
     def test_referenced_design_code_and_test_files_exist(self):
@@ -31,7 +36,12 @@ class TraceabilityV014Tests(unittest.TestCase):
     def test_no_false_100_percent_e2e_claim(self):
         summary = self.trace["summary"]
         self.assertTrue(summary["percentageClaimForbidden"])
-        self.assertEqual(0, summary["realGitE2EVerified"])
+        verified = sum(
+            1 for item in self.trace["requirements"]
+            if item["coverage"]["realGitE2E"] == "PASS"
+        )
+        self.assertEqual(verified, summary["realGitE2EVerified"])
+        self.assertLess(verified, len(self.trace["requirements"]))
         self.assertEqual(0, summary["crossHostVerified"])
 
 
