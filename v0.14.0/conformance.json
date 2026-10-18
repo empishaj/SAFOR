@@ -1855,6 +1855,13 @@
       },
       "statement": "Platform response classification determines menu presence; informational notices are menu-free and interactive response classes use exactly one terminal menu.",
       "expected": true
+    },
+    {
+      "id": "CF-RC4-004",
+      "status": "ACTIVE",
+      "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
+      "statement": "A HUMAN-GO claim becomes authoritative only when provider CAS succeeds and full committed job-state readback exactly matches the prepared state by canonical digest and bound project/job/agent/identity/chat/dispatch fields; the activationId is already persisted in consumedActivationIds.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
