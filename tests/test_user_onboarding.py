@@ -30,14 +30,16 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertIn("SAFOR-FRAMEWORK-BOOK-CREATION.json", self.start_here)
         self.assertIn("SAFOR-TEST-ACCESS-BOOK-CREATION.json", self.start_here)
         self.assertIn("frage mich nicht noch einmal", self.start_here)
-        self.assertIn("keine Produktionslizenz", self.start_here)
+        self.assertIn("Die Testdateien sind keine Produktionslizenz", self.start_here)
 
-    def test_german_guide_keeps_runtime_detail_out_of_nontechnical_path(self):
+    def test_german_guide_is_usage_only_and_keeps_technical_detail_elsewhere(self):
+        self.assertIn("Du musst keine JSON-Datei öffnen oder verstehen", self.start_here)
+        self.assertIn("Der **MASTER** ist dein Hauptchat", self.start_here)
+        self.assertIn("Du musst den Job nicht zwischen Chats kopieren", self.start_here)
         self.assertNotIn("Python-Referenzcode", self.start_here)
         self.assertNotIn("providerReadback", self.start_here)
-        self.assertNotIn("schemaVersion", self.start_here)
-        self.assertIn("kompatiblen Chat", self.readme)
-        self.assertIn("Optional Python reference implementations", self.readme)
+        self.assertIn("reference implementation", self.readme)
+        self.assertIn("does not automatically execute this Python module", self.readme)
 
     def test_quickstart_separates_end_user_and_generic_engineering_routes(self):
         self.assertIn("## Recommended end-user start", self.quickstart)
