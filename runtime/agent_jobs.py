@@ -226,6 +226,14 @@ def validate_job_state_transition(*, from_status: str, to_status: str, evidence_
         raise AgentJobValidationError('RESPONSE_SUBMISSION_CANNOT_SKIP_VERIFICATION')
 
 def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
+    persistence_context_supplied = any(
+        value is not None
+        for value in (persistence_state, attempt_id, phase, reason_code)
+    )
+    if status != 'BLOCKED' and persistence_context_supplied:
+        raise AgentJobValidationError('PERSISTENCE_FAILURE_CONTEXT_ONLY_ALLOWED_FOR_BLOCKED')
+    if status == 'BLOCKED' and details_ref and persistence_context_supplied:
+        raise AgentJobValidationError('BLOCKED_DETAILS_REF_AND_PERSISTENCE_FAILURE_ARE_MUTUALLY_EXCLUSIVE')
     if status == 'READY':
         text = f'Agent {display_name} ({agent_id}) bereit | Status: WAITING_HUMAN_GO'
         terminal = False
