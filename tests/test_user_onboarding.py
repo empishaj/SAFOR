@@ -57,7 +57,9 @@ class UserOnboardingTests(unittest.TestCase):
     def test_readme_does_not_overstate_generic_chat_execution(self):
         self.assertIn("deterministic reference implementation", self.readme)
         self.assertIn("does not automatically execute this Python module", self.readme)
-        self.assertIn("Production use therefore requires an integrated SAFOR host/runtime boundary", self.readme)
+        self.assertIn("Optional host integration can provide stronger machine enforcement", self.readme)
+        self.assertIn("does not require a separately installed customer runtime", self.readme)
+        self.assertNotIn("Production use therefore requires an integrated SAFOR host/runtime boundary", self.readme)
 
 
 if __name__ == "__main__":

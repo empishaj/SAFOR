@@ -229,7 +229,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
             self.assertEqual(committed, built)
 
     def test_public_evaluation_access_bundles_unlock_only_paid_test_modules(self):
-        catalog = load_json("v0.13.0/package-catalog.json")
+        catalog = load_json("v0.14.0/package-catalog.json")
         for profile_id, framework_file in (
             ("SAAS", "SAFOR-FRAMEWORK-SAAS.json"),
             ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json"),
