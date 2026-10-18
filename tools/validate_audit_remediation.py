@@ -243,12 +243,13 @@ def validate():
         if conformance_by_id.get(superseded_id, {}).get("status") != "SUPERSEDED":
             errors.append(f"legacy chat-binding conformance is not superseded: {superseded_id}")
     required_claim_evidence = {
-        "READBACK_STATE_EQUALS_PROPOSED_STATE",
-        "CANONICAL_STATE_DIGEST_MATCH",
+        "READBACK_AGENT_STATE_EQUALS_PROPOSED_STATE",
+        "CANONICAL_AGENT_STATE_DIGEST_MATCH",
         "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-        "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
-        "READBACK_REF_PRESENT",
-        "READBACK_BLOB_IDENTITY_PRESENT",
+        "MASTER_JOB_REVISION_BINDING_MATCH",
+        "ACTIVATION_ID_PRESENT_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+        "AGENT_STATE_READBACK_REF_PRESENT",
+        "AGENT_STATE_BLOB_IDENTITY_PRESENT",
     }
     if not required_claim_evidence.issubset(set(activation.get("claimSuccessRequires", []))):
         errors.append("GO claim success evidence is incomplete")
