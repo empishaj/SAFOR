@@ -1,0 +1,66 @@
+name: SAFOR rc.5 Materialization
+
+on:
+  push:
+    branches:
+      - safor/inbox-pull-agent-0.14.0-rc.5
+    paths:
+      - ".github/workflows/materialize-rc5.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Configure release commit identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Materialize current Framework distributions
+        run: python tools/materialize_release.py --prepare
+
+      - name: Validate materialized worktree before PASS marking
+        run: |
+          VERSION="$(cat VERSION)"
+          python tools/build_bundle.py --check
+          python tools/build_domain_framework.py --check
+          python tools/validate_safor.py
+          python tools/validate_audit_remediation.py
+          python tools/validate_release_facts.py
+          python tools/validate_traceability.py
+          python -m unittest discover -s tests -v
+          sha256sum --check "SHA256SUMS-${VERSION}.txt"
+
+      - name: Finalize release evidence after successful validation
+        run: python tools/materialize_release.py --finalize
+
+      - name: Validate final materialized release state
+        run: |
+          VERSION="$(cat VERSION)"
+          python tools/build_bundle.py --check
+          python tools/build_domain_framework.py --check
+          python tools/validate_safor.py
+          python tools/validate_audit_remediation.py
+          python tools/validate_release_facts.py
+          python tools/validate_traceability.py
+          python -m unittest discover -s tests -v
+          sha256sum --check "SHA256SUMS-${VERSION}.txt"
+
+      - name: Commit exact materialized release
+        run: |
+          VERSION="$(cat VERSION)"
+          git add -A -- 'SAFOR-FRAMEWORK-v*.json'
+          git add             SAFOR-FRAMEWORK.json             SAFOR-FRAMEWORK-WEBSITE.json             SAFOR-FRAMEWORK-SAAS.json             SAFOR-FRAMEWORK-BOOK-CREATION.json             SAFOR-TEST-ACCESS-SAAS.json             SAFOR-TEST-ACCESS-BOOK-CREATION.json             RELEASE-FACTS.json             RELEASE-MANIFEST.json             PRODUCT-READINESS.md             "RELEASE-EVIDENCE-${VERSION}.json"             "RELEASE-NOTES-${VERSION}.md"             "SHA256SUMS-${VERSION}.txt"             docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json
+          git diff --cached --quiet && { echo "No materialization changes"; exit 1; }
+          git commit -m "SAFOR ${VERSION}: materialize inbox-pull release candidate"
+          git push origin HEAD:safor/inbox-pull-agent-0.14.0-rc.5
