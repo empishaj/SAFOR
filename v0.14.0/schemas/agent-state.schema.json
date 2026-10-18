@@ -15,6 +15,7 @@
     "session",
     "currentJob",
     "lastResponseRef",
+    "consumedActivationIds",
     "updatedAt"
   ],
   "properties": {
@@ -83,6 +84,15 @@
     "updatedAt": {
       "type": "string",
       "format": "date-time"
+    },
+    "consumedActivationIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 8
+      },
+      "description": "Single-use HUMAN-GO activation IDs consumed by provider-confirmed CAS on this agent-owned state."
     }
   },
   "$defs": {
@@ -128,6 +138,7 @@
         "jobRef",
         "jobBlobSha",
         "masterJobStateRef",
+        "masterJobRevision",
         "dispatchRevision",
         "claimId"
       ],
@@ -153,12 +164,15 @@
           "minimum": 1
         },
         "claimId": {
-          "type": [
-            "string",
-            "null"
-          ]
+          "type": "string",
+          "minLength": 8
+        },
+        "masterJobRevision": {
+          "type": "integer",
+          "minimum": 1
         }
-      }
+      },
+      "description": "Agent-owned execution claim binding. It references but never mutates MASTER-owned job lifecycle state."
     }
   }
 }
