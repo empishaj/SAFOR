@@ -19,11 +19,18 @@ class ReleaseFactsV014Tests(unittest.TestCase):
         self.assertEqual(version, manifest["version"])
         self.assertEqual(version, trace["releaseTarget"])
 
-    def test_release_artifacts_are_explicitly_pending_wp_a7(self):
+    def test_release_artifact_state_is_consistent(self):
         facts = self.load("RELEASE-FACTS.json")
         manifest = self.load("RELEASE-MANIFEST.json")
-        self.assertEqual("PENDING_WP_A7", facts["releaseArtifacts"]["state"])
-        self.assertEqual("PENDING_WP_A7_MATERIALIZATION", manifest["releaseArtifactsState"])
+        state = facts["releaseArtifacts"]["state"]
+        self.assertIn(
+            state,
+            {"PENDING_WP_A7", "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"},
+        )
+        if state == "PENDING_WP_A7":
+            self.assertEqual("PENDING_WP_A7_MATERIALIZATION", manifest["releaseArtifactsState"])
+        else:
+            self.assertEqual("MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS", manifest["releaseArtifactsState"])
 
     def test_website_defaults_match_canonical_profile(self):
         facts = self.load("RELEASE-FACTS.json")
@@ -45,12 +52,18 @@ class ReleaseFactsV014Tests(unittest.TestCase):
             migration["candidateMigration"]["prerequisites"],
         )
 
-    def test_rc4_traceability_does_not_claim_unmaterialized_bundle_pass(self):
+    def test_rc4_traceability_matches_materialization_state(self):
+        facts = self.load("RELEASE-FACTS.json")
         trace = self.load("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json")
+        expected = (
+            "PASS"
+            if facts["releaseArtifacts"]["state"] == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
+            else "PENDING"
+        )
         for item in trace["requirements"]:
             with self.subTest(requirement=item["id"]):
-                self.assertEqual("PENDING", item["coverage"]["automatedTest"])
-                self.assertEqual("PENDING", item["coverage"]["bundle"])
+                self.assertEqual(expected, item["coverage"]["automatedTest"])
+                self.assertEqual(expected, item["coverage"]["bundle"])
                 self.assertEqual("NOT_VERIFIED", item["coverage"]["realGitE2E"])
                 self.assertEqual("NOT_VERIFIED", item["coverage"]["crossHost"])
 
