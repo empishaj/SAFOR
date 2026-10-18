@@ -13,7 +13,7 @@ class GoEvidenceValidationError(ValueError):
 
 _REQUIRED_FIELDS = {
     "format", "schemaVersion", "activationId", "projectId", "agentId",
-    "identityRevision", "chatBindingId", "sessionId", "targetJobId",
+    "identityRevision", "targetJobId",
     "targetDispatchRevision", "intent", "source", "observedAt",
     "singleUse", "jobPromptTransported",
 }
@@ -56,7 +56,6 @@ def _claim_bindings(state: Mapping[str, Any], activation_id: str) -> dict[str, A
         "jobId": state.get("jobId"),
         "agentId": state.get("assignedAgentId"),
         "identityRevision": state.get("assignedIdentityRevision"),
-        "chatBindingId": state.get("chatBindingId"),
         "dispatchRevision": state.get("dispatchRevision"),
         "activationId": activation_id,
     }
@@ -81,19 +80,18 @@ def validate_human_go_evidence(
         raise GoEvidenceValidationError("GO_EVIDENCE_SCHEMA_VERSION_INVALID")
     if evidence.get("intent") != "GO":
         raise GoEvidenceValidationError("GO_EVIDENCE_INTENT_INVALID")
-    if evidence.get("source") != "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT":
+    if evidence.get("source") != "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT":
         raise GoEvidenceValidationError("GO_EVIDENCE_SOURCE_INVALID")
     if evidence.get("singleUse") is not True:
         raise GoEvidenceValidationError("GO_EVIDENCE_MUST_BE_SINGLE_USE")
     if evidence.get("jobPromptTransported") is not False:
         raise GoEvidenceValidationError("GO_EVIDENCE_JOB_PROMPT_TRANSPORT_FORBIDDEN")
     activation_id = _nonempty(evidence.get("activationId"), "GO_ACTIVATION_ID_MISSING")
-    _nonempty(evidence.get("sessionId"), "GO_SESSION_ID_MISSING")
     _parse_datetime(evidence.get("observedAt"), "GO_OBSERVED_AT_INVALID")
     if activation_id in set(consumed_activation_ids or ()):
         raise GoEvidenceValidationError("GO_EVIDENCE_ALREADY_CONSUMED")
     fields = (
-        "projectId", "agentId", "identityRevision", "chatBindingId",
+        "projectId", "agentId", "identityRevision",
         "targetJobId", "targetDispatchRevision",
     )
     for field in fields:
@@ -123,7 +121,6 @@ def prepare_go_claim(
         "projectId": state.get("projectId"),
         "agentId": state.get("assignedAgentId"),
         "identityRevision": state.get("assignedIdentityRevision"),
-        "chatBindingId": state.get("chatBindingId"),
         "targetJobId": state.get("jobId"),
         "targetDispatchRevision": state.get("dispatchRevision"),
     }
