@@ -286,8 +286,11 @@ For one mutating agent job and one read-only agent job:
 7. Planning presents a summarized interpretation and material tradeoffs before technical detail.
 8. The HUMAN approves the plan once for the pinned plan/scope.
 9. Re-reading or resuming the unchanged plan does not trigger the same approval again.
-10. FREE_PUBLIC package resolution and deterministic compatible package binding after creation-type selection do not create redundant approval requests.
-11. Only a materially changed/non-standard/conflicting binding may invoke K10A.
+10. FREE_PUBLIC package resolution and a deterministic default Factory/Operating-Model binding do not create a K10A approval request.
+11. An unchanged previously approved non-default binding reuses its still-valid PACKAGE_BINDING_APPROVAL and does not ask again.
+12. A compatible material Factory/Operating-Model change enters K10A before K11 and waits for explicit PACKAGE_BINDING_APPROVAL.
+13. An incompatible, unauthorized or integrity-invalid binding is blocked before K10A and is never presented as an approvable choice.
+14. K10 creates only a non-authoritative binding proposal; denial at K10A preserves the last valid binding, and K11 is the first step allowed to activate the proposed binding.
 
 **Expected — execution load reduction**
 12. After plan approval and a covering execution mandate, Scheduling and Agent Coordination proceed without HUMAN questions for job IDs, agent selection when deterministic, branches, resource leases, dispatch waves, readbacks, evidence collection or internal state transitions.
