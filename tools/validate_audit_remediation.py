@@ -185,11 +185,48 @@ def validate():
     if communication.get("persistenceFailureFallback", {}).get("detailsRef", "missing") is not None:
         errors.append("persistence fallback may not invent detailsRef")
     activation = load("v0.14.0/agent-activation-model.json").get("atomicClaimContract", {})
-    required = ["CAS_COMMIT_EXPECTED_REVISION", "PROVIDER_READBACK", "PERSIST_ACTIVATION_CONSUMPTION"]
+    required = [
+        "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
+        "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+        "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
+        "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE",
+    ]
     if not all(item in activation.get("authoritativeSequence", []) for item in required):
         errors.append("provider claim sequence incomplete")
     if activation.get("inMemoryConsumptionAuthoritative") is not False:
         errors.append("in-memory GO consumption incorrectly authoritative")
+    if activation.get("persistActivationConsumptionInsideCasState") is not True:
+        errors.append("GO activation consumption is not persisted inside CAS state")
+    if activation.get("proposedStateIsNonAuthoritativeUntilReadback") is not True:
+        errors.append("proposed claim state may be treated as authoritative before readback")
+    required_claim_evidence = {
+        "READBACK_STATE_EQUALS_PROPOSED_STATE",
+        "CANONICAL_STATE_DIGEST_MATCH",
+        "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+        "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
+        "READBACK_REF_PRESENT",
+        "READBACK_BLOB_IDENTITY_PRESENT",
+    }
+    if not required_claim_evidence.issubset(set(activation.get("claimSuccessRequires", []))):
+        errors.append("GO claim success evidence is incomplete")
+
+    provider_claim_requirements = {
+        "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+        "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
+        "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+        "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
+        "READBACK_REFERENCE_PRESENT",
+        "OBSERVED_BLOB_IDENTITY_PRESENT",
+    }
+    for provider_path in (
+        "v0.14.0/providers/github/0.6.0/package.json",
+        "v0.14.0/providers/gitlab/0.6.0/package.json",
+    ):
+        provider = load(provider_path).get("model", {}).get("agentClaimProtocol", {})
+        if not provider_claim_requirements.issubset(set(provider.get("successRequires", []))):
+            errors.append(f"provider claim readback contract incomplete: {provider_path}")
+        if provider.get("onReadbackMismatch") != "RECONCILE_REQUIRED":
+            errors.append(f"provider claim mismatch is not fail-closed: {provider_path}")
 
     module_map = bundle_map.get("modulePaths", {})
     recovery = load("v0.14.0/module-self-healing-model.json").get("moduleProfiles", [])
