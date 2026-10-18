@@ -36,6 +36,107 @@ REMOTE_REQUIRED_CAPABILITIES = {
 }
 
 
+def evaluate_k10a_binding_gate(
+    creation_profile: Mapping[str, Any],
+    proposed_binding: Mapping[str, Any],
+    *,
+    access_verified: bool,
+    compatibility_verified: bool,
+    existing_binding: Optional[Mapping[str, Any]] = None,
+    prior_decision_reusable: bool = False,
+    human_decision: Optional[str] = None,
+) -> Dict[str, Any]:
+    """Reference policy for the optional K10A package-binding approval gate.
+
+    K10 creates a non-authoritative proposal. K10A is skipped for deterministic
+    defaults, reused for an unchanged already-approved binding, required for a
+    compatible material change, and never offered for an invalid binding.
+    """
+
+    if not access_verified or not compatibility_verified:
+        return {
+            "route": "BLOCK_INVALID_BINDING",
+            "invokeK10A": False,
+            "canProceedToK11": False,
+            "activeBindingMutationAllowed": False,
+            "outcome": "BLOCKED_BEFORE_K10A",
+        }
+
+    proposed_factory = proposed_binding.get("factoryPackageId")
+    proposed_om = proposed_binding.get("operatingModelPackageId")
+    if not proposed_factory or not proposed_om:
+        return {
+            "route": "BLOCK_INVALID_BINDING",
+            "invokeK10A": False,
+            "canProceedToK11": False,
+            "activeBindingMutationAllowed": False,
+            "outcome": "BINDING_PROPOSAL_INCOMPLETE",
+        }
+
+    default_pair = (
+        creation_profile.get("defaultFactoryPackageId"),
+        creation_profile.get("defaultOperatingModelPackageId"),
+    )
+    proposed_pair = (proposed_factory, proposed_om)
+
+    existing_pair = None
+    if existing_binding is not None:
+        existing_pair = (
+            existing_binding.get("factoryPackageId"),
+            existing_binding.get("operatingModelPackageId"),
+        )
+
+    if proposed_pair == default_pair and existing_binding is None:
+        return {
+            "route": "SKIP_DEFAULT_BINDING",
+            "invokeK10A": False,
+            "canProceedToK11": True,
+            "activeBindingMutationAllowed": False,
+            "outcome": "K10A_NOT_REQUIRED_DEFAULT_BINDING",
+        }
+
+    if (
+        existing_pair == proposed_pair
+        and prior_decision_reusable is True
+    ):
+        return {
+            "route": "REUSE_UNCHANGED_BINDING_DECISION",
+            "invokeK10A": False,
+            "canProceedToK11": True,
+            "activeBindingMutationAllowed": False,
+            "outcome": "K10A_REUSED_EXISTING_DECISION",
+        }
+
+    if human_decision is None:
+        return {
+            "route": "REQUIRE_HUMAN_APPROVAL",
+            "invokeK10A": True,
+            "canProceedToK11": False,
+            "activeBindingMutationAllowed": False,
+            "outcome": "WAITING_HUMAN_PACKAGE_BINDING_APPROVAL",
+        }
+
+    if human_decision == "APPROVED":
+        return {
+            "route": "REQUIRE_HUMAN_APPROVAL",
+            "invokeK10A": True,
+            "canProceedToK11": True,
+            "activeBindingMutationAllowed": False,
+            "outcome": "K10A_APPROVED_FOR_K11_MATERIALIZATION",
+        }
+
+    if human_decision == "DENIED":
+        return {
+            "route": "REQUIRE_HUMAN_APPROVAL",
+            "invokeK10A": True,
+            "canProceedToK11": False,
+            "activeBindingMutationAllowed": False,
+            "outcome": "K10A_DENIED_PRESERVE_LAST_VALID_BINDING",
+        }
+
+    raise ValueError("Unsupported K10A human_decision")
+
+
 def _creation_profile(catalog: Mapping[str, Any], creation_type: str) -> Mapping[str, Any]:
     matches = [x for x in catalog.get("creationProfiles", []) if x.get("creationType") == creation_type]
     if len(matches) != 1:
