@@ -47,7 +47,7 @@ When safe automatic continuation is impossible, SAFOR stops or waits for the HUM
 4. the smallest required HUMAN action.
 
 
-## Project workspace support in 0.13
+## Project workspace support
 
 SAFOR distinguishes package/framework sources from HUMAN project storage.
 
@@ -57,7 +57,7 @@ Supported project workspace classes:
 
 SAFOR does not claim local execution when the current host cannot actually access the local filesystem/Git repository.
 
-Paid Factory/Operating Model access additionally requires supported entitlement verification. The 0.13 schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.
+Paid Factory/Operating Model access additionally requires supported entitlement verification. The current schema supports authorized provider readback or verified offline signature evidence; production entitlement infrastructure remains a release-readiness gate.
 
 
 
