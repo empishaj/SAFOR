@@ -277,19 +277,37 @@
       "id": "CF-046",
       "statement": "`{selectedOwner}/safor-memory` must pre-exist before project selection and is the mandatory control repository.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-RC4-001",
+        "CF-RC4-002"
+      ],
+      "supersessionReason": "Unscoped remote-memory prerequisite replaced by workspace-type-specific control requirements.",
+      "semanticKey": "CONTROL_WORKSPACE_REQUIREMENT"
     },
     {
       "id": "CF-047",
       "statement": "safor-memory read and write access must be proven; missing repository or insufficient access causes STOP.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-RC4-001",
+        "CF-RC4-002"
+      ],
+      "supersessionReason": "Unscoped safor-memory access/STOP rule replaced by workspace-type-specific prerequisites.",
+      "semanticKey": "CONTROL_WORKSPACE_ACCESS"
     },
     {
       "id": "CF-048",
       "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-RC4-001",
+        "CF-RC4-002"
+      ],
+      "supersessionReason": "Legacy no-substitution rule replaced by explicit REMOTE_GIT and LOCAL_GIT control roots.",
+      "semanticKey": "CONTROL_WORKSPACE_LOCATION"
     },
     {
       "id": "CF-049",
@@ -385,7 +403,13 @@
       "id": "CF-064",
       "statement": "Normal chat agents require an external activation trigger; background wakeup is not assumed.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-270",
+        "CF-271"
+      ],
+      "supersessionReason": "Generic external-trigger wording replaced by exclusive HUMAN-GO and explicit background-trigger prohibition.",
+      "semanticKey": "AGENT_ACTIVATION_TRIGGER"
     },
     {
       "id": "CF-065",
@@ -925,7 +949,13 @@
       "id": "CF-154",
       "statement": "Every SAFOR-generated HUMAN-facing response validates against the HUMAN response schema and contains exactly one terminal interaction menu.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-267",
+        "CF-RC4-003"
+      ],
+      "supersessionReason": "Universal terminal-menu requirement replaced by response-class-specific menu policy.",
+      "semanticKey": "HUMAN_RESPONSE_MENU_POLICY"
     },
     {
       "id": "CF-155",
@@ -937,7 +967,13 @@
       "id": "CF-156",
       "statement": "Terminal-menu presence applies to normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-267",
+        "CF-RC4-003"
+      ],
+      "supersessionReason": "Universal menu-presence list replaced by response-class-specific menu policy.",
+      "semanticKey": "HUMAN_RESPONSE_MENU_POLICY"
     },
     {
       "id": "CF-157",
@@ -955,7 +991,13 @@
       "id": "CF-159",
       "statement": "The HUMAN response finalizer is mandatory, validates response and menu before emission, renders the terminal menu last and stops rendering immediately after it.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-267",
+        "CF-RC4-003"
+      ],
+      "supersessionReason": "Finalizer remains mandatory, but terminal-menu rendering is conditional on response class.",
+      "semanticKey": "HUMAN_RESPONSE_FINALIZATION"
     },
     {
       "id": "CF-160",
@@ -1171,7 +1213,14 @@
       "id": "CF-195",
       "statement": "SOFTWARE_WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
       "expected": true,
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "CF-229",
+        "CF-231",
+        "CF-232"
+      ],
+      "supersessionReason": "Legacy SOFTWARE_WEBSITE free-path assertion replaced by distinct WEBSITE and SOFTWARE_SAAS creation profiles.",
+      "semanticKey": "CREATION_TYPE_COMMERCIAL_POLICY"
     },
     {
       "id": "CF-196",
@@ -1765,6 +1814,46 @@
       "id": "CF-RC3-007",
       "status": "ACTIVE",
       "statement": "Current release documentation is checked against VERSION, manifest, module/recovery counts and domain defaults.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC4-001",
+      "status": "ACTIVE",
+      "semanticKey": "CONTROL_WORKSPACE_REQUIREMENT",
+      "applicability": {
+        "workspaceType": [
+          "REMOTE_GIT"
+        ]
+      },
+      "statement": "REMOTE_GIT requires a separate HUMAN-controlled pre-existing readable/writable {selectedOwner}/safor-memory control repository; failure stops remote initialization.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC4-002",
+      "status": "ACTIVE",
+      "semanticKey": "CONTROL_WORKSPACE_REQUIREMENT",
+      "applicability": {
+        "workspaceType": [
+          "LOCAL_GIT"
+        ]
+      },
+      "statement": "LOCAL_GIT requires a Git-tracked MASTER-only .safor/ control root and does not require a remote safor-memory repository.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC4-003",
+      "status": "ACTIVE",
+      "semanticKey": "HUMAN_RESPONSE_MENU_POLICY",
+      "applicability": {
+        "responseClass": [
+          "INFORMATIONAL_NOTICE",
+          "INTERACTIVE_CHECKPOINT",
+          "DECISION_REQUEST",
+          "ACTIONABLE_BLOCKER",
+          "COMPLETION_CHECKPOINT"
+        ]
+      },
+      "statement": "The mandatory HUMAN response finalizer derives terminal-menu presence from response class: informational notices are menu-free; interactive checkpoints and decisions carry exactly one terminal menu when a HUMAN action is valid.",
       "expected": true
     }
   ],
