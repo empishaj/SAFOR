@@ -62,7 +62,17 @@
       "path": "v0.14.0/SAFOR-MASTER.json",
       "summary": "Remove unconditional remote-memory instructions and discriminate initialization by workspace type.",
       "plannedWorkPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
-      "status": "PLANNED_NOT_STARTED"
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "masterCommit": "15362f8bf41af1482070df956258b8769eee8c52",
+        "initializationCommit": "c2fd93b1d1eb48a032030eef43366e0343fea950",
+        "interactionCommit": "2496f2ec26799524ff766e5c3c7d85bbde57380b",
+        "validatorCommit": "eec1c084765d364063b7a3f860d7b1302a189f33",
+        "regressionTestCommit": "4229dac66a7f50c866e740225882f578abcd96c7",
+        "focusedWorkflowCommit": "f592d29f518fed242234dc2d7a7a03db4217c9d0",
+        "focusedValidationRun": 39122125892,
+        "result": "PASS"
+      }
     },
     {
       "findingId": "RC4-REVIEW-003",
@@ -137,11 +147,11 @@
     "noopBranchIdenticalToSourceCandidate": true
   },
   "stepResult": {
-    "workPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
+    "workPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
     "state": "COMPLETED",
     "validation": "FOCUSED_SOURCE_VALIDATION_PASS",
     "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION",
-    "nextWorkPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
+    "nextWorkPackage": "WP-A3_HUMAN_RESPONSE_CLASSIFICATION",
     "nextWorkPackageAuthorized": false
   }
 }
