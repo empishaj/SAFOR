@@ -2,7 +2,7 @@
 
 Current target: **v0.14.0-rc.4**
 
-Materialization state: **PENDING WP-A7**. Source-contract remediation is validated, but rc.4 Framework artifacts, checksums and full release CI are not release evidence until WP-A7 completes.
+Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The rc.4 Framework distributions and checksums are reproducible and automated validation is green; real-Git E2E, cross-host and migration acceptance remain separate open gates.
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 

@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
   "schemaVersion": "0.14.0",
-  "distributionVersion": "0.14.0-rc.3",
+  "distributionVersion": "0.14.0-rc.4",
   "distributionId": "safor.framework.saas",
   "fileName": "SAFOR-FRAMEWORK-SAAS.json",
   "publicationMode": "PUBLIC_TEST_EVALUATION",
@@ -20,7 +20,7 @@
   "framework": {
     "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
     "schemaVersion": "0.14.0",
-    "bundleVersion": "0.14.0-rc.3",
+    "bundleVersion": "0.14.0-rc.4",
     "definitionId": "safor-framework",
     "productName": "SAFOR",
     "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -282,17 +282,17 @@
     "integrityManifest": {
       "kernel": {
         "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "450e833285e7caf738412c58893ff0a0c264f860",
+        "sourceBlobSha": "9a8158eb5603c1e91821e7f785246df51a991056",
         "selfHealingProfileId": "MRP-KERNEL"
       },
       "initialization": {
         "sourcePath": "v0.14.0/initialization-model.json",
-        "sourceBlobSha": "af0ab244f4d4890e6b749049f834962a9251efd4",
+        "sourceBlobSha": "e8e3ceb853c793c7c33167187fc9c8643031db85",
         "selfHealingProfileId": "MRP-INITIALIZATION"
       },
       "interaction": {
         "sourcePath": "v0.14.0/interaction-model.json",
-        "sourceBlobSha": "6026ab8aa93fca37af7865432c28150fe6eecc34",
+        "sourceBlobSha": "e9e092ded59097b7f7e019243fb7eddbf14702ed",
         "selfHealingProfileId": "MRP-INTERACTION"
       },
       "humanDecisionGate": {
@@ -307,12 +307,12 @@
       },
       "agentActivation": {
         "sourcePath": "v0.14.0/agent-activation-model.json",
-        "sourceBlobSha": "98d188c8e8bd759892763d6ce177eb0bf8340fc0",
+        "sourceBlobSha": "1f6295664eafdec46c1f0517c970504b2fee44fb",
         "selfHealingProfileId": "MRP-AGENTACTIVATION"
       },
       "agentCommunication": {
         "sourcePath": "v0.14.0/agent-communication-model.json",
-        "sourceBlobSha": "e338e00ab10acfdf95c91b0baf898ecfc97e5656",
+        "sourceBlobSha": "20ec44d56f7f70f2e1f98a01b20471df49a48604",
         "selfHealingProfileId": "MRP-AGENTCOMMUNICATION"
       },
       "agentResponseContract": {
@@ -397,12 +397,12 @@
       },
       "providerGithub": {
         "sourcePath": "v0.14.0/providers/github/0.6.0/package.json",
-        "sourceBlobSha": "d8bda3ad30cefea804859cc82276cff4f7211e3e",
+        "sourceBlobSha": "bbbfbb4b9bdfb94f6865d2ae504e9b18fbc9584b",
         "selfHealingProfileId": "MRP-PROVIDERGITHUB"
       },
       "providerGitlab": {
         "sourcePath": "v0.14.0/providers/gitlab/0.6.0/package.json",
-        "sourceBlobSha": "3ab04ef4b74ace7b9fbcb570c1201d2531efaef2",
+        "sourceBlobSha": "346fb767966cefcf785b0b801b6502de4ae7588d",
         "selfHealingProfileId": "MRP-PROVIDERGITLAB"
       },
       "schemaPackageManifest": {
@@ -517,7 +517,7 @@
       },
       "schemaAgentChatOutput": {
         "sourcePath": "v0.14.0/schemas/agent-chat-output.schema.json",
-        "sourceBlobSha": "c8faa4a6765f11627fe60135c06ae697f2a9b95d",
+        "sourceBlobSha": "2d5e6c3028febfd24c72753e0957b450f2a655aa",
         "selfHealingProfileId": "MRP-SCHEMAAGENTCHATOUTPUT"
       },
       "schemaAgentResponse": {
@@ -697,7 +697,7 @@
       },
       "conformance": {
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "4affd137ab279d602f79524f1670fda3f2639ffc",
+        "sourceBlobSha": "b0584da6e9606897b00089295e87ad1259d61bb2",
         "selfHealingProfileId": "MRP-CONFORMANCE"
       },
       "composablePackageModel": {
@@ -750,7 +750,7 @@
       "kernel": {
         "key": "kernel",
         "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "450e833285e7caf738412c58893ff0a0c264f860",
+        "sourceBlobSha": "9a8158eb5603c1e91821e7f785246df51a991056",
         "content": {
           "format": "SAFOR_MASTER_BOOTSTRAP",
           "schemaVersion": "0.14.0",
@@ -3283,12 +3283,9 @@
               "Keep technical IDs, evidence detail and state mechanics behind DETAILS unless required for a decision or material risk.",
               "Encourage the HUMAN only with specific, evidence-grounded progress or a realistic next step.",
               "If the HUMAN requests depth, switch to expanded detail without sacrificing accuracy.",
-              "During initialization ask only one decision at a time: provider, owner, project mode, then repository/project identity.",
               "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
               "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
               "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
-              "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
-              "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
               "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
               "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",
               "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it.",
@@ -3296,12 +3293,18 @@
               "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
               "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
               "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval.",
-              "End every SAFOR-generated HUMAN-facing response with exactly one interaction menu.",
-              "Do not render any SAFOR-visible content after the terminal interaction menu.",
-              "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK."
+              "During initialization ask only one non-derivable decision at a time. Resolve creation/package choices before project workspace selection, then follow only the selected workspace branch.",
+              "For REMOTE_GIT, require and verify the separate HUMAN-controlled {selectedOwner}/safor-memory control repository according to the control workspace policy; if it is unavailable, block only the remote path.",
+              "For LOCAL_GIT, require verified local filesystem/Git capabilities and a Git-tracked MASTER-only .safor/ control root; never require remote safor-memory as a prerequisite for the local path.",
+              "Never combine REMOTE_GIT and LOCAL_GIT prerequisites in one initialization run.",
+              "Use the platform response classification contract before rendering direct HUMAN responses."
             ],
             "responseSchemaRef": "schemas/human-response.schema.json",
-            "terminalMenuRequired": true
+            "terminalMenuRequired": false,
+            "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy",
+            "workspaceSpecificInitializationRequired": true,
+            "terminalMenuPolicy": "DERIVED_FROM_RESPONSE_CLASS",
+            "responseClassificationRef": "interaction-model.json#responseClassification"
           },
           "initializationModelRef": "initialization-model.json",
           "selfHealingModelRef": "self-healing-model.json",
@@ -3429,7 +3432,7 @@
       "initialization": {
         "key": "initialization",
         "sourcePath": "v0.14.0/initialization-model.json",
-        "sourceBlobSha": "af0ab244f4d4890e6b749049f834962a9251efd4",
+        "sourceBlobSha": "e8e3ceb853c793c7c33167187fc9c8643031db85",
         "content": {
           "format": "SAFOR_INITIALIZATION_MODEL",
           "schemaVersion": "0.14.0",
@@ -3788,14 +3791,52 @@
             "onUnknownExternalEffect": "RECONCILE_REQUIRED"
           },
           "creationTypeVocabularyRef": "creation-type-vocabulary.json",
-          "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy"
+          "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy",
+          "workspaceBranchContract": {
+            "discriminator": "PROJECT_WORKSPACE_TYPE",
+            "mutuallyExclusive": true,
+            "commonPreWorkspaceSteps": [
+              "INIT-00",
+              "INIT-00A",
+              "INIT-01",
+              "INIT-02",
+              "INIT-03",
+              "INIT-04",
+              "INIT-05",
+              "INIT-06"
+            ],
+            "REMOTE_GIT": {
+              "sequence": [
+                "INIT-07R",
+                "INIT-08R",
+                "INIT-09R",
+                "INIT-10R",
+                "INIT-11"
+              ],
+              "controlWorkspace": "{selectedOwner}/safor-memory",
+              "remoteMemoryRequired": true,
+              "localControlRootRequired": false
+            },
+            "LOCAL_GIT": {
+              "sequence": [
+                "INIT-07L",
+                "INIT-08L",
+                "INIT-09L",
+                "INIT-11"
+              ],
+              "controlWorkspace": ".safor/",
+              "remoteMemoryRequired": false,
+              "localControlRootRequired": true
+            },
+            "rule": "After PROJECT_WORKSPACE_TYPE is selected, execute exactly one branch. Requirements from the other branch are non-applicable and must not block initialization."
+          }
         },
         "selfHealingProfileId": "MRP-INITIALIZATION"
       },
       "interaction": {
         "key": "interaction",
         "sourcePath": "v0.14.0/interaction-model.json",
-        "sourceBlobSha": "6026ab8aa93fca37af7865432c28150fe6eecc34",
+        "sourceBlobSha": "e9e092ded59097b7f7e019243fb7eddbf14702ed",
         "content": {
           "format": "SAFOR_INTERACTION_MODEL",
           "schemaVersion": "0.14.0",
@@ -4105,7 +4146,8 @@
               "platformResponseGovernorRequired": true,
               "domainPresentationOverrideForbidden": true,
               "terminalMenuRequiredAtInteractiveCheckpoints": true,
-              "informationalNoticeMayOmitTerminalMenu": true
+              "informationalNoticeMayOmitTerminalMenu": true,
+              "terminalMenuPolicy": "DERIVED_FROM_RESPONSE_CLASS"
             },
             "responseBudgets": {
               "acknowledgement": {
@@ -4242,7 +4284,9 @@
                   "STOP",
                   "REQUIRED_FIX"
                 ],
-                "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAFOR danach neu."
+                "example": "Remote-Git ist blockiert: Das benötigte safor-memory fehlt oder ist nicht beschreibbar. Richte den Remote-Control-Workspace ein oder wähle den lokalen Git-Pfad.",
+                "appliesWhen": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+                "legacyName": true
               },
               "creationType": {
                 "structure": [
@@ -4283,6 +4327,14 @@
                   "VALUE_STREAM_WALKTHROUGH",
                   "MIGRATION_OPTION_MENU_WITHOUT_REAL_HUMAN_DECISION"
                 ]
+              },
+              "localControlWorkspaceStop": {
+                "appliesWhen": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+                "structure": [
+                  "STOP",
+                  "REQUIRED_FIX"
+                ],
+                "example": "Lokaler Git-Zugriff ist blockiert: Dateisystem-/Git-Rechte oder der geschützte .safor/-Control-Root fehlen. Remote-safor-memory ist dafür nicht erforderlich."
               }
             },
             "avoid": {
@@ -4452,7 +4504,8 @@
               "Remote Git requires verified read/write access to a separate HUMAN-controlled safor-memory.",
               "Local Git requires verified local filesystem/Git rights and a MASTER-only Git-tracked .safor/ root; no remote memory is required.",
               "Creation Type options are WEBSITE, SOFTWARE_SAAS and BOOK unless a domain distribution preselects one."
-            ]
+            ],
+            "workspaceBranchRule": "After workspace selection, render and execute only steps whose when condition matches the selected PROJECT_WORKSPACE_TYPE. Never surface REMOTE_GIT blockers in LOCAL_GIT or LOCAL_GIT blockers in REMOTE_GIT."
           },
           "nativeUiPolicy": {
             "mode": "CHAT_NATIVE_UI_ONLY",
@@ -4990,6 +5043,38 @@
             ],
             "failureMode": "FAIL_CLOSED_TO_MINIMUM_SAFE_PLATFORM_MESSAGE",
             "minimumSafeMessage": "Ich habe die Änderung erkannt. Ich prüfe den sicheren nächsten Schritt und ändere bis dahin nichts."
+          },
+          "responseClassification": {
+            "id": "SAFOR_PLATFORM_RESPONSE_CLASSIFICATION",
+            "authority": "SAFOR_PLATFORM",
+            "schemaRef": "schemas/human-response.schema.json",
+            "classes": {
+              "INFORMATIONAL_NOTICE": {
+                "interactive": false,
+                "terminalMenu": "FORBIDDEN",
+                "renderMode": "CONTENT_ONLY"
+              },
+              "INTERACTIVE_CHECKPOINT": {
+                "interactive": true,
+                "terminalMenu": "REQUIRED_EXACTLY_ONE",
+                "renderMode": "CONTENT_THEN_MENU"
+              },
+              "DECISION_REQUEST": {
+                "interactive": true,
+                "terminalMenu": "REQUIRED_EXACTLY_ONE",
+                "renderMode": "CONTENT_THEN_MENU"
+              },
+              "BLOCKER": {
+                "interactive": true,
+                "terminalMenu": "REQUIRED_EXACTLY_ONE",
+                "renderMode": "CONTENT_THEN_MENU"
+              },
+              "DETAIL_RESPONSE": {
+                "interactive": true,
+                "terminalMenu": "REQUIRED_EXACTLY_ONE",
+                "renderMode": "CONTENT_THEN_MENU"
+              }
+            }
           }
         },
         "selfHealingProfileId": "MRP-INTERACTION"
@@ -5186,7 +5271,7 @@
       "agentActivation": {
         "key": "agentActivation",
         "sourcePath": "v0.14.0/agent-activation-model.json",
-        "sourceBlobSha": "98d188c8e8bd759892763d6ce177eb0bf8340fc0",
+        "sourceBlobSha": "1f6295664eafdec46c1f0517c970504b2fee44fb",
         "content": {
           "format": "SAFOR_AGENT_ACTIVATION_MODEL",
           "schemaVersion": "0.14.0",
@@ -5341,16 +5426,31 @@
             "authoritativeSequence": [
               "READ_PINNED_JOB_STATE",
               "VALIDATE_GO_EVIDENCE",
-              "PREPARE_CLAIM_INTENT",
-              "CAS_COMMIT_EXPECTED_REVISION",
-              "PROVIDER_READBACK",
-              "PERSIST_ACTIVATION_CONSUMPTION",
-              "MARK_CLAIM_CONFIRMED"
+              "BUILD_EXACT_PROPOSED_CLAIM_STATE",
+              "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_STATE",
+              "CALCULATE_CANONICAL_PROPOSED_STATE_DIGEST",
+              "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
+              "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+              "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
+              "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE"
             ],
             "inMemoryConsumptionAuthoritative": false,
             "claimSuccessRequiresProviderReadback": true,
             "casFailureOutcome": "RECONCILE_REQUIRED",
-            "activationConsumptionAuthority": "PERSISTED_JOB_STATE_AFTER_PROVIDER_READBACK"
+            "activationConsumptionAuthority": "CAS_COMMITTED_JOB_STATE_VERIFIED_BY_PROVIDER_READBACK",
+            "claimSuccessRequires": [
+              "CAS_SUCCEEDED",
+              "FULL_COMMITTED_STATE_READ_BACK",
+              "READBACK_STATE_EQUALS_PROPOSED_STATE",
+              "CANONICAL_STATE_DIGEST_MATCH",
+              "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+              "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
+              "READBACK_REF_PRESENT",
+              "READBACK_BLOB_IDENTITY_PRESENT"
+            ],
+            "persistActivationConsumptionInsideCasState": true,
+            "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
+            "proposedStateIsNonAuthoritativeUntilReadback": true
           }
         },
         "selfHealingProfileId": "MRP-AGENTACTIVATION"
@@ -5358,7 +5458,7 @@
       "agentCommunication": {
         "key": "agentCommunication",
         "sourcePath": "v0.14.0/agent-communication-model.json",
-        "sourceBlobSha": "e338e00ab10acfdf95c91b0baf898ecfc97e5656",
+        "sourceBlobSha": "20ec44d56f7f70f2e1f98a01b20471df49a48604",
         "content": {
           "format": "SAFOR_AGENT_COMMUNICATION_MODEL",
           "schemaVersion": "0.14.0",
@@ -5432,6 +5532,28 @@
               "After provider recovery, persist only the missing response and reconcile its index.",
               "Keep the chat fallback to one line and route the HUMAN to MASTER."
             ]
+          },
+          "persistenceXorContract": {
+            "appliesToStatus": "BLOCKED",
+            "variants": {
+              "PERSISTED_RESPONSE": {
+                "detailsRef": "REQUIRED_NONEMPTY",
+                "persistence": "MUST_BE_NULL",
+                "authoritativeResponsePersisted": true
+              },
+              "PERSISTENCE_FAILURE": {
+                "detailsRef": "MUST_BE_NULL",
+                "persistenceState": "FAILED",
+                "authoritativeResponsePersisted": false,
+                "requiredFields": [
+                  "attemptId",
+                  "phase",
+                  "reasonCode"
+                ]
+              }
+            },
+            "mutuallyExclusive": true,
+            "ambiguousCombinationOutcome": "REJECT"
           }
         },
         "selfHealingProfileId": "MRP-AGENTCOMMUNICATION"
@@ -11556,7 +11678,7 @@
       "providerGithub": {
         "key": "providerGithub",
         "sourcePath": "v0.14.0/providers/github/0.6.0/package.json",
-        "sourceBlobSha": "d8bda3ad30cefea804859cc82276cff4f7211e3e",
+        "sourceBlobSha": "bbbfbb4b9bdfb94f6865d2ae504e9b18fbc9584b",
         "content": {
           "format": "SAFOR_PACKAGE_MANIFEST",
           "schemaVersion": "0.14.0",
@@ -11703,17 +11825,25 @@
             "agentClaimProtocol": {
               "requiredOperations": [
                 "READ_JOB_STATE_AT_PINNED_REVISION",
-                "WRITE_JOB_STATE_WITH_EXPECTED_REVISION",
-                "READ_BACK_COMMITTED_JOB_STATE"
+                "WRITE_EXACT_PROPOSED_JOB_STATE_WITH_EXPECTED_REVISION",
+                "READ_BACK_FULL_COMMITTED_JOB_STATE",
+                "READ_BACK_COMMITTED_BLOB_IDENTITY"
               ],
               "successRequires": [
                 "COMPARE_AND_SWAP_SUCCEEDED",
+                "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+                "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
+                "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+                "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
                 "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
                 "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
-                "OBSERVED_ACTIVATION_ID_MATCHES"
+                "READBACK_REFERENCE_PRESENT",
+                "OBSERVED_BLOB_IDENTITY_PRESENT"
               ],
               "onCasConflict": "RECONCILE_REQUIRED",
-              "inMemoryStateNeverAuthoritative": true
+              "inMemoryStateNeverAuthoritative": true,
+              "onReadbackMismatch": "RECONCILE_REQUIRED",
+              "proposedStateNeverAuthoritativeBeforeReadback": true
             }
           }
         },
@@ -11722,7 +11852,7 @@
       "providerGitlab": {
         "key": "providerGitlab",
         "sourcePath": "v0.14.0/providers/gitlab/0.6.0/package.json",
-        "sourceBlobSha": "3ab04ef4b74ace7b9fbcb570c1201d2531efaef2",
+        "sourceBlobSha": "346fb767966cefcf785b0b801b6502de4ae7588d",
         "content": {
           "format": "SAFOR_PACKAGE_MANIFEST",
           "schemaVersion": "0.14.0",
@@ -11868,17 +11998,25 @@
             "agentClaimProtocol": {
               "requiredOperations": [
                 "READ_JOB_STATE_AT_PINNED_REVISION",
-                "WRITE_JOB_STATE_WITH_EXPECTED_REVISION",
-                "READ_BACK_COMMITTED_JOB_STATE"
+                "WRITE_EXACT_PROPOSED_JOB_STATE_WITH_EXPECTED_REVISION",
+                "READ_BACK_FULL_COMMITTED_JOB_STATE",
+                "READ_BACK_COMMITTED_BLOB_IDENTITY"
               ],
               "successRequires": [
                 "COMPARE_AND_SWAP_SUCCEEDED",
+                "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+                "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
+                "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+                "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
                 "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
                 "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
-                "OBSERVED_ACTIVATION_ID_MATCHES"
+                "READBACK_REFERENCE_PRESENT",
+                "OBSERVED_BLOB_IDENTITY_PRESENT"
               ],
               "onCasConflict": "RECONCILE_REQUIRED",
-              "inMemoryStateNeverAuthoritative": true
+              "inMemoryStateNeverAuthoritative": true,
+              "onReadbackMismatch": "RECONCILE_REQUIRED",
+              "proposedStateNeverAuthoritativeBeforeReadback": true
             }
           }
         },
@@ -17662,7 +17800,7 @@
       "schemaAgentChatOutput": {
         "key": "schemaAgentChatOutput",
         "sourcePath": "v0.14.0/schemas/agent-chat-output.schema.json",
-        "sourceBlobSha": "c8faa4a6765f11627fe60135c06ae697f2a9b95d",
+        "sourceBlobSha": "2d5e6c3028febfd24c72753e0957b450f2a655aa",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:agent-chat-output:0.14.0",
@@ -17728,7 +17866,8 @@
               "type": [
                 "string",
                 "null"
-              ]
+              ],
+              "minLength": 1
             },
             "text": {
               "type": "string",
@@ -17806,6 +17945,30 @@
                 "required": [
                   "persistence"
                 ]
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "status": {
+                    "const": "BLOCKED"
+                  },
+                  "detailsRef": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "status",
+                  "detailsRef"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "persistence": {
+                    "type": "null"
+                  }
+                }
               }
             },
             {
@@ -23550,7 +23713,7 @@
       "conformance": {
         "key": "conformance",
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "4affd137ab279d602f79524f1670fda3f2639ffc",
+        "sourceBlobSha": "b0584da6e9606897b00089295e87ad1259d61bb2",
         "content": {
           "format": "SAFOR_CONFORMANCE_SUITE",
           "schemaVersion": "0.14.0",
@@ -23830,19 +23993,37 @@
               "id": "CF-046",
               "statement": "`{selectedOwner}/safor-memory` must pre-exist before project selection and is the mandatory control repository.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-RC4-001",
+                "CF-RC4-002"
+              ],
+              "supersessionReason": "Unscoped remote-memory prerequisite replaced by workspace-type-specific control requirements.",
+              "semanticKey": "CONTROL_WORKSPACE_REQUIREMENT"
             },
             {
               "id": "CF-047",
               "statement": "safor-memory read and write access must be proven; missing repository or insufficient access causes STOP.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-RC4-001",
+                "CF-RC4-002"
+              ],
+              "supersessionReason": "Unscoped safor-memory access/STOP rule replaced by workspace-type-specific prerequisites.",
+              "semanticKey": "CONTROL_WORKSPACE_ACCESS"
             },
             {
               "id": "CF-048",
               "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-RC4-001",
+                "CF-RC4-002"
+              ],
+              "supersessionReason": "Legacy no-substitution rule replaced by explicit REMOTE_GIT and LOCAL_GIT control roots.",
+              "semanticKey": "CONTROL_WORKSPACE_LOCATION"
             },
             {
               "id": "CF-049",
@@ -23938,7 +24119,13 @@
               "id": "CF-064",
               "statement": "Normal chat agents require an external activation trigger; background wakeup is not assumed.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-270",
+                "CF-271"
+              ],
+              "supersessionReason": "Generic external-trigger wording replaced by exclusive HUMAN-GO and explicit background-trigger prohibition.",
+              "semanticKey": "AGENT_ACTIVATION_TRIGGER"
             },
             {
               "id": "CF-065",
@@ -24478,7 +24665,13 @@
               "id": "CF-154",
               "statement": "Every SAFOR-generated HUMAN-facing response validates against the HUMAN response schema and contains exactly one terminal interaction menu.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-267",
+                "CF-RC4-003"
+              ],
+              "supersessionReason": "Universal terminal-menu requirement replaced by response-class-specific menu policy.",
+              "semanticKey": "HUMAN_RESPONSE_MENU_POLICY"
             },
             {
               "id": "CF-155",
@@ -24490,7 +24683,13 @@
               "id": "CF-156",
               "statement": "Terminal-menu presence applies to normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-267",
+                "CF-RC4-003"
+              ],
+              "supersessionReason": "Universal menu-presence list replaced by response-class-specific menu policy.",
+              "semanticKey": "HUMAN_RESPONSE_MENU_POLICY"
             },
             {
               "id": "CF-157",
@@ -24508,7 +24707,13 @@
               "id": "CF-159",
               "statement": "The HUMAN response finalizer is mandatory, validates response and menu before emission, renders the terminal menu last and stops rendering immediately after it.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-267",
+                "CF-RC4-003"
+              ],
+              "supersessionReason": "Finalizer remains mandatory, but terminal-menu rendering is conditional on response class.",
+              "semanticKey": "HUMAN_RESPONSE_FINALIZATION"
             },
             {
               "id": "CF-160",
@@ -24724,7 +24929,14 @@
               "id": "CF-195",
               "statement": "SOFTWARE_WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
               "expected": true,
-              "status": "ACTIVE"
+              "status": "SUPERSEDED",
+              "supersededBy": [
+                "CF-229",
+                "CF-231",
+                "CF-232"
+              ],
+              "supersessionReason": "Legacy SOFTWARE_WEBSITE free-path assertion replaced by distinct WEBSITE and SOFTWARE_SAAS creation profiles.",
+              "semanticKey": "CREATION_TYPE_COMMERCIAL_POLICY"
             },
             {
               "id": "CF-196",
@@ -25318,6 +25530,60 @@
               "id": "CF-RC3-007",
               "status": "ACTIVE",
               "statement": "Current release documentation is checked against VERSION, manifest, module/recovery counts and domain defaults.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC4-001",
+              "status": "ACTIVE",
+              "semanticKey": "CONTROL_WORKSPACE_REQUIREMENT",
+              "applicability": {
+                "workspaceType": [
+                  "REMOTE_GIT"
+                ]
+              },
+              "statement": "REMOTE_GIT requires a separate HUMAN-controlled pre-existing readable/writable {selectedOwner}/safor-memory control repository; failure stops remote initialization.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC4-002",
+              "status": "ACTIVE",
+              "semanticKey": "CONTROL_WORKSPACE_REQUIREMENT",
+              "applicability": {
+                "workspaceType": [
+                  "LOCAL_GIT"
+                ]
+              },
+              "statement": "LOCAL_GIT requires a Git-tracked MASTER-only .safor/ control root and does not require a remote safor-memory repository.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC4-003",
+              "status": "ACTIVE",
+              "semanticKey": "HUMAN_RESPONSE_MENU_POLICY",
+              "applicability": {
+                "responseClass": [
+                  "INFORMATIONAL_NOTICE",
+                  "INTERACTIVE_CHECKPOINT",
+                  "DECISION_REQUEST",
+                  "BLOCKER",
+                  "DETAIL_RESPONSE"
+                ]
+              },
+              "statement": "Platform response classification determines menu presence; informational notices are menu-free and interactive response classes use exactly one terminal menu.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC4-004",
+              "status": "ACTIVE",
+              "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
+              "statement": "A HUMAN-GO claim becomes authoritative only when provider CAS succeeds and full committed job-state readback exactly matches the prepared state by canonical digest and bound project/job/agent/identity/chat/dispatch fields; the activationId is already persisted in consumedActivationIds.",
+              "expected": true
+            },
+            {
+              "id": "CF-RC4-005",
+              "status": "ACTIVE",
+              "semanticKey": "AGENT_CHAT_PERSISTENCE_XOR",
+              "statement": "For BLOCKED agent chat output, exactly one persistence representation is valid: either a non-empty detailsRef with persistence=null, or detailsRef=null with a FAILED control-repository persistence object; both together are forbidden.",
               "expected": true
             }
           ],
@@ -28437,6 +28703,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:0203dd18aabab776488a50bd9e8f699a3037cd3cda71331d9327ed4c32635d24"
+    "contentDigest": "sha256:8f51cf76810b203d8d7fe0d40e42b96f231f667757da6f89bb8a8f22d34f4d88"
   }
 }

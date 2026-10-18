@@ -377,5 +377,5 @@
   },
   "embeddedModuleCount": 93,
   "releaseFactsRef": "RELEASE-FACTS.json",
-  "releaseArtifactsState": "PENDING_WP_A7_MATERIALIZATION"
+  "releaseArtifactsState": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
 }
