@@ -1,7 +1,7 @@
 # SAFOR – einfache Anleitung
 
 > Aktuelle Version: **0.14.0-rc.5 (Release Candidate)**  
-> Du musst keine JSON-Datei öffnen oder verstehen. Du brauchst nur einen kompatiblen Chat und – wenn SAFOR mit Git arbeiten soll – einen Git-Zugang, den dein Chat tatsächlich benutzen kann.
+> Du musst keine JSON-Datei öffnen oder verstehen. Wenn SAFOR Dateien in Git speichern soll, braucht dein Chat lediglich Zugriff auf dein Git-Projekt.
 
 ## 1. Wähle, was du machen willst
 
@@ -26,7 +26,7 @@ Kopiere nach dem Hochladen genau diesen Text:
 ```text
 Arbeite mit dem geladenen SAFOR-Framework.
 Führe mich in einfacher Sprache Schritt für Schritt.
-Nutze die bereits gewählte Domain und frage mich nicht noch einmal, ob ich Website, SaaS oder Buch erstellen möchte.
+Nutze den bereits gewählten Bereich und frage mich nicht noch einmal, ob ich Website, SaaS oder Buch erstellen möchte.
 Frage mich nur Dinge, die du nicht sicher aus meinen Antworten ableiten kannst.
 Erkläre mir einen Stopp kurz und verständlich.
 ```
@@ -35,7 +35,7 @@ Danach beschreibst du dein Vorhaben ganz normal in deinen eigenen Worten.
 
 ## 4. Beantworte nur die Fragen des MASTER
 
-Der **MASTER** ist dein Ansprechpartner.
+Der **MASTER** ist dein Hauptchat und dein einziger Ansprechpartner für fachliche Fragen.
 
 Du musst keine technischen Rollen, Dateien oder Arbeitsaufträge selbst koordinieren. SAFOR soll diese Dinge aus deinen Angaben ableiten.
 
@@ -43,7 +43,7 @@ Wenn der MASTER eine echte Entscheidung von dir braucht, beantwortest du sie. We
 
 ## 5. Wenn SAFOR einen Subagenten braucht
 
-Manche Aufgaben kann der MASTER an einen spezialisierten Agenten geben.
+Manche Aufgaben kann der MASTER an einen Hilfs-Chat, einen sogenannten Subagenten, geben.
 
 Dann läuft es so:
 
