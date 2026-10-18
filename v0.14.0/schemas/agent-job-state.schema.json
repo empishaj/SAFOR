@@ -249,5 +249,6 @@
         }
       }
     }
-  }
+  },
+  "description": "MASTER-owned authoritative job lifecycle. Normal subagents read this state before claim but never CAS or mutate it directly."
 }
