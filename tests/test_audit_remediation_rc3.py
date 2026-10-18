@@ -71,6 +71,27 @@ class AuditRemediationRc3Tests(unittest.TestCase):
         self.assertFalse(policy["LOCAL_GIT"]["remoteMemoryRequired"])
         self.assertEqual("{selectedOwner}/safor-memory", policy["REMOTE_GIT"]["target"])
 
+    def test_legacy_conformance_assertions_are_superseded(self):
+        assertions = self.load("v0.14.0/conformance.json")["assertions"]
+        indexed = {item["id"]: item for item in assertions}
+        expected = {
+            "CF-046": {"CF-RC4-001", "CF-RC4-002"},
+            "CF-047": {"CF-RC4-001", "CF-RC4-002"},
+            "CF-048": {"CF-RC4-001", "CF-RC4-002"},
+            "CF-064": {"CF-270", "CF-271"},
+            "CF-154": {"CF-267", "CF-RC4-003"},
+            "CF-156": {"CF-267", "CF-RC4-003"},
+            "CF-159": {"CF-267", "CF-RC4-003"},
+            "CF-195": {"CF-229", "CF-231", "CF-232"},
+        }
+        for legacy_id, successors in expected.items():
+            with self.subTest(legacy_id=legacy_id):
+                self.assertEqual("SUPERSEDED", indexed[legacy_id]["status"])
+                self.assertEqual(successors, set(indexed[legacy_id]["supersededBy"]))
+                self.assertTrue(all(indexed[target]["status"] == "ACTIVE" for target in successors))
+        self.assertEqual(["REMOTE_GIT"], indexed["CF-RC4-001"]["applicability"]["workspaceType"])
+        self.assertEqual(["LOCAL_GIT"], indexed["CF-RC4-002"]["applicability"]["workspaceType"])
+
     def test_persistence_failure_chat_fallback_has_no_fake_reference(self):
         output = render_agent_chat_output(
             status="BLOCKED", project_id="project-001", agent_id="agent-a",
