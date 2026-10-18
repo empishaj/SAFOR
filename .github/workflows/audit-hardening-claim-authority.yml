@@ -1,0 +1,28 @@
+name: SAFOR Claim Authority Validation
+
+on:
+  push:
+    branches:
+      - safor/audit-hardening-claim-authority-rc5
+
+permissions:
+  contents: read
+
+jobs:
+  validate-claim-authority:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate audit contracts
+        run: python tools/validate_audit_remediation.py
+
+      - name: Validate documentation consistency
+        run: python tools/validate_content_consistency.py
+
+      - name: Run claim-authority regressions
+        run: |
+          python -m unittest             tests.test_go_evidence_v014             tests.test_go_claim_integrity_v014             tests.test_claim_authority_separation_v014             tests.test_agent_activation_v014             tests.test_audit_remediation_rc3 -v
