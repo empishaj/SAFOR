@@ -10,6 +10,8 @@ SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-ba
 
 SAFOR is loaded as JSON into an ordinary compatible LLM chat. No customer-installed runtime is required. The chat follows the declarative contract and uses only real host/Git capabilities. Optional Python reference implementations support validation and stronger host integration but are not an end-user prerequisite.
 
+MASTER is the only fachliche and organizational HUMAN interface. An agent does not conduct domain discussion with the HUMAN; it writes substantive results, questions, conflicts and evidence to the contracted Git targets and renders only minimal operational status in its bound chat.
+
 ## Start here
 
 - Nontechnical German test guide: [START-HIER.md](START-HIER.md)
@@ -48,7 +50,7 @@ The matching access bundles are self-describing and bind only to their intended 
 
 `runtime/public_evaluation_access.py` is the deterministic reference implementation for compatible host/runtime integrations between both uploaded artifacts. It rejects wrong filenames, cross-domain bundles, altered activation contracts, additional or imprecise grants and any attempt to set `productionAuthorization=true`. On success it resolves package access and continues at `SELECT_PROJECT_WORKSPACE_TYPE`, without a redundant domain question.
 
-A generic chat host does not automatically execute this Python module merely because JSON files were uploaded. Without a host or adapter invoking the reference implementation, a chat evaluation tests whether the model follows the contract; it does not prove machine-enforced entitlement execution. Production use therefore requires an integrated SAFOR host/runtime boundary.
+A generic chat host does not automatically execute this Python module merely because JSON files were uploaded. Without a host or adapter invoking the reference implementation, a chat evaluation tests whether the model follows the contract; it does not prove machine-enforced entitlement execution. Optional host integration can provide stronger machine enforcement, but normal SAFOR chat use does not require a separately installed customer runtime.
 
 These public access bundles are not purchase evidence, are not transferable and do not change the production catalog. Production paid packages still resolve through licensed HUMAN delivery or `ENTITLED_PACKAGE_SOURCE` with independently verified entitlement evidence for Factory and Operating Model.
 
@@ -113,6 +115,6 @@ The same validation runs in GitHub Actions.
 
 ## Product status
 
-SAFOR remains a **Release Candidate**, not General Availability. The Framework/package/licensing boundary and public evaluation reference bridge are machine-tested. Generic chat uploads alone do not execute that bridge. Real commercial package delivery, production entitlement infrastructure, host/runtime integration and provider/agent end-to-end acceptance remain GA gates.
+SAFOR remains a **Release Candidate**, not General Availability. The Framework/package/licensing boundary and public evaluation reference bridge are machine-tested. Generic chat uploads alone do not execute that bridge. Real commercial package delivery, production entitlement infrastructure, optional stronger host integration and provider/agent end-to-end acceptance remain GA gates.
 
 See [LICENSE-DECISION.md](LICENSE-DECISION.md), [PRODUCT-READINESS.md](PRODUCT-READINESS.md) and [ACCEPTANCE-TESTS.md](ACCEPTANCE-TESTS.md).
