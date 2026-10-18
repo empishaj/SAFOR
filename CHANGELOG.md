@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.13.0-rc.9
+
+- Publishes a fresh generic SAFOR Framework and all three domain Framework distributions after the non-destructive `safomwebsite` reference migration completed.
+- Adds a versioned release-evidence record, SHA-256 distribution checksums and dedicated release notes.
+- Records the complete nine-agent reference registry, authoritative current-state pointer and provider-readback evidence without embedding project-specific state in the generic Framework.
+- Removes `REFERENCE_PROJECT_RC8_MIGRATION_ACCEPTANCE` from the GA blocker list while retaining all unrelated cross-host, provider, commercial and governance blockers.
+- Corrects the SaaS onboarding instruction to pair `SAFOR-FRAMEWORK-SAAS.json` with `SAFOR-TEST-ACCESS-SAAS.json`.
+- Rebuilds and revalidates the generic, Website, SaaS-evaluation and Book-evaluation Framework files from canonical sources.
+
 ## 0.13.0-rc.8
 
 - Defines ordinary compatible LLM chat as SAFOR's primary execution surface and removes any customer-runtime installation prerequisite.

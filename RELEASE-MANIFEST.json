@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.13.0-rc.8",
+  "version": "0.13.0-rc.9",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.13.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.8.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.13.0-rc.9.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.7",
+  "previousVersion": "0.13.0-rc.8",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -150,7 +150,13 @@
     "COMPACT_MASTER_STATUS_INDEX",
     "POINTER_FIRST_STATUS_READS",
     "SEPARATE_PRODUCT_AND_CONTROL_WRITE_SCOPES",
-    "HUMAN_NOTICE_TRACEABILITY_SUITE"
+    "HUMAN_NOTICE_TRACEABILITY_SUITE",
+    "REFERENCE_PROJECT_RC8_MIGRATION_COMPLETED",
+    "REFERENCE_PROJECT_CURRENT_STATE_POINTER",
+    "COMPLETE_NINE_AGENT_REFERENCE_REGISTRY",
+    "REFERENCE_PROJECT_MIGRATION_PROVIDER_READBACK",
+    "VERSIONED_RELEASE_EVIDENCE",
+    "DISTRIBUTION_SHA256_CHECKSUMS"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -174,8 +180,7 @@
     "COMPOSABLE_PACKAGE_END_TO_END_ACCEPTANCE",
     "DOMAIN_FRAMEWORK_DISTRIBUTION_END_TO_END_ACCEPTANCE",
     "PLATFORM_RESPONSE_GOVERNOR_HOST_END_TO_END_ACCEPTANCE",
-    "FRESH_CHAT_HUMAN_GO_CROSS_HOST_ACCEPTANCE",
-    "REFERENCE_PROJECT_RC8_MIGRATION_ACCEPTANCE"
+    "FRESH_CHAT_HUMAN_GO_CROSS_HOST_ACCEPTANCE"
   ],
   "sourceBaselines": [
     "v0.13.0",
@@ -263,5 +268,28 @@
     "CLARIFICATION_REQUEST",
     "CAPABILITY_MISMATCH",
     "IMPROVEMENT_PROPOSAL"
-  ]
+  ],
+  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.13.0-rc.9.json",
+  "releaseNotesRef": "RELEASE-NOTES-0.13.0-rc.9.md",
+  "checksumFile": "SHA256SUMS-0.13.0-rc.9.txt",
+  "referenceProjectMigration": {
+    "status": "COMPLETED",
+    "projectId": "67454821-9325-41f3-ac41-d72121cfec5f",
+    "projectSlug": "safomwebsite",
+    "controlRepository": "empishaj/safor-memory",
+    "mergeCommit": "85e08eab15b18a86868090d7b18573b9e2484aea",
+    "pullRequest": 4,
+    "currentStateRef": "projects/safomwebsite/state/current.json",
+    "currentStateBlobSha": "8e0d00bb8e7f1aedf70043be761f6378eb924f81",
+    "agentRegistryRef": "projects/safomwebsite/agents/index.json",
+    "agentRegistryBlobSha": "466dcdb608cb22592d97a575b9687c8c513beb7f",
+    "migrationAuditRef": "projects/safomwebsite/audit/rc8-migration-validation.json",
+    "migrationAuditBlobSha": "bc18643d0c23d60094cd5c350bba68f0607d27a8",
+    "agentCount": 9,
+    "typedResponseTemplateCount": 5,
+    "historicalArtifactsPreserved": true,
+    "productRepository": "empishaj/safomwebsite",
+    "productRepositoryHeadUnchangedAtMigration": "1026ff2176d739aeedc506e5970b48528aa8ad23"
+  },
+  "distributionArtifactCount": 7
 }

@@ -1,4 +1,4 @@
-# HUMAN Notice Conformance – SAFOR 0.13.0-rc.8
+# HUMAN Notice Conformance – SAFOR 0.13.0-rc.9
 
 ## Scope
 
@@ -33,4 +33,6 @@ SAFOR's JSON contracts are normative product behavior. They do not create connec
 
 ## Reference-project migration
 
-The product release is complete only after `safomwebsite` receives a non-destructive rc.8 migration: current binding, complete agent registry, active identity overlays, response templates, MASTER status index and one authoritative current-state pointer. Historical jobs, AWC objects and evidence remain immutable read-only history.
+The non-destructive `safomwebsite` migration is complete in `empishaj/safor-memory` at merge commit `85e08eab15b18a86868090d7b18573b9e2484aea` (PR #4). The authoritative projection is `projects/safomwebsite/state/current.json`; the complete nine-agent registry, HUMAN-GO identity overlays, response-template binding and compact MASTER status index are present. Historical jobs, AWC objects, legacy identities and evidence remain read-only history.
+
+This closes the reference-project migration acceptance item for rc.9. It does not close cross-host, provider, commercial-delivery or General Availability acceptance items.

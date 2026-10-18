@@ -4,7 +4,7 @@
 
 - [x] `VERSION` matches the intended release candidate.
 - [x] `CHANGELOG.md` contains the release.
-- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.8.json`.
+- [x] `RELEASE-MANIFEST.json` points to `SAFOR-FRAMEWORK-v0.13.0-rc.9.json`.
 - [x] `SAFOR-FRAMEWORK.json` exactly matches the versioned Framework artifact.
 - [x] `python tools/build_bundle.py --check` passes.
 - [x] `python tools/build_domain_framework.py --check` reproduces all public domain Framework distributions.
@@ -113,3 +113,10 @@
 - [x] Subagent chat output is minimal status only.
 - [x] MASTER status uses compact versioned pointer indexes.
 - [x] Negative tests reject Git wake-up, identity ambiguity, invalid responses and scope mixing.
+
+## 0.13.0-rc.9 consolidation checks
+
+- [x] `RELEASE-EVIDENCE-0.13.0-rc.9.json` binds the release to the verified reference-project migration.
+- [x] `SHA256SUMS-0.13.0-rc.9.txt` covers every distributed Framework and evaluation-access artifact.
+- [x] The prior versioned root Framework file is removed; its immutable history remains in Git.
+- [x] The reference-project migration blocker is closed without claiming unrelated GA acceptance.

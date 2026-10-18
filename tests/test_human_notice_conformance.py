@@ -172,7 +172,7 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         ):
             distribution = load(file_name)
             framework = distribution["framework"]
-            self.assertEqual(framework["bundleVersion"], "0.13.0-rc.8")
+            self.assertEqual(framework["bundleVersion"], "0.13.0-rc.9")
             modules = framework["embeddedModules"]
             for key in (
                 "chatExecution", "agentBootstrap", "agentResponseContract", "agentResponseTemplates",

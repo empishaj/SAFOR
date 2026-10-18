@@ -2,7 +2,7 @@
 
 Diese Anleitung ist für Menschen gedacht, die SAFOR **verwenden**, nicht technisch analysieren wollen. Du musst keine JSON-Datei öffnen, bearbeiten oder verstehen.
 
-> Produktstatus: **SAFOR v0.13.0-rc.8 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
+> Produktstatus: **SAFOR v0.13.0-rc.9 ist ein Release Candidate.** Die öffentlichen SaaS- und Buch-Dateien dienen ausschließlich dem Produkttest und sind keine Produktionslizenz.
 
 ## Ausführungsmodell
 
@@ -104,7 +104,7 @@ Erwartung: SAFOR startet nicht stillschweigend mit den bezahlten Modulen. Es for
 
 ### Test C – falscher Testzugang
 
-Lade `SAFOR-FRAMEWORK-SAAS.json` zusammen mit `SAFOR-TEST-ACCESS-BOOK-CREATION.json`.
+Lade `SAFOR-FRAMEWORK-SAAS.json` zusammen mit `SAFOR-TEST-ACCESS-SAAS.json`.
 
 Erwartung: SAFOR lehnt die Kombination wegen Domain-, Creation-Type-, Distribution- und Paketversionskonflikten ab. Es darf den Buch-Zugriff niemals für SaaS verwenden.
 
@@ -116,7 +116,7 @@ Erwartung: SAFOR lehnt den Austausch ab und behält die letzte gültige Buch-Bin
 
 ## 6. Typische Fehler vermeiden
 
-- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.8.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
+- Verwende als Endanwender die Domain-Datei und nicht `SAFOR-FRAMEWORK.json` oder `SAFOR-FRAMEWORK-v0.13.0-rc.9.json`. Diese generischen Dateien sind für Framework-Engineering und fortgeschrittene Auswahlabläufe gedacht.
 - Bearbeite die JSON-Dateien nicht. Jede Änderung kann Integritäts- oder Zugriffsprüfungen ungültig machen.
 - Verwende dein eigenes Git-Projekt. Das SAFOR-Repository ist Produktquelle, nicht Arbeitsbereich deines Vorhabens.
 - Interpretiere den öffentlichen Testzugang nicht als Kauf- oder Produktionsnachweis.
