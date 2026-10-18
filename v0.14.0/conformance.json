@@ -1862,6 +1862,13 @@
       "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
       "statement": "A HUMAN-GO claim becomes authoritative only when provider CAS succeeds and full committed job-state readback exactly matches the prepared state by canonical digest and bound project/job/agent/identity/chat/dispatch fields; the activationId is already persisted in consumedActivationIds.",
       "expected": true
+    },
+    {
+      "id": "CF-RC4-005",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_CHAT_PERSISTENCE_XOR",
+      "statement": "For BLOCKED agent chat output, exactly one persistence representation is valid: either a non-empty detailsRef with persistence=null, or detailsRef=null with a FAILED control-repository persistence object; both together are forbidden.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
