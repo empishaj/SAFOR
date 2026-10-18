@@ -1,7 +1,7 @@
 # SAFOR Commercial Distribution Decision
 
 Decision date: **2026-10-17**
-Current implementation baseline: **SAFOR 0.14.0-rc.3**
+Current implementation baseline: **SAFOR 0.14.0-rc.5**
 
 ## Product decision
 
@@ -21,8 +21,8 @@ The HUMAN has selected a modular commercial model with an explicit boundary betw
 
 The default free Website pair is:
 
-- `safor.factory.website-delivery@1.1.0`
-- `safor.om.website-team@1.1.0`
+- `safor.factory.website-delivery@1.2.0`
+- `safor.om.website-team@1.2.0`
 
 These packages are deliberately narrower than the Software/SaaS products. They cover website intent, audience/content structure, UX, web implementation, accessibility/responsive/performance verification, publishing, post-publish observation and website outcome assessment.
 
@@ -100,7 +100,7 @@ The public Framework defines this protocol but does not embed payment credential
 
 ## Public evaluation exception
 
-For rc.6 testing, SAFOR deliberately publishes:
+For current public evaluation testing, SAFOR deliberately publishes:
 - `SAFOR-FRAMEWORK-SAAS.json`,
 - `SAFOR-FRAMEWORK-BOOK-CREATION.json`,
 - their explicitly versioned `*-test.1` Factory/Operating Model modules,
