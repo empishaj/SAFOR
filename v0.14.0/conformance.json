@@ -1849,11 +1849,11 @@
           "INFORMATIONAL_NOTICE",
           "INTERACTIVE_CHECKPOINT",
           "DECISION_REQUEST",
-          "ACTIONABLE_BLOCKER",
-          "COMPLETION_CHECKPOINT"
+          "BLOCKER",
+          "DETAIL_RESPONSE"
         ]
       },
-      "statement": "The mandatory HUMAN response finalizer derives terminal-menu presence from response class: informational notices are menu-free; interactive checkpoints and decisions carry exactly one terminal menu when a HUMAN action is valid.",
+      "statement": "Platform response classification determines menu presence; informational notices are menu-free and interactive response classes use exactly one terminal menu.",
       "expected": true
     }
   ],

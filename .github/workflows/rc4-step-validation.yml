@@ -26,4 +26,4 @@ jobs:
       - name: Validate audit remediation contracts
         run: python tools/validate_audit_remediation.py
       - name: Run focused rc.4 remediation regression tests
-        run: python -m unittest tests.test_audit_remediation_rc3 tests.test_workspace_initialization_v014 -v
+        run: python -m unittest tests.test_audit_remediation_rc3 tests.test_workspace_initialization_v014 tests.test_human_response_classification_v014 -v

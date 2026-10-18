@@ -307,7 +307,8 @@
       "platformResponseGovernorRequired": true,
       "domainPresentationOverrideForbidden": true,
       "terminalMenuRequiredAtInteractiveCheckpoints": true,
-      "informationalNoticeMayOmitTerminalMenu": true
+      "informationalNoticeMayOmitTerminalMenu": true,
+      "terminalMenuPolicy": "DERIVED_FROM_RESPONSE_CLASS"
     },
     "responseBudgets": {
       "acknowledgement": {
@@ -1203,5 +1204,37 @@
     ],
     "failureMode": "FAIL_CLOSED_TO_MINIMUM_SAFE_PLATFORM_MESSAGE",
     "minimumSafeMessage": "Ich habe die Änderung erkannt. Ich prüfe den sicheren nächsten Schritt und ändere bis dahin nichts."
+  },
+  "responseClassification": {
+    "id": "SAFOR_PLATFORM_RESPONSE_CLASSIFICATION",
+    "authority": "SAFOR_PLATFORM",
+    "schemaRef": "schemas/human-response.schema.json",
+    "classes": {
+      "INFORMATIONAL_NOTICE": {
+        "interactive": false,
+        "terminalMenu": "FORBIDDEN",
+        "renderMode": "CONTENT_ONLY"
+      },
+      "INTERACTIVE_CHECKPOINT": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      },
+      "DECISION_REQUEST": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      },
+      "BLOCKER": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      },
+      "DETAIL_RESPONSE": {
+        "interactive": true,
+        "terminalMenu": "REQUIRED_EXACTLY_ONE",
+        "renderMode": "CONTENT_THEN_MENU"
+      }
+    }
   }
 }

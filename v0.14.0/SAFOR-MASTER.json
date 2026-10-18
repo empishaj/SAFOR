@@ -2540,18 +2540,18 @@
       "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
       "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
       "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval.",
-      "End every SAFOR-generated HUMAN-facing response with exactly one interaction menu.",
-      "Do not render any SAFOR-visible content after the terminal interaction menu.",
-      "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK.",
       "During initialization ask only one non-derivable decision at a time. Resolve creation/package choices before project workspace selection, then follow only the selected workspace branch.",
       "For REMOTE_GIT, require and verify the separate HUMAN-controlled {selectedOwner}/safor-memory control repository according to the control workspace policy; if it is unavailable, block only the remote path.",
       "For LOCAL_GIT, require verified local filesystem/Git capabilities and a Git-tracked MASTER-only .safor/ control root; never require remote safor-memory as a prerequisite for the local path.",
-      "Never combine REMOTE_GIT and LOCAL_GIT prerequisites in one initialization run."
+      "Never combine REMOTE_GIT and LOCAL_GIT prerequisites in one initialization run.",
+      "Use the platform response classification contract before rendering direct HUMAN responses."
     ],
     "responseSchemaRef": "schemas/human-response.schema.json",
-    "terminalMenuRequired": true,
+    "terminalMenuRequired": false,
     "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy",
-    "workspaceSpecificInitializationRequired": true
+    "workspaceSpecificInitializationRequired": true,
+    "terminalMenuPolicy": "DERIVED_FROM_RESPONSE_CLASS",
+    "responseClassificationRef": "interaction-model.json#responseClassification"
   },
   "initializationModelRef": "initialization-model.json",
   "selfHealingModelRef": "self-healing-model.json",

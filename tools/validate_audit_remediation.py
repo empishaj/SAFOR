@@ -155,6 +155,32 @@ def validate():
     if message_patterns.get("localControlWorkspaceStop", {}).get("appliesWhen") != "PROJECT_WORKSPACE_TYPE == LOCAL_GIT":
         errors.append("LOCAL_GIT blocker message pattern missing")
 
+    response_schema = load("v0.14.0/schemas/human-response.schema.json")
+    schema_classes = response_schema.get("properties", {}).get("responseClass", {}).get("enum", [])
+    response_classes = interaction.get("responseClassification", {}).get("classes", {})
+    if set(schema_classes) != set(response_classes):
+        errors.append("HUMAN response classes differ between schema and interaction model")
+    expected_menus = {
+        "INFORMATIONAL_NOTICE": "FORBIDDEN",
+        "INTERACTIVE_CHECKPOINT": "REQUIRED_EXACTLY_ONE",
+        "DECISION_REQUEST": "REQUIRED_EXACTLY_ONE",
+        "BLOCKER": "REQUIRED_EXACTLY_ONE",
+        "DETAIL_RESPONSE": "REQUIRED_EXACTLY_ONE",
+    }
+    for response_class, expected_menu in expected_menus.items():
+        if response_classes.get(response_class, {}).get("terminalMenu") != expected_menu:
+            errors.append(f"response class {response_class} menu policy mismatch")
+    human_contract = kernel.get("humanCommunication", {})
+    if human_contract.get("terminalMenuRequired") is not False:
+        errors.append("MASTER still declares universal terminal menu requirement")
+    if human_contract.get("terminalMenuPolicy") != "DERIVED_FROM_RESPONSE_CLASS":
+        errors.append("MASTER does not derive menu policy from response class")
+    if human_contract.get("responseClassificationRef") != "interaction-model.json#responseClassification":
+        errors.append("MASTER response classification reference mismatch")
+    rc4_classes = conformance_by_id.get("CF-RC4-003", {}).get("applicability", {}).get("responseClass", [])
+    if set(rc4_classes) != set(schema_classes):
+        errors.append("CF-RC4-003 response classes differ from schema")
+
     communication = load("v0.14.0/agent-communication-model.json")
     if communication.get("persistenceFailureFallback", {}).get("detailsRef", "missing") is not None:
         errors.append("persistence fallback may not invent detailsRef")
