@@ -78,6 +78,50 @@ def validate():
         if forbidden in active_rules:
             errors.append(f"active invariant contains legacy contract: {forbidden}")
 
+    conformance = load("v0.14.0/conformance.json").get("assertions", [])
+    conformance_by_id = {item.get("id"): item for item in conformance}
+    conformance_statuses = {"ACTIVE", "SUPERSEDED", "LEGACY_ONLY"}
+    for assertion in conformance:
+        aid = assertion.get("id")
+        status = assertion.get("status")
+        if status not in conformance_statuses:
+            errors.append(f"conformance assertion {aid} has no valid status")
+        if status == "SUPERSEDED":
+            successors = assertion.get("supersededBy")
+            if not isinstance(successors, list) or not successors:
+                errors.append(f"superseded conformance assertion {aid} has no supersededBy")
+                continue
+            for successor in successors:
+                target = conformance_by_id.get(successor)
+                if target is None:
+                    errors.append(f"conformance assertion {aid} points to missing successor {successor}")
+                elif target.get("status") != "ACTIVE":
+                    errors.append(f"conformance successor {successor} for {aid} is not ACTIVE")
+    legacy_conformance = {
+        "CF-046": {"CF-RC4-001", "CF-RC4-002"},
+        "CF-047": {"CF-RC4-001", "CF-RC4-002"},
+        "CF-048": {"CF-RC4-001", "CF-RC4-002"},
+        "CF-064": {"CF-270", "CF-271"},
+        "CF-154": {"CF-267", "CF-RC4-003"},
+        "CF-156": {"CF-267", "CF-RC4-003"},
+        "CF-159": {"CF-267", "CF-RC4-003"},
+        "CF-195": {"CF-229", "CF-231", "CF-232"},
+    }
+    for legacy_id, expected_successors in legacy_conformance.items():
+        item = conformance_by_id.get(legacy_id)
+        if not item or item.get("status") != "SUPERSEDED":
+            errors.append(f"legacy conformance assertion {legacy_id} is not SUPERSEDED")
+            continue
+        if set(item.get("supersededBy") or ()) != expected_successors:
+            errors.append(f"legacy conformance assertion {legacy_id} successor set mismatch")
+    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-267", "CF-270", "CF-271", "CF-229", "CF-231", "CF-232"):
+        if conformance_by_id.get(active_id, {}).get("status") != "ACTIVE":
+            errors.append(f"current conformance assertion {active_id} is not ACTIVE")
+    if conformance_by_id.get("CF-RC4-001", {}).get("applicability", {}).get("workspaceType") != ["REMOTE_GIT"]:
+        errors.append("REMOTE_GIT conformance applicability mismatch")
+    if conformance_by_id.get("CF-RC4-002", {}).get("applicability", {}).get("workspaceType") != ["LOCAL_GIT"]:
+        errors.append("LOCAL_GIT conformance applicability mismatch")
+
     policy = load("v0.14.0/repository-policy.json").get("controlWorkspacePolicy", {})
     if policy.get("discriminator") != "PROJECT_WORKSPACE_TYPE":
         errors.append("control workspace policy has no discriminator")
