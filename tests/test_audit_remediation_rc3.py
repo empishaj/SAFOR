@@ -24,9 +24,8 @@ class AuditRemediationRc3Tests(unittest.TestCase):
             "format": "SAFOR_HUMAN_GO_EVIDENCE", "schemaVersion": "0.14.0",
             "activationId": "activation-rc3-001", "projectId": "project-001",
             "agentId": "agent-a", "identityRevision": 2,
-            "chatBindingId": "binding-a-r2", "sessionId": "session-001",
             "targetJobId": "job-001", "targetDispatchRevision": 3,
-            "intent": "GO", "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+            "intent": "GO", "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
             "observedAt": "2026-10-18T10:00:00Z", "singleUse": True,
             "jobPromptTransported": False,
         }
@@ -35,8 +34,7 @@ class AuditRemediationRc3Tests(unittest.TestCase):
         return {
             "format": "SAFOR_AGENT_JOB_STATE", "schemaVersion": "0.14.0",
             "projectId": "project-001", "jobId": "job-001",
-            "assignedAgentId": "agent-a", "assignedIdentityRevision": 2,
-            "chatBindingId": "binding-a-r2", "dispatchRevision": 3,
+            "assignedAgentId": "agent-a", "assignedIdentityRevision": 2, "dispatchRevision": 3,
             "revision": 7, "lifecycleStatus": "WAITING_HUMAN_GO",
             "goEvidenceRef": None, "consumedActivationIds": [],
             "transitionHistory": [], "updatedAt": "2026-10-18T09:59:00Z",
