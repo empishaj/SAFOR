@@ -29157,6 +29157,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:4d3789daade9788114a22bc114228e2769056c5b24e450fdf32902ccd8c78e91"
+    "contentDigest": "sha256:c8382e5021a6ec12c95c792250656d9d917b39b75caae0007cf91311720978d3"
   }
 }
