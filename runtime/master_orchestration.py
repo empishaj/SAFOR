@@ -83,9 +83,9 @@ def _eligible_agent(work: Mapping[str, Any], agent: Mapping[str, Any], reserved_
         return False
     if agent.get('dispatchEnabled') is not True:
         return False
-    if agent.get('chatBindingStatus') not in {'BOUND', 'NOT_APPLICABLE'}:
+    if agent.get('inboxBindingStatus') not in {'BOUND', 'NOT_APPLICABLE'}:
         return False
-    if agent.get('agentKind') == 'CHAT_AGENT' and agent.get('chatBindingStatus') != 'BOUND':
+    if agent.get('agentKind') == 'CHAT_AGENT' and agent.get('inboxBindingStatus') != 'BOUND':
         return False
     required = set(work.get('requiredCapabilities') or ())
     available = set(agent.get('capabilityIds') or ())
