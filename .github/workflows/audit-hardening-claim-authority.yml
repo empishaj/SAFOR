@@ -1,4 +1,4 @@
-name: SAFOR Claim Authority Validation
+name: SAFOR Audit Hardening Validation
 
 on:
   push:
@@ -9,7 +9,7 @@ permissions:
   contents: read
 
 jobs:
-  validate-claim-authority:
+  validate-audit-hardening:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
