@@ -1,0 +1,297 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/human-response.schema.json",
+  "title": "SAFOR HUMAN Response",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "responseId",
+    "phase",
+    "responseClass",
+    "surface",
+    "content",
+    "governance",
+    "renderingContract"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_HUMAN_RESPONSE"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "responseId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "phase": {
+      "enum": [
+        "BOOTSTRAP",
+        "RESUME",
+        "DISCOVERY",
+        "PLANNING",
+        "SCHEDULING",
+        "AGENT_COORDINATION",
+        "EXECUTION",
+        "RECOVERY",
+        "OUTCOME",
+        "CLOSING"
+      ]
+    },
+    "surface": {
+      "enum": [
+        "SUMMARY",
+        "DETAILS",
+        "EVIDENCE",
+        "TECHNICAL_STATE"
+      ]
+    },
+    "content": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "text"
+        ],
+        "properties": {
+          "type": {
+            "enum": [
+              "ACKNOWLEDGEMENT",
+              "SUMMARY",
+              "STATUS",
+              "PROGRESS",
+              "DECISION_CONTEXT",
+              "BLOCKER",
+              "WARNING",
+              "RECOVERY",
+              "OUTCOME",
+              "COMPLETION",
+              "DETAIL"
+            ]
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 1
+    },
+    "terminalMenu": {
+      "$ref": "interaction-menu.schema.json"
+    },
+    "renderingContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "renderMode",
+        "renderOrder",
+        "terminalElement",
+        "exactlyOneTerminalMenu",
+        "contentAfterTerminalElementForbidden",
+        "stopRenderingAfterTerminalMenu"
+      ],
+      "properties": {
+        "renderMode": {
+          "enum": [
+            "CONTENT_ONLY",
+            "CONTENT_THEN_MENU"
+          ]
+        },
+        "renderOrder": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 2,
+          "items": {
+            "enum": [
+              "content",
+              "terminalMenu"
+            ]
+          }
+        },
+        "terminalElement": {
+          "enum": [
+            "content",
+            "terminalMenu"
+          ]
+        },
+        "exactlyOneTerminalMenu": {
+          "type": "boolean"
+        },
+        "contentAfterTerminalElementForbidden": {
+          "const": true
+        },
+        "stopRenderingAfterTerminalMenu": {
+          "type": "boolean"
+        }
+      }
+    },
+    "responseClass": {
+      "enum": [
+        "INFORMATIONAL_NOTICE",
+        "INTERACTIVE_CHECKPOINT",
+        "DECISION_REQUEST",
+        "BLOCKER",
+        "DETAIL_RESPONSE"
+      ]
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "owner",
+        "governorId",
+        "domainOverrideApplied",
+        "decisionGateOutcome",
+        "detailsDisclosure",
+        "detailsAvailable",
+        "evidenceRetained",
+        "responseBudget"
+      ],
+      "properties": {
+        "owner": {
+          "const": "SAFOR_PLATFORM"
+        },
+        "governorId": {
+          "const": "SAFOR_PLATFORM_HUMAN_RESPONSE_GOVERNOR"
+        },
+        "domainOverrideApplied": {
+          "const": false
+        },
+        "decisionGateOutcome": {
+          "enum": [
+            "ALLOW_ASK",
+            "SUPPRESS_DERIVABLE",
+            "REUSE_EXISTING_DECISION",
+            "BLOCK_INVALID_HUMAN_DELEGATION",
+            "NOT_REQUIRED"
+          ]
+        },
+        "detailsDisclosure": {
+          "enum": [
+            "SUMMARY_ONLY",
+            "DETAILS_REQUESTED",
+            "SAFETY_REQUIRED"
+          ]
+        },
+        "detailsAvailable": {
+          "type": "boolean"
+        },
+        "evidenceRetained": {
+          "const": true
+        },
+        "responseBudget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "maxSentences",
+            "maxWords"
+          ],
+          "properties": {
+            "maxSentences": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "maxWords": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "responseClass": {
+            "const": "INFORMATIONAL_NOTICE"
+          }
+        },
+        "required": [
+          "responseClass"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "terminalMenu"
+          ]
+        },
+        "properties": {
+          "renderingContract": {
+            "properties": {
+              "renderMode": {
+                "const": "CONTENT_ONLY"
+              },
+              "renderOrder": {
+                "const": [
+                  "content"
+                ]
+              },
+              "terminalElement": {
+                "const": "content"
+              },
+              "exactlyOneTerminalMenu": {
+                "const": false
+              },
+              "stopRenderingAfterTerminalMenu": {
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "responseClass": {
+            "enum": [
+              "INTERACTIVE_CHECKPOINT",
+              "DECISION_REQUEST",
+              "BLOCKER",
+              "DETAIL_RESPONSE"
+            ]
+          }
+        },
+        "required": [
+          "responseClass"
+        ]
+      },
+      "then": {
+        "required": [
+          "terminalMenu"
+        ],
+        "properties": {
+          "renderingContract": {
+            "properties": {
+              "renderMode": {
+                "const": "CONTENT_THEN_MENU"
+              },
+              "renderOrder": {
+                "const": [
+                  "content",
+                  "terminalMenu"
+                ]
+              },
+              "terminalElement": {
+                "const": "terminalMenu"
+              },
+              "exactlyOneTerminalMenu": {
+                "const": true
+              },
+              "stopRenderingAfterTerminalMenu": {
+                "const": true
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

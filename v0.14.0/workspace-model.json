@@ -1,0 +1,71 @@
+{
+  "format": "SAFOR_WORKSPACE_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "safor-human-workspace",
+  "purpose": "Bind all project-specific work to a HUMAN-owned remote Git repository or local Git workspace while keeping SAFOR product/package sources out of project storage.",
+  "projectWorkspaceTypes": {
+    "REMOTE_GIT": {
+      "ownership": "HUMAN_OR_HUMAN_ORGANIZATION",
+      "supportedProviders": [
+        "GITHUB",
+        "GITLAB"
+      ],
+      "requiredCapabilities": [
+        "workspace.project.read",
+        "workspace.project.write",
+        "workspace.git.history.read",
+        "workspace.git.branch.read",
+        "workspace.git.branch.write"
+      ],
+      "controlStrategy": "REMOTE_SEPARATE_SAFOR_MEMORY",
+      "projectArtifactRule": "All Factory-produced domain artifacts remain in the selected HUMAN project repository."
+    },
+    "LOCAL_GIT": {
+      "ownership": "HUMAN",
+      "requiredCapabilities": [
+        "workspace.local.read",
+        "workspace.local.write",
+        "workspace.git.repository.read",
+        "workspace.git.history.read",
+        "workspace.git.branch.read",
+        "workspace.git.branch.write",
+        "workspace.git.commit.write"
+      ],
+      "controlStrategy": "LOCAL_MASTER_CONTROL_ROOT",
+      "controlRoot": ".safor/",
+      "projectArtifactRule": "All Factory-produced domain artifacts remain under the HUMAN-selected local Git workspace.",
+      "workerProtection": {
+        "forbiddenWritePrefixes": [
+          ".safor/"
+        ],
+        "masterOnlyPrefixes": [
+          ".safor/"
+        ],
+        "directDefaultBranchWrite": false
+      }
+    }
+  },
+  "controlWorkspaceStrategies": {
+    "REMOTE_SEPARATE_SAFOR_MEMORY": {
+      "humanOwned": true,
+      "repositoryName": "safor-memory",
+      "mustBeReadable": true,
+      "mustBeWritable": true,
+      "projectArtifactsForbidden": true
+    },
+    "LOCAL_MASTER_CONTROL_ROOT": {
+      "humanOwned": true,
+      "root": ".safor/",
+      "gitTracked": true,
+      "masterOnly": true,
+      "workerWritesForbidden": true
+    }
+  },
+  "hardRules": [
+    "Canonical SAFOR repository cannot be the project workspace.",
+    "Commercial package source cannot be the project workspace.",
+    "Project workspace binding is explicit HUMAN-controlled context.",
+    "Local mutating execution requires a valid Git repository.",
+    "Project workspace and package entitlement are independent."
+  ]
+}

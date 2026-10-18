@@ -49,7 +49,7 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertIn("does **not** ask the HUMAN", self.quickstart)
 
     def test_readme_uses_current_rc_and_has_no_stale_path_typo(self):
-        self.assertIn("v0.13.0-rc.9", self.readme)
+        self.assertIn("v0.14.0-rc.2", self.readme)
         self.assertNotIn("Paid package access in rc.4", self.readme)
         self.assertNotIn("v0.13.0/ packages/", self.readme)
         self.assertIn("runtime/public_evaluation_access.py", self.readme)

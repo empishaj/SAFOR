@@ -1,0 +1,2356 @@
+{
+  "format": "SAFOR_MASTER_BOOTSTRAP",
+  "schemaVersion": "0.14.0",
+  "kernelVersion": "0.14.0",
+  "definitionId": "safor-master-kernel",
+  "maturity": "RELEASE_CANDIDATE_V014_HARDENED_AGENT_ORCHESTRATION",
+  "purpose": "Portable JSON-governed SAFOR Framework for ordinary compatible LLM chats, with composable domain packages, HUMAN-GO-only subagents, typed Git responses, compact MASTER status and platform-owned HUMAN communication.",
+  "bootstrapContract": {
+    "singleFileEntry": true,
+    "entryFile": "SAFOR-FRAMEWORK.json",
+    "userExperience": [
+      "HUMAN loads the SAFOR Framework JSON into a compatible chat.",
+      "SAFOR verifies Framework, recovery and deterministic-control integrity before project work.",
+      "HUMAN chooses WEBSITE, SOFTWARE_SAAS or BOOK.",
+      "WEBSITE defaults to the FREE_PUBLIC Website Factory and Website Operating Model from canonical public SAFOR Git.",
+      "SOFTWARE_SAAS defaults to the commercial Software Factory and SaaS Engineering Operating Model; both selected packages must be PAID_ENTITLEMENT_REQUIRED and independently entitled.",
+      "BOOK likewise requires a paid Factory and paid Operating Model.",
+      "Each selected Factory and Operating Model remains an independent SAFOR_DOMAIN_PACKAGE JSON artifact and must pass integrity, Framework/Creation-Type and pair compatibility checks.",
+      "Creation profiles may permit compatible overrides but commercial profiles cannot be downgraded through a free-package override.",
+      "Package possession never proves entitlement; entitlement evidence remains external to the package JSON.",
+      "After package selection and compatibility are materialized, HUMAN chooses REMOTE_GIT or LOCAL_GIT for the project.",
+      "SAFOR product/package repositories remain sources and never implicit project targets."
+    ],
+    "noImplicitExecution": true,
+    "noImplicitAuthorization": true,
+    "noImplicitProviderRights": true
+  },
+  "kernelPrinciples": {
+    "domainAgnostic": true,
+    "llmReplaceable": true,
+    "operatingModelExternal": true,
+    "factoryExternal": true,
+    "providerAdapterExternal": true,
+    "evidenceBeforeBelief": true,
+    "explicitHumanAuthority": true,
+    "leastPrivilege": true,
+    "immutableTerminalRuns": true,
+    "reconcileUnknownExternalEffects": true,
+    "deliveryIsNotBusinessOutcome": true,
+    "oneAuthoritativeFactMultipleReferences": true,
+    "menuFirstHumanExperience": true,
+    "nativeInteractionWhenAvailable": true,
+    "freeTextAlwaysAllowed": true,
+    "conciseHumanCommunication": true,
+    "buddyStyleHumanInteraction": true,
+    "detailOnDemand": true,
+    "mandatoryProviderReadWriteBeforeProjectSelection": true,
+    "explicitOwnerSelection": true,
+    "recentRepositorySelectionMenu": true,
+    "chatNativeUiOnly": true,
+    "conservativeSelfHealing": true,
+    "safMemoryAbsolutePrerequisite": true,
+    "creationTypeMandatory": true,
+    "factoryBoundDiscoveryPlanningEvidence": true,
+    "repositoryNativeAgentJobs": true,
+    "persistentAgentIdentity": true,
+    "masterAuthoritativeAgentJobLifecycle": true,
+    "optimisticAgentJobClaiming": true,
+    "multiAgentScheduling": true,
+    "conflictAwareParallelDispatch": true,
+    "gitIsolatedAgentMutations": true,
+    "humanReadableAgentResults": true,
+    "canonicalExplicitAgentJobContract": true,
+    "explicitRoleAndSkillBindingPerJob": true,
+    "humanReadableAgentJobProjection": true,
+    "explicitJobAuthorizationAndReturnRoutes": true,
+    "moduleWideSelfHealing": true,
+    "exactRecoveryProfileCoverage": true,
+    "failClosedRecoveryControl": true,
+    "noSemanticAutoRewrite": true,
+    "phaseAwareHumanCognitiveLoad": true,
+    "humanDecisionGateRequired": true,
+    "deriveBeforeAsk": true,
+    "reuseUnchangedHumanDecisions": true,
+    "postDiscoveryLoadReduction": true,
+    "humanDomainLanguageDefault": true,
+    "humanAsDecisionMakerNotWorkflowOperator": true,
+    "terminalMenuOnEveryHumanResponse": true,
+    "terminalMenuIsFinalRenderedSurface": true,
+    "humanResponseEnvelopeRequired": true,
+    "probabilisticWorkDeterministicGovernance": true,
+    "deterministicControlKernelRequired": true,
+    "typedEventsForExecutableTransitions": true,
+    "externalActorsCannotMutateAuthoritativeStateDirectly": true,
+    "pureReducerRequired": true,
+    "externalEffectsSeparatedFromStateDecision": true,
+    "replayVerificationRequired": true,
+    "transitionAmbiguityFailsClosed": true,
+    "arbitraryCodeInTransitionModelsForbidden": true,
+    "deterministicRcBoundaryMustBeExplicit": true,
+    "typedAcceptanceContracts": true,
+    "deterministicAcceptanceEvaluation": true,
+    "qualitativeAcceptanceRequiresExplicitReviewOrAuthority": true,
+    "agentSelfCheckNeverAuthoritativeAcceptance": true,
+    "acceptanceContractImmutableAfterApproval": true,
+    "acceptanceDoesNotImplyOutcome": true,
+    "modularDomainPackages": true,
+    "paidPackageContentExcludedFromPublicFramework": true,
+    "freeWebsitePackagesPubliclyResolvable": true,
+    "commercialEntitlementRequiredForPaidPackages": true,
+    "entitlementIndependentFromOrganizationalAuthority": true,
+    "humanOwnsProjectWorkspace": true,
+    "localGitWorkspaceSupported": true,
+    "projectWorkspaceSeparateFromPackageSource": true,
+    "frameworkRepositoryNeverProjectTarget": true,
+    "domainPackagesAreChatLoadableJson": true,
+    "factoryAndOperatingModelIndependentlySelectable": true,
+    "creationProfilesDefineDefaultsNotLockedPairs": true,
+    "packageAccessResolvedPerSelectedPackage": true,
+    "mixedFreeAndPaidPackagePairsAllowed": true,
+    "domainPackageEntitlementEvidenceExternal": true,
+    "domainPackageIntegrityRequired": true,
+    "packageSelectionRequiresCompatibilityDecision": true,
+    "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
+    "creationProfileAccessPolicyEnforced": true,
+    "commercialEntitlementStatusTimeSubjectAndTrustRequired": true,
+    "commercialBasisEvidenceRequired": true,
+    "entitledSourceDeliveryEvidenceRequired": true,
+    "commercialDeliveryDigestBindingRequired": true,
+    "domainSpecificFrameworkDistributions": true,
+    "sameKernelAcrossDomainDistributions": true,
+    "domainDistributionPreselectsDomainAndDefaults": true,
+    "embeddedDomainDefaultsRemainReplaceable": true,
+    "replacementRequiresSameDomain": true,
+    "replacementRequiresBidirectionalCompatibility": true,
+    "packageFamilyCompatibilityRequiredForV2Packages": true,
+    "crossDomainPackageReplacementForbidden": true,
+    "publicPaidDomainEvaluationArtifactsAllowedForTesting": true,
+    "publicEvaluationDoesNotAuthorizePaidUse": true,
+    "platformOwnsHumanVisibleCommunication": true,
+    "factoryAndOperatingModelCannotOverrideHumanPresentation": true,
+    "platformResponseGovernorRunsBeforeEveryHumanRender": true,
+    "safeMigrationPlanningIsInternalOrchestration": true,
+    "informationalNoticesAreCompressedAndNonInteractive": true,
+    "fullDetailAndEvidenceRemainAvailableOnDemand": true,
+    "ordinaryCompatibleLlmChatIsPrimaryExecutionSurface": true,
+    "customerInstalledRuntimeNotRequired": true,
+    "referenceRuntimeOptional": true,
+    "humanGoIsExclusiveSubagentActivation": true,
+    "gitEventsNeverActivateSubagents": true,
+    "oneTimeAgentChatBinding": true,
+    "agentIdentityRebindFailsClosed": true,
+    "distinctAgentDisplayNameRequired": true,
+    "typedAgentResponseFamilyRequired": true,
+    "allAgentJobsBindAllResponseTemplates": true,
+    "productAndControlWriteScopesSeparated": true,
+    "minimalSubagentChatStatusOnly": true,
+    "subagentsDoNotDiscussDomainWorkWithHuman": true,
+    "masterIsOnlyHumanManagementInterface": true,
+    "compactMasterStatusIndexRequired": true,
+    "routineStatusGlobalScanForbidden": true,
+    "agentRegistryCompletenessRequired": true,
+    "blockedAgentsStopMutatingWork": true,
+    "jobSupersessionPreservesHistory": true,
+    "structuredHumanGoEvidenceRequired": true,
+    "atomicAgentClaimRequired": true,
+    "verifiedResponseReadbackBeforeMasterCompletionClaim": true,
+    "statusFreshnessDerivedNotAsserted": true,
+    "partialProductControlWriteReconciliation": true,
+    "requirementsEvidenceDimensionsSeparated": true
+  },
+  "moduleArchitecture": {
+    "layers": [
+      {
+        "id": "MASTER_KERNEL",
+        "responsibility": "Generic orchestration, state transitions, evidence, authorization, reconciliation, package loading and invariants."
+      },
+      {
+        "id": "DETERMINISTIC_CONTROL_KERNEL",
+        "responsibility": "Pure typed-event transition evaluation, closed predicates, declarative state effects, external effect intents, canonical state hashing and replay verification."
+      },
+      {
+        "id": "OPERATING_MODEL",
+        "responsibility": "Roles, mandates, capability ownership, decision rights, human gates, separation of duties and escalation."
+      },
+      {
+        "id": "COMPOSABLE_DOMAIN_PACKAGE_SELECTION",
+        "responsibility": "Resolve creation-profile defaults plus optional HUMAN Factory/Operating Model overrides, verify each package independently and materialize one compatibility decision before immutable binding."
+      },
+      {
+        "id": "PACKAGE_DISTRIBUTION",
+        "responsibility": "Resolve public/free, HUMAN-loaded and entitled Factory/Operating Model packages without embedding paid model content in the public Framework."
+      },
+      {
+        "id": "COMMERCIAL_ENTITLEMENT",
+        "responsibility": "Verify paid package access independently from project scope, provider rights and Operating Model authority."
+      },
+      {
+        "id": "PROJECT_WORKSPACE",
+        "responsibility": "Bind HUMAN-owned REMOTE_GIT or LOCAL_GIT project/control locations and protect package/product sources from becoming work targets."
+      },
+      {
+        "id": "FACTORY",
+        "responsibility": "Domain-specific value stream, artifact types, work-item types, transformations, quality requirements and outcome model."
+      },
+      {
+        "id": "DETERMINISTIC_ACCEPTANCE",
+        "responsibility": "Approved typed Acceptance Contracts bind Factory evidence, qualitative review and authority requirements so Work Item acceptance can be evaluated deterministically without converting probabilistic judgment into direct state authority."
+      },
+      {
+        "id": "PROJECT_INSTANCE",
+        "responsibility": "Concrete bindings, actors, project state, decisions, evidence and value-stream instance."
+      },
+      {
+        "id": "MULTI_AGENT_SCHEDULER",
+        "responsibility": "MASTER-owned dependency, capacity, conflict, lease, fan-out/fan-in and parallel dispatch-wave orchestration across multiple agent actors."
+      },
+      {
+        "id": "AGENT_JOB_CONTRACT",
+        "responsibility": "Immutable, self-describing MASTER-issued execution contract binding job identity, package lineage, MASTER provenance, agent/role/skills, scope, immutable inputs, authorization, workspace, scheduling, output routes and verification."
+      },
+      {
+        "id": "AGENT_WORKSPACE_PROTOCOL",
+        "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
+      },
+      {
+        "id": "HUMAN_INTERACTION_GOVERNANCE",
+        "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction, dynamic primary-action labeling and mandatory terminal-menu finalization for every HUMAN-facing response."
+      },
+      {
+        "id": "MODULE_SELF_HEALING",
+        "responsibility": "One explicit bounded recovery profile for every embedded SAFOR module, governing detection, restoration/regeneration/rebinding, retry budgets, verification and escalation according to module authority."
+      },
+      {
+        "id": "DECLARATIVE_CHAT_EXECUTION",
+        "responsibility": "Make ordinary compatible LLM chat the primary execution surface without customer-installed SAFOR runtime software."
+      },
+      {
+        "id": "AGENT_CHAT_BOOTSTRAP",
+        "responsibility": "Create one persistent agent identity/chat binding and enforce HUMAN-GO-only activation with fail-closed rebind."
+      },
+      {
+        "id": "AGENT_RESPONSE_CONTRACT",
+        "responsibility": "Bind exact typed response templates, schemas and Git return paths for result, error, clarification, capability mismatch and improvement proposals."
+      },
+      {
+        "id": "AGENT_CHAT_GOVERNANCE",
+        "responsibility": "Render only one-line operational status in subagent chats and route all substantive content to Git and MASTER."
+      },
+      {
+        "id": "MASTER_STATUS_INDEX",
+        "responsibility": "Provide a compact pointer projection for project, agent, job, review, blocker and next-action status without repository-wide scans."
+      },
+      {
+        "id": "PROVIDER_ADAPTER",
+        "responsibility": "Mapping provider-neutral repository and collaboration capabilities to actually available host tools."
+      }
+    ],
+    "dependencyRules": [
+      "MASTER_KERNEL must not depend on domain role IDs, domain artifact types, domain work-item types or provider product names.",
+      "FACTORY may depend on abstract capability IDs and authority IDs, but must not reference concrete role IDs or actor IDs.",
+      "OPERATING_MODEL maps abstract capabilities and authorities to roles/mandates, but must not define the value-stream order.",
+      "PROJECT_INSTANCE maps roles to concrete human or agent actors and pins package versions.",
+      "PROVIDER_ADAPTER maps provider-neutral capabilities to provider semantics and actual host tools; unavailable tools remain unavailable.",
+      "AGENT_WORKSPACE_PROTOCOL transports work through repository artifacts, never through copied prompts as authority.",
+      "Agent-local runtime state and MASTER job lifecycle are separate authorities and must not overwrite each other.",
+      "MULTI_AGENT_SCHEDULER may dispatch only ATOMIC READY work whose dependency/join predicates are satisfied.",
+      "Parallel dispatch requires explicit resource declarations, free agent capacity and a conflict-free lease set.",
+      "Mutating agent work uses dedicated job branches; direct default-branch writes are forbidden unless a separately governed non-agent operation explicitly permits them.",
+      "Every agent result has both machine-readable JSON and a Git-persisted HUMAN-readable Markdown report.",
+      "AGENT_JOB_CONTRACT JSON is authoritative; the paired Markdown job view is a derived HUMAN-readable projection.",
+      "Every dispatched agent job explicitly binds the role the agent must assume and every mandatory versioned skill it must apply.",
+      "Job permissions are an upper bound only and never create provider rights.",
+      "A job may become READY only after JSON and Markdown job artifacts are written and read back and all immutable references resolve.",
+      "Every embedded module must resolve to exactly one valid module recovery profile.",
+      "SELF_HEALING executes only the intersection of failure-class policy, module recovery profile, active authority and actual provider rights.",
+      "Authoritative immutable modules are never heuristically rewritten; derived artifacts may be regenerated only from verified authoritative sources.",
+      "Recovery-control modules fail closed: if self-healing policy/profile integrity cannot be proven, automatic repair stops.",
+      "Every proposed HUMAN question or approval passes the HUMAN Decision Gate before presentation.",
+      "A derivable or unchanged previously approved decision must not be delegated back to the HUMAN.",
+      "High HUMAN cognitive load is legitimate in Discovery when acquiring non-derivable intent/domain knowledge; after plan approval default HUMAN load decreases to LOW/VERY_LOW except for material decisions, new authority, risk, irreversible action, recovery escalation or outcome judgment.",
+      "Scheduling, job IDs, leases, dispatch waves, readback, evidence collection and deterministic agent coordination are internal SAFOR responsibilities.",
+      "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required.",
+      "Every SAFOR-generated HUMAN-facing response must validate against the HUMAN response contract and terminate with exactly one interaction menu.",
+      "The terminal interaction menu is a presentation/navigation surface and does not itself imply that a HUMAN decision is required.",
+      "No SAFOR-visible content may be rendered after the terminal menu; the HUMAN response finalizer stops rendering immediately after it.",
+      "If contextual menu derivation fails, only a safe state-derived non-authority-expanding fallback menu may be generated.",
+      "Within the migrated executable transition slice, authoritative state transitions are owned only by the deterministic control kernel; HUMAN, AGENT and PROVIDER actors contribute typed events/evidence instead of direct authoritative state changes.",
+      "The deterministic reducer is pure: it performs no provider/LLM calls, reads no wall clock, uses no randomness and never executes arbitrary code from JSON.",
+      "External mutations are emitted only as effect intents. Completion requires a later provider outcome/readback event.",
+      "Non-migrated 0.10 governance semantics remain valid but must not be falsely represented as executable deterministic transitions in rc.1.",
+      "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance evaluation.",
+      "Free-text or qualitative acceptance criteria may not be directly marked PASS by an LLM; they must resolve to typed EVIDENCE, REVIEW or AUTHORITY requirements in the approved Acceptance Contract.",
+      "Agent acceptanceSelfCheck is advisory only and cannot satisfy required independent review or authority approval.",
+      "A Work Item may become ACCEPTED only through the deterministic acceptance transition after all requirements of its hash-valid ACTIVE Acceptance Contract are satisfied.",
+      "Work Item ACCEPTED remains distinct from Factory outcome success; delivery/acceptance must not be substituted for VALUE_SUPPORTED.",
+      "Creation profiles define default Factory and Operating Model package IDs; they do not lock the project to one commercial bundle.",
+      "Factory and Operating Model access are evaluated independently; FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED packages may form one pair when every paid package is independently entitled.",
+      "A HUMAN may replace only the Factory, only the Operating Model, or both; every override remains subject to package integrity, Framework/creation-type scope and pair compatibility.",
+      "Possession of a domain-package JSON artifact never establishes commercial entitlement; entitlement evidence remains external and independently verifiable.",
+      "No selected Factory/Operating Model pair becomes authoritative until a package-selection record and COMPATIBLE compatibility decision are materialized and referenced by project bindings.",
+      "DECLARATIVE_CHAT_EXECUTION is the primary product mode; optional reference code is never a customer-installation prerequisite.",
+      "AGENT_CHAT_BOOTSTRAP accepts only HUMAN GO from the bound agent chat as execution activation.",
+      "Git pushes, polling, file creation, automation and background host events never activate a subagent.",
+      "Every new Agent Job binds all five typed response templates and exact separate control-write targets before READY.",
+      "Subagent chats render only minimal operational status; domain questions, errors and conflicts are Git responses to MASTER.",
+      "MASTER_STATUS_INDEX is a derived pointer projection and never replaces authoritative job, response, review or control records."
+    ]
+  },
+  "packageSystem": {
+    "requiredPackageKinds": [
+      "OPERATING_MODEL",
+      "FACTORY",
+      "PROVIDER_ADAPTER"
+    ],
+    "manifestSchemaRef": "schemas/package-manifest.schema.json",
+    "registryRef": "package-registry.json",
+    "catalogRef": "package-catalog.json",
+    "distributionModelRef": "package-distribution-model.json",
+    "entitlementModelRef": "commercial-entitlement-model.json",
+    "bindingResolutionOrder": [
+      "HUMAN.CREATION_TYPE_SELECTION",
+      "PACKAGE_CATALOG.creationProfiles.DEFAULTS",
+      "HUMAN_OPTIONAL_FACTORY_AND_OPERATING_MODEL_OVERRIDES",
+      "CREATION_PROFILE_SELECTED_ACCESS_POLICY",
+      "FACTORY_PACKAGE_ACCESS_AND_ENTITLEMENT",
+      "OPERATING_MODEL_PACKAGE_ACCESS_AND_ENTITLEMENT",
+      "DOMAIN_PACKAGE_SHAPE_AND_INTEGRITY",
+      "DOMAIN_PACKAGE_FRAMEWORK_AND_CREATION_TYPE_COMPATIBILITY",
+      "FACTORY_OPERATING_MODEL_CAPABILITY_AND_AUTHORITY_COMPATIBILITY",
+      "PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+      "IMMUTABLE_PACKAGE_BINDINGS",
+      "PROJECT_WORKSPACE_SELECTION",
+      "PROJECT_INSTANCE.actorAssignments",
+      "ACTUAL_HOST_RIGHTS"
+    ],
+    "rules": {
+      "pinResolvedVersion": true,
+      "pinImmutableSourceRevisionAndBlob": true,
+      "snapshotResolvedManifestIntoProject": true,
+      "validateKernelCompatibility": true,
+      "validateRequiredCapabilities": true,
+      "rejectFactoryRoleReferences": true,
+      "rejectOperatingModelFlowOwnership": true,
+      "freeWebsiteMayAutoResolveFromPublicCanonicalRepo": true,
+      "paidPackagesRequireVerifiedEntitlement": true,
+      "paidPackageContentForbiddenInPublicFramework": true,
+      "entitlementNeverGrantsAuthority": true,
+      "packageSourceNeverProjectWorkspace": true,
+      "creationProfileDefinesDefaultPackageIds": true,
+      "factoryOverrideAllowed": true,
+      "operatingModelOverrideAllowed": true,
+      "packageAccessResolvedPerSelectedPackage": true,
+      "mixedFreeAndPaidPackagePairsAllowed": true,
+      "paidOverrideRequiresExplicitHumanApproval": true,
+      "domainPackageEntitlementEvidenceExternal": true,
+      "domainPackageContractDigestRequired": true,
+      "domainPackageFrameworkRangeRequired": true,
+      "domainPackageCreationTypeSupportRequired": true,
+      "packagePairCompatibilityDecisionRequired": true,
+      "softwareSaasRequiresPaidFactoryAndOperatingModel": true,
+      "creationProfileSelectedAccessPolicyRequired": true,
+      "entitlementStatusTimeSubjectAndTrustRequired": true,
+      "commercialBasisEvidenceRequired": true,
+      "entitledPackageSourceDeliveryEvidenceRequired": true,
+      "deliveryEvidenceMustBindEntitlementPackageVersionAndDigest": true,
+      "humanLoadedPaidPackageStillRequiresEntitlement": true,
+      "domainFrameworkProfileCatalogRequired": true,
+      "domainDistributionPreselectsDomain": true,
+      "replacementSameDomainRequired": true,
+      "replacementBidirectionalCounterpartRequired": true,
+      "replacementPackageFamilyConstraintsEnforced": true,
+      "crossDomainReplacementForbidden": true,
+      "publicEvaluationPaidBytesNotProductionSource": true
+    },
+    "domainPackageSchemaRef": "schemas/domain-package.schema.json",
+    "selectionSchemaRef": "schemas/package-selection.schema.json",
+    "compatibilityDecisionSchemaRef": "schemas/package-compatibility-decision.schema.json",
+    "composablePackageModelRef": "composable-package-model.json",
+    "domainFrameworkProfileRef": "domain-framework-profiles.json",
+    "domainFrameworkDistributionFiles": [
+      "SAFOR-FRAMEWORK-WEBSITE.json",
+      "SAFOR-FRAMEWORK-SAAS.json",
+      "SAFOR-FRAMEWORK-BOOK-CREATION.json"
+    ]
+  },
+  "projectMaterialization": {
+    "root": "projects/{projectSlug}/",
+    "requiredArtifacts": {
+      "project": "project.json",
+      "bindings": "bindings.json",
+      "controlState": "state/control.json",
+      "valueStreamState": "state/value-stream.json",
+      "executionState": "state/execution.json",
+      "agentRegistry": "agents/index.json",
+      "schedulerState": "master/scheduler/state.json",
+      "workspaceBinding": "workspace.json"
+    },
+    "directories": [
+      "packages/",
+      "decisions/",
+      "evidence/",
+      "artifacts/",
+      "work-items/",
+      "agents/",
+      "audit/",
+      "master/jobs/",
+      "master/dispatch-waves/",
+      "master/resource-leases/"
+    ],
+    "packageSnapshots": {
+      "operatingModel": "packages/operating-model.json",
+      "factory": "packages/factory.json",
+      "providerAdapters": "packages/provider-adapters.json",
+      "entitlementEvidence": "packages/entitlement-evidence.json"
+    },
+    "aggregateRule": "Control state, value-stream state and execution state are separate authoritative aggregates. Cross-aggregate transitions require declared invariants and references; duplicated authoritative facts are forbidden.",
+    "agentWorkspace": {
+      "modelRef": "agent-workspace-model.json",
+      "registry": "agents/index.json",
+      "agentRoot": "agents/{agentId}/",
+      "identity": "agents/{agentId}/identity.json",
+      "state": "agents/{agentId}/state.json",
+      "inbox": "agents/{agentId}/inbox/",
+      "outbox": "agents/{agentId}/outbox/",
+      "evidence": "agents/{agentId}/evidence/",
+      "audit": "agents/{agentId}/audit/",
+      "masterJobState": "master/jobs/{jobId}.json",
+      "inboxIndex": "agents/{agentId}/inbox/index.json"
+    },
+    "scheduler": {
+      "modelRef": "multi-agent-scheduler-model.json",
+      "state": "master/scheduler/state.json",
+      "dispatchWaves": "master/dispatch-waves/",
+      "resourceLeases": "master/resource-leases/"
+    },
+    "workspaceRule": "Project-specific work is materialized only in the HUMAN-selected REMOTE_GIT or LOCAL_GIT workspace. Remote control state remains in HUMAN safor-memory; local control state is under MASTER-only .safor/."
+  },
+  "providerCapabilityVocabulary": [
+    "provider.identity.read",
+    "provider.namespace.list",
+    "provider.repository.list",
+    "provider.repository.read",
+    "provider.repository.create",
+    "provider.artifact.read",
+    "provider.artifact.write",
+    "provider.history.read",
+    "provider.branch.read",
+    "provider.branch.write",
+    "provider.change_request.read",
+    "provider.change_request.write",
+    "provider.change_request.merge",
+    "provider.checks.read",
+    "provider.issue.read",
+    "provider.issue.write"
+  ],
+  "kernelVocabulary": {
+    "businessObjectKinds": [
+      "INTENT",
+      "REQUIREMENT",
+      "WORK_ITEM",
+      "CONTRIBUTION",
+      "EVIDENCE",
+      "DECISION",
+      "HANDOFF",
+      "DELIVERY",
+      "ACTIVATION",
+      "OUTCOME",
+      "EXCEPTION",
+      "AGENT_IDENTITY",
+      "AGENT_JOB",
+      "AGENT_RESULT"
+    ],
+    "relationKinds": [
+      "depends_on",
+      "produces",
+      "is_evidence_for",
+      "authorizes",
+      "activates",
+      "contributes_to_outcome",
+      "revises",
+      "hands_off_to"
+    ],
+    "workItemStatuses": [
+      "PLANNED",
+      "READY",
+      "ASSIGNED",
+      "IN_PROGRESS",
+      "HANDOFF_READY",
+      "IN_REVIEW",
+      "CHANGES_REQUIRED",
+      "ACCEPTED",
+      "BLOCKED",
+      "CANCELED"
+    ],
+    "runStatuses": [
+      "INTENT_WRITTEN",
+      "RUNNING",
+      "WAITING_HUMAN",
+      "WAITING_EXTERNAL",
+      "RECONCILE_REQUIRED",
+      "COMPLETED",
+      "BLOCKED",
+      "FAILED",
+      "CANCELED"
+    ],
+    "outcomeStatuses": [
+      "NOT_EVALUATED",
+      "VALUE_SUPPORTED",
+      "VALUE_NOT_DEMONSTRATED",
+      "VALUE_UNCLEAR"
+    ]
+  },
+  "schemas": {
+    "packageManifest": "schemas/package-manifest.schema.json",
+    "controlState": "schemas/control-state.schema.json",
+    "valueStreamState": "schemas/value-stream-state.schema.json",
+    "executionState": "schemas/execution-state.schema.json",
+    "workItem": "schemas/work-item.schema.json",
+    "project": "schemas/project.schema.json",
+    "bindings": "schemas/bindings.schema.json",
+    "decisionRecord": "schemas/decision-record.schema.json",
+    "evidenceRecord": "schemas/evidence-record.schema.json",
+    "interactionMenu": "schemas/interaction-menu.schema.json",
+    "selfHealingRecord": "schemas/self-healing-record.schema.json",
+    "agentRegistry": "schemas/agent-registry.schema.json",
+    "agentIdentity": "schemas/agent-identity.schema.json",
+    "agentState": "schemas/agent-state.schema.json",
+    "agentJob": "schemas/agent-job.schema.json",
+    "agentJobState": "schemas/agent-job-state.schema.json",
+    "agentResult": "schemas/agent-result.schema.json",
+    "agentInboxIndex": "schemas/agent-inbox-index.schema.json",
+    "schedulerState": "schemas/scheduler-state.schema.json",
+    "dispatchWave": "schemas/dispatch-wave.schema.json",
+    "resourceLease": "schemas/resource-lease.schema.json",
+    "moduleRecoveryProfile": "schemas/module-recovery-profile.schema.json",
+    "humanCognitiveLoadPolicy": "schemas/human-cognitive-load-policy.schema.json",
+    "humanDecisionGate": "schemas/human-decision-gate.schema.json",
+    "humanResponse": "schemas/human-response.schema.json",
+    "event": "schemas/event.schema.json",
+    "predicate": "schemas/predicate.schema.json",
+    "transition": "schemas/transition.schema.json",
+    "effectIntent": "schemas/effect-intent.schema.json",
+    "transitionRecord": "schemas/transition-record.schema.json",
+    "stateSnapshot": "schemas/state-snapshot.schema.json",
+    "acceptanceContract": "schemas/acceptance-contract.schema.json",
+    "reviewDecision": "schemas/review-decision.schema.json",
+    "authorityDecision": "schemas/authority-decision.schema.json",
+    "packageCatalog": "schemas/package-catalog.schema.json",
+    "entitlement": "schemas/entitlement.schema.json",
+    "workspaceBinding": "schemas/workspace-binding.schema.json",
+    "domainPackage": "schemas/domain-package.schema.json",
+    "packageSelection": "schemas/package-selection.schema.json",
+    "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json",
+    "agentBootstrap": "schemas/agent-bootstrap.schema.json",
+    "agentResponse": "schemas/agent-response.schema.json",
+    "agentChatStatus": "schemas/agent-chat-status.schema.json",
+    "masterStatusIndex": "schemas/master-status-index.schema.json",
+    "humanGoEvidence": "schemas/human-go-evidence.schema.json",
+    "executionAttempt": "schemas/execution-attempt.schema.json",
+    "reconciliationRecord": "schemas/reconciliation-record.schema.json",
+    "projectStatusIndex": "schemas/project-status-index.schema.json",
+    "migrationManifest": "schemas/migration-manifest.schema.json",
+    "requirementsTraceability": "schemas/requirements-traceability.schema.json"
+  },
+  "controlPlane": {
+    "startActionId": "K00",
+    "phases": [
+      {
+        "id": "BOOTSTRAP",
+        "actions": [
+          "K00",
+          "K00A",
+          "K01",
+          "K02",
+          "K03",
+          "K04",
+          "K05",
+          "K06",
+          "K07",
+          "K08",
+          "K09",
+          "K10",
+          "K11"
+        ]
+      },
+      {
+        "id": "RESUME",
+        "actions": [
+          "R01"
+        ]
+      },
+      {
+        "id": "DISCOVERY",
+        "actions": [
+          "D01"
+        ]
+      },
+      {
+        "id": "PLANNING",
+        "actions": [
+          "P01",
+          "P02",
+          "P03"
+        ]
+      },
+      {
+        "id": "SCHEDULING",
+        "actions": [
+          "S01",
+          "S02",
+          "S03",
+          "S04",
+          "S05",
+          "S06",
+          "S07"
+        ]
+      },
+      {
+        "id": "AGENT_COORDINATION",
+        "actions": [
+          "A01",
+          "A02",
+          "A03",
+          "A04",
+          "A05"
+        ]
+      },
+      {
+        "id": "EXECUTION",
+        "actions": [
+          "E01",
+          "E02",
+          "E03",
+          "E04",
+          "E05",
+          "E06"
+        ]
+      },
+      {
+        "id": "RECOVERY",
+        "actions": [
+          "H01",
+          "H02",
+          "H03",
+          "H04"
+        ]
+      },
+      {
+        "id": "OUTCOME",
+        "actions": [
+          "O01"
+        ]
+      },
+      {
+        "id": "CLOSING",
+        "actions": [
+          "C01"
+        ]
+      }
+    ],
+    "actions": [
+      {
+        "id": "K00",
+        "operation": "VERIFY_MODULE_RECOVERY_BASELINE",
+        "purpose": "Before provider or project work, verify exact embedded-module/recovery-profile coverage and fail-closed integrity of the recovery-control modules.",
+        "domainNeutral": true,
+        "modelRef": "module-self-healing-model.json"
+      },
+      {
+        "id": "K00A",
+        "operation": "VERIFY_DETERMINISTIC_CONTROL_BASELINE",
+        "purpose": "Verify pinned event, predicate, transition, effect, snapshot and replay-control modules before any executable deterministic state transition.",
+        "domainNeutral": true,
+        "modelRef": "deterministic-control-model.json"
+      },
+      {
+        "id": "K01",
+        "operation": "SELECT_CREATION_TYPE",
+        "purpose": "HUMAN chooses the intended creation path before project location; choice determines required Factory/Operating Model package IDs.",
+        "domainNeutral": true,
+        "humanDecision": "CREATION_TYPE_SELECTION",
+        "modelRef": "initialization-model.json#sequence/INIT-01",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
+      },
+      {
+        "id": "K02",
+        "operation": "RESOLVE_PACKAGE_ACCESS_PROFILE",
+        "purpose": "Resolve FREE_PUBLIC versus PAID_ENTITLEMENT_REQUIRED access requirements from public package catalog.",
+        "domainNeutral": true,
+        "modelRef": "package-distribution-model.json"
+      },
+      {
+        "id": "K03",
+        "operation": "RESOLVE_REQUIRED_PACKAGES",
+        "purpose": "Resolve explicit HUMAN-loaded, entitled or public-free Factory/Operating Model packages according to access policy.",
+        "domainNeutral": true,
+        "modelRef": "package-distribution-model.json"
+      },
+      {
+        "id": "K04",
+        "operation": "VERIFY_PACKAGE_ACCESS_INTEGRITY",
+        "purpose": "Verify entitlement when required plus package identity, immutable revision/blob and kernel compatibility.",
+        "domainNeutral": true,
+        "modelRef": "commercial-entitlement-model.json"
+      },
+      {
+        "id": "K05",
+        "operation": "VERIFY_FACTORY_OM_COMPATIBILITY",
+        "purpose": "Prove the selected Factory requirements are covered by the selected Operating Model before project binding.",
+        "domainNeutral": true
+      },
+      {
+        "id": "K06",
+        "operation": "SELECT_PROJECT_WORKSPACE_TYPE",
+        "purpose": "HUMAN chooses REMOTE_GIT or LOCAL_GIT. Package source/access does not choose project location.",
+        "domainNeutral": true,
+        "humanDecision": "PROJECT_WORKSPACE_SELECTION",
+        "modelRef": "workspace-model.json",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
+      },
+      {
+        "id": "K07",
+        "operation": "VERIFY_PROJECT_WORKSPACE_CAPABILITIES",
+        "purpose": "Verify actual remote-provider or local-filesystem/Git capabilities for the selected HUMAN-owned workspace.",
+        "domainNeutral": true,
+        "modelRef": "workspace-model.json"
+      },
+      {
+        "id": "K08",
+        "operation": "SELECT_OR_DEFINE_HUMAN_PROJECT",
+        "purpose": "Select or define the project only inside the verified HUMAN workspace; SAFOR product/package sources are forbidden targets.",
+        "domainNeutral": true,
+        "humanDecision": "PROJECT_SELECTION",
+        "modelRef": "workspace-model.json",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "HUMAN_CONTROLLED_TARGET_SELECTION",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
+      },
+      {
+        "id": "K09",
+        "operation": "BIND_CONTROL_WORKSPACE",
+        "purpose": "Use separate safor-memory for REMOTE_GIT or protected MASTER-only .safor/ for LOCAL_GIT.",
+        "domainNeutral": true,
+        "modelRef": "workspace-model.json"
+      },
+      {
+        "id": "K10",
+        "operation": "MATERIALIZE_PACKAGE_AND_WORKSPACE_BINDINGS",
+        "purpose": "Persist immutable package pins, access evidence and workspace binding; entitlement never changes organizational authority.",
+        "domainNeutral": true
+      },
+      {
+        "id": "K11",
+        "operation": "APPROVE_AND_MATERIALIZE_PROJECT",
+        "purpose": "After setup approval, materialize project/control exclusively in HUMAN-owned workspace(s) and verify by authoritative readback.",
+        "domainNeutral": true,
+        "humanDecision": "SETUP_APPROVAL",
+        "modelRef": "initialization-model.json#sequence/INIT-11",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
+      },
+      {
+        "id": "K10A",
+        "operation": "APPROVE_NON_STANDARD_OR_CHANGED_BINDING",
+        "purpose": "Request HUMAN approval only when the resolved package binding materially differs from the already approved creation profile or an existing pinned binding.",
+        "domainNeutral": true,
+        "humanDecision": "PACKAGE_BINDING_APPROVAL",
+        "modelRef": "human-decision-gate-model.json",
+        "executeWhen": "K10 detected a non-standard, changed or conflicting binding that cannot be safely derived/reused.",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "BOOTSTRAP",
+          "reason": "MATERIAL_ALTERNATIVE_CHOICE",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        }
+      },
+      {
+        "id": "R01",
+        "operation": "LOAD_AND_VERIFY_PROJECT_STATE",
+        "purpose": "Read persisted aggregates, validate bindings/integrity and reconcile unfinished external effects.",
+        "domainNeutral": true
+      },
+      {
+        "id": "D01",
+        "operation": "CAPTURE_FACTORY_INTENT",
+        "purpose": "Run Discovery strictly from the bound Factory discoveryContract selected by the HUMAN creation type.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.discoveryContract",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "DISCOVERY",
+          "reason": "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+          "targetLoad": "HIGH",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "rule": "Deep sequential questioning is allowed only for information the Factory requires and SAFOR cannot safely derive from approved state/evidence."
+        }
+      },
+      {
+        "id": "P01",
+        "operation": "INSTANTIATE_VALUE_STREAM",
+        "purpose": "Create the plan strictly from the same bound Factory planningContract, confirmed Discovery and Factory flow graph.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.planningContract",
+        "acceptanceModelRef": "acceptance-model.json#derivationContract",
+        "acceptanceRule": "Planning must materialize one typed Acceptance Contract per executable Work Item from the approved Factory evidence contract, Work Item criteria/review/authority requirements and plan provenance. Qualitative criteria must bind to REVIEW or AUTHORITY."
+      },
+      {
+        "id": "P02",
+        "operation": "RESOLVE_ACTORS",
+        "purpose": "Resolve factory-required capabilities through the operating model to roles and concrete actors.",
+        "domainNeutral": true
+      },
+      {
+        "id": "P03",
+        "operation": "APPROVE_PLAN",
+        "purpose": "Persist explicit approval of the instantiated plan; plan approval is not execution authorization.",
+        "domainNeutral": true,
+        "humanDecision": "PLAN_APPROVAL",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "PLANNING",
+          "reason": "MATERIAL_ALTERNATIVE_CHOICE",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        },
+        "reuseRule": "Do not request plan approval again when the approved plan blob, scope and material assumptions are unchanged and approval remains active.",
+        "approvalIncludes": [
+          "PLAN",
+          "WORK_ITEM_ACCEPTANCE_CONTRACTS"
+        ],
+        "acceptanceRule": "Plan approval pins the Acceptance Contract set. A material acceptance-contract change requires governed replan/new approval."
+      },
+      {
+        "id": "E01",
+        "operation": "REQUEST_EXECUTION_MANDATE",
+        "purpose": "Create an explicit, scoped execution mandate for selected work items/capabilities.",
+        "domainNeutral": true,
+        "humanDecision": "EXECUTION_MANDATE",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "EXECUTION",
+          "reason": "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        },
+        "decisionReuseRule": "Do not request a new execution mandate when an active unrevoked mandate already covers the same work, capabilities and materially unchanged bound inputs. Prefer one safely scoped batch mandate over repeated equivalent approvals."
+      },
+      {
+        "id": "E02",
+        "operation": "SELECT_READY_WORK_ITEM",
+        "purpose": "Select only work whose dependencies, authority and guards are satisfied.",
+        "domainNeutral": true
+      },
+      {
+        "id": "E03",
+        "operation": "DISPATCH_WORK_ITEM",
+        "purpose": "Issue a scoped execution contract to the resolved actor. AGENT work must be materialized through the canonical Agent Job Contract and an active conflict-checked scheduler wave; copied prompts are not authoritative.",
+        "domainNeutral": true,
+        "modelRef": "agent-job-contract-model.json"
+      },
+      {
+        "id": "E04",
+        "operation": "COLLECT_EVIDENCE",
+        "purpose": "Collect evidence required by the bound Factory evidenceContract for the current work-item type plus kernel/provider integrity evidence.",
+        "domainNeutral": true,
+        "modelRef": "BOUND_FACTORY.model.evidenceContract"
+      },
+      {
+        "id": "E05",
+        "operation": "EVALUATE_WORK_ITEM",
+        "purpose": "Evaluate Work Item acceptance deterministically from the approved hash-valid Acceptance Contract and replayed Evidence/Review/Authority records; never infer qualitative PASS from LLM output.",
+        "domainNeutral": true,
+        "modelRef": "acceptance-model.json",
+        "factoryEvidenceContractRef": "BOUND_FACTORY.model.evidenceContract",
+        "rule": "Only WORK_ITEM_ACCEPTED may materialize ACCEPTED in the migrated rc.2 slice, and only when every typed requirement is satisfied."
+      },
+      {
+        "id": "E06",
+        "operation": "ROUTE_VALUE_STREAM",
+        "purpose": "Apply the factory graph to proceed, branch, join, rework, escalate or wait.",
+        "domainNeutral": true
+      },
+      {
+        "id": "O01",
+        "operation": "ASSESS_OUTCOMES",
+        "purpose": "Evaluate declared business/reader/organizational outcomes only when the factory defines measurable outcome nodes and evidence.",
+        "domainNeutral": true,
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "OUTCOME",
+          "reason": "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true
+        }
+      },
+      {
+        "id": "C01",
+        "operation": "CLOSE_PROJECT_OR_ITERATION",
+        "purpose": "Close only when the factory terminal predicate is satisfied; delivery completion never implies outcome success.",
+        "domainNeutral": true
+      },
+      {
+        "id": "H01",
+        "operation": "DETECT_CLASSIFY_AND_RESOLVE_MODULE_FAILURE",
+        "purpose": "Detect failure, derive fingerprint, classify it, resolve the affected embedded module and load its unique module recovery profile.",
+        "domainNeutral": true,
+        "modelRef": "module-self-healing-model.json"
+      },
+      {
+        "id": "H02",
+        "operation": "CHECK_AND_PLAN_PROFILE_CONSTRAINED_REPAIR",
+        "purpose": "Intersect failure-class repair policy with module profile repairability, active mandate/policy, retry budget and actual provider rights before any mutation.",
+        "domainNeutral": true,
+        "modelRef": "self-healing-model.json"
+      },
+      {
+        "id": "H03",
+        "operation": "EXECUTE_PROFILE_CONSTRAINED_REPAIR",
+        "purpose": "Execute only the repair allowed by the resolved module profile: validate/restore verified source, regenerate declared derived artifacts, or rebind external capabilities. Semantic invention is forbidden.",
+        "domainNeutral": true,
+        "modelRef": "module-self-healing-model.json"
+      },
+      {
+        "id": "H04",
+        "operation": "VERIFY_MODULE_REPAIR_AND_RESUME",
+        "purpose": "Provider-readback the repaired module/artifact, revalidate profile/integrity expectations, persist the module-aware repair record and resume only from a verified checkpoint.",
+        "domainNeutral": true,
+        "modelRef": "module-self-healing-model.json"
+      },
+      {
+        "id": "A01",
+        "operation": "REGISTER_AGENT_IDENTITY",
+        "purpose": "Create or explicitly revise a persistent agent identity and workspace after HUMAN approval; identity is reused across jobs.",
+        "domainNeutral": true,
+        "humanDecision": "AGENT_IDENTITY_APPROVAL",
+        "modelRef": "agent-workspace-model.json",
+        "humanInteractionContract": {
+          "gateRef": "human-decision-gate-model.json",
+          "phase": "AGENT_COORDINATION",
+          "reason": "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED",
+          "targetLoad": "MEDIUM",
+          "maxNewDecisionContexts": 1,
+          "technicalDetailExposure": "SUMMARY",
+          "deriveBeforeAsk": true,
+          "reuseUnchangedDecision": true
+        },
+        "humanDecisionWhen": "FIRST_IDENTITY_CREATION_OR_IMMUTABLE_IDENTITY_OR_AUTHORITY_CHANGE",
+        "reuseRule": "Reuse an unchanged ACTIVE persistent agent identity without HUMAN reapproval."
+      },
+      {
+        "id": "A02",
+        "operation": "MATERIALIZE_AND_DISPATCH_AGENT_JOB",
+        "purpose": "Create the canonical immutable job contract with explicit package/sequence lineage, MASTER provenance, assigned identity, role, skills, immutable inputs, granular authorization, workspace, scheduling, output return routes and verification requirements; render the HUMAN-readable job Markdown, read back both, then publish the job as READY.",
+        "domainNeutral": true,
+        "modelRef": "agent-job-contract-model.json"
+      },
+      {
+        "id": "A03",
+        "operation": "OBSERVE_AGENT_CLAIM",
+        "purpose": "Read back the agent state claim, verify identity/revision/job binding and optimistic-concurrency evidence, then advance MASTER job state.",
+        "domainNeutral": true,
+        "modelRef": "agent-workspace-model.json"
+      },
+      {
+        "id": "A04",
+        "operation": "INGEST_AGENT_RESULT",
+        "purpose": "Read the agent outbox result and referenced evidence without treating the submission itself as acceptance.",
+        "domainNeutral": true,
+        "modelRef": "agent-workspace-model.json"
+      },
+      {
+        "id": "A05",
+        "operation": "VERIFY_AGENT_RESULT",
+        "purpose": "Verify result binding, evidence, provider readback, reviews and Factory requirements before MASTER marks the job VERIFIED or ACCEPTED.",
+        "domainNeutral": true,
+        "modelRef": "agent-workspace-model.json"
+      },
+      {
+        "id": "S01",
+        "operation": "DECOMPOSE_COMPOSITE_WORK",
+        "purpose": "Ensure approved composite work is decomposed into explicit ATOMIC child work items with independent outputs, dependencies, resource declarations and join policy.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      },
+      {
+        "id": "S02",
+        "operation": "BUILD_READY_ATOMIC_SET",
+        "purpose": "Derive the authoritative set of READY ATOMIC work whose dependencies, immutable inputs, mandates and guards are satisfied.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      },
+      {
+        "id": "S03",
+        "operation": "MATCH_AGENT_CAPACITY",
+        "purpose": "Match READY work to active dispatch-enabled actors with required capabilities, free scheduling slots and satisfiable separation-of-duties constraints.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      },
+      {
+        "id": "S04",
+        "operation": "PLAN_CONFLICT_FREE_DISPATCH_WAVE",
+        "purpose": "Select a maximal safe set of assignments whose write conflict domains, exclusive keys and job branches do not conflict and whose total size stays within project and agent capacity.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      },
+      {
+        "id": "S05",
+        "operation": "ACQUIRE_RESOURCE_LEASES",
+        "purpose": "Acquire MASTER-owned agent-slot, mutation-domain, exclusive-key and branch leases with optimistic concurrency before dispatch.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      },
+      {
+        "id": "S06",
+        "operation": "DISPATCH_PARALLEL_WAVE",
+        "purpose": "Materialize dedicated Git job workspaces, canonical JSON+Markdown job contracts and dispatch all successfully leased assignments through the Agent Workspace Protocol; read back every dispatch artifact before READY.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      },
+      {
+        "id": "S07",
+        "operation": "RECONCILE_WAVE_AND_RELEASE_LEASES",
+        "purpose": "Track job terminals, reconcile uncertain effects, release verified leases and unlock downstream fan-in work only from accepted upstream results.",
+        "domainNeutral": true,
+        "modelRef": "multi-agent-scheduler-model.json"
+      }
+    ],
+    "modes": [
+      "BOOTSTRAP",
+      "INITIALIZING",
+      "PLANNING",
+      "AWAITING_AUTHORIZATION",
+      "EXECUTING",
+      "WAITING_OUTCOME",
+      "RECOVERING",
+      "PAUSED",
+      "STOPPED",
+      "COMPLETED"
+    ],
+    "interactionLoop": {
+      "stableCheckpointBehavior": "Every SAFOR-generated HUMAN-facing response MUST end with exactly one valid state-derived interaction menu. This applies to checkpoints, progress, decisions, blockers, recovery, status, help, pause, stop, outcome and completion. No SAFOR-visible content may follow the menu.",
+      "defaultPrimaryIntent": "NEXT_ROUND",
+      "roundDefinitionRef": "interaction-model.json#roundSemantics",
+      "menuPolicyRef": "interaction-model.json#menuPolicy",
+      "recommendationPolicyRef": "interaction-model.json#recommendationExperience",
+      "decisionPolicyRef": "interaction-model.json#decisionExperience",
+      "humanCommunicationRef": "interaction-model.json#humanCommunication",
+      "defaultHumanSurface": "SUMMARY",
+      "humanResponseSchemaRef": "schemas/human-response.schema.json",
+      "terminalMenuPolicyRef": "interaction-model.json#terminalMenuContract",
+      "humanResponseFinalizer": {
+        "mandatory": true,
+        "appliesTo": "ALL_SAFOR_GENERATED_HUMAN_FACING_RESPONSES",
+        "steps": [
+          "BUILD_HUMAN_RESPONSE_ENVELOPE",
+          "APPLY_PLATFORM_RESPONSE_GOVERNOR",
+          "REJECT_DOMAIN_PRESENTATION_OVERRIDE",
+          "APPLY_HUMAN_DECISION_GATE",
+          "CLASSIFY_RESPONSE_CLASS",
+          "COMPRESS_SUMMARY_TO_PLATFORM_BUDGET",
+          "VALIDATE_HUMAN_RESPONSE_SCHEMA",
+          "IF_INFORMATIONAL_NOTICE_RENDER_CONTENT_ONLY",
+          "IF_INTERACTIVE_RENDER_EXACTLY_ONE_TERMINAL_MENU",
+          "VERIFY_NO_CONTENT_AFTER_TERMINAL_ELEMENT",
+          "STOP_RENDERING"
+        ],
+        "emitWithoutSuccessfulFinalization": false
+      },
+      "platformResponseGovernorRef": "interaction-model.json#platformResponseGovernor",
+      "platformResponseGovernorMandatory": true,
+      "domainModulePresentationOverrideForbidden": true,
+      "informationalNoticeMayOmitTerminalMenu": true
+    },
+    "recoveryLoop": {
+      "modelRef": "self-healing-model.json",
+      "triggerOn": [
+        "FAILED_WITH_CLASSIFIABLE_RECOVERY",
+        "BLOCKED_WITH_CLASSIFIABLE_RECOVERY",
+        "RECONCILE_REQUIRED",
+        "READBACK_MISMATCH",
+        "STALE_REVISION_CONFLICT"
+      ],
+      "enterMode": "RECOVERING",
+      "actions": [
+        "H01",
+        "H02",
+        "H03",
+        "H04"
+      ],
+      "success": "RETURN_TO_LAST_VERIFIED_CHECKPOINT",
+      "escalation": "WAITING_HUMAN",
+      "rule": "Automatic repair is permitted only within existing authorization and configured repair/retry budgets."
+    },
+    "crossCuttingGuards": {
+      "humanDecisionGate": {
+        "modelRef": "human-decision-gate-model.json",
+        "interactionPolicyRef": "interaction-model.json#humanCognitiveLoadPolicy",
+        "appliesBefore": "EVERY_HUMAN_QUESTION_APPROVAL_OR_CHOICE",
+        "defaultOutcome": "DO_NOT_ASK",
+        "requiredEvaluationOrder": [
+          "DERIVE_FROM_APPROVED_STATE_POLICY_AND_EVIDENCE",
+          "REUSE_UNCHANGED_ACTIVE_DECISION",
+          "RESOLVE_LEGITIMATE_HUMAN_REASON",
+          "CHECK_PHASE_LOAD_TARGET",
+          "TRANSLATE_TO_HUMAN_DOMAIN_LANGUAGE",
+          "PRESENT_ONE_DECISION_CONTEXT"
+        ]
+      },
+      "deterministicControlKernel": {
+        "modelRef": "deterministic-control-model.json",
+        "eventModelRef": "event-model.json",
+        "transitionRegistryRef": "transition-registry.json",
+        "predicateRegistryRef": "predicate-registry.json",
+        "effectModelRef": "effect-model.json",
+        "appliesBefore": "EVERY_AUTHORITATIVE_STATE_TRANSITION_IN_MIGRATED_EXECUTABLE_SLICE",
+        "failClosedOn": [
+          "STATE_HASH_MISMATCH",
+          "EVENT_SEQUENCE_GAP",
+          "DIVERGENT_DUPLICATE_EVENT",
+          "UNKNOWN_PREDICATE",
+          "AMBIGUOUS_TRANSITION",
+          "REPLAY_DIVERGENCE"
+        ],
+        "rule": "External actors submit typed events/evidence. The deterministic control kernel alone evaluates guards and produces the next authoritative state within the migrated executable slice."
+      },
+      "deterministicAcceptance": {
+        "modelRef": "acceptance-model.json",
+        "appliesBefore": "EVERY_WORK_ITEM_ACCEPTED_TRANSITION",
+        "requiredChecks": [
+          "SINGLE_ACTIVE_HASH_VALID_ACCEPTANCE_CONTRACT",
+          "ALL_CRITERIA_TYPED",
+          "REQUIRED_EVIDENCE_SATISFIED",
+          "REQUIRED_REVIEW_SATISFIED",
+          "REVIEW_INDEPENDENCE_SATISFIED",
+          "REQUIRED_AUTHORITIES_SATISFIED",
+          "NO_REQUIRED_AUTHORITY_REJECTION"
+        ],
+        "failClosed": true
+      },
+      "packageAccess": {
+        "distributionModelRef": "package-distribution-model.json",
+        "entitlementModelRef": "commercial-entitlement-model.json",
+        "appliesBefore": "EVERY_FACTORY_OR_OPERATING_MODEL_BINDING",
+        "failClosedOn": [
+          "PAID_PUBLIC_RESOLUTION_ATTEMPT",
+          "MISSING_VERIFIED_ENTITLEMENT",
+          "PACKAGE_ID_VERSION_MISMATCH",
+          "PACKAGE_BLOB_UNVERIFIED"
+        ]
+      },
+      "projectWorkspace": {
+        "workspaceModelRef": "workspace-model.json",
+        "appliesBefore": "EVERY_PROJECT_MUTATION",
+        "failClosedOn": [
+          "PROJECT_TARGET_IS_SAFOR_PRODUCT_REPOSITORY",
+          "PROJECT_TARGET_IS_PACKAGE_SOURCE",
+          "LOCAL_GIT_CAPABILITY_UNPROVEN",
+          "WORKER_TARGETS_MASTER_CONTROL_ROOT"
+        ]
+      }
+    }
+  },
+  "invariants": [
+    {
+      "id": "INV-001",
+      "rule": "A factory must reference required capabilities, never concrete operating-model role IDs."
+    },
+    {
+      "id": "INV-002",
+      "rule": "An operating model must map capabilities/authorities to roles but must not own the sequence of factory transformations."
+    },
+    {
+      "id": "INV-003",
+      "rule": "A work item can become ACCEPTED only when all configured acceptance criteria and required evidence are satisfied."
+    },
+    {
+      "id": "INV-004",
+      "rule": "If independent review is required, no actor may approve its own contribution unless an explicit exception authority permits it."
+    },
+    {
+      "id": "INV-005",
+      "rule": "No external mutation may be recorded as completed without provider readback or equivalent authoritative evidence."
+    },
+    {
+      "id": "INV-006",
+      "rule": "Unknown external mutation outcome transitions to RECONCILE_REQUIRED and must not be blindly retried."
+    },
+    {
+      "id": "INV-007",
+      "rule": "Execution requires an active mandate whose scope covers the selected work item and capability."
+    },
+    {
+      "id": "INV-008",
+      "rule": "STOP revokes active execution mandates; RESUME after STOP requires new execution authorization where execution would continue."
+    },
+    {
+      "id": "INV-009",
+      "rule": "Provider permissions come from the host/provider, never from JSON declarations."
+    },
+    {
+      "id": "INV-010",
+      "rule": "DELIVERY_COMPLETE and VALUE_SUPPORTED are distinct states and may not be inferred from one another."
+    },
+    {
+      "id": "INV-011",
+      "rule": "Project-specific migration constants may not appear in global kernel schemas."
+    },
+    {
+      "id": "INV-012",
+      "rule": "The same authoritative fact must not be independently writable in multiple state aggregates."
+    },
+    {
+      "id": "INV-013",
+      "rule": "At every user-relevant stable checkpoint, the MASTER presents a state-derived action menu unless no meaningful user action exists while waiting on an external effect."
+    },
+    {
+      "id": "INV-014",
+      "rule": "Menu items must be generated from currently allowed transitions, guards, mandates and actual host capabilities; unavailable or unauthorized actions must not be presented as executable."
+    },
+    {
+      "id": "INV-015",
+      "rule": "NEXT_ROUND may continue only within existing authorization scope and must stop before any new human decision, authority expansion, unresolved external effect, block, failure or terminal completion."
+    },
+    {
+      "id": "INV-016",
+      "rule": "If the host exposes native action buttons or choice controls, the MASTER prefers them; otherwise it renders the same action model through the structured text fallback."
+    },
+    {
+      "id": "INV-017",
+      "rule": "Direct HUMAN communication is concise by default: lead with result, decision or next useful action and avoid repeating known context."
+    },
+    {
+      "id": "INV-018",
+      "rule": "Routine HUMAN checkpoint messages obey the configured response budget; deeper technical detail is disclosed on request or when materially required."
+    },
+    {
+      "id": "INV-019",
+      "rule": "Encouragement must be grounded in verified progress or a realistic next step; generic praise, exaggeration, guilt and emotional manipulation are forbidden."
+    },
+    {
+      "id": "INV-020",
+      "rule": "The HUMAN interaction style is warm, direct and collaborative while authority, uncertainty, risk and evidence remain explicit and unblurred."
+    },
+    {
+      "id": "INV-021",
+      "rule": "After SAFOR-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery."
+    },
+    {
+      "id": "INV-022",
+      "rule": "Initialization cannot proceed to owner selection unless mandatory baseline provider read/write capabilities are proven by actual host/provider evidence."
+    },
+    {
+      "id": "INV-023",
+      "rule": "If mandatory read/write access is missing or unproven, SAFOR enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAFOR never asks for a password or personal access token in chat."
+    },
+    {
+      "id": "INV-024",
+      "rule": "The project owner namespace is explicitly selected by the HUMAN and owner-scoped read/write access is re-verified before project selection."
+    },
+    {
+      "id": "INV-025",
+      "rule": "For EXISTING project mode, the default repository menu contains only eligible repositories under the selected owner with normalized lastActivityAt within the previous 7 days, ordered newest first."
+    },
+    {
+      "id": "INV-026",
+      "rule": "Selecting a repository from a menu is not sufficient evidence by itself; stable repository identity, default branch and target read/write access must be verified before binding."
+    },
+    {
+      "id": "INV-027",
+      "rule": "For NEW project mode, provider.repository.create is mandatory and no repository is created before explicit HUMAN confirmation and SETUP_APPROVAL."
+    },
+    {
+      "id": "INV-028",
+      "rule": "All HUMAN interaction uses only native UI surfaces exposed by the current chat host; custom web applications, HTML/CSS/JavaScript UI shells and iframes are forbidden."
+    },
+    {
+      "id": "INV-029",
+      "rule": "SAFOR controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
+    },
+    {
+      "id": "INV-030",
+      "rule": "If native buttons or select controls are unavailable, SAFOR falls back only to native chat Markdown/plain text choices, never to a custom external interface."
+    },
+    {
+      "id": "INV-031",
+      "rule": "Self-healing may execute automatically only when the failure is classified, the repair is explicitly eligible, the active mandate covers it and required provider rights are proven."
+    },
+    {
+      "id": "INV-032",
+      "rule": "Every automatic repair is bounded by a retry budget and must persist an immutable repair record with pre-state references and verification evidence."
+    },
+    {
+      "id": "INV-033",
+      "rule": "Unknown external effects must enter reconciliation before any retry; blind repetition of a mutation is forbidden."
+    },
+    {
+      "id": "INV-034",
+      "rule": "Self-healing must never bypass human gates, reviews, policy guards, separation of duties or expand an execution mandate."
+    },
+    {
+      "id": "INV-035",
+      "rule": "Force-push, history rewrite, destructive repository deletion, invented evidence and ambiguous authoritative-state restoration are forbidden automatic repairs."
+    },
+    {
+      "id": "INV-036",
+      "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAFOR reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
+    },
+    {
+      "id": "INV-037",
+      "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAFOR transitions to STOP and performs no project discovery, selection, planning or execution."
+    },
+    {
+      "id": "INV-038",
+      "rule": "SAFOR must never auto-create safor-memory or silently substitute another control repository in this baseline."
+    },
+    {
+      "id": "INV-039",
+      "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed."
+    },
+    {
+      "id": "INV-040",
+      "rule": "Creation type deterministically fixes the Factory and compatible Operating Model until the HUMAN explicitly changes the selection through a new governed decision."
+    },
+    {
+      "id": "INV-041",
+      "rule": "Discovery questions and completion criteria come exclusively from the bound Factory discoveryContract."
+    },
+    {
+      "id": "INV-042",
+      "rule": "Planning perspectives, work-item derivation and planning requirements come exclusively from the same bound Factory planningContract and confirmed Discovery."
+    },
+    {
+      "id": "INV-043",
+      "rule": "Evidence requirements for domain work come exclusively from the same bound Factory evidenceContract; cross-Factory evidence substitution is forbidden."
+    },
+    {
+      "id": "INV-044",
+      "rule": "A project may not proceed when creationType, Factory binding, Operating Model binding and persisted project descriptor disagree."
+    },
+    {
+      "id": "INV-045",
+      "rule": "An agent identity is persistent across jobs. Initial chat bootstrap requires only control repository, project ID and agent ID; job prompts are not transported by the HUMAN after identity bootstrap."
+    },
+    {
+      "id": "INV-046",
+      "rule": "Agent identity, agent registry, agent inbox index, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them."
+    },
+    {
+      "id": "INV-047",
+      "rule": "An agent may write only its own agent state, outbox, evidence and audit protocol paths plus separately authorized work-repository targets; protocol path ownership never grants provider rights."
+    },
+    {
+      "id": "INV-048",
+      "rule": "An agent may claim a job only when assignedAgentId and assignedIdentityRevision match its active identity and the referenced execution mandate and actual provider rights cover the requested scope."
+    },
+    {
+      "id": "INV-049",
+      "rule": "Agent job claims use optimistic concurrency against provider-observed agent state revision/blob identity; stale or concurrent claims must fail safely and reconcile before retry."
+    },
+    {
+      "id": "INV-050",
+      "rule": "A dispatched agent job contract is immutable. Scope, mandate or assignment changes require a new dispatch revision or a superseding job."
+    },
+    {
+      "id": "INV-051",
+      "rule": "Agent-local runtime state is not authoritative for project orchestration. MASTER-owned master/jobs/{jobId}.json is the sole authoritative agent-job lifecycle state."
+    },
+    {
+      "id": "INV-052",
+      "rule": "An agent result is a submission claim, never acceptance. The agent cannot mark its own job VERIFIED or ACCEPTED."
+    },
+    {
+      "id": "INV-053",
+      "rule": "MASTER may advance an agent job to VERIFIED or ACCEPTED only after reading the result, validating job/identity binding, evaluating required evidence/review and reading back external mutations where applicable."
+    },
+    {
+      "id": "INV-054",
+      "rule": "SAFOR does not assume a normal chat wakes itself when a repository job appears. Agent execution requires an external HUMAN, automation or host-supported activation trigger."
+    },
+    {
+      "id": "INV-055",
+      "rule": "A reviewer requirement continues to enforce separation of duties across agent identities; the performing agent may not approve its own contribution unless an explicit exception authority permits it."
+    },
+    {
+      "id": "INV-056",
+      "rule": "Agent job discovery must use the fixed MASTER-owned agents/{agentId}/inbox/index.json projection. The index is never authoritative lifecycle state; before claim the agent must read the referenced immutable job contract and MASTER-owned master/jobs/{jobId}.json. Repository directory enumeration is not required for correctness."
+    },
+    {
+      "id": "INV-057",
+      "rule": "Only ATOMIC work items may be dispatched to agents. COMPOSITE work items must first be decomposed into explicit children with a declared join policy."
+    },
+    {
+      "id": "INV-058",
+      "rule": "An agent job may be dispatched only when its authoritative work-item resource declaration is complete and all read inputs are pinned to immutable revisions."
+    },
+    {
+      "id": "INV-059",
+      "rule": "Two concurrently active jobs must not share a write conflict domain, exclusive key or explicit job branch. Any unknown conflict is treated as exclusive and serialized."
+    },
+    {
+      "id": "INV-060",
+      "rule": "The number of concurrently active jobs assigned to an agent must never exceed the maxConcurrentJobs declared in the MASTER-owned agent registry."
+    },
+    {
+      "id": "INV-061",
+      "rule": "MASTER forms dispatch waves only from dependency-ready, capability-compatible, mandate-covered and separation-of-duties-safe ATOMIC work."
+    },
+    {
+      "id": "INV-062",
+      "rule": "All resource leases for a selected assignment must be acquired and read back before the job is treated as dispatched."
+    },
+    {
+      "id": "INV-063",
+      "rule": "Lease expiry or missing agent progress never authorizes silent reassignment. MASTER must reconcile possible external effects before another agent may receive overlapping work."
+    },
+    {
+      "id": "INV-064",
+      "rule": "Every mutating agent job uses a dedicated branch derived from jobId and agentId and may not write the default branch directly."
+    },
+    {
+      "id": "INV-065",
+      "rule": "Parallel branches are integrated only after their job results are VERIFIED and required review/integration gates pass."
+    },
+    {
+      "id": "INV-066",
+      "rule": "Every agent job, including read-only work, must persist a HUMAN-readable Markdown result in the Git-backed control repository and the machine result must pin its blob and commit identity."
+    },
+    {
+      "id": "INV-067",
+      "rule": "Every mutating agent result must report Git base/head commit identities, produced commit SHAs, changed paths and provider readback sufficient for MASTER verification."
+    },
+    {
+      "id": "INV-068",
+      "rule": "A parent or downstream join may become execution-ready only from ACCEPTED upstream children required by its join predicate; RESULT_SUBMITTED or VERIFIED alone is insufficient."
+    },
+    {
+      "id": "INV-069",
+      "rule": "Dispatch-wave records and resource-lease records are MASTER-owned audit artifacts and may not be mutated by agents."
+    },
+    {
+      "id": "INV-070",
+      "rule": "With N free eligible agent slots and at least N mutually conflict-free READY ATOMIC jobs, the scheduler may dispatch up to N jobs in the same wave subject to the project parallelism ceiling."
+    },
+    {
+      "id": "INV-071",
+      "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
+    },
+    {
+      "id": "INV-072",
+      "rule": "Every agent job has a globally unique immutable jobId, a HUMAN/Git-safe jobKey, packageId, workItemId and explicit plan/package/dispatch/attempt/rework sequence lineage."
+    },
+    {
+      "id": "INV-073",
+      "rule": "Every agent job records MASTER creation provenance including createdAt, issuedAt, masterId, masterVersion, masterRunId and masterStateRevision."
+    },
+    {
+      "id": "INV-074",
+      "rule": "Every agent job explicitly binds the target agentId and identityRevision plus the roleId/role definition the agent must assume for that job."
+    },
+    {
+      "id": "INV-075",
+      "rule": "Every mandatory job skill is explicit, versioned, described, includes execution instructions and is pinned to an immutable skill source/blob identity."
+    },
+    {
+      "id": "INV-076",
+      "rule": "All job inputs are read-only and pinned to immutable repository commit identities; path-scoped inputs pin blob identity when applicable."
+    },
+    {
+      "id": "INV-077",
+      "rule": "Job authorization explicitly separates provider capabilities and repository read/write/branch/commit/push/change-request/merge/deploy permissions. JSON authorization is only an upper bound and never grants provider rights."
+    },
+    {
+      "id": "INV-078",
+      "rule": "Every job declares machine result, HUMAN-readable result, evidence root and audit root before execution. The agent must not choose ad-hoc return locations."
+    },
+    {
+      "id": "INV-079",
+      "rule": "The canonical job JSON is authoritative and immutable after dispatch. Any scope, role, mandatory-skill or authorization expansion requires a new governed job/dispatch."
+    },
+    {
+      "id": "INV-080",
+      "rule": "Every canonical job has a MASTER-generated HUMAN-readable inbox/{jobId}.md projection whose blob SHA is pinned by the JSON contract and whose content may not expand the JSON contract."
+    },
+    {
+      "id": "INV-081",
+      "rule": "A job may become READY or enter inbox/index.json only after MASTER writes and provider-readbacks both job JSON and job Markdown and validates their binding."
+    },
+    {
+      "id": "INV-082",
+      "rule": "Rework never reuses a historical jobId. A new attempt receives a new jobId and may reference the superseded job through lineage."
+    },
+    {
+      "id": "INV-083",
+      "rule": "An agent must stop when mandate, identity revision, job supersession, resource lease, allowed write scope or required provider rights no longer satisfy the explicit job contract."
+    },
+    {
+      "id": "INV-084",
+      "rule": "The assigned agent may not change its job role, substitute a mandatory skill, delegate the job, mutate the job contract or expand its own authorization."
+    },
+    {
+      "id": "INV-085",
+      "rule": "MASTER acceptance evaluates the explicit verificationContract from the job; result submission and agent self-check never constitute acceptance."
+    },
+    {
+      "id": "INV-086",
+      "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
+    },
+    {
+      "id": "INV-087",
+      "rule": "Every embedded SAFOR module must have exactly one valid recovery profile in module-self-healing-model.json; unprofiled or multiply-profiled modules invalidate the distribution."
+    },
+    {
+      "id": "INV-088",
+      "rule": "Each embedded module and integrity-manifest entry must reference its exact recovery profile ID."
+    },
+    {
+      "id": "INV-089",
+      "rule": "A module repair action is executable only when allowed by the failure class, the resolved module recovery profile, current SAFOR authority/policy and actual provider rights."
+    },
+    {
+      "id": "INV-090",
+      "rule": "IMMUTABLE_VALIDATE_ONLY modules may never be semantically rewritten by automatic recovery; SAFOR may only verify/reload the expected pinned blob or stop/escalate."
+    },
+    {
+      "id": "INV-091",
+      "rule": "RESTORE_FROM_VERIFIED_SOURCE modules may be restored only from a source whose expected version/blob identity is independently verified."
+    },
+    {
+      "id": "INV-092",
+      "rule": "REGENERATE_DERIVED_ONLY modules may mutate only declared derived artifacts and must preserve their authoritative source unchanged."
+    },
+    {
+      "id": "INV-093",
+      "rule": "REBIND_EXTERNAL_CAPABILITY recovery may refresh/reobserve provider capabilities but must never grant, fabricate or elevate provider permissions."
+    },
+    {
+      "id": "INV-094",
+      "rule": "Unknown external effects always reconcile before retry or lease/resource reuse, regardless of the module profile."
+    },
+    {
+      "id": "INV-095",
+      "rule": "Every module repair persists moduleKey, moduleProfileId, authority type, repairability, pre-state references, selected repair action and verification evidence."
+    },
+    {
+      "id": "INV-096",
+      "rule": "Repair success requires authoritative readback plus the module-profile success predicate; assistant narration or intended action is never evidence of recovery."
+    },
+    {
+      "id": "INV-097",
+      "rule": "The self-healing model, module-self-healing model and recovery-profile schema are fail-closed recovery controls. If their expected integrity cannot be proven, automatic recovery stops."
+    },
+    {
+      "id": "INV-098",
+      "rule": "Canonical agent job recovery may regenerate job.md or other declared projections from valid job.json, but may never automatically rewrite a dispatched authoritative job.json to change role, skill, scope, input or authorization semantics."
+    },
+    {
+      "id": "INV-099",
+      "rule": "Factory and Operating Model recovery may restore pinned package blobs and revalidate bindings, but may never automatically alter workflow semantics, decision rights, mandates or separation-of-duties policy."
+    },
+    {
+      "id": "INV-100",
+      "rule": "Schema recovery may restore the expected schema and revalidate subjects; an authoritative subject must never be automatically coerced merely to satisfy schema validation."
+    },
+    {
+      "id": "INV-101",
+      "rule": "Scheduler recovery may rebuild derived READY/capacity/wave views, but resource lease expiry or uncertain job effects require reconciliation before reassignment."
+    },
+    {
+      "id": "INV-102",
+      "rule": "Provider-adapter recovery may retry idempotent reads, refresh revisions and rebind observed capabilities; missing required rights remain a blocker or HUMAN escalation."
+    },
+    {
+      "id": "INV-103",
+      "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS."
+    },
+    {
+      "id": "INV-104",
+      "rule": "K00 module-recovery preflight runs before provider/project actions. Failure to prove exact module-profile coverage or recovery-control integrity causes STOP before external work."
+    },
+    {
+      "id": "INV-105",
+      "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
+    },
+    {
+      "id": "INV-106",
+      "rule": "Every proposed HUMAN question or approval is evaluated by human-decision-gate-model.json before presentation and records exactly one legitimate interaction reason."
+    },
+    {
+      "id": "INV-107",
+      "rule": "High HUMAN cognitive load is permitted in DISCOVERY when required to acquire non-derivable HUMAN intent, context, priorities or value judgments; technical/system-generated load remains minimized."
+    },
+    {
+      "id": "INV-108",
+      "rule": "After PLAN_APPROVAL, default HUMAN load is LOW or VERY_LOW. Temporary escalation requires an explicit legitimate reason such as scope/authority change, material risk, irreversible action, goal conflict, recovery escalation or outcome judgment."
+    },
+    {
+      "id": "INV-109",
+      "rule": "A HUMAN question is forbidden when its answer can be safely derived from approved state, policy and authoritative evidence."
+    },
+    {
+      "id": "INV-110",
+      "rule": "An unchanged, unrevoked prior HUMAN decision with the same scope and materially unchanged bound inputs is reused and must not be requested again."
+    },
+    {
+      "id": "INV-111",
+      "rule": "Scheduling, deterministic agent selection, job IDs, Git branch naming, resource leases, dispatch waves, readbacks, evidence collection, internal transitions and recovery-profile selection must not be delegated to HUMAN."
+    },
+    {
+      "id": "INV-112",
+      "rule": "Normal creation-profile binding does not require a second HUMAN approval when Factory, Operating Model and Provider Adapter are deterministically resolved from the approved creation type and unchanged pinned versions."
+    },
+    {
+      "id": "INV-113",
+      "rule": "Every HUMAN-facing turn contains at most one new decision context; multiple technical sub-decisions are consolidated by MASTER before presentation."
+    },
+    {
+      "id": "INV-114",
+      "rule": "Default SUMMARY communication hides technical IDs and internal terms and explains what happened, project meaning, whether HUMAN action is required and what happens next."
+    },
+    {
+      "id": "INV-115",
+      "rule": "Primary-action labels are domain-specific and dynamic where possible; internal action IDs or orchestration terms are never default HUMAN labels. Fallback label is 'Weiter'."
+    },
+    {
+      "id": "INV-116",
+      "rule": "The heuristic cognitive-load score is an internal governance heuristic, not a psychometric measurement, and may not be presented as a validated scientific measure."
+    },
+    {
+      "id": "INV-117",
+      "rule": "DISCOVERY may ask deep sequential questions, but still only one decision context per turn and only for information SAFOR cannot safely derive."
+    },
+    {
+      "id": "INV-118",
+      "rule": "Execution and Recovery communicate by exception: successful authorized internal operations do not require HUMAN confirmations merely to acknowledge technical state transitions."
+    },
+    {
+      "id": "INV-119",
+      "rule": "Existing active execution mandates and persistent agent identities are reused within unchanged scope rather than repeatedly reauthorized."
+    },
+    {
+      "id": "INV-120",
+      "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored."
+    },
+    {
+      "id": "INV-121",
+      "rule": "Every SAFOR-generated HUMAN-facing response contains exactly one valid interaction menu as its terminal surface."
+    },
+    {
+      "id": "INV-122",
+      "rule": "No SAFOR-visible text, status, evidence, explanation or other content may be rendered after the terminal interaction menu."
+    },
+    {
+      "id": "INV-123",
+      "rule": "A terminal interaction menu is required for normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses."
+    },
+    {
+      "id": "INV-124",
+      "rule": "Presence of the terminal menu does not imply a HUMAN decision; Decision Gate semantics remain authoritative and non-decision menus may contain only valid navigation/control actions."
+    },
+    {
+      "id": "INV-125",
+      "rule": "If contextual terminal-menu derivation fails, SAFOR may regenerate only a safe derived fallback menu from authoritative state and actual capabilities; it must not invent authority, scope, approval or state transitions to create menu options."
+    },
+    {
+      "id": "INV-126",
+      "rule": "Within the migrated executable transition slice, no HUMAN, AGENT, provider or LLM output may directly mutate authoritative SAFOR state; it must first enter as a typed event/evidence input."
+    },
+    {
+      "id": "INV-127",
+      "rule": "The deterministic reducer is a pure function over a pinned projection set, typed event and pinned models; provider I/O, LLM invocation, wall-clock reads, randomness and arbitrary JSON code execution are forbidden inside the reducer."
+    },
+    {
+      "id": "INV-128",
+      "rule": "Transition candidates are selected from the pinned registry in canonical priority/order; more than one applicable authoritative transition is a fail-closed control failure."
+    },
+    {
+      "id": "INV-129",
+      "rule": "Event replay order is determined by contiguous event sequence, not by timestamps; a duplicate identical event is idempotent and a divergent duplicate event is an integrity failure."
+    },
+    {
+      "id": "INV-130",
+      "rule": "External mutations are represented as effect intents and are never treated as completed until a later provider outcome/readback event provides authoritative evidence."
+    },
+    {
+      "id": "INV-131",
+      "rule": "An unknown external mutation outcome deterministically transitions Control State to RECONCILE_REQUIRED/RECOVERING and emits provider readback intent before any retry."
+    },
+    {
+      "id": "INV-132",
+      "rule": "Canonical state hashing excludes only the stateHash field itself; identical canonical inputs and pinned model revision must yield the same logical output and state hash."
+    },
+    {
+      "id": "INV-133",
+      "rule": "Replay from a verified genesis snapshot through the ordered event sequence must reproduce the stored projection-set state hash or fail closed with replay divergence."
+    },
+    {
+      "id": "INV-134",
+      "rule": "Migration of pre-0.11 projects starts from a verified MIGRATION_GENESIS_SNAPSHOT; SAFOR must never fabricate historical events."
+    },
+    {
+      "id": "INV-135",
+      "rule": "SAFOR 0.11.0-rc.1 claims determinism only for transitions explicitly listed by the deterministic-control model; non-migrated governance rules remain normative but non-executable until migrated."
+    },
+    {
+      "id": "INV-136",
+      "rule": "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance may be evaluated."
+    },
+    {
+      "id": "INV-137",
+      "rule": "Every approved acceptance criterion must be preserved in the Acceptance Contract and reference at least one typed EVIDENCE, REVIEW or AUTHORITY requirement."
+    },
+    {
+      "id": "INV-138",
+      "rule": "A free-text or qualitative criterion may never be directly converted to PASS by an LLM; it must be satisfied through explicit typed evidence, review or authority decision."
+    },
+    {
+      "id": "INV-139",
+      "rule": "A Work Item may enter ACCEPTED only through WORK_ITEM_ACCEPTED with a hash-valid active contract and all typed requirements satisfied."
+    },
+    {
+      "id": "INV-140",
+      "rule": "Evidence used for acceptance must match the Work Item subject and declared evidence type; PINNED requirements require a concrete revisionRef."
+    },
+    {
+      "id": "INV-141",
+      "rule": "When independent review is required, performer and approving reviewer must differ; self-review cannot satisfy the Acceptance Contract."
+    },
+    {
+      "id": "INV-142",
+      "rule": "Agent acceptanceSelfCheck is advisory and can never substitute for required independent review, provider evidence or authority decision."
+    },
+    {
+      "id": "INV-143",
+      "rule": "A recorded REJECTED decision for a required authority blocks acceptance for the current Acceptance Contract revision."
+    },
+    {
+      "id": "INV-144",
+      "rule": "An approved Acceptance Contract is immutable. Material changes require a new governed contract revision and approval; Self-Healing may not relax requirements."
+    },
+    {
+      "id": "INV-145",
+      "rule": "Acceptance ledger records are replay-derived pinned copies of source artifacts/events and must not become an independent writable source of business authority."
+    },
+    {
+      "id": "INV-146",
+      "rule": "Duplicate acceptance record identities under different events must not be appended to the deterministic acceptance ledger."
+    },
+    {
+      "id": "INV-147",
+      "rule": "Work Item ACCEPTED and VALUE_SUPPORTED are distinct; deterministic acceptance does not establish business or reader outcome success."
+    },
+    {
+      "id": "INV-148",
+      "rule": "The SAFOR product repository and every package source are read-only sources and may never become an implicit project workspace."
+    },
+    {
+      "id": "INV-149",
+      "rule": "Every project binds exactly one HUMAN-controlled project workspace of type REMOTE_GIT or LOCAL_GIT before project mutation."
+    },
+    {
+      "id": "INV-150",
+      "rule": "REMOTE_GIT project artifacts reside only in the selected HUMAN repository; remote safor-memory contains control state and no Factory-produced domain work artifacts."
+    },
+    {
+      "id": "INV-151",
+      "rule": "LOCAL_GIT mutating execution requires proven local filesystem and Git repository/history/branch/commit capabilities."
+    },
+    {
+      "id": "INV-152",
+      "rule": "For LOCAL_GIT, .safor/ is MASTER-only control state and is forbidden in worker write scopes."
+    },
+    {
+      "id": "INV-153",
+      "rule": "Package access and project workspace are independent: entitlement cannot select or grant rights to a project workspace, and workspace ownership cannot grant package entitlement."
+    },
+    {
+      "id": "INV-154",
+      "rule": "FREE_PUBLIC packages may resolve from the canonical public SAFOR repository only at an immutable provider revision/blob."
+    },
+    {
+      "id": "INV-155",
+      "rule": "PAID_ENTITLEMENT_REQUIRED package model content must not be embedded in the public SAFOR Framework bundle."
+    },
+    {
+      "id": "INV-156",
+      "rule": "Paid package content may not resolve from PUBLIC_CANONICAL_REPOSITORY; it requires HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus verified entitlement."
+    },
+    {
+      "id": "INV-157",
+      "rule": "A self-asserted entitlement or possession of package JSON is insufficient to satisfy paid package access."
+    },
+    {
+      "id": "INV-158",
+      "rule": "Commercial entitlement never grants Operating Model authority, provider rights, execution mandate or project scope."
+    },
+    {
+      "id": "INV-159",
+      "rule": "Factory/Operating Model compatibility must be proven independently from commercial entitlement."
+    },
+    {
+      "id": "INV-160",
+      "rule": "WEBSITE binds the declared FREE_PUBLIC Website Factory/Operating Model defaults unless the HUMAN explicitly supplies another compatible pair allowed by the Website profile."
+    },
+    {
+      "id": "INV-161",
+      "rule": "SOFTWARE_SAAS and BOOK are commercial creation profiles: both selected Factory and Operating Model must be PAID_ENTITLEMENT_REQUIRED and independently entitled before binding."
+    },
+    {
+      "id": "INV-162",
+      "rule": "Project package snapshots are immutable binding evidence and never a discovery source that expands commercial access."
+    },
+    {
+      "id": "INV-163",
+      "rule": "The public Framework bundle contains public package metadata but no paid Factory or paid Operating Model model content."
+    },
+    {
+      "id": "INV-164",
+      "rule": "Pre-0.12 publicly disclosed prototype package content cannot be treated as confidential commercial distribution evidence."
+    },
+    {
+      "id": "INV-165",
+      "rule": "Project/control data remain HUMAN-owned whether remote or local; SAFOR does not require project artifacts to be stored in an OpenAI- or SAFOR-owned repository."
+    },
+    {
+      "id": "INV-166",
+      "rule": "Every selected Factory and Operating Model is represented as an independently loadable SAFOR_DOMAIN_PACKAGE JSON artifact."
+    },
+    {
+      "id": "INV-167",
+      "rule": "A Creation Profile defines default Factory and Operating Model candidates but MUST NOT make either package non-replaceable."
+    },
+    {
+      "id": "INV-168",
+      "rule": "Factory access and Operating Model access are evaluated independently for the actually selected package IDs and versions."
+    },
+    {
+      "id": "INV-169",
+      "rule": "A mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED pair is permitted only when the active Creation Profile allows mixed access and every paid package has verified entitlement."
+    },
+    {
+      "id": "INV-170",
+      "rule": "Commercial entitlement evidence is external to SAFOR_DOMAIN_PACKAGE content; possession or modification of package JSON cannot self-authorize package use."
+    },
+    {
+      "id": "INV-171",
+      "rule": "Every SAFOR_DOMAIN_PACKAGE must pass declared-contract SHA-256 integrity verification before it may be bound."
+    },
+    {
+      "id": "INV-172",
+      "rule": "Every selected domain package must explicitly support the active Framework version and Creation Type."
+    },
+    {
+      "id": "INV-173",
+      "rule": "Factory and Operating Model may be upgraded or replaced independently, but the resulting pair must pass capability, authority and declared counterpart compatibility checks."
+    },
+    {
+      "id": "INV-174",
+      "rule": "Project bindings reference a materialized package selection and a COMPATIBLE package-compatibility decision before domain execution begins."
+    },
+    {
+      "id": "INV-175",
+      "rule": "The free WEBSITE starter path remains usable without commercial entitlement for its default Website Factory and Website Operating Model; SOFTWARE_SAAS is not part of the free starter."
+    },
+    {
+      "id": "INV-176",
+      "rule": "WEBSITE and SOFTWARE_SAAS are distinct Creation Types with distinct default Factory/Operating Model identities and commercial policies."
+    },
+    {
+      "id": "INV-177",
+      "rule": "The WEBSITE default pair is safor.factory.website-delivery + safor.om.website-team and both are FREE_PUBLIC."
+    },
+    {
+      "id": "INV-178",
+      "rule": "The SOFTWARE_SAAS default pair is safor.factory.software-delivery + safor.om.saas-engineering and both require independently verified commercial entitlement."
+    },
+    {
+      "id": "INV-179",
+      "rule": "A SOFTWARE_SAAS Factory or Operating Model selection with FREE_PUBLIC access mode is invalid even if technical capability compatibility would otherwise pass."
+    },
+    {
+      "id": "INV-180",
+      "rule": "Historical publicly disclosed Software Factory/SaaS Operating Model versions are legacy bytes and MUST NOT be treated as the current protected commercial package source."
+    },
+    {
+      "id": "INV-181",
+      "rule": "A paid package entitlement is usable only when status is ACTIVE and evaluatedAt lies within its validity interval."
+    },
+    {
+      "id": "INV-182",
+      "rule": "A paid entitlement must match the active HUMAN/organization subject, exact package/version grant and commercial-basis SKU; purchase evidence alone is not entitlement."
+    },
+    {
+      "id": "INV-183",
+      "rule": "Entitlement issuer and entitlement verifier trust are supplied by explicit trusted configuration and MUST NOT be inferred from identities declared inside the entitlement record."
+    },
+    {
+      "id": "INV-184",
+      "rule": "ENTITLED_PACKAGE_SOURCE requires external commercial delivery evidence before delivered package bytes may be used."
+    },
+    {
+      "id": "INV-185",
+      "rule": "Commercial delivery evidence binds entitlementId, packageId, exact version and declared-contract artifact digest and must be valid at the explicit evaluation timestamp."
+    },
+    {
+      "id": "INV-186",
+      "rule": "A delivery verifier must be explicitly trusted; self-declared delivery verification is insufficient."
+    },
+    {
+      "id": "INV-187",
+      "rule": "HUMAN_LOADED_PACKAGE may carry a licensed paid artifact without source delivery evidence, but it never bypasses entitlement status, subject, time, issuer or verifier checks."
+    },
+    {
+      "id": "INV-188",
+      "rule": "SAFOR domain distributions share one kernel but may embed different default Factory and Operating Model modules for WEBSITE_CREATION, SAAS_ENGINEERING and BOOK_CREATION."
+    },
+    {
+      "id": "INV-189",
+      "rule": "Loading a SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION preselects its domainId and creationType and MUST suppress redundant HUMAN creation-type selection."
+    },
+    {
+      "id": "INV-190",
+      "rule": "A domain distribution may initialize only when its embedded default Factory and Operating Model both support the distribution domain and pass bidirectional compatibility."
+    },
+    {
+      "id": "INV-191",
+      "rule": "An embedded default Factory or Operating Model remains independently replaceable after initialization; embedding is a default binding, not permanent coupling."
+    },
+    {
+      "id": "INV-192",
+      "rule": "Every replacement Factory and Operating Model must explicitly support the active domainId; replacement may never change domain implicitly."
+    },
+    {
+      "id": "INV-193",
+      "rule": "Factory/Operating Model compatibility is bidirectional: Factory counterpart constraints are checked against the Operating Model and Operating Model counterpart constraints are checked against the Factory."
+    },
+    {
+      "id": "INV-194",
+      "rule": "V2 domain packages carry packageFamily and package-family constraints are enforced independently from exact packageId so compatible Premium versions/families may replace defaults."
+    },
+    {
+      "id": "INV-195",
+      "rule": "A Factory may restrict acceptable Operating Model package families and require capabilities, authorities, work-item types or artifact types from its counterpart."
+    },
+    {
+      "id": "INV-196",
+      "rule": "An Operating Model may restrict acceptable Factory package families and require capabilities, authorities, work-item types or artifact types from its counterpart."
+    },
+    {
+      "id": "INV-197",
+      "rule": "Cross-domain combinations such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model are invalid even when individual capabilities happen to overlap."
+    },
+    {
+      "id": "INV-198",
+      "rule": "PUBLIC_TEST_EVALUATION domain Frameworks may embed paid-mode prerelease test packages in the public repository solely for testing; they are not the protected commercial production package source."
+    },
+    {
+      "id": "INV-199",
+      "rule": "Public visibility of a paid-mode test package or domain Framework never satisfies entitlement; possession remains non-authoritative for commercial access."
+    },
+    {
+      "id": "INV-200",
+      "rule": "Production catalog entries for paid SaaS and Book packages must remain ENTITLED_PACKAGE_SOURCE with no public model path even while public evaluation Frameworks exist."
+    },
+    {
+      "id": "INV-201",
+      "rule": "The SAFOR platform exclusively owns HUMAN-visible response classification, verbosity, structure, progressive disclosure and menu rendering; Factory and Operating Model may supply domain facts, risks, evidence and legitimate decision requirements only."
+    },
+    {
+      "id": "INV-202",
+      "rule": "Every HUMAN-visible output passes the platform response governor after domain fact collection and before rendering; a domain module presentation override is rejected."
+    },
+    {
+      "id": "INV-203",
+      "rule": "Framework detection, technical comparison and safe reversible migration-plan drafting are internal SAFOR orchestration and do not create a HUMAN decision by themselves."
+    },
+    {
+      "id": "INV-204",
+      "rule": "A platform INFORMATIONAL_NOTICE contains at most two sentences and thirty words, hides technical identifiers and offers no choices or terminal menu."
+    },
+    {
+      "id": "INV-205",
+      "rule": "Full technical analysis, evidence and migration mappings remain retained and auditable but are shown only when the HUMAN requests Details or material safety requires disclosure."
+    },
+    {
+      "id": "INV-206",
+      "rule": "A genuine HUMAN decision may be requested only after the Decision Gate identifies non-derivable scope, material alternative, authority, risk, irreversible action or goal conflict; response compression never suppresses such a decision."
+    },
+    {
+      "id": "INV-207",
+      "rule": "A compatible ordinary LLM chat is the primary SAFOR execution surface; no customer-installed SAFOR runtime is required."
+    },
+    {
+      "id": "INV-208",
+      "rule": "Optional reference runtimes may validate or strengthen enforcement but may not be presented as an Endkunden prerequisite."
+    },
+    {
+      "id": "INV-209",
+      "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat."
+    },
+    {
+      "id": "INV-210",
+      "rule": "Git push, polling, inbox creation, automation and host background events never count as HUMAN GO."
+    },
+    {
+      "id": "INV-211",
+      "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain."
+    },
+    {
+      "id": "INV-212",
+      "rule": "Every active chat agent has a stable agentId and a distinct memorable displayName; the name never replaces the ID."
+    },
+    {
+      "id": "INV-213",
+      "rule": "Agent normal reads are limited to identity, personal index, assigned job and explicitly referenced inputs."
+    },
+    {
+      "id": "INV-214",
+      "rule": "Every new dispatched Agent Job binds exact templates for result, error, clarification, capability mismatch and improvement proposal."
+    },
+    {
+      "id": "INV-215",
+      "rule": "Unknown, mismatched or structurally invalid agent responses fail closed and cannot advance MASTER job state."
+    },
+    {
+      "id": "INV-216",
+      "rule": "Product artifact writes and SAFOR control/response writes are separate authorization scopes."
+    },
+    {
+      "id": "INV-217",
+      "rule": "Subagent chat output is limited to one-line STARTED, SUBMITTED, BLOCKED or REBIND_REQUIRED operational status."
+    },
+    {
+      "id": "INV-218",
+      "rule": "Subagents do not conduct domain or governance discussions with the HUMAN; substantive questions and conflicts are Git responses to MASTER."
+    },
+    {
+      "id": "INV-219",
+      "rule": "MASTER is the only fachliche and organizational HUMAN interface for goals, plans, status, decisions, conflicts and integration."
+    },
+    {
+      "id": "INV-220",
+      "rule": "Routine MASTER status uses compact versioned pointer indexes and loads deeper records only when referenced or required."
+    },
+    {
+      "id": "INV-221",
+      "rule": "The active Agent Registry includes every known active, paused, rebind-required or revoked project agent identity."
+    },
+    {
+      "id": "INV-222",
+      "rule": "A BLOCKED, FAILED, clarification or capability-mismatch response stops further mutating job work until MASTER resolution."
+    },
+    {
+      "id": "INV-223",
+      "rule": "Substantial job changes produce a superseding job or dispatch revision and preserve predecessor and decision references."
+    },
+    {
+      "id": "INV-224",
+      "rule": "Factory and Operating Model provide domain facts only; SAFOR platform owns HUMAN and subagent chat rendering contracts."
+    },
+    {
+      "id": "INV-225",
+      "rule": "WAITING_HUMAN_GO may advance only with structured, single-use, job-, agent-, identity-, binding- and dispatch-bound HUMAN-GO evidence."
+    },
+    {
+      "id": "INV-226",
+      "rule": "Agent claim uses optimistic provider concurrency; duplicate or stale GO evidence cannot create a second claim or product mutation."
+    },
+    {
+      "id": "INV-227",
+      "rule": "MASTER may report an expected response as received only after schema-valid, job-bound provider readback or an explicit decision waiving the expectation."
+    },
+    {
+      "id": "INV-228",
+      "rule": "A status index is CURRENT only when its deadline, source revisions and provider readback are verified; otherwise it is STALE or UNKNOWN."
+    },
+    {
+      "id": "INV-229",
+      "rule": "A successful product mutation followed by failed response persistence enters reconciliation and must not repeat the known product mutation."
+    },
+    {
+      "id": "INV-230",
+      "rule": "Traceability reports design, implementation, automated tests, bundle integration, real Git E2E and cross-host evidence as separate dimensions."
+    }
+  ],
+  "evidencePolicy": {
+    "explicitHumanDecisionRequires": [
+      "scope",
+      "decisionType",
+      "versionOrRevision",
+      "source"
+    ],
+    "externalMutationCompletionRequires": [
+      "providerReadback",
+      "stableTargetIdentity",
+      "runReference"
+    ],
+    "cannotInferApprovalFrom": [
+      "uploadedArtifact",
+      "assistantStatement",
+      "workerStatement",
+      "historicalApprovalOutsideDeclaredScope"
+    ],
+    "ambiguousMutationOutcome": "RECONCILE_REQUIRED",
+    "factoryEvidenceContractRequired": true,
+    "sameFactoryBindingRequiredAcrossDiscoveryPlanningExecution": true,
+    "crossFactoryEvidenceSubstitutionForbidden": true
+  },
+  "interrupts": {
+    "STOP": {
+      "effect": "Persist stop decision when authorized, revoke execution mandates, create no new dispatches, never claim remote cancellation without evidence."
+    },
+    "PAUSE": {
+      "effect": "Persist pause where possible; retain resumable state but dispatch no new work."
+    },
+    "RESUME": {
+      "effect": "Reload authoritative state and continue only after re-evaluating guards and required authorization."
+    },
+    "REPLAN": {
+      "effect": "Invalidate superseded open planning/execution bindings while preserving accepted work and evidence."
+    },
+    "STATUS": {
+      "effect": "Read and report authoritative state without advancing the workflow."
+    },
+    "HELP": {
+      "effect": "Explain current state/action without advancing the workflow."
+    },
+    "NEXT_ROUND": {
+      "effect": "Start one SAFOR round from the verified current checkpoint. Advance only through already-authorized and guard-satisfied operations, stop at the next user-relevant checkpoint, then present the refreshed menu."
+    },
+    "VIEW_RECOMMENDATIONS": {
+      "effect": "Rank up to three currently feasible recommendations using the interaction model. Do not persist or execute a recommendation until the user selects an action."
+    },
+    "DETAILS": {
+      "effect": "Explain the current stage, next transition, relevant evidence and constraints in user language without advancing state."
+    }
+  },
+  "compatibility": {
+    "sourceBaseline": "SAFOR 0.13.0-rc.9",
+    "migrationPolicy": "EXPLICIT_NON_DESTRUCTIVE_MIGRATION_ONLY",
+    "legacyProjectPolicy": "Preserve historical objects; exactly one active v0.14 authority chain after migration."
+  },
+  "repositoryPolicyRef": "repository-policy.json",
+  "packageRegistryRef": "package-registry.json",
+  "distribution": {
+    "canonicalSource": {
+      "repository": "empishaj/SAFOR",
+      "root": "v0.13.0",
+      "registry": "package-registry.json",
+      "catalog": "package-catalog.json"
+    },
+    "frameworkArtifact": "SAFOR-FRAMEWORK.json",
+    "resolutionPolicy": "Framework modules are embedded. Creation profiles supply defaults only. Each selected Factory and Operating Model is independently resolved, access-checked, integrity-verified and pinned. FREE_PUBLIC packages may resolve from the canonical public repository at immutable revision/blob or explicit HUMAN-loaded artifacts. PAID_ENTITLEMENT_REQUIRED packages resolve only from HUMAN-loaded or entitled sources with independently verified entitlement.",
+    "publicPaidContentForbidden": true,
+    "offlineFallback": "HUMAN may load a Factory JSON and/or Operating Model JSON directly. Each paid artifact still requires independently verifiable external entitlement evidence, and every selected pair must pass compatibility checks."
+  },
+  "kernelDecisionTypes": [
+    "PROVIDER_SELECTION",
+    "OWNER_SELECTION",
+    "CREATION_TYPE_SELECTION",
+    "PROJECT_MODE_SELECTION",
+    "PROJECT_SELECTION",
+    "SETUP_APPROVAL",
+    "PACKAGE_BINDING_APPROVAL",
+    "PLAN_APPROVAL",
+    "EXECUTION_MANDATE",
+    "REPLAN",
+    "PAUSE",
+    "STOP",
+    "RESUME",
+    "AGENT_IDENTITY_APPROVAL"
+  ],
+  "interactionModelRef": "interaction-model.json",
+  "hostInteraction": {
+    "discoveryActionId": "K01",
+    "requiredBehavior": "Use only chat-native interaction surfaces actually exposed by the host. Prefer native buttons and select controls for GitHub/GitLab, owner, project-mode and repository selection. Never create or require a separate web UI, HTML, CSS or custom color styling.",
+    "fallback": "NATIVE_MARKDOWN"
+  },
+  "humanCommunication": {
+    "profileRef": "interaction-model.json#humanCommunication",
+    "defaultSurface": "SUMMARY",
+    "requiredBehavior": [
+      "Communicate with the HUMAN briefly, warmly and directly.",
+      "Lead with the useful result or decision, not process narration.",
+      "Keep routine checkpoint messages within the configured response budget.",
+      "Do not repeat context the HUMAN already knows.",
+      "Keep technical IDs, evidence detail and state mechanics behind DETAILS unless required for a decision or material risk.",
+      "Encourage the HUMAN only with specific, evidence-grounded progress or a realistic next step.",
+      "If the HUMAN requests depth, switch to expanded detail without sacrificing accuracy.",
+      "During initialization ask only one decision at a time: provider, owner, project mode, then repository/project identity.",
+      "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
+      "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
+      "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
+      "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
+      "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
+      "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
+      "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",
+      "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it.",
+      "Before asking the HUMAN anything, attempt safe derivation/reuse and evaluate the HUMAN Decision Gate.",
+      "After plan approval, keep routine execution, scheduling and agent coordination at LOW or VERY_LOW HUMAN cognitive load.",
+      "Use HUMAN domain language on SUMMARY; keep internal state IDs, leases, dispatch waves, readbacks and recovery classes behind DETAILS unless materially required.",
+      "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval.",
+      "End every SAFOR-generated HUMAN-facing response with exactly one interaction menu.",
+      "Do not render any SAFOR-visible content after the terminal interaction menu.",
+      "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK."
+    ],
+    "responseSchemaRef": "schemas/human-response.schema.json",
+    "terminalMenuRequired": true
+  },
+  "initializationModelRef": "initialization-model.json",
+  "selfHealingModelRef": "self-healing-model.json",
+  "agentWorkspaceModelRef": "agent-workspace-model.json",
+  "multiAgentSchedulerModelRef": "multi-agent-scheduler-model.json",
+  "agentJobContractModelRef": "agent-job-contract-model.json",
+  "moduleSelfHealingModelRef": "module-self-healing-model.json",
+  "humanDecisionGateModelRef": "human-decision-gate-model.json",
+  "deterministicControlModelRef": "deterministic-control-model.json",
+  "eventModelRef": "event-model.json",
+  "predicateRegistryRef": "predicate-registry.json",
+  "transitionRegistryRef": "transition-registry.json",
+  "effectModelRef": "effect-model.json",
+  "acceptanceModelRef": "acceptance-model.json",
+  "workspaceCapabilityVocabulary": [
+    "workspace.project.read",
+    "workspace.project.write",
+    "workspace.local.read",
+    "workspace.local.write",
+    "workspace.git.repository.read",
+    "workspace.git.history.read",
+    "workspace.git.branch.read",
+    "workspace.git.branch.write",
+    "workspace.git.commit.write"
+  ],
+  "packageDistributionModelRef": "package-distribution-model.json",
+  "commercialEntitlementModelRef": "commercial-entitlement-model.json",
+  "workspaceModelRef": "workspace-model.json",
+  "packageCatalogRef": "package-catalog.json",
+  "composablePackageModelRef": "composable-package-model.json",
+  "executionEnvironmentContract": {
+    "format": "SAFOR_CHAT_EXECUTION_MODEL",
+    "schemaVersion": "0.13.0",
+    "id": "SAFOR-DECLARATIVE-CHAT-EXECUTION",
+    "purpose": "Define SAFOR as a JSON-governed product executed by a compatible ordinary LLM chat using the host tools that actually exist, without requiring customer-installed SAFOR runtime software.",
+    "primaryExecutionMode": "DECLARATIVE_LLM_CHAT",
+    "customerInstalledRuntimeRequired": false,
+    "requiredCustomerInstallation": "NONE",
+    "requiredChatCapabilities": [
+      "READ_UPLOADED_JSON",
+      "MAINTAIN_CURRENT_CHAT_CONTEXT",
+      "READ_GIT_ARTIFACTS_WHEN_AUTHORIZED",
+      "WRITE_GIT_ARTIFACTS_WHEN_AUTHORIZED"
+    ],
+    "referenceImplementations": {
+      "role": "OPTIONAL_VALIDATION_AND_HOST_INTEGRATION",
+      "requiredForNormalChatUse": false,
+      "mayStrengthenTechnicalEnforcement": true,
+      "mayNotBePresentedAsCustomerInstallationPrerequisite": true
+    },
+    "truthBoundary": {
+      "jsonDefinesNormativeBehavior": true,
+      "jsonCannotCreateProviderRights": true,
+      "jsonCannotGuaranteeHostCompliance": true,
+      "hostAndProviderEvidenceRemainAuthoritative": true,
+      "technicalLimitationsMustBeDisclosedWithoutChangingTheProductMode": true
+    },
+    "invariants": [
+      "A compatible ordinary LLM chat is the primary SAFOR execution surface.",
+      "No domain path may require a customer-installed SAFOR runtime.",
+      "Optional reference code may validate or strengthen enforcement but never replaces the declarative chat contract.",
+      "Missing optional reference execution is not itself a product blocker.",
+      "Actual Git/provider capabilities and permissions are discovered and verified before effects are claimed."
+    ]
+  },
+  "agentActivationProtocol": {
+    "modelRef": "agent-bootstrap-model.json",
+    "mode": "HUMAN_GO_ONLY",
+    "acceptedCommand": "GO",
+    "gitEventWakeupForbidden": true,
+    "automationWakeupForbidden": true,
+    "oneTimeChatBindingRequired": true,
+    "rebindWhenIdentityUncertain": true
+  },
+  "agentResponseProtocol": {
+    "modelRef": "agent-response-contract-model.json",
+    "templateCatalogRef": "agent-response-templates.json",
+    "schemaRef": "schemas/agent-response.schema.json",
+    "requiredTypes": [
+      "JOB_RESULT",
+      "JOB_ERROR",
+      "CLARIFICATION_REQUEST",
+      "CAPABILITY_MISMATCH",
+      "IMPROVEMENT_PROPOSAL"
+    ],
+    "productAndControlWritesSeparatelyAuthorized": true
+  },
+  "agentChatProtocol": {
+    "modelRef": "agent-chat-contract-model.json",
+    "schemaRef": "schemas/agent-chat-status.schema.json",
+    "mode": "MINIMAL_STATUS_ONLY",
+    "masterOnlyHumanDomainInterface": true
+  },
+  "masterStatusProtocol": {
+    "modelRef": "master-status-index-model.json",
+    "schemaRef": "schemas/master-status-index.schema.json",
+    "normalReadMode": "COMPACT_POINTER_INDEX",
+    "globalFullScanForbiddenForRoutineStatus": true
+  },
+  "agentOrchestration": {
+    "activationModelRef": "agent-activation-model.json",
+    "communicationModelRef": "agent-communication-model.json",
+    "jobContractModelRef": "agent-job-contract-model.json",
+    "responseContractModelRef": "agent-response-contract-model.json",
+    "workspaceModelRef": "agent-workspace-model.json",
+    "schedulerModelRef": "multi-agent-scheduler-model.json",
+    "masterStatusModelRef": "master-status-model.json",
+    "migrationModelRef": "migration-model.json",
+    "executionAttemptModelRef": "execution-attempt-model.json"
+  }
+}

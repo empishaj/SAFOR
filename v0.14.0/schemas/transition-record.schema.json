@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/transition-record.schema.json",
+  "title": "SAFOR Transition Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "transitionRecordId",
+    "transitionId",
+    "eventId",
+    "preStateHash",
+    "postStateHash",
+    "guardResults",
+    "effectIntents",
+    "modelRevision",
+    "outcome"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_TRANSITION_RECORD"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "transitionRecordId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transitionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "eventId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "preStateHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "postStateHash": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "guardResults": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "predicate",
+          "result"
+        ],
+        "properties": {
+          "predicate": {
+            "type": "string",
+            "minLength": 1
+          },
+          "result": {
+            "type": "boolean"
+          },
+          "detail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        }
+      }
+    },
+    "effectIntents": {
+      "type": "array",
+      "items": {
+        "$ref": "effect-intent.schema.json"
+      }
+    },
+    "modelRevision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "enum": [
+        "APPLIED",
+        "IDEMPOTENT_NO_OP",
+        "NO_TRANSITION",
+        "CONTROL_FAILURE",
+        "INTEGRITY_FAILURE"
+      ]
+    }
+  }
+}

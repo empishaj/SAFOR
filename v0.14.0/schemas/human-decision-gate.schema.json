@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:human-decision-gate:0.14.0",
+  "title": "SAFOR HUMAN Decision Gate Model 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "id",
+    "purpose",
+    "schemaRef",
+    "cognitiveLoadPolicyRef",
+    "defaultDecision",
+    "legitimateReasons",
+    "mustNotAskHumanFor",
+    "evaluationAlgorithm",
+    "outcomes",
+    "askPredicate",
+    "decisionReusePolicy",
+    "latePhasePolicy",
+    "interactionRecordRequiredFields"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_HUMAN_DECISION_GATE_MODEL"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "id": {
+      "const": "SAFOR-HUMAN-DECISION-GATE"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "schemaRef": {
+      "const": "schemas/human-decision-gate.schema.json"
+    },
+    "cognitiveLoadPolicyRef": {
+      "const": "interaction-model.json#humanCognitiveLoadPolicy"
+    },
+    "defaultDecision": {
+      "const": "DO_NOT_ASK"
+    },
+    "legitimateReasons": {
+      "type": "array",
+      "minItems": 12,
+      "maxItems": 12,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "requiresRecordedRationale"
+        ],
+        "properties": {
+          "id": {
+            "enum": [
+              "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+              "HUMAN_CONTROLLED_TARGET_SELECTION",
+              "MATERIAL_ALTERNATIVE_CHOICE",
+              "SCOPE_CHANGE_REQUIRED",
+              "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+              "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+              "IRREVERSIBLE_ACTION_REQUIRED",
+              "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+              "GOAL_CONFLICT_REQUIRES_PRIORITY",
+              "RECOVERY_CANNOT_PROCEED_SAFELY",
+              "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+              "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+            ]
+          },
+          "requiresRecordedRationale": {
+            "const": true
+          }
+        }
+      }
+    },
+    "mustNotAskHumanFor": {
+      "type": "array",
+      "minItems": 10,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "evaluationAlgorithm": {
+      "type": "array",
+      "minItems": 10,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "outcomes": {
+      "type": "array",
+      "minItems": 4,
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "ALLOW_ASK",
+          "SUPPRESS_DERIVABLE",
+          "REUSE_EXISTING_DECISION",
+          "BLOCK_INVALID_HUMAN_DELEGATION"
+        ]
+      }
+    },
+    "askPredicate": {
+      "type": "string",
+      "minLength": 1
+    },
+    "decisionReusePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reuseWhen",
+        "reaskWhen",
+        "unchangedApprovalRepetitionForbidden"
+      ],
+      "properties": {
+        "reuseWhen": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "reaskWhen": {
+          "type": "array",
+          "minItems": 4,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "unchangedApprovalRepetitionForbidden": {
+          "const": true
+        }
+      }
+    },
+    "latePhasePolicy": {
+      "type": "object",
+      "minProperties": 6,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "interactionRecordRequiredFields": {
+      "type": "array",
+      "minItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

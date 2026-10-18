@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/project.schema.json",
+  "title": "SAFOR Project Descriptor 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "projectSlug",
+    "title",
+    "creationType",
+    "goal",
+    "createdAt",
+    "workspaceBindingRef",
+    "bindingsRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PROJECT"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectSlug": {
+      "type": "string",
+      "pattern": "^[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creationType": {
+      "enum": [
+        "SOFTWARE_WEBSITE",
+        "BOOK"
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "workspaceBindingRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "bindingsRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

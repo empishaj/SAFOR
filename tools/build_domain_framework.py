@@ -25,7 +25,7 @@ from runtime.bootstrap_policy import (
     validate_domain_package,
 )
 
-PROFILE_CATALOG = ROOT / "v0.13.0/domain-framework-profiles.json"
+PROFILE_CATALOG = ROOT / "v0.14.0/domain-framework-profiles.json"
 BASE_FRAMEWORK = ROOT / "SAFOR-FRAMEWORK.json"
 
 
@@ -124,7 +124,7 @@ def build_distribution(
 
     distribution: Dict[str, Any] = {
         "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
-        "schemaVersion": "0.13.0",
+        "schemaVersion": "0.14.0",
         "distributionVersion": framework["bundleVersion"],
         "distributionId": profile["distributionId"],
         "fileName": profile["distributionFile"],

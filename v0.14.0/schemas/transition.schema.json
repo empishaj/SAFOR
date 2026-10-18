@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/transition.schema.json",
+  "title": "SAFOR Transition Definition",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "transitionId",
+    "priority",
+    "aggregate",
+    "subjectType",
+    "eventTypes",
+    "fromStatus",
+    "guards",
+    "effects",
+    "effectIntents"
+  ],
+  "properties": {
+    "transitionId": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9_]*$"
+    },
+    "priority": {
+      "type": "integer"
+    },
+    "aggregate": {
+      "enum": [
+        "CONTROL",
+        "VALUE_STREAM",
+        "EXECUTION",
+        "ACCEPTANCE"
+      ]
+    },
+    "subjectType": {
+      "enum": [
+        "PROJECT",
+        "WORK_ITEM",
+        "JOB",
+        "EFFECT",
+        "MODULE"
+      ]
+    },
+    "eventTypes": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "fromStatus": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "guards": {
+      "$ref": "predicate.schema.json"
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/stateEffect"
+      }
+    },
+    "effectIntents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/effectIntentTemplate"
+      }
+    }
+  },
+  "$defs": {
+    "path": {
+      "type": "string",
+      "pattern": "^\\$(?:aggregate|subject|control|valueStream|execution|acceptance)(?:\\.[A-Za-z0-9_-]+)+$"
+    },
+    "stateEffect": {
+      "type": "object",
+      "oneOf": [
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "value"
+          ],
+          "properties": {
+            "op": {
+              "const": "SET"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "value": {}
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "eventPath"
+          ],
+          "properties": {
+            "op": {
+              "const": "SET_FROM_EVENT"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "eventPath": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+$"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "by"
+          ],
+          "properties": {
+            "op": {
+              "const": "INCREMENT"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "by": {
+              "type": "number"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "value"
+          ],
+          "properties": {
+            "op": {
+              "const": "APPEND_UNIQUE"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "value": {}
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "match"
+          ],
+          "properties": {
+            "op": {
+              "const": "REMOVE_MATCHING"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "match": {
+              "type": "object"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "statePath"
+          ],
+          "properties": {
+            "op": {
+              "const": "SET_FROM_STATE"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "statePath": {
+              "$ref": "#/$defs/path"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "eventPath"
+          ],
+          "properties": {
+            "op": {
+              "const": "REVOKE_ACTIVE_MANDATES"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "eventPath": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+$"
+            }
+          }
+        },
+        {
+          "additionalProperties": false,
+          "required": [
+            "op",
+            "path",
+            "eventPath"
+          ],
+          "properties": {
+            "op": {
+              "const": "APPEND_FROM_EVENT"
+            },
+            "path": {
+              "$ref": "#/$defs/path"
+            },
+            "eventPath": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9_.-]+$"
+            }
+          }
+        }
+      ]
+    },
+    "effectIntentTemplate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "effectType",
+        "reason"
+      ],
+      "properties": {
+        "effectType": {
+          "enum": [
+            "CREATE_BRANCH",
+            "WRITE_FILE",
+            "UPDATE_FILE",
+            "CREATE_PULL_REQUEST",
+            "MERGE_PULL_REQUEST",
+            "PROVIDER_READBACK",
+            "ACTIVATE_AGENT"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payload": {
+          "type": "object",
+          "default": {}
+        }
+      }
+    }
+  }
+}

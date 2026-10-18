@@ -1,4 +1,4 @@
-"""Pure SAFOR 0.12/0.13 bootstrap policy reference implementation.
+"""Pure SAFOR 0.12/0.13/0.14 bootstrap policy reference implementation.
 
 This module evaluates package-access and HUMAN-workspace boundary rules only.
 It performs no provider I/O, filesystem I/O, purchases, entitlement issuance,
@@ -69,7 +69,7 @@ def entitlement_covers(
 ) -> bool:
     if entitlement.get("format") != "SAFOR_COMMERCIAL_ENTITLEMENT":
         return False
-    if entitlement.get("schemaVersion") not in {"0.12.0", "0.13.0"}:
+    if entitlement.get("schemaVersion") not in {"0.12.0", "0.13.0", "0.14.0"}:
         return False
     grant = entitlement.get("grant", {})
     if grant.get("packageId") != package_id:
@@ -292,7 +292,7 @@ def validate_domain_package(
 
     if package.get("format") != "SAFOR_DOMAIN_PACKAGE":
         errors.append("DOMAIN_PACKAGE_FORMAT_INVALID")
-    if package.get("schemaVersion") != "0.13.0":
+    if package.get("schemaVersion") not in {"0.13.0", "0.14.0"}:
         errors.append("DOMAIN_PACKAGE_SCHEMA_VERSION_INVALID")
     if package_kind not in {"FACTORY", "OPERATING_MODEL"}:
         errors.append("DOMAIN_PACKAGE_KIND_INVALID")

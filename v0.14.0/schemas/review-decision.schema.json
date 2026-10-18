@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/review-decision.schema.json",
+  "title": "SAFOR Review Decision",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "reviewId",
+    "workItemId",
+    "reviewerActorId",
+    "performerActorId",
+    "capability",
+    "independencePolicy",
+    "decision",
+    "evidenceRef",
+    "observedAt",
+    "sourceRevisionRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_REVIEW_DECISION"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "reviewId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "workItemId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewerActorId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "performerActorId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "capability": {
+      "type": "string",
+      "minLength": 1
+    },
+    "independencePolicy": {
+      "enum": [
+        "NONE",
+        "PERFORMER_MUST_DIFFER_FROM_APPROVING_REVIEWER"
+      ]
+    },
+    "decision": {
+      "enum": [
+        "PASS",
+        "CHANGES_REQUIRED"
+      ]
+    },
+    "evidenceRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "sourceRevisionRef": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

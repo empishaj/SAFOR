@@ -1,0 +1,149 @@
+{
+  "format": "SAFOR_PREDICATE_REGISTRY",
+  "schemaVersion": "0.14.0",
+  "id": "safor-predicate-registry",
+  "purpose": "Closed, versioned predicate vocabulary for deterministic SAFOR transition guards. Arbitrary executable expressions are forbidden.",
+  "executionPolicy": {
+    "closedRegistry": true,
+    "arbitraryCodeForbidden": true,
+    "unknownPredicateOutcome": "CONTROL_FAILURE",
+    "pureEvaluationRequired": true,
+    "externalIoForbidden": true,
+    "llmInvocationForbidden": true
+  },
+  "predicates": [
+    {
+      "id": "ALL_DEPENDENCIES_ACCEPTED",
+      "description": "Every dependency of the subject work item is ACCEPTED.",
+      "args": []
+    },
+    {
+      "id": "ACTIVE_MANDATE_COVERS_WORK_ITEM",
+      "description": "At least one active unrevoked Control-State mandate covers the subject work item and every required capability.",
+      "args": []
+    },
+    {
+      "id": "REQUIRED_INPUTS_RESOLVABLE",
+      "description": "All subject work-item input refs resolve to value-stream objects with a non-null artifactRef.",
+      "args": []
+    },
+    {
+      "id": "RESOURCE_DECLARATION_COMPLETE",
+      "description": "The subject work item contains a schema-complete execution.resourceAccess declaration with readSet, writeSet and exclusiveKeys arrays.",
+      "args": []
+    },
+    {
+      "id": "FIELD_EQUALS",
+      "description": "A resolved state/event field equals the provided literal value.",
+      "args": [
+        "path",
+        "value"
+      ]
+    },
+    {
+      "id": "FIELD_IN",
+      "description": "A resolved state/event field is a member of the provided literal set.",
+      "args": [
+        "path",
+        "values"
+      ]
+    },
+    {
+      "id": "EVENT_TYPE_IS",
+      "description": "The event type equals the provided value.",
+      "args": [
+        "value"
+      ]
+    },
+    {
+      "id": "EVENT_SEQUENCE_CONTIGUOUS",
+      "description": "The event sequence is exactly lastAppliedEventSequence + 1.",
+      "args": []
+    },
+    {
+      "id": "SUBJECT_WORK_ITEM_EXISTS",
+      "description": "The event subject resolves to exactly one work item.",
+      "args": []
+    },
+    {
+      "id": "ACCEPTANCE_CONTRACT_NOT_REGISTERED",
+      "description": "No ACTIVE Acceptance Contract is already registered for the subject work item.",
+      "args": []
+    },
+    {
+      "id": "ACCEPTANCE_CONTRACT_VALID_FOR_SUBJECT",
+      "description": "The event Acceptance Contract hash, subject, approved-plan provenance, criteria and typed requirements are structurally consistent with the subject Work Item.",
+      "args": []
+    },
+    {
+      "id": "EVIDENCE_RECORD_VALID_FOR_SUBJECT",
+      "description": "The event evidence record is authoritative-looking, revision-pinned, and its subjectRef equals the subject Work Item.",
+      "args": []
+    },
+    {
+      "id": "REVIEW_RECORD_VALID_FOR_SUBJECT",
+      "description": "The event review record matches the subject Work Item, event decision type and required schema fields.",
+      "args": []
+    },
+    {
+      "id": "AUTHORITY_DECISION_VALID_FOR_SUBJECT",
+      "description": "The event authority decision matches the subject Work Item, event decision type and required schema fields.",
+      "args": []
+    },
+    {
+      "id": "ACTIVE_ACCEPTANCE_CONTRACT_EXISTS",
+      "description": "Exactly one ACTIVE Acceptance Contract exists for the subject Work Item and its hash validates.",
+      "args": []
+    },
+    {
+      "id": "REQUIRED_EVIDENCE_SATISFIED",
+      "description": "Every EVIDENCE requirement referenced by every criterion has a matching replay-ledger evidence record satisfying type, subject and integrity.",
+      "args": []
+    },
+    {
+      "id": "REQUIRED_REVIEWS_SATISFIED",
+      "description": "Every REVIEW requirement referenced by every criterion has a matching PASS review decision for the required capability.",
+      "args": []
+    },
+    {
+      "id": "REVIEW_INDEPENDENCE_SATISFIED",
+      "description": "Every satisfying review respects its configured independence policy.",
+      "args": []
+    },
+    {
+      "id": "REQUIRED_AUTHORITIES_SATISFIED",
+      "description": "Every AUTHORITY requirement referenced by every criterion has a matching APPROVED authority decision.",
+      "args": []
+    },
+    {
+      "id": "NO_REJECTING_AUTHORITY_DECISION",
+      "description": "No recorded REJECTED authority decision exists for a required authority of the active contract.",
+      "args": []
+    },
+    {
+      "id": "ALL_ACCEPTANCE_CRITERIA_SATISFIED",
+      "description": "Every criterion references at least one requirement and every referenced requirement is satisfied.",
+      "args": []
+    },
+    {
+      "id": "REVIEW_EVENT_INDEPENDENCE_VALID",
+      "description": "A review event satisfies its declared independence policy; performer and approving reviewer differ when required.",
+      "args": []
+    },
+    {
+      "id": "EVIDENCE_RECORD_NOT_REGISTERED",
+      "description": "No evidence record with the same evidenceId is already present in the acceptance replay ledger.",
+      "args": []
+    },
+    {
+      "id": "REVIEW_RECORD_NOT_REGISTERED",
+      "description": "No review decision with the same reviewId is already present in the acceptance replay ledger.",
+      "args": []
+    },
+    {
+      "id": "AUTHORITY_DECISION_NOT_REGISTERED",
+      "description": "No authority decision with the same decisionId is already present in the acceptance replay ledger.",
+      "args": []
+    }
+  ]
+}

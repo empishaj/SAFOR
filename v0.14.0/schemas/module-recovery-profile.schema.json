@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:module-recovery-profile:0.14.0",
+  "title": "SAFOR Module Recovery Profile 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profileId",
+    "moduleKey",
+    "moduleClass",
+    "authorityType",
+    "repairability",
+    "failureDetectors",
+    "automaticRepairs",
+    "forbiddenRepairs",
+    "retryBudget",
+    "verification",
+    "escalation"
+  ],
+  "properties": {
+    "profileId": {
+      "type": "string",
+      "pattern": "^MRP-[A-Z0-9_-]+$"
+    },
+    "moduleKey": {
+      "type": "string",
+      "minLength": 1
+    },
+    "moduleClass": {
+      "enum": [
+        "KERNEL",
+        "RUNTIME_MODEL",
+        "POLICY",
+        "REGISTRY",
+        "PROVIDER_ADAPTER",
+        "OPERATING_MODEL",
+        "FACTORY",
+        "SCHEMA",
+        "CONFORMANCE"
+      ]
+    },
+    "authorityType": {
+      "enum": [
+        "EMBEDDED_BOOTSTRAP_AUTHORITY",
+        "PINNED_CANONICAL_SOURCE",
+        "DERIVED_RUNTIME_PROJECTION",
+        "EXTERNAL_PROVIDER_BOUND"
+      ]
+    },
+    "repairability": {
+      "enum": [
+        "IMMUTABLE_VALIDATE_ONLY",
+        "RESTORE_FROM_VERIFIED_SOURCE",
+        "REGENERATE_DERIVED_ONLY",
+        "REBIND_EXTERNAL_CAPABILITY"
+      ]
+    },
+    "sourceOfTruth": {
+      "type": "string",
+      "minLength": 1
+    },
+    "failureDetectors": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "automaticRepairs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "forbiddenRepairs": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "retryBudget": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5
+    },
+    "preconditions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requiredEvidence",
+        "successPredicate"
+      ],
+      "properties": {
+        "requiredEvidence": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "successPredicate": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "escalation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "when",
+        "target"
+      ],
+      "properties": {
+        "when": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "target": {
+          "enum": [
+            "MASTER",
+            "HUMAN",
+            "STOP"
+          ]
+        }
+      }
+    }
+  }
+}
