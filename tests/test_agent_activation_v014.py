@@ -200,9 +200,9 @@ class AgentActivationV014Tests(unittest.TestCase):
         ):
             validate_chat_agent_identity(invalid)
 
-    def test_uncertain_chat_binding_requires_reidentification(self):
+    def test_invalid_personal_inbox_binding_requires_reinitialization(self):
         invalid = copy.deepcopy(self.identity)
-        invalid["chatBinding"]["status"] = "UNVERIFIED"
+        invalid["inboxBinding"]["identityRevision"] = 1
         result = evaluate_human_go_activation(
             identity=invalid,
             agent_state=self.state,
