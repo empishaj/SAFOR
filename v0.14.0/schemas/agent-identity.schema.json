@@ -20,7 +20,7 @@
     "initializedBy",
     "roleIds",
     "capabilityIds",
-    "chatBinding",
+    "inboxBinding",
     "activationContract",
     "communicationContractRef"
   ],
@@ -97,14 +97,14 @@
       },
       "uniqueItems": true
     },
-    "chatBinding": {
-      "$ref": "#/$defs/chatBinding"
-    },
     "activationContract": {
       "$ref": "#/$defs/activationContract"
     },
     "communicationContractRef": {
       "$ref": "#/$defs/immutableRef"
+    },
+    "inboxBinding": {
+      "$ref": "#/$defs/inboxBinding"
     }
   },
   "allOf": [
@@ -145,6 +145,9 @@
                   },
                   "jobPromptTransportRequired": {
                     "const": false
+                  },
+                  "source": {
+                    "const": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT"
                   }
                 }
               }
@@ -209,49 +212,6 @@
         }
       }
     },
-    "chatBinding": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "bindingId",
-        "bindingMode",
-        "status",
-        "establishedAt",
-        "initializedFromPromptRef",
-        "expectedSessionContinuity",
-        "onUncertain"
-      ],
-      "properties": {
-        "bindingId": {
-          "type": "string",
-          "minLength": 1
-        },
-        "bindingMode": {
-          "const": "CONTINUED_CHAT_HISTORY"
-        },
-        "status": {
-          "enum": [
-            "BOUND",
-            "UNVERIFIED",
-            "LOST",
-            "REVOKED"
-          ]
-        },
-        "establishedAt": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "initializedFromPromptRef": {
-          "$ref": "#/$defs/immutableRef"
-        },
-        "expectedSessionContinuity": {
-          "const": true
-        },
-        "onUncertain": {
-          "const": "REIDENTIFICATION_REQUIRED"
-        }
-      }
-    },
     "activationContract": {
       "type": "object",
       "additionalProperties": false,
@@ -288,8 +248,7 @@
           "type": "boolean"
         },
         "source": {
-          "type": "string",
-          "minLength": 1
+          "const": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT"
         },
         "backgroundWakeupAssumed": {
           "type": "boolean"
@@ -331,8 +290,8 @@
             "enum": [
               "LOAD_IDENTITY",
               "VERIFY_IDENTITY_STATUS_ACTIVE",
-              "VERIFY_CHAT_BINDING_BOUND",
               "LOAD_AGENT_STATE",
+              "VERIFY_PERSONAL_INBOX_BINDING",
               "LOAD_PERSONAL_INBOX_INDEX",
               "SELECT_DISCOVERABLE_JOB",
               "READ_AUTHORITATIVE_JOB_JSON",
@@ -347,6 +306,32 @@
         },
         "jobPromptTransportRequired": {
           "type": "boolean"
+        }
+      }
+    },
+    "inboxBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "inboxIndexRef",
+        "jobPathPattern",
+        "agentId",
+        "identityRevision"
+      ],
+      "properties": {
+        "inboxIndexRef": {
+          "$ref": "#/$defs/immutableRef"
+        },
+        "jobPathPattern": {
+          "const": "agents/{agentId}/inbox/{jobId}.json"
+        },
+        "agentId": {
+          "type": "string",
+          "minLength": 3
+        },
+        "identityRevision": {
+          "type": "integer",
+          "minimum": 1
         }
       }
     }
