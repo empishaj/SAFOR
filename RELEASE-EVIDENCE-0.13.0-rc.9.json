@@ -1,0 +1,89 @@
+{
+  "format": "SAFOR_RELEASE_EVIDENCE",
+  "schemaVersion": "1.0",
+  "product": "SAFOR",
+  "version": "0.13.0-rc.9",
+  "status": "MATERIALIZED_AND_LOCALLY_VALIDATED",
+  "createdAt": "2026-10-18T06:55:30Z",
+  "releaseBranch": "safor/framework-0.13.0-rc.9",
+  "materializationRun": {
+    "repository": "empishaj/SAFOR",
+    "runId": "39105757712",
+    "runAttempt": "1"
+  },
+  "source": {
+    "baseVersion": "0.13.0-rc.8",
+    "baseCommit": "086aae928e255bb099b94c507c405e8b82ad03ab",
+    "sourceRoot": "v0.13.0"
+  },
+  "referenceProjectMigration": {
+    "status": "COMPLETED",
+    "projectId": "67454821-9325-41f3-ac41-d72121cfec5f",
+    "projectSlug": "safomwebsite",
+    "controlRepository": "empishaj/safor-memory",
+    "mergeCommit": "85e08eab15b18a86868090d7b18573b9e2484aea",
+    "pullRequest": 4,
+    "currentStateRef": "projects/safomwebsite/state/current.json",
+    "currentStateBlobSha": "8e0d00bb8e7f1aedf70043be761f6378eb924f81",
+    "agentRegistryRef": "projects/safomwebsite/agents/index.json",
+    "agentRegistryBlobSha": "466dcdb608cb22592d97a575b9687c8c513beb7f",
+    "migrationAuditRef": "projects/safomwebsite/audit/rc8-migration-validation.json",
+    "migrationAuditBlobSha": "bc18643d0c23d60094cd5c350bba68f0607d27a8",
+    "agentCount": 9,
+    "typedResponseTemplateCount": 5,
+    "historicalArtifactsPreserved": true,
+    "productRepository": "empishaj/safomwebsite",
+    "productRepositoryHeadUnchangedAtMigration": "1026ff2176d739aeedc506e5970b48528aa8ad23"
+  },
+  "validationCommands": [
+    "python tools/build_bundle.py --check",
+    "python tools/build_domain_framework.py --check",
+    "python tools/validate_safor.py",
+    "python -m unittest discover -s tests -v"
+  ],
+  "artifacts": [
+    {
+      "path": "SAFOR-FRAMEWORK.json",
+      "sha256": "bf3ce4e93d5f375e8611443967258a340f1867a423a83ef1b56b459693a80e30",
+      "bytes": 895497
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-v0.13.0-rc.9.json",
+      "sha256": "bf3ce4e93d5f375e8611443967258a340f1867a423a83ef1b56b459693a80e30",
+      "bytes": 895497
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "sha256": "51184ee666df4c11ccaf05ba5356b04a76dc52cf9f79d17dc1fd8282a4d7ede7",
+      "bytes": 970589
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-SAAS.json",
+      "sha256": "824725d7559a7afc893de21273c05073e53e417c379aa02e4cc17ebb07ec6470",
+      "bytes": 995621
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "sha256": "3a7062af91f1356cd1c14313f5cdcd6dd9199b30604411247a2da3f715104be0",
+      "bytes": 967054
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-SAAS.json",
+      "sha256": "ce1548567cd20c38b2ae49673ae8d6c8bb45c514b4a4b0a4ddbb870cef39ee62",
+      "bytes": 3664
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "sha256": "b6ec7c78e1e2bceedd8c7c201f5ca909f34f3889e06d137f6e35f3fd52e1c1ac",
+      "bytes": 3634
+    }
+  ],
+  "truthBoundary": [
+    "The Framework is declarative JSON and does not create provider permissions.",
+    "Reference-project evidence proves the recorded repository state, not universal cross-host behavior.",
+    "Public paid-domain evaluation bytes do not grant commercial production authorization."
+  ],
+  "artifactCount": 7,
+  "checksumFile": "SHA256SUMS-0.13.0-rc.9.txt",
+  "materializedAt": "2026-10-18T06:55:30Z"
+}

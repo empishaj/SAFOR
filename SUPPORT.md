@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.13.0-rc.8 is a **Release Candidate**.
+SAFOR v0.13.0-rc.9 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 

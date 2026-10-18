@@ -20,7 +20,7 @@ Do not post secrets or exploitable details in a public issue. Contact the reposi
 
 ## Supported version
 
-Security hardening currently targets SAFOR v0.13.0-rc.8 and the free Website Factory/Operating Model 1.1.0 pair.
+Security hardening currently targets SAFOR v0.13.0-rc.9 and the free Website Factory/Operating Model 1.1.0 pair.
 
 
 ## Commercial package boundary

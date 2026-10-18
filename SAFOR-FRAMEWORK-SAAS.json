@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
   "schemaVersion": "0.13.0",
-  "distributionVersion": "0.13.0-rc.8",
+  "distributionVersion": "0.13.0-rc.9",
   "distributionId": "safor.framework.saas",
   "fileName": "SAFOR-FRAMEWORK-SAAS.json",
   "publicationMode": "PUBLIC_TEST_EVALUATION",
@@ -20,7 +20,7 @@
   "framework": {
     "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
     "schemaVersion": "0.13.0",
-    "bundleVersion": "0.13.0-rc.8",
+    "bundleVersion": "0.13.0-rc.9",
     "definitionId": "safor-framework",
     "productName": "SAFOR",
     "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -25231,6 +25231,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:aa9af9d09c8adae220a7b611a76ef635f41d846d590902d5186f1e2b68b37711"
+    "contentDigest": "sha256:e44d5354dddfac8c5b9b71007df9b5e4451664fc7d4c69d66cf0db759bb73877"
   }
 }

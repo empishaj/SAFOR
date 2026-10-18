@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.8**
+Current target: **v0.13.0-rc.9**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 
@@ -119,3 +119,9 @@ The licensing **architecture/product decision is complete**. Final legal license
 ## General Availability definition
 
 GA requires all OPEN gates above to be resolved or explicitly removed from GA scope through a governed HUMAN product decision, with evidence retained at immutable release revisions.
+
+## rc.9 reference-project evidence
+
+The `safomwebsite` control plane migration is provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It contributes a complete nine-agent registry, HUMAN-GO-only identity overlays, personal inbox/response indexes, typed response bindings, a compact MASTER status index and an authoritative current-state pointer. The product repository remained unchanged during this control-plane migration.
+
+This closes only the reference-project migration blocker. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.

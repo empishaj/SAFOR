@@ -4,7 +4,7 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories and Operating Models.
 
-> Current maturity: **v0.13.0-rc.8 — Release Candidate**
+> Current maturity: **v0.13.0-rc.9 — Release Candidate**
 
 ## Product execution model
 
@@ -25,7 +25,7 @@ Use the domain-specific entrypoint:
 
 The Domain Framework already fixes Website, SaaS or Book and embeds the matching default Factory and Operating Model. SAFOR must not ask the user to select the domain again. The additional SaaS/Book test file is entitlement evidence for the exact public test versions; it is not another domain module and never grants production authorization.
 
-`SAFOR-FRAMEWORK.json` and `SAFOR-FRAMEWORK-v0.13.0-rc.8.json` remain the generic shared base Frameworks for engineering and distribution building. They intentionally ask for a Creation Type and are not the simplest end-user entrypoint.
+`SAFOR-FRAMEWORK.json` and `SAFOR-FRAMEWORK-v0.13.0-rc.9.json` remain the generic shared base Frameworks for engineering and distribution building. They intentionally ask for a Creation Type and are not the simplest end-user entrypoint.
 
 ## Platform-owned HUMAN communication
 
@@ -61,7 +61,8 @@ These public access bundles are not purchase evidence, are not transferable and 
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.13.0-rc.8.json` — versioned generic Framework release candidate.
+- `SAFOR-FRAMEWORK-v0.13.0-rc.9.json` — versioned generic Framework release candidate.
+- `RELEASE-EVIDENCE-0.13.0-rc.9.json` — versioned release, migration and validation evidence.
 - `SAFOR-FRAMEWORK.json` — current generic Framework alias.
 - `SAFOR-FRAMEWORK-WEBSITE.json` — end-user Website distribution.
 - `SAFOR-FRAMEWORK-SAAS.json` — end-user public SaaS evaluation distribution.
