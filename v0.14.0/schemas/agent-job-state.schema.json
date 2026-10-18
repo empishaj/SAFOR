@@ -27,7 +27,6 @@
     "transitionHistory",
     "updatedAt",
     "dispatchRevision",
-    "chatBindingId",
     "consumedActivationIds"
   ],
   "properties": {
@@ -173,10 +172,6 @@
     "dispatchRevision": {
       "type": "integer",
       "minimum": 1
-    },
-    "chatBindingId": {
-      "type": "string",
-      "minLength": 3
     },
     "consumedActivationIds": {
       "type": "array",
