@@ -1676,6 +1676,11 @@ def _patch_bootstrap_policy() -> None:
 def _patch_validator(module_map: Mapping[str, Any]) -> None:
     relative = "tools/validate_safor.py"
     text = path(relative).read_text(encoding="utf-8")
+    # A prior integration phase may already have installed the v0.14-native
+    # validator. In that case the old rc.9 regex migration is intentionally
+    # skipped; the validator itself is then exercised after bundle materialization.
+    if 'VERSION = "0.14.0-rc.2"' in text and 'v0.14 package catalog invalid' in text:
+        return
     text = text.replace('kernel_file = load_json("v0.13.0/SAFOR-MASTER.json")', 'kernel_file = load_json("v0.14.0/SAFOR-MASTER.json")')
     text = text.replace(f'if version != "{PREVIOUS_VERSION}":', f'if version != "{TARGET_VERSION}":')
     text = text.replace(f'fail(f"VERSION must be {PREVIOUS_VERSION}, got {{version}}.")', f'fail(f"VERSION must be {TARGET_VERSION}, got {{version}}.")')
