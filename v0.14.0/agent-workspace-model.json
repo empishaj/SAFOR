@@ -17,7 +17,8 @@
     "evidenceRoot": "agents/{agentId}/evidence/{jobId}/",
     "auditRoot": "agents/{agentId}/audit/{jobId}/",
     "masterJobState": "master/jobs/{jobId}.json",
-    "masterResponseResolution": "master/response-resolutions/{responseId}.json"
+    "masterResponseResolution": "master/response-resolutions/{responseId}.json",
+    "agentClaimState": "agents/{agentId}/state.json"
   },
   "ownership": {
     "MASTER_ONLY": [
@@ -49,7 +50,10 @@
     "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
     "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
     "AGENT_RUNS_PREFLIGHT",
-    "AGENT_CLAIMS_WITH_OPTIMISTIC_CONCURRENCY",
+    "AGENT_CAS_WRITES_ONLY_OWN_AGENT_STATE",
+    "PROVIDER_READBACK_CONFIRMS_AGENT_CLAIM",
+    "AGENT_EMITS_PROVIDER_VERIFIED_CLAIM_EVIDENCE",
+    "MASTER_JOB_LIFECYCLE_REMAINS_MASTER_ONLY",
     "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
     "AGENT_WRITES_TYPED_RESPONSE_AND_RESPONSE_INDEX",
     "AGENT_EMITS_ONE_LINE_TERMINAL_CHAT_STATUS",
@@ -68,7 +72,9 @@
     "noSilentJobMutation": true,
     "noFullRepositoryScanInNormalFlow": true,
     "noHostSessionAttestationDependency": true,
-    "identityComesFromPinnedInitializationNotJob": true
+    "identityComesFromPinnedInitializationNotJob": true,
+    "agentClaimCasTargetMustBeAgentOwnedState": true,
+    "masterLifecycleRequiresSeparateMasterTransition": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -80,5 +86,12 @@
     "jobPromptTransportRequired": false,
     "hostSessionBindingRequired": false,
     "rule": "A job is dispatched when MASTER writes the immutable job contract and corresponding personal inbox index entry. The agent never waits for a copied job prompt and never scans globally for work."
+  },
+  "claimAuthority": {
+    "agentClaimTarget": "agents/{agentId}/state.json",
+    "agentClaimWriter": "ASSIGNED_AGENT_ONLY",
+    "masterLifecycleTarget": "master/jobs/{jobId}.json",
+    "masterLifecycleWriter": "MASTER_ONLY",
+    "rule": "The agent atomically claims work only by CAS-writing its own agent state. The agent never writes master/jobs/{jobId}.json. MASTER later reads provider-confirmed agent claim evidence and advances the MASTER-owned lifecycle separately."
   }
 }
