@@ -109,10 +109,15 @@ class AgentJobV014Tests(unittest.TestCase):
         validate_job_state_transition(from_status='VERIFIED', to_status='ACCEPTED', evidence_refs=['acceptance:001'])
         validate_job_state_transition(from_status='ACCEPTED', to_status='INTEGRATED', evidence_refs=['merge:001'])
 
-    def test_go_transition_requires_go_evidence(self):
-        with self.assertRaisesRegex(AgentJobValidationError, 'GO_EVIDENCE_REQUIRED'):
-            validate_job_state_transition(from_status='WAITING_HUMAN_GO', to_status='GO_OBSERVED', evidence_refs=['generic:evidence'])
-        validate_job_state_transition(from_status='WAITING_HUMAN_GO', to_status='GO_OBSERVED', evidence_refs=['go-evidence:activation-001'])
+    def test_go_transition_requires_bound_single_use_evidence(self):
+        context = {'projectId': 'project-001', 'agentId': 'agent-dev-003', 'identityRevision': 2, 'chatBindingId': 'binding-001', 'targetJobId': '0199f0aa-7e40-7abc-8a12-000000000014', 'targetDispatchRevision': 1}
+        evidence = {'format': 'SAFOR_HUMAN_GO_EVIDENCE', 'schemaVersion': '0.14.0', 'activationId': 'activation-001', **context, 'sessionId': 'session-001', 'intent': 'GO', 'source': 'DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT', 'observedAt': '2026-10-17T20:03:00Z', 'singleUse': True, 'jobPromptTransported': False}
+        pointer = self.pointer('projects/example/agents/agent-dev-003/evidence/go-activation-001.json')
+        with self.assertRaisesRegex(AgentJobValidationError, 'STRUCTURED_GO_EVIDENCE_REQUIRED'):
+            validate_job_state_transition(from_status='WAITING_HUMAN_GO', to_status='GO_OBSERVED', evidence_refs=['go-evidence:activation-001'])
+        validate_job_state_transition(from_status='WAITING_HUMAN_GO', to_status='GO_OBSERVED', evidence_refs=[pointer], go_evidence=evidence, expected_go_context=context, consumed_activation_ids=set())
+        with self.assertRaisesRegex(AgentJobValidationError, 'GO_EVIDENCE_ALREADY_CONSUMED'):
+            validate_job_state_transition(from_status='WAITING_HUMAN_GO', to_status='GO_OBSERVED', evidence_refs=[pointer], go_evidence=evidence, expected_go_context=context, consumed_activation_ids={'activation-001'})
 
     def test_minimal_chat_output_for_all_allowed_statuses(self):
         cases = (('READY', None, None, None), ('STARTED', 'wp-014-impl', 'safor/job/wp-014/agent', None), ('SUBMITTED', 'wp-014-impl', None, 'git:response'), ('BLOCKED', 'wp-014-impl', None, 'git:conflict'), ('REIDENTIFICATION_REQUIRED', None, None, None))

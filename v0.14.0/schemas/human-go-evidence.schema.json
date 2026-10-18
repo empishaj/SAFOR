@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:human-go-evidence:0.14.0",
+  "title": "SAFOR HUMAN GO Evidence 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "activationId",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "chatBindingId",
+    "sessionId",
+    "targetJobId",
+    "targetDispatchRevision",
+    "intent",
+    "source",
+    "observedAt",
+    "singleUse",
+    "jobPromptTransported"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_HUMAN_GO_EVIDENCE"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "activationId": {
+      "type": "string",
+      "minLength": 8
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "chatBindingId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "sessionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetJobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "targetDispatchRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "intent": {
+      "const": "GO"
+    },
+    "source": {
+      "const": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT"
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "singleUse": {
+      "const": true
+    },
+    "jobPromptTransported": {
+      "const": false
+    }
+  }
+}

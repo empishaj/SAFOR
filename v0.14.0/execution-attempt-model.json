@@ -1,0 +1,25 @@
+{
+  "format": "SAFOR_EXECUTION_ATTEMPT_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-PARTIAL-WRITE-RECONCILIATION",
+  "purpose": "Prevent duplicate product mutations when product and control repository writes complete only partially.",
+  "schemas": {
+    "attempt": "schemas/execution-attempt.schema.json",
+    "reconciliation": "schemas/reconciliation-record.schema.json"
+  },
+  "writeSequence": [
+    "VERIFY_ACTUAL_PRODUCT_AND_CONTROL_RIGHTS",
+    "CREATE_ATTEMPT_RECORD",
+    "PRODUCT_MUTATION",
+    "PRODUCT_PROVIDER_READBACK",
+    "TYPED_RESPONSE_WRITE",
+    "RESPONSE_PROVIDER_READBACK",
+    "MASTER_INDEX_UPDATE"
+  ],
+  "rules": [
+    "A known product commit is never repeated merely because response persistence failed.",
+    "Every retry reads provider state before deciding whether any mutation remains necessary.",
+    "Unknown external effects enter RECONCILE_REQUIRED.",
+    "When the control response cannot be persisted, chat may show only a minimal persistence-failure status and must not claim that a Git error record exists."
+  ]
+}
