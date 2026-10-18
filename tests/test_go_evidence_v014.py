@@ -35,7 +35,7 @@ class GoEvidenceV014Tests(unittest.TestCase):
             validate_human_go_evidence({"value": "not-a-governed-evidence-but-contains-go"}, expected=self.expected())
 
     def test_foreign_job_agent_binding_and_dispatch_fail(self):
-        for field, value in (("targetJobId", "job-other"), ("agentId", "agent-other"), ("chatBindingId", "binding-other"), ("targetDispatchRevision", 2)):
+        for field, value in (("targetJobId", "job-other"), ("agentId", "agent-other"), ("identityRevision", 1), ("targetDispatchRevision", 2)):
             evidence = self.evidence(); evidence[field] = value
             with self.subTest(field=field), self.assertRaisesRegex(GoEvidenceValidationError, f"GO_EVIDENCE_BINDING_MISMATCH:{field}"):
                 validate_human_go_evidence(evidence, expected=self.expected())
