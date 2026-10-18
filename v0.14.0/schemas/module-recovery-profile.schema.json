@@ -13,7 +13,8 @@
     "failureDetectors",
     "automaticRepairs",
     "forbiddenRepairs",
-    "retryBudget",
+    "initialAutomaticAttemptBudget",
+    "additionalRetryBudget",
     "verification",
     "escalation"
   ],
@@ -86,10 +87,17 @@
         "minLength": 1
       }
     },
-    "retryBudget": {
+    "initialAutomaticAttemptBudget": {
       "type": "integer",
       "minimum": 0,
-      "maximum": 5
+      "maximum": 1,
+      "description": "Number of automatic INITIAL repair executions permitted for one failureFingerprint. This budget is independent from retry accounting."
+    },
+    "additionalRetryBudget": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5,
+      "description": "Number of additional repair executions permitted after the INITIAL attempt. Zero means attemptNumber 2+ is not automatically executable."
     },
     "preconditions": {
       "type": "array",
