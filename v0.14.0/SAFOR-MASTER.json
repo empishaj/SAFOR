@@ -1353,7 +1353,7 @@
     },
     {
       "id": "INV-039",
-      "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed."
+      "rule": "Exactly one creation type is active: WEBSITE, SOFTWARE_SAAS or BOOK. The HUMAN selects it in the generic Framework; a HUMAN-loaded domain distribution explicitly preselects its declared type and suppresses redundant selection. Repository content never selects a type."
     },
     {
       "id": "INV-040",
@@ -2228,7 +2228,7 @@
       "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
       "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
       "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
-      "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
+      "For the generic Framework, ask one creation-type question with Website, Software / SaaS and Buch; for a domain distribution reuse its preselected creationType and do not ask again.",
       "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
       "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
       "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",

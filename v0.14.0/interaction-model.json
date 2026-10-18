@@ -581,14 +581,20 @@
         "preferredSurface": "NATIVE_SINGLE_SELECT",
         "options": [
           {
-            "label": "Software / Website",
-            "intent": "SELECT_CREATION_TYPE_SOFTWARE_WEBSITE"
+            "label": "Website",
+            "intent": "SELECT_CREATION_TYPE_WEBSITE"
+          },
+          {
+            "label": "Software / SaaS",
+            "intent": "SELECT_CREATION_TYPE_SOFTWARE_SAAS"
           },
           {
             "label": "Buch",
             "intent": "SELECT_CREATION_TYPE_BOOK"
           }
-        ]
+        ],
+        "skipWhen": "CONTAINER_FORMAT == SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
+        "preselectedOutcome": "DOMAIN_AND_CREATION_TYPE_PRESELECTED"
       },
       {
         "id": "PROJECT_MODE",

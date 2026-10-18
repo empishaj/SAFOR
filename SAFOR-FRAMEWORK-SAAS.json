@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
   "schemaVersion": "0.14.0",
-  "distributionVersion": "0.14.0-rc.2",
+  "distributionVersion": "0.14.0-rc.3",
   "distributionId": "safor.framework.saas",
   "fileName": "SAFOR-FRAMEWORK-SAAS.json",
   "publicationMode": "PUBLIC_TEST_EVALUATION",
@@ -20,7 +20,7 @@
   "framework": {
     "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
     "schemaVersion": "0.14.0",
-    "bundleVersion": "0.14.0-rc.2",
+    "bundleVersion": "0.14.0-rc.3",
     "definitionId": "safor-framework",
     "productName": "SAFOR",
     "productExpansion": "Systemic AI Factory Orchestration Runtime",
@@ -280,7 +280,7 @@
     "integrityManifest": {
       "kernel": {
         "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "f067b7239fb59c55bcd9a6511dba8ecd19b5cd27",
+        "sourceBlobSha": "5897b92a55d36d4ba265c7b5af6b716f8ae49a6a",
         "selfHealingProfileId": "MRP-KERNEL"
       },
       "initialization": {
@@ -290,7 +290,7 @@
       },
       "interaction": {
         "sourcePath": "v0.14.0/interaction-model.json",
-        "sourceBlobSha": "d36d73dc085777fb6029d83393daad6a9a1c04bf",
+        "sourceBlobSha": "c6bd7b107731d4ee9e80cd793b00e6dabcc4245a",
         "selfHealingProfileId": "MRP-INTERACTION"
       },
       "humanDecisionGate": {
@@ -430,7 +430,7 @@
       },
       "schemaProject": {
         "sourcePath": "v0.14.0/schemas/project.schema.json",
-        "sourceBlobSha": "5f43cf57c7acfbe17e8d4a88a4c7ab7097980a0a",
+        "sourceBlobSha": "8a3d7df15c9489c2906d7586d581948b489aa784",
         "selfHealingProfileId": "MRP-SCHEMAPROJECT"
       },
       "schemaBindings": {
@@ -695,7 +695,7 @@
       },
       "conformance": {
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "6e83be4e02399100cdcffc9de18dc49e6fc14a2e",
+        "sourceBlobSha": "5b9062a7301baf8a158d8ef86a5a1c705dd09468",
         "selfHealingProfileId": "MRP-CONFORMANCE"
       },
       "composablePackageModel": {
@@ -738,7 +738,7 @@
       "kernel": {
         "key": "kernel",
         "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-        "sourceBlobSha": "f067b7239fb59c55bcd9a6511dba8ecd19b5cd27",
+        "sourceBlobSha": "5897b92a55d36d4ba265c7b5af6b716f8ae49a6a",
         "content": {
           "format": "SAFOR_MASTER_BOOTSTRAP",
           "schemaVersion": "0.14.0",
@@ -2094,7 +2094,7 @@
             },
             {
               "id": "INV-039",
-              "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed."
+              "rule": "Exactly one creation type is active: WEBSITE, SOFTWARE_SAAS or BOOK. The HUMAN selects it in the generic Framework; a HUMAN-loaded domain distribution explicitly preselects its declared type and suppresses redundant selection. Repository content never selects a type."
             },
             {
               "id": "INV-040",
@@ -2969,7 +2969,7 @@
               "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
               "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
               "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
-              "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
+              "For the generic Framework, ask one creation-type question with Website, Software / SaaS and Buch; for a domain distribution reuse its preselected creationType and do not ask again.",
               "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
               "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
               "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",
@@ -3464,7 +3464,7 @@
       "interaction": {
         "key": "interaction",
         "sourcePath": "v0.14.0/interaction-model.json",
-        "sourceBlobSha": "d36d73dc085777fb6029d83393daad6a9a1c04bf",
+        "sourceBlobSha": "c6bd7b107731d4ee9e80cd793b00e6dabcc4245a",
         "content": {
           "format": "SAFOR_INTERACTION_MODEL",
           "schemaVersion": "0.14.0",
@@ -4048,14 +4048,20 @@
                 "preferredSurface": "NATIVE_SINGLE_SELECT",
                 "options": [
                   {
-                    "label": "Software / Website",
-                    "intent": "SELECT_CREATION_TYPE_SOFTWARE_WEBSITE"
+                    "label": "Website",
+                    "intent": "SELECT_CREATION_TYPE_WEBSITE"
+                  },
+                  {
+                    "label": "Software / SaaS",
+                    "intent": "SELECT_CREATION_TYPE_SOFTWARE_SAAS"
                   },
                   {
                     "label": "Buch",
                     "intent": "SELECT_CREATION_TYPE_BOOK"
                   }
-                ]
+                ],
+                "skipWhen": "CONTAINER_FORMAT == SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
+                "preselectedOutcome": "DOMAIN_AND_CREATION_TYPE_PRESELECTED"
               },
               {
                 "id": "PROJECT_MODE",
@@ -12671,7 +12677,7 @@
       "schemaProject": {
         "key": "schemaProject",
         "sourcePath": "v0.14.0/schemas/project.schema.json",
-        "sourceBlobSha": "5f43cf57c7acfbe17e8d4a88a4c7ab7097980a0a",
+        "sourceBlobSha": "8a3d7df15c9489c2906d7586d581948b489aa784",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "https://safor.dev/schemas/0.14.0/project.schema.json",
@@ -12711,7 +12717,8 @@
             },
             "creationType": {
               "enum": [
-                "SOFTWARE_WEBSITE",
+                "WEBSITE",
+                "SOFTWARE_SAAS",
                 "BOOK"
               ]
             },
@@ -22921,7 +22928,7 @@
       "conformance": {
         "key": "conformance",
         "sourcePath": "v0.14.0/conformance.json",
-        "sourceBlobSha": "6e83be4e02399100cdcffc9de18dc49e6fc14a2e",
+        "sourceBlobSha": "5b9062a7301baf8a158d8ef86a5a1c705dd09468",
         "content": {
           "format": "SAFOR_CONFORMANCE_SUITE",
           "schemaVersion": "0.14.0",
@@ -23899,7 +23906,7 @@
             },
             {
               "id": "CF-195",
-              "statement": "SOFTWARE_WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
+              "statement": "WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
               "expected": true
             },
             {
@@ -27331,6 +27338,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:7dbf8494034812f3b0c93766a4dc9a4c8f7176893916bd7ad30a24e444ceca4a"
+    "contentDigest": "sha256:cae1b5eca20aff4c1a6f1c5d054e2b031318529d16f516d68942a5bb78ef3c2a"
   }
 }

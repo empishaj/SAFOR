@@ -14,7 +14,7 @@ from runtime.bootstrap_policy import evaluate_domain_framework_pair, validate_do
 from runtime.public_evaluation_access import resolve_public_evaluation_access
 from tools.build_domain_framework import build_distribution, validate_distribution
 
-VERSION = "0.14.0-rc.2"
+VERSION = "0.14.0-rc.3"
 SCHEMA = "0.14.0"
 errors = []
 
