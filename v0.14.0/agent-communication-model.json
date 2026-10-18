@@ -1,0 +1,45 @@
+{
+  "format": "SAFOR_AGENT_COMMUNICATION_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-MINIMAL-AGENT-CHAT",
+  "purpose": "Keep the agent chat limited to activation and terminal status while all domain detail, evidence, errors and questions are persisted as typed Git responses to MASTER.",
+  "humanBoundary": {
+    "masterIsOnlyDomainInterface": true,
+    "agentMayAskHumanDomainQuestions": false,
+    "agentMayNegotiateScopeWithHuman": false,
+    "agentMayPresentLongResultsInChat": false,
+    "agentMayExposeTechnicalEvidenceInChat": false,
+    "detailsPersistedInGit": true
+  },
+  "allowedStatuses": [
+    "READY",
+    "STARTED",
+    "SUBMITTED",
+    "BLOCKED",
+    "REIDENTIFICATION_REQUIRED"
+  ],
+  "budgets": {
+    "maxLines": 1,
+    "maxSentences": 1,
+    "maxWords": 36,
+    "maxCharacters": 360
+  },
+  "patterns": {
+    "READY": "Agent {displayName} ({agentId}) bereit | Status: WAITING_HUMAN_GO",
+    "STARTED": "GO bestätigt | Agent: {displayName} ({agentId}) | Job: {jobKey} | Status: RUNNING | Zielbranch: {targetBranch}",
+    "SUBMITTED": "Job {jobKey} abgeschlossen | Status: SUBMITTED | Ergebnis: {detailsRef}",
+    "BLOCKED": "Job {jobKey} blockiert | Status: BLOCKED | Meldung: {detailsRef} | MASTER-Klärung erforderlich",
+    "REIDENTIFICATION_REQUIRED": "Agentenidentität unsicher | Status: REIDENTIFICATION_REQUIRED | Bitte im MASTER-Chat neue Initialisierung anfordern"
+  },
+  "forbiddenContent": [
+    "DOMAIN_QUESTION",
+    "DOMAIN_ANSWER",
+    "LONG_RESULT_REPORT",
+    "EVIDENCE_DUMP",
+    "SCOPE_NEGOTIATION",
+    "MULTI_OPTION_DECISION",
+    "UNPERSISTED_ERROR_DETAIL",
+    "JOB_PROMPT"
+  ],
+  "terminalRule": "After SUBMITTED, BLOCKED or REIDENTIFICATION_REQUIRED no additional chat content is allowed in the same turn."
+}

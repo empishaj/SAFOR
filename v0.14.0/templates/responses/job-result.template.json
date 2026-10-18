@@ -1,0 +1,20 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.response.job-result",
+  "templateVersion": "1.0.0",
+  "responseType": "JOB_RESULT",
+  "responseSchemaRef": "schemas/agent-response.schema.json",
+  "defaultStatus": "SUBMITTED",
+  "defaultChatStatus": "SUBMITTED",
+  "pathPattern": "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+  "requiredBindings": ["PROJECT_ID", "JOB_ID", "PACKAGE_ID", "WORK_ITEM_ID", "AGENT_ID", "IDENTITY_REVISION", "JOB_CONTRACT_REF", "JOB_CONTRACT_BLOB_SHA", "TARGET_MASTER_REF"],
+  "payloadTemplate": {
+    "completionStatus": "COMPLETED",
+    "outputs": [],
+    "gitTrace": [],
+    "checks": [],
+    "openItems": []
+  },
+  "immutableAfterWrite": true
+}

@@ -1,0 +1,20 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.response.capability-mismatch",
+  "templateVersion": "1.0.0",
+  "responseType": "CAPABILITY_MISMATCH",
+  "responseSchemaRef": "schemas/agent-response.schema.json",
+  "defaultStatus": "BLOCKED",
+  "defaultChatStatus": "BLOCKED",
+  "pathPattern": "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+  "requiredBindings": ["PROJECT_ID", "JOB_ID", "PACKAGE_ID", "WORK_ITEM_ID", "AGENT_ID", "IDENTITY_REVISION", "JOB_CONTRACT_REF", "JOB_CONTRACT_BLOB_SHA", "TARGET_MASTER_REF"],
+  "payloadTemplate": {
+    "expected": "{{EXPECTED_CAPABILITY_SET}}",
+    "available": "{{AVAILABLE_CAPABILITY_SET}}",
+    "risk": "{{RISK}}",
+    "affectedScope": [],
+    "conflict": "{{CONFLICT_OBJECT}}"
+  },
+  "immutableAfterWrite": true
+}

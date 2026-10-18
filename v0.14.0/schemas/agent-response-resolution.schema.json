@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-response-resolution:0.14.0",
+  "title": "SAFOR Agent Response Resolution 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "resolutionId",
+    "projectId",
+    "responseId",
+    "responseRef",
+    "jobId",
+    "masterId",
+    "decisionRef",
+    "resolutionStatus",
+    "supersedingJobId",
+    "resolvedAt",
+    "immutable"
+  ],
+  "properties": {
+    "format": {"const": "SAFOR_AGENT_RESPONSE_RESOLUTION"},
+    "schemaVersion": {"const": "0.14.0"},
+    "resolutionId": {"type": "string", "minLength": 1},
+    "projectId": {"type": "string", "minLength": 1},
+    "responseId": {"type": "string", "minLength": 1},
+    "responseRef": {"$ref": "#/$defs/pointer"},
+    "jobId": {"type": "string", "minLength": 1},
+    "masterId": {"type": "string", "minLength": 1},
+    "decisionRef": {"$ref": "#/$defs/pointer"},
+    "resolutionStatus": {"enum": ["ACKNOWLEDGED", "RESOLVED_BY_DECISION", "SUPERSEDED_BY_JOB", "CLOSED_WITHOUT_CHANGE"]},
+    "supersedingJobId": {"type": ["string", "null"]},
+    "resolvedAt": {"type": "string", "format": "date-time"},
+    "immutable": {"const": true}
+  },
+  "$defs": {
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "ref", "path", "blobSha"],
+      "properties": {
+        "repository": {"type": "string", "minLength": 1},
+        "ref": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "blobSha": {"type": "string", "minLength": 7}
+      }
+    }
+  }
+}

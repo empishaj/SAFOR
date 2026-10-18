@@ -1,10 +1,25 @@
 # SAFOR Multi-Agent Scheduler
 
-SAFOR v0.10 provides a MASTER-owned scheduler for safe parallel work across multiple persistent agent chats.
+SAFOR v0.14 provides a MASTER-owned scheduler for safe parallel work across persistent agents.
 
-## Goal
+## Boundary: scheduling is not chat activation
 
-Use available agent capacity without allowing parallel jobs to overwrite the same resources, violate dependencies, break separation of duties, or lose Git traceability.
+The scheduler may:
+
+- derive READY atomic work;
+- match roles, capabilities and actual provider rights;
+- reserve capacity and conflict domains;
+- create dedicated job branches;
+- materialize immutable jobs and inbox pointers;
+- publish a HUMAN start list.
+
+For a normal `CHAT_AGENT`, the scheduler may **not** start the chat. The dispatch result is:
+
+```text
+WAITING_HUMAN_GO
+```
+
+The HUMAN deliberately types `GO` in each bound agent chat. Git push, polling, automation and host events do not replace this step.
 
 ## Scheduling formula
 
@@ -18,119 +33,142 @@ parallel dispatch capacity
   )
 ```
 
-With six ACTIVE chat agents at one slot each, six mutually conflict-free READY atomic work items can be dispatched in one wave.
-
-## Work-package model
+## Atomic work
 
 A work item is either:
 
-- `COMPOSITE` — planning/container work; never dispatched directly.
-- `ATOMIC` — independently executable and independently assessable agent work.
-
-Composite work must declare child work items and a join policy. The safe baseline join is `ALL_CHILDREN_ACCEPTED`.
+- `COMPOSITE` — planning/container work; never dispatched directly;
+- `ATOMIC` — independently executable and assessable agent work.
 
 Every atomic work item declares:
-- dependencies,
-- immutable read inputs,
-- write conflict domains,
-- exclusive keys,
-- expected outputs,
-- acceptance/evidence requirements,
-- required capabilities,
-- reviewer constraints,
+
+- dependencies and join predicate;
+- required capabilities;
+- immutable inputs;
+- product write conflict domains;
+- exclusive keys;
+- expected outputs;
+- acceptance and evidence requirements;
+- reviewer independence constraints;
 - priority and readiness metadata.
+
+## Eligibility
+
+An agent is eligible only when:
+
+- identity status is `ACTIVE`;
+- registry dispatch is enabled;
+- a normal chat identity has `BOUND` chat binding;
+- required role and capabilities match;
+- at least one scheduling slot is free;
+- separation of duties remains satisfiable;
+- actual provider rights cover the proposed job;
+- no reidentification requirement exists.
 
 ## Conflict model
 
 Parallel execution is allowed only when:
-- dependencies are already satisfied,
-- reads are pinned to immutable revisions,
-- write conflict domains do not overlap,
-- exclusive keys do not overlap,
-- dedicated job branches are unique,
-- agent capacities are free,
-- mandates, provider rights and separation of duties pass.
 
-Unknown mutation overlap is treated as a conflict and serialized.
+- dependencies are already accepted;
+- reads are pinned to immutable revisions;
+- write conflict domains do not overlap;
+- exclusive keys do not overlap;
+- dedicated branches are unique;
+- capacities are free;
+- mandates, rights and review constraints pass.
+
+`UNKNOWN` or `PROJECT_WIDE` mutation scope conflicts with all other mutating jobs. Ambiguity is serialized.
+
+Read-only jobs do not conflict solely because they inspect the same immutable input.
+
+## Deterministic order
+
+Candidates are ordered by:
+
+1. priority descending;
+2. ready-since timestamp ascending;
+3. work-item ID ascending;
+4. agent ID ascending.
+
+This makes equivalent scheduling inputs replayable.
 
 ## Dispatch waves
 
-The MASTER persists each scheduling decision in:
+MASTER persists every decision in:
 
 ```text
-projects/{projectSlug}/master/dispatch-waves/{waveId}.json
+master/dispatch-waves/{waveId}.json
 ```
 
-A wave contains the considered READY work, the selected work-item-to-agent assignments and the acquired resource leases.
+A wave records considered work, assignments, job pointers, branch names, acquired leases and the activation boundary:
+
+```text
+normalChatAgentsActivated = false
+dispatchOutcome = WAITING_HUMAN_GO
+humanGoRequired = true
+```
 
 ## Resource leases
 
-Before dispatch, the MASTER reserves:
-- one agent slot,
-- write conflict domains,
-- exclusive keys,
-- dedicated job branch names.
+Before publication, MASTER reserves:
 
-Leases live under:
+- agent slot;
+- write conflict domain;
+- exclusive key;
+- dedicated branch.
+
+Lease states are:
 
 ```text
-projects/{projectSlug}/master/resource-leases/{leaseId}.json
+RESERVED
+→ ACTIVE
+→ RELEASE_PENDING
+→ RELEASED
 ```
 
-Lease expiry never means "safe to reassign". It means `RECONCILE_REQUIRED` until the MASTER proves the previous agent cannot still create external effects.
+If expiry or external effects are uncertain:
+
+```text
+RECONCILE_REQUIRED
+```
+
+Expiry never authorizes silent reassignment. MASTER must first prove whether the previous agent can still create effects.
 
 ## Git isolation
 
-Every mutating agent job uses a dedicated Git branch:
+Every mutating job uses a dedicated branch:
 
 ```text
 safor/job/{jobKey}/{agentKey}
 ```
 
-The job is based on an immutable commit. Agents do not write the default branch and do not write another job's branch.
+The job is based on an immutable commit. Agents do not write the default branch, another job's branch or undeclared paths.
 
-Parallel contribution branches are integrated only after their own results are VERIFIED and all required review/integration gates pass.
+Branches are integrated only after:
 
-## HUMAN-readable results
+- typed response submission;
+- provider readback;
+- required independent review;
+- MASTER verification;
+- acceptance criteria and evidence gates;
+- explicit integration authority.
 
-Every job writes both:
+## Separation of duties
 
-```text
-agents/{agentId}/outbox/{jobId}.result.json
-agents/{agentId}/outbox/{jobId}.result.md
-```
+The author cannot perform a configured independent review of the same contribution. Review work is a separate atomic job. If no independent eligible reviewer exists, the work is blocked with `SOD_CONFLICT`.
 
-The Markdown report contains:
-1. Objective
-2. Work Performed
-3. Artifacts Changed
-4. Git Trace
-5. Verification
-6. Result
-7. Risks and Limits
-8. Open Items
+## HUMAN start list
 
-The JSON pins the Markdown report by repository, ref/path, blob SHA and commit SHA.
-
-Mutating job results additionally identify:
-- base commit,
-- job branch,
-- all result commit SHAs,
-- head commit,
-- changed paths,
-- PR/MR reference when present,
-- provider readback evidence.
-
-## Example: six-agent wave
+After safe publication, MASTER provides a compact list:
 
 ```text
-Wave W-17
-├── Agent A -> WP-04A -> branch safor/job/wp04a/agent-a
-├── Agent B -> WP-04B -> branch safor/job/wp04b/agent-b
-├── Agent C -> WP-05  -> branch safor/job/wp05/agent-c
-├── Agent D -> WP-07A -> branch safor/job/wp07a/agent-d
-├── Agent E -> WP-07B -> branch safor/job/wp07b/agent-e
-└── Agent F -> WP-08  -> branch safor/job/wp08/agent-f
+Display name | agentId | jobKey | bound chat | instruction = GO
 ```
 
-This wave is valid only if all six jobs are dependency-ready and mutually conflict-free.
+The HUMAN does not transport the job body. Each agent retrieves it through its own index.
+
+## Status and fan-in
+
+Downstream work becomes READY only when its declared join predicate is satisfied by `ACCEPTED` upstream work. `RESPONSE_SUBMITTED` alone is insufficient.
+
+MASTER reports utilization, startable agents, running work, responses, reviews and blockers through compact status indices instead of rescanning the repository.

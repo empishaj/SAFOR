@@ -1,0 +1,180 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-inbox-index:0.14.0",
+  "title": "SAFOR Agent Inbox Index 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "revision",
+    "authoritativeLifecycle",
+    "sourceOfTruth",
+    "verificationRule",
+    "directoryEnumerationRequired",
+    "entries",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_INBOX_INDEX"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "authoritativeLifecycle": {
+      "const": false
+    },
+    "sourceOfTruth": {
+      "const": "master/jobs/{jobId}.json"
+    },
+    "verificationRule": {
+      "const": "READ_MASTER_JOB_STATE_BEFORE_CLAIM"
+    },
+    "directoryEnumerationRequired": {
+      "const": false
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/entry"
+      }
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "ref",
+        "path",
+        "blobSha"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    },
+    "entry": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "jobId",
+        "jobRef",
+        "masterJobStateRef",
+        "humanJobRef",
+        "dispatchRevision",
+        "discoverabilityState",
+        "activationState",
+        "queuedAt",
+        "packageId",
+        "workItemId",
+        "planSequence",
+        "dispatchSequence",
+        "roleId",
+        "requiredIdentityRevision"
+      ],
+      "properties": {
+        "jobId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "jobRef": {
+          "$ref": "#/$defs/pointer"
+        },
+        "masterJobStateRef": {
+          "$ref": "#/$defs/pointer"
+        },
+        "humanJobRef": {
+          "$ref": "#/$defs/pointer"
+        },
+        "dispatchRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "discoverabilityState": {
+          "enum": [
+            "AVAILABLE",
+            "REWORK_AVAILABLE",
+            "WITHDRAWN",
+            "SUPERSEDED",
+            "ACCEPTED"
+          ]
+        },
+        "activationState": {
+          "enum": [
+            "WAITING_HUMAN_GO",
+            "ACTIVATED",
+            "NOT_CLAIMABLE"
+          ]
+        },
+        "queuedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "workItemId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "planSequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dispatchSequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "roleId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requiredIdentityRevision": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    }
+  }
+}
