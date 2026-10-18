@@ -1,5 +1,20 @@
 # Changelog
 
+## 0.14.0-rc.5
+
+- Replaces unverifiable host chat/session binding with pinned Agent Identity plus a personal Git INBOX binding.
+- MASTER dispatches immutable jobs through `agents/{agentId}/inbox/{jobId}.json` and the personal inbox index.
+- HUMAN `GO` remains the exclusive start signal; the job itself is never transported through the chat message.
+- Keeps identityRevision, Job assignment, dispatchRevision, role/skill/mandate checks, provider rights, CAS and exact provider readback fail-closed.
+- Adds dedicated inbox-pull audit regression coverage and materializes all current Framework distributions reproducibly.
+- Synchronizes release metadata and documentation with the rc.5 Framework.
+
+## 0.14.0-rc.4
+
+- Consolidates the rc.3 review remediation: active/superseded conformance, workspace-specific initialization, HUMAN response classes, exact provider-confirmed GO claims and persistence XOR.
+- Introduces canonical release facts and synchronized traceability.
+- Materializes reproducible rc.4 Framework distributions and release evidence.
+
 ## 0.14.0-rc.2
 
 - Integrates the complete v0.14 orchestration contract into every uploadable Framework distribution.
