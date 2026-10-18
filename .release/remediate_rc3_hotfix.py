@@ -74,3 +74,14 @@ write("v0.14.0/module-self-healing-model.json", recovery)
 readiness_path = ROOT / "PRODUCT-READINESS.md"
 readiness = readiness_path.read_text(encoding="utf-8").replace("92/92", "93/93")
 readiness_path.write_text(readiness, encoding="utf-8")
+
+# The ordinary BLOCKED path still requires a Git detailsRef. The new narrow
+# persistence-failure exception deliberately emits a different fail-closed
+# error when neither a Git reference nor complete persistence context exists.
+test_path = ROOT / "tests/test_agent_job_v014.py"
+test_text = test_path.read_text(encoding="utf-8")
+test_text = test_text.replace(
+    "self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_REQUIRES_JOB_AND_DETAILS_REF')",
+    "self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT')",
+)
+test_path.write_text(test_text, encoding="utf-8")
