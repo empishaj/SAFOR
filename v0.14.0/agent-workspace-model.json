@@ -17,7 +17,9 @@
     "evidenceRoot": "agents/{agentId}/evidence/{jobId}/",
     "auditRoot": "agents/{agentId}/audit/{jobId}/",
     "masterJobState": "master/jobs/{jobId}.json",
-    "masterResponseResolution": "master/response-resolutions/{responseId}.json"
+    "masterResponseResolution": "master/response-resolutions/{responseId}.json",
+    "inboxIndexSemantics": "MUTABLE_MASTER_OWNED_DISCOVERABILITY_PROJECTION_AT_STABLE_LOCATION",
+    "inboxBootstrapRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
   },
   "ownership": {
     "MASTER_ONLY": [
@@ -44,7 +46,7 @@
     "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
     "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
     "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
-    "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_PERSONAL_INBOX_INDEX",
+    "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_CURRENT_PERSONAL_INBOX_INDEX_FROM_BOUND_LOCATION",
     "AGENT_SELECTS_NEXT_ELIGIBLE_PERSONAL_INBOX_JOB",
     "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
     "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
@@ -68,7 +70,9 @@
     "noSilentJobMutation": true,
     "noFullRepositoryScanInNormalFlow": true,
     "noHostSessionAttestationDependency": true,
-    "identityComesFromPinnedInitializationNotJob": true
+    "identityComesFromPinnedInitializationNotJob": true,
+    "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
+    "identityRemainsStableWhenInboxIndexChanges": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -79,6 +83,8 @@
     "activation": "EXPLICIT_HUMAN_GO",
     "jobPromptTransportRequired": false,
     "hostSessionBindingRequired": false,
-    "rule": "A job is dispatched when MASTER writes the immutable job contract and corresponding personal inbox index entry. The agent never waits for a copied job prompt and never scans globally for work."
+    "rule": "A job is dispatched when MASTER writes the immutable job contract and updates the personal inbox index at the stable bound locator. The identity's bootstrap inbox blob is provenance only and may become stale after dispatch; it is never used for current job discovery. The agent never waits for a copied job prompt and never scans globally for work.",
+    "discoverabilityIndexLocationSemantics": "STABLE_REPOSITORY_REF_PATH_LOCATOR_WITH_MUTABLE_CONTENT",
+    "bootstrapIndexRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
   }
 }
