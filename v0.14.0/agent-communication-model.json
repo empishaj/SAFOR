@@ -71,5 +71,27 @@
       "After provider recovery, persist only the missing response and reconcile its index.",
       "Keep the chat fallback to one line and route the HUMAN to MASTER."
     ]
+  },
+  "persistenceXorContract": {
+    "appliesToStatus": "BLOCKED",
+    "variants": {
+      "PERSISTED_RESPONSE": {
+        "detailsRef": "REQUIRED_NONEMPTY",
+        "persistence": "MUST_BE_NULL",
+        "authoritativeResponsePersisted": true
+      },
+      "PERSISTENCE_FAILURE": {
+        "detailsRef": "MUST_BE_NULL",
+        "persistenceState": "FAILED",
+        "authoritativeResponsePersisted": false,
+        "requiredFields": [
+          "attemptId",
+          "phase",
+          "reasonCode"
+        ]
+      }
+    },
+    "mutuallyExclusive": true,
+    "ambiguousCombinationOutcome": "REJECT"
   }
 }
