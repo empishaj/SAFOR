@@ -26,7 +26,7 @@ def redigest_distribution(distribution):
 
 class PublicEvaluationAccessTests(unittest.TestCase):
     def setUp(self):
-        self.catalog = load_json("v0.13.0/package-catalog.json")
+        self.catalog = load_json("v0.14.0/package-catalog.json")
         self.saas_distribution = load_json("SAFOR-FRAMEWORK-SAAS.json")
         self.saas_access = load_json("SAFOR-TEST-ACCESS-SAAS.json")
         self.book_distribution = load_json("SAFOR-FRAMEWORK-BOOK-CREATION.json")

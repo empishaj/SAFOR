@@ -1,0 +1,153 @@
+{
+  "format": "SAFOR_AGENT_ACTIVATION_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-HUMAN-GO-CHAT-ACTIVATION",
+  "purpose": "Define one-time agent chat identity bootstrap and subsequent deliberate HUMAN-GO activation without job prompt transport or automatic chat wake-up.",
+  "scope": {
+    "normalChatAgents": true,
+    "serviceAgentsSeparate": true,
+    "endCustomerRuntimeInstallationRequired": false,
+    "normativeRulesEmbeddedInFramework": true,
+    "referenceRuntimeOptionalForVerification": true
+  },
+  "identityInvariants": [
+    "A CHAT_AGENT has one stable agentId and a separate HUMAN-readable displayName.",
+    "displayName must not equal agentId after normalization.",
+    "The identity is bound to projectId, masterId, controlRepository and workspaceRoot.",
+    "Uncertain or lost chat continuity changes the effective state to REIDENTIFICATION_REQUIRED.",
+    "Identity must never be guessed from job content, display name or repository location."
+  ],
+  "initializationProtocol": {
+    "performedOncePerContinuedChat": true,
+    "preparedBy": "MASTER",
+    "humanAction": "PASTE_MASTER_GENERATED_INITIALIZATION_PROMPT_ONCE",
+    "requiredBindings": [
+      "CONTROL_REPOSITORY",
+      "PROJECT_ID",
+      "AGENT_ID",
+      "DISPLAY_NAME",
+      "IDENTITY_REF",
+      "AGENT_STATE_REF",
+      "INBOX_INDEX_REF",
+      "COMMUNICATION_CONTRACT_REF"
+    ],
+    "validationSteps": [
+      "READ_PINNED_IDENTITY",
+      "VERIFY_IDENTITY_BLOB",
+      "VERIFY_PROJECT_AND_MASTER_BINDING",
+      "VERIFY_CHAT_BINDING_STATUS_BOUND",
+      "READ_AGENT_STATE",
+      "READ_PERSONAL_INBOX_INDEX",
+      "CONFIRM_READY_FOR_HUMAN_GO"
+    ],
+    "jobPromptTransportRequired": false,
+    "onValidationFailure": "REIDENTIFICATION_REQUIRED"
+  },
+  "chatAgentActivationContract": {
+    "activationMode": "HUMAN_GO_REQUIRED",
+    "acceptedHumanMessage": "GO",
+    "trimWhitespace": true,
+    "caseSensitive": false,
+    "additionalTextAllowed": false,
+    "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+    "backgroundWakeupAssumed": false,
+    "gitEventActivationAllowed": false,
+    "pollingActivationAllowed": false,
+    "automationActivationAllowed": false,
+    "hostTriggerActivationAllowed": false,
+    "schedulerMayActivateChat": false,
+    "schedulerOutcomeBeforeGo": "WAITING_HUMAN_GO",
+    "activationEvidenceRequiredBeforeClaim": true,
+    "activationEvidenceAuthority": "CHAT_LOCAL_ASSERTION_NOT_CRYPTOGRAPHIC_HUMAN_SIGNATURE",
+    "claimMode": "ATOMIC_COMPARE_AND_SWAP_WITH_SINGLE_USE_GO_EVIDENCE",
+    "stringSubstringEvidenceForbidden": true
+  },
+  "onHumanGo": {
+    "allowedReadsInOrder": [
+      "PINNED_IDENTITY",
+      "AGENT_STATE",
+      "PERSONAL_INBOX_INDEX",
+      "SELECTED_JOB_CONTRACT",
+      "SELECTED_MASTER_JOB_STATE",
+      "JOB_REFERENCED_INPUTS_ONLY"
+    ],
+    "forbiddenDiscovery": [
+      "GLOBAL_REPOSITORY_SEARCH",
+      "OTHER_AGENT_INBOX_READ",
+      "PROJECT_TREE_FULL_SCAN",
+      "UNREFERENCED_ARTIFACT_DISCOVERY"
+    ],
+    "preClaimChecks": [
+      "IDENTITY_ACTIVE",
+      "CHAT_BINDING_BOUND",
+      "IDENTITY_REVISION_MATCH",
+      "DISCOVERABLE_JOB_AVAILABLE",
+      "JOB_AGENT_ASSIGNMENT_MATCH",
+      "JOB_DISPATCH_REVISION_MATCH",
+      "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
+      "ROLE_AND_SKILL_MATCH",
+      "MANDATE_ACTIVE",
+      "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT"
+    ],
+    "failClosed": true
+  },
+  "reidentificationProtocol": {
+    "triggers": [
+      "CHAT_HISTORY_MISSING_OR_UNCERTAIN",
+      "CHAT_BINDING_ID_MISMATCH",
+      "IDENTITY_REVISION_MISMATCH",
+      "CONTROL_REPOSITORY_UNAVAILABLE",
+      "IDENTITY_BLOB_MISMATCH",
+      "AGENT_CANNOT_PROVE_OWN_IDENTITY"
+    ],
+    "effect": [
+      "NO_JOB_CLAIM",
+      "NO_PRODUCT_MUTATION",
+      "NO_RESPONSE_PATH_GUESSING",
+      "EMIT_MINIMAL_REIDENTIFICATION_STATUS"
+    ],
+    "requiredHumanPath": "RETURN_TO_MASTER_FOR_NEW_INITIALIZATION_PROMPT"
+  },
+  "goEvidenceContract": {
+    "format": "SAFOR_HUMAN_GO_EVIDENCE",
+    "schemaVersion": "0.14.0",
+    "requiredFields": [
+      "activationId",
+      "projectId",
+      "agentId",
+      "identityRevision",
+      "chatBindingId",
+      "sessionId",
+      "targetJobId",
+      "targetDispatchRevision",
+      "intent",
+      "source",
+      "observedAt",
+      "singleUse",
+      "jobPromptTransported"
+    ],
+    "constants": {
+      "intent": "GO",
+      "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+      "singleUse": true,
+      "jobPromptTransported": false
+    },
+    "schemaRef": "schemas/human-go-evidence.schema.json"
+  },
+  "atomicClaimContract": {
+    "expectedState": "WAITING_HUMAN_GO",
+    "requiredExpectedRevision": true,
+    "evidenceBindingFields": [
+      "projectId",
+      "agentId",
+      "identityRevision",
+      "chatBindingId",
+      "targetJobId",
+      "targetDispatchRevision",
+      "activationId"
+    ],
+    "singleUseEnforced": true,
+    "providerCompareAndSwapRequired": true,
+    "onConflict": "RECONCILE_REQUIRED"
+  }
+}

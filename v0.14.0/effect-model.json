@@ -1,0 +1,37 @@
+{
+  "format": "SAFOR_EFFECT_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "safor-effect-model",
+  "purpose": "Separate deterministic state decisions from nondeterministic provider/host mutations.",
+  "principles": {
+    "reducerNeverExecutesExternalEffect": true,
+    "effectIntentIsNotCompletionEvidence": true,
+    "providerOutcomeReturnsAsEvent": true,
+    "unknownMutationOutcomeRequiresReconciliation": true,
+    "readbackRequiredForMutationCompletion": true
+  },
+  "stateEffectOperations": [
+    "SET",
+    "SET_FROM_EVENT",
+    "APPEND_UNIQUE",
+    "INCREMENT",
+    "REMOVE_MATCHING",
+    "SET_FROM_STATE",
+    "REVOKE_ACTIVE_MANDATES",
+    "APPEND_FROM_EVENT"
+  ],
+  "externalEffectTypes": [
+    "CREATE_BRANCH",
+    "WRITE_FILE",
+    "UPDATE_FILE",
+    "CREATE_PULL_REQUEST",
+    "MERGE_PULL_REQUEST",
+    "PROVIDER_READBACK",
+    "ACTIVATE_AGENT"
+  ],
+  "providerOutcomes": [
+    "EFFECT_SUCCEEDED",
+    "EFFECT_FAILED",
+    "EFFECT_OUTCOME_UNKNOWN"
+  ]
+}

@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:human-cognitive-load-policy:0.14.0",
+  "title": "SAFOR HUMAN Cognitive Load Policy 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "objective",
+    "schemaRef",
+    "principles",
+    "loadLevels",
+    "phaseProfiles",
+    "adaptiveLoadRules",
+    "heuristicLoadEstimate",
+    "questionPolicy"
+  ],
+  "properties": {
+    "objective": {
+      "const": "MAXIMIZE_NECESSARY_HUMAN_CONTRIBUTION_MINIMIZE_EXTRANEOUS_SYSTEM_LOAD"
+    },
+    "schemaRef": {
+      "const": "schemas/human-cognitive-load-policy.schema.json"
+    },
+    "principles": {
+      "type": "object",
+      "minProperties": 9,
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    },
+    "loadLevels": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "VERY_LOW",
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ],
+      "properties": {
+        "VERY_LOW": {
+          "type": "string",
+          "minLength": 1
+        },
+        "LOW": {
+          "type": "string",
+          "minLength": 1
+        },
+        "MEDIUM": {
+          "type": "string",
+          "minLength": 1
+        },
+        "HIGH": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "phaseProfiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "BOOTSTRAP",
+        "DISCOVERY",
+        "PLANNING",
+        "SCHEDULING",
+        "AGENT_COORDINATION",
+        "EXECUTION",
+        "RECOVERY",
+        "OUTCOME",
+        "CLOSING"
+      ],
+      "properties": {
+        "BOOTSTRAP": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "DISCOVERY": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "PLANNING": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "SCHEDULING": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "AGENT_COORDINATION": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "EXECUTION": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "RECOVERY": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "OUTCOME": {
+          "$ref": "#/$defs/phaseProfile"
+        },
+        "CLOSING": {
+          "$ref": "#/$defs/phaseProfile"
+        }
+      }
+    },
+    "adaptiveLoadRules": {
+      "type": "object",
+      "minProperties": 8,
+      "additionalProperties": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "heuristicLoadEstimate": {
+      "$ref": "#/$defs/heuristic"
+    },
+    "questionPolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maxNewDecisionContextsPerTurn",
+        "askOnlyMinimumNecessaryQuestion",
+        "decisionReasonMustBeRecorded",
+        "decisionReasonNeedNotBeShownUnlessUseful",
+        "noQuestionWhenAnswerSafelyDerivable",
+        "noQuestionWhenUnchangedDecisionReusable"
+      ],
+      "properties": {
+        "maxNewDecisionContextsPerTurn": {
+          "const": 1
+        },
+        "askOnlyMinimumNecessaryQuestion": {
+          "const": true
+        },
+        "decisionReasonMustBeRecorded": {
+          "const": true
+        },
+        "decisionReasonNeedNotBeShownUnlessUseful": {
+          "const": true
+        },
+        "noQuestionWhenAnswerSafelyDerivable": {
+          "const": true
+        },
+        "noQuestionWhenUnchangedDecisionReusable": {
+          "const": true
+        }
+      }
+    }
+  },
+  "$defs": {
+    "phaseProfile": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "targetLoad",
+        "purpose",
+        "maxNewDecisionsPerTurn",
+        "humanInteractionDefault",
+        "technicalDetailDefault",
+        "temporaryEscalationReasons"
+      ],
+      "properties": {
+        "targetLoad": {
+          "enum": [
+            "VERY_LOW",
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "maxNewDecisionsPerTurn": {
+          "const": 1
+        },
+        "humanInteractionDefault": {
+          "enum": [
+            "GUIDED",
+            "DIALOGUE",
+            "DECISION_WHEN_NEEDED",
+            "NONE",
+            "EXCEPTION_ONLY",
+            "ESCALATION_ONLY",
+            "SUMMARY"
+          ]
+        },
+        "technicalDetailDefault": {
+          "const": "HIDDEN"
+        },
+        "allowDeepQuestions": {
+          "type": "boolean"
+        },
+        "masterMustRecommendPreferredOption": {
+          "type": "boolean"
+        },
+        "showSummaryBeforeDetail": {
+          "type": "boolean"
+        },
+        "humanContributionRequired": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "temporaryEscalationReasons": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "NON_DERIVABLE_HUMAN_INTENT_OR_CONTEXT",
+              "HUMAN_CONTROLLED_TARGET_SELECTION",
+              "MATERIAL_ALTERNATIVE_CHOICE",
+              "SCOPE_CHANGE_REQUIRED",
+              "NEW_OR_EXPANDED_AUTHORITY_REQUIRED",
+              "MATERIAL_RISK_ACCEPTANCE_REQUIRED",
+              "IRREVERSIBLE_ACTION_REQUIRED",
+              "BUSINESS_OR_PRODUCT_DECISION_REQUIRED",
+              "GOAL_CONFLICT_REQUIRES_PRIORITY",
+              "RECOVERY_CANNOT_PROCEED_SAFELY",
+              "BUSINESS_OUTCOME_JUDGMENT_REQUIRED",
+              "GOVERNANCE_OR_IDENTITY_APPROVAL_REQUIRED"
+            ]
+          }
+        }
+      }
+    },
+    "factor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "maxPoints"
+      ],
+      "properties": {
+        "maxPoints": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        }
+      }
+    },
+    "heuristic": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "notPsychometricMeasure",
+        "purpose",
+        "range",
+        "factors",
+        "thresholds",
+        "phaseMaximumWithoutExplicitEscalation"
+      ],
+      "properties": {
+        "notPsychometricMeasure": {
+          "const": true
+        },
+        "purpose": {
+          "type": "string",
+          "minLength": 1
+        },
+        "range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "min",
+            "max"
+          ],
+          "properties": {
+            "min": {
+              "const": 0
+            },
+            "max": {
+              "const": 100
+            }
+          }
+        },
+        "factors": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "decisionComplexity",
+            "newContext",
+            "choiceCount",
+            "contextSwitching",
+            "technicalTerminologyExposure"
+          ],
+          "properties": {
+            "decisionComplexity": {
+              "$ref": "#/$defs/factor"
+            },
+            "newContext": {
+              "$ref": "#/$defs/factor"
+            },
+            "choiceCount": {
+              "$ref": "#/$defs/factor"
+            },
+            "contextSwitching": {
+              "$ref": "#/$defs/factor"
+            },
+            "technicalTerminologyExposure": {
+              "$ref": "#/$defs/factor"
+            }
+          }
+        },
+        "thresholds": {
+          "type": "object",
+          "minProperties": 4
+        },
+        "phaseMaximumWithoutExplicitEscalation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "BOOTSTRAP",
+            "DISCOVERY",
+            "PLANNING",
+            "SCHEDULING",
+            "AGENT_COORDINATION",
+            "EXECUTION",
+            "RECOVERY",
+            "OUTCOME",
+            "CLOSING"
+          ],
+          "properties": {
+            "BOOTSTRAP": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "DISCOVERY": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "PLANNING": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "SCHEDULING": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "AGENT_COORDINATION": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "EXECUTION": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "RECOVERY": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "OUTCOME": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            },
+            "CLOSING": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 100
+            }
+          }
+        }
+      }
+    }
+  }
+}

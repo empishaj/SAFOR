@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-chat-output:0.14.0",
+  "title": "SAFOR Minimal Agent Chat Output 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "status",
+    "projectId",
+    "agentId",
+    "displayName",
+    "jobKey",
+    "targetBranch",
+    "detailsRef",
+    "text",
+    "terminal",
+    "containsDomainDetail"
+  ],
+  "properties": {
+    "format": {"const": "SAFOR_AGENT_CHAT_OUTPUT"},
+    "schemaVersion": {"const": "0.14.0"},
+    "status": {"enum": ["READY", "STARTED", "SUBMITTED", "BLOCKED", "REIDENTIFICATION_REQUIRED"]},
+    "projectId": {"type": "string", "minLength": 1},
+    "agentId": {"type": "string", "minLength": 3},
+    "displayName": {"type": "string", "minLength": 3},
+    "jobKey": {"type": ["string", "null"]},
+    "targetBranch": {"type": ["string", "null"]},
+    "detailsRef": {"type": ["string", "null"]},
+    "text": {"type": "string", "minLength": 1, "maxLength": 360, "pattern": "^[^\\n\\r]+$"},
+    "terminal": {"type": "boolean"},
+    "containsDomainDetail": {"const": false}
+  }
+}

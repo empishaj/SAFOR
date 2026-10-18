@@ -1,0 +1,573 @@
+{
+  "format": "SAFOR_SELF_HEALING_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-CONSERVATIVE-SELF-HEALING-0.14",
+  "purpose": "Conservative SAFOR recovery policy including independently selectable domain-package integrity, entitlement, compatibility and HUMAN-workspace boundaries.",
+  "principles": {
+    "conservativeByDefault": true,
+    "evidenceDriven": true,
+    "repairWithinExistingAuthorityOnly": true,
+    "verifyEveryRepair": true,
+    "immutableFailureHistory": true,
+    "boundedRetries": true,
+    "noSilentScopeExpansion": true,
+    "noHumanDecisionInference": true,
+    "noGateBypass": true,
+    "noForcePush": true,
+    "noDestructiveDeleteByDefault": true,
+    "moduleProfileRequired": true,
+    "exactModuleCoverageRequired": true,
+    "failClosedOnRecoveryControlFailure": true,
+    "derivedOnlyRegeneration": true,
+    "noSemanticAutoRewrite": true
+  },
+  "lifecycle": [
+    "DETECT",
+    "CLASSIFY",
+    "RESOLVE_SUBJECT_MODULE",
+    "LOAD_MODULE_RECOVERY_PROFILE",
+    "CHECK_REPAIR_ELIGIBILITY",
+    "PLAN_REPAIR",
+    "EXECUTE_REPAIR",
+    "VERIFY_REPAIR",
+    "RESUME_OR_ESCALATE"
+  ],
+  "failureClasses": [
+    {
+      "id": "SH-01",
+      "name": "TRANSIENT_PROVIDER_ERROR",
+      "examples": [
+        "temporary provider error",
+        "rate-limit recovery after provider indicates retry is allowed",
+        "temporary transport failure"
+      ],
+      "automaticRepair": "RETRY_SAME_IDEMPOTENT_OPERATION",
+      "defaultRetryBudget": 2,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-02",
+      "name": "READBACK_MISMATCH_OR_UNKNOWN_EFFECT",
+      "examples": [
+        "write response returned but final state is unclear",
+        "provider timeout after mutation"
+      ],
+      "automaticRepair": "RECONCILE_BEFORE_ANY_RETRY",
+      "defaultRetryBudget": 0,
+      "requiresReconciliation": true
+    },
+    {
+      "id": "SH-03",
+      "name": "STALE_REVISION_CONFLICT",
+      "examples": [
+        "expected branch head changed",
+        "optimistic-lock conflict"
+      ],
+      "automaticRepair": "REFRESH_STATE_AND_REEVALUATE",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-04",
+      "name": "MISSING_DERIVABLE_CONTROL_ARTIFACT",
+      "examples": [
+        "missing generated index",
+        "missing derived non-authoritative projection"
+      ],
+      "automaticRepair": "REGENERATE_FROM_AUTHORITATIVE_SOURCES",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-05",
+      "name": "WORK_RESULT_NEEDS_REWORK",
+      "examples": [
+        "review requests changes",
+        "acceptance criterion not satisfied"
+      ],
+      "automaticRepair": "ROUTE_TO_EXISTING_REWORK_PATH",
+      "defaultRetryBudget": 0,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-06",
+      "name": "MISSING_PERMISSION_OR_TOOL",
+      "examples": [
+        "write permission revoked",
+        "required provider tool unavailable"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-07",
+      "name": "POLICY_OR_GUARD_VIOLATION",
+      "examples": [
+        "operation outside mandate",
+        "human gate required",
+        "separation-of-duties violation"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-08",
+      "name": "STATE_OR_SCHEMA_CORRUPTION",
+      "examples": [
+        "authoritative state invalid",
+        "binding integrity failure",
+        "schema mismatch"
+      ],
+      "automaticRepair": "RESTORE_ONLY_FROM_VERIFIED_PRIOR_OR_AUTHORITATIVE_SOURCE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_RESTORE_IS_NOT_UNAMBIGUOUS"
+    },
+    {
+      "id": "SH-09",
+      "name": "RETRY_BUDGET_EXHAUSTED",
+      "examples": [
+        "same recoverable failure repeats beyond budget"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-10",
+      "name": "MODULE_INTEGRITY_OR_COVERAGE_FAILURE",
+      "examples": [
+        "embedded module blob differs from integrity manifest",
+        "module lacks recovery profile",
+        "duplicate recovery profile"
+      ],
+      "automaticRepair": "RELOAD_EXPECTED_MODULE_OR_STOP_IF_PROFILE_COVERAGE_INVALID",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-11",
+      "name": "JOB_CONTRACT_BINDING_FAILURE",
+      "examples": [
+        "job role binding mismatch",
+        "skill source/blob mismatch",
+        "authorization/return-route mismatch",
+        "immutable input mismatch"
+      ],
+      "automaticRepair": "BLOCK_JOB_AND_REBUILD_ONLY_BEFORE_DISPATCH_OR_CREATE_SUPERSEDING_JOB",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_SEMANTICS_OR_AUTHORITY_WOULD_CHANGE"
+    },
+    {
+      "id": "SH-12",
+      "name": "DERIVED_PROJECTION_FAILURE",
+      "examples": [
+        "job.md missing or blob mismatch",
+        "inbox index missing/stale",
+        "derived status projection missing"
+      ],
+      "automaticRepair": "REGENERATE_FROM_VERIFIED_AUTHORITATIVE_SOURCE",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-13",
+      "name": "PACKAGE_OR_MODEL_BINDING_FAILURE",
+      "examples": [
+        "factory/operating-model package blob mismatch",
+        "registry binding points to unexpected version",
+        "model reference unresolved"
+      ],
+      "automaticRepair": "RESTORE_EXPECTED_PINNED_PACKAGE_OR_BLOCK",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-14",
+      "name": "PROVIDER_CAPABILITY_DRIFT",
+      "examples": [
+        "provider permission revoked",
+        "host tool unavailable",
+        "declared adapter capability no longer observable"
+      ],
+      "automaticRepair": "REFRESH_AND_REBIND_ACTUAL_CAPABILITIES_WITHOUT_ELEVATION",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_REQUIRED_CAPABILITY_REMAINS_MISSING"
+    },
+    {
+      "id": "SH-15",
+      "name": "SCHEDULER_LEASE_OR_CAPACITY_FAILURE",
+      "examples": [
+        "agent slot count drift",
+        "resource lease conflict",
+        "expired lease with uncertain external effect",
+        "stale ready set"
+      ],
+      "automaticRepair": "RECOMPUTE_DERIVED_SCHEDULER_STATE_AND_RECONCILE_UNCERTAIN_EFFECTS",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": "WHEN_EXTERNAL_EFFECTS_ARE_UNCERTAIN"
+    },
+    {
+      "id": "SH-16",
+      "name": "SCHEMA_VALIDATION_FAILURE",
+      "examples": [
+        "schema module invalid",
+        "subject does not validate",
+        "schema version mismatch"
+      ],
+      "automaticRepair": "RESTORE_SCHEMA_OR_REGENERATE_ONLY_DERIVED_SUBJECT",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_AUTHORITATIVE_SUBJECT_WOULD_REQUIRE_SEMANTIC_CHANGE"
+    },
+    {
+      "id": "SH-17",
+      "name": "OPERATING_MODEL_OR_FACTORY_SEMANTIC_MISMATCH",
+      "examples": [
+        "role/authority mapping inconsistent",
+        "flow graph invalid",
+        "evidence/planning contract mismatch"
+      ],
+      "automaticRepair": "RESTORE_PINNED_PACKAGE_OR_BLOCK",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_PINNED_SOURCE_ITSELF_IS_INVALID_OR_CHANGE_IS_REQUIRED"
+    },
+    {
+      "id": "SH-18",
+      "name": "SELF_HEALING_CONTROL_FAILURE",
+      "examples": [
+        "self-healing model invalid",
+        "module recovery profile model invalid",
+        "recovery recursion guard triggered"
+      ],
+      "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-19",
+      "name": "HUMAN_INTERACTION_GOVERNANCE_FAILURE",
+      "examples": [
+        "human decision gate invalid",
+        "cognitive-load policy invalid",
+        "unnecessary repeated approval detected",
+        "technical interaction surface violates phase load target"
+      ],
+      "automaticRepair": "RESTORE_VERIFIED_INTERACTION_GOVERNANCE_OR_SUPPRESS_NONESSENTIAL_ASK",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "ONLY_MINIMUM_SAFE_BLOCKER_IF_GOVERNANCE_CANNOT_BE_RESTORED"
+    },
+    {
+      "id": "SH-20",
+      "name": "HUMAN_RESPONSE_GOVERNANCE_FAILURE",
+      "examples": [
+        "Interactive HUMAN response has no terminal menu or has more than one menu",
+        "Platform INFORMATIONAL_NOTICE contains a terminal menu or migration option list",
+        "Factory or Operating Model attempts to control visible response text, length or structure",
+        "Default SUMMARY exceeds the platform response budget without a Details request or material safety reason",
+        "SAFOR-visible content appears after an interactive terminal menu"
+      ],
+      "automaticRepair": "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE_AND_SAFE_TERMINAL_MENU",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "ONLY_IF_A_VALID_NON_AUTHORITY_EXPANDING_FALLBACK_MENU_CANNOT_BE_DERIVED"
+    },
+    {
+      "id": "SH-21",
+      "name": "DETERMINISTIC_CONTROL_FAILURE",
+      "examples": [
+        "projection state hash mismatch",
+        "event sequence gap",
+        "divergent duplicate event",
+        "unknown predicate identifier",
+        "ambiguous authoritative transition",
+        "replay state hash divergence"
+      ],
+      "automaticRepair": "RESTORE_VERIFIED_DETERMINISTIC_CONTROL_MODULES_OR_REPLAY_DERIVED_PROJECTION",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_AUTHORITATIVE_STATE_DIVERGENCE_OR_MISSING_EVENT_CANNOT_BE_RECONCILED_FROM_VERIFIED_EVIDENCE"
+    },
+    {
+      "id": "SH-22",
+      "name": "DETERMINISTIC_ACCEPTANCE_FAILURE",
+      "examples": [
+        "Acceptance Contract hash mismatch",
+        "acceptance criterion has no typed requirement",
+        "evidence subject/type/integrity mismatch",
+        "independent review violated by self-review",
+        "required authority approval absent or rejected",
+        "duplicate acceptance record identity",
+        "acceptance replay divergence"
+      ],
+      "automaticRepair": "RESTORE_VERIFIED_ACCEPTANCE_MODEL_OR_REPLAY_DERIVED_ACCEPTANCE_LEDGER",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_APPROVED_ACCEPTANCE_CONTRACT_OR_REQUIRED_HUMAN_AUTHORITY_MUST_CHANGE"
+    },
+    {
+      "id": "SH-23",
+      "name": "PACKAGE_ACCESS_OR_WORKSPACE_BOUNDARY_FAILURE",
+      "examples": [
+        "paid package resolution attempted from public canonical repository",
+        "missing or unverifiable commercial entitlement",
+        "package source selected as project workspace",
+        "canonical SAFOR repository selected as project target",
+        "LOCAL_GIT selected without proven local Git/read/write capabilities",
+        "worker write scope intersects local .safor control root",
+        "remote project missing writable HUMAN-controlled safor-memory"
+      ],
+      "automaticRepair": "REFRESH_DERIVED_PACKAGE_CATALOG_OR_REOBSERVE_WORKSPACE_CAPABILITIES_ONLY",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_PACKAGE_PURCHASE_OR_ENTITLEMENT_OR_PROJECT_LOCATION_OR_LOCAL_HOST_ACCESS_MUST_CHANGE"
+    },
+    {
+      "id": "SH-24",
+      "name": "COMPOSABLE_DOMAIN_PACKAGE_FAILURE",
+      "examples": [
+        "SAFOR_DOMAIN_PACKAGE declared-contract digest mismatch",
+        "package ID namespace does not match FACTORY or OPERATING_MODEL kind",
+        "selected package does not support active Framework version",
+        "selected package does not support active Creation Type",
+        "paid selected Factory or Operating Model lacks independently verified entitlement",
+        "Factory/Operating Model capability or authority compatibility fails",
+        "materialized package selection or compatibility decision is missing or inconsistent",
+        "entitlement is revoked, suspended, expired, not yet valid or bound to a different subject",
+        "entitlement issuer or verifier is not trusted by the active verification context",
+        "ENTITLED_PACKAGE_SOURCE lacks delivery evidence",
+        "commercial package delivery evidence is expired or binds the wrong entitlement/package/version/digest",
+        "replacement package does not support active domainId",
+        "Factory package family is not accepted by selected Operating Model",
+        "Operating Model package family is not accepted by selected Factory",
+        "Factory-to-Operating-Model counterpart requirements fail",
+        "Operating-Model-to-Factory counterpart requirements fail"
+      ],
+      "automaticRepair": "RELOAD_OR_REVERIFY_THE_SAME_SELECTED_PACKAGE_BYTES_AND_REEVALUATE_DOMAIN_AND_BIDIRECTIONAL_COMPATIBILITY_WITHOUT_CHANGING_DOMAIN_OR_COUNTERPART_SELECTION",
+      "defaultRetryBudget": 1,
+      "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
+    },
+    {
+      "id": "SH-25",
+      "name": "AGENT_IDENTITY_BINDING_UNCERTAIN",
+      "examples": [
+        "chat history missing",
+        "identity revision mismatch",
+        "agent cannot prove bound chat identity"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true,
+      "requiredOutcome": "REBIND_REQUIRED"
+    },
+    {
+      "id": "SH-26",
+      "name": "AGENT_RESPONSE_CONTRACT_INVALID",
+      "examples": [
+        "unknown response type",
+        "missing template reference",
+        "job/agent binding mismatch"
+      ],
+      "automaticRepair": "RESTORE_TEMPLATE_OR_REISSUE_JOB_BEFORE_EXECUTION",
+      "defaultRetryBudget": 0,
+      "requiresHuman": "WHEN_MASTER_CANNOT_REISSUE_WITHOUT_NEW_DECISION"
+    },
+    {
+      "id": "SH-27",
+      "name": "MASTER_STATUS_INDEX_STALE",
+      "examples": [
+        "stale response pointer",
+        "registry/index mismatch"
+      ],
+      "automaticRepair": "REGENERATE_DERIVED_INDEX_FROM_AUTHORITATIVE_POINTERS",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": false
+    },
+    {
+      "id": "SH-31",
+      "name": "INVALID_OR_REUSED_HUMAN_GO_EVIDENCE",
+      "examples": [
+        "foreign job GO evidence",
+        "stale dispatch revision",
+        "duplicate activationId"
+      ],
+      "automaticRepair": "NONE",
+      "defaultRetryBudget": 0,
+      "requiresHuman": true
+    },
+    {
+      "id": "SH-32",
+      "name": "PRODUCT_COMMIT_RESPONSE_PERSISTENCE_PARTIAL_FAILURE",
+      "examples": [
+        "product commit read back but control response write failed"
+      ],
+      "automaticRepair": "RECONCILE_AND_RETRY_RESPONSE_ONLY",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": true
+    },
+    {
+      "id": "SH-33",
+      "name": "MASTER_STATUS_TRUTH_OR_FRESHNESS_FAILURE",
+      "examples": [
+        "missing response readback",
+        "expired status index",
+        "source revision mismatch"
+      ],
+      "automaticRepair": "REGENERATE_DERIVED_INDEX_FROM_VERIFIED_POINTERS",
+      "defaultRetryBudget": 1,
+      "requiresReconciliation": true
+    }
+  ],
+  "eligibilityRules": [
+    "The repair must stay inside the currently active mandate and bound package policies.",
+    "The repair must not create a new business, product, risk or governance decision.",
+    "The repair must be idempotent or have an explicit reconciliation/compensation strategy.",
+    "Required provider capabilities and rights must be proven immediately before repair.",
+    "The authoritative pre-repair state must be captured or referenced.",
+    "A repair must define success evidence before it runs.",
+    "Any ambiguity about external side effects requires RECONCILE_REQUIRED before retry.",
+    "The subject module must resolve to exactly one module recovery profile before any automatic repair.",
+    "The repair action must be allowed by both the failure class and the resolved module recovery profile.",
+    "A module profile marked IMMUTABLE_VALIDATE_ONLY may never be semantically rewritten automatically.",
+    "A module profile marked REGENERATE_DERIVED_ONLY may mutate only declared derived artifacts, never its authoritative source.",
+    "A module profile marked REBIND_EXTERNAL_CAPABILITY may only re-observe/rebind actual capability state and never elevate permissions.",
+    "If the self-healing model or module recovery model cannot itself be verified, automatic recovery fails closed and SAFOR stops/escalates.",
+    "Interaction recovery may simplify or suppress a nonessential question, but may never infer a HUMAN decision, approval, risk acceptance or new authority.",
+    "If HUMAN interaction governance is invalid, internal authorized work must not use that failure as permission to broaden authority or bypass a required HUMAN gate.",
+    "A terminal-menu repair may only regenerate derived HUMAN presentation artifacts and must not mutate authoritative project state to manufacture an available action.",
+    "Terminal-menu presence never authorizes a HUMAN decision request; Decision Gate outcome remains independently authoritative.",
+    "Deterministic-control recovery may restore only pinned verified control definitions or regenerate/replay declared derived projection state; it may never invent a missing event, HUMAN decision, provider outcome or historical transition.",
+    "Replay divergence is an integrity failure. Automatic recovery may not overwrite authoritative evidence merely to make hashes match.",
+    "Unknown predicates, arbitrary executable transition expressions and ambiguous authoritative transitions fail closed.",
+    "Acceptance recovery may restore only pinned acceptance definitions or replay/regenerate the derived acceptance ledger from verified events; it may never fabricate evidence, PASS reviews, approvals or requirement satisfaction.",
+    "A failed independent-review or authority requirement is a business/governance fact, not a repairable presentation defect.",
+    "Acceptance Contract mutation after approval requires a new governed contract revision; Self-Healing must not edit requirements to make work pass.",
+    "Commercial recovery may re-read public catalog metadata or re-observe actual entitlement/workspace evidence, but may never create, forge, extend or infer entitlement.",
+    "Workspace recovery may not move project artifacts to SAFOR product/package repositories or to a different location without explicit HUMAN selection.",
+    "LOCAL_GIT recovery may not silently downgrade to non-Git filesystem execution.",
+    "Paid package resolution failure cannot be repaired by reading historical/public prototype package content."
+  ],
+  "forbiddenAutomaticRepairs": [
+    "FORCE_PUSH",
+    "HISTORY_REWRITE",
+    "DELETE_REPOSITORY",
+    "DELETE_AUTHORITATIVE_STATE_WITHOUT_VERIFIED_RESTORE",
+    "BYPASS_REQUIRED_REVIEW",
+    "BYPASS_HUMAN_GATE",
+    "EXPAND_EXECUTION_MANDATE",
+    "ACCEPT_RISK_FOR_HUMAN",
+    "MERGE_WITH_FAILED_REQUIRED_CHECKS",
+    "CHANGE_OPERATING_MODEL_OR_FACTORY_BINDING",
+    "CHANGE_SECURITY_OR_COMPLIANCE_POLICY",
+    "INVENT_MISSING_EVIDENCE",
+    "AUTO_REWRITE_AUTHORITATIVE_JOB_CONTRACT",
+    "AUTO_CHANGE_FACTORY_OR_OPERATING_MODEL_SEMANTICS",
+    "AUTO_COERCE_AUTHORITATIVE_STATE_TO_PASS_SCHEMA",
+    "AUTO_ELEVATE_PROVIDER_PERMISSION",
+    "AUTO_GENERATE_MISSING_MODULE_RECOVERY_PROFILE",
+    "AUTO_MARK_CONFORMANCE_FAILURE_AS_PASS",
+    "INFER_HUMAN_APPROVAL_DURING_INTERACTION_RECOVERY",
+    "RELAX_HUMAN_DECISION_GATE_TO_CONTINUE",
+    "INVENT_AUTHORITY_OR_STATE_TRANSITION_TO_POPULATE_TERMINAL_MENU",
+    "REMOVE_TERMINAL_MENU_REQUIREMENT_TO_CONTINUE_RENDERING",
+    "FABRICATE_MISSING_EVENT",
+    "ALTER_EVENT_SEQUENCE_TO_FORCE_REPLAY",
+    "AUTO_SELECT_AMBIGUOUS_AUTHORITATIVE_TRANSITION",
+    "EXECUTE_ARBITRARY_CODE_FROM_TRANSITION_MODEL",
+    "OVERWRITE_AUTHORITATIVE_STATE_TO_MATCH_REPLAY",
+    "FABRICATE_ACCEPTANCE_EVIDENCE",
+    "FABRICATE_REVIEW_PASS",
+    "FABRICATE_AUTHORITY_APPROVAL",
+    "RELAX_REVIEW_INDEPENDENCE",
+    "REMOVE_ACCEPTANCE_REQUIREMENT_TO_PASS",
+    "REWRITE_APPROVED_ACCEPTANCE_CONTRACT_HASH",
+    "INVENT_COMMERCIAL_ENTITLEMENT",
+    "TREAT_PACKAGE_POSSESSION_AS_VERIFIED_ENTITLEMENT",
+    "RESOLVE_PAID_PACKAGE_FROM_PUBLIC_CANONICAL_REPOSITORY",
+    "USE_SAFOR_PRODUCT_REPOSITORY_AS_PROJECT_TARGET",
+    "USE_PACKAGE_SOURCE_AS_PROJECT_TARGET",
+    "BYPASS_LOCAL_GIT_REQUIREMENT",
+    "ALLOW_WORKER_WRITE_TO_LOCAL_SAFOR_CONTROL_ROOT",
+    "INVENT_PACKAGE_ENTITLEMENT",
+    "REWRITE_DOMAIN_PACKAGE_TO_MATCH_EXPECTED_DIGEST",
+    "SILENTLY_CHANGE_SELECTED_FACTORY_OR_OPERATING_MODEL",
+    "FORCE_PACKAGE_COMPATIBILITY_RESULT_TO_PASS",
+    "INVENT_COMMERCIAL_BASIS_EVIDENCE",
+    "TREAT_REVOKED_SUSPENDED_OR_EXPIRED_ENTITLEMENT_AS_ACTIVE",
+    "TRUST_ENTITLEMENT_ISSUER_FROM_SELF_DECLARED_RECORD",
+    "TRUST_ENTITLEMENT_OR_DELIVERY_VERIFIER_FROM_SELF_DECLARED_RECORD",
+    "INVENT_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE",
+    "IGNORE_COMMERCIAL_DELIVERY_EXPIRY",
+    "REWRITE_DELIVERY_DIGEST_TO_MATCH_PACKAGE",
+    "SILENTLY_CHANGE_ACTIVE_DOMAIN_TO_FIT_REPLACEMENT",
+    "AUTO_REPLACE_COUNTERPART_TO_MAKE_NEW_PACKAGE_COMPATIBLE",
+    "IGNORE_PACKAGE_FAMILY_MISMATCH",
+    "DOWNGRADE_BIDIRECTIONAL_COMPATIBILITY_TO_ONE_WAY"
+  ],
+  "retryPolicy": {
+    "key": "failureFingerprint",
+    "exponentialBackoffConcept": true,
+    "hostSchedulingRequiredForDelayedRetry": true,
+    "defaultImmediateRetries": 0,
+    "maximumAutomaticAttemptsAcrossSameFingerprint": 2,
+    "resetOnlyWhen": "MATERIAL_INPUT_OR_EXTERNAL_STATE_CHANGED",
+    "rule": "Retry count is bounded by the lower of the failure-class budget and any operation-specific budget."
+  },
+  "repairPlanRequiredFields": [
+    "repairId",
+    "failureClass",
+    "failureFingerprint",
+    "moduleKey",
+    "moduleProfileId",
+    "moduleAuthorityType",
+    "moduleRepairability",
+    "subjectRef",
+    "proposedAction",
+    "authorityBasis",
+    "preStateRefs",
+    "successEvidenceRequirements",
+    "attemptNumber"
+  ],
+  "verification": {
+    "successRequires": [
+      "MODULE_PROFILE_STILL_MATCHES_SUBJECT_MODULE",
+      "AUTHORITATIVE_READBACK",
+      "EXPECTED_STATE_MATCH",
+      "NO_NEW_GUARD_VIOLATION",
+      "REPAIR_RECORD_PERSISTED"
+    ],
+    "onSuccess": "RESUME_FROM_VERIFIED_CHECKPOINT",
+    "onFailure": "RECLASSIFY_OR_ESCALATE",
+    "neverInferSuccessFrom": "ASSISTANT_TEXT_OR_INTENT"
+  },
+  "rollback": {
+    "useWhen": "REPAIR_CREATED_A_REVERSIBLE_EFFECT_AND_VERIFICATION_FAILED",
+    "requirements": [
+      "Rollback action was authorized before execution or is an explicit compensation allowed by the same mandate.",
+      "Rollback target is unambiguous.",
+      "Rollback can be verified through authoritative readback."
+    ],
+    "otherwise": "STOP_AND_ESCALATE"
+  },
+  "escalation": {
+    "toHumanWhen": [
+      "REQUIRES_HUMAN_DECISION",
+      "PERMISSION_OR_TOOL_MISSING",
+      "POLICY_OR_GUARD_VIOLATION",
+      "RETRY_BUDGET_EXHAUSTED",
+      "AMBIGUOUS_RESTORE_OR_ROLLBACK",
+      "REPAIR_WOULD_EXPAND_SCOPE_OR_AUTHORITY",
+      "HIGH_IMPACT_OR_IRREVERSIBLE_EFFECT"
+    ],
+    "messageStyle": "Concise: what failed, what SAFOR tried, current safe state, and the smallest HUMAN decision/action needed."
+  },
+  "moduleRecoveryModelRef": "module-self-healing-model.json",
+  "moduleRecoveryDispatch": {
+    "resolveOrder": [
+      "SUBJECT_EXPLICIT_MODULE_KEY",
+      "MASTER_ACTION_MODEL_REF_TO_MODULE_KEY",
+      "SCHEMA_OR_PACKAGE_REFERENCE_TO_MODULE_KEY",
+      "BUNDLE_INTEGRITY_MANIFEST_PATH_TO_MODULE_KEY"
+    ],
+    "noMatch": "STOP_AND_ESCALATE",
+    "multipleMatches": "STOP_AND_ESCALATE",
+    "actionIntersectionRule": "EXECUTABLE_REPAIR = failureClass.automaticRepair INTERSECT moduleProfile.automaticRepairs INTERSECT currentAuthority/providerRights",
+    "noAllowedAction": "ESCALATE_WITHOUT_MUTATION"
+  }
+}

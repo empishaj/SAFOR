@@ -1,0 +1,354 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-identity:0.14.0",
+  "title": "SAFOR Agent Identity 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "displayName",
+    "agentKind",
+    "masterId",
+    "controlRepository",
+    "workspaceRoot",
+    "identityRevision",
+    "status",
+    "registeredAt",
+    "initializedBy",
+    "roleIds",
+    "capabilityIds",
+    "chatBinding",
+    "activationContract",
+    "communicationContractRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_IDENTITY"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 80,
+      "x-safor-invariant": "NORMALIZED_DISPLAY_NAME_MUST_DIFFER_FROM_AGENT_ID"
+    },
+    "agentKind": {
+      "enum": [
+        "CHAT_AGENT",
+        "SERVICE_AGENT"
+      ]
+    },
+    "masterId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "controlRepository": {
+      "$ref": "#/$defs/repositoryRef"
+    },
+    "workspaceRoot": {
+      "type": "string",
+      "pattern": "^projects/[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?/agents/[A-Za-z0-9][A-Za-z0-9._:-]{2,127}/$"
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "PAUSED",
+        "REVOKED",
+        "REIDENTIFICATION_REQUIRED"
+      ]
+    },
+    "registeredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "initializedBy": {
+      "$ref": "#/$defs/immutableRef"
+    },
+    "roleIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "capabilityIds": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+    "chatBinding": {
+      "$ref": "#/$defs/chatBinding"
+    },
+    "activationContract": {
+      "$ref": "#/$defs/activationContract"
+    },
+    "communicationContractRef": {
+      "$ref": "#/$defs/immutableRef"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "agentKind": {
+            "const": "CHAT_AGENT"
+          }
+        },
+        "required": [
+          "agentKind"
+        ]
+      },
+      "then": {
+        "properties": {
+          "activationContract": {
+            "allOf": [
+              {
+                "properties": {
+                  "activationMode": {
+                    "const": "HUMAN_GO_REQUIRED"
+                  },
+                  "backgroundWakeupAssumed": {
+                    "const": false
+                  },
+                  "automationActivationAllowed": {
+                    "const": false
+                  },
+                  "hostTriggerActivationAllowed": {
+                    "const": false
+                  },
+                  "gitEventActivationAllowed": {
+                    "const": false
+                  },
+                  "schedulerMayActivateChat": {
+                    "const": false
+                  },
+                  "jobPromptTransportRequired": {
+                    "const": false
+                  }
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "repositoryRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "provider",
+        "repository",
+        "ref"
+      ],
+      "properties": {
+        "provider": {
+          "enum": [
+            "github",
+            "gitlab",
+            "local_git"
+          ]
+        },
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "immutableRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "ref",
+        "path",
+        "blobSha"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    },
+    "chatBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "bindingId",
+        "bindingMode",
+        "status",
+        "establishedAt",
+        "initializedFromPromptRef",
+        "expectedSessionContinuity",
+        "onUncertain"
+      ],
+      "properties": {
+        "bindingId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bindingMode": {
+          "const": "CONTINUED_CHAT_HISTORY"
+        },
+        "status": {
+          "enum": [
+            "BOUND",
+            "UNVERIFIED",
+            "LOST",
+            "REVOKED"
+          ]
+        },
+        "establishedAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "initializedFromPromptRef": {
+          "$ref": "#/$defs/immutableRef"
+        },
+        "expectedSessionContinuity": {
+          "const": true
+        },
+        "onUncertain": {
+          "const": "REIDENTIFICATION_REQUIRED"
+        }
+      }
+    },
+    "activationContract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "activationMode",
+        "acceptedToken",
+        "tokenCaseSensitive",
+        "additionalTextAllowed",
+        "source",
+        "backgroundWakeupAssumed",
+        "automationActivationAllowed",
+        "hostTriggerActivationAllowed",
+        "gitEventActivationAllowed",
+        "schedulerMayActivateChat",
+        "initialBootstrapFields",
+        "onGo",
+        "jobPromptTransportRequired"
+      ],
+      "properties": {
+        "activationMode": {
+          "enum": [
+            "HUMAN_GO_REQUIRED",
+            "SERVICE_TRIGGER_ALLOWED"
+          ]
+        },
+        "acceptedToken": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tokenCaseSensitive": {
+          "type": "boolean"
+        },
+        "additionalTextAllowed": {
+          "type": "boolean"
+        },
+        "source": {
+          "type": "string",
+          "minLength": 1
+        },
+        "backgroundWakeupAssumed": {
+          "type": "boolean"
+        },
+        "automationActivationAllowed": {
+          "type": "boolean"
+        },
+        "hostTriggerActivationAllowed": {
+          "type": "boolean"
+        },
+        "gitEventActivationAllowed": {
+          "type": "boolean"
+        },
+        "schedulerMayActivateChat": {
+          "type": "boolean"
+        },
+        "initialBootstrapFields": {
+          "type": "array",
+          "minItems": 8,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "CONTROL_REPOSITORY",
+              "PROJECT_ID",
+              "AGENT_ID",
+              "DISPLAY_NAME",
+              "IDENTITY_REF",
+              "AGENT_STATE_REF",
+              "INBOX_INDEX_REF",
+              "COMMUNICATION_CONTRACT_REF"
+            ]
+          }
+        },
+        "onGo": {
+          "type": "array",
+          "minItems": 10,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "LOAD_IDENTITY",
+              "VERIFY_IDENTITY_STATUS_ACTIVE",
+              "VERIFY_CHAT_BINDING_BOUND",
+              "LOAD_AGENT_STATE",
+              "LOAD_PERSONAL_INBOX_INDEX",
+              "SELECT_DISCOVERABLE_JOB",
+              "READ_AUTHORITATIVE_JOB_JSON",
+              "READ_MASTER_JOB_STATE",
+              "BIND_HUMAN_GO_EVIDENCE",
+              "VERIFY_ASSIGNMENT_ROLE_SKILLS_MANDATE_RIGHTS",
+              "CLAIM_WITH_OPTIMISTIC_CONCURRENCY",
+              "EXECUTE_ONLY_CLAIMED_JOB",
+              "SUBMIT_TYPED_RESPONSE_AND_EVIDENCE"
+            ]
+          }
+        },
+        "jobPromptTransportRequired": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:decision-record:0.14.0",
+  "title": "SAFOR Decision Record 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "decisionId",
+    "decisionType",
+    "authorityId",
+    "actorId",
+    "scope",
+    "revision",
+    "decision",
+    "source",
+    "createdAt",
+    "evidenceRefs"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_DECISION_RECORD"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "decisionId": {
+      "type": "string"
+    },
+    "decisionType": {
+      "type": "string"
+    },
+    "authorityId": {
+      "type": "string"
+    },
+    "actorId": {
+      "type": "string"
+    },
+    "scope": {
+      "type": "object"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "decision": {
+      "type": "string"
+    },
+    "source": {
+      "enum": [
+        "DIRECT_HUMAN_INPUT",
+        "PROVIDER_RECORD",
+        "AUTHORIZED_SERVICE"
+      ]
+    },
+    "createdAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

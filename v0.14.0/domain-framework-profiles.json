@@ -1,0 +1,99 @@
+{
+  "format": "SAFOR_DOMAIN_FRAMEWORK_PROFILE_CATALOG",
+  "schemaVersion": "0.14.0",
+  "profiles": [
+    {
+      "id": "WEBSITE",
+      "distributionId": "safor.framework.website",
+      "distributionFile": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "domainId": "WEBSITE_CREATION",
+      "creationType": "WEBSITE",
+      "accessMode": "FREE_PUBLIC",
+      "publicArtifactCommitted": true,
+      "defaultFactory": {
+        "packageId": "safor.factory.website-delivery",
+        "packageFamily": "safor.factory.website",
+        "version": "1.2.0",
+        "publicPath": "v0.14.0/packages/factories/website-delivery/1.2.0/package.json"
+      },
+      "defaultOperatingModel": {
+        "packageId": "safor.om.website-team",
+        "packageFamily": "safor.om.website",
+        "version": "1.2.0",
+        "publicPath": "v0.14.0/packages/operating-models/website-team/1.2.0/package.json"
+      },
+      "replacementPolicy": {
+        "factoryReplaceable": true,
+        "operatingModelReplaceable": true,
+        "sameDomainRequired": true,
+        "bidirectionalCounterpartRequired": true,
+        "packageFamilyConstraintsEnforced": true,
+        "crossDomainPairForbidden": true
+      },
+      "publicationMode": "PUBLIC_PRODUCTION",
+      "evaluationAccessFile": null
+    },
+    {
+      "id": "SAAS",
+      "distributionId": "safor.framework.saas",
+      "distributionFile": "SAFOR-FRAMEWORK-SAAS.json",
+      "domainId": "SAAS_ENGINEERING",
+      "creationType": "SOFTWARE_SAAS",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "publicArtifactCommitted": true,
+      "defaultFactory": {
+        "packageId": "safor.factory.software-delivery",
+        "packageFamily": "safor.factory.saas",
+        "publicPath": "v0.14.0/packages/factories/software-delivery/1.8.0-test.1/package.json",
+        "version": "1.8.0-test.1"
+      },
+      "defaultOperatingModel": {
+        "packageId": "safor.om.saas-engineering",
+        "packageFamily": "safor.om.saas",
+        "publicPath": "v0.14.0/packages/operating-models/saas-engineering/1.8.0-test.1/package.json",
+        "version": "1.8.0-test.1"
+      },
+      "replacementPolicy": {
+        "factoryReplaceable": true,
+        "operatingModelReplaceable": true,
+        "sameDomainRequired": true,
+        "bidirectionalCounterpartRequired": true,
+        "packageFamilyConstraintsEnforced": true,
+        "crossDomainPairForbidden": true
+      },
+      "publicationMode": "PUBLIC_TEST_EVALUATION",
+      "evaluationAccessFile": "SAFOR-TEST-ACCESS-SAAS.json"
+    },
+    {
+      "id": "BOOK_CREATION",
+      "distributionId": "safor.framework.book-creation",
+      "distributionFile": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "domainId": "BOOK_CREATION",
+      "creationType": "BOOK",
+      "accessMode": "PAID_ENTITLEMENT_REQUIRED",
+      "publicArtifactCommitted": true,
+      "defaultFactory": {
+        "packageId": "safor.factory.book-production",
+        "packageFamily": "safor.factory.book",
+        "publicPath": "v0.14.0/packages/factories/book-production/1.1.0-test.1/package.json",
+        "version": "1.1.0-test.1"
+      },
+      "defaultOperatingModel": {
+        "packageId": "safor.om.book-authoring",
+        "packageFamily": "safor.om.book",
+        "publicPath": "v0.14.0/packages/operating-models/book-authoring/1.1.0-test.1/package.json",
+        "version": "1.1.0-test.1"
+      },
+      "replacementPolicy": {
+        "factoryReplaceable": true,
+        "operatingModelReplaceable": true,
+        "sameDomainRequired": true,
+        "bidirectionalCounterpartRequired": true,
+        "packageFamilyConstraintsEnforced": true,
+        "crossDomainPairForbidden": true
+      },
+      "publicationMode": "PUBLIC_TEST_EVALUATION",
+      "evaluationAccessFile": "SAFOR-TEST-ACCESS-BOOK-CREATION.json"
+    }
+  ]
+}

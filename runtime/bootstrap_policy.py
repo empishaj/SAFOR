@@ -1,4 +1,4 @@
-"""Pure SAFOR 0.12/0.13 bootstrap policy reference implementation.
+"""Pure SAFOR 0.12/0.13/0.14 bootstrap policy reference implementation.
 
 This module evaluates package-access and HUMAN-workspace boundary rules only.
 It performs no provider I/O, filesystem I/O, purchases, entitlement issuance,
@@ -69,7 +69,7 @@ def entitlement_covers(
 ) -> bool:
     if entitlement.get("format") != "SAFOR_COMMERCIAL_ENTITLEMENT":
         return False
-    if entitlement.get("schemaVersion") not in {"0.12.0", "0.13.0"}:
+    if entitlement.get("schemaVersion") not in {"0.12.0", "0.13.0", "0.14.0"}:
         return False
     grant = entitlement.get("grant", {})
     if grant.get("packageId") != package_id:
@@ -292,7 +292,7 @@ def validate_domain_package(
 
     if package.get("format") != "SAFOR_DOMAIN_PACKAGE":
         errors.append("DOMAIN_PACKAGE_FORMAT_INVALID")
-    if package.get("schemaVersion") != "0.13.0":
+    if package.get("schemaVersion") not in {"0.13.0", "0.14.0"}:
         errors.append("DOMAIN_PACKAGE_SCHEMA_VERSION_INVALID")
     if package_kind not in {"FACTORY", "OPERATING_MODEL"}:
         errors.append("DOMAIN_PACKAGE_KIND_INVALID")
@@ -647,7 +647,7 @@ def validate_commercial_entitlement(
     Time, subject and trust are supplied explicitly so this policy function stays
     pure and never reads the wall clock or invents trusted identities.
     """
-    if entitlement.get("format") != "SAFOR_COMMERCIAL_ENTITLEMENT" or entitlement.get("schemaVersion") != "0.13.0":
+    if entitlement.get("format") != "SAFOR_COMMERCIAL_ENTITLEMENT" or entitlement.get("schemaVersion") not in {"0.13.0", "0.14.0"}:
         return {"valid": False, "outcome": "PACKAGE_ENTITLEMENT_UNVERIFIED"}
 
     if entitlement.get("status") != "ACTIVE":
@@ -719,7 +719,7 @@ def validate_commercial_delivery_evidence(
     """Validate evidence produced by an entitled/private package delivery source."""
     if delivery_evidence.get("format") != "SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE":
         return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
-    if delivery_evidence.get("schemaVersion") != "0.13.0":
+    if delivery_evidence.get("schemaVersion") not in {"0.13.0", "0.14.0"}:
         return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
     if delivery_evidence.get("result") != "VERIFIED":
         return {"valid": False, "outcome": "COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE_INVALID"}
@@ -770,7 +770,7 @@ def resolve_composable_creation_packages(
     selection: Optional[Mapping[str, str]] = None,
     verification_context: Optional[Mapping[str, Any]] = None,
 ) -> Dict[str, Any]:
-    if catalog.get("schemaVersion") != "0.13.0":
+    if catalog.get("schemaVersion") not in {"0.13.0", "0.14.0"}:
         return {"outcome": "PACKAGE_CATALOG_SCHEMA_UNSUPPORTED", "packages": []}
 
     profile = _creation_profile(catalog, creation_type)

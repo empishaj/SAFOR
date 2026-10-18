@@ -25,17 +25,17 @@ def redigest(pkg):
 class DomainFrameworkDistributionTests(unittest.TestCase):
     def setUp(self):
         self.factory = load_json(
-            "v0.13.0/packages/factories/website-delivery/1.1.0/package.json"
+            "v0.14.0/packages/factories/website-delivery/1.2.0/package.json"
         )
         self.om = load_json(
-            "v0.13.0/packages/operating-models/website-team/1.1.0/package.json"
+            "v0.14.0/packages/operating-models/website-team/1.2.0/package.json"
         )
 
     def test_website_default_pair_is_domain_compatible_bidirectionally(self):
         result = evaluate_domain_framework_pair(
             self.factory,
             self.om,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -51,7 +51,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             premium,
             self.om,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -65,7 +65,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             premium,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -80,7 +80,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             self.factory,
             foreign,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -96,7 +96,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             foreign,
             self.om,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -127,7 +127,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             book_factory,
             engineering_om,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "BOOK",
             "BOOK_CREATION",
         )
@@ -143,7 +143,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
         result = evaluate_domain_framework_pair(
             incomplete,
             self.om,
-            "0.13.0-rc.9",
+            "0.14.0-rc.2",
             "WEBSITE",
             "WEBSITE_CREATION",
         )
@@ -229,7 +229,7 @@ class DomainFrameworkDistributionTests(unittest.TestCase):
             self.assertEqual(committed, built)
 
     def test_public_evaluation_access_bundles_unlock_only_paid_test_modules(self):
-        catalog = load_json("v0.13.0/package-catalog.json")
+        catalog = load_json("v0.14.0/package-catalog.json")
         for profile_id, framework_file in (
             ("SAAS", "SAFOR-FRAMEWORK-SAAS.json"),
             ("BOOK_CREATION", "SAFOR-FRAMEWORK-BOOK-CREATION.json"),

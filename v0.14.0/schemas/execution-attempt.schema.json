@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:execution-attempt:0.14.0",
+  "title": "SAFOR Execution Attempt 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "attemptId",
+    "projectId",
+    "jobId",
+    "agentId",
+    "dispatchRevision",
+    "status",
+    "productTarget",
+    "responseTarget",
+    "productMutation",
+    "responsePersistence",
+    "startedAt",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_EXECUTION_ATTEMPT"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "attemptId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dispatchRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "status": {
+      "enum": [
+        "STARTED",
+        "PRODUCT_COMMITTED_RESPONSE_PENDING",
+        "COMPLETED",
+        "RECONCILE_REQUIRED"
+      ]
+    },
+    "productTarget": {
+      "type": "object"
+    },
+    "responseTarget": {
+      "type": "object"
+    },
+    "productMutation": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "responsePersistence": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "startedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "format": "SAFOR_V014_INTEGRATION_BASELINE",
+  "schemaVersion": "0.14.0",
+  "targetVersion": "0.14.0-rc.2",
+  "baseMainCommit": "29a9bcc5c84fe348f94c63b08852fda28135fe50",
+  "auditedFeatureCommit": "cd6aa12605d208b96c4d19c95b7eb9756624c113",
+  "integrationBranch": "safor/integrate-v0.14.0-rc.2",
+  "strategy": "RC9_BASE_SELECTIVE_V014_CONSOLIDATION_NO_BLIND_MERGE",
+  "auditFindings": {
+    "F-01": "CONFIRMED",
+    "F-02": "CONFIRMED",
+    "F-03": "CONFIRMED",
+    "F-04": "CONFIRMED",
+    "F-05": "CONFIRMED",
+    "F-06": "CONFIRMED",
+    "F-07": "CONFIRMED",
+    "F-08": "CONFIRMED_ARCHITECTURAL_LIMIT",
+    "F-09": "NOT_ASSESSED",
+    "F-10": "PARTIAL",
+    "F-11": "NOT_ASSESSED",
+    "F-12": "RESOLVED_BY_CURRENT_HUMAN_DECISION_RECORD"
+  },
+  "recordedAt": "2026-10-18T09:01:32Z"
+}

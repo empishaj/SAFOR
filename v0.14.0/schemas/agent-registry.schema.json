@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-registry:0.14.0",
+  "title": "SAFOR Agent Registry 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "revision",
+    "agents",
+    "updatedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_REGISTRY"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/agent"
+      },
+      "uniqueItems": true
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "$defs": {
+    "immutableRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "ref",
+        "path",
+        "blobSha"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "agentId",
+        "displayName",
+        "agentKind",
+        "identityRevision",
+        "identityRef",
+        "workspaceRoot",
+        "identityStatus",
+        "chatBindingStatus",
+        "registeredAt",
+        "registeredBy",
+        "scheduling",
+        "legacyDisposition"
+      ],
+      "properties": {
+        "agentId": {
+          "type": "string",
+          "minLength": 3
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 3,
+          "x-safor-invariant": "NORMALIZED_DISPLAY_NAME_MUST_DIFFER_FROM_AGENT_ID"
+        },
+        "agentKind": {
+          "enum": [
+            "CHAT_AGENT",
+            "SERVICE_AGENT"
+          ]
+        },
+        "identityRevision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "identityRef": {
+          "$ref": "#/$defs/immutableRef"
+        },
+        "workspaceRoot": {
+          "type": "string",
+          "minLength": 1
+        },
+        "identityStatus": {
+          "enum": [
+            "ACTIVE",
+            "PAUSED",
+            "REVOKED",
+            "REIDENTIFICATION_REQUIRED"
+          ]
+        },
+        "chatBindingStatus": {
+          "enum": [
+            "BOUND",
+            "UNVERIFIED",
+            "LOST",
+            "REVOKED",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "registeredBy": {
+          "$ref": "#/$defs/immutableRef"
+        },
+        "scheduling": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "dispatchEnabled",
+            "maxConcurrentJobs"
+          ],
+          "properties": {
+            "dispatchEnabled": {
+              "type": "boolean"
+            },
+            "maxConcurrentJobs": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "legacyDisposition": {
+          "enum": [
+            "NONE",
+            "MIGRATED_ACTIVE",
+            "LEGACY_SNAPSHOT",
+            "SUPERSEDED"
+          ]
+        }
+      }
+    }
+  }
+}

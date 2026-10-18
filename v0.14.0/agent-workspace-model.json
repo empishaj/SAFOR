@@ -1,0 +1,67 @@
+{
+  "format": "SAFOR_AGENT_WORKSPACE_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "SAFOR-AGENT-WORKSPACE-PROTOCOL",
+  "purpose": "Repository-native coordination for persistent chat agents activated only by HUMAN GO and returning typed Git responses to MASTER.",
+  "topology": {
+    "projectRoot": "projects/{projectSlug}/",
+    "agentRegistry": "agents/index.json",
+    "agentIdentity": "agents/{agentId}/identity.json",
+    "agentState": "agents/{agentId}/state.json",
+    "agentInitialization": "agents/{agentId}/initialization.json",
+    "inboxIndex": "agents/{agentId}/inbox/index.json",
+    "jobContract": "agents/{agentId}/inbox/{jobId}.json",
+    "humanJobProjection": "agents/{agentId}/inbox/{jobId}.md",
+    "responseRoot": "agents/{agentId}/outbox/{jobId}/",
+    "responseIndex": "agents/{agentId}/outbox/index.json",
+    "evidenceRoot": "agents/{agentId}/evidence/{jobId}/",
+    "auditRoot": "agents/{agentId}/audit/{jobId}/",
+    "masterJobState": "master/jobs/{jobId}.json",
+    "masterResponseResolution": "master/response-resolutions/{responseId}.json"
+  },
+  "ownership": {
+    "MASTER_ONLY": [
+      "agents/index.json",
+      "agents/{agentId}/identity.json",
+      "agents/{agentId}/initialization.json",
+      "agents/{agentId}/inbox/index.json",
+      "agents/{agentId}/inbox/{jobId}.json",
+      "agents/{agentId}/inbox/{jobId}.md",
+      "master/jobs/{jobId}.json",
+      "master/response-resolutions/{responseId}.json"
+    ],
+    "AGENT_ONLY": [
+      "agents/{agentId}/state.json",
+      "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+      "agents/{agentId}/outbox/index.json",
+      "agents/{agentId}/evidence/{jobId}/",
+      "agents/{agentId}/audit/{jobId}/"
+    ],
+    "actualProviderRightsRemainAuthoritative": true
+  },
+  "normalFlow": [
+    "MASTER_WRITES_JOB_AND_INDEX_AS_WAITING_HUMAN_GO",
+    "HUMAN_TYPES_GO_IN_BOUND_AGENT_CHAT",
+    "AGENT_LOADS_IDENTITY_STATE_INDEX_JOB_AND_REFERENCED_INPUTS_ONLY",
+    "AGENT_BINDS_GO_EVIDENCE",
+    "AGENT_RUNS_PREFLIGHT",
+    "AGENT_CLAIMS_WITH_OPTIMISTIC_CONCURRENCY",
+    "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
+    "AGENT_WRITES_TYPED_RESPONSE_AND_RESPONSE_INDEX",
+    "AGENT_EMITS_ONE_LINE_TERMINAL_CHAT_STATUS",
+    "MASTER_READS_RESPONSE_AND_PROVIDER_EFFECTS",
+    "MASTER_VERIFIES_REVIEWS_AND_ACCEPTANCE",
+    "MASTER_UPDATES_AUTHORITATIVE_LIFECYCLE"
+  ],
+  "safety": {
+    "noPromptAsAuthority": true,
+    "noAutomaticChatWakeup": true,
+    "noCrossAgentReadOrClaim": true,
+    "noAgentMasterStateWrite": true,
+    "noAgentSelfAcceptance": true,
+    "noDirectDefaultBranchMutation": true,
+    "noResponseAsProviderPermission": true,
+    "noSilentJobMutation": true,
+    "noFullRepositoryScanInNormalFlow": true
+  }
+}

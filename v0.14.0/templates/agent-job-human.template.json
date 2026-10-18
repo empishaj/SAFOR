@@ -1,0 +1,8 @@
+{
+  "format": "SAFOR_HUMAN_READABLE_AGENT_JOB_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "agent-job-human",
+  "contentType": "text/markdown",
+  "content": "# SAFOR Agent Job {{JOB_KEY}}\n\n> HUMAN-readable projection only. The authoritative contract is `{{JOB_JSON_REF}}` at blob `{{JOB_JSON_BLOB_SHA}}`.\n\n## Job Identity\n{{JOB_IDENTITY}}\n\n## Package & Sequence\n{{PACKAGE_AND_SEQUENCE}}\n\n## MASTER Provenance\n{{MASTER_PROVENANCE}}\n\n## Assignment\n{{ASSIGNMENT}}\n\n## Domain Context\n{{DOMAIN_CONTEXT}}\n\n## Role\n{{ROLE}}\n\n## Skills\n{{SKILLS}}\n\n## Task\n{{TASK}}\n\n## Dependencies & Inputs\n{{DEPENDENCIES_AND_INPUTS}}\n\n## Authorization\n{{AUTHORIZATION}}\n\n## Workspace & Git\n{{WORKSPACE_AND_GIT}}\n\n## Scheduling & HUMAN-GO\n{{SCHEDULING_AND_HUMAN_GO}}\n\n## Expected Product Outputs\n{{PRODUCT_OUTPUTS}}\n\n## Response Contracts & Return Paths\n{{RESPONSE_CONTRACTS}}\n\n## Verification & Review\n{{VERIFICATION_AND_REVIEW}}\n\n## Communication Boundary\n{{COMMUNICATION_BOUNDARY}}\n\n## Constraints & Stop Conditions\n{{CONSTRAINTS_AND_STOP_CONDITIONS}}\n",
+  "rule": "Projection only; the machine-readable Agent Job JSON remains authoritative."
+}

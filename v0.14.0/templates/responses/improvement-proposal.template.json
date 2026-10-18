@@ -1,0 +1,24 @@
+{
+  "format": "SAFOR_AGENT_RESPONSE_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.response.improvement-proposal",
+  "templateVersion": "1.0.0",
+  "responseType": "IMPROVEMENT_PROPOSAL",
+  "responseSchemaRef": "schemas/agent-response.schema.json",
+  "defaultStatus": "ADVISORY",
+  "defaultChatStatus": "NONE",
+  "pathPattern": "agents/{agentId}/outbox/{jobId}/{responseId}.json",
+  "requiredBindings": ["PROJECT_ID", "JOB_ID", "PACKAGE_ID", "WORK_ITEM_ID", "AGENT_ID", "IDENTITY_REVISION", "JOB_CONTRACT_REF", "JOB_CONTRACT_BLOB_SHA", "TARGET_MASTER_REF"],
+  "payloadTemplate": {
+    "proposalId": "{{PROPOSAL_ID}}",
+    "problem": "{{PROBLEM}}",
+    "suggestion": "{{SUGGESTION}}",
+    "expectedBenefit": "{{BENEFIT}}",
+    "risk": "{{RISK}}",
+    "affectedProcess": "{{PROCESS}}",
+    "blocking": false,
+    "requiresSeparateDecision": true,
+    "jobScopeChanged": false
+  },
+  "immutableAfterWrite": true
+}

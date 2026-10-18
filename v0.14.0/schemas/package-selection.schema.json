@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/package-selection.schema.json",
+  "title": "SAFOR Package Selection 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "selectionId",
+    "creationType",
+    "factory",
+    "operatingModel",
+    "compatibilityDecisionRef"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_PACKAGE_SELECTION"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "selectionId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "creationType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "factory": {
+      "$ref": "#/$defs/selection"
+    },
+    "operatingModel": {
+      "$ref": "#/$defs/selection"
+    },
+    "compatibilityDecisionRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "approvedByHumanDecisionRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "$defs": {
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "selectionOrigin"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "pattern": "^safor\\.(factory|om)\\."
+        },
+        "selectionOrigin": {
+          "enum": [
+            "DEFAULT_PROFILE",
+            "HUMAN_OVERRIDE"
+          ]
+        },
+        "requestedVersion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

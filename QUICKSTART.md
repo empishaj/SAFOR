@@ -78,7 +78,7 @@ Book likewise requires independent entitlement evidence for Factory and Operatin
 
 ## Generic engineering start — advanced
 
-Framework engineers may load `SAFOR-FRAMEWORK-v0.13.0-rc.9.json` or the current alias `SAFOR-FRAMEWORK.json`. This generic base intentionally follows a different sequence:
+Framework engineers may load `SAFOR-FRAMEWORK-v0.14.0-rc.2.json` or the current alias `SAFOR-FRAMEWORK.json`. This generic base intentionally follows a different sequence:
 
 1. Verify the shared Framework.
 2. Select **Website**, **Software / SaaS** or **Book**.

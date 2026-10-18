@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:reconciliation-record:0.14.0",
+  "title": "SAFOR Reconciliation Record 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "attemptId",
+    "jobId",
+    "outcome",
+    "productCommitReadback",
+    "responseReadback",
+    "retryProductMutationAllowed",
+    "retryResponsePersistenceAllowed",
+    "observedAt"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_RECONCILIATION_RECORD"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "attemptId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "jobId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "outcome": {
+      "type": "string",
+      "minLength": 1
+    },
+    "productCommitReadback": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "responseReadback": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "retryProductMutationAllowed": {
+      "type": "boolean"
+    },
+    "retryResponsePersistenceAllowed": {
+      "type": "boolean"
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

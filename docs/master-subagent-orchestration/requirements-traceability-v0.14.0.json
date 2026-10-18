@@ -1,0 +1,1627 @@
+{
+  "format": "SAFOR_REQUIREMENTS_TRACEABILITY",
+  "schemaVersion": "0.14.0",
+  "releaseTarget": "0.14.0-rc.2",
+  "source": {
+    "document": "HUMAN NOTICE – SAFOR: Master–Subagent-Orchestrierung über Git",
+    "date": "2026-10-17",
+    "authority": "HUMAN"
+  },
+  "coveragePolicy": {
+    "target": "100_PERCENT_NORMATIVE_REQUIREMENTS",
+    "requireSchemaOrModelRef": true,
+    "requireAutomatedTestRef": true,
+    "requireMigrationDisposition": true,
+    "evidenceLimitRule": "Design, implementation, automated tests, bundle integration, real Git E2E and cross-host evidence are independent dimensions."
+  },
+  "requirements": [
+    {
+      "id": "REQ-001",
+      "title": "Direkter Chat-Upload",
+      "statement": "SAFOR ist als JSON-basierte Distribution direkt in einem kompatiblen normalen LLM-Chat nutzbar.",
+      "source": "HUMAN_NOTICE_1.2",
+      "acceptance": [
+        "Das Release enthält eine selbstbeschreibende Single-File-Framework-Distribution.",
+        "Die Endanwenderdokumentation verlangt keine separate UI oder lokale SAFOR-Installation."
+      ],
+      "workPackages": [
+        "WP-06",
+        "WP-07",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/chat-execution-model.json"
+      ],
+      "implementationEvidence": [
+        "tools/build_bundle.py"
+      ],
+      "automatedTests": [
+        "tests/test_product_boundary_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "chatExecution"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "NOT_APPLICABLE",
+      "openFindings": [
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-002",
+      "title": "Keine Endkunden-Runtime",
+      "statement": "Für die normale SAFOR-Nutzung ist keine zusätzlich beim Endkunden zu installierende Runtime Voraussetzung.",
+      "source": "HUMAN_NOTICE_1.2",
+      "acceptance": [
+        "Dokumentation unterscheidet deklarative Chat-Ausführung von optionalem Referenzcode.",
+        "Kein Bootstrap- oder Aktivierungsvertrag setzt Python, einen Daemon oder einen externen Agentenservice voraus."
+      ],
+      "workPackages": [
+        "WP-06",
+        "WP-07"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/chat-execution-model.json"
+      ],
+      "implementationEvidence": [
+        "tools/build_bundle.py"
+      ],
+      "automatedTests": [
+        "tests/test_product_boundary_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "chatExecution"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "NOT_APPLICABLE",
+      "openFindings": [
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-003",
+      "title": "MASTER als einzige fachliche HUMAN-Schnittstelle",
+      "statement": "Ziele, Planung, Status, Risiken, Freigaben und Konfliktentscheidungen laufen ausschließlich über den MASTER.",
+      "source": "HUMAN_NOTICE_3.1-3.2",
+      "acceptance": [
+        "Agenten-Chat-Vertrag verbietet fachliche HUMAN-Dialoge im Normalbetrieb.",
+        "Klärungen und Konflikte werden als Git-Response an den MASTER geroutet."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-03",
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-activation-model.json",
+        "v0.14.0/agent-communication-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_activation_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentActivation",
+        "agentCommunication",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-004",
+      "title": "HUMAN-GO als bewusster Trigger",
+      "statement": "Ein vorbereiteter Agenten-Chat beginnt einen Job ausschließlich nach einem bewussten HUMAN-'GO'.",
+      "source": "HUMAN_NOTICE_3.1,3.3,4",
+      "acceptance": [
+        "Activation Mode ist HUMAN_GO_REQUIRED.",
+        "Automatisches Wake-up, Git-Push-Aktivierung und implizite Aktivierung sind verboten.",
+        "Ohne gültiges GO bleibt der Agent vor Claim und Mutation stehen."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-03",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-activation-model.json",
+        "v0.14.0/agent-communication-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_activation_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentActivation",
+        "agentCommunication",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-005",
+      "title": "Einmalige Chatinitialisierung",
+      "statement": "Der HUMAN fügt nur einmal den MASTER-erzeugten Initialisierungsprompt in einen neuen Agenten-Chat ein; Folgejobs benötigen keinen neuen Fachprompt.",
+      "source": "HUMAN_NOTICE_3.1,5.1",
+      "acceptance": [
+        "Ein versioniertes Initialisierungstemplate ist eingebettet.",
+        "Identity, Memory-Repo, Workspace und Kommunikationsgrenzen werden validiert.",
+        "jobPromptTransportRequired ist false."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-07",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-activation-model.json",
+        "v0.14.0/agent-communication-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_activation_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentActivation",
+        "agentCommunication",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-006",
+      "title": "Stabile technische Agenten-ID",
+      "statement": "Jeder Subagent besitzt eine eindeutige, dauerhafte technische Agenten-ID.",
+      "source": "HUMAN_NOTICE_5.1",
+      "acceptance": [
+        "Identity-Schema erzwingt Agenten-ID und Identity Revision.",
+        "Jobs, Responses und Indizes sind an Agenten-ID und Revision gebunden."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-02",
+        "WP-03"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-activation-model.json",
+        "v0.14.0/agent-communication-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_activation_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentActivation",
+        "agentCommunication",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-007",
+      "title": "Einprägsamer Anzeigename",
+      "statement": "Jeder Agent besitzt zusätzlich einen einprägsamen Anzeigenamen, der nicht die technische ID ersetzt.",
+      "source": "HUMAN_NOTICE_5.1",
+      "acceptance": [
+        "Identity-Schema verlangt displayName.",
+        "displayName darf nicht identisch mit agentId sein.",
+        "Registry und Minimalstatus führen beide Werte."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-03"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-activation-model.json",
+        "v0.14.0/agent-communication-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_activation_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentActivation",
+        "agentCommunication",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-008",
+      "title": "Fail-closed-Reidentifikation",
+      "statement": "Bei fehlender Historie, unsicherer Chatbindung oder Zugriffsverlust stoppt der Agent und verlangt erneute MASTER-vorbereitete Identitätsbindung.",
+      "source": "HUMAN_NOTICE_5.1",
+      "acceptance": [
+        "ChatBinding und Reidentification Policy sind explizit.",
+        "Unsichere oder abweichende Bindung erzeugt capability_mismatch oder job_error ohne Produktmutation."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-02",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-activation-model.json",
+        "v0.14.0/agent-communication-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_activation_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentActivation",
+        "agentCommunication",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-009",
+      "title": "Pointer statt Vollscan",
+      "statement": "Agenten lesen nur Identität, persönlichen kleinen Index, konkreten Job und explizit gepinnte Inputs.",
+      "source": "HUMAN_NOTICE_6",
+      "acceptance": [
+        "Directory Enumeration und globale Repository-Suche sind im Normalpfad verboten.",
+        "Indexeinträge enthalten genaue Repo/Ref/Path/Blob-Pointer.",
+        "E2E-Test weist begrenzte Reads nach."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-03",
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "AGREED_DIRECTION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/master-status-model.json",
+        "v0.14.0/agent-workspace-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_master_status_truth_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "masterStatus",
+        "agentWorkspace",
+        "schemaProjectStatusIndex"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-010",
+      "title": "Kompakter MASTER-Statusindex",
+      "statement": "Der MASTER beantwortet Statusfragen aus kompakten Indizes und löst Details nur ereignisbezogen auf.",
+      "source": "HUMAN_NOTICE_6,11",
+      "acceptance": [
+        "Projekt-Agenten-Statusindex ist schematisiert.",
+        "Jobs, Responses, Reviews, Blocker und nächste HUMAN-Aktion sind pointerbasiert sichtbar.",
+        "Index ist Projektion; autoritative Artefakte bleiben eindeutig."
+      ],
+      "workPackages": [
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "AGREED_DIRECTION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/master-status-model.json",
+        "v0.14.0/agent-workspace-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_master_status_truth_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "masterStatus",
+        "agentWorkspace",
+        "schemaProjectStatusIndex"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-011",
+      "title": "Vollständiges Agentenregister",
+      "statement": "Alle aktiven, pausierten, widerrufenen und migrierten Agenten sind eindeutig im Register erfasst.",
+      "source": "HUMAN_NOTICE_3.2,5.1,11",
+      "acceptance": [
+        "Registry-Schema führt Status, Identity Ref, Display Name, Chat Binding Status und Scheduling.",
+        "Migration ergänzt fehlende Legacy-Agenten ohne Historienverlust."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-05",
+        "WP-08"
+      ],
+      "origin": "AGREED_DIRECTION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/master-status-model.json",
+        "v0.14.0/agent-workspace-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_master_status_truth_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "masterStatus",
+        "agentWorkspace",
+        "schemaProjectStatusIndex"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-012",
+      "title": "Expliziter unveränderlicher Jobvertrag",
+      "statement": "Jeder Agentenjob ist selbstbeschreibend, agentengebunden, versioniert und nach Dispatch unveränderlich.",
+      "source": "HUMAN_NOTICE_7",
+      "acceptance": [
+        "Job-Schema verlangt Identität, Lineage, Provenance, Rolle, Skills, Aufgabe, Inputs, Rechte, Workspace, Outputs, Verifikation und Responses.",
+        "Substanzielle Änderung erzeugt neue Job-ID oder Dispatch Revision."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-05",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-job-contract-model.json",
+        "v0.14.0/schemas/agent-job.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentJobContract",
+        "schemaAgentJob",
+        "schemaAgentJobState"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-013",
+      "title": "Rollen- und Skillpassung",
+      "statement": "MASTER prüft Rollen-/Skillpassung vor Zuweisung; Agent prüft sie bei jedem GO erneut.",
+      "source": "HUMAN_NOTICE_7.2-7.3",
+      "acceptance": [
+        "Jobs binden versionierte Skill- und Rollenprofile.",
+        "Mismatch stoppt vor Mutation und erzeugt capability_mismatch."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-03",
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-job-contract-model.json",
+        "v0.14.0/schemas/agent-job.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentJobContract",
+        "schemaAgentJob",
+        "schemaAgentJobState"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-014",
+      "title": "Exakte gepinnte Eingaben",
+      "statement": "Alle benötigten Quellen sind mit Repository, Ref/Commit, Pfad und Integritätsidentität gepinnt.",
+      "source": "HUMAN_NOTICE_6,7.1",
+      "acceptance": [
+        "Job-Schema erzwingt immutable input refs.",
+        "Nicht auflösbare oder widersprüchliche Ref stoppt fail-closed."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-job-contract-model.json",
+        "v0.14.0/schemas/agent-job.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentJobContract",
+        "schemaAgentJob",
+        "schemaAgentJobState"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-015",
+      "title": "Expliziter Git-Arbeitsbereich",
+      "statement": "Jeder mutierende Job benennt Repository, Branch, Base Commit, Pfade und erlaubte Operationen.",
+      "source": "HUMAN_NOTICE_7.1,10",
+      "acceptance": [
+        "Direkte Default-Branch-Mutation bleibt verboten.",
+        "Produktbranch und Memory-Response-Ziel sind getrennt autorisiert.",
+        "Provider-Rechte werden zusätzlich tatsächlich geprüft."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-job-contract-model.json",
+        "v0.14.0/schemas/agent-job.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentJobContract",
+        "schemaAgentJob",
+        "schemaAgentJobState"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-016",
+      "title": "Getrennte Produkt- und Memory-Schreibziele",
+      "statement": "Produktartefakte und Steuerungs-/Response-Artefakte besitzen getrennte, explizite Schreibrechte.",
+      "source": "HUMAN_NOTICE_8.3,10.2",
+      "acceptance": [
+        "Job enthält mindestens workArtifactWriteTarget und responseWriteTarget.",
+        "Eine Berechtigung impliziert niemals die andere."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-job-contract-model.json",
+        "v0.14.0/schemas/agent-job.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentJobContract",
+        "schemaAgentJob",
+        "schemaAgentJobState"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-017",
+      "title": "Response Contract je Job",
+      "statement": "Jeder Job referenziert konkrete Response-Schemas, Templates, Versionen, Zielbranch und Zielpfade.",
+      "source": "HUMAN_NOTICE_8.1",
+      "acceptance": [
+        "Job-Schema verlangt Response Contract Registry.",
+        "Alle Response-Typen sind unveränderlich gepinnt.",
+        "Response Path ist deterministisch aus Job und Agent ableitbar."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-03"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-job-contract-model.json",
+        "v0.14.0/schemas/agent-job.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentJobContract",
+        "schemaAgentJob",
+        "schemaAgentJobState"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-018",
+      "title": "job_result",
+      "statement": "Erfolgreiche Ausführung erzeugt ein typisiertes job_result mit Artefakt-, Git-, Test- und Open-Item-Nachweisen.",
+      "source": "HUMAN_NOTICE_8.2",
+      "acceptance": [
+        "Response-Schema validiert job_result.",
+        "MASTER kann daraus Review/Integration anstoßen."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-response-contract-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_responses.py",
+        "runtime/execution_reconciliation.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_responses_v014.py",
+        "tests/test_execution_reconciliation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentResponseContract",
+        "schemaAgentResponse",
+        "executionAttempt"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-09"
+      ]
+    },
+    {
+      "id": "REQ-019",
+      "title": "job_error",
+      "statement": "Technisches Scheitern erzeugt ein typisiertes job_error mit Fehlerklasse, Schritt, Reproduktion und betroffenen Refs.",
+      "source": "HUMAN_NOTICE_8.2,9",
+      "acceptance": [
+        "Response-Schema validiert job_error.",
+        "Fehlerzustand verbietet weitere Produktmutation."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-response-contract-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_responses.py",
+        "runtime/execution_reconciliation.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_responses_v014.py",
+        "tests/test_execution_reconciliation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentResponseContract",
+        "schemaAgentResponse",
+        "executionAttempt"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-09"
+      ]
+    },
+    {
+      "id": "REQ-020",
+      "title": "clarification_request",
+      "statement": "Unklarer oder widersprüchlicher Auftrag erzeugt eine typisierte clarification_request an den MASTER.",
+      "source": "HUMAN_NOTICE_8.2,9",
+      "acceptance": [
+        "Response enthält Frage, betroffene Jobfelder, Optionen und empfohlene Resolution.",
+        "Subagent führt keinen fachlichen HUMAN-Dialog."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-03",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-response-contract-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_responses.py",
+        "runtime/execution_reconciliation.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_responses_v014.py",
+        "tests/test_execution_reconciliation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentResponseContract",
+        "schemaAgentResponse",
+        "executionAttempt"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-09"
+      ]
+    },
+    {
+      "id": "REQ-021",
+      "title": "capability_mismatch",
+      "statement": "Nicht passende Rolle, Skill, Domäne oder Chatidentität erzeugt capability_mismatch.",
+      "source": "HUMAN_NOTICE_8.2,9",
+      "acceptance": [
+        "Erwartete und vorhandene Kompetenzen sind strukturiert.",
+        "Mismatch stoppt vor Claim oder spätestens vor erster Mutation."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-response-contract-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_responses.py",
+        "runtime/execution_reconciliation.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_responses_v014.py",
+        "tests/test_execution_reconciliation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentResponseContract",
+        "schemaAgentResponse",
+        "executionAttempt"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-09"
+      ]
+    },
+    {
+      "id": "REQ-022",
+      "title": "improvement_proposal",
+      "statement": "Nicht blockierende Verbesserungshinweise werden getrennt als improvement_proposal übergeben.",
+      "source": "HUMAN_NOTICE_8.2",
+      "acceptance": [
+        "Verbesserungsvorschlag verändert Auftrag und Scope nicht.",
+        "MASTER entscheidet separat."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-response-contract-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_responses.py",
+        "runtime/execution_reconciliation.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_responses_v014.py",
+        "tests/test_execution_reconciliation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentResponseContract",
+        "schemaAgentResponse",
+        "executionAttempt"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-09"
+      ]
+    },
+    {
+      "id": "REQ-023",
+      "title": "Konfliktlebenszyklus",
+      "statement": "Konflikte besitzen ID, Typ, Severity, betroffenen Schritt, Refs, Vorschlag, Status und spätere Masterentscheidung.",
+      "source": "HUMAN_NOTICE_9.2",
+      "acceptance": [
+        "Konfliktdaten sind im Response-Schema verpflichtend.",
+        "Ersatzjob referenziert Vorgänger und Konflikt.",
+        "Agent arbeitet nicht an der MASTER-Entscheidung vorbei."
+      ],
+      "workPackages": [
+        "WP-02",
+        "WP-03",
+        "WP-05",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-response-contract-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_responses.py",
+        "runtime/execution_reconciliation.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_responses_v014.py",
+        "tests/test_execution_reconciliation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentResponseContract",
+        "schemaAgentResponse",
+        "executionAttempt"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-09"
+      ]
+    },
+    {
+      "id": "REQ-024",
+      "title": "Minimale Agenten-Chat-Ausgabe",
+      "statement": "Der Agenten-Chat zeigt nur Start-, Abschluss- oder Blocker-Minimalstatus mit Git-Referenz.",
+      "source": "HUMAN_NOTICE_3.4,8.1",
+      "acceptance": [
+        "Chat Output Schema erlaubt nur STARTED, SUBMITTED, BLOCKED und REIDENTIFICATION_REQUIRED.",
+        "Wort-/Satzbudget ist deterministisch.",
+        "Fachberichte werden ausschließlich in Git abgelegt."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-06",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-communication-model.json",
+        "v0.14.0/agent-activation-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py",
+        "runtime/agent_orchestration.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_agent_activation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentCommunication",
+        "agentActivation",
+        "schemaAgentChatOutput"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-025",
+      "title": "Keine automatische Agentenaktivierung",
+      "statement": "Git-Push, Polling oder Scheduler-Dispatch aktivieren keinen normalen Agenten-Chat automatisch.",
+      "source": "HUMAN_NOTICE_3.1,4",
+      "acceptance": [
+        "backgroundWakeupAssumed ist false.",
+        "Scheduler markiert nur STARTABLE/WAITING_HUMAN_GO.",
+        "Claim benötigt GO-Evidence."
+      ],
+      "workPackages": [
+        "WP-01",
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/agent-communication-model.json",
+        "v0.14.0/agent-activation-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/agent_jobs.py",
+        "runtime/agent_orchestration.py"
+      ],
+      "automatedTests": [
+        "tests/test_agent_job_v014.py",
+        "tests/test_agent_activation_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "agentCommunication",
+        "agentActivation",
+        "schemaAgentChatOutput"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-026",
+      "title": "Submission, Verification, Acceptance und Merge getrennt",
+      "statement": "Fachlich fertig, in Git geschrieben, unabhängig geprüft, akzeptiert und integriert sind getrennte Zustände.",
+      "source": "HUMAN_NOTICE_10",
+      "acceptance": [
+        "Lifecycle enthält SUBMITTED, VERIFIED, ACCEPTED und MERGED/INTEGRATED getrennt.",
+        "Agent darf sich nicht selbst akzeptieren oder mergen."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "ARCHITECTURE_DECISION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/multi-agent-scheduler-model.json",
+        "v0.14.0/schemas/agent-job-state.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "multiAgentScheduler",
+        "schemaSchedulerState",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-027",
+      "title": "Unabhängige Reviewsteuerung",
+      "statement": "Wo gefordert, unterscheiden sich Produzent und Reviewer; Review erhält eigenen Job und eigene Evidence.",
+      "source": "HUMAN_NOTICE_3.2,10",
+      "acceptance": [
+        "Scheduler prüft Separation of Duties.",
+        "Reviewstatus und Reviewjob sind im Statusindex sichtbar."
+      ],
+      "workPackages": [
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "ARCHITECTURE_DECISION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/multi-agent-scheduler-model.json",
+        "v0.14.0/schemas/agent-job-state.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "multiAgentScheduler",
+        "schemaSchedulerState",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-028",
+      "title": "Parallelität ohne Kollisionen",
+      "statement": "Parallele Jobs benötigen konfliktfreie Schreibbereiche, eigene Branches und aktive Leases.",
+      "source": "HUMAN_NOTICE_10.2",
+      "acceptance": [
+        "Unbekannte Schreibüberlappung wird serialisiert.",
+        "Lease-Ablauf führt zu Reconciliation, nicht automatischer Neuzuweisung."
+      ],
+      "workPackages": [
+        "WP-04",
+        "WP-09"
+      ],
+      "origin": "ARCHITECTURE_DECISION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/multi-agent-scheduler-model.json",
+        "v0.14.0/schemas/agent-job-state.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "multiAgentScheduler",
+        "schemaSchedulerState",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-029",
+      "title": "Historie und Rework",
+      "statement": "Bearbeitete Jobs werden nicht still überschrieben; Rework und Neuzuweisung erzeugen neue Identitäten und Vorgängerreferenzen.",
+      "source": "HUMAN_NOTICE_9.2",
+      "acceptance": [
+        "Job-ID wird nie wiederverwendet.",
+        "supersedesJobId und conflictRef sind bei Rework/Neuzuweisung vorhanden."
+      ],
+      "workPackages": [
+        "WP-03",
+        "WP-05",
+        "WP-09"
+      ],
+      "origin": "ARCHITECTURE_DECISION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/multi-agent-scheduler-model.json",
+        "v0.14.0/schemas/agent-job-state.schema.json"
+      ],
+      "implementationEvidence": [
+        "runtime/master_orchestration.py",
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_master_scheduler_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "multiAgentScheduler",
+        "schemaSchedulerState",
+        "schemaHumanGoEvidence"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02"
+      ]
+    },
+    {
+      "id": "REQ-030",
+      "title": "Legacy-Migration ohne Historienverlust",
+      "statement": "Alte AWC-/SAF-Artefakte bleiben auditierbar, konkurrieren aber nicht mit aktiven autoritativen v0.14-Zuständen.",
+      "source": "AUDIT_FINDING",
+      "acceptance": [
+        "Migration Manifest klassifiziert ACTIVE, LEGACY_SNAPSHOT und SUPERSEDED.",
+        "Eine aktive Autoritätskette ist eindeutig.",
+        "Kein Legacy-Artefakt wird gelöscht."
+      ],
+      "workPackages": [
+        "WP-05",
+        "WP-08"
+      ],
+      "origin": "ARCHITECTURE_DECISION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/migration-model.json",
+        "v0.14.0/legacy-artifact-policy.json"
+      ],
+      "implementationEvidence": [
+        "runtime/migration.py"
+      ],
+      "automatedTests": [
+        "tests/test_migration_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "migration",
+        "legacyArtifactPolicy",
+        "schemaMigrationManifest"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "REFERENCE_PROJECT_MIGRATION_AFTER_ISOLATED_E2E",
+      "openFindings": [
+        "F-02",
+        "F-10"
+      ]
+    },
+    {
+      "id": "REQ-031",
+      "title": "Framework-/Factory-/OM-Kompatibilität bleibt erhalten",
+      "statement": "Die neue Agentenorchestrierung ändert nicht die bestehende Domain- und Paketkompatibilitätslogik.",
+      "source": "HUMAN_NOTICE_1.3",
+      "acceptance": [
+        "Bestehende Website/SaaS/Book-Pakettests bleiben grün.",
+        "Cross-Domain-Kombinationen bleiben fail-closed."
+      ],
+      "workPackages": [
+        "WP-07",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/composable-package-model.json",
+        "v0.14.0/domain-framework-profiles.json"
+      ],
+      "implementationEvidence": [
+        "runtime/bootstrap_policy.py",
+        "tools/build_domain_framework.py"
+      ],
+      "automatedTests": [
+        "tests/test_domain_framework_distributions.py",
+        "tests/test_composable_packages.py"
+      ],
+      "bundleModuleKeys": [
+        "composablePackageModel",
+        "schemaDomainPackage",
+        "packageCatalog"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "NOT_APPLICABLE",
+      "openFindings": []
+    },
+    {
+      "id": "REQ-032",
+      "title": "Maschinen- und Chat-Verifikation getrennt",
+      "statement": "Python-Referenzcode darf CI und Hostverifikation liefern, ist aber keine Endkundenvoraussetzung.",
+      "source": "HUMAN_NOTICE_1.2",
+      "acceptance": [
+        "Dokumentation bezeichnet Referenzruntime als optional.",
+        "Alle normativen Regeln sind im JSON-Bundle enthalten.",
+        "CI prüft dieselben Regeln maschinell."
+      ],
+      "workPackages": [
+        "WP-06",
+        "WP-07",
+        "WP-09"
+      ],
+      "origin": "HUMAN_REQUIREMENT",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "v0.14.0/chat-execution-model.json",
+        "v0.14.0/agent-activation-model.json"
+      ],
+      "implementationEvidence": [
+        "runtime/go_evidence.py"
+      ],
+      "automatedTests": [
+        "tests/test_product_boundary_v014.py",
+        "tests/test_go_evidence_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "chatExecution",
+        "agentActivation"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "NOT_APPLICABLE",
+      "openFindings": [
+        "F-08"
+      ]
+    },
+    {
+      "id": "REQ-033",
+      "title": "100-Prozent-Traceability",
+      "statement": "Jede verbindliche HUMAN-Anforderung ist einem Schema/Modell, Test und Nachweis zugeordnet.",
+      "source": "HUMAN_REQUEST_CURRENT",
+      "acceptance": [
+        "Traceability Matrix hat keine unzugeordneten Anforderungen.",
+        "Finaler Validator meldet 33/33 normative Anforderungen.",
+        "Evidenzgrenzen werden separat ausgewiesen."
+      ],
+      "workPackages": [
+        "WP-00",
+        "WP-10"
+      ],
+      "origin": "AUDIT_RECOMMENDATION",
+      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
+      "designEvidence": [
+        "docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json"
+      ],
+      "implementationEvidence": [
+        "tools/validate_traceability.py"
+      ],
+      "automatedTests": [
+        "tests/test_traceability_v014.py"
+      ],
+      "bundleModuleKeys": [
+        "schemaRequirementsTraceability"
+      ],
+      "coverage": {
+        "design": "PASS",
+        "implementation": "PASS",
+        "automatedTest": "PASS",
+        "bundle": "PASS",
+        "realGitE2E": "NOT_VERIFIED",
+        "crossHost": "NOT_VERIFIED"
+      },
+      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
+      "openFindings": [
+        "F-02",
+        "F-11"
+      ]
+    }
+  ],
+  "workPackages": [
+    {
+      "id": "WP-00",
+      "title": "Baseline und Traceability",
+      "dependsOn": []
+    },
+    {
+      "id": "WP-01",
+      "title": "HUMAN-GO und Agenteninitialisierung",
+      "dependsOn": [
+        "WP-00"
+      ]
+    },
+    {
+      "id": "WP-02",
+      "title": "Typisierte Response-Familie",
+      "dependsOn": [
+        "WP-00"
+      ]
+    },
+    {
+      "id": "WP-03",
+      "title": "Jobvertrag v0.14 und minimale Chat-Ausgabe",
+      "dependsOn": [
+        "WP-01",
+        "WP-02"
+      ]
+    },
+    {
+      "id": "WP-04",
+      "title": "MASTER-Statusindex und Scheduler-Integration",
+      "dependsOn": [
+        "WP-03"
+      ]
+    },
+    {
+      "id": "WP-05",
+      "title": "Migration und Legacy-Kompatibilität",
+      "dependsOn": [
+        "WP-03",
+        "WP-04"
+      ]
+    },
+    {
+      "id": "WP-06",
+      "title": "Produktgrenze und Dokumentation",
+      "dependsOn": [
+        "WP-01",
+        "WP-03"
+      ]
+    },
+    {
+      "id": "WP-07",
+      "title": "Framework- und Release-Integration",
+      "dependsOn": [
+        "WP-01",
+        "WP-02",
+        "WP-03",
+        "WP-04",
+        "WP-05",
+        "WP-06"
+      ]
+    },
+    {
+      "id": "WP-08",
+      "title": "Referenzprojektmigration",
+      "dependsOn": [
+        "WP-05",
+        "WP-07"
+      ]
+    },
+    {
+      "id": "WP-09",
+      "title": "End-to-End-Abnahme",
+      "dependsOn": [
+        "WP-07",
+        "WP-08"
+      ]
+    },
+    {
+      "id": "WP-10",
+      "title": "Abschlussprüfung und Release-PR",
+      "dependsOn": [
+        "WP-09"
+      ]
+    }
+  ],
+  "status": "APPROVED_FOR_IMPLEMENTATION_BY_CURRENT_HUMAN_REQUEST",
+  "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
+  "schemaRef": "v0.14.0/schemas/requirements-traceability.schema.json",
+  "summary": {
+    "requirements": 33,
+    "designPass": 33,
+    "implementationPass": 33,
+    "automatedTestPendingUntilCI": 0,
+    "bundlePendingUntilMaterialization": 0,
+    "realGitE2EVerified": 0,
+    "crossHostVerified": 0,
+    "percentageClaimForbidden": true,
+    "automatedTestPass": 33,
+    "bundlePass": 33
+  },
+  "ciEvidence": {
+    "repository": "empishaj/SAFOR",
+    "workflowRunId": "39113701629",
+    "runAttempt": "1",
+    "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_HEAD"
+  }
+}

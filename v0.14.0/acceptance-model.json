@@ -1,0 +1,64 @@
+{
+  "format": "SAFOR_ACCEPTANCE_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "safor-deterministic-acceptance",
+  "purpose": "Deterministically evaluate approved Work Item acceptance contracts from replayable evidence, independent review and authority decisions without letting probabilistic actors directly accept work.",
+  "principles": {
+    "acceptanceOwnedByDeterministicKernel": true,
+    "qualitativeJudgmentMustBecomeExplicitReviewOrAuthorityDecision": true,
+    "agentSelfCheckIsNotAcceptanceEvidence": true,
+    "everyCriterionRequiresTypedRequirement": true,
+    "oneActiveContractPerWorkItemRc2": true,
+    "contractImmutableAfterApproval": true,
+    "evidenceMustMatchSubjectAndType": true,
+    "reviewIndependenceEnforced": true,
+    "authorityIdMustMatchExactly": true,
+    "rejectedAuthorityBlocksAcceptance": true
+  },
+  "requirementTypes": {
+    "EVIDENCE": {
+      "satisfiedWhen": "A replay-ledger evidence record matches workItemId/evidenceType and required integrity policy."
+    },
+    "REVIEW": {
+      "satisfiedWhen": "A PASS review record matches workItemId/capability and the configured independence policy."
+    },
+    "AUTHORITY": {
+      "satisfiedWhen": "An APPROVED authority decision matches workItemId/authorityId and no later/equally-current rejecting decision supersedes it."
+    }
+  },
+  "derivationContract": {
+    "sources": [
+      "APPROVED_PLAN",
+      "WORK_ITEM.acceptanceCriteria",
+      "WORK_ITEM.evidenceRequirements",
+      "BOUND_FACTORY.model.evidenceContract",
+      "WORK_ITEM.review",
+      "WORK_ITEM.authorityRequirements"
+    ],
+    "deterministicFirst": true,
+    "qualitativeFallback": "BIND_TO_REVIEW_OR_AUTHORITY_REQUIREMENT",
+    "forbidden": [
+      "LLM_DIRECT_PASS_OF_FREE_TEXT_CRITERION",
+      "AGENT_SELF_ATTESTATION_FOR_INDEPENDENT_REVIEW",
+      "ASSISTANT_CLAIM_FOR_PROVIDER_EVIDENCE",
+      "DELIVERY_AS_OUTCOME_EVIDENCE"
+    ],
+    "approvalRule": "The typed Acceptance Contract is approved with the plan or by a later material-plan decision before becoming ACTIVE."
+  },
+  "evaluationOrder": [
+    "RESOLVE_SINGLE_ACTIVE_CONTRACT",
+    "VERIFY_CONTRACT_HASH_AND_SUBJECT",
+    "VERIFY_EVERY_CRITERION_HAS_REQUIREMENTS",
+    "EVALUATE_EVIDENCE_REQUIREMENTS",
+    "EVALUATE_REVIEW_REQUIREMENTS",
+    "EVALUATE_REVIEW_INDEPENDENCE",
+    "EVALUATE_AUTHORITY_REQUIREMENTS",
+    "VERIFY_NO_ACTIVE_REJECTION",
+    "ACCEPT_ONLY_IF_ALL_PASS"
+  ],
+  "modelRefs": {
+    "acceptanceContractSchema": "schemas/acceptance-contract.schema.json",
+    "reviewDecisionSchema": "schemas/review-decision.schema.json",
+    "authorityDecisionSchema": "schemas/authority-decision.schema.json"
+  }
+}

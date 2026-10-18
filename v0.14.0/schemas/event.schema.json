@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/event.schema.json",
+  "title": "SAFOR Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "eventId",
+    "sequence",
+    "eventType",
+    "occurredAt",
+    "source",
+    "subject",
+    "correlationId",
+    "causationId",
+    "payload",
+    "evidenceRefs"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_EVENT"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "eventId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "eventType": {
+      "type": "string",
+      "minLength": 1
+    },
+    "occurredAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "actorId"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "HUMAN",
+            "AGENT",
+            "PROVIDER",
+            "KERNEL",
+            "MIGRATION"
+          ]
+        },
+        "actorId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "subject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "type",
+        "ref"
+      ],
+      "properties": {
+        "type": {
+          "enum": [
+            "PROJECT",
+            "WORK_ITEM",
+            "JOB",
+            "EFFECT",
+            "MODULE"
+          ]
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "correlationId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "causationId": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "payload": {
+      "type": "object"
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

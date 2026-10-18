@@ -1,6 +1,6 @@
 # SAFOR Product Readiness
 
-Current target: **v0.13.0-rc.9**
+Current target: **v0.14.0-rc.2**
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 

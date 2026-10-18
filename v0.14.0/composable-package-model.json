@@ -1,0 +1,83 @@
+{
+  "format": "SAFOR_COMPOSABLE_PACKAGE_MODEL",
+  "schemaVersion": "0.14.0",
+  "id": "safor-composable-domain-packages",
+  "purpose": "Make Factory and Operating Model independently loadable JSON products that can be mixed only after deterministic access, integrity and compatibility checks.",
+  "principles": {
+    "frameworkIsIndependentProduct": true,
+    "factoryAndOperatingModelAreIndependentPackages": true,
+    "onePackageEqualsOneLoadableJsonArtifact": true,
+    "entitlementEvidenceIsExternalToPackageJson": true,
+    "packagePossessionIsNotEntitlement": true,
+    "websiteStarterDefaultsAreFreePublic": true,
+    "factoryMayBeUpgradedIndependently": true,
+    "operatingModelMayBeUpgradedIndependently": true,
+    "mixedFreeAndPaidPairAllowed": true,
+    "selectedPairMustBeCompatible": true,
+    "projectWorkspaceIndependentFromPackageSource": true,
+    "softwareSaasFactoryAndOperatingModelAreCommercial": true,
+    "creationProfilesMayRestrictSelectedAccessModes": true,
+    "domainSpecificFrameworkDistributions": true,
+    "domainDistributionEmbedsDefaultFactoryAndOperatingModel": true,
+    "domainDistributionSuppressesRedundantCreationTypeQuestion": true,
+    "packageFamilyCompatibilitySupported": true,
+    "compatibilityIsBidirectional": true,
+    "crossDomainReplacementForbidden": true
+  },
+  "packageArtifactContract": {
+    "format": "SAFOR_DOMAIN_PACKAGE",
+    "schemaRef": "schemas/domain-package.schema.json",
+    "chatLoadable": true,
+    "singleJsonFile": true,
+    "entitlementEmbedded": false,
+    "integrityDigestScope": "DECLARED_DOMAIN_CONTRACT"
+  },
+  "selectionContract": {
+    "catalogRef": "package-catalog.json",
+    "selectionSchemaRef": "schemas/package-selection.schema.json",
+    "compatibilityDecisionSchemaRef": "schemas/package-compatibility-decision.schema.json",
+    "defaultRule": "Use creation-profile defaults unless HUMAN explicitly selects an allowed alternative. WEBSITE defaults are free. SOFTWARE_SAAS and BOOK defaults are commercial.",
+    "accessRule": "Resolve access independently for Factory and Operating Model, then enforce the active creation profile access policy. SOFTWARE_SAAS and BOOK require both selected packages to be paid.",
+    "paidOverrideRule": "Every selected paid package requires its own independently verified entitlement. On SOFTWARE_SAAS this applies to both Factory and Operating Model.",
+    "compatibilityRule": "No Factory/Operating Model pair or replacement may bind without same-domain support and bidirectional counterpart compatibility, including allowed package-family constraints and declared capability/authority/work-item/artifact requirements."
+  },
+  "resolutionOrder": [
+    "RESOLVE_OR_PRESELECT_DOMAIN_FROM_DISTRIBUTION",
+    "LOAD_EMBEDDED_DEFAULT_FACTORY_AND_OPERATING_MODEL_OR_GENERIC_PROFILE_DEFAULTS",
+    "OFFER_OR_ACCEPT_HUMAN_PACKAGE_OVERRIDES",
+    "RESOLVE_FACTORY_ACCESS_INDEPENDENTLY",
+    "RESOLVE_OPERATING_MODEL_ACCESS_INDEPENDENTLY",
+    "VERIFY_DOMAIN_PACKAGE_SHAPE_AND_INTEGRITY",
+    "VERIFY_FRAMEWORK_VERSION_COMPATIBILITY",
+    "VERIFY_CREATION_TYPE_AND_DOMAIN_SUPPORT",
+    "VERIFY_PACKAGE_FAMILY_CONSTRAINTS_BIDIRECTIONALLY",
+    "VERIFY_FACTORY_TO_OPERATING_MODEL_REQUIREMENTS",
+    "VERIFY_OPERATING_MODEL_TO_FACTORY_REQUIREMENTS",
+    "MATERIALIZE_PACKAGE_SELECTION_AND_COMPATIBILITY_DECISION",
+    "PIN_PACKAGE_BINDINGS",
+    "CONTINUE_TO_PROJECT_WORKSPACE_SELECTION"
+  ],
+  "failureOutcomes": {
+    "missingPackage": "PACKAGE_ACCESS_REQUIRED",
+    "unverifiedEntitlement": "PACKAGE_ENTITLEMENT_UNVERIFIED",
+    "invalidPackage": "DOMAIN_PACKAGE_INVALID",
+    "integrityMismatch": "DOMAIN_PACKAGE_INTEGRITY_MISMATCH",
+    "frameworkIncompatible": "DOMAIN_PACKAGE_FRAMEWORK_INCOMPATIBLE",
+    "pairIncompatible": "FACTORY_OPERATING_MODEL_INCOMPATIBLE",
+    "unsupportedCreationType": "DOMAIN_PACKAGE_CREATION_TYPE_UNSUPPORTED",
+    "creationProfilePaidPairViolation": "CREATION_PROFILE_REQUIRES_BOTH_PAID_PACKAGES",
+    "domainMismatch": "DOMAIN_FRAMEWORK_DOMAIN_MISMATCH",
+    "packageFamilyMismatch": "FACTORY_OPERATING_MODEL_FAMILY_INCOMPATIBLE",
+    "bidirectionalCounterpartMismatch": "FACTORY_OPERATING_MODEL_BIDIRECTIONAL_INCOMPATIBLE"
+  },
+  "domainFrameworkDistributionContract": {
+    "format": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION",
+    "profileCatalogRef": "domain-framework-profiles.json",
+    "distributions": [
+      "SAFOR-FRAMEWORK-WEBSITE.json",
+      "SAFOR-FRAMEWORK-SAAS.json",
+      "SAFOR-FRAMEWORK-BOOK-CREATION.json"
+    ],
+    "rule": "All distributions use the same SAFOR kernel. Each embeds one default Factory and Operating Model for one fixed domain. Public Website is reproducible from public modules; paid SaaS/Book distributions are built only with protected entitled module inputs."
+  }
+}

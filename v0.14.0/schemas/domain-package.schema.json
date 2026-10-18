@@ -1,0 +1,454 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/0.14.0/domain-package.schema.json",
+  "title": "SAFOR Domain Package 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "packageId",
+    "packageKind",
+    "version",
+    "name",
+    "description",
+    "commercial",
+    "compatibility",
+    "exports",
+    "dependencies",
+    "integrity",
+    "model"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_DOMAIN_PACKAGE"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "packageId": {
+      "type": "string",
+      "pattern": "^safor\\.(factory|om)\\.[a-z0-9][a-z0-9.-]*$"
+    },
+    "packageKind": {
+      "enum": [
+        "FACTORY",
+        "OPERATING_MODEL"
+      ]
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[A-Za-z0-9.-]+)?$"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string",
+      "minLength": 1
+    },
+    "commercial": {
+      "$ref": "#/$defs/commercial"
+    },
+    "compatibility": {
+      "$ref": "#/$defs/compatibility"
+    },
+    "exports": {
+      "$ref": "#/$defs/exports"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/dependency"
+      }
+    },
+    "integrity": {
+      "$ref": "#/$defs/integrity"
+    },
+    "model": {
+      "type": "object"
+    },
+    "provenance": {
+      "$ref": "#/$defs/provenance"
+    },
+    "packageFamily": {
+      "type": "string",
+      "pattern": "^safor\\.(factory|om)\\.[a-z0-9][a-z0-9.-]*$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "packageKind": {
+            "const": "FACTORY"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "packageId": {
+            "pattern": "^safor\\.factory\\."
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "packageKind": {
+            "const": "OPERATING_MODEL"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "packageId": {
+            "pattern": "^safor\\.om\\."
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "commercial": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "accessMode",
+        "sku",
+        "entitlementRequired",
+        "entitlementEvidenceMode",
+        "independentlySelectable"
+      ],
+      "properties": {
+        "accessMode": {
+          "enum": [
+            "FREE_PUBLIC",
+            "PAID_ENTITLEMENT_REQUIRED"
+          ]
+        },
+        "sku": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entitlementRequired": {
+          "type": "boolean"
+        },
+        "entitlementEvidenceMode": {
+          "const": "EXTERNAL_ONLY"
+        },
+        "independentlySelectable": {
+          "const": true
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "accessMode": {
+                "const": "FREE_PUBLIC"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "entitlementRequired": {
+                "const": false
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "accessMode": {
+                "const": "PAID_ENTITLEMENT_REQUIRED"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "entitlementRequired": {
+                "const": true
+              }
+            }
+          }
+        }
+      ]
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "framework",
+        "supportedCreationTypes",
+        "counterpart"
+      ],
+      "properties": {
+        "framework": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "minimum",
+            "maximumExclusive"
+          ],
+          "properties": {
+            "minimum": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            },
+            "maximumExclusive": {
+              "type": "string",
+              "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+            }
+          }
+        },
+        "supportedCreationTypes": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "counterpart": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "requiredKind",
+            "requiredCapabilities",
+            "requiredAuthorities"
+          ],
+          "properties": {
+            "requiredKind": {
+              "enum": [
+                "FACTORY",
+                "OPERATING_MODEL"
+              ]
+            },
+            "requiredCapabilities": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "requiredAuthorities": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "allowedPackageIds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^safor\\.(factory|om)\\."
+              }
+            },
+            "allowedPackageFamilies": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "pattern": "^safor\\.(factory|om)\\.[a-z0-9][a-z0-9.-]*$"
+              }
+            },
+            "requiredWorkItemTypes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "requiredArtifactTypes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          }
+        },
+        "domainIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[A-Z][A-Z0-9_]{2,63}$"
+          }
+        }
+      }
+    },
+    "exports": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "capabilities",
+        "authorities",
+        "workItemTypes",
+        "artifactTypes",
+        "providerCapabilities"
+      ],
+      "properties": {
+        "capabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "authorities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "workItemTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "artifactTypes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        },
+        "providerCapabilities": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "dependency": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "packageId",
+        "versionRange"
+      ],
+      "properties": {
+        "packageId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionRange": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "integrity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "canonicalization",
+        "digestAlgorithm",
+        "digestScope",
+        "contentDigest",
+        "verificationMode"
+      ],
+      "properties": {
+        "canonicalization": {
+          "enum": [
+            "SAFOR_CANONICAL_JSON_V1",
+            "SAFOR_CANONICAL_JSON_V2"
+          ]
+        },
+        "digestAlgorithm": {
+          "const": "SHA-256"
+        },
+        "digestScope": {
+          "const": "DECLARED_DOMAIN_CONTRACT"
+        },
+        "contentDigest": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "verificationMode": {
+          "enum": [
+            "CANONICAL_REPOSITORY_READBACK",
+            "TRUSTED_PACKAGE_SOURCE_READBACK",
+            "SIGNED_ARTIFACT"
+          ]
+        },
+        "signature": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "algorithm",
+            "keyId",
+            "value"
+          ],
+          "properties": {
+            "algorithm": {
+              "enum": [
+                "Ed25519"
+              ]
+            },
+            "keyId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "value": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "verificationMode": {
+                "const": "SIGNED_ARTIFACT"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "signature"
+            ]
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sourceRef": {
+          "type": "string",
+          "minLength": 1
+        },
+        "builtAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}

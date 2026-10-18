@@ -1,6 +1,6 @@
 {
   "format": "SAFOR_PUBLIC_EVALUATION_ACCESS_BUNDLE",
-  "schemaVersion": "0.13.0",
+  "schemaVersion": "0.14.0",
   "domainId": "SAAS_ENGINEERING",
   "creationType": "SOFTWARE_SAAS",
   "purpose": "PUBLIC_TEST_EVALUATION_ONLY",
@@ -32,7 +32,7 @@
   "entitlements": [
     {
       "format": "SAFOR_COMMERCIAL_ENTITLEMENT",
-      "schemaVersion": "0.13.0",
+      "schemaVersion": "0.14.0",
       "entitlementId": "TEST-SAAS-FACTORY",
       "status": "ACTIVE",
       "subject": {
@@ -47,7 +47,7 @@
       "grant": {
         "sku": "SAFOR-SOFTWARE-FACTORY-TEST",
         "packageId": "safor.factory.software-delivery",
-        "versionRange": "1.7.0-test.1",
+        "versionRange": "1.8.0-test.1",
         "licenseType": "PERPETUAL"
       },
       "validity": {
@@ -68,7 +68,7 @@
     },
     {
       "format": "SAFOR_COMMERCIAL_ENTITLEMENT",
-      "schemaVersion": "0.13.0",
+      "schemaVersion": "0.14.0",
       "entitlementId": "TEST-SAAS-OM",
       "status": "ACTIVE",
       "subject": {
@@ -83,7 +83,7 @@
       "grant": {
         "sku": "SAFOR-SAAS-ENGINEERING-OM-TEST",
         "packageId": "safor.om.saas-engineering",
-        "versionRange": "1.7.0-test.1",
+        "versionRange": "1.8.0-test.1",
         "licenseType": "PERPETUAL"
       },
       "validity": {

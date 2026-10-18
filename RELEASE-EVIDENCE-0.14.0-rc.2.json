@@ -1,0 +1,91 @@
+{
+  "format": "SAFOR_RELEASE_EVIDENCE",
+  "schemaVersion": "0.14.0",
+  "product": "SAFOR",
+  "version": "0.14.0-rc.2",
+  "status": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+  "createdAt": "2026-10-18T09:01:41Z",
+  "baseMainCommit": "29a9bcc5c84fe348f94c63b08852fda28135fe50",
+  "auditedV014Commit": "cd6aa12605d208b96c4d19c95b7eb9756624c113",
+  "integrationBranch": "safor/integrate-v0.14.0-rc.2",
+  "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
+  "auditDeltaRef": "docs/master-subagent-orchestration/AUDIT-DELTA-v0.14.0-rc.2.md",
+  "workflow": {
+    "repository": "empishaj/SAFOR",
+    "runId": "39113701629",
+    "runAttempt": "1"
+  },
+  "validatedCommands": [
+    "python tools/build_bundle.py --check",
+    "python tools/build_domain_framework.py --check",
+    "python tools/validate_safor.py",
+    "python tools/validate_traceability.py",
+    "python -m unittest discover -s tests -v",
+    "sha256sum --check SHA256SUMS-0.14.0-rc.2.txt"
+  ],
+  "auditFindings": {
+    "F-01": "RESOLVED_BY_BUNDLE_INTEGRATION",
+    "F-02": "OPEN_REAL_GIT_E2E_REQUIRED",
+    "F-03": "RESOLVED_BY_STRUCTURED_GO_EVIDENCE_AND_ATOMIC_CLAIM",
+    "F-04": "RESOLVED_BY_VERIFIED_RESPONSE_READBACK",
+    "F-05": "RESOLVED_BY_DERIVED_FRESHNESS",
+    "F-06": "RESOLVED_STRUCTURALLY_REAL_E2E_REMAINS_EXPLICIT",
+    "F-07": "RESOLVED_BY_RC9_BASED_INTEGRATION",
+    "F-08": "DOCUMENTED_ARCHITECTURAL_LIMIT",
+    "F-09": "AUTOMATED_FAILURE_INJECTION_PASS_LIVE_E2E_OPEN",
+    "F-10": "AUTOMATED_IDEMPOTENCY_PASS_LIVE_E2E_OPEN",
+    "F-11": "OPEN_EMPIRICAL_USABILITY_EVIDENCE",
+    "F-12": "RESOLVED_BY_IMPLEMENTATION_DECISION_RECORD"
+  },
+  "artifacts": [
+    {
+      "path": "SAFOR-FRAMEWORK.json",
+      "sha256": "19b75c826d1802c12a5a4fea124c8c3a69f6a201d447e646e9f10aafcaa4c08b",
+      "gitBlobSha": "165570e46c96730cc7853ab17146dd1d2cfb991c",
+      "bytes": 959932
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-v0.14.0-rc.2.json",
+      "sha256": "19b75c826d1802c12a5a4fea124c8c3a69f6a201d447e646e9f10aafcaa4c08b",
+      "gitBlobSha": "165570e46c96730cc7853ab17146dd1d2cfb991c",
+      "bytes": 959932
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "sha256": "a4cd6de8ddeab9a0f38b2096e3cff5f03647b9bd3482dd0a2ed85cfc675c08d3",
+      "gitBlobSha": "08e6ecc784bfb9c8430077a402d300f6f8cfef19",
+      "bytes": 1039387
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-SAAS.json",
+      "sha256": "928a68b00240a92aa8742c809d0c48dbca786669ffa761522a171a0a8180b572",
+      "gitBlobSha": "5330fe86185989b5ff85e6755a1f02d0f04cba12",
+      "bytes": 1064438
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "sha256": "062d8772b775980167142b6d3ffee8d706504c90db86d01598d72ff398edbb7f",
+      "gitBlobSha": "c8d932b8beb65bbf9a5bab38bf21ea7d48c31c0f",
+      "bytes": 1035867
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-SAAS.json",
+      "sha256": "f5e8b7aa994e164cbff4e462611b8fbf7374514b15d0f196c07ca70fe781ffc0",
+      "gitBlobSha": "8927cc3564714c9bd0bea0f9a6e7d1667e60dcf1",
+      "bytes": 3664
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "sha256": "250e3731d015380bda4db94854a3ee8e70c86c530a7cbcdf3d0ee65da6c1164c",
+      "gitBlobSha": "93ead41aee9409231167a9b523e059a68b7928bf",
+      "bytes": 3634
+    }
+  ],
+  "truthBoundary": [
+    "Automated PASS is not a real fresh-chat Git E2E PASS.",
+    "HUMAN-GO evidence is a bound chat assertion, not a cryptographic HUMAN signature.",
+    "JSON does not create provider permissions or force a non-conforming host.",
+    "Public SaaS and Book evaluation bytes are not commercial production licenses.",
+    "Reference-project migration is intentionally deferred until isolated real-Git E2E passes."
+  ]
+}

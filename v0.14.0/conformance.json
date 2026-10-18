@@ -1,0 +1,1447 @@
+{
+  "format": "SAFOR_CONFORMANCE_SUITE",
+  "schemaVersion": "0.14.0",
+  "purpose": "Declarative architecture and safety checks for the integrated SAFOR 0.14 release candidate.",
+  "assertions": [
+    {
+      "id": "CF-001",
+      "statement": "SAFOR-MASTER.json is the single portable bootstrap entrypoint.",
+      "expected": true
+    },
+    {
+      "id": "CF-002",
+      "statement": "Kernel requires OPERATING_MODEL, FACTORY and PROVIDER_ADAPTER bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-003",
+      "statement": "Factory packages reference capabilities/authorities but contain no roleId bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-004",
+      "statement": "Every capability required by the software factory is exported by the SaaS engineering operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-005",
+      "statement": "Every authority required by the software factory is exported by the SaaS engineering operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-006",
+      "statement": "Every capability required by the book factory is exported by the book authoring operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-007",
+      "statement": "Every authority required by the book factory is exported by the book authoring operating model.",
+      "expected": true
+    },
+    {
+      "id": "CF-008",
+      "statement": "Provider adapters export only capabilities known to the kernel provider capability vocabulary.",
+      "expected": true
+    },
+    {
+      "id": "CF-009",
+      "statement": "Global schemas contain no safomwebsite-specific migration constant.",
+      "expected": true
+    },
+    {
+      "id": "CF-010",
+      "statement": "Work-item type is a factory-defined string and is not a kernel domain enum.",
+      "expected": true
+    },
+    {
+      "id": "CF-011",
+      "statement": "Control, value-stream and execution states are separate aggregates.",
+      "expected": true
+    },
+    {
+      "id": "CF-012",
+      "statement": "Delivery completion is distinct from outcome validation.",
+      "expected": true
+    },
+    {
+      "id": "CF-013",
+      "statement": "Kernel references a dedicated interaction model and interaction-menu schema.",
+      "expected": true
+    },
+    {
+      "id": "CF-014",
+      "statement": "A state-aware menu is required at user-relevant stable checkpoints.",
+      "expected": true
+    },
+    {
+      "id": "CF-015",
+      "statement": "NEXT_ROUND is bounded by existing authorization and stops before any new human decision or authority expansion.",
+      "expected": true
+    },
+    {
+      "id": "CF-016",
+      "statement": "Native clickable actions are preferred only when the host actually exposes a supported interaction capability.",
+      "expected": true
+    },
+    {
+      "id": "CF-017",
+      "statement": "Recommendations are advisory until explicitly selected and are ranked from current state/evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-018",
+      "statement": "Danger actions are visually separated and require confirmation.",
+      "expected": true
+    },
+    {
+      "id": "CF-019",
+      "statement": "Direct HUMAN communication uses the SAFOR_HUMAN_BUDDY profile.",
+      "expected": true
+    },
+    {
+      "id": "CF-020",
+      "statement": "Routine checkpoint communication is concise by default and governed by explicit response budgets.",
+      "expected": true
+    },
+    {
+      "id": "CF-021",
+      "statement": "HUMAN messages lead with the useful result, decision or next action instead of tool/process narration.",
+      "expected": true
+    },
+    {
+      "id": "CF-022",
+      "statement": "Technical state and evidence detail are progressively disclosed through Details unless immediately necessary.",
+      "expected": true
+    },
+    {
+      "id": "CF-023",
+      "statement": "Encouragement is specific and evidence-grounded; generic praise, exaggeration and emotional manipulation are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-024",
+      "statement": "Expanded detail remains available whenever the HUMAN requests it or material risk requires it.",
+      "expected": true
+    },
+    {
+      "id": "CF-025",
+      "statement": "Loading SAFOR-MASTER starts guided initialization with explicit GitHub/GitLab HUMAN selection.",
+      "expected": true
+    },
+    {
+      "id": "CF-026",
+      "statement": "Owner selection is blocked until mandatory baseline provider read/write capabilities are proven.",
+      "expected": true
+    },
+    {
+      "id": "CF-027",
+      "statement": "Missing provider rights produce a HUMAN blocker that explicitly requires read/write access without requesting passwords or PATs in chat.",
+      "expected": true
+    },
+    {
+      "id": "CF-028",
+      "statement": "The HUMAN explicitly selects an owner namespace and owner-scoped access is re-verified.",
+      "expected": true
+    },
+    {
+      "id": "CF-029",
+      "statement": "The HUMAN explicitly selects EXISTING or NEW project mode.",
+      "expected": true
+    },
+    {
+      "id": "CF-030",
+      "statement": "EXISTING mode defaults to eligible repositories active within the previous 7 days, sorted by normalized lastActivityAt descending.",
+      "expected": true
+    },
+    {
+      "id": "CF-031",
+      "statement": "The existing-project repository list is presented as a selectable menu with an option to show all repositories.",
+      "expected": true
+    },
+    {
+      "id": "CF-032",
+      "statement": "NEW mode requires provider.repository.create and does not create a repository before HUMAN confirmation and SETUP_APPROVAL.",
+      "expected": true
+    },
+    {
+      "id": "CF-033",
+      "statement": "Selected owner identity is persisted in the project descriptor.",
+      "expected": true
+    },
+    {
+      "id": "CF-034",
+      "statement": "All HUMAN interaction is restricted to chat-native UI surfaces exposed by the host.",
+      "expected": true
+    },
+    {
+      "id": "CF-035",
+      "statement": "Custom web UI, HTML, CSS, JavaScript UI shells, iframes and forced color theming are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-036",
+      "statement": "SAFOR controls interaction semantics and labels but not host-owned button colors or dropdown styling.",
+      "expected": true
+    },
+    {
+      "id": "CF-037",
+      "statement": "When native buttons/selects are unavailable, fallback is native Markdown/plain text only.",
+      "expected": true
+    },
+    {
+      "id": "CF-038",
+      "statement": "Kernel references a conservative self-healing model and repair-record schema.",
+      "expected": true
+    },
+    {
+      "id": "CF-039",
+      "statement": "Self-healing has explicit detect, classify, plan, execute and verify stages.",
+      "expected": true
+    },
+    {
+      "id": "CF-040",
+      "statement": "Automatic repairs are limited to existing authorization and proven provider capabilities.",
+      "expected": true
+    },
+    {
+      "id": "CF-041",
+      "statement": "Retries are bounded by failure-class and operation budgets; unknown mutation effects reconcile before retry.",
+      "expected": true
+    },
+    {
+      "id": "CF-042",
+      "statement": "Every repair requires authoritative readback before success and persists an immutable repair record.",
+      "expected": true
+    },
+    {
+      "id": "CF-043",
+      "statement": "Human gates, reviews, mandates and policy guards cannot be bypassed by self-healing.",
+      "expected": true
+    },
+    {
+      "id": "CF-044",
+      "statement": "Force-push, history rewrite, destructive repository deletion and invented evidence are forbidden automatic repairs.",
+      "expected": true
+    },
+    {
+      "id": "CF-045",
+      "statement": "When automatic recovery is unsafe or exhausted, SAFOR escalates concisely to the HUMAN with the smallest required action.",
+      "expected": true
+    },
+    {
+      "id": "CF-046",
+      "statement": "`{selectedOwner}/safor-memory` must pre-exist before project selection and is the mandatory control repository.",
+      "expected": true
+    },
+    {
+      "id": "CF-047",
+      "statement": "safor-memory read and write access must be proven; missing repository or insufficient access causes STOP.",
+      "expected": true
+    },
+    {
+      "id": "CF-048",
+      "statement": "SAFOR never auto-creates safor-memory or substitutes another control repository in this baseline.",
+      "expected": true
+    },
+    {
+      "id": "CF-049",
+      "statement": "The HUMAN explicitly chooses exactly one creation type: WEBSITE, SOFTWARE_SAAS or BOOK.",
+      "expected": true
+    },
+    {
+      "id": "CF-050",
+      "statement": "Creation type selects default Factory/Operating Model candidates plus its commercial access policy; compatible overrides remain separately governed.",
+      "expected": true
+    },
+    {
+      "id": "CF-051",
+      "statement": "Website, Software/SaaS and Book factories each own their domain-specific discovery, planning and evidence contracts.",
+      "expected": true
+    },
+    {
+      "id": "CF-052",
+      "statement": "D01 Discovery resolves only the bound Factory discoveryContract.",
+      "expected": true
+    },
+    {
+      "id": "CF-053",
+      "statement": "P01 Planning resolves only the same bound Factory planningContract and confirmed Discovery.",
+      "expected": true
+    },
+    {
+      "id": "CF-054",
+      "statement": "E04/E05 collect and evaluate domain evidence only against the same bound Factory evidenceContract; cross-Factory substitution is forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-055",
+      "statement": "Project descriptor persists the HUMAN-selected creationType and it must remain consistent with package bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-056",
+      "statement": "Kernel defines a repository-native Agent Workspace Protocol with persistent identities, inbox, state, outbox, evidence and MASTER job-state paths.",
+      "expected": true
+    },
+    {
+      "id": "CF-057",
+      "statement": "Agent registry and identity are MASTER-owned; agent state, outbox and agent evidence are AGENT-owned.",
+      "expected": true
+    },
+    {
+      "id": "CF-058",
+      "statement": "Agent jobs are immutable MASTER-dispatched contracts and copied chat prompts are not authoritative job transport.",
+      "expected": true
+    },
+    {
+      "id": "CF-059",
+      "statement": "An agent claim requires matching agentId and identityRevision plus an active covering mandate and actual provider rights.",
+      "expected": true
+    },
+    {
+      "id": "CF-060",
+      "statement": "Concurrent agent claims use optimistic concurrency and stale claims reconcile instead of silently succeeding.",
+      "expected": true
+    },
+    {
+      "id": "CF-061",
+      "statement": "MASTER-owned master/jobs/{jobId}.json is the authoritative lifecycle; agent-local state is not authoritative project status.",
+      "expected": true
+    },
+    {
+      "id": "CF-062",
+      "statement": "Agent result submission cannot self-verify or self-accept work.",
+      "expected": true
+    },
+    {
+      "id": "CF-063",
+      "statement": "MASTER verifies result binding, evidence, reviews and provider readback before VERIFIED/ACCEPTED.",
+      "expected": true
+    },
+    {
+      "id": "CF-064",
+      "statement": "Normal chat agents require an external activation trigger; background wakeup is not assumed.",
+      "expected": true
+    },
+    {
+      "id": "CF-065",
+      "statement": "Agent identity is stable across jobs and initial bootstrap requires only control repository, project ID and agent ID.",
+      "expected": true
+    },
+    {
+      "id": "CF-066",
+      "statement": "Execution state references agent job states without duplicating their authoritative lifecycle fields.",
+      "expected": true
+    },
+    {
+      "id": "CF-067",
+      "statement": "Every persistent agent has a fixed MASTER-owned inbox index at agents/{agentId}/inbox/index.json so job discovery never depends on repository directory enumeration or HUMAN prompt transport.",
+      "expected": true
+    },
+    {
+      "id": "CF-068",
+      "statement": "The inbox index is a non-authoritative discoverability projection; an agent must read the referenced immutable job contract and authoritative master/jobs/{jobId}.json before claim.",
+      "expected": true
+    },
+    {
+      "id": "CF-069",
+      "statement": "Kernel references a dedicated MASTER-owned multi-agent scheduler model and scheduler state.",
+      "expected": true
+    },
+    {
+      "id": "CF-070",
+      "statement": "Only ATOMIC work items are dispatchable; COMPOSITE work items require explicit child decomposition and join policy.",
+      "expected": true
+    },
+    {
+      "id": "CF-071",
+      "statement": "READY scheduling requires accepted dependencies, immutable read inputs, active mandate and complete resource declarations.",
+      "expected": true
+    },
+    {
+      "id": "CF-072",
+      "statement": "Agent registry declares dispatchEnabled and maxConcurrentJobs; normal chat-agent capacity defaults conceptually to one slot.",
+      "expected": true
+    },
+    {
+      "id": "CF-073",
+      "statement": "Scheduler may use multiple free agent slots in one dispatch wave when mutually conflict-free READY jobs exist.",
+      "expected": true
+    },
+    {
+      "id": "CF-074",
+      "statement": "Concurrent jobs are rejected when write conflict domains or exclusive keys intersect.",
+      "expected": true
+    },
+    {
+      "id": "CF-075",
+      "statement": "Unknown or project-wide mutation conflict is serialized rather than optimistically parallelized.",
+      "expected": true
+    },
+    {
+      "id": "CF-076",
+      "statement": "MASTER-owned resource leases are acquired and read back before an agent job is considered dispatched.",
+      "expected": true
+    },
+    {
+      "id": "CF-077",
+      "statement": "Lease expiry or lost progress causes reconciliation and never silent overlapping reassignment.",
+      "expected": true
+    },
+    {
+      "id": "CF-078",
+      "statement": "Every mutating agent job receives a dedicated Git branch from an immutable base commit.",
+      "expected": true
+    },
+    {
+      "id": "CF-079",
+      "statement": "Agent direct writes to the default branch and cross-job branches are forbidden.",
+      "expected": true
+    },
+    {
+      "id": "CF-080",
+      "statement": "Every mutating agent result includes provider-verifiable Git base/head/commit/path traceability.",
+      "expected": true
+    },
+    {
+      "id": "CF-081",
+      "statement": "Every agent job, including read-only work, persists a HUMAN-readable Markdown result alongside machine JSON.",
+      "expected": true
+    },
+    {
+      "id": "CF-082",
+      "statement": "Machine result pins the HUMAN-readable report by control repository, blob SHA and commit SHA.",
+      "expected": true
+    },
+    {
+      "id": "CF-083",
+      "statement": "Downstream fan-in work becomes READY only from ACCEPTED required upstream work, not from submission alone.",
+      "expected": true
+    },
+    {
+      "id": "CF-084",
+      "statement": "Dispatch-wave and resource-lease records persist the MASTER scheduling decision for audit.",
+      "expected": true
+    },
+    {
+      "id": "CF-085",
+      "statement": "Agent job resource access is an immutable dispatch snapshot pinned to the authoritative work-item blob.",
+      "expected": true
+    },
+    {
+      "id": "CF-086",
+      "statement": "Read inputs used for parallel scheduling are pinned to immutable revisions.",
+      "expected": true
+    },
+    {
+      "id": "CF-087",
+      "statement": "Factory planning contracts require execution/resource/parallelization data and declare natural parallelism where applicable.",
+      "expected": true
+    },
+    {
+      "id": "CF-088",
+      "statement": "HUMAN status experience exposes agent utilization, active jobs and conflict/dependency blockers without requiring raw JSON inspection.",
+      "expected": true
+    },
+    {
+      "id": "CF-089",
+      "statement": "Scheduling dependencies form a DAG; dependency cycles block READY derivation and dispatch.",
+      "expected": true
+    },
+    {
+      "id": "CF-090",
+      "statement": "Every agent job uses the canonical hierarchical v0.8 execution contract rather than the former flat job structure.",
+      "expected": true
+    },
+    {
+      "id": "CF-091",
+      "statement": "Every job has a globally unique UUIDv7 jobId and a separate HUMAN/Git-safe jobKey.",
+      "expected": true
+    },
+    {
+      "id": "CF-092",
+      "statement": "Every job explicitly records packageId, workItemId, package/plan/dispatch sequence, attempt and rework lineage.",
+      "expected": true
+    },
+    {
+      "id": "CF-093",
+      "statement": "Every job records MASTER provenance and creation/issue timestamps sufficient to reconstruct which MASTER run/state created it.",
+      "expected": true
+    },
+    {
+      "id": "CF-094",
+      "statement": "Every job explicitly binds the target agent identity revision and the role the subagent must assume.",
+      "expected": true
+    },
+    {
+      "id": "CF-095",
+      "statement": "Every job contains one or more explicit versioned skill contracts with description, execution instructions and immutable skill refs.",
+      "expected": true
+    },
+    {
+      "id": "CF-096",
+      "statement": "Every job input is READ_ONLY and pinned to an immutable repository commit; path inputs may additionally pin blob identity.",
+      "expected": true
+    },
+    {
+      "id": "CF-097",
+      "statement": "Every job declares provider capability bounds and per-repository read/write/branch/commit/push/change-request/merge/deploy permissions.",
+      "expected": true
+    },
+    {
+      "id": "CF-098",
+      "statement": "Job authorization is an upper bound only; actual provider rights, mandate and SAFOR policy remain independently required.",
+      "expected": true
+    },
+    {
+      "id": "CF-099",
+      "statement": "Every job fixes machine result, HUMAN result, evidence and audit return paths before execution.",
+      "expected": true
+    },
+    {
+      "id": "CF-100",
+      "statement": "Every job explicitly declares acceptance criteria, evidence requirements, review contract, self-acceptance prohibition and MASTER acceptance authority.",
+      "expected": true
+    },
+    {
+      "id": "CF-101",
+      "statement": "Every canonical job JSON has a MASTER-generated inbox/{jobId}.md HUMAN projection whose blob is pinned in the JSON.",
+      "expected": true
+    },
+    {
+      "id": "CF-102",
+      "statement": "The HUMAN job Markdown is non-authoritative and may not expand scope, role, skills, rights, outputs or verification beyond JSON.",
+      "expected": true
+    },
+    {
+      "id": "CF-103",
+      "statement": "MASTER reads back both job JSON and job Markdown before marking the job READY or publishing it in inbox/index.json.",
+      "expected": true
+    },
+    {
+      "id": "CF-104",
+      "statement": "Inbox index exposes package/work-item/sequence/role and HUMAN job projection references for discoverability.",
+      "expected": true
+    },
+    {
+      "id": "CF-105",
+      "statement": "MASTER job lifecycle state persists package/work-item/sequence/role/identity/job-contract revision and HUMAN job projection lineage.",
+      "expected": true
+    },
+    {
+      "id": "CF-106",
+      "statement": "Rework uses a new jobId and may reference the superseded job; historical job identities are never reused.",
+      "expected": true
+    },
+    {
+      "id": "CF-107",
+      "statement": "Agents cannot mutate canonical job JSON/Markdown, change role, substitute mandatory skills, delegate, expand scope or expand authorization.",
+      "expected": true
+    },
+    {
+      "id": "CF-108",
+      "statement": "Agent execution stops on revoked mandate, identity mismatch, supersession, invalid lease, write outside allowed scope or missing required provider rights.",
+      "expected": true
+    },
+    {
+      "id": "CF-109",
+      "statement": "Scheduler materialization explicitly builds canonical JSON, renders/pins Markdown and readbacks both before dispatch publication.",
+      "expected": true
+    },
+    {
+      "id": "CF-110",
+      "statement": "Job skills are self-contained for execution but retain authoritative immutable provenance through skillRef + skillBlobSha; MASTER may not invent skill provenance.",
+      "expected": true
+    },
+    {
+      "id": "CF-111",
+      "statement": "Every embedded SAFOR module has exactly one recovery profile and every recovery profile targets exactly one embedded module.",
+      "expected": true
+    },
+    {
+      "id": "CF-112",
+      "statement": "Every embedded module and its integrity-manifest entry carry the same selfHealingProfileId.",
+      "expected": true
+    },
+    {
+      "id": "CF-113",
+      "statement": "Every module recovery profile contains authority type, repairability, failure detectors, allowed/forbidden repairs, retry budget, verification and escalation.",
+      "expected": true
+    },
+    {
+      "id": "CF-114",
+      "statement": "Automatic repair is constrained by the intersection of failure-class policy, module profile, active authority and actual provider rights.",
+      "expected": true
+    },
+    {
+      "id": "CF-115",
+      "statement": "IMMUTABLE_VALIDATE_ONLY modules are never semantically rewritten automatically.",
+      "expected": true
+    },
+    {
+      "id": "CF-116",
+      "statement": "RESTORE_FROM_VERIFIED_SOURCE modules restore only expected version/blob identities from verified sources.",
+      "expected": true
+    },
+    {
+      "id": "CF-117",
+      "statement": "REGENERATE_DERIVED_ONLY modules mutate only derived artifacts and preserve authoritative sources.",
+      "expected": true
+    },
+    {
+      "id": "CF-118",
+      "statement": "REBIND_EXTERNAL_CAPABILITY recovery may refresh observations but never grant or elevate provider permissions.",
+      "expected": true
+    },
+    {
+      "id": "CF-119",
+      "statement": "Self-healing control modules fail closed when their own integrity/profile coverage cannot be proven.",
+      "expected": true
+    },
+    {
+      "id": "CF-120",
+      "statement": "Self-healing records persist module key/profile/authority/repairability plus the selected profile-constrained repair decision.",
+      "expected": true
+    },
+    {
+      "id": "CF-121",
+      "statement": "Canonical job recovery may regenerate job Markdown/index projections but never silently rewrite dispatched authoritative job semantics.",
+      "expected": true
+    },
+    {
+      "id": "CF-122",
+      "statement": "Scheduler recovery rebuilds only derived readiness/capacity/waves and reconciles uncertain leases/effects before reuse.",
+      "expected": true
+    },
+    {
+      "id": "CF-123",
+      "statement": "Factory and Operating Model recovery restores pinned blobs and validates bindings without automatic semantic or authority changes.",
+      "expected": true
+    },
+    {
+      "id": "CF-124",
+      "statement": "Schema recovery may restore schemas and regenerate only explicitly derived subjects; authoritative subjects are never coerced merely to validate.",
+      "expected": true
+    },
+    {
+      "id": "CF-125",
+      "statement": "Provider adapter recovery refreshes/rebinds observed capabilities and rights without fabricating missing permissions.",
+      "expected": true
+    },
+    {
+      "id": "CF-126",
+      "statement": "Conformance recovery is validate-only; failed assertions are never automatically marked PASS.",
+      "expected": true
+    },
+    {
+      "id": "CF-127",
+      "statement": "Unknown external mutation effects enter reconciliation before retry regardless of module profile.",
+      "expected": true
+    },
+    {
+      "id": "CF-128",
+      "statement": "Every successful module repair requires authoritative readback, expected-state match and persisted repair evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-129",
+      "statement": "Failure taxonomy includes dedicated module integrity, job binding, derived projection, package/model, provider drift, scheduler, schema, semantic-model and recovery-control classes SH-10 through SH-18.",
+      "expected": true
+    },
+    {
+      "id": "CF-130",
+      "statement": "K00 module-recovery preflight is the first kernel action and runs before provider/project operations.",
+      "expected": true
+    },
+    {
+      "id": "CF-131",
+      "statement": "Initialization begins with INIT-00 and STOPs if exact module-profile coverage or recovery-control integrity cannot be proven.",
+      "expected": true
+    },
+    {
+      "id": "CF-132",
+      "statement": "The Interaction Model contains a schema-bound humanCognitiveLoadPolicy with explicit phase profiles for BOOTSTRAP, DISCOVERY, PLANNING, SCHEDULING, AGENT_COORDINATION, EXECUTION, RECOVERY, OUTCOME and CLOSING.",
+      "expected": true
+    },
+    {
+      "id": "CF-133",
+      "statement": "DISCOVERY target HUMAN load is HIGH while SCHEDULING and AGENT_COORDINATION target VERY_LOW, EXECUTION/RECOVERY target LOW, and OUTCOME target MEDIUM.",
+      "expected": true
+    },
+    {
+      "id": "CF-134",
+      "statement": "Every phase profile limits new HUMAN decision contexts to one per turn and hides technical detail by default.",
+      "expected": true
+    },
+    {
+      "id": "CF-135",
+      "statement": "The Cognitive Load Policy requires derive-before-ask and reuse of unchanged decisions.",
+      "expected": true
+    },
+    {
+      "id": "CF-136",
+      "statement": "The heuristic load estimate explicitly declares that it is not a psychometric measurement instrument and spans 0–100 with phase maxima.",
+      "expected": true
+    },
+    {
+      "id": "CF-137",
+      "statement": "The HUMAN Decision Gate defaults to DO_NOT_ASK and allows HUMAN interaction only for enumerated legitimate reasons.",
+      "expected": true
+    },
+    {
+      "id": "CF-138",
+      "statement": "The HUMAN Decision Gate explicitly forbids delegating job IDs, deterministic agent selection, branch creation, leases, dispatch waves, readbacks, evidence collection, recovery-profile selection and internal transitions to HUMAN.",
+      "expected": true
+    },
+    {
+      "id": "CF-139",
+      "statement": "Unchanged active HUMAN decisions with the same scope and materially unchanged bound inputs are reused and not requested again.",
+      "expected": true
+    },
+    {
+      "id": "CF-140",
+      "statement": "Normal K10 creation-profile binding is deterministic and has no unconditional HUMAN decision; K10A exists only for non-standard, changed or conflicting bindings.",
+      "expected": true
+    },
+    {
+      "id": "CF-141",
+      "statement": "Discovery questions are Decision-Gate governed but may retain HIGH cognitive load for non-derivable HUMAN intent/domain knowledge.",
+      "expected": true
+    },
+    {
+      "id": "CF-142",
+      "statement": "After plan approval, default HUMAN load falls to LOW/VERY_LOW unless a legitimate material escalation reason applies.",
+      "expected": true
+    },
+    {
+      "id": "CF-143",
+      "statement": "Execution and Recovery use exception-oriented HUMAN interaction instead of requiring confirmations for successful internal transitions.",
+      "expected": true
+    },
+    {
+      "id": "CF-144",
+      "statement": "Persistent agent identities and existing execution mandates are reused within unchanged scope without repeated HUMAN approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-145",
+      "statement": "The default HUMAN language policy hides internal SAFOR terms/technical IDs and provides HUMAN-domain mappings.",
+      "expected": true
+    },
+    {
+      "id": "CF-146",
+      "statement": "Primary actions use dynamic domain labels and fallback to 'Weiter'; internal action IDs are forbidden default HUMAN labels.",
+      "expected": true
+    },
+    {
+      "id": "CF-147",
+      "statement": "Interaction menu state requires phase, cognitive-load target, decision reason, gate outcome and heuristic load metadata.",
+      "expected": true
+    },
+    {
+      "id": "CF-148",
+      "statement": "A decision-required interaction menu must carry a legitimate interactionReason and ALLOW_ASK gate outcome.",
+      "expected": true
+    },
+    {
+      "id": "CF-149",
+      "statement": "The HUMAN Decision Gate and Cognitive Load Policy have dedicated JSON Schemas and kernel references.",
+      "expected": true
+    },
+    {
+      "id": "CF-150",
+      "statement": "HUMAN interaction governance has module self-healing profiles and failure class SH-19.",
+      "expected": true
+    },
+    {
+      "id": "CF-151",
+      "statement": "If interaction governance is invalid, SAFOR suppresses nonessential questions/fails closed and never infers HUMAN approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-152",
+      "statement": "SUMMARY communication answers what happened, project meaning, whether HUMAN action is required and what happens next, while technical evidence remains behind Details.",
+      "expected": true
+    },
+    {
+      "id": "CF-153",
+      "statement": "Every explicit kernel HUMAN-decision action carries a humanInteractionContract with gate ref, phase, legitimate reason, load target, one-decision limit and derive/reuse semantics.",
+      "expected": true
+    },
+    {
+      "id": "CF-154",
+      "statement": "Every SAFOR-generated HUMAN-facing response validates against the HUMAN response schema and contains exactly one terminal interaction menu.",
+      "expected": true
+    },
+    {
+      "id": "CF-155",
+      "statement": "The terminal interaction menu is the final rendered SAFOR-visible element; no SAFOR text, status, evidence, explanation or other content follows it.",
+      "expected": true
+    },
+    {
+      "id": "CF-156",
+      "statement": "Terminal-menu presence applies to normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses.",
+      "expected": true
+    },
+    {
+      "id": "CF-157",
+      "statement": "A terminal menu does not imply a HUMAN decision; the HUMAN Decision Gate independently determines whether decision interaction is allowed.",
+      "expected": true
+    },
+    {
+      "id": "CF-158",
+      "statement": "If contextual menu derivation fails, HUMAN Interaction Governance regenerates only a safe derived fallback menu from authoritative state and actual capabilities without inventing authority, approval, scope or state transitions.",
+      "expected": true
+    },
+    {
+      "id": "CF-159",
+      "statement": "The HUMAN response finalizer is mandatory, validates response and menu before emission, renders the terminal menu last and stops rendering immediately after it.",
+      "expected": true
+    },
+    {
+      "id": "CF-160",
+      "statement": "Kernel binds an explicit deterministic-control model and applies it before every authoritative state transition in the migrated executable slice.",
+      "expected": true
+    },
+    {
+      "id": "CF-161",
+      "statement": "External HUMAN, AGENT and PROVIDER actors contribute typed events/evidence and cannot directly mutate authoritative state within the migrated executable slice.",
+      "expected": true
+    },
+    {
+      "id": "CF-162",
+      "statement": "The deterministic reducer is pure with respect to providers, LLMs, wall clock, randomness and arbitrary executable JSON expressions.",
+      "expected": true
+    },
+    {
+      "id": "CF-163",
+      "statement": "The predicate registry is closed; unknown predicate identifiers fail closed.",
+      "expected": true
+    },
+    {
+      "id": "CF-164",
+      "statement": "Transition candidate ordering is deterministic and more than one applicable authoritative transition is a control failure.",
+      "expected": true
+    },
+    {
+      "id": "CF-165",
+      "statement": "Event sequence is authoritative for replay ordering; timestamps do not order state application.",
+      "expected": true
+    },
+    {
+      "id": "CF-166",
+      "statement": "A duplicate event with identical canonical content is idempotent; the same eventId with different canonical content is an integrity failure.",
+      "expected": true
+    },
+    {
+      "id": "CF-167",
+      "statement": "Canonical state hashing excludes only stateHash and identical canonical inputs/pinned models yield identical resulting state hash.",
+      "expected": true
+    },
+    {
+      "id": "CF-168",
+      "statement": "Replay from a verified genesis snapshot must reproduce the stored projection-set hash or fail closed.",
+      "expected": true
+    },
+    {
+      "id": "CF-169",
+      "statement": "Pre-0.11 migration uses a verified MIGRATION_GENESIS_SNAPSHOT and never fabricates historical events.",
+      "expected": true
+    },
+    {
+      "id": "CF-170",
+      "statement": "External provider mutations are represented as effect intents; an effect intent is never completion evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-171",
+      "statement": "Unknown external mutation outcome transitions Control State to RECOVERING/RECONCILE_REQUIRED and emits provider readback intent.",
+      "expected": true
+    },
+    {
+      "id": "CF-172",
+      "statement": "STOP transition revokes all active execution mandates and records revokedAt from the triggering event.",
+      "expected": true
+    },
+    {
+      "id": "CF-173",
+      "statement": "RESUME after STOP transitions to AWAITING_AUTHORIZATION rather than restoring prior execution authority.",
+      "expected": true
+    },
+    {
+      "id": "CF-174",
+      "statement": "READY transition requires accepted dependencies, resolvable inputs, active mandate coverage and schema-complete resource declaration.",
+      "expected": true
+    },
+    {
+      "id": "CF-175",
+      "statement": "SAFOR 0.11.0-rc.1 exposes an explicit executable-transition boundary and does not claim un-migrated governance rules are already deterministic.",
+      "expected": true
+    },
+    {
+      "id": "CF-176",
+      "statement": "Kernel binds the deterministic Acceptance Model and the Acceptance Contract, Review Decision and Authority Decision schemas.",
+      "expected": true
+    },
+    {
+      "id": "CF-177",
+      "statement": "Planning materializes one typed Acceptance Contract per executable Work Item from approved criteria, Factory evidence, review and authority requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-178",
+      "statement": "Plan approval explicitly includes the Work Item Acceptance Contract set and material contract changes require governed replan/new approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-179",
+      "statement": "Every Acceptance Contract criterion preserves the approved criterion text and references at least one typed EVIDENCE, REVIEW or AUTHORITY requirement.",
+      "expected": true
+    },
+    {
+      "id": "CF-180",
+      "statement": "Acceptance Contract integrity is canonical SHA-256 excluding only contractHash; a mismatching hash cannot be registered.",
+      "expected": true
+    },
+    {
+      "id": "CF-181",
+      "statement": "E05 uses the deterministic Acceptance Model while retaining the bound Factory evidenceContract as required domain input.",
+      "expected": true
+    },
+    {
+      "id": "CF-182",
+      "statement": "WORK_ITEM_ACCEPTED is the only rc.2 executable transition that may materialize Work Item status ACCEPTED.",
+      "expected": true
+    },
+    {
+      "id": "CF-183",
+      "statement": "Acceptance evidence must match work-item subject and required evidenceType; PINNED evidence requires revisionRef.",
+      "expected": true
+    },
+    {
+      "id": "CF-184",
+      "statement": "Independent review requires performer and approving reviewer to differ when configured; self-review cannot satisfy the contract.",
+      "expected": true
+    },
+    {
+      "id": "CF-185",
+      "statement": "Agent acceptanceSelfCheck is advisory and cannot satisfy independent review, provider evidence or authority approval.",
+      "expected": true
+    },
+    {
+      "id": "CF-186",
+      "statement": "Authority satisfaction requires an exact workItemId/authorityId APPROVED decision with pinned source revision.",
+      "expected": true
+    },
+    {
+      "id": "CF-187",
+      "statement": "A recorded REJECTED decision for a required authority blocks acceptance for the current active contract.",
+      "expected": true
+    },
+    {
+      "id": "CF-188",
+      "statement": "Duplicate evidenceId, reviewId or authority decisionId records under new events are rejected from the acceptance replay ledger.",
+      "expected": true
+    },
+    {
+      "id": "CF-189",
+      "statement": "Acceptance ledger is a replay-derived projection of pinned contracts/evidence/reviews/decisions, not an independent business-authority source.",
+      "expected": true
+    },
+    {
+      "id": "CF-190",
+      "statement": "Review CHANGES_REQUIRED deterministically routes the Work Item to CHANGES_REQUIRED and does not self-heal into PASS.",
+      "expected": true
+    },
+    {
+      "id": "CF-191",
+      "statement": "Acceptance recovery SH-22 forbids fabricated evidence, review PASS, authority approval, relaxed independence or requirement deletion.",
+      "expected": true
+    },
+    {
+      "id": "CF-192",
+      "statement": "Work Item ACCEPTED remains distinct from VALUE_SUPPORTED; deterministic acceptance cannot substitute for outcome evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-193",
+      "statement": "The rc.2 deterministic-control boundary explicitly lists acceptance registration, evidence/review/authority recording and WORK_ITEM_ACCEPTED transitions while leaving later governance areas deferred.",
+      "expected": true
+    },
+    {
+      "id": "CF-194",
+      "statement": "Public SAFOR Framework distribution contains no embedded Factory or Operating Model model content designated as paid.",
+      "expected": true
+    },
+    {
+      "id": "CF-195",
+      "statement": "SOFTWARE_WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
+      "expected": true
+    },
+    {
+      "id": "CF-196",
+      "statement": "BOOK is PAID_ENTITLEMENT_REQUIRED and its public catalog entries expose no public model-content path.",
+      "expected": true
+    },
+    {
+      "id": "CF-197",
+      "statement": "Package access/entitlement is evaluated before project workspace selection and independently from organizational authority.",
+      "expected": true
+    },
+    {
+      "id": "CF-198",
+      "statement": "Self-asserted entitlement and package possession alone are explicitly insufficient for paid package access.",
+      "expected": true
+    },
+    {
+      "id": "CF-199",
+      "statement": "Paid packages bind only from HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE with verified entitlement evidence.",
+      "expected": true
+    },
+    {
+      "id": "CF-200",
+      "statement": "Project workspace is explicitly HUMAN-selected as REMOTE_GIT or LOCAL_GIT.",
+      "expected": true
+    },
+    {
+      "id": "CF-201",
+      "statement": "LOCAL_GIT requires proven filesystem read/write plus Git repository/history/branch/commit capabilities before mutating execution.",
+      "expected": true
+    },
+    {
+      "id": "CF-202",
+      "statement": "LOCAL_GIT reserves .safor/ as Git-tracked MASTER-only control state and forbids worker write scopes there.",
+      "expected": true
+    },
+    {
+      "id": "CF-203",
+      "statement": "REMOTE_GIT uses separate HUMAN-controlled safor-memory for control state; safor-memory is not required for LOCAL_GIT.",
+      "expected": true
+    },
+    {
+      "id": "CF-204",
+      "statement": "Canonical SAFOR product repository is forbidden as project target.",
+      "expected": true
+    },
+    {
+      "id": "CF-205",
+      "statement": "Public/commercial package sources are forbidden as project targets.",
+      "expected": true
+    },
+    {
+      "id": "CF-206",
+      "statement": "Factory-produced project artifacts remain in the HUMAN-selected project workspace and never in SAFOR/package source repositories.",
+      "expected": true
+    },
+    {
+      "id": "CF-207",
+      "statement": "Initialization resolves creation type, package access, package integrity and Factory/OM compatibility before asking for project workspace.",
+      "expected": true
+    },
+    {
+      "id": "CF-208",
+      "statement": "0.12 distribution is a Framework bundle and domain packages are independently resolved/pinned.",
+      "expected": true
+    },
+    {
+      "id": "CF-209",
+      "statement": "Project package snapshots are immutable evidence for an approved binding and cannot expand package access.",
+      "expected": true
+    },
+    {
+      "id": "CF-210",
+      "statement": "0.12 records that pre-0.12 publicly disclosed prototype package content cannot be made confidential retroactively.",
+      "expected": true
+    },
+    {
+      "id": "CF-211",
+      "statement": "LOCAL_GIT without actual Git capability cannot silently continue as unversioned filesystem execution.",
+      "expected": true
+    },
+    {
+      "id": "CF-212",
+      "statement": "Website free-starter package auto-resolution is allowed only for FREE_PUBLIC catalog entries.",
+      "expected": true
+    },
+    {
+      "id": "CF-213",
+      "statement": "Paid package content is excluded from the public Framework integrity manifest/embedded module set.",
+      "expected": true
+    },
+    {
+      "id": "CF-214",
+      "statement": "Factory/Operating Model technical compatibility is checked independently after access/entitlement validation.",
+      "expected": true
+    },
+    {
+      "id": "CF-215",
+      "statement": "Commercial entitlement cannot grant Operating Model authority, provider rights, mandate or project scope.",
+      "expected": true
+    },
+    {
+      "id": "CF-216",
+      "statement": "Control workspace strategy is conditional: REMOTE_SEPARATE_SAFOR_MEMORY for REMOTE_GIT and LOCAL_MASTER_CONTROL_ROOT for LOCAL_GIT.",
+      "expected": true
+    },
+    {
+      "id": "CF-217",
+      "statement": "Every selected Factory and Operating Model is a standalone SAFOR_DOMAIN_PACKAGE JSON artifact.",
+      "expected": true
+    },
+    {
+      "id": "CF-218",
+      "statement": "Creation Profiles define default Factory/Operating Model candidates and do not lock either package against independent HUMAN override.",
+      "expected": true
+    },
+    {
+      "id": "CF-219",
+      "statement": "Factory and Operating Model access modes are evaluated independently for the actually selected package versions.",
+      "expected": true
+    },
+    {
+      "id": "CF-220",
+      "statement": "A FREE_PUBLIC/PAID_ENTITLEMENT_REQUIRED mixed pair is valid only when the active Creation Profile allows mixed access and every paid member has independently verified entitlement.",
+      "expected": true
+    },
+    {
+      "id": "CF-221",
+      "statement": "Entitlement evidence is external to domain-package JSON and package possession cannot self-authorize commercial access.",
+      "expected": true
+    },
+    {
+      "id": "CF-222",
+      "statement": "Every selected domain package must pass SHA-256 verification over the declared SAFOR canonical domain contract before binding.",
+      "expected": true
+    },
+    {
+      "id": "CF-223",
+      "statement": "Package ID namespace must match package kind: safor.factory.* for FACTORY and safor.om.* for OPERATING_MODEL.",
+      "expected": true
+    },
+    {
+      "id": "CF-224",
+      "statement": "Every selected domain package explicitly supports the active Framework version and active Creation Type.",
+      "expected": true
+    },
+    {
+      "id": "CF-225",
+      "statement": "Factory capability and authority requirements must be covered by the selected Operating Model before pair binding.",
+      "expected": true
+    },
+    {
+      "id": "CF-226",
+      "statement": "HUMAN may replace only Factory, only Operating Model, or both, subject to access, integrity and compatibility checks.",
+      "expected": true
+    },
+    {
+      "id": "CF-227",
+      "statement": "A project binding references both a package-selection record and a COMPATIBLE package-compatibility decision.",
+      "expected": true
+    },
+    {
+      "id": "CF-228",
+      "statement": "Domain-package project bindings persist content digest, selection origin, integrity verification and entitlement-evidence reference.",
+      "expected": true
+    },
+    {
+      "id": "CF-229",
+      "statement": "The free WEBSITE starter uses safor.factory.website-delivery plus safor.om.website-team; SOFTWARE_SAAS is a separate commercial path.",
+      "expected": true
+    },
+    {
+      "id": "CF-230",
+      "statement": "Public Framework embedding remains free of Factory/Operating Model model payloads even though their schemas, catalog metadata and package-selection policy are embedded.",
+      "expected": true
+    },
+    {
+      "id": "CF-231",
+      "statement": "WEBSITE and SOFTWARE_SAAS are distinct Creation Types with distinct default package identities and commercial policies.",
+      "expected": true
+    },
+    {
+      "id": "CF-232",
+      "statement": "WEBSITE defaults to FREE_PUBLIC safor.factory.website-delivery and FREE_PUBLIC safor.om.website-team.",
+      "expected": true
+    },
+    {
+      "id": "CF-233",
+      "statement": "SOFTWARE_SAAS defaults to safor.factory.software-delivery and safor.om.saas-engineering, both PAID_ENTITLEMENT_REQUIRED.",
+      "expected": true
+    },
+    {
+      "id": "CF-234",
+      "statement": "A SOFTWARE_SAAS selection containing any FREE_PUBLIC Factory or Operating Model fails before binding even if technical compatibility would otherwise pass.",
+      "expected": true
+    },
+    {
+      "id": "CF-235",
+      "statement": "SOFTWARE_SAAS requires independent entitlement evidence for both selected paid domain packages.",
+      "expected": true
+    },
+    {
+      "id": "CF-236",
+      "statement": "Historical public Software Factory/SaaS Operating Model bytes are legacy disclosure and are not the current protected commercial package source.",
+      "expected": true
+    },
+    {
+      "id": "CF-237",
+      "statement": "Paid entitlement verification requires ACTIVE status, explicit evaluation time and matching subject/package/version.",
+      "expected": true
+    },
+    {
+      "id": "CF-238",
+      "statement": "Commercial-basis evidence exists separately from entitlement and its SKU matches the entitlement grant; purchase evidence alone never authorizes package use.",
+      "expected": true
+    },
+    {
+      "id": "CF-239",
+      "statement": "Entitlement issuer and verifier identities are accepted only from explicit trusted verification context, never from self-declared record fields.",
+      "expected": true
+    },
+    {
+      "id": "CF-240",
+      "statement": "ENTITLED_PACKAGE_SOURCE requires SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE before package use.",
+      "expected": true
+    },
+    {
+      "id": "CF-241",
+      "statement": "Commercial delivery evidence binds entitlementId, packageId, exact version and artifact digest.",
+      "expected": true
+    },
+    {
+      "id": "CF-242",
+      "statement": "Commercial delivery evidence is rejected when expired, future-issued or verified by an untrusted delivery verifier.",
+      "expected": true
+    },
+    {
+      "id": "CF-243",
+      "statement": "Delivery artifactDigest equals the selected domain package declared-contract digest; digest mismatch fails closed.",
+      "expected": true
+    },
+    {
+      "id": "CF-244",
+      "statement": "HUMAN_LOADED_PACKAGE remains allowed for paid manual delivery but still requires strict verified entitlement.",
+      "expected": true
+    },
+    {
+      "id": "CF-245",
+      "statement": "SAFOR defines exactly three domain framework profiles: WEBSITE, SAAS and BOOK_CREATION, all sharing the same SAFOR kernel.",
+      "expected": true
+    },
+    {
+      "id": "CF-246",
+      "statement": "SAFOR-FRAMEWORK-WEBSITE.json embeds the default Website Factory and Website Operating Model and preselects WEBSITE_CREATION.",
+      "expected": true
+    },
+    {
+      "id": "CF-247",
+      "statement": "SAFOR-FRAMEWORK-SAAS.json is committed as PUBLIC_TEST_EVALUATION with paid-mode SaaS test modules; those public test bytes are not the protected commercial production package source.",
+      "expected": true
+    },
+    {
+      "id": "CF-248",
+      "statement": "SAFOR-FRAMEWORK-BOOK-CREATION.json is committed as PUBLIC_TEST_EVALUATION with paid-mode Book test modules; those public test bytes are not the protected commercial production package source.",
+      "expected": true
+    },
+    {
+      "id": "CF-249",
+      "statement": "Loading a domain framework distribution suppresses redundant creation-type selection because domainId and creationType are already fixed by the artifact.",
+      "expected": true
+    },
+    {
+      "id": "CF-250",
+      "statement": "V2 replaceable domain packages declare packageFamily and domainIds, and both fields are covered by the V2 declared-contract digest.",
+      "expected": true
+    },
+    {
+      "id": "CF-251",
+      "statement": "Factory counterpart requirements are evaluated against the selected Operating Model, including allowed package families and declared capability, authority, work-item and artifact requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-252",
+      "statement": "Operating Model counterpart requirements are evaluated against the selected Factory, including allowed package families and declared capability, authority, work-item and artifact requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-253",
+      "statement": "A Premium replacement with a different packageId may be adopted when it remains in an allowed package family, supports the active domain and passes all bidirectional requirements.",
+      "expected": true
+    },
+    {
+      "id": "CF-254",
+      "statement": "A cross-domain pair such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model is rejected before binding.",
+      "expected": true
+    },
+    {
+      "id": "CF-255",
+      "statement": "An incompatible replacement leaves the previously valid Factory, Operating Model and active domain unchanged.",
+      "expected": true
+    },
+    {
+      "id": "CF-256",
+      "statement": "All three domain Framework files are committed and reproducibly buildable in rc.6 for end-to-end testing.",
+      "expected": true
+    },
+    {
+      "id": "CF-257",
+      "statement": "SaaS and Book public evaluation Frameworks retain PAID_ENTITLEMENT_REQUIRED on both embedded domain modules.",
+      "expected": true
+    },
+    {
+      "id": "CF-258",
+      "statement": "Public test/evaluation package bytes use prerelease test versions and explicit PUBLIC_TEST_EVALUATION provenance.",
+      "expected": true
+    },
+    {
+      "id": "CF-259",
+      "statement": "Production catalog entries for paid SaaS/Book packages continue to expose no public model path and resolve only from ENTITLED_PACKAGE_SOURCE.",
+      "expected": true
+    },
+    {
+      "id": "CF-260",
+      "statement": "Publishing public evaluation bytes does not make possession sufficient for entitlement; paid-mode access checks remain normative.",
+      "expected": true
+    },
+    {
+      "id": "CF-261",
+      "statement": "HUMAN-visible response governance is owned by the SAFOR platform and is not delegated to a Factory or Operating Model.",
+      "expected": true
+    },
+    {
+      "id": "CF-262",
+      "statement": "Factory and Operating Model may contribute domain facts, risk, evidence and legitimate decision requirements but cannot control visible text, verbosity, structure, choices or terminal menus.",
+      "expected": true
+    },
+    {
+      "id": "CF-263",
+      "statement": "The platform response governor runs after domain fact collection and before every HUMAN-visible render.",
+      "expected": true
+    },
+    {
+      "id": "CF-264",
+      "statement": "Framework detection and safe reversible migration planning produce a compressed non-interactive informational notice rather than a technical report or option menu.",
+      "expected": true
+    },
+    {
+      "id": "CF-265",
+      "statement": "The framework-detection notice is limited to two sentences and twenty-four words and contains no version, digest, package-ID or value-stream dump by default.",
+      "expected": true
+    },
+    {
+      "id": "CF-266",
+      "statement": "Full migration analysis and evidence remain retained behind Details/Evidence and are not lost through HUMAN-facing compression.",
+      "expected": true
+    },
+    {
+      "id": "CF-267",
+      "statement": "SAFOR_HUMAN_RESPONSE distinguishes informational notices without menus from interactive checkpoints with exactly one terminal menu.",
+      "expected": true
+    },
+    {
+      "id": "CF-268",
+      "statement": "Ordinary compatible LLM chat is SAFOR's primary execution surface and customer-installed runtime is not required.",
+      "expected": true
+    },
+    {
+      "id": "CF-269",
+      "statement": "Optional reference code is validation/host-integration support and never a normal-chat product prerequisite.",
+      "expected": true
+    },
+    {
+      "id": "CF-270",
+      "statement": "Chat-bound subagents are activated only by explicit HUMAN GO in the same bound chat.",
+      "expected": true
+    },
+    {
+      "id": "CF-271",
+      "statement": "Git events, polling, inbox creation, automation and host background wakeups cannot activate a subagent.",
+      "expected": true
+    },
+    {
+      "id": "CF-272",
+      "statement": "Every active chat agent has stable agentId, distinct displayName and fail-closed rebind policy.",
+      "expected": true
+    },
+    {
+      "id": "CF-273",
+      "statement": "Every new Agent Job binds exact result, error, clarification, capability-mismatch and improvement-proposal templates.",
+      "expected": true
+    },
+    {
+      "id": "CF-274",
+      "statement": "Product and SAFOR response write scopes are separately authorized.",
+      "expected": true
+    },
+    {
+      "id": "CF-275",
+      "statement": "Subagent chat output is one-line operational status; substantive content is a versioned Git response to MASTER.",
+      "expected": true
+    },
+    {
+      "id": "CF-276",
+      "statement": "MASTER is the only fachliche and organizational HUMAN interface.",
+      "expected": true
+    },
+    {
+      "id": "CF-277",
+      "statement": "Routine MASTER status uses compact pointer indexes and forbids global full scans.",
+      "expected": true
+    },
+    {
+      "id": "CF-278",
+      "statement": "Blocked/failed/mismatch responses stop further job mutation until MASTER resolution.",
+      "expected": true
+    },
+    {
+      "id": "CF-279",
+      "statement": "Substantial job changes preserve history through superseding jobs or dispatch revisions.",
+      "expected": true
+    },
+    {
+      "id": "CF-301",
+      "statement": "The uploaded Framework declares schema 0.14.0 and embeds all v0.14 orchestration contracts.",
+      "expected": true
+    },
+    {
+      "id": "CF-302",
+      "statement": "A HUMAN-GO transition requires structured single-use evidence bound to project, agent, identity, chat, job and dispatch revision.",
+      "expected": true
+    },
+    {
+      "id": "CF-303",
+      "statement": "An atomically claimed job cannot consume the same activationId twice.",
+      "expected": true
+    },
+    {
+      "id": "CF-304",
+      "statement": "MASTER response completeness requires verified response readback or an explicit waiver decision.",
+      "expected": true
+    },
+    {
+      "id": "CF-305",
+      "statement": "MASTER status freshness is derived from time, source revisions and provider readback and may be UNKNOWN.",
+      "expected": true
+    },
+    {
+      "id": "CF-306",
+      "statement": "A product-commit/control-response partial failure reconciles without repeating the known product mutation.",
+      "expected": true
+    },
+    {
+      "id": "CF-307",
+      "statement": "All 33 requirements expose separate design, implementation, automated-test, bundle, real-Git-E2E and cross-host evidence dimensions.",
+      "expected": true
+    },
+    {
+      "id": "CF-308",
+      "statement": "Website, SaaS and Book Framework distributions use v0.14-compatible Factory and Operating Model package versions.",
+      "expected": true
+    }
+  ],
+  "lastManualVerification": {
+    "branch": "safor/composable-domain-packages-v0.13.0-rc.1",
+    "result": "MACHINE_VALIDATION_GREEN_BEFORE_FINAL_DOCUMENTATION_SYNC",
+    "note": "Composable package build, validator and 48-test suite passed before final governance/documentation synchronization; final branch CI remains authoritative."
+  }
+}
