@@ -147,7 +147,7 @@
       "humanTerminalMenuRule": "Platform informational notices are content-only and non-interactive. Interactive checkpoints and genuine decisions contain exactly one terminal menu and render no SAFOR-visible content after it.",
       "deterministicControlRule": "Within the executable transition boundary, external observations enter as typed events and only the deterministic control kernel materializes authoritative state transitions.",
       "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
-      "selfHealingRule": "Use conservative profile-constrained recovery; never invent entitlement, authority, evidence or workspace ownership.",
+      "selfHealingRule": "Use one profile-constrained INITIAL recovery attempt separately from retry accounting. SAFOR 0.14 module profiles permit zero additional retries; unknown effects reconcile read-only, and a proven product mutation is never replayed.",
       "agentWorkspaceRule": "AGENT work uses persistent chat-bound identities and repository-native jobs; local .safor/ is never a worker write target.",
       "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate, claim or start a subagent job; Git and automation events never wake an agent.",
       "agentResponseRule": "Every dispatched job binds all five typed response templates and exact separate Git return targets before READY.",
@@ -357,12 +357,12 @@
       },
       "selfHealing": {
         "sourcePath": "v0.14.0/self-healing-model.json",
-        "sourceBlobSha": "bcab128f65f008b2b4286ccebaba2e00e6eb78f7",
+        "sourceBlobSha": "61116bb39e53f900b937ee2758fb2b6d5f62772b",
         "selfHealingProfileId": "MRP-SELFHEALING"
       },
       "moduleSelfHealing": {
         "sourcePath": "v0.14.0/module-self-healing-model.json",
-        "sourceBlobSha": "a4e0fb17e1d22f8fc59604591a3cf198677b6a63",
+        "sourceBlobSha": "8f4f1c3693d26aae32982c43a4a55456bbfd99ff",
         "selfHealingProfileId": "MRP-MODULESELFHEALING"
       },
       "repositoryPolicy": {
@@ -472,12 +472,12 @@
       },
       "schemaSelfHealingRecord": {
         "sourcePath": "v0.14.0/schemas/self-healing-record.schema.json",
-        "sourceBlobSha": "37b04b3482e3d35b0c5a18533736c7bb4ed4f42b",
+        "sourceBlobSha": "690913b76e54c11db7d88805c51da7637ed43580",
         "selfHealingProfileId": "MRP-SCHEMASELFHEALINGRECORD"
       },
       "schemaModuleRecoveryProfile": {
         "sourcePath": "v0.14.0/schemas/module-recovery-profile.schema.json",
-        "sourceBlobSha": "1d262ffe6e7e0c820dade06651359929e1e61f07",
+        "sourceBlobSha": "588f6e4f8a62fa5bd0e26d83bbb4e33c5e63e933",
         "selfHealingProfileId": "MRP-SCHEMAMODULERECOVERYPROFILE"
       },
       "schemaAgentRegistry": {
@@ -6169,7 +6169,7 @@
       "selfHealing": {
         "key": "selfHealing",
         "sourcePath": "v0.14.0/self-healing-model.json",
-        "sourceBlobSha": "bcab128f65f008b2b4286ccebaba2e00e6eb78f7",
+        "sourceBlobSha": "61116bb39e53f900b937ee2758fb2b6d5f62772b",
         "content": {
           "format": "SAFOR_SELF_HEALING_MODEL",
           "schemaVersion": "0.14.0",
@@ -6191,7 +6191,10 @@
             "exactModuleCoverageRequired": true,
             "failClosedOnRecoveryControlFailure": true,
             "derivedOnlyRegeneration": true,
-            "noSemanticAutoRewrite": true
+            "noSemanticAutoRewrite": true,
+            "initialAttemptSeparatedFromRetries": true,
+            "automaticMutationReplayForbiddenByDefault": true,
+            "reconciliationIsReadOnly": true
           },
           "lifecycle": [
             "DETECT",
@@ -6214,7 +6217,7 @@
                 "temporary transport failure"
               ],
               "automaticRepair": "RETRY_SAME_IDEMPOTENT_OPERATION",
-              "defaultRetryBudget": 2,
+              "defaultAdditionalRetryBudget": 2,
               "requiresReconciliation": false
             },
             {
@@ -6225,7 +6228,7 @@
                 "provider timeout after mutation"
               ],
               "automaticRepair": "RECONCILE_BEFORE_ANY_RETRY",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresReconciliation": true
             },
             {
@@ -6236,7 +6239,7 @@
                 "optimistic-lock conflict"
               ],
               "automaticRepair": "REFRESH_STATE_AND_REEVALUATE",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": false
             },
             {
@@ -6247,7 +6250,7 @@
                 "missing derived non-authoritative projection"
               ],
               "automaticRepair": "REGENERATE_FROM_AUTHORITATIVE_SOURCES",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": false
             },
             {
@@ -6258,7 +6261,7 @@
                 "acceptance criterion not satisfied"
               ],
               "automaticRepair": "ROUTE_TO_EXISTING_REWORK_PATH",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresReconciliation": false
             },
             {
@@ -6269,7 +6272,7 @@
                 "required provider tool unavailable"
               ],
               "automaticRepair": "NONE",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": true
             },
             {
@@ -6281,7 +6284,7 @@
                 "separation-of-duties violation"
               ],
               "automaticRepair": "NONE",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": true
             },
             {
@@ -6293,7 +6296,7 @@
                 "schema mismatch"
               ],
               "automaticRepair": "RESTORE_ONLY_FROM_VERIFIED_PRIOR_OR_AUTHORITATIVE_SOURCE",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": "WHEN_RESTORE_IS_NOT_UNAMBIGUOUS"
             },
             {
@@ -6303,7 +6306,7 @@
                 "same recoverable failure repeats beyond budget"
               ],
               "automaticRepair": "NONE",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": true
             },
             {
@@ -6315,7 +6318,7 @@
                 "duplicate recovery profile"
               ],
               "automaticRepair": "RELOAD_EXPECTED_MODULE_OR_STOP_IF_PROFILE_COVERAGE_INVALID",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": false
             },
             {
@@ -6328,7 +6331,7 @@
                 "immutable input mismatch"
               ],
               "automaticRepair": "BLOCK_JOB_AND_REBUILD_ONLY_BEFORE_DISPATCH_OR_CREATE_SUPERSEDING_JOB",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": "WHEN_SEMANTICS_OR_AUTHORITY_WOULD_CHANGE"
             },
             {
@@ -6340,7 +6343,7 @@
                 "derived status projection missing"
               ],
               "automaticRepair": "REGENERATE_FROM_VERIFIED_AUTHORITATIVE_SOURCE",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": false
             },
             {
@@ -6352,7 +6355,7 @@
                 "model reference unresolved"
               ],
               "automaticRepair": "RESTORE_EXPECTED_PINNED_PACKAGE_OR_BLOCK",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": false
             },
             {
@@ -6364,7 +6367,7 @@
                 "declared adapter capability no longer observable"
               ],
               "automaticRepair": "REFRESH_AND_REBIND_ACTUAL_CAPABILITIES_WITHOUT_ELEVATION",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "WHEN_REQUIRED_CAPABILITY_REMAINS_MISSING"
             },
             {
@@ -6377,7 +6380,7 @@
                 "stale ready set"
               ],
               "automaticRepair": "RECOMPUTE_DERIVED_SCHEDULER_STATE_AND_RECONCILE_UNCERTAIN_EFFECTS",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": "WHEN_EXTERNAL_EFFECTS_ARE_UNCERTAIN"
             },
             {
@@ -6389,7 +6392,7 @@
                 "schema version mismatch"
               ],
               "automaticRepair": "RESTORE_SCHEMA_OR_REGENERATE_ONLY_DERIVED_SUBJECT",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "WHEN_AUTHORITATIVE_SUBJECT_WOULD_REQUIRE_SEMANTIC_CHANGE"
             },
             {
@@ -6401,7 +6404,7 @@
                 "evidence/planning contract mismatch"
               ],
               "automaticRepair": "RESTORE_PINNED_PACKAGE_OR_BLOCK",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": "WHEN_PINNED_SOURCE_ITSELF_IS_INVALID_OR_CHANGE_IS_REQUIRED"
             },
             {
@@ -6413,7 +6416,7 @@
                 "recovery recursion guard triggered"
               ],
               "automaticRepair": "RELOAD_VERIFIED_RECOVERY_CONTROL_MODULES_OR_STOP",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": true
             },
             {
@@ -6426,7 +6429,7 @@
                 "technical interaction surface violates phase load target"
               ],
               "automaticRepair": "RESTORE_VERIFIED_INTERACTION_GOVERNANCE_OR_SUPPRESS_NONESSENTIAL_ASK",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "ONLY_MINIMUM_SAFE_BLOCKER_IF_GOVERNANCE_CANNOT_BE_RESTORED"
             },
             {
@@ -6440,7 +6443,7 @@
                 "SAFOR-visible content appears after an interactive terminal menu"
               ],
               "automaticRepair": "REGENERATE_DERIVED_HUMAN_RESPONSE_ENVELOPE_AND_SAFE_TERMINAL_MENU",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "ONLY_IF_A_VALID_NON_AUTHORITY_EXPANDING_FALLBACK_MENU_CANNOT_BE_DERIVED"
             },
             {
@@ -6455,7 +6458,7 @@
                 "replay state hash divergence"
               ],
               "automaticRepair": "RESTORE_VERIFIED_DETERMINISTIC_CONTROL_MODULES_OR_REPLAY_DERIVED_PROJECTION",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "WHEN_AUTHORITATIVE_STATE_DIVERGENCE_OR_MISSING_EVENT_CANNOT_BE_RECONCILED_FROM_VERIFIED_EVIDENCE"
             },
             {
@@ -6471,7 +6474,7 @@
                 "acceptance replay divergence"
               ],
               "automaticRepair": "RESTORE_VERIFIED_ACCEPTANCE_MODEL_OR_REPLAY_DERIVED_ACCEPTANCE_LEDGER",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "WHEN_APPROVED_ACCEPTANCE_CONTRACT_OR_REQUIRED_HUMAN_AUTHORITY_MUST_CHANGE"
             },
             {
@@ -6487,7 +6490,7 @@
                 "remote project missing writable HUMAN-controlled safor-memory"
               ],
               "automaticRepair": "REFRESH_DERIVED_PACKAGE_CATALOG_OR_REOBSERVE_WORKSPACE_CAPABILITIES_ONLY",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "WHEN_PACKAGE_PURCHASE_OR_ENTITLEMENT_OR_PROJECT_LOCATION_OR_LOCAL_HOST_ACCESS_MUST_CHANGE"
             },
             {
@@ -6512,7 +6515,7 @@
                 "Operating-Model-to-Factory counterpart requirements fail"
               ],
               "automaticRepair": "RELOAD_OR_REVERIFY_THE_SAME_SELECTED_PACKAGE_BYTES_AND_REEVALUATE_DOMAIN_AND_BIDIRECTIONAL_COMPATIBILITY_WITHOUT_CHANGING_DOMAIN_OR_COUNTERPART_SELECTION",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresHuman": "WHEN_PURCHASE_ENTITLEMENT_SUBJECT_TRUST_CONFIGURATION_PACKAGE_OVERRIDE_OR_SELECTED_PAIR_MUST_CHANGE"
             },
             {
@@ -6524,7 +6527,7 @@
                 "agent cannot prove bound chat identity"
               ],
               "automaticRepair": "NONE",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": true,
               "requiredOutcome": "REBIND_REQUIRED"
             },
@@ -6537,7 +6540,7 @@
                 "job/agent binding mismatch"
               ],
               "automaticRepair": "RESTORE_TEMPLATE_OR_REISSUE_JOB_BEFORE_EXECUTION",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": "WHEN_MASTER_CANNOT_REISSUE_WITHOUT_NEW_DECISION"
             },
             {
@@ -6548,7 +6551,7 @@
                 "registry/index mismatch"
               ],
               "automaticRepair": "REGENERATE_DERIVED_INDEX_FROM_AUTHORITATIVE_POINTERS",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": false
             },
             {
@@ -6560,7 +6563,7 @@
                 "duplicate activationId"
               ],
               "automaticRepair": "NONE",
-              "defaultRetryBudget": 0,
+              "defaultAdditionalRetryBudget": 0,
               "requiresHuman": true
             },
             {
@@ -6570,7 +6573,7 @@
                 "product commit read back but control response write failed"
               ],
               "automaticRepair": "RECONCILE_AND_RETRY_RESPONSE_ONLY",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": true
             },
             {
@@ -6582,7 +6585,7 @@
                 "source revision mismatch"
               ],
               "automaticRepair": "REGENERATE_DERIVED_INDEX_FROM_VERIFIED_POINTERS",
-              "defaultRetryBudget": 1,
+              "defaultAdditionalRetryBudget": 1,
               "requiresReconciliation": true
             }
           ],
@@ -6672,14 +6675,70 @@
             "IGNORE_PACKAGE_FAMILY_MISMATCH",
             "DOWNGRADE_BIDIRECTIONAL_COMPATIBILITY_TO_ONE_WAY"
           ],
+          "attemptSemantics": {
+            "initialRepairAttempt": {
+              "attemptKind": "INITIAL",
+              "attemptNumber": 1,
+              "definition": "First execution of one profile-constrained repair action for a failureFingerprint after fresh eligibility evaluation.",
+              "consumesAdditionalRetryBudget": false,
+              "automaticExecutionLimitPerFailureFingerprint": 1,
+              "requiresFreshEligibilityEvaluation": true,
+              "requiresPreStateRefs": true,
+              "requiresSuccessEvidenceDefinedBeforeExecution": true
+            },
+            "repairRetry": {
+              "attemptKind": "RETRY",
+              "attemptNumberStartsAt": 2,
+              "definition": "Any second or later execution of the same selected profile-constrained repair action for the same failureFingerprint.",
+              "consumesAdditionalRetryBudget": true,
+              "requiresPriorAttemptRef": true,
+              "requiresFreshEligibilityEvaluation": true,
+              "requiresAuthoritativeReadbackOfPriorEffect": true,
+              "unknownPriorEffectOutcome": "RECONCILE_REQUIRED",
+              "sameMutationReplayRule": "FORBIDDEN_UNLESS_PRIOR_EFFECT_PROVEN_NOT_APPLIED_AND_EFFECTIVE_ADDITIONAL_RETRY_BUDGET_GT_0"
+            },
+            "reconciliation": {
+              "definition": "Read-only observation used to resolve an unknown external effect before any retry decision.",
+              "countsAsRepairAttempt": false,
+              "consumesAdditionalRetryBudget": false,
+              "mutationAllowed": false,
+              "requiredWhen": "PRIOR_EXTERNAL_EFFECT_UNKNOWN"
+            },
+            "effectContinuation": {
+              "definition": "Execution of a missing downstream effect after an upstream effect is authoritatively proven applied.",
+              "sameAsRetryOfUpstreamMutation": false,
+              "example": "Persist the typed control response after the product commit was read back successfully.",
+              "mustBindProvenUpstreamEffectRef": true,
+              "mayNotRepeatProvenUpstreamMutation": true
+            }
+          },
           "retryPolicy": {
             "key": "failureFingerprint",
+            "budgetMeaning": "ADDITIONAL_REPAIR_EXECUTIONS_AFTER_INITIAL_ATTEMPT",
+            "failureClassBudgetField": "defaultAdditionalRetryBudget",
+            "moduleProfileBudgetField": "additionalRetryBudget",
+            "operationSpecificBudgetField": "additionalRetryBudget",
+            "effectiveAdditionalRetryBudgetRule": "MIN(FAILURE_CLASS_BUDGET, MODULE_PROFILE_BUDGET, OPERATION_SPECIFIC_BUDGET_WHEN_PRESENT)",
+            "initialAttemptConsumesAdditionalRetryBudget": false,
+            "reconciliationCountsAsRepairAttempt": false,
+            "reconciliationMayMutate": false,
             "exponentialBackoffConcept": true,
             "hostSchedulingRequiredForDelayedRetry": true,
-            "defaultImmediateRetries": 0,
-            "maximumAutomaticAttemptsAcrossSameFingerprint": 2,
+            "defaultImmediateAdditionalRetries": 0,
+            "maximumAutomaticAdditionalRetriesAcrossSameFingerprint": 2,
+            "automaticMutationReplayDefault": "FORBIDDEN",
+            "sameMutationRetryRequires": [
+              "PRIOR_EFFECT_AUTHORITATIVELY_PROVEN_NOT_APPLIED",
+              "EFFECTIVE_ADDITIONAL_RETRY_BUDGET_GT_0",
+              "FRESH_ELIGIBILITY_EVALUATION_PASS",
+              "SAME_PROFILE_CONSTRAINED_ACTION",
+              "SAME_AUTHORITY_AND_SCOPE"
+            ],
+            "effectUnknownOutcome": "RECONCILE_REQUIRED",
+            "provenAppliedOutcome": "DO_NOT_REPEAT_MUTATION",
+            "responsePersistenceContinuationRule": "A proven product mutation may be followed only by the missing response/control persistence effect; the product mutation is never replayed.",
             "resetOnlyWhen": "MATERIAL_INPUT_OR_EXTERNAL_STATE_CHANGED",
-            "rule": "Retry count is bounded by the lower of the failure-class budget and any operation-specific budget."
+            "rule": "The first eligible repair execution is the INITIAL attempt and does not consume retry budget. A RETRY starts with attemptNumber 2 and is bounded by the minimum additional-retry budget. Budget alone never authorizes mutation replay."
           },
           "repairPlanRequiredFields": [
             "repairId",
@@ -6694,7 +6753,10 @@
             "authorityBasis",
             "preStateRefs",
             "successEvidenceRequirements",
-            "attemptNumber"
+            "attemptKind",
+            "attemptNumber",
+            "priorAttemptRef",
+            "retryAuthorization"
           ],
           "verification": {
             "successRequires": [
@@ -6748,7 +6810,7 @@
       "moduleSelfHealing": {
         "key": "moduleSelfHealing",
         "sourcePath": "v0.14.0/module-self-healing-model.json",
-        "sourceBlobSha": "a4e0fb17e1d22f8fc59604591a3cf198677b6a63",
+        "sourceBlobSha": "8f4f1c3693d26aae32982c43a4a55456bbfd99ff",
         "content": {
           "format": "SAFOR_MODULE_SELF_HEALING_MODEL",
           "schemaVersion": "0.14.0",
@@ -6765,7 +6827,13 @@
           "globalRules": [
             "Recovery never substitutes another trigger for HUMAN GO.",
             "GO evidence is never fabricated, rebound to another job or reused.",
-            "Unknown external effects reconcile before retry.",
+            "Each module profile authorizes at most one INITIAL automatic repair execution through initialAutomaticAttemptBudget.",
+            "The INITIAL execution is attemptNumber 1 and does not consume additionalRetryBudget.",
+            "additionalRetryBudget counts only attemptNumber 2 or later for the same failureFingerprint and selected repair action.",
+            "All SAFOR 0.14 module profiles set additionalRetryBudget to 0; module recovery therefore performs no automatic second repair execution for the same fingerprint.",
+            "A retry budget never by itself authorizes replaying an external mutation.",
+            "Unknown external effects require read-only reconciliation before any retry decision.",
+            "Reconciliation readback is not a repair attempt and cannot mutate state.",
             "A known product commit is not repeated when only response persistence failed.",
             "MASTER status projections are regenerated only from verified versioned pointers and provider readback.",
             "Self-healing never expands authority, entitlement, domain scope or HUMAN decisions."
@@ -6792,7 +6860,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -6836,7 +6905,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -6880,7 +6950,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -6924,7 +6995,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -6968,7 +7040,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7012,7 +7085,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7056,7 +7130,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7100,7 +7175,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7144,7 +7220,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7188,7 +7265,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7233,7 +7311,8 @@
                 "ACCEPT_UNVERIFIED_STATE",
                 "AUTOMATICALLY_RECLASSIFY_LEGACY_CREATION_TYPE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7277,7 +7356,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7321,7 +7401,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7365,7 +7446,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7409,7 +7491,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7453,7 +7536,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7497,7 +7581,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7541,7 +7626,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7585,7 +7671,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7629,7 +7716,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7673,7 +7761,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7717,7 +7806,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7761,7 +7851,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7805,7 +7896,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7849,7 +7941,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7893,7 +7986,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7937,7 +8031,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -7981,7 +8076,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8025,7 +8121,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8069,7 +8166,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8113,7 +8211,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8157,7 +8256,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8201,7 +8301,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8245,7 +8346,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8289,7 +8391,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8333,7 +8436,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8377,7 +8481,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8421,7 +8526,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8465,7 +8571,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8509,7 +8616,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8553,7 +8661,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8597,7 +8706,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8641,7 +8751,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8685,7 +8796,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8729,7 +8841,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8773,7 +8886,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8817,7 +8931,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8861,7 +8976,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8905,7 +9021,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8949,7 +9066,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -8993,7 +9111,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9037,7 +9156,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9081,7 +9201,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9125,7 +9246,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9169,7 +9291,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9213,7 +9336,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9257,7 +9381,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9301,7 +9426,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9345,7 +9471,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9389,7 +9516,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9433,7 +9561,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9477,7 +9606,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9521,7 +9651,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9565,7 +9696,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9609,7 +9741,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9653,7 +9786,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9697,7 +9831,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9741,7 +9876,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9785,7 +9921,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9829,7 +9966,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9873,7 +10011,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9917,7 +10056,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -9961,7 +10101,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10005,7 +10146,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10049,7 +10191,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10093,7 +10236,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10137,7 +10281,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10181,7 +10326,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10225,7 +10371,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10269,7 +10416,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10313,7 +10461,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10357,7 +10506,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10401,7 +10551,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10445,7 +10596,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10489,7 +10641,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10533,7 +10686,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10577,7 +10731,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10621,7 +10776,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10665,7 +10821,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10709,7 +10866,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10753,7 +10911,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10797,7 +10956,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -10841,7 +11001,8 @@
                 "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
                 "ACCEPT_UNVERIFIED_STATE"
               ],
-              "retryBudget": 0,
+              "initialAutomaticAttemptBudget": 1,
+              "additionalRetryBudget": 0,
               "preconditions": [
                 "CURRENT_PROVIDER_RIGHTS_PROVEN",
                 "PRE_REPAIR_STATE_REFERENCED",
@@ -15020,7 +15181,7 @@
       "schemaSelfHealingRecord": {
         "key": "schemaSelfHealingRecord",
         "sourcePath": "v0.14.0/schemas/self-healing-record.schema.json",
-        "sourceBlobSha": "37b04b3482e3d35b0c5a18533736c7bb4ed4f42b",
+        "sourceBlobSha": "690913b76e54c11db7d88805c51da7637ed43580",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:self-healing-record:0.14.0",
@@ -15041,7 +15202,10 @@
             "profileDecision",
             "proposedAction",
             "authorityBasis",
+            "attemptKind",
             "attemptNumber",
+            "priorAttemptRef",
+            "retryAuthorization",
             "preStateRefs",
             "successEvidenceRequirements",
             "evidenceRefs",
@@ -15089,9 +15253,71 @@
                 "type": "string"
               }
             },
+            "attemptKind": {
+              "enum": [
+                "INITIAL",
+                "RETRY"
+              ],
+              "description": "INITIAL is attemptNumber 1. RETRY is any second or later execution of the same selected repair action for the same failureFingerprint."
+            },
             "attemptNumber": {
               "type": "integer",
               "minimum": 1
+            },
+            "priorAttemptRef": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Null for INITIAL. Mandatory reference to the immediately preceding repair attempt for RETRY."
+            },
+            "retryAuthorization": {
+              "type": [
+                "object",
+                "null"
+              ],
+              "description": "Null for INITIAL. For RETRY this proves that the prior effect did not apply and that an additional retry remains authorized.",
+              "additionalProperties": false,
+              "required": [
+                "effectiveAdditionalRetryBudget",
+                "additionalRetriesConsumedBeforeThisAttempt",
+                "priorEffectState",
+                "authoritativeReadbackRefs",
+                "eligibilityRevalidated",
+                "selectedActionUnchanged",
+                "scopeUnchanged"
+              ],
+              "properties": {
+                "effectiveAdditionalRetryBudget": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "additionalRetriesConsumedBeforeThisAttempt": {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                "priorEffectState": {
+                  "const": "PROVEN_NOT_APPLIED"
+                },
+                "authoritativeReadbackRefs": {
+                  "type": "array",
+                  "minItems": 1,
+                  "uniqueItems": true,
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "eligibilityRevalidated": {
+                  "const": true
+                },
+                "selectedActionUnchanged": {
+                  "const": true
+                },
+                "scopeUnchanged": {
+                  "const": true
+                }
+              }
             },
             "preStateRefs": {
               "type": "array",
@@ -15198,14 +15424,68 @@
                 }
               }
             }
-          }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "attemptKind": {
+                    "const": "INITIAL"
+                  }
+                },
+                "required": [
+                  "attemptKind"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "attemptNumber": {
+                    "const": 1
+                  },
+                  "priorAttemptRef": {
+                    "type": "null"
+                  },
+                  "retryAuthorization": {
+                    "type": "null"
+                  }
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": {
+                  "attemptKind": {
+                    "const": "RETRY"
+                  }
+                },
+                "required": [
+                  "attemptKind"
+                ]
+              },
+              "then": {
+                "properties": {
+                  "attemptNumber": {
+                    "type": "integer",
+                    "minimum": 2
+                  },
+                  "priorAttemptRef": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "retryAuthorization": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          ]
         },
         "selfHealingProfileId": "MRP-SCHEMASELFHEALINGRECORD"
       },
       "schemaModuleRecoveryProfile": {
         "key": "schemaModuleRecoveryProfile",
         "sourcePath": "v0.14.0/schemas/module-recovery-profile.schema.json",
-        "sourceBlobSha": "1d262ffe6e7e0c820dade06651359929e1e61f07",
+        "sourceBlobSha": "588f6e4f8a62fa5bd0e26d83bbb4e33c5e63e933",
         "content": {
           "$schema": "https://json-schema.org/draft/2020-12/schema",
           "$id": "urn:safor:module-recovery-profile:0.14.0",
@@ -15221,7 +15501,8 @@
             "failureDetectors",
             "automaticRepairs",
             "forbiddenRepairs",
-            "retryBudget",
+            "initialAutomaticAttemptBudget",
+            "additionalRetryBudget",
             "verification",
             "escalation"
           ],
@@ -15294,10 +15575,17 @@
                 "minLength": 1
               }
             },
-            "retryBudget": {
+            "initialAutomaticAttemptBudget": {
               "type": "integer",
               "minimum": 0,
-              "maximum": 5
+              "maximum": 1,
+              "description": "Number of automatic INITIAL repair executions permitted for one failureFingerprint. This budget is independent from retry accounting."
+            },
+            "additionalRetryBudget": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 5,
+              "description": "Number of additional repair executions permitted after the INITIAL attempt. Zero means attemptNumber 2+ is not automatically executable."
             },
             "preconditions": {
               "type": "array",
@@ -28782,6 +29070,6 @@
     "canonicalization": "SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION_V1",
     "digestAlgorithm": "SHA-256",
     "digestScope": "DISTRIBUTION_EXCLUDING_INTEGRITY",
-    "contentDigest": "sha256:99d0326c68ce95de79f3dcdfe860df3527deae0efeed642a165a041a8e8689a4"
+    "contentDigest": "sha256:987c86a94d5c9811eee7107cb2bf5c684e6f51df09ae826e0d464083a73f3eb1"
   }
 }
