@@ -59,7 +59,7 @@ def main() -> None:
         if manifest.get("releaseArtifactsState") != "PENDING_RELEASE_MATERIALIZATION":
             errors.append("manifest artifact state is not pending materialization")
         if "Materialization state: **PENDING MATERIALIZATION**" not in readiness:
-            errors.append("PRODUCT-READINESS does not disclose pending rc.4 materialization")
+            errors.append("PRODUCT-READINESS does not disclose pending materialization")
     if artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
         if manifest.get("releaseArtifactsState") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
             errors.append("manifest artifact state is not materialized/pass")
@@ -124,7 +124,7 @@ def main() -> None:
         errors.append("candidate migration lacks isolated real-Git E2E prerequisite")
     if manifest.get("referenceProjectMigration") != migration:
         errors.append("manifest reference migration differs from release facts")
-    if "The current candidate migration is **NOT_STARTED**" not in readiness:
+    if f"The {version} candidate migration is **NOT_STARTED**" not in readiness:
         errors.append("PRODUCT-READINESS does not distinguish current candidate migration")
     if "V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE" not in manifest.get("gaBlockers", []):
         errors.append("current reference-project migration GA blocker was removed prematurely")
@@ -138,10 +138,10 @@ def main() -> None:
     pass_bundles = sum(1 for item in requirements if item.get("coverage", {}).get("bundle") == "PASS")
     if artifact_state == "PENDING_MATERIALIZATION":
         if pending_tests != 33 or pending_bundles != 33:
-            errors.append("all rc.4 automated-test/bundle dimensions must be PENDING before materialization")
+            errors.append("all current automated-test/bundle dimensions must be PENDING before materialization")
     if artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
         if pass_tests != 33 or pass_bundles != 33:
-            errors.append("all rc.4 automated-test/bundle dimensions must be PASS after materialization")
+            errors.append("all current automated-test/bundle dimensions must be PASS after materialization")
     if any(item.get("coverage", {}).get("realGitE2E") != "NOT_VERIFIED" for item in requirements):
         errors.append("real-Git E2E must remain NOT_VERIFIED")
     if any(item.get("coverage", {}).get("crossHost") != "NOT_VERIFIED" for item in requirements):
