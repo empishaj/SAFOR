@@ -79,7 +79,7 @@
         "identityRef",
         "workspaceRoot",
         "identityStatus",
-        "chatBindingStatus",
+        "inboxBindingStatus",
         "registeredAt",
         "registeredBy",
         "scheduling",
@@ -120,15 +120,6 @@
             "REIDENTIFICATION_REQUIRED"
           ]
         },
-        "chatBindingStatus": {
-          "enum": [
-            "BOUND",
-            "UNVERIFIED",
-            "LOST",
-            "REVOKED",
-            "NOT_APPLICABLE"
-          ]
-        },
         "registeredAt": {
           "type": "string",
           "format": "date-time"
@@ -159,6 +150,15 @@
             "MIGRATED_ACTIVE",
             "LEGACY_SNAPSHOT",
             "SUPERSEDED"
+          ]
+        },
+        "inboxBindingStatus": {
+          "enum": [
+            "BOUND",
+            "MISSING",
+            "STALE",
+            "REVOKED",
+            "NOT_APPLICABLE"
           ]
         }
       }
