@@ -144,17 +144,25 @@
     "agentClaimProtocol": {
       "requiredOperations": [
         "READ_JOB_STATE_AT_PINNED_REVISION",
-        "WRITE_JOB_STATE_WITH_EXPECTED_REVISION",
-        "READ_BACK_COMMITTED_JOB_STATE"
+        "WRITE_EXACT_PROPOSED_JOB_STATE_WITH_EXPECTED_REVISION",
+        "READ_BACK_FULL_COMMITTED_JOB_STATE",
+        "READ_BACK_COMMITTED_BLOB_IDENTITY"
       ],
       "successRequires": [
         "COMPARE_AND_SWAP_SUCCEEDED",
+        "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+        "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
+        "PROJECT_JOB_AGENT_IDENTITY_CHAT_DISPATCH_BINDINGS_MATCH",
+        "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
         "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
         "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
-        "OBSERVED_ACTIVATION_ID_MATCHES"
+        "READBACK_REFERENCE_PRESENT",
+        "OBSERVED_BLOB_IDENTITY_PRESENT"
       ],
       "onCasConflict": "RECONCILE_REQUIRED",
-      "inMemoryStateNeverAuthoritative": true
+      "inMemoryStateNeverAuthoritative": true,
+      "onReadbackMismatch": "RECONCILE_REQUIRED",
+      "proposedStateNeverAuthoritativeBeforeReadback": true
     }
   }
 }
