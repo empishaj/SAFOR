@@ -32,12 +32,13 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertEqual("ATOMIC_COMPARE_AND_SWAP_WITH_SINGLE_USE_GO_EVIDENCE", activation["claimMode"])
         self.assertTrue(activation["stringSubstringEvidenceForbidden"])
 
-    def test_agent_identity_requires_display_name_binding_and_fail_closed_rebind(self):
+    def test_agent_identity_requires_display_name_and_personal_inbox_binding(self):
         schema = self.modules["schemaAgentIdentity"]["content"]
         required = set(schema["required"])
-        self.assertTrue({"agentId", "displayName", "chatBinding", "activationContract", "communicationContractRef"}.issubset(required))
-        chat_binding = schema["$defs"]["chatBinding"]
-        self.assertIn("onUncertain", chat_binding["required"])
+        self.assertTrue({"agentId", "displayName", "inboxBinding", "activationContract", "communicationContractRef"}.issubset(required))
+        inbox_binding = schema["$defs"]["inboxBinding"]
+        self.assertIn("inboxIndexRef", inbox_binding["required"])
+        self.assertIn("identityRevision", inbox_binding["required"])
         activation = schema["allOf"][0]["then"]["properties"]["activationContract"]["allOf"][0]["properties"]
         self.assertEqual("HUMAN_GO_REQUIRED", activation["activationMode"]["const"])
         self.assertFalse(activation["automationActivationAllowed"]["const"])
