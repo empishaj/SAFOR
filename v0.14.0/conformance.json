@@ -405,10 +405,11 @@
       "expected": true,
       "status": "SUPERSEDED",
       "supersededBy": [
-        "CF-270",
+        "CF-RC5-001",
+        "CF-RC5-003",
         "CF-271"
       ],
-      "supersessionReason": "Generic external-trigger wording replaced by exclusive HUMAN-GO and explicit background-trigger prohibition.",
+      "supersessionReason": "Activation semantics now distinguish HUMAN-GO inbox pull from forbidden background activation; no host-bound chat proof is required.",
       "semanticKey": "AGENT_ACTIVATION_TRIGGER"
     },
     {
