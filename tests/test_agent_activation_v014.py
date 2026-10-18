@@ -44,26 +44,23 @@ class AgentActivationV014Tests(unittest.TestCase):
             },
             "roleIds": ["DEVELOPER"],
             "capabilityIds": ["code_contribution"],
-            "chatBinding": {
-                "bindingId": "chat-binding-agent-dev-003-r2",
-                "bindingMode": "CONTINUED_CHAT_HISTORY",
-                "status": "BOUND",
-                "establishedAt": "2026-10-17T20:00:00Z",
-                "initializedFromPromptRef": {
+            "inboxBinding": {
+                "inboxIndexRef": {
                     "repository": "example/safor-memory",
                     "ref": "abc1234",
-                    "path": "projects/example/agents/agent-dev-003/initialization.json",
-                    "blobSha": "9876abc",
+                    "path": "projects/example/agents/agent-dev-003/inbox/index.json",
+                    "blobSha": "inbox123",
                 },
-                "expectedSessionContinuity": True,
-                "onUncertain": "REIDENTIFICATION_REQUIRED",
+                "jobPathPattern": "agents/{agentId}/inbox/{jobId}.json",
+                "agentId": "agent-dev-003",
+                "identityRevision": 2,
             },
             "activationContract": {
                 "activationMode": "HUMAN_GO_REQUIRED",
                 "acceptedToken": "GO",
                 "tokenCaseSensitive": False,
                 "additionalTextAllowed": False,
-                "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
+                "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
                 "backgroundWakeupAssumed": False,
                 "automationActivationAllowed": False,
                 "hostTriggerActivationAllowed": False,
@@ -82,7 +79,7 @@ class AgentActivationV014Tests(unittest.TestCase):
                 "onGo": [
                     "LOAD_IDENTITY",
                     "VERIFY_IDENTITY_STATUS_ACTIVE",
-                    "VERIFY_CHAT_BINDING_BOUND",
+                    "VERIFY_PERSONAL_INBOX_BINDING",
                     "LOAD_AGENT_STATE",
                     "LOAD_PERSONAL_INBOX_INDEX",
                     "SELECT_DISCOVERABLE_JOB",
@@ -160,7 +157,6 @@ class AgentActivationV014Tests(unittest.TestCase):
             agent_state=self.state,
             inbox_index=self.inbox,
             human_message=message,
-            session_id="session-001",
             activation_id="activation-001",
             observed_at="2026-10-17T20:03:00Z",
         )
@@ -212,7 +208,6 @@ class AgentActivationV014Tests(unittest.TestCase):
             agent_state=self.state,
             inbox_index=self.inbox,
             human_message="GO",
-            session_id="session-001",
             activation_id="activation-001",
             observed_at="2026-10-17T20:03:00Z",
         )
@@ -243,6 +238,27 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertFalse(evidence["jobPromptTransported"])
         self.assertTrue(evidence["singleUse"])
 
+    def test_host_session_attestation_is_not_required(self):
+        result = self.activate()
+        self.assertTrue(result["allowed"])
+        evidence = result["activationEvidence"]
+        self.assertNotIn("sessionId", evidence)
+        self.assertNotIn("chatBindingId", evidence)
+
+    def test_foreign_personal_inbox_fails_closed(self):
+        foreign = copy.deepcopy(self.inbox)
+        foreign["agentId"] = "agent-other"
+        result = evaluate_human_go_activation(
+            identity=self.identity,
+            agent_state=self.state,
+            inbox_index=foreign,
+            human_message="GO",
+            activation_id="activation-001",
+            observed_at="2026-10-17T20:03:00Z",
+        )
+        self.assertFalse(result["allowed"])
+        self.assertEqual(result["reasonCode"], "INBOX_AGENT_MISMATCH")
+
     def test_stale_identity_revision_is_not_claimable(self):
         stale = copy.deepcopy(self.inbox)
         stale["entries"][0]["requiredIdentityRevision"] = 1
@@ -251,7 +267,6 @@ class AgentActivationV014Tests(unittest.TestCase):
             agent_state=self.state,
             inbox_index=stale,
             human_message="GO",
-            session_id="session-001",
             activation_id="activation-001",
             observed_at="2026-10-17T20:03:00Z",
         )
