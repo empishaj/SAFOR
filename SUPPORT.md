@@ -2,7 +2,7 @@
 
 ## Current maturity
 
-SAFOR v0.14.0-rc.3 is a **Release Candidate**.
+SAFOR v0.14.0-rc.5 is a **Release Candidate**.
 
 The architecture and complete distribution are machine-checkable, but General Availability requires explicit end-to-end acceptance on every claimed provider path.
 
@@ -27,7 +27,7 @@ SAFOR's primary product mode is declarative execution in an ordinary compatible 
 
 ## Agent runtime boundary
 
-SAFOR persists chat-bound agent identities and repository-native jobs. A subagent starts work only when the HUMAN types `GO` in that already bound agent chat. Git pushes, polling, inbox creation, automation and host background events never activate an agent. After the one-time identity bootstrap, the job contract comes from the repository and the HUMAN never transports the job prompt.
+SAFOR persists agent identities, personal Git INBOXes and repository-native jobs. A subagent starts work only when the HUMAN types `GO` in its initialized agent chat. Git pushes, polling, inbox creation, automation and host background events never activate an agent. After the one-time identity bootstrap, the job contract comes from the repository and the HUMAN never transports the job prompt.
 
 ## What SAFOR does not promise
 
@@ -64,8 +64,8 @@ Paid Factory/Operating Model access additionally requires supported entitlement 
 ## Product paths in the current release candidate
 
 **Website** is the free supported starter:
-- `safor.factory.website-delivery@1.1.0`
-- `safor.om.website-team@1.1.0`
+- `safor.factory.website-delivery@1.2.0`
+- `safor.om.website-team@1.2.0`
 
 **Software / SaaS** is commercial:
 - Software Factory entitlement required.
@@ -74,10 +74,10 @@ Paid Factory/Operating Model access additionally requires supported entitlement 
 
 **Book** remains commercial.
 
-rc.4 provides the machine-enforced entitlement/delivery contract and reference verification logic. A production billing system, entitlement issuer/verifier service and protected package delivery service remain GA-readiness work.
+The current Framework provides the entitlement/delivery contract and reference verification logic. A production billing system, entitlement issuer/verifier service and protected package delivery service remain GA-readiness work.
 
 
-## Domain Framework files in rc.6
+## Domain Framework files in the current release
 
 End users should normally load a domain-specific Framework rather than the generic base Framework:
 
@@ -85,7 +85,7 @@ End users should normally load a domain-specific Framework rather than the gener
 - SaaS: `SAFOR-FRAMEWORK-SAAS.json` — public test/evaluation artifact; paid-mode test modules.
 - Book: `SAFOR-FRAMEWORK-BOOK-CREATION.json` — public test/evaluation artifact; paid-mode test modules.
 
-For rc.6, SaaS and Book test Frameworks are committed publicly to enable end-to-end testing. Their embedded packages are prerelease test versions and are not the protected commercial production package source.
+In rc.5, SaaS and Book test Frameworks are committed publicly to enable end-to-end testing. Their embedded packages are prerelease test versions and are not the protected commercial production package source.
 
 Premium Factory or Operating Model replacement is supported only inside the active domain and after bidirectional package-family and counterpart compatibility checks.
 
