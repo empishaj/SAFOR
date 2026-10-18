@@ -26,28 +26,28 @@
   "artifacts": [
     {
       "path": "SAFOR-FRAMEWORK.json",
-      "sha256": "eec5df2565cad07c2e199d31404e8e222c85126eff5f1b67dcdb04af66dfd1ae",
-      "bytes": 1033962
+      "sha256": "c5ed0b8aeda1c577b9151c94f4074bb9bad988206c92ad1085f13ed1e55f5faf",
+      "bytes": 1038862
     },
     {
       "path": "SAFOR-FRAMEWORK-v0.14.0-rc.5.json",
-      "sha256": "eec5df2565cad07c2e199d31404e8e222c85126eff5f1b67dcdb04af66dfd1ae",
-      "bytes": 1033962
+      "sha256": "c5ed0b8aeda1c577b9151c94f4074bb9bad988206c92ad1085f13ed1e55f5faf",
+      "bytes": 1038862
     },
     {
       "path": "SAFOR-FRAMEWORK-WEBSITE.json",
-      "sha256": "3c045c7fb076167fc5ca590148c810a7bc5cebe40cc454c6c6864f2901c7d8b9",
-      "bytes": 1116895
+      "sha256": "9f95095db4685eafbfc8c88986105c3e7cee8032587abacac8730bb1aff90ff8",
+      "bytes": 1121969
     },
     {
       "path": "SAFOR-FRAMEWORK-SAAS.json",
-      "sha256": "1f63ee1944c5d8d2f1739923afd56560114b7b215bc05481b1d0e69db7bfec41",
-      "bytes": 1141946
+      "sha256": "67cdd3d41e18607933ad9c45589cf3ce65fe66fa09f3d6a3fc0fd11468ee897e",
+      "bytes": 1147020
     },
     {
       "path": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
-      "sha256": "186b8ba25bdee5847dd57b76518b6e3b661bf29e700e6f4810e09fd8bf2c0958",
-      "bytes": 1113375
+      "sha256": "e29d5c889d8d48052beeca6eab90cf505df7a2fef46261395042a7723d63951c",
+      "bytes": 1118449
     },
     {
       "path": "SAFOR-TEST-ACCESS-SAAS.json",
