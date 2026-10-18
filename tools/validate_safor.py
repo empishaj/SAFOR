@@ -158,7 +158,7 @@ for profile in profiles_catalog.get("profiles", []):
     validation = validate_distribution(built, profile_id)
     if validation.get("valid") is not True:
         fail(f"{profile_id} distribution invalid: {validation}")
-    committed = load(profile.get("outputFile", ""))
+    committed = load(profile.get("distributionFile", ""))
     if committed != built:
         fail(f"{profile_id} committed distribution is not reproducible")
     if committed.get("framework", {}).get("bundleVersion") != VERSION:
