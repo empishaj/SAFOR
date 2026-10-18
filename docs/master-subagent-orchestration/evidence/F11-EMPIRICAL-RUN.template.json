@@ -1,0 +1,74 @@
+{
+  "format": "SAFOR_F11_EMPIRICAL_RUN",
+  "schemaVersion": "0.14.0",
+  "runId": "REPLACE",
+  "participant": {
+    "participantId": "PSEUDONYMOUS_ID_ONLY",
+    "independentFromSaforDesign": false,
+    "experienceProfile": "TECHNICAL"
+  },
+  "environment": {
+    "host": "REPLACE",
+    "freshChat": true,
+    "frameworkRef": {
+      "repository": "empishaj/SAFOR",
+      "commit": "REPLACE",
+      "path": "SAFOR-FRAMEWORK-v0.14.0-rc.5.json",
+      "blobSha": "REPLACE"
+    }
+  },
+  "scenario": {
+    "scenarioClasses": [
+      "DISCOVERY_HEAVY"
+    ],
+    "realisticTaskRef": "REPLACE",
+    "startedAt": "REPLACE_ISO_8601",
+    "endedAt": "REPLACE_ISO_8601"
+  },
+  "evidence": {
+    "transcriptRef": "REPLACE",
+    "additionalRefs": []
+  },
+  "behavioralMetrics": {
+    "maxNewDecisionContextsPerTurn": 0,
+    "repeatedUnchangedApprovalCount": 0,
+    "safelyDerivableQuestionViolationCount": 0,
+    "internalOrchestrationQuestionCountAfterPlan": 0,
+    "rawInternalIdentifierExposureViolationCount": 0,
+    "technicalMechanicsExposureViolationCount": 0,
+    "genuineNonDerivableDiscoveryQuestionObserved": false,
+    "executionUnnecessaryHumanQuestionCount": 0,
+    "unchangedDecisionReuseObserved": false,
+    "materialEscalationObserved": false,
+    "materialEscalationReason": null,
+    "returnedToPhaseTargetAfterEscalation": null,
+    "safeRecoveryRequiredHumanDecision": null,
+    "unsafeRecoverySingleClearBlocker": null,
+    "inferredHumanApprovalViolationCount": 0,
+    "internalHeuristicPresentedAsScientificMeasure": false
+  },
+  "subjectiveFeedback": {
+    "provided": false,
+    "clarityRating": null,
+    "controlRating": null,
+    "discoveryEffortRating": null,
+    "executionEffortRating": null,
+    "comment": null,
+    "ratingsAreValidatedPsychometrics": false
+  },
+  "evaluation": {
+    "eligible": false,
+    "hardBehavioralPass": false,
+    "result": "NOT_EVALUATED",
+    "evaluatorId": "REPLACE",
+    "evaluatedAt": "REPLACE_ISO_8601",
+    "findings": [],
+    "limitations": []
+  },
+  "privacy": {
+    "directPersonalIdentifiersStored": false,
+    "participantPseudonymized": true
+  },
+  "immutable": true,
+  "supersedesRunId": null
+}
