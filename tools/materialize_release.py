@@ -97,6 +97,11 @@ def prepare(run_id: str, source_sha: str) -> None:
     for profile in ("WEBSITE", "SAAS", "BOOK_CREATION"):
         run("python", "tools/build_domain_framework.py", "--profile", profile)
 
+    current_versioned = f"SAFOR-FRAMEWORK-v{version}.json"
+    for old_versioned in ROOT.glob("SAFOR-FRAMEWORK-v*.json"):
+        if old_versioned.name != current_versioned:
+            old_versioned.unlink()
+
     records = artifact_records()
     write_checksums(records)
     write_release_notes()
