@@ -13,14 +13,14 @@
       "defaultFactory": {
         "packageId": "safor.factory.website-delivery",
         "packageFamily": "safor.factory.website",
-        "version": "1.2.0",
-        "publicPath": "v0.14.0/packages/factories/website-delivery/1.2.0/package.json"
+        "version": "1.1.0",
+        "publicPath": "v0.13.0/packages/factories/website-delivery/1.1.0/package.json"
       },
       "defaultOperatingModel": {
         "packageId": "safor.om.website-team",
         "packageFamily": "safor.om.website",
-        "version": "1.2.0",
-        "publicPath": "v0.14.0/packages/operating-models/website-team/1.2.0/package.json"
+        "version": "1.1.0",
+        "publicPath": "v0.13.0/packages/operating-models/website-team/1.1.0/package.json"
       },
       "replacementPolicy": {
         "factoryReplaceable": true,
@@ -44,14 +44,14 @@
       "defaultFactory": {
         "packageId": "safor.factory.software-delivery",
         "packageFamily": "safor.factory.saas",
-        "publicPath": "v0.14.0/packages/factories/software-delivery/1.8.0-test.1/package.json",
-        "version": "1.8.0-test.1"
+        "publicPath": "v0.13.0/packages/factories/software-delivery/1.7.0-test.1/package.json",
+        "version": "1.7.0-test.1"
       },
       "defaultOperatingModel": {
         "packageId": "safor.om.saas-engineering",
         "packageFamily": "safor.om.saas",
-        "publicPath": "v0.14.0/packages/operating-models/saas-engineering/1.8.0-test.1/package.json",
-        "version": "1.8.0-test.1"
+        "publicPath": "v0.13.0/packages/operating-models/saas-engineering/1.7.0-test.1/package.json",
+        "version": "1.7.0-test.1"
       },
       "replacementPolicy": {
         "factoryReplaceable": true,
@@ -75,14 +75,14 @@
       "defaultFactory": {
         "packageId": "safor.factory.book-production",
         "packageFamily": "safor.factory.book",
-        "publicPath": "v0.14.0/packages/factories/book-production/1.1.0-test.1/package.json",
-        "version": "1.1.0-test.1"
+        "publicPath": "v0.13.0/packages/factories/book-production/1.0.0-test.1/package.json",
+        "version": "1.0.0-test.1"
       },
       "defaultOperatingModel": {
         "packageId": "safor.om.book-authoring",
         "packageFamily": "safor.om.book",
-        "publicPath": "v0.14.0/packages/operating-models/book-authoring/1.1.0-test.1/package.json",
-        "version": "1.1.0-test.1"
+        "publicPath": "v0.13.0/packages/operating-models/book-authoring/1.0.0-test.1/package.json",
+        "version": "1.0.0-test.1"
       },
       "replacementPolicy": {
         "factoryReplaceable": true,
