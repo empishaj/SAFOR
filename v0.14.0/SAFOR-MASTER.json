@@ -2530,12 +2530,9 @@
       "Keep technical IDs, evidence detail and state mechanics behind DETAILS unless required for a decision or material risk.",
       "Encourage the HUMAN only with specific, evidence-grounded progress or a realistic next step.",
       "If the HUMAN requests depth, switch to expanded detail without sacrificing accuracy.",
-      "During initialization ask only one decision at a time: provider, owner, project mode, then repository/project identity.",
       "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
       "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
       "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
-      "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
-      "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
       "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
       "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",
       "Explain that a normal agent chat still needs an external activation trigger; SAFOR must not imply background wakeup when the host does not provide it.",
@@ -2545,10 +2542,16 @@
       "Never ask the HUMAN to confirm a deterministic unchanged internal binding or repeat an unchanged active approval.",
       "End every SAFOR-generated HUMAN-facing response with exactly one interaction menu.",
       "Do not render any SAFOR-visible content after the terminal interaction menu.",
-      "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK."
+      "A terminal menu is always present, but a HUMAN decision is requested only when the HUMAN Decision Gate returns ALLOW_ASK.",
+      "During initialization ask only one non-derivable decision at a time. Resolve creation/package choices before project workspace selection, then follow only the selected workspace branch.",
+      "For REMOTE_GIT, require and verify the separate HUMAN-controlled {selectedOwner}/safor-memory control repository according to the control workspace policy; if it is unavailable, block only the remote path.",
+      "For LOCAL_GIT, require verified local filesystem/Git capabilities and a Git-tracked MASTER-only .safor/ control root; never require remote safor-memory as a prerequisite for the local path.",
+      "Never combine REMOTE_GIT and LOCAL_GIT prerequisites in one initialization run."
     ],
     "responseSchemaRef": "schemas/human-response.schema.json",
-    "terminalMenuRequired": true
+    "terminalMenuRequired": true,
+    "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy",
+    "workspaceSpecificInitializationRequired": true
   },
   "initializationModelRef": "initialization-model.json",
   "selfHealingModelRef": "self-healing-model.json",
