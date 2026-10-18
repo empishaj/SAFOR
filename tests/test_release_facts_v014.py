@@ -60,12 +60,31 @@ class ReleaseFactsV014Tests(unittest.TestCase):
             if facts["releaseArtifacts"]["state"] == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
             else "PENDING"
         )
+        real_git_pass = 0
         for item in trace["requirements"]:
             with self.subTest(requirement=item["id"]):
                 self.assertEqual(expected, item["coverage"]["automatedTest"])
                 self.assertEqual(expected, item["coverage"]["bundle"])
-                self.assertEqual("NOT_VERIFIED", item["coverage"]["realGitE2E"])
+                self.assertIn(item["coverage"]["realGitE2E"], {"PASS", "NOT_VERIFIED"})
+                if item["coverage"]["realGitE2E"] == "PASS":
+                    real_git_pass += 1
+                    refs = item.get("realGitE2EEvidence") or []
+                    self.assertTrue(refs)
+                    for ref in refs:
+                        self.assertTrue((ROOT / ref.split("#", 1)[0]).exists())
                 self.assertEqual("NOT_VERIFIED", item["coverage"]["crossHost"])
+        self.assertEqual(real_git_pass, trace["summary"]["realGitE2EVerified"])
+        if real_git_pass < len(trace["requirements"]):
+            self.assertEqual("NOT_VERIFIED", facts["traceability"]["realGitE2E"])
+
+    def test_live_provider_audit_evidence_closes_only_f09_f10(self):
+        manifest = self.load("RELEASE-MANIFEST.json")
+        findings = manifest["auditResolution"]["findings"]
+        self.assertTrue(findings["F-09"].startswith("RESOLVED_BY_ISOLATED_LIVE_GITHUB"))
+        self.assertTrue(findings["F-10"].startswith("RESOLVED_BY_ISOLATED_LIVE_GITHUB"))
+        self.assertEqual("OPEN_REAL_GIT_E2E_REQUIRED", findings["F-02"])
+        evidence = ROOT / manifest["auditResolution"]["liveProviderEvidenceRef"]
+        self.assertTrue(evidence.exists())
 
 
 if __name__ == "__main__":
