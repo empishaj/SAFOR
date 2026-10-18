@@ -280,11 +280,11 @@ def validate():
             errors.append(f"PRODUCT-READINESS contains stale default {stale}")
 
     if errors:
-        print("SAFOR rc.3 audit remediation: FAIL")
+        print(f"SAFOR {version} audit remediation: FAIL")
         for error in errors:
             print("-", error)
         raise SystemExit(1)
-    print(f"SAFOR rc.3 audit remediation: PASS ({len(module_map)} modules/recovery profiles)")
+    print(f"SAFOR {version} audit remediation: PASS ({len(module_map)} modules/recovery profiles)")
 
 
 if __name__ == "__main__":
