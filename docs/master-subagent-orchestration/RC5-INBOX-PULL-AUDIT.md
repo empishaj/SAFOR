@@ -15,7 +15,7 @@ The required product behavior is therefore:
 3. MASTER updates the personal INBOX index.
 4. The agent remains idle.
 5. HUMAN types exactly `GO` in the initialized agent chat.
-6. The agent reads its pinned identity and personal INBOX.
+6. The agent reads its pinned identity and the current personal INBOX index from the stable bound locator.
 7. The agent selects the next eligible assigned Job.
 8. The agent validates assignment, identity revision, dispatch revision, role, skills, mandate and actual provider rights.
 9. The agent atomically claims exactly that Job.
@@ -37,6 +37,7 @@ The required product behavior is therefore:
 | A-10 | Subagent returns substantive work in HUMAN chat | **PASS / FORBIDDEN** — typed Git OUTBOX remains authoritative |
 | A-11 | Materialized Framework differs from canonical sources | **PASS** — reproducible bundle and domain distributions validated |
 | A-12 | Regression could silently restore host-session dependency | **CLOSED** — dedicated `test_inbox_pull_audit_rc5.py` added |
+| A-13 | Stable identity pins a mutable INBOX blob and therefore becomes stale after dispatch | **CLOSED** — immutable bootstrap evidence is separated from `inboxIndexLocation`; current discovery always reads the mutable index at the bound locator |
 
 ## Canonical communication contract
 
@@ -55,7 +56,7 @@ HUMAN: GO
   v
 initialized agent
   |
-  | reads pinned identity + personal INBOX
+  | reads pinned identity + current personal INBOX via stable locator
   | selects eligible assigned Job
   | validates identityRevision + dispatchRevision + role/skills/rights
   | provider-CAS claim + exact readback
@@ -78,7 +79,7 @@ Execution authority is instead based on:
 - pinned ACTIVE Agent Identity;
 - exact `agentId`;
 - exact `identityRevision`;
-- personal INBOX binding;
+- personal INBOX binding with immutable bootstrap evidence and a stable current-index locator;
 - Job assignment to that Agent;
 - exact `dispatchRevision`;
 - explicit HUMAN `GO`;
