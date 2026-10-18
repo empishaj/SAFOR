@@ -1,0 +1,61 @@
+name: Creation type repair build
+
+on:
+  push:
+    branches: ["fix/creation-types-v014-20261018"]
+    paths:
+      - tools/fix_creation_types_v014.py
+      - .github/workflows/creation-type-repair.yml
+
+permissions:
+  contents: write
+
+concurrency:
+  group: creation-type-repair-20261018
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: github.repository == 'empishaj/SAFOR' && github.ref == 'refs/heads/fix/creation-types-v014-20261018'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Apply pinned source correction
+        run: python tools/fix_creation_types_v014.py
+      - name: Regenerate all public framework distributions
+        run: |
+          set -euo pipefail
+          python tools/build_bundle.py
+          python tools/build_domain_framework.py --profile WEBSITE
+          python tools/build_domain_framework.py --profile SAAS
+          python tools/build_domain_framework.py --profile BOOK_CREATION
+      - name: Verify reproducibility and full regression suite
+        run: |
+          set -euo pipefail
+          python tools/build_bundle.py --check
+          python tools/build_domain_framework.py --check
+          python tools/validate_safor.py
+          python -m unittest discover -s tests -v
+      - name: Record observed validation and preserve release history
+        run: |
+          set -euo pipefail
+          python tools/fix_creation_types_v014.py --finalize
+          sha256sum -c SHA256SUMS-0.14.0-rc.3.txt
+          git diff --exit-code -- SAFOR-FRAMEWORK-v0.14.0-rc.2.json RELEASE-EVIDENCE-0.14.0-rc.2.json RELEASE-NOTES-0.14.0-rc.2.md SHA256SUMS-0.14.0-rc.2.txt v0.13.0 v0.12.0 v0.11.0 v0.10.0
+      - name: Persist only reviewed repair outputs on the repair branch
+        env:
+          EXPECTED_HEAD: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          actual=$(git ls-remote origin refs/heads/fix/creation-types-v014-20261018 | cut -f1)
+          test "$actual" = "$EXPECTED_HEAD"
+          git add -- README.md VERSION RELEASE-MANIFEST.json v0.14.0/schemas/project.schema.json v0.14.0/SAFOR-MASTER.json v0.14.0/interaction-model.json v0.14.0/conformance.json tools/build_bundle.py tools/build_domain_framework.py tools/validate_safor.py SAFOR-FRAMEWORK.json SAFOR-FRAMEWORK-WEBSITE.json SAFOR-FRAMEWORK-SAAS.json SAFOR-FRAMEWORK-BOOK-CREATION.json SAFOR-FRAMEWORK-v0.14.0-rc.3.json RELEASE-EVIDENCE-0.14.0-rc.3.json RELEASE-NOTES-0.14.0-rc.3.md SHA256SUMS-0.14.0-rc.3.txt
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'fix: align creation types and rebuild validated rc.3 distributions'
+          git push origin HEAD:refs/heads/fix/creation-types-v014-20261018
