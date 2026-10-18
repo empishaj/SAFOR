@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:requirements-traceability:0.14.0",
+  "title": "SAFOR Requirements Traceability 0.14.0",
+  "type": "object",
+  "required": [
+    "format",
+    "schemaVersion",
+    "releaseTarget",
+    "requirements"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_REQUIREMENTS_TRACEABILITY"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "releaseTarget": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requirements": {
+      "type": "array",
+      "minItems": 33,
+      "maxItems": 33,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "statement",
+          "origin",
+          "decisionStatus",
+          "designEvidence",
+          "implementationEvidence",
+          "automatedTests",
+          "bundleModuleKeys",
+          "coverage",
+          "migrationDisposition",
+          "openFindings"
+        ],
+        "properties": {
+          "id": {
+            "pattern": "^REQ-[0-9]{3}$"
+          },
+          "origin": {
+            "enum": [
+              "HUMAN_REQUIREMENT",
+              "AGREED_DIRECTION",
+              "ARCHITECTURE_DECISION",
+              "AUDIT_RECOMMENDATION"
+            ]
+          },
+          "decisionStatus": {
+            "const": "APPROVED_FOR_RC2_IMPLEMENTATION"
+          },
+          "designEvidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "implementationEvidence": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "automatedTests": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "bundleModuleKeys": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string"
+            }
+          },
+          "coverage": {
+            "type": "object",
+            "required": [
+              "design",
+              "implementation",
+              "automatedTest",
+              "bundle",
+              "realGitE2E",
+              "crossHost"
+            ],
+            "properties": {
+              "design": {
+                "enum": [
+                  "PASS",
+                  "PARTIAL",
+                  "FAIL",
+                  "NOT_VERIFIED",
+                  "NOT_APPLICABLE",
+                  "PENDING"
+                ]
+              },
+              "implementation": {
+                "enum": [
+                  "PASS",
+                  "PARTIAL",
+                  "FAIL",
+                  "NOT_VERIFIED",
+                  "NOT_APPLICABLE",
+                  "PENDING"
+                ]
+              },
+              "automatedTest": {
+                "enum": [
+                  "PASS",
+                  "PARTIAL",
+                  "FAIL",
+                  "NOT_VERIFIED",
+                  "NOT_APPLICABLE",
+                  "PENDING"
+                ]
+              },
+              "bundle": {
+                "enum": [
+                  "PASS",
+                  "PARTIAL",
+                  "FAIL",
+                  "NOT_VERIFIED",
+                  "NOT_APPLICABLE",
+                  "PENDING"
+                ]
+              },
+              "realGitE2E": {
+                "enum": [
+                  "PASS",
+                  "PARTIAL",
+                  "FAIL",
+                  "NOT_VERIFIED",
+                  "NOT_APPLICABLE",
+                  "PENDING"
+                ]
+              },
+              "crossHost": {
+                "enum": [
+                  "PASS",
+                  "PARTIAL",
+                  "FAIL",
+                  "NOT_VERIFIED",
+                  "NOT_APPLICABLE",
+                  "PENDING"
+                ]
+              }
+            }
+          },
+          "migrationDisposition": {
+            "type": "string",
+            "minLength": 1
+          },
+          "openFindings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}
