@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.14.0-rc.2
+
+- Integrates the complete v0.14 orchestration contract into every uploadable Framework distribution.
+- Replaces substring-based GO guards with structured, single-use and atomically claimed HUMAN-GO evidence.
+- Makes MASTER response completeness and freshness dependent on verified readback rather than lifecycle inference.
+- Adds partial product/control-write reconciliation and idempotent retry guards.
+- Upgrades all active domain package pairs and provider adapter contracts for the 0.14 range.
+- Adds evidence-dimensioned traceability for all 33 requirements while keeping real-Git E2E, cross-host and usability claims explicitly open.
+
 ## 0.13.0-rc.9
 
 - Publishes a fresh generic SAFOR Framework and all three domain Framework distributions after the non-destructive `safomwebsite` reference migration completed.
