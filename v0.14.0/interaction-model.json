@@ -444,7 +444,9 @@
           "STOP",
           "REQUIRED_FIX"
         ],
-        "example": "Stopp. Ohne `safor-memory` mit Lese- und Schreibrechten geht es nicht weiter. Richte es unter dem gewählten Owner ein und starte SAFOR danach neu."
+        "example": "Remote-Git ist blockiert: Das benötigte safor-memory fehlt oder ist nicht beschreibbar. Richte den Remote-Control-Workspace ein oder wähle den lokalen Git-Pfad.",
+        "appliesWhen": "PROJECT_WORKSPACE_TYPE == REMOTE_GIT",
+        "legacyName": true
       },
       "creationType": {
         "structure": [
@@ -485,6 +487,14 @@
           "VALUE_STREAM_WALKTHROUGH",
           "MIGRATION_OPTION_MENU_WITHOUT_REAL_HUMAN_DECISION"
         ]
+      },
+      "localControlWorkspaceStop": {
+        "appliesWhen": "PROJECT_WORKSPACE_TYPE == LOCAL_GIT",
+        "structure": [
+          "STOP",
+          "REQUIRED_FIX"
+        ],
+        "example": "Lokaler Git-Zugriff ist blockiert: Dateisystem-/Git-Rechte oder der geschützte .safor/-Control-Root fehlen. Remote-safor-memory ist dafür nicht erforderlich."
       }
     },
     "avoid": {
@@ -654,7 +664,8 @@
       "Remote Git requires verified read/write access to a separate HUMAN-controlled safor-memory.",
       "Local Git requires verified local filesystem/Git rights and a MASTER-only Git-tracked .safor/ root; no remote memory is required.",
       "Creation Type options are WEBSITE, SOFTWARE_SAAS and BOOK unless a domain distribution preselects one."
-    ]
+    ],
+    "workspaceBranchRule": "After workspace selection, render and execute only steps whose when condition matches the selected PROJECT_WORKSPACE_TYPE. Never surface REMOTE_GIT blockers in LOCAL_GIT or LOCAL_GIT blockers in REMOTE_GIT."
   },
   "nativeUiPolicy": {
     "mode": "CHAT_NATIVE_UI_ONLY",
