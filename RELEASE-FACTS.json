@@ -1,10 +1,10 @@
 {
   "format": "SAFOR_RELEASE_FACTS",
   "schemaVersion": "1.0",
-  "targetVersion": "0.14.0-rc.4",
-  "previousVersion": "0.14.0-rc.3",
+  "targetVersion": "0.14.0-rc.5",
+  "previousVersion": "0.14.0-rc.4",
   "frameworkSchemaVersion": "0.14.0",
-  "status": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+  "status": "SOURCE_VALIDATED_RELEASE_MATERIALIZATION_PENDING",
   "sourceRoot": "v0.14.0",
   "moduleCount": 93,
   "recoveryProfileCount": 93,
@@ -38,21 +38,20 @@
     }
   },
   "releaseArtifacts": {
-    "state": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
-    "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
+    "state": "PENDING_MATERIALIZATION",
+    "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.5.json",
     "latestAlias": "SAFOR-FRAMEWORK.json",
-    "evidence": "RELEASE-EVIDENCE-0.14.0-rc.4.json",
-    "notes": "RELEASE-NOTES-0.14.0-rc.4.md",
-    "checksums": "SHA256SUMS-0.14.0-rc.4.txt",
-    "expectedDistributionArtifactCount": 7,
-    "workflowRunId": "39125871541"
+    "evidence": "RELEASE-EVIDENCE-0.14.0-rc.5.json",
+    "notes": "RELEASE-NOTES-0.14.0-rc.5.md",
+    "checksums": "SHA256SUMS-0.14.0-rc.5.txt",
+    "expectedDistributionArtifactCount": 7
   },
   "traceability": {
-    "releaseTarget": "0.14.0-rc.4",
+    "releaseTarget": "0.14.0-rc.5",
     "design": "PASS",
     "implementation": "PASS",
-    "automatedTest": "PASS",
-    "bundle": "PASS",
+    "automatedTest": "PENDING_FULL_CI",
+    "bundle": "PENDING_MATERIALIZATION",
     "realGitE2E": "NOT_VERIFIED",
     "crossHost": "NOT_VERIFIED"
   },
@@ -81,7 +80,7 @@
       }
     },
     "candidateMigration": {
-      "targetVersion": "0.14.0-rc.4",
+      "targetVersion": "0.14.0-rc.5",
       "status": "NOT_STARTED",
       "prerequisites": [
         "V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE"
