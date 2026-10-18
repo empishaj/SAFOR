@@ -144,13 +144,13 @@
       "id": "RC4-DRIFT-001",
       "summary": "Requirements traceability still identifies releaseTarget 0.14.0-rc.2 on the rc.3 candidate.",
       "plannedWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_SYNC",
-      "status": "PLANNED_NOT_STARTED"
+      "status": "COMPLETED_SOURCE_VALIDATED"
     },
     {
       "id": "RC4-DRIFT-002",
       "summary": "Product readiness and release manifest must be checked for default-package and migration-status consistency.",
       "plannedWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_SYNC",
-      "status": "PLANNED_NOT_STARTED"
+      "status": "COMPLETED_SOURCE_VALIDATED"
     }
   ],
   "repositoryHygiene": {
@@ -181,11 +181,34 @@
     "noopBranchIdenticalToSourceCandidate": true
   },
   "stepResult": {
-    "workPackage": "WP-A5_PERSISTENCE_FALLBACK_XOR",
+    "workPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_DRIFT",
     "state": "COMPLETED",
-    "validation": "FOCUSED_SOURCE_VALIDATION_PASS",
-    "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION",
-    "nextWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_DRIFT",
+    "validation": "FOCUSED_RELEASE_FACTS_AND_TRACEABILITY_VALIDATION_PASS",
+    "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_WP_A7_BUNDLE_MATERIALIZATION",
+    "nextWorkPackage": "WP-A7_RC4_BUILD_AND_INDEPENDENT_REVIEW",
     "nextWorkPackageAuthorized": false
+  },
+  "releaseFactsRemediation": {
+    "status": "COMPLETED_SOURCE_VALIDATED",
+    "targetVersion": "0.14.0-rc.4",
+    "releaseFactsRef": "RELEASE-FACTS.json",
+    "evidence": {
+      "versionCommit": "35e279ddb49c1e794d3d101bb387c1589cc18fec",
+      "releaseFactsCommit": "60cdc36e298797664b58b037fa54c7a6df025b1e",
+      "manifestCommit": "734dde86ea42ec617282238b1c82813ab2368b06",
+      "traceabilityCommit": "6f425ca4b882f4764781b7bc13e8dc88a638d8aa",
+      "readinessCommit": "9b9234f8a52448f12fc7494790b41b17cca9c358",
+      "releaseTestCommit": "90ea561957839de99946c7b7be372004027c6041",
+      "releaseFactsValidatorCommit": "2c85d5e9a4e03f4da42ff90a011d30c2c3c54d2c",
+      "releaseFactsTestCommit": "5b6056648cf6f6e0d05e55826d00b2baf53d3782",
+      "traceabilityValidatorCommit": "4dd32dccba6b795150b6ade48cf118b44799ab2d",
+      "auditValidatorCommit": "623a6a0b2265395a6c6535a076bbfa2b782ade39",
+      "focusedWorkflowCommit": "033fd8fc49140c5abd205168b3b124f222aabf89",
+      "focusedValidationRun": 39125182998,
+      "focusedValidationJob": 117668691615,
+      "focusedValidationResult": "PASS",
+      "standardValidationRun": 39125183005,
+      "standardValidationResult": "EXPECTED_FAILURE_UNTIL_WP_A7_MATERIALIZATION"
+    }
   }
 }
