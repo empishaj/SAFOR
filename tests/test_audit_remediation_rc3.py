@@ -1,3 +1,4 @@
+import hashlib
 import json
 import subprocess
 import sys
@@ -106,7 +107,7 @@ class AuditRemediationRc3Tests(unittest.TestCase):
         with self.assertRaisesRegex(AgentJobValidationError, "PERSISTENCE_FAILURE_CONTEXT"):
             render_agent_chat_output(status="BLOCKED", project_id="project-001", agent_id="agent-a", display_name="Nova Dev", job_key="WP-001")
 
-    def test_go_claim_is_not_authoritative_before_provider_readback(self):
+    def test_go_claim_is_not_authoritative_before_exact_provider_readback(self):
         consumed = set()
         intent = prepare_go_claim(
             job_state=self.state(), go_evidence=self.evidence(),
@@ -115,7 +116,8 @@ class AuditRemediationRc3Tests(unittest.TestCase):
         )
         self.assertFalse(intent["authoritative"])
         self.assertEqual(set(), consumed)
-        self.assertEqual("PENDING_PROVIDER_CAS_READBACK", intent["proposedState"]["claimConfirmationStatus"])
+        self.assertIn("activation-rc3-001", intent["proposedState"]["consumedActivationIds"])
+        self.assertTrue(intent["proposedStateDigest"].startswith("sha256:"))
         with self.assertRaisesRegex(GoEvidenceValidationError, "PROVIDER_CAS_NOT_CONFIRMED"):
             confirm_go_claim_after_provider_readback(
                 claim_intent=intent,
@@ -123,17 +125,29 @@ class AuditRemediationRc3Tests(unittest.TestCase):
                 consumed_activation_ids=consumed,
             )
         self.assertEqual(set(), consumed)
+
+        observed = json.loads(json.dumps(intent["proposedState"]))
+        observed_digest = "sha256:" + hashlib.sha256(
+            json.dumps(
+                observed, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+            ).encode("utf-8")
+        ).hexdigest()
         confirmed = confirm_go_claim_after_provider_readback(
             claim_intent=intent,
             provider_readback={
-                "casSucceeded": True, "readbackVerified": True,
-                "observedRevision": 8, "observedLifecycleStatus": "CLAIMED",
-                "observedActivationId": "activation-rc3-001",
+                "casSucceeded": True,
+                "readbackVerified": True,
+                "observedState": observed,
+                "observedStateDigest": observed_digest,
                 "readbackRef": "git:commit:claimed",
+                "observedBlobSha": "blob-claimed-123",
             },
             consumed_activation_ids=consumed,
         )
-        self.assertEqual("CONFIRMED_PROVIDER_CAS_READBACK", confirmed["claimConfirmationStatus"])
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("SAFOR_CONFIRMED_GO_CLAIM", confirmed["format"])
+        self.assertEqual(observed, confirmed["state"])
+        self.assertEqual(intent["proposedStateDigest"], confirmed["stateDigest"])
         self.assertIn("activation-rc3-001", consumed)
 
     def test_audit_validator_passes(self):
