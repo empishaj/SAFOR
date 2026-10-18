@@ -114,7 +114,7 @@ def validate():
             continue
         if set(item.get("supersededBy") or ()) != expected_successors:
             errors.append(f"legacy conformance assertion {legacy_id} successor set mismatch")
-    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-RC4-005", "CF-RC5-001", "CF-RC5-002", "CF-RC5-003", "CF-RC5-004", "CF-267", "CF-271", "CF-229", "CF-231", "CF-232"):
+    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-RC4-005", "CF-RC5-001", "CF-RC5-002", "CF-RC5-003", "CF-RC5-004", "CF-RC5-005", "CF-RC5-006", "CF-267", "CF-271", "CF-229", "CF-231", "CF-232"):
         if conformance_by_id.get(active_id, {}).get("status") != "ACTIVE":
             errors.append(f"current conformance assertion {active_id} is not ACTIVE")
     if conformance_by_id.get("CF-RC4-001", {}).get("applicability", {}).get("workspaceType") != ["REMOTE_GIT"]:
@@ -233,6 +233,73 @@ def validate():
         errors.append("GO claim state-integrity conformance assertion missing")
     if conformance_by_id.get("CF-RC5-005", {}).get("semanticKey") != "AGENT_MASTER_CLAIM_AUTHORITY_SEPARATION":
         errors.append("agent/master claim-authority separation conformance assertion missing")
+
+    if conformance_by_id.get("CF-RC5-006", {}).get("semanticKey") != "CONDITIONAL_PACKAGE_BINDING_APPROVAL_ROUTE":
+        errors.append("conditional K10A package-binding route conformance assertion missing")
+
+    control_plane = kernel.get("controlPlane", {})
+    action_defs = {item.get("id"): item for item in control_plane.get("actions", [])}
+    phase_actions = {
+        action_id
+        for phase in control_plane.get("phases", [])
+        for action_id in phase.get("actions", [])
+    }
+    unphased = set(action_defs) - phase_actions
+    if unphased:
+        errors.append(f"executable control actions are not phase-reachable: {sorted(unphased)}")
+
+    bootstrap = next(
+        (phase for phase in control_plane.get("phases", []) if phase.get("id") == "BOOTSTRAP"),
+        {},
+    )
+    bootstrap_actions = bootstrap.get("actions", [])
+    try:
+        if not (
+            bootstrap_actions.index("K10")
+            < bootstrap_actions.index("K10A")
+            < bootstrap_actions.index("K11")
+        ):
+            errors.append("K10A is not ordered between K10 and K11")
+    except ValueError:
+        errors.append("K10/K10A/K11 bootstrap route is incomplete")
+
+    k10 = action_defs.get("K10", {})
+    k10a = action_defs.get("K10A", {})
+    k11 = action_defs.get("K11", {})
+    if k10.get("activeBindingMutationAllowed") is not False:
+        errors.append("K10 may activate a binding before approval")
+    if k10a.get("activeBindingMutationAllowed") is not False:
+        errors.append("K10A may mutate the active binding directly")
+    if k11.get("bindingMaterializationAuthority") != "FIRST_STEP_ALLOWED_TO_ACTIVATE_THE_K10_PROPOSED_BINDING":
+        errors.append("K11 is not the sole active-binding materialization step")
+
+    route = next(
+        (
+            item
+            for item in control_plane.get("conditionalActionRoutes", [])
+            if item.get("id") == "BOOTSTRAP-K10A-PACKAGE-BINDING"
+        ),
+        {},
+    )
+    if (
+        route.get("predecessor") != "K10"
+        or route.get("actionId") != "K10A"
+        or route.get("successor") != "K11"
+    ):
+        errors.append("K10A conditional route endpoints are invalid")
+    route_effects = {
+        key: value.get("effect")
+        for key, value in route.get("routes", {}).items()
+        if isinstance(value, dict)
+    }
+    expected_route_effects = {
+        "SKIP_DEFAULT_BINDING": "SKIP_K10A_AND_CONTINUE_TO_K11",
+        "REUSE_UNCHANGED_BINDING_DECISION": "REUSE_EXISTING_DECISION_AND_CONTINUE_TO_K11",
+        "REQUIRE_HUMAN_APPROVAL": "EXECUTE_K10A_BEFORE_K11",
+        "BLOCK_INVALID_BINDING": "BLOCK_BEFORE_K10A_AND_PRESERVE_LAST_VALID_BINDING",
+    }
+    if route_effects != expected_route_effects:
+        errors.append("K10A conditional route semantics are incomplete or ambiguous")
     if activation.get("claimStateTarget") != "agents/{agentId}/state.json":
         errors.append("agent claim CAS target is not agent-owned state")
     if activation.get("masterLifecycleTarget") != "master/jobs/{jobId}.json":
