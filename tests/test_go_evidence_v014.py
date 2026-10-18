@@ -1,4 +1,6 @@
 import copy
+import hashlib
+import json
 import unittest
 
 from runtime.go_evidence import GoEvidenceValidationError, confirm_go_claim_after_provider_readback, prepare_go_claim, validate_human_go_evidence
@@ -45,18 +47,43 @@ class GoEvidenceV014Tests(unittest.TestCase):
 
     def test_claim_requires_provider_cas_readback_before_consumption(self):
         consumed = set()
-        intent = prepare_go_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=7, consumed_activation_ids=consumed, go_evidence_ref=self.ref())
+        intent = prepare_go_claim(
+            job_state=self.state(),
+            go_evidence=self.evidence(),
+            expected_state_revision=7,
+            consumed_activation_ids=consumed,
+            go_evidence_ref=self.ref(),
+        )
         self.assertFalse(intent["authoritative"])
         self.assertEqual(set(), consumed)
+
+        observed = copy.deepcopy(intent["proposedState"])
+        observed_digest = "sha256:" + hashlib.sha256(
+            json.dumps(
+                observed,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
         claimed = confirm_go_claim_after_provider_readback(
             claim_intent=intent,
-            provider_readback={"casSucceeded": True, "readbackVerified": True, "observedRevision": 8, "observedLifecycleStatus": "CLAIMED", "observedActivationId": "activation-001", "readbackRef": "git:claim"},
+            provider_readback={
+                "casSucceeded": True,
+                "readbackVerified": True,
+                "observedState": observed,
+                "observedStateDigest": observed_digest,
+                "readbackRef": "git:claim",
+                "observedBlobSha": "blob-claim-001",
+            },
             consumed_activation_ids=consumed,
         )
-        self.assertEqual("CLAIMED", claimed["lifecycleStatus"])
-        self.assertEqual(8, claimed["revision"])
+        self.assertTrue(claimed["authoritative"])
+        self.assertEqual("SAFOR_CONFIRMED_GO_CLAIM", claimed["format"])
+        self.assertEqual("CLAIMED", claimed["state"]["lifecycleStatus"])
+        self.assertEqual(8, claimed["state"]["revision"])
         self.assertIn("activation-001", consumed)
-        self.assertEqual(["activation-001"], claimed["consumedActivationIds"])
+        self.assertEqual(["activation-001"], claimed["state"]["consumedActivationIds"])
 
     def test_failed_cas_does_not_consume_or_confirm(self):
         consumed = set()
