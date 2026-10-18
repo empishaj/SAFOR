@@ -1630,9 +1630,9 @@
     "currentCandidate": {
       "releaseTarget": "0.14.0-rc.5",
       "repository": "empishaj/SAFOR",
-      "workflowRunId": "39129067804",
+      "workflowRunId": "39146270880",
       "runAttempt": "1",
-      "sourceCommitBeforeMaterialization": "8d498783a51f1e57cc5fd092d8140bc61640dcff",
+      "sourceCommitBeforeMaterialization": "570daf6573f8b007ee3d2afd512133e1431a963a",
       "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_WORKTREE"
     }
   }
