@@ -215,10 +215,11 @@ def validate():
         errors.append("persistence XOR conformance assertion missing")
     activation = load("v0.14.0/agent-activation-model.json").get("atomicClaimContract", {})
     required = [
-        "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
-        "PROVIDER_READBACK_FULL_COMMITTED_STATE",
-        "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
-        "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE",
+        "CAS_COMMIT_AGENT_STATE_AT_EXPECTED_AGENT_REVISION",
+        "PROVIDER_READBACK_FULL_AGENT_STATE",
+        "VERIFY_CANONICAL_AGENT_STATE_DIGEST_AND_BINDINGS",
+        "EMIT_AGENT_CLAIM_PROVIDER_VERIFIED_EVENT",
+        "MASTER_UPDATES_MASTER_JOB_LIFECYCLE_SEPARATELY",
     ]
     if not all(item in activation.get("authoritativeSequence", []) for item in required):
         errors.append("provider claim sequence incomplete")
@@ -230,6 +231,14 @@ def validate():
         errors.append("proposed claim state may be treated as authoritative before readback")
     if conformance_by_id.get("CF-RC5-004", {}).get("semanticKey") != "GO_CLAIM_STATE_INTEGRITY":
         errors.append("GO claim state-integrity conformance assertion missing")
+    if conformance_by_id.get("CF-RC5-005", {}).get("semanticKey") != "AGENT_MASTER_CLAIM_AUTHORITY_SEPARATION":
+        errors.append("agent/master claim-authority separation conformance assertion missing")
+    if activation.get("claimStateTarget") != "agents/{agentId}/state.json":
+        errors.append("agent claim CAS target is not agent-owned state")
+    if activation.get("masterLifecycleTarget") != "master/jobs/{jobId}.json":
+        errors.append("MASTER lifecycle target is not master/jobs/{jobId}.json")
+    if activation.get("agentMayWriteMasterLifecycle") is not False:
+        errors.append("agent is allowed to write MASTER lifecycle")
     for superseded_id in ("CF-270", "CF-272", "CF-302", "CF-RC4-004"):
         if conformance_by_id.get(superseded_id, {}).get("status") != "SUPERSEDED":
             errors.append(f"legacy chat-binding conformance is not superseded: {superseded_id}")
@@ -245,12 +254,13 @@ def validate():
         errors.append("GO claim success evidence is incomplete")
 
     provider_claim_requirements = {
-        "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
-        "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
+        "OBSERVED_FULL_AGENT_STATE_EQUALS_PROPOSED_AGENT_STATE",
+        "OBSERVED_CANONICAL_AGENT_STATE_DIGEST_MATCHES",
         "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-        "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
-        "READBACK_REFERENCE_PRESENT",
-        "OBSERVED_BLOB_IDENTITY_PRESENT",
+        "MASTER_JOB_REVISION_BINDING_MATCH",
+        "OBSERVED_ACTIVATION_ID_PERSISTED_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+        "AGENT_STATE_READBACK_REFERENCE_PRESENT",
+        "OBSERVED_AGENT_STATE_BLOB_IDENTITY_PRESENT",
     }
     for provider_path in (
         "v0.14.0/providers/github/0.6.0/package.json",
@@ -261,6 +271,10 @@ def validate():
             errors.append(f"provider claim readback contract incomplete: {provider_path}")
         if provider.get("onReadbackMismatch") != "RECONCILE_REQUIRED":
             errors.append(f"provider claim mismatch is not fail-closed: {provider_path}")
+        if provider.get("casTargetPath") != "agents/{agentId}/state.json":
+            errors.append(f"provider claim CAS target is not agent-owned: {provider_path}")
+        if provider.get("agentMayWriteMasterLifecycle") is not False:
+            errors.append(f"provider contract allows agent MASTER-lifecycle write: {provider_path}")
 
     module_map = bundle_map.get("modulePaths", {})
     recovery = load("v0.14.0/module-self-healing-model.json").get("moduleProfiles", [])
