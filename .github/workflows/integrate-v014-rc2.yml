@@ -1,0 +1,212 @@
+name: Integrate SAFOR 0.14.0-rc.2
+
+on:
+  push:
+    branches:
+      - safor/integrate-v0.14.0-rc.2
+    paths:
+      - .github/workflows/integrate-v014-rc2.yml
+      - .release/integrate_v014_rc2.py
+
+permissions:
+  contents: write
+
+concurrency:
+  group: safor-v014-rc2-integration
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout rc.9-based integration branch
+        uses: actions/checkout@v4
+        with:
+          ref: safor/integrate-v0.14.0-rc.2
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Import audited v0.14 sources without merging its old release baseline
+        shell: bash
+        run: |
+          set -euo pipefail
+          git fetch origin safor/master-subagent-orchestration-v0.14.0-rc.1:v014-audited-source
+          git checkout v014-audited-source -- \
+            v0.14.0 \
+            runtime/agent_jobs.py \
+            runtime/agent_orchestration.py \
+            runtime/agent_responses.py \
+            runtime/master_orchestration.py \
+            runtime/migration.py \
+            tests/test_agent_activation_v014.py \
+            tests/test_agent_job_v014.py \
+            tests/test_agent_responses_v014.py \
+            tests/test_master_scheduler_v014.py \
+            tests/test_migration_v014.py \
+            tests/test_product_boundary_v014.py \
+            MASTER-SUBAGENT-ORCHESTRATION.md \
+            AGENT-JOB-CONTRACT.md \
+            AGENT-WORKSPACE.md \
+            MULTI-AGENT-SCHEDULER.md \
+            docs/master-subagent-orchestration
+
+      - name: Configure staged commit identity
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: KWP-00/01 baseline and selective consolidation
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(git rev-parse HEAD)
+          log=/tmp/kwp-00-01.log
+          if ! { python .release/integrate_v014_rc2.py baseline && python -m unittest discover -s tests -p 'test_*_v014.py' -v; } >"$log" 2>&1; then
+            cp "$log" /tmp/failure.log
+            git reset --hard "$start"
+            git clean -fd
+            { echo '# KWP-00/01 integration failure'; echo; echo '```text'; tail -n 300 /tmp/failure.log; echo '```'; } > INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git add INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git commit -m "audit(v0.14): record KWP-00/01 integration failure"
+            git push origin HEAD:safor/integrate-v0.14.0-rc.2
+            exit 1
+          fi
+          git add -A
+          git commit -m "SAFOR v0.14 KWP-00/01: establish rc.9-based integration baseline"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
+
+      - name: KWP-02/03/04 safety guards, status truth and partial-write recovery
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(git rev-parse HEAD)
+          log=/tmp/kwp-02-04.log
+          if ! { python .release/integrate_v014_rc2.py security && python -m unittest tests.test_agent_activation_v014 tests.test_agent_job_v014 tests.test_agent_responses_v014 tests.test_master_scheduler_v014 tests.test_go_evidence_v014 tests.test_master_status_truth_v014 tests.test_execution_reconciliation_v014 -v; } >"$log" 2>&1; then
+            cp "$log" /tmp/failure.log
+            git reset --hard "$start"
+            git clean -fd
+            { echo '# KWP-02/03/04 integration failure'; echo; echo '```text'; tail -n 400 /tmp/failure.log; echo '```'; } > INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git add INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git commit -m "audit(v0.14): record KWP-02/03/04 integration failure"
+            git push origin HEAD:safor/integrate-v0.14.0-rc.2
+            exit 1
+          fi
+          git add -A
+          git commit -m "SAFOR v0.14 KWP-02/03/04: harden GO, status and reconciliation"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
+
+      - name: KWP-05 evidence-dimensioned traceability
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(git rev-parse HEAD)
+          log=/tmp/kwp-05.log
+          if ! { python .release/integrate_v014_rc2.py traceability && python tools/validate_traceability.py && python -m unittest tests.test_traceability_v014 -v; } >"$log" 2>&1; then
+            cp "$log" /tmp/failure.log
+            git reset --hard "$start"
+            git clean -fd
+            { echo '# KWP-05 integration failure'; echo; echo '```text'; tail -n 300 /tmp/failure.log; echo '```'; } > INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git add INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git commit -m "audit(v0.14): record KWP-05 integration failure"
+            git push origin HEAD:safor/integrate-v0.14.0-rc.2
+            exit 1
+          fi
+          git add -A
+          git commit -m "SAFOR v0.14 KWP-05: add evidence-dimensioned 33-REQ traceability"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
+
+      - name: Stage upgraded domain and provider packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(git rev-parse HEAD)
+          log=/tmp/kwp-packages.log
+          if ! { python .release/integrate_v014_rc2.py packages && python -m unittest tests.test_v014_packages_staged -v; } >"$log" 2>&1; then
+            cp "$log" /tmp/failure.log
+            git reset --hard "$start"
+            git clean -fd
+            { echo '# v0.14 package-upgrade failure'; echo; echo '```text'; tail -n 300 /tmp/failure.log; echo '```'; } > INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git add INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git commit -m "audit(v0.14): record package-upgrade failure"
+            git push origin HEAD:safor/integrate-v0.14.0-rc.2
+            exit 1
+          fi
+          git add -A
+          git commit -m "SAFOR v0.14: stage upgraded domain and provider packages"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
+
+      - name: KWP-06/07 materialize every v0.14 Framework distribution
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(git rev-parse HEAD)
+          log=/tmp/kwp-06-07.log
+          if ! {
+            python .release/integrate_v014_rc2.py bundle
+            python tools/build_bundle.py
+            python tools/build_domain_framework.py --profile WEBSITE
+            python tools/build_domain_framework.py --profile SAAS
+            python tools/build_domain_framework.py --profile BOOK_CREATION
+            python tools/build_bundle.py --check
+            python tools/build_domain_framework.py --check
+            python tools/validate_safor.py
+            python tools/validate_traceability.py
+            python -m unittest discover -s tests -v
+          } >"$log" 2>&1; then
+            cp "$log" /tmp/failure.log
+            git reset --hard "$start"
+            git clean -fd
+            { echo '# KWP-06/07 bundle integration failure'; echo; echo '```text'; tail -n 500 /tmp/failure.log; echo '```'; } > INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git add INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git commit -m "audit(v0.14): record KWP-06/07 bundle failure"
+            git push origin HEAD:safor/integrate-v0.14.0-rc.2
+            exit 1
+          fi
+          git add -A
+          git commit -m "SAFOR v0.14 KWP-06/07: build complete rc.2 Framework distributions"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
+
+      - name: Finalize release evidence, checksums and exact-head validation
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(git rev-parse HEAD)
+          log=/tmp/release.log
+          if ! {
+            python .release/integrate_v014_rc2.py release
+            python tools/build_bundle.py --check
+            python tools/build_domain_framework.py --check
+            python tools/validate_safor.py
+            python tools/validate_traceability.py
+            python -m unittest discover -s tests -v
+            sha256sum --check SHA256SUMS-0.14.0-rc.2.txt
+          } >"$log" 2>&1; then
+            cp "$log" /tmp/failure.log
+            git reset --hard "$start"
+            git clean -fd
+            { echo '# Final v0.14.0-rc.2 validation failure'; echo; echo '```text'; tail -n 600 /tmp/failure.log; echo '```'; } > INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git add INTEGRATION-FAILURE-v0.14.0-rc.2.md
+            git commit -m "audit(v0.14): record final release validation failure"
+            git push origin HEAD:safor/integrate-v0.14.0-rc.2
+            exit 1
+          fi
+          rm -f INTEGRATION-FAILURE-v0.14.0-rc.2.md
+          git add -A
+          git commit -m "SAFOR 0.14.0-rc.2: finalize evidence and release artifacts"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
+
+      - name: Remove one-shot integration machinery
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f .release/integrate_v014_rc2.py
+          rmdir .release 2>/dev/null || true
+          rm -f .github/workflows/integrate-v014-rc2.yml
+          git add -A
+          git commit -m "build(v0.14): remove one-shot integration machinery"
+          git push origin HEAD:safor/integrate-v0.14.0-rc.2
