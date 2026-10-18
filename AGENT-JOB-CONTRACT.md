@@ -8,9 +8,10 @@ SAFOR v0.14 defines every MASTER-to-agent job as an immutable, self-describing e
 agents/{agentId}/inbox/{jobId}.json   authoritative machine contract
 agents/{agentId}/inbox/{jobId}.md     derived HUMAN-readable projection
 master/jobs/{jobId}.json              authoritative lifecycle
+agents/{agentId}/state.json            Agent claim CAS target
 ```
 
-The Markdown projection may never override or expand the JSON contract. MASTER writes and reads back both job artifacts before publishing the job as `WAITING_HUMAN_GO`.
+The Markdown projection may never override or expand the JSON contract. MASTER writes and reads back both job artifacts before publishing the job as `WAITING_HUMAN_GO`. The assigned agent may CAS only its own `agents/{agentId}/state.json`; it never writes the MASTER lifecycle file.
 
 ## Required contract areas
 
