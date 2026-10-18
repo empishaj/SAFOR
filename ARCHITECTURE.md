@@ -305,7 +305,7 @@ The pure bootstrap policy receives `evaluatedAt` and trusted identity sets as ex
 
 `ENTITLED_PACKAGE_SOURCE` requires a time-bounded `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` record. `HUMAN_LOADED_PACKAGE` is still valid for a licensed artifact supplied manually, but the entitlement verification chain remains mandatory.
 
-rc.4 is a protocol/reference implementation. Billing, transaction processing, real entitlement issuance, network package delivery and cryptographic offline-signature verification remain external production services.
+The current SAFOR release provides the protocol/reference implementation. Billing, transaction processing, real entitlement issuance, network package delivery and cryptographic offline-signature verification remain external production services.
 
 
 ## Domain-specific single-file Framework distributions
