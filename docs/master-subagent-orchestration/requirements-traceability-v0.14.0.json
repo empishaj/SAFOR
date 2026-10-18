@@ -340,7 +340,7 @@
       "statement": "Bei fehlender Historie, unsicherer Chatbindung oder Zugriffsverlust stoppt der Agent und verlangt erneute MASTER-vorbereitete Identitätsbindung.",
       "source": "HUMAN_NOTICE_5.1",
       "acceptance": [
-        "ChatBinding und Reidentification Policy sind explizit.",
+        "Persistente Agentenidentität und persönliche INBOX-Bindung sind explizit; Host-Session-Attestation ist keine Ausführungsvoraussetzung.",
         "Unsichere oder abweichende Bindung erzeugt capability_mismatch oder job_error ohne Produktmutation."
       ],
       "workPackages": [
