@@ -138,8 +138,8 @@
     "referenceRuntimeOptional": true,
     "humanGoIsExclusiveSubagentActivation": true,
     "gitEventsNeverActivateSubagents": true,
-    "oneTimeAgentChatBinding": true,
-    "agentIdentityRebindFailsClosed": true,
+    "oneTimeAgentChatBinding": false,
+    "agentIdentityRebindFailsClosed": false,
     "distinctAgentDisplayNameRequired": true,
     "typedAgentResponseFamilyRequired": true,
     "allAgentJobsBindAllResponseTemplates": true,
@@ -164,7 +164,11 @@
     "workspaceSpecificCapabilityVerification": true,
     "terminalMenuRequiredForInteractiveResponses": true,
     "canonicalCreationTypeVocabularyRequired": true,
-    "providerConfirmedClaimRequired": true
+    "providerConfirmedClaimRequired": true,
+    "oneTimeAgentIdentityBootstrap": true,
+    "agentIdentityAndInboxBindingFailClosed": true,
+    "personalInboxIsAuthoritativeJobTransport": true,
+    "hostSessionAttestationRequiredForChatAgents": false
   },
   "moduleArchitecture": {
     "layers": [
@@ -218,7 +222,7 @@
       },
       {
         "id": "AGENT_WORKSPACE_PROTOCOL",
-        "responsibility": "Persistent repository-native agent identity, job dispatch, claim coordination, result handoff and MASTER verification."
+        "responsibility": "Persistent repository-native agent identity, MASTER-to-personal-INBOX job dispatch, HUMAN-GO activation, atomic claim, result handoff and MASTER verification."
       },
       {
         "id": "HUMAN_INTERACTION_GOVERNANCE",
@@ -234,7 +238,7 @@
       },
       {
         "id": "AGENT_CHAT_BOOTSTRAP",
-        "responsibility": "Create one persistent agent identity/chat binding and enforce HUMAN-GO-only activation with fail-closed rebind."
+        "responsibility": "Establish one pinned agent identity and personal inbox binding per agent chat; future jobs are pulled from that inbox after HUMAN GO without requiring host session attestation."
       },
       {
         "id": "AGENT_RESPONSE_CONTRACT",
@@ -259,7 +263,7 @@
       "OPERATING_MODEL maps abstract capabilities and authorities to roles/mandates, but must not define the value-stream order.",
       "PROJECT_INSTANCE maps roles to concrete human or agent actors and pins package versions.",
       "PROVIDER_ADAPTER maps provider-neutral capabilities to provider semantics and actual host tools; unavailable tools remain unavailable.",
-      "AGENT_WORKSPACE_PROTOCOL transports work through repository artifacts, never through copied prompts as authority.",
+      "AGENT_WORKSPACE_PROTOCOL transports work through the assigned agent's personal Git INBOX; copied job prompts are never authority.",
       "Agent-local runtime state and MASTER job lifecycle are separate authorities and must not overwrite each other.",
       "MULTI_AGENT_SCHEDULER may dispatch only ATOMIC READY work whose dependency/join predicates are satisfied.",
       "Parallel dispatch requires explicit resource declarations, free agent capacity and a conflict-free lease set.",
@@ -2279,7 +2283,11 @@
     {
       "id": "INV-209",
       "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat.",
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-RC5-001"
+      ],
+      "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
     },
     {
       "id": "INV-210",
@@ -2289,7 +2297,11 @@
     {
       "id": "INV-211",
       "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain.",
-      "status": "ACTIVE"
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-RC5-002"
+      ],
+      "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
     },
     {
       "id": "INV-212",
@@ -2402,8 +2414,12 @@
     },
     {
       "id": "INV-233",
-      "status": "ACTIVE",
-      "rule": "A normal chat subagent may be activated only by explicit HUMAN GO in its bound chat. Git, polling, automation, another chat and background host events never activate it."
+      "status": "SUPERSEDED",
+      "rule": "A normal chat subagent may be activated only by explicit HUMAN GO in its bound chat. Git, polling, automation, another chat and background host events never activate it.",
+      "supersededBy": [
+        "INV-RC5-001"
+      ],
+      "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
     },
     {
       "id": "INV-234",
@@ -2412,8 +2428,12 @@
     },
     {
       "id": "INV-235",
-      "status": "ACTIVE",
-      "rule": "The canonical fail-closed identity status for a chat that cannot prove its binding is REIDENTIFICATION_REQUIRED."
+      "status": "SUPERSEDED",
+      "rule": "The canonical fail-closed identity status for a chat that cannot prove its binding is REIDENTIFICATION_REQUIRED.",
+      "supersededBy": [
+        "INV-RC5-002"
+      ],
+      "supersessionReason": "rc.5 removes unverifiable host-session binding from normal chat-agent job activation and replaces it with pinned identity plus personal inbox binding."
     },
     {
       "id": "INV-236",
@@ -2424,6 +2444,21 @@
       "id": "INV-237",
       "status": "ACTIVE",
       "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap against the expected state revision, provider readback and persisted activation consumption. In-memory consumption alone is never authoritative."
+    },
+    {
+      "id": "INV-RC5-001",
+      "status": "ACTIVE",
+      "rule": "A normal chat subagent starts work only after explicit HUMAN GO; after GO it pulls the next eligible job from its own MASTER-written personal INBOX. Git, polling, automation, another chat or background host events never count as GO."
+    },
+    {
+      "id": "INV-RC5-002",
+      "status": "ACTIVE",
+      "rule": "A chat agent proves execution identity from its pinned ACTIVE identity, identityRevision and personal inbox binding. Host sessionId/chatBindingId attestation is not required; foreign inbox, stale revision or foreign job assignment fails closed."
+    },
+    {
+      "id": "INV-RC5-003",
+      "status": "ACTIVE",
+      "rule": "MASTER dispatches a subagent job by writing the immutable Agent Job JSON to agents/{agentId}/inbox/{jobId}.json and updating agents/{agentId}/inbox/index.json; no job prompt must be transported through chat."
     }
   ],
   "evidencePolicy": {
@@ -2619,12 +2654,16 @@
   },
   "agentActivationProtocol": {
     "modelRef": "agent-activation-model.json",
-    "mode": "HUMAN_GO_ONLY",
+    "mode": "HUMAN_GO_INBOX_PULL",
     "acceptedCommand": "GO",
     "gitEventWakeupForbidden": true,
     "automationWakeupForbidden": true,
-    "oneTimeChatBindingRequired": true,
-    "rebindWhenIdentityUncertain": true
+    "oneTimeChatBindingRequired": false,
+    "rebindWhenIdentityUncertain": false,
+    "oneTimeIdentityBootstrapRequired": true,
+    "personalInboxPullRequired": true,
+    "hostSessionAttestationRequired": false,
+    "reinitializeWhenPinnedIdentityOrInboxBindingInvalid": true
   },
   "agentResponseProtocol": {
     "modelRef": "agent-response-contract-model.json",
