@@ -4,6 +4,7 @@ on:
     branches: ["fix/creation-types-v014-rc3-20261018"]
     paths:
       - "tools/prepare_v014_rc3.py"
+      - "tools/finish_creation_type_release.py"
       - "runtime/creation_type_contract.py"
       - "tests/test_creation_type_contract.py"
       - ".github/workflows/prepare-creation-type-fix.yml"
@@ -41,6 +42,7 @@ jobs:
         run: |
           set -euo pipefail
           python tools/prepare_v014_rc3.py --apply
+          python tools/finish_creation_type_release.py --prepare
           python tools/build_bundle.py
           for profile in WEBSITE SAAS BOOK_CREATION; do
             python tools/build_domain_framework.py --profile "$profile"
@@ -49,11 +51,14 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          python tools/finish_creation_type_release.py --checksums
           python tools/build_bundle.py --check 2>&1 | tee /tmp/safor-creation-type-evidence/bundle.log
           python tools/build_domain_framework.py --check 2>&1 | tee /tmp/safor-creation-type-evidence/domains.log
           python tools/validate_safor.py 2>&1 | tee /tmp/safor-creation-type-evidence/validate.log
           python -m unittest discover -s tests -v 2>&1 | tee /tmp/safor-creation-type-evidence/tests.log
           python tools/prepare_v014_rc3.py --evidence /tmp/safor-creation-type-evidence
+          python tools/finish_creation_type_release.py --finalize
+          python -m unittest discover -s tests -v 2>&1 | tee /tmp/safor-creation-type-evidence/final-tests.log
           sha256sum -c SHA256SUMS-0.14.0-rc.3.txt
       - name: Commit verified outputs only to the dedicated review branch
         shell: bash
@@ -64,7 +69,10 @@ jobs:
           branch=fix/creation-types-v014-rc3-20261018
           remote_head=$(git ls-remote origin "refs/heads/$branch" | cut -f1)
           test "$remote_head" = "$EXPECTED_HEAD"
-          git diff --exit-code -- v0.13.0 v0.12.0 v0.11.0 v0.10.0 SAFOR-FRAMEWORK-v0.14.0-rc.2.json
+          git diff --exit-code -- v0.13.0 v0.12.0 v0.11.0 v0.10.0
+          git add -u -- SAFOR-FRAMEWORK-v0.14.0-rc.2.json
+          git add tests/test_v014_release.py tests/test_v014_bundle_integration.py \
+            tests/test_human_notice_conformance.py tests/test_user_onboarding.py
           git add VERSION README.md CHANGELOG.md RELEASE-MANIFEST.json \
             v0.14.0/schemas/project.schema.json v0.14.0/SAFOR-MASTER.json \
             v0.14.0/interaction-model.json v0.14.0/conformance.json \
