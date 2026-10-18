@@ -1,5 +1,8 @@
 # SAFOR HUMAN Notice – verbindlicher Umsetzungsplan
 
+> **HISTORISCHES PLANUNGSARTEFAKT.** Dieses Dokument beschreibt einen früheren Umsetzungsstand und ist **nicht** der aktuelle Ausführungsvertrag. Für den aktuellen rc.5-Stand gelten `VERSION`, `RELEASE-FACTS.json`, `RELEASE-MANIFEST.json`, `v0.14.0/SAFOR-MASTER.json`, `v0.14.0/agent-activation-model.json` und `v0.14.0/agent-workspace-model.json`. Insbesondere wurde die frühere Host-Chat-Binding-Voraussetzung durch gepinnte Agentenidentität + persönliche INBOX ersetzt.
+
+
 Stand: 17. Oktober 2026  
 Zielrelease: `0.13.0-rc.8`  
 Ausgangscommit: `bce845305c886b2b78065d1a21f0823775614975`

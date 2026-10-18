@@ -4,7 +4,7 @@ Current target: **v0.14.0-rc.5**
 
 Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The 0.14.0-rc.5 Framework distributions and checksums are reproducible and automated validation is green.
 
-Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
+Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines **`v0.10.0/` through `v0.13.0/`** remain read-only references, not the current execution contract.
 
 ## Release-candidate gates
 

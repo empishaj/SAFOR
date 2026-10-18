@@ -336,12 +336,13 @@
     },
     {
       "id": "REQ-008",
-      "title": "Fail-closed-Reidentifikation",
-      "statement": "Bei fehlender Historie, unsicherer Chatbindung oder Zugriffsverlust stoppt der Agent und verlangt erneute MASTER-vorbereitete Identitätsbindung.",
+      "title": "Fail-closed Identitäts- und INBOX-Prüfung",
+      "statement": "Bei ungültiger gepinnter Identität, veralteter identityRevision, fremder oder fehlender persönlicher INBOX-Bindung oder Zugriffsverlust stoppt der Agent vor Claim und Produktmutation.",
       "source": "HUMAN_NOTICE_5.1",
       "acceptance": [
         "Persistente Agentenidentität und persönliche INBOX-Bindung sind explizit; Host-Session-Attestation ist keine Ausführungsvoraussetzung.",
-        "Unsichere oder abweichende Bindung erzeugt capability_mismatch oder job_error ohne Produktmutation."
+        "Stale identityRevision, fremde INBOX oder fremde Job-Zuweisung blockieren den Claim.",
+        "Ein solcher Konflikt erzeugt einen kontrollierten Blocker ohne Produktmutation."
       ],
       "workPackages": [
         "WP-01",
@@ -479,7 +480,7 @@
       "statement": "Alle aktiven, pausierten, widerrufenen und migrierten Agenten sind eindeutig im Register erfasst.",
       "source": "HUMAN_NOTICE_3.2,5.1,11",
       "acceptance": [
-        "Registry-Schema führt Status, Identity Ref, Display Name, Chat Binding Status und Scheduling.",
+        "Registry-Schema führt Status, Identity Ref, Display Name, persönliche INBOX-Bindung und Scheduling.",
         "Migration ergänzt fehlende Legacy-Agenten ohne Historienverlust."
       ],
       "workPackages": [
@@ -1068,7 +1069,7 @@
       "statement": "Der Agenten-Chat zeigt nur Start-, Abschluss- oder Blocker-Minimalstatus mit Git-Referenz.",
       "source": "HUMAN_NOTICE_3.4,8.1",
       "acceptance": [
-        "Chat Output Schema erlaubt nur STARTED, SUBMITTED, BLOCKED und REIDENTIFICATION_REQUIRED.",
+        "Chat Output Schema erlaubt nur READY, STARTED, SUBMITTED, BLOCKED und REIDENTIFICATION_REQUIRED.",
         "Wort-/Satzbudget ist deterministisch.",
         "Fachberichte werden ausschließlich in Git abgelegt."
       ],
@@ -1603,7 +1604,7 @@
       ]
     }
   ],
-  "status": "RC5_INBOX_PULL_SOURCE_VALIDATED_MATERIALIZATION_PENDING",
+  "status": "RC5_MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
   "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
   "schemaRef": "v0.14.0/schemas/requirements-traceability.schema.json",
   "summary": {

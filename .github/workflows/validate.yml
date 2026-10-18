@@ -28,5 +28,11 @@ jobs:
         run: python tools/build_domain_framework.py --check
       - name: Validate SAFOR distribution
         run: python tools/validate_safor.py
+      - name: Validate release facts
+        run: python tools/validate_release_facts.py
+      - name: Validate traceability
+        run: python tools/validate_traceability.py
+      - name: Validate content consistency
+        run: python tools/validate_content_consistency.py
       - name: Run deterministic control tests
         run: python -m unittest discover -s tests -v

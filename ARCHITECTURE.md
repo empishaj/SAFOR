@@ -256,8 +256,8 @@ SAFOR now distinguishes Website creation from Software/SaaS product engineering 
 SAFOR Framework
 │
 ├── WEBSITE                         FREE_PUBLIC defaults
-│   ├── safor.factory.website-delivery@1.1.0
-│   └── safor.om.website-team@1.1.0
+│   ├── safor.factory.website-delivery@1.2.0
+│   └── safor.om.website-team@1.2.0
 │
 ├── SOFTWARE_SAAS                   COMMERCIAL
 │   ├── safor.factory.software-delivery
@@ -305,7 +305,7 @@ The pure bootstrap policy receives `evaluatedAt` and trusted identity sets as ex
 
 `ENTITLED_PACKAGE_SOURCE` requires a time-bounded `SAFOR_COMMERCIAL_PACKAGE_DELIVERY_EVIDENCE` record. `HUMAN_LOADED_PACKAGE` is still valid for a licensed artifact supplied manually, but the entitlement verification chain remains mandatory.
 
-rc.4 is a protocol/reference implementation. Billing, transaction processing, real entitlement issuance, network package delivery and cryptographic offline-signature verification remain external production services.
+The current SAFOR release provides the protocol/reference implementation. Billing, transaction processing, real entitlement issuance, network package delivery and cryptographic offline-signature verification remain external production services.
 
 
 ## Domain-specific single-file Framework distributions
@@ -363,7 +363,7 @@ This intentionally rejects cross-domain composition. A Book Factory and a SaaS E
 
 `SAFOR-FRAMEWORK-WEBSITE.json` is reproducibly built from public modules and committed publicly.
 
-In rc.6, `SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json` are deliberately committed as `PUBLIC_TEST_EVALUATION` artifacts. They embed paid-mode prerelease test packages so the complete domain bootstrap and entitlement path can be exercised.
+In the current rc.5 release, `SAFOR-FRAMEWORK-SAAS.json` and `SAFOR-FRAMEWORK-BOOK-CREATION.json` are deliberately committed as `PUBLIC_TEST_EVALUATION` artifacts. They embed paid-mode prerelease test packages so the complete domain bootstrap and entitlement path can be exercised.
 
 This does **not** turn the public repository into the commercial production source. The production catalog still exposes no public paid-model path and resolves commercial production versions only through `ENTITLED_PACKAGE_SOURCE`.
 

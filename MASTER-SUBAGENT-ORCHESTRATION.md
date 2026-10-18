@@ -67,12 +67,12 @@ Die Initialisierung bindet:
 - `identityRevision`;
 - Control Repository;
 - Workspace Root;
-- Chat Binding;
+- persönliche INBOX-Bindung;
 - Kommunikationsvertrag.
 
 Der HUMAN fügt den gerenderten Prompt einmal ein. Der Agent liest die referenzierten Artefakte zurück und meldet `READY`.
 
-Bei verlorener oder unsicherer Chatbindung:
+Bei fehlender, veralteter oder widersprüchlicher Identität/INBOX-Bindung:
 
 ```text
 REIDENTIFICATION_REQUIRED
@@ -87,7 +87,7 @@ MASTER darf einen Job erst veröffentlichen, wenn:
 - Work Item atomar und dependency-ready ist;
 - Mandat und HUMAN-Entscheidungen aktiv sind;
 - Rollen- und Skillquellen immutable gepinnt sind;
-- Agent aktiv, chatgebunden, capability-kompatibel und kapazitiv frei ist;
+- Agent aktiv, an seine persönliche INBOX gebunden, capability-kompatibel und kapazitiv frei ist;
 - Inputversionen auflösbar sind;
 - Produktbranch und Pfade feststehen;
 - Produkt- und Response-Rechte getrennt sind;
@@ -109,7 +109,7 @@ MASTER zeigt:
 ```text
 Agent: Nova Dev (agent-dev-003)
 Job: WP-014-IMPL
-Chat: <gebundener Chat>
+Agenten-Chat: <initialisierter Agenten-Chat>
 Start: GO
 ```
 
@@ -125,7 +125,7 @@ Zusätzlicher Fachtext ist nicht Teil des Aktivierungsvertrags.
 
 Nach `GO` prüft der Agent:
 
-1. Identity und Chat Binding;
+1. gepinnte Identity und persönliche INBOX-Bindung;
 2. persönlichen Inbox-Index;
 3. Job- und Projektion-Blob;
 4. MASTER-Jobstatus und Dispatch Revision;
@@ -137,7 +137,7 @@ Nach `GO` prüft der Agent:
 10. getrennte Response-Ziele;
 11. tatsächliche Providerrechte;
 12. aktive Leases und Konfliktfreiheit;
-13. STOP, PAUSE, stale refs oder Reidentifikation.
+13. STOP, PAUSE, stale refs oder ungültige Identity/INBOX-Bindung.
 
 Erst danach erfolgt der Claim.
 

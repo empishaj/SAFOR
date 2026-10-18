@@ -4,7 +4,7 @@ SAFOR v0.14 coordinates persistent chat agents through Git while keeping the HUM
 
 ## Goal
 
-A chat agent receives a stable identity once. MASTER writes immutable jobs into its personal workspace. The HUMAN starts each future job by typing exactly `GO` in the same bound agent chat. The agent retrieves the job itself and writes typed responses and evidence back for MASTER verification.
+A chat agent receives a stable identity once. MASTER writes immutable jobs into its personal workspace. The HUMAN starts each future job by typing exactly `GO` in the initialized agent chat. The agent retrieves the job itself and writes typed responses and evidence back for MASTER verification.
 
 The HUMAN does not transport job prompts, artifact lists or return instructions between chats.
 
@@ -72,11 +72,11 @@ MASTER generates an immutable initialization artifact containing:
 4. control repository;
 5. exact identity, state and inbox-index pointers;
 6. communication contract;
-7. fail-closed reidentification behavior.
+7. personal-INBOX binding and fail-closed reinitialization behavior.
 
-The HUMAN pastes the generated prompt once into a new chat. The agent reads back and validates the referenced identity. Future jobs use the same continued chat and need no new job prompt.
+The HUMAN pastes the generated prompt once into a new chat. The agent reads back and validates the referenced identity. Future jobs use the initialized agent chat and need no new job prompt. Host-session attestation is not required.
 
-If chat continuity or identity cannot be proven, the agent does not guess. It emits `REIDENTIFICATION_REQUIRED` and directs the HUMAN back to MASTER.
+If the pinned identity or personal-INBOX binding is missing, stale or inconsistent, the agent does not guess. It emits `REIDENTIFICATION_REQUIRED` and directs the HUMAN back to MASTER.
 
 ## Activation
 
@@ -116,7 +116,7 @@ The inbox index is only a discoverability projection. Job contract and MASTER jo
 
 The agent verifies:
 
-- identity status and chat binding;
+- active identity, identity revision and personal-INBOX binding;
 - identity revision and exact assignment;
 - HUMAN-GO evidence for the selected job;
 - job and projection blob identities;
