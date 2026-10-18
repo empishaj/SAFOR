@@ -17,7 +17,15 @@ def digest(value):
 
 
 class GoClaimIntegrityV014Tests(unittest.TestCase):
-    def state(self):
+    def pointer(self, path, blob):
+        return {
+            "repository": "example/safor-memory",
+            "ref": "commit-go",
+            "path": path,
+            "blobSha": blob,
+        }
+
+    def master_state(self):
         return {
             "format": "SAFOR_AGENT_JOB_STATE",
             "schemaVersion": "0.14.0",
@@ -27,10 +35,27 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "assignedIdentityRevision": 2,
             "dispatchRevision": 3,
             "revision": 7,
+            "owner": "MASTER",
             "lifecycleStatus": "WAITING_HUMAN_GO",
-            "goEvidenceRef": None,
+            "contractRef": self.pointer(
+                "projects/example/agents/agent-a/inbox/job-001.json", "jobblob123"
+            ),
+            "updatedAt": "2026-10-18T09:59:00Z",
+        }
+
+    def agent_state(self):
+        return {
+            "format": "SAFOR_AGENT_STATE",
+            "schemaVersion": "0.14.0",
+            "projectId": "project-001",
+            "agentId": "agent-a",
+            "identityRevision": 2,
+            "revision": 4,
+            "runtimeStatus": "WAITING_HUMAN_GO",
+            "session": None,
+            "currentJob": None,
+            "lastResponseRef": None,
             "consumedActivationIds": [],
-            "transitionHistory": [],
             "updatedAt": "2026-10-18T09:59:00Z",
         }
 
@@ -38,7 +63,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         return {
             "format": "SAFOR_HUMAN_GO_EVIDENCE",
             "schemaVersion": "0.14.0",
-            "activationId": "activation-rc4-001",
+            "activationId": "activation-rc5-001",
             "projectId": "project-001",
             "agentId": "agent-a",
             "identityRevision": 2,
@@ -51,42 +76,44 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "jobPromptTransported": False,
         }
 
-    def evidence_ref(self):
-        return {
-            "repository": "example/safor-memory",
-            "ref": "commit-go",
-            "path": "projects/example/evidence/go.json",
-            "blobSha": "blob-go-123",
-        }
-
     def intent(self):
         return prepare_go_claim(
-            job_state=self.state(),
+            master_job_state=self.master_state(),
+            master_job_state_ref=self.pointer(
+                "projects/example/master/jobs/job-001.json", "masterjob123"
+            ),
+            agent_state=self.agent_state(),
             go_evidence=self.evidence(),
-            expected_state_revision=7,
+            expected_agent_state_revision=4,
             consumed_activation_ids=set(),
-            go_evidence_ref=self.evidence_ref(),
+            go_evidence_ref=self.pointer(
+                "projects/example/evidence/go.json", "goblob123"
+            ),
         )
 
-    def readback(self, intent, observed=None):
-        observed = json.loads(json.dumps(observed or intent["proposedState"]))
+    def readback(self, intent, observed=None, target_path=None):
+        observed = json.loads(
+            json.dumps(observed or intent["proposedAgentState"])
+        )
         return {
             "casSucceeded": True,
             "readbackVerified": True,
+            "targetPath": target_path or intent["casTargetPath"],
             "observedState": observed,
             "observedStateDigest": digest(observed),
             "readbackRef": "git:commit:claim",
             "observedBlobSha": "blob-claim-123",
         }
 
-    def test_claim_persists_activation_consumption_inside_cas_state(self):
+    def test_claim_persists_activation_consumption_inside_agent_state(self):
         intent = self.intent()
         self.assertIn(
-            "activation-rc4-001",
-            intent["proposedState"]["consumedActivationIds"],
+            "activation-rc5-001",
+            intent["proposedAgentState"]["consumedActivationIds"],
         )
+        self.assertEqual("agents/agent-a/state.json", intent["casTargetPath"])
 
-    def test_exact_provider_readback_confirms_claim(self):
+    def test_exact_provider_readback_confirms_agent_claim(self):
         intent = self.intent()
         result = confirm_go_claim_after_provider_readback(
             claim_intent=intent,
@@ -94,13 +121,23 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             consumed_activation_ids=set(),
         )
         self.assertTrue(result["authoritative"])
-        self.assertEqual(intent["proposedStateDigest"], result["stateDigest"])
+        self.assertEqual(
+            intent["proposedAgentStateDigest"], result["stateDigest"]
+        )
         self.assertEqual(intent["bindings"], result["bindings"])
+        self.assertEqual(
+            "SAFOR_AGENT_CLAIM_PROVIDER_VERIFIED",
+            result["masterTransitionInput"]["format"],
+        )
+        self.assertEqual(
+            7, result["masterTransitionInput"]["expectedMasterJobRevision"]
+        )
+        self.assertEqual("MASTER", result["masterTransitionInput"]["requiredWriter"])
 
     def test_tampered_job_binding_is_rejected(self):
         intent = self.intent()
-        observed = json.loads(json.dumps(intent["proposedState"]))
-        observed["jobId"] = "job-other"
+        observed = json.loads(json.dumps(intent["proposedAgentState"]))
+        observed["currentJob"]["jobId"] = "job-other"
         with self.assertRaisesRegex(
             GoEvidenceValidationError, "PROVIDER_CLAIM_STATE_MISMATCH"
         ):
@@ -112,8 +149,8 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
 
     def test_tampered_agent_binding_is_rejected(self):
         intent = self.intent()
-        observed = json.loads(json.dumps(intent["proposedState"]))
-        observed["assignedAgentId"] = "agent-b"
+        observed = json.loads(json.dumps(intent["proposedAgentState"]))
+        observed["agentId"] = "agent-b"
         with self.assertRaisesRegex(
             GoEvidenceValidationError, "PROVIDER_CLAIM_STATE_MISMATCH"
         ):
@@ -138,17 +175,42 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
 
     def test_missing_persisted_activation_is_rejected(self):
         intent = self.intent()
-        observed = json.loads(json.dumps(intent["proposedState"]))
+        observed = json.loads(json.dumps(intent["proposedAgentState"]))
         observed["consumedActivationIds"] = []
         tampered_intent = dict(intent)
-        tampered_intent["proposedState"] = observed
-        tampered_intent["proposedStateDigest"] = digest(observed)
+        tampered_intent["proposedAgentState"] = observed
+        tampered_intent["proposedAgentStateDigest"] = digest(observed)
         with self.assertRaisesRegex(
             GoEvidenceValidationError, "PROVIDER_CLAIM_ACTIVATION_NOT_PERSISTED"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
                 provider_readback=self.readback(tampered_intent, observed),
+                consumed_activation_ids=set(),
+            )
+
+    def test_master_job_path_can_never_be_agent_cas_target(self):
+        intent = self.intent()
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError, "PROVIDER_CLAIM_TARGET_PATH_MISMATCH"
+        ):
+            confirm_go_claim_after_provider_readback(
+                claim_intent=intent,
+                provider_readback=self.readback(
+                    intent, target_path="master/jobs/job-001.json"
+                ),
+                consumed_activation_ids=set(),
+            )
+
+    def test_agent_master_lifecycle_write_flag_is_rejected(self):
+        intent = self.intent()
+        intent["agentMayWriteMasterLifecycle"] = True
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError, "AGENT_MASTER_LIFECYCLE_WRITE_FORBIDDEN"
+        ):
+            confirm_go_claim_after_provider_readback(
+                claim_intent=intent,
+                provider_readback=self.readback(intent),
                 consumed_activation_ids=set(),
             )
 
