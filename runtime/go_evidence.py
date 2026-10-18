@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from copy import deepcopy
 from datetime import datetime
+import hashlib
+import json
 from typing import Any, Mapping, MutableSet
 
 
@@ -36,6 +38,28 @@ def _parse_datetime(value: Any, code: str) -> datetime:
         return datetime.fromisoformat(text.replace("Z", "+00:00"))
     except ValueError as exc:
         raise GoEvidenceValidationError(code) from exc
+
+
+def _canonical_digest(value: Mapping[str, Any]) -> str:
+    payload = json.dumps(
+        dict(value),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
+def _claim_bindings(state: Mapping[str, Any], activation_id: str) -> dict[str, Any]:
+    return {
+        "projectId": state.get("projectId"),
+        "jobId": state.get("jobId"),
+        "agentId": state.get("assignedAgentId"),
+        "identityRevision": state.get("assignedIdentityRevision"),
+        "chatBindingId": state.get("chatBindingId"),
+        "dispatchRevision": state.get("dispatchRevision"),
+        "activationId": activation_id,
+    }
 
 
 def validate_human_go_evidence(
@@ -114,8 +138,10 @@ def prepare_go_claim(
     proposed = deepcopy(state)
     proposed["revision"] = expected_state_revision + 1
     proposed["lifecycleStatus"] = "CLAIMED"
-    proposed["claimConfirmationStatus"] = "PENDING_PROVIDER_CAS_READBACK"
     proposed["goEvidenceRef"] = dict(go_evidence_ref)
+    proposed["consumedActivationIds"] = sorted(
+        set(proposed.get("consumedActivationIds") or ()) | {activation_id}
+    )
     proposed.setdefault("transitionHistory", []).extend(
         [
             {"from": "WAITING_HUMAN_GO", "to": "GO_OBSERVED", "at": go_evidence["observedAt"], "actorId": go_evidence["agentId"], "evidenceRefs": [str(go_evidence_ref["path"])]},
@@ -128,9 +154,18 @@ def prepare_go_claim(
         "schemaVersion": "0.14.0",
         "authoritative": False,
         "activationId": activation_id,
+        "bindings": _claim_bindings(proposed, activation_id),
         "expectedRevision": expected_state_revision,
         "proposedRevision": expected_state_revision + 1,
-        "requiredProviderSequence": ["CAS_COMMIT_EXPECTED_REVISION", "PROVIDER_READBACK", "PERSIST_ACTIVATION_CONSUMPTION"],
+        "priorStateDigest": _canonical_digest(state),
+        "proposedStateDigest": _canonical_digest(proposed),
+        "goEvidenceRef": dict(go_evidence_ref),
+        "requiredProviderSequence": [
+            "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
+            "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+            "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
+            "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE",
+        ],
         "proposedState": proposed,
     }
 
@@ -141,7 +176,7 @@ def confirm_go_claim_after_provider_readback(
     provider_readback: Mapping[str, Any],
     consumed_activation_ids: MutableSet[str],
 ) -> dict[str, Any]:
-    """Confirm authority only after provider CAS and readback prove the claim."""
+    """Return authoritative claim evidence only after exact provider readback."""
     intent = _mapping(claim_intent, "claimIntent")
     readback = _mapping(provider_readback, "providerReadback")
     if intent.get("format") != "SAFOR_GO_CLAIM_INTENT" or intent.get("authoritative") is not False:
@@ -153,18 +188,49 @@ def confirm_go_claim_after_provider_readback(
         raise GoEvidenceValidationError("PROVIDER_CAS_NOT_CONFIRMED")
     if readback.get("readbackVerified") is not True:
         raise GoEvidenceValidationError("PROVIDER_CLAIM_READBACK_UNVERIFIED")
-    if readback.get("observedRevision") != intent.get("proposedRevision"):
+
+    proposed = deepcopy(dict(_mapping(intent.get("proposedState"), "proposedState")))
+    observed = deepcopy(dict(_mapping(readback.get("observedState"), "observedState")))
+    expected_digest = _nonempty(intent.get("proposedStateDigest"), "GO_CLAIM_PROPOSED_DIGEST_MISSING")
+    observed_digest = _canonical_digest(observed)
+    declared_observed_digest = _nonempty(
+        readback.get("observedStateDigest"),
+        "PROVIDER_CLAIM_OBSERVED_DIGEST_MISSING",
+    )
+    if declared_observed_digest != observed_digest:
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_READBACK_DIGEST_INVALID")
+    if observed_digest != expected_digest or observed != proposed:
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_STATE_MISMATCH")
+
+    expected_bindings = _mapping(intent.get("bindings"), "claimBindings")
+    actual_bindings = _claim_bindings(observed, activation_id)
+    for field, expected_value in expected_bindings.items():
+        if actual_bindings.get(field) != expected_value:
+            raise GoEvidenceValidationError(f"PROVIDER_CLAIM_BINDING_MISMATCH:{field}")
+    if observed.get("revision") != intent.get("proposedRevision"):
         raise GoEvidenceValidationError("PROVIDER_CLAIM_REVISION_MISMATCH")
-    if readback.get("observedLifecycleStatus") != "CLAIMED":
+    if observed.get("lifecycleStatus") != "CLAIMED":
         raise GoEvidenceValidationError("PROVIDER_CLAIM_STATUS_MISMATCH")
-    if readback.get("observedActivationId") != activation_id:
-        raise GoEvidenceValidationError("PROVIDER_CLAIM_ACTIVATION_MISMATCH")
-    state = deepcopy(dict(_mapping(intent.get("proposedState"), "proposedState")))
+    if activation_id not in set(observed.get("consumedActivationIds") or ()):
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_ACTIVATION_NOT_PERSISTED")
+
+    readback_ref = _nonempty(readback.get("readbackRef"), "PROVIDER_CLAIM_READBACK_REF_MISSING")
+    observed_blob_sha = _nonempty(
+        readback.get("observedBlobSha"),
+        "PROVIDER_CLAIM_BLOB_SHA_MISSING",
+    )
     consumed_activation_ids.add(activation_id)
-    state["consumedActivationIds"] = sorted(set(state.get("consumedActivationIds") or ()) | {activation_id})
-    state["claimConfirmationStatus"] = "CONFIRMED_PROVIDER_CAS_READBACK"
-    state["claimProviderReadbackRef"] = readback.get("readbackRef")
-    return state
+    return {
+        "format": "SAFOR_CONFIRMED_GO_CLAIM",
+        "schemaVersion": "0.14.0",
+        "authoritative": True,
+        "activationId": activation_id,
+        "bindings": dict(expected_bindings),
+        "stateDigest": observed_digest,
+        "providerReadbackRef": readback_ref,
+        "providerBlobSha": observed_blob_sha,
+        "state": observed,
+    }
 
 
 def atomically_observe_go_and_claim(
