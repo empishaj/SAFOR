@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import json
+import re
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+MODULE_KEY = "domainFrameworkProfiles"
+SOURCE_PATH = "v0.14.0/domain-framework-profiles.json"
+
+
+def load(path: str):
+    return json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+
+def write(path: str, value) -> None:
+    (ROOT / path).write_text(json.dumps(value, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+
+
+def profile():
+    profile_id = "MRP-" + re.sub(r"[^A-Z0-9]", "", MODULE_KEY.upper())
+    return {
+        "profileId": profile_id,
+        "moduleKey": MODULE_KEY,
+        "moduleClass": "POLICY_MODEL",
+        "authorityType": "PINNED_CANONICAL_SOURCE",
+        "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+        "sourceOfTruth": f"embeddedModules.{MODULE_KEY} + integrityManifest.{MODULE_KEY} ({SOURCE_PATH})",
+        "failureDetectors": ["MODULE_BLOB_MISMATCH", "MODULE_SCHEMA_OR_CONTRACT_INVALID"],
+        "automaticRepairs": ["RELOAD_VERIFIED_EMBEDDED_MODULE", "COMPARE_WITH_PINNED_CANONICAL_SOURCE"],
+        "forbiddenRepairs": [
+            "INVENT_MISSING_EVIDENCE",
+            "EXPAND_AUTHORITY_OR_SCOPE",
+            "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+            "ACCEPT_UNVERIFIED_STATE",
+        ],
+        "retryBudget": 0,
+        "preconditions": [
+            "CURRENT_PROVIDER_RIGHTS_PROVEN",
+            "PRE_REPAIR_STATE_REFERENCED",
+            "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION",
+        ],
+        "verification": {
+            "requiredEvidence": ["AUTHORITATIVE_READBACK", "EXPECTED_STATE_MATCH", "REPAIR_RECORD_PERSISTED"],
+            "successPredicate": f"{MODULE_KEY}_MATCHES_PINNED_RELEASE",
+        },
+        "escalation": {
+            "when": [
+                "SOURCE_OF_TRUTH_AMBIGUOUS",
+                "AUTHORITATIVE_READBACK_FAILS",
+                "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY",
+            ],
+            "target": "MASTER",
+        },
+    }
+
+
+mapping = load("v0.14.0/bundle-module-map.json")
+mapping["modulePaths"][MODULE_KEY] = SOURCE_PATH
+mapping["referenceResolution"]["domain-framework-profiles.json"] = MODULE_KEY
+keys = set(mapping.get("v014AuthoritativeKeys", []))
+keys.add(MODULE_KEY)
+mapping["v014AuthoritativeKeys"] = sorted(keys)
+write("v0.14.0/bundle-module-map.json", mapping)
+
+recovery = load("v0.14.0/module-self-healing-model.json")
+profiles = [item for item in recovery["moduleProfiles"] if item.get("moduleKey") != MODULE_KEY]
+profiles.append(profile())
+profiles.sort(key=lambda item: item["moduleKey"])
+recovery["moduleProfiles"] = profiles
+write("v0.14.0/module-self-healing-model.json", recovery)
+
+readiness_path = ROOT / "PRODUCT-READINESS.md"
+readiness = readiness_path.read_text(encoding="utf-8").replace("92/92", "93/93")
+readiness_path.write_text(readiness, encoding="utf-8")
