@@ -58,10 +58,10 @@ class AuditRemediationRc3Tests(unittest.TestCase):
     def test_active_invariants_are_unambiguous(self):
         invariants = self.load("v0.14.0/SAFOR-MASTER.json")["invariants"]
         indexed = {item["id"]: item for item in invariants}
-        for legacy_id in ("INV-013", "INV-037", "INV-038", "INV-039", "INV-054", "INV-121", "INV-123", "INV-217"):
+        for legacy_id in ("INV-013", "INV-037", "INV-038", "INV-039", "INV-054", "INV-121", "INV-123", "INV-209", "INV-211", "INV-217", "INV-233", "INV-235"):
             self.assertEqual("SUPERSEDED", indexed[legacy_id]["status"])
             self.assertTrue(indexed[legacy_id]["supersededBy"])
-        for active_id in ("INV-231", "INV-232", "INV-233", "INV-234", "INV-235", "INV-236", "INV-237"):
+        for active_id in ("INV-231", "INV-232", "INV-234", "INV-236", "INV-237", "INV-RC5-001", "INV-RC5-002", "INV-RC5-003"):
             self.assertEqual("ACTIVE", indexed[active_id]["status"])
 
     def test_local_and_remote_control_policies_are_mutually_explicit(self):
@@ -77,7 +77,7 @@ class AuditRemediationRc3Tests(unittest.TestCase):
             "CF-046": {"CF-RC4-001", "CF-RC4-002"},
             "CF-047": {"CF-RC4-001", "CF-RC4-002"},
             "CF-048": {"CF-RC4-001", "CF-RC4-002"},
-            "CF-064": {"CF-270", "CF-271"},
+            "CF-064": {"CF-RC5-001", "CF-RC5-003", "CF-271"},
             "CF-154": {"CF-267", "CF-RC4-003"},
             "CF-156": {"CF-267", "CF-RC4-003"},
             "CF-159": {"CF-267", "CF-RC4-003"},
