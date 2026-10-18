@@ -65,7 +65,10 @@ SAFOR must not ask the HUMAN to manage:
 - recovery-profile selection,
 - internal state transitions,
 - technical identifier selection,
-- deterministic Factory/Operating-Model binding already fixed by an approved creation type.
+- deterministic Factory/Operating-Model binding already fixed by an approved creation type;
+- unchanged previously approved package bindings whose decision evidence is still reusable.
+
+K10A is therefore not a routine confirmation step. It appears only for a compatible material package-binding change that cannot reuse a prior approval. Invalid bindings are blocked before the HUMAN is asked.
 
 ## Decision reuse
 
