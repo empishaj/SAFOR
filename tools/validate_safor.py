@@ -130,7 +130,7 @@ if master_status.get("principles", {}).get("fullRepositoryScanForRoutineStatusFo
     fail("MASTER routine full-scan prohibition missing")
 
 identity_schema = modules.get("schemaAgentIdentity", {}).get("content", {})
-if not {"agentId", "displayName", "chatBinding", "activationContract"}.issubset(set(identity_schema.get("required", []))):
+if not {"agentId", "displayName", "inboxBinding", "activationContract"}.issubset(set(identity_schema.get("required", []))):
     fail("Agent identity required fields incomplete")
 job_schema = modules.get("schemaAgentJob", {}).get("content", {})
 if not {"domainContext", "responseContracts", "communicationContract"}.issubset(set(job_schema.get("required", []))):
