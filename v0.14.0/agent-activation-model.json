@@ -13,6 +13,8 @@
   "identityInvariants": [
     "A CHAT_AGENT has one stable agentId and a separate HUMAN-readable displayName.",
     "The agent identity is bound to projectId, masterId, controlRepository, workspaceRoot and personal inbox path.",
+    "The immutable inboxIndexRef proves the personal inbox bootstrap binding; it is provenance only and never the source for later job discovery.",
+    "The stable inboxIndexLocation identifies the mutable MASTER-owned personal inbox projection; current jobs are always read from this location with provider readback.",
     "The one-time initialization prompt establishes which pinned identity and personal inbox this chat must use; host session attestation is not required.",
     "The agent identity must never be inferred from job content, display name, repository location or an arbitrary inbox entry.",
     "An inactive identity, stale identityRevision, foreign inbox or foreign job assignment fails closed before claim."
@@ -29,6 +31,7 @@
       "IDENTITY_REF",
       "AGENT_STATE_REF",
       "INBOX_INDEX_REF",
+      "INBOX_INDEX_LOCATION",
       "COMMUNICATION_CONTRACT_REF"
     ],
     "validationSteps": [
@@ -36,9 +39,11 @@
       "VERIFY_IDENTITY_BLOB",
       "VERIFY_PROJECT_AND_MASTER_BINDING",
       "VERIFY_IDENTITY_STATUS_ACTIVE",
-      "VERIFY_PERSONAL_INBOX_BINDING",
+      "VERIFY_PERSONAL_INBOX_BOOTSTRAP_REF",
+      "VERIFY_PERSONAL_INBOX_LOCATION",
       "READ_AGENT_STATE",
-      "READ_PERSONAL_INBOX_INDEX",
+      "READ_CURRENT_PERSONAL_INBOX_INDEX_FROM_LOCATION",
+      "VERIFY_CURRENT_INBOX_PROJECT_AGENT_AND_IDENTITY_REVISION",
       "CONFIRM_READY_FOR_HUMAN_GO"
     ],
     "jobPromptTransportRequired": false,
@@ -63,13 +68,16 @@
     "activationEvidenceAuthority": "DIRECT_HUMAN_GO_BOUND_TO_PINNED_IDENTITY_AND_PERSONAL_INBOX",
     "claimMode": "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
     "stringSubstringEvidenceForbidden": true,
-    "hostSessionAttestationRequired": false
+    "hostSessionAttestationRequired": false,
+    "currentInboxSource": "BOUND_MUTABLE_INBOX_INDEX_LOCATION",
+    "bootstrapInboxBlobMayBecomeStaleAfterDispatch": true,
+    "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true
   },
   "onHumanGo": {
     "allowedReadsInOrder": [
       "PINNED_IDENTITY",
       "AGENT_STATE",
-      "PERSONAL_INBOX_INDEX",
+      "CURRENT_PERSONAL_INBOX_INDEX_AT_BOUND_LOCATION",
       "SELECTED_INBOX_JOB_CONTRACT",
       "SELECTED_MASTER_JOB_STATE",
       "JOB_REFERENCED_INPUTS_ONLY"
@@ -84,6 +92,7 @@
       "IDENTITY_ACTIVE",
       "IDENTITY_REVISION_MATCH",
       "PERSONAL_INBOX_PROJECT_AND_AGENT_MATCH",
+      "CURRENT_INBOX_READ_FROM_BOUND_LOCATION",
       "DISCOVERABLE_JOB_AVAILABLE",
       "JOB_AGENT_ASSIGNMENT_MATCH",
       "JOB_IDENTITY_REVISION_MATCH",
@@ -101,7 +110,8 @@
       "IDENTITY_REVISION_MISMATCH",
       "CONTROL_REPOSITORY_UNAVAILABLE",
       "PERSONAL_INBOX_PROJECT_OR_AGENT_MISMATCH",
-      "AGENT_CANNOT_PROVE_PINNED_IDENTITY"
+      "AGENT_CANNOT_PROVE_PINNED_IDENTITY",
+      "PERSONAL_INBOX_LOCATION_MISMATCH"
     ],
     "effect": [
       "NO_JOB_CLAIM",
