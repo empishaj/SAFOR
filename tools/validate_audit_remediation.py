@@ -114,7 +114,7 @@ def validate():
             continue
         if set(item.get("supersededBy") or ()) != expected_successors:
             errors.append(f"legacy conformance assertion {legacy_id} successor set mismatch")
-    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-267", "CF-270", "CF-271", "CF-229", "CF-231", "CF-232"):
+    for active_id in ("CF-RC4-001", "CF-RC4-002", "CF-RC4-003", "CF-RC4-004", "CF-267", "CF-270", "CF-271", "CF-229", "CF-231", "CF-232"):
         if conformance_by_id.get(active_id, {}).get("status") != "ACTIVE":
             errors.append(f"current conformance assertion {active_id} is not ACTIVE")
     if conformance_by_id.get("CF-RC4-001", {}).get("applicability", {}).get("workspaceType") != ["REMOTE_GIT"]:
@@ -199,6 +199,8 @@ def validate():
         errors.append("GO activation consumption is not persisted inside CAS state")
     if activation.get("proposedStateIsNonAuthoritativeUntilReadback") is not True:
         errors.append("proposed claim state may be treated as authoritative before readback")
+    if conformance_by_id.get("CF-RC4-004", {}).get("semanticKey") != "GO_CLAIM_STATE_INTEGRITY":
+        errors.append("GO claim state-integrity conformance assertion missing")
     required_claim_evidence = {
         "READBACK_STATE_EQUALS_PROPOSED_STATE",
         "CANONICAL_STATE_DIGEST_MATCH",
