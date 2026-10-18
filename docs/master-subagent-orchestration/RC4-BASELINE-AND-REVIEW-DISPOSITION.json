@@ -44,7 +44,15 @@
       "path": "v0.14.0/conformance.json",
       "summary": "Supersede contradictory legacy conformance assertions instead of marking them ACTIVE.",
       "plannedWorkPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
-      "status": "PLANNED_NOT_STARTED"
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "conformanceBlobSha": "7b2922b6d36926eb2f09269865c70a80a919bc66",
+        "validatorCommit": "29ab04f68689a702efe789243d4a947ac5d37d58",
+        "regressionTestCommit": "ba05f3e54a731c0d26f966dc7b7d03fcc0f6c033",
+        "focusedValidationRun": 39121653512,
+        "focusedValidationJob": 117658303914,
+        "result": "PASS"
+      }
     },
     {
       "findingId": "RC4-REVIEW-002",
@@ -129,9 +137,11 @@
     "noopBranchIdenticalToSourceCandidate": true
   },
   "stepResult": {
-    "workPackage": "WP-A0_BASELINE_FREEZE_AND_REPOSITORY_HYGIENE",
+    "workPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
     "state": "COMPLETED",
-    "nextWorkPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
+    "validation": "FOCUSED_SOURCE_VALIDATION_PASS",
+    "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION",
+    "nextWorkPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
     "nextWorkPackageAuthorized": false
   }
 }
