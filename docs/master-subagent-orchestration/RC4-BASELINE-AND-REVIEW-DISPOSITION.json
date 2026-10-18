@@ -181,11 +181,10 @@
     "noopBranchIdenticalToSourceCandidate": true
   },
   "stepResult": {
-    "workPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_DRIFT",
+    "workPackage": "WP-A7_RC4_BUILD_AND_INDEPENDENT_REVIEW_PREPARATION",
     "state": "COMPLETED",
-    "validation": "FOCUSED_RELEASE_FACTS_AND_TRACEABILITY_VALIDATION_PASS",
-    "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_WP_A7_BUNDLE_MATERIALIZATION",
-    "nextWorkPackage": "WP-A7_RC4_BUILD_AND_INDEPENDENT_REVIEW",
+    "validation": "MATERIALIZED_FULL_SUITE_AND_STANDARD_CI_PASS",
+    "nextWorkPackage": "INDEPENDENT_REVIEW_EXACT_RC4_HEAD",
     "nextWorkPackageAuthorized": false
   },
   "releaseFactsRemediation": {
@@ -210,5 +209,45 @@
       "standardValidationRun": 39125183005,
       "standardValidationResult": "EXPECTED_FAILURE_UNTIL_WP_A7_MATERIALIZATION"
     }
+  },
+  "wpA7": {
+    "status": "COMPLETED_MATERIALIZED_CI_GREEN_REVIEW_PREPARED",
+    "targetVersion": "0.14.0-rc.4",
+    "materializationWorkflow": {
+      "runId": 39125871541,
+      "result": "SUCCESS",
+      "sourceHead": "e443b1d0083c4454adb5c8ed660d593e0fa7fe5d",
+      "materializationCommit": "ddda500",
+      "testCount": 265,
+      "testsResult": "PASS",
+      "checksumCount": 7,
+      "checksumsResult": "PASS"
+    },
+    "postMaterializationHygiene": {
+      "supersededFrameworkRemoved": "SAFOR-FRAMEWORK-v0.14.0-rc.3.json",
+      "commit": "fa0fcd5b19b2689fd988b279e83d9ae66d896c10",
+      "standardValidationRun": 39125945182,
+      "standardValidationResult": "SUCCESS"
+    },
+    "releaseArtifacts": [
+      "SAFOR-FRAMEWORK.json",
+      "SAFOR-FRAMEWORK-v0.14.0-rc.4.json",
+      "SAFOR-FRAMEWORK-WEBSITE.json",
+      "SAFOR-FRAMEWORK-SAAS.json",
+      "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "SAFOR-TEST-ACCESS-SAAS.json",
+      "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "RELEASE-EVIDENCE-0.14.0-rc.4.json",
+      "RELEASE-NOTES-0.14.0-rc.4.md",
+      "SHA256SUMS-0.14.0-rc.4.txt"
+    ],
+    "remainingEvidenceBoundary": [
+      "INDEPENDENT_REVIEW_OF_EXACT_HEAD_REQUIRED",
+      "REAL_GIT_E2E_NOT_VERIFIED",
+      "CROSS_HOST_NOT_VERIFIED",
+      "REFERENCE_PROJECT_RC4_MIGRATION_NOT_STARTED",
+      "COGNITIVE_LOAD_EMPIRICAL_NOT_VERIFIED",
+      "GA_NOT_AUTHORIZED"
+    ]
   }
 }
