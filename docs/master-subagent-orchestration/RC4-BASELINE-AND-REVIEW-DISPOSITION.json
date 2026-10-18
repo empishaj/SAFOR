@@ -1,0 +1,126 @@
+{
+  "format": "SAFOR_REVIEW_REMEDIATION_BASELINE",
+  "schemaVersion": "1.0",
+  "targetRelease": "0.14.0-rc.4",
+  "createdAt": "2026-10-18T00:00:00+02:00",
+  "repository": "empishaj/SAFOR",
+  "authorization": {
+    "source": "DIRECT_HUMAN_INPUT_IN_CURRENT_MASTER_CHAT",
+    "authorityType": "HUMAN_STEPWISE_IMPLEMENTATION_AUTHORIZATION",
+    "scopeAuthorizedNow": [
+      "WP-A0_BASELINE_FREEZE_AND_REPOSITORY_HYGIENE"
+    ],
+    "nextStepRequiresNewHumanAuthorization": true,
+    "cryptographicHumanSignatureClaimed": false
+  },
+  "sourceCandidate": {
+    "release": "0.14.0-rc.3",
+    "pullRequest": 28,
+    "branch": "safor/audit-remediation-0.14.0-rc.3",
+    "baseBranch": "main",
+    "baseCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
+    "headCommit": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "headTree": "d02ae0191c2ea0175b32943ecc64660a97bcdee4",
+    "standardValidationRun": 39119507945,
+    "pullRequestValidationRun": 39119616040,
+    "automatedValidationState": "PASS",
+    "mergeStateAtFreeze": "OPEN_MERGEABLE_NOT_MERGED"
+  },
+  "remediationBranch": {
+    "branch": "safor/review-remediation-0.14.0-rc.4",
+    "createdFromExactCommit": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "historyRewriteForbidden": true,
+    "forcePushForbidden": true,
+    "publishedFrameworkJsonManualEditingForbidden": true,
+    "canonicalSourcesAndBuildersOnly": true
+  },
+  "reviewFindings": [
+    {
+      "findingId": "RC4-REVIEW-001",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovW",
+      "sourceCommentDatabaseId": 4306690303,
+      "path": "v0.14.0/conformance.json",
+      "summary": "Supersede contradictory legacy conformance assertions instead of marking them ACTIVE.",
+      "plannedWorkPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
+      "status": "PLANNED_NOT_STARTED"
+    },
+    {
+      "findingId": "RC4-REVIEW-002",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovZ",
+      "sourceCommentDatabaseId": 4306690309,
+      "path": "v0.14.0/SAFOR-MASTER.json",
+      "summary": "Remove unconditional remote-memory instructions and discriminate initialization by workspace type.",
+      "plannedWorkPackage": "WP-A2_WORKSPACE_SPECIFIC_INITIALIZATION",
+      "status": "PLANNED_NOT_STARTED"
+    },
+    {
+      "findingId": "RC4-REVIEW-003",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovb",
+      "sourceCommentDatabaseId": 4306690312,
+      "path": "v0.14.0/SAFOR-MASTER.json",
+      "summary": "Align executable HUMAN communication instructions with notice-versus-interactive menu semantics.",
+      "plannedWorkPackage": "WP-A3_HUMAN_RESPONSE_CLASSIFICATION",
+      "status": "PLANNED_NOT_STARTED"
+    },
+    {
+      "findingId": "RC4-REVIEW-004",
+      "severity": "P1",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovf",
+      "sourceCommentDatabaseId": 4306690317,
+      "path": "runtime/go_evidence.py",
+      "summary": "Validate the complete proposed claim state and its bindings against provider readback before confirming authority.",
+      "plannedWorkPackage": "WP-A4_GO_CLAIM_STATE_INTEGRITY",
+      "status": "PLANNED_NOT_STARTED"
+    },
+    {
+      "findingId": "RC4-REVIEW-005",
+      "severity": "P2",
+      "sourceThreadId": "PRRT_kwDOVMX0BM6tpovi",
+      "sourceCommentDatabaseId": 4306690322,
+      "path": "v0.14.0/schemas/agent-chat-output.schema.json",
+      "summary": "Make detailsRef and persistence failure mutually exclusive for BLOCKED outputs.",
+      "plannedWorkPackage": "WP-A5_PERSISTENCE_FALLBACK_XOR",
+      "status": "PLANNED_NOT_STARTED"
+    }
+  ],
+  "additionalKnownDrift": [
+    {
+      "id": "RC4-DRIFT-001",
+      "summary": "Requirements traceability still identifies releaseTarget 0.14.0-rc.2 on the rc.3 candidate.",
+      "plannedWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_SYNC",
+      "status": "PLANNED_NOT_STARTED"
+    },
+    {
+      "id": "RC4-DRIFT-002",
+      "summary": "Product readiness and release manifest must be checked for default-package and migration-status consistency.",
+      "plannedWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_SYNC",
+      "status": "PLANNED_NOT_STARTED"
+    }
+  ],
+  "repositoryHygiene": {
+    "unexpectedBranch": "noop",
+    "comparedToCommit": "e5c47bf1da11d10d7dae8bfa64eef6d907a7be2b",
+    "comparisonResult": "IDENTICAL",
+    "uniqueCommits": 0,
+    "deletionStatus": "PENDING_SAFE_REF_DELETE_CAPABILITY",
+    "safetyDecision": "DO_NOT_FORCE_MOVE_OR_REPURPOSE_THE_BRANCH"
+  },
+  "explicitNonGoalsUntilLaterHumanGates": [
+    "MERGE_TO_MAIN",
+    "MIGRATE_SAFOMWEBSITE",
+    "MUTATE_SAFOR_MEMORY_REFERENCE_PROJECT",
+    "RUN_FRESH_CHAT_REAL_GIT_E2E",
+    "CLAIM_CROSS_HOST_ACCEPTANCE",
+    "CLAIM_GENERAL_AVAILABILITY",
+    "CLAIM_COMMERCIAL_PRODUCTION_APPROVAL"
+  ],
+  "stepResult": {
+    "workPackage": "WP-A0_BASELINE_FREEZE_AND_REPOSITORY_HYGIENE",
+    "state": "COMPLETED_PENDING_READBACK",
+    "nextWorkPackage": "WP-A1_CONFORMANCE_AND_INVARIANT_SUPERSESSION",
+    "nextWorkPackageAuthorized": false
+  }
+}
