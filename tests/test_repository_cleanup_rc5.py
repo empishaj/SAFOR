@@ -63,12 +63,12 @@ class RepositoryCleanupRc5Tests(unittest.TestCase):
         for version in expected_versions:
             self.assertIn(version, combined)
 
-    def test_start_here_negative_access_case_uses_book_bundle_for_saas(self):
-        text = (ROOT / "START-HIER.md").read_text(encoding="utf-8")
-        section = text.split("### Test C – falscher Testzugang", 1)[1].split("### Test D", 1)[0]
-        self.assertIn("SAFOR-FRAMEWORK-SAAS.json", section)
-        self.assertIn("SAFOR-TEST-ACCESS-BOOK-CREATION.json", section)
-        self.assertNotIn("SAFOR-TEST-ACCESS-SAAS.json", section)
+    def test_negative_access_case_is_kept_in_acceptance_tests_not_handbook(self):
+        handbook = (ROOT / "START-HIER.md").read_text(encoding="utf-8")
+        acceptance = (ROOT / "ACCEPTANCE-TESTS.md").read_text(encoding="utf-8")
+        self.assertNotIn("Test C – falscher Testzugang", handbook)
+        self.assertIn("SAFOR-FRAMEWORK-SAAS.json", acceptance)
+        self.assertIn("SAFOR-TEST-ACCESS-BOOK-CREATION.json", acceptance)
 
     def test_release_checklist_is_version_agnostic(self):
         text = (ROOT / "RELEASE-CHECKLIST.md").read_text(encoding="utf-8")
