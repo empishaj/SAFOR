@@ -1,4 +1,4 @@
-# integration retry 2
+# integration retry 3
 name: Integrate SAFOR 0.14.0-rc.2
 
 on:
@@ -8,6 +8,7 @@ on:
     paths:
       - .github/workflows/integrate-v014-rc2.yml
       - .release/integrate_v014_rc2.py
+      - .release/security_compat_patch.py
 
 permissions:
   contents: write
@@ -88,7 +89,7 @@ jobs:
           set -euo pipefail
           start=$(git rev-parse HEAD)
           log=/tmp/kwp-02-04.log
-          if ! { python .release/integrate_v014_rc2.py security && python -m unittest tests.test_agent_activation_v014 tests.test_agent_job_v014 tests.test_agent_responses_v014 tests.test_master_scheduler_v014 tests.test_go_evidence_v014 tests.test_master_status_truth_v014 tests.test_execution_reconciliation_v014 -v; } >"$log" 2>&1; then
+          if ! { python .release/integrate_v014_rc2.py security && python .release/security_compat_patch.py && python -m unittest tests.test_agent_activation_v014 tests.test_agent_job_v014 tests.test_agent_responses_v014 tests.test_master_scheduler_v014 tests.test_go_evidence_v014 tests.test_master_status_truth_v014 tests.test_execution_reconciliation_v014 -v; } >"$log" 2>&1; then
             cp "$log" /tmp/failure.log
             git reset --hard "$start"
             git clean -fd
@@ -207,6 +208,7 @@ jobs:
         run: |
           set -euo pipefail
           rm -f .release/integrate_v014_rc2.py
+          rm -f .release/security_compat_patch.py
           rmdir .release 2>/dev/null || true
           rm -f .github/workflows/integrate-v014-rc2.yml
           git add -A
