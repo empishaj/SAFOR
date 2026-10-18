@@ -1914,7 +1914,14 @@
       "id": "CF-RC5-004",
       "status": "ACTIVE",
       "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
-      "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
+      "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback of the assigned agent's own agents/{agentId}/state.json, matching project, job, agent, identityRevision, masterJobRevision, dispatchRevision and persisted activation consumption.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-005",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_MASTER_CLAIM_AUTHORITY_SEPARATION",
+      "statement": "Normal subagents never CAS or mutate master/jobs/{jobId}.json. Agent claim authority is persisted only in agent-owned state; MASTER advances the MASTER-owned lifecycle separately from provider-verified agent claim evidence.",
       "expected": true
     }
   ],
