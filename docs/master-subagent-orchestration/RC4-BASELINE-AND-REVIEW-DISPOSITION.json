@@ -123,7 +123,20 @@
       "path": "v0.14.0/schemas/agent-chat-output.schema.json",
       "summary": "Make detailsRef and persistence failure mutually exclusive for BLOCKED outputs.",
       "plannedWorkPackage": "WP-A5_PERSISTENCE_FALLBACK_XOR",
-      "status": "PLANNED_NOT_STARTED"
+      "status": "COMPLETED_SOURCE_VALIDATED",
+      "completionEvidence": {
+        "schemaCommit": "b9ac25dc8d1005c49d518261115c401d6692a492",
+        "communicationModelCommit": "e7b9130af2119c3d9d69deb19eb87de278d8429b",
+        "runtimeCommit": "2320f62d89d817b964f72495930cc9d260e18cd3",
+        "negativeTestCommit": "ec64edc05dbc9651fa6d861c988967e9f7a45cf5",
+        "validatorCommit": "94d3b0147906216451596c168c2b6049456eaa53",
+        "conformanceCommit": "ec2f102b74ab345b10fd99ba559fd5109f887b3f",
+        "focusedWorkflowCommit": "f75bd9fcae099c5090cb723c94d40c2352e3b0c0",
+        "focusedValidationRun": 39124416576,
+        "focusedValidationJob": 117666434792,
+        "focusedValidationResult": "PASS",
+        "standardValidationState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION"
+      }
     }
   ],
   "additionalKnownDrift": [
@@ -168,11 +181,11 @@
     "noopBranchIdenticalToSourceCandidate": true
   },
   "stepResult": {
-    "workPackage": "WP-A4_GO_CLAIM_STATE_INTEGRITY",
+    "workPackage": "WP-A5_PERSISTENCE_FALLBACK_XOR",
     "state": "COMPLETED",
     "validation": "FOCUSED_SOURCE_VALIDATION_PASS",
     "fullReleaseCiState": "EXPECTED_REPRODUCIBILITY_FAIL_UNTIL_LATER_BUNDLE_MATERIALIZATION",
-    "nextWorkPackage": "WP-A5_PERSISTENCE_FALLBACK_XOR",
+    "nextWorkPackage": "WP-A6_RELEASE_FACTS_AND_TRACEABILITY_DRIFT",
     "nextWorkPackageAuthorized": false
   }
 }
