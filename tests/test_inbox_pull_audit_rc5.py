@@ -15,6 +15,11 @@ class InboxPullAuditRc5Tests(unittest.TestCase):
         self.assertIn("inboxBinding", required)
         self.assertNotIn("chatBinding", required)
         self.assertIn("inboxBinding", schema["$defs"])
+        binding = schema["$defs"]["inboxBinding"]
+        self.assertIn("inboxIndexRef", binding["required"])
+        self.assertIn("inboxIndexLocation", binding["required"])
+        self.assertIn("mutableInboxIndexLocation", schema["$defs"])
+        self.assertNotIn("blobSha", schema["$defs"]["mutableInboxIndexLocation"]["required"])
         self.assertNotIn("chatBinding", schema["$defs"])
 
     def test_go_evidence_has_no_host_session_binding_fields(self):
@@ -85,6 +90,14 @@ class InboxPullAuditRc5Tests(unittest.TestCase):
         )
         self.assertFalse(contract["jobPromptTransportRequired"])
         self.assertFalse(contract["hostSessionBindingRequired"])
+        self.assertEqual(
+            "STABLE_REPOSITORY_REF_PATH_LOCATOR_WITH_MUTABLE_CONTENT",
+            contract["discoverabilityIndexLocationSemantics"],
+        )
+        self.assertEqual(
+            "IMMUTABLE_PROVENANCE_ONLY",
+            contract["bootstrapIndexRefSemantics"],
+        )
 
     def test_active_rules_do_not_reintroduce_bound_chat_requirement(self):
         master = self.load("v0.14.0/SAFOR-MASTER.json")
@@ -127,6 +140,10 @@ class InboxPullAuditRc5Tests(unittest.TestCase):
             activation["chatAgentActivationContract"]["hostSessionAttestationRequired"]
         )
         self.assertIn("inboxBinding", identity["required"])
+        self.assertIn(
+            "inboxIndexLocation",
+            identity["$defs"]["inboxBinding"]["required"],
+        )
         self.assertNotIn("chatBinding", identity["required"])
         self.assertNotIn("sessionId", go_schema["required"])
         self.assertEqual(
