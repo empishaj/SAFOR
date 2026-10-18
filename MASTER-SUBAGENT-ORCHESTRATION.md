@@ -141,6 +141,22 @@ Nach `GO` prüft der Agent:
 
 Erst danach erfolgt der Claim.
 
+## Claim-Autorität
+
+Der Agent claimt einen freigegebenen Job ausschließlich über seinen eigenen Zustand:
+
+```text
+agents/{agentId}/state.json
+```
+
+Der globale Jobstatus bleibt ausschließlich beim MASTER:
+
+```text
+master/jobs/{jobId}.json
+```
+
+Der Agent darf den MASTER-Jobstatus weder direkt schreiben noch per CAS verändern. Nach bestätigtem Provider-Readback des Agenten-Claims entsteht ein verifiziertes Claim-Ereignis. Erst der MASTER darf daraus seinen eigenen Lifecycle fortschreiben.
+
 ## Rückgabeobjekte
 
 | Typ | Auslöser | Wirkung |
