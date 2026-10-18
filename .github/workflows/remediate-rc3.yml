@@ -6,6 +6,7 @@ on:
       - safor/audit-remediation-0.14.0-rc.3
     paths:
       - .release/remediate_rc3.py
+      - .release/remediate_rc3_hotfix.py
       - .github/workflows/remediate-rc3.yml
 
 permissions:
@@ -28,6 +29,9 @@ jobs:
 
       - name: Apply canonical rc.3 source corrections
         run: python .release/remediate_rc3.py prepare
+
+      - name: Embed the authoritative domain profile catalog
+        run: python .release/remediate_rc3_hotfix.py
 
       - name: Build generic Framework
         run: python tools/build_bundle.py
@@ -66,6 +70,7 @@ jobs:
         shell: bash
         run: |
           rm -f .release/remediate_rc3.py
+          rm -f .release/remediate_rc3_hotfix.py
           rmdir .release 2>/dev/null || true
           rm -f .github/workflows/remediate-rc3.yml
 
