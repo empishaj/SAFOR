@@ -86,7 +86,9 @@ def evaluate_k10a_binding_gate(
             existing_binding.get("operatingModelPackageId"),
         )
 
-    if proposed_pair == default_pair and existing_binding is None:
+    if proposed_pair == default_pair and (
+        existing_binding is None or existing_pair == proposed_pair
+    ):
         return {
             "route": "SKIP_DEFAULT_BINDING",
             "invokeK10A": False,
