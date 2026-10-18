@@ -1353,11 +1353,11 @@
     },
     {
       "id": "INV-039",
-      "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed."
+      "rule": "Exactly one active creation type is required: WEBSITE, SOFTWARE_SAAS or BOOK. A generic Framework requires explicit HUMAN selection; a domain distribution supplies its declared type without a redundant question. Repository contents never select the creation type."
     },
     {
       "id": "INV-040",
-      "rule": "Creation type deterministically fixes the Factory and compatible Operating Model until the HUMAN explicitly changes the selection through a new governed decision."
+      "rule": "Creation type fixes the domain and default Factory/Operating Model candidates, not a non-replaceable pair. Each selected package remains independently replaceable through explicit HUMAN selection, verified access/integrity and same-domain bidirectional compatibility."
     },
     {
       "id": "INV-041",
@@ -2228,7 +2228,7 @@
       "When provider read/write access is missing, use imperative but friendly language: state that the rights are required and initialization cannot continue without them.",
       "Use only chat-native UI. Never propose or require a separate SAFOR web interface.",
       "When self-healing escalates, tell the HUMAN briefly what failed, what SAFOR already tried, whether the current state is safe, and the smallest next action required.",
-      "After safor-memory verification, ask exactly one mandatory creation-type question: Software / Website or Buch.",
+      "For a generic Framework, ask one creation-type question with Website, Software / SaaS and Buch. For a domain distribution, reuse its declared type without asking again.",
       "If safor-memory is missing or not writable, say STOP clearly and tell the HUMAN exactly what must be fixed before restarting.",
       "Do not ask Discovery questions until creation type and its Factory binding are confirmed.",
       "When an AGENT actor is used, create or reuse its persistent repository identity and dispatch work through its inbox instead of asking the HUMAN to copy a full job prompt.",

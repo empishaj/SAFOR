@@ -25,6 +25,8 @@ from runtime.bootstrap_policy import (
     validate_domain_package,
 )
 
+from runtime.creation_type_contract import validate_creation_type_contract
+
 PROFILE_CATALOG = ROOT / "v0.14.0/domain-framework-profiles.json"
 BASE_FRAMEWORK = ROOT / "SAFOR-FRAMEWORK.json"
 
@@ -76,6 +78,9 @@ def build_distribution(
 ) -> Dict[str, Any]:
     profile = profile_by_id(profile_id)
     framework = load_json(BASE_FRAMEWORK)
+    type_decision = validate_creation_type_contract(framework, profile["creationType"])
+    if not type_decision["valid"]:
+        raise ValueError(f"Creation-type contract invalid: {type_decision['errors']}")
     factory_path = resolve_package_path(
         profile["defaultFactory"], factory_file, profile["publicArtifactCommitted"]
     )
@@ -223,6 +228,8 @@ def validate_distribution(
         errors.append("DOMAIN_FRAMEWORK_CREATION_TYPE_MISMATCH")
 
     framework = distribution.get("framework", {})
+    type_decision = validate_creation_type_contract(framework, profile["creationType"])
+    errors.extend(type_decision["errors"])
     modules = distribution.get("embeddedDomainModules", {})
     factory = modules.get("factory", {})
     operating_model = modules.get("operatingModel", {})

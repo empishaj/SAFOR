@@ -1,0 +1,81 @@
+{
+  "format": "SAFOR_RELEASE_EVIDENCE",
+  "schemaVersion": "1.0",
+  "version": "0.14.0-rc.3",
+  "status": "VERIFIED_CANDIDATE_NOT_MERGED",
+  "sourceBaselineCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
+  "evaluatedAt": "2026-10-18T10:17:25.723963+00:00",
+  "executionEnvironment": "GITHUB_ACTIONS",
+  "runRef": "https://github.com/empishaj/SAFOR/actions/runs/39118646198",
+  "recipeCommit": "1a412fddfabd3fb3d0ac336fb528d5892b82e3f7",
+  "automatedTests": {
+    "result": "PASS",
+    "testsRun": 247,
+    "newRegressionTests": 15,
+    "preFixRegression": "EXPECTED_FAIL"
+  },
+  "bundleReproducibility": "PASS",
+  "domainReproducibility": "PASS",
+  "distributionValidation": "PASS",
+  "artifactSha256": {
+    "SAFOR-FRAMEWORK.json": "426981382c9df48ad0c242be9d69305e9fccbb8701d378279008f533db657746",
+    "SAFOR-FRAMEWORK-v0.14.0-rc.3.json": "426981382c9df48ad0c242be9d69305e9fccbb8701d378279008f533db657746",
+    "SAFOR-FRAMEWORK-WEBSITE.json": "32bd45e5b199a872b9d6ae1363a4544e1fe61fd58ca15e21f9205bab7e8caa6b",
+    "SAFOR-FRAMEWORK-SAAS.json": "ffa695bbbfa8ab94a1f70efdd77dedb09cfb4f02dc4354c39574e59f0579b5d6",
+    "SAFOR-FRAMEWORK-BOOK-CREATION.json": "ce59070e27cb95a6fc265f97241099e07a2dcc54d0ffb43c1503afb91e97624c",
+    "SAFOR-TEST-ACCESS-SAAS.json": "f5e8b7aa994e164cbff4e462611b8fbf7374514b15d0f196c07ca70fe781ffc0",
+    "SAFOR-TEST-ACCESS-BOOK-CREATION.json": "250e3731d015380bda4db94854a3ee8e70c86c530a7cbcdf3d0ee65da6c1164c"
+  },
+  "logSha256": {
+    "baseline": "f32b305c56acf30b6ac6d9afab5d9a2a9177f00d980e2c28e407b4581748bf40",
+    "bundle": "af8aacd6731ec5609e313276b83263e4adced0161c56988efe2bac723e8649c7",
+    "domains": "c12bbf1c96a09b8ba4d5904a1909e70102237ea37f23fffdc34166ea81665389",
+    "validate": "2192e71320e034ba273511bc5431588f70ccb53258853a62d8063b9f4cc4bff1",
+    "tests": "c1bc540a66bde988f0c2b69a7598662bad18446d1c7e0f6185f1633268d77de3"
+  },
+  "projectMigration": "NOT_PERFORMED",
+  "agentsActivated": false,
+  "productionDeployment": "NOT_PERFORMED",
+  "independentReview": "NOT_CLAIMED",
+  "realGitProjectE2E": "NOT_PERFORMED",
+  "crossHostEvidence": "NOT_PERFORMED",
+  "historicalArtifacts": "PRESERVED_IN_PINNED_GIT_HISTORY",
+  "scope": "Creation-type contract correction and distribution regeneration only.",
+  "artifacts": [
+    {
+      "path": "SAFOR-FRAMEWORK.json",
+      "sha256": "426981382c9df48ad0c242be9d69305e9fccbb8701d378279008f533db657746"
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-v0.14.0-rc.3.json",
+      "sha256": "426981382c9df48ad0c242be9d69305e9fccbb8701d378279008f533db657746"
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "sha256": "32bd45e5b199a872b9d6ae1363a4544e1fe61fd58ca15e21f9205bab7e8caa6b"
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-SAAS.json",
+      "sha256": "ffa695bbbfa8ab94a1f70efdd77dedb09cfb4f02dc4354c39574e59f0579b5d6"
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "sha256": "ce59070e27cb95a6fc265f97241099e07a2dcc54d0ffb43c1503afb91e97624c"
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-SAAS.json",
+      "sha256": "f5e8b7aa994e164cbff4e462611b8fbf7374514b15d0f196c07ca70fe781ffc0"
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "sha256": "250e3731d015380bda4db94854a3ee8e70c86c530a7cbcdf3d0ee65da6c1164c"
+    }
+  ],
+  "retiredGeneratedRootBundle": {
+    "path": "SAFOR-FRAMEWORK-v0.14.0-rc.2.json",
+    "sourceCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
+    "blobSha": "165570e46c96730cc7853ab17146dd1d2cfb991c",
+    "contentRewritten": false,
+    "reason": "Existing repository policy allows only the current root distribution."
+  }
+}

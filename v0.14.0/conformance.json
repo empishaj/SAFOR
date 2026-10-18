@@ -975,7 +975,7 @@
     },
     {
       "id": "CF-195",
-      "statement": "SOFTWARE_WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
+      "statement": "WEBSITE is FREE_PUBLIC and resolves its declared Factory/Operating Model from canonical public SAFOR Git at immutable revision/blob when not explicitly loaded.",
       "expected": true
     },
     {

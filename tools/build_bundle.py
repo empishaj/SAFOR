@@ -6,6 +6,12 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
+import sys
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from runtime.creation_type_contract import validate_creation_type_contract
+
 BUNDLE_CONFIG = json.loads((ROOT / "v0.14.0/bundle-module-map.json").read_text(encoding="utf-8"))
 MODULE_PATHS = BUNDLE_CONFIG["modulePaths"]
 REFERENCE_RESOLUTION = BUNDLE_CONFIG["referenceResolution"]
@@ -51,7 +57,7 @@ def build_bundle():
         module["selfHealingProfileId"] = recovery_profiles[key]["profileId"]
 
     version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
-    return {
+    bundle = {
         "format": "SAFOR_FRAMEWORK_SINGLE_FILE",
         "schemaVersion": "0.14.0",
         "bundleVersion": version,
@@ -219,6 +225,11 @@ def build_bundle():
         },
         "embeddedModules": modules,
     }
+
+    decision = validate_creation_type_contract(bundle)
+    if not decision["valid"]:
+        raise ValueError(f"Creation-type contract invalid: {decision['errors']}")
+    return bundle
 
 
 def canonical(obj):

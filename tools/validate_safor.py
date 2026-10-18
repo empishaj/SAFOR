@@ -11,10 +11,11 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from runtime.bootstrap_policy import evaluate_domain_framework_pair, validate_domain_package
+from runtime.creation_type_contract import validate_creation_type_contract
 from runtime.public_evaluation_access import resolve_public_evaluation_access
 from tools.build_domain_framework import build_distribution, validate_distribution
 
-VERSION = "0.14.0-rc.2"
+VERSION = "0.14.0-rc.3"
 SCHEMA = "0.14.0"
 errors = []
 
@@ -38,6 +39,9 @@ def blob_sha(relative):
 
 version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 framework = load("SAFOR-FRAMEWORK.json")
+creation_type_decision = validate_creation_type_contract(framework)
+if not creation_type_decision["valid"]:
+    fail(f"Creation-type contract invalid: {creation_type_decision['errors']}")
 versioned_path = f"SAFOR-FRAMEWORK-v{version}.json"
 versioned = load(versioned_path)
 manifest = load("RELEASE-MANIFEST.json")

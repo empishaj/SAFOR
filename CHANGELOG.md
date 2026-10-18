@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.14.0-rc.3 — Creation-type contract correction
+
+- Aligns the active project schema, kernel selection rules, interaction choices and free-Website conformance statement with WEBSITE, SOFTWARE_SAAS and BOOK.
+- Rejects the ambiguous legacy SOFTWARE_WEBSITE value for new active 0.14 descriptors; historical schemas and artifacts remain unchanged.
+- Fails bundle/domain builds and validation when schema, initialization, runtime profiles and catalog types disagree. Adds 15 regression tests.
+- Rebuilds all three domain distributions, the generic/versioned Framework and integrity evidence. Does not migrate a project or authorize publishing.
+
 ## 0.14.0-rc.2
 
 - Integrates the complete v0.14 orchestration contract into every uploadable Framework distribution.

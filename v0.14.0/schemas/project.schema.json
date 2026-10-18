@@ -37,7 +37,8 @@
     },
     "creationType": {
       "enum": [
-        "SOFTWARE_WEBSITE",
+        "WEBSITE",
+        "SOFTWARE_SAAS",
         "BOOK"
       ]
     },
