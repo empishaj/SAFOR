@@ -355,7 +355,9 @@
       "F-11": "OPEN_EMPIRICAL_USABILITY_EVIDENCE",
       "F-12": "RESOLVED_BY_IMPLEMENTATION_DECISION_RECORD"
     },
-    "liveProviderEvidenceRef": "docs/master-subagent-orchestration/evidence/LIVE-GIT-AUDIT-EVIDENCE-F09-F10-2026-10-18.json"
+    "liveProviderEvidenceRef": "docs/master-subagent-orchestration/evidence/LIVE-GIT-AUDIT-EVIDENCE-F09-F10-2026-10-18.json",
+    "f11EmpiricalProtocolRef": "docs/master-subagent-orchestration/F11-EMPIRICAL-USABILITY-PROTOCOL.md",
+    "f11EmpiricalRunTemplateRef": "docs/master-subagent-orchestration/evidence/F11-EMPIRICAL-RUN.template.json"
   },
   "auditRemediation": {
     "sourceRelease": "0.14.0-rc.2",

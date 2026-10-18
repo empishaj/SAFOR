@@ -90,7 +90,7 @@ Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines
 | Domain-module presentation override | FORBIDDEN and regression-tested |
 | Framework-detection informational notice budget | PASS by unit/validator |
 | Platform response governor host end-to-end acceptance | OPEN |
-| HUMAN cognitive-load end-to-end acceptance | OPEN |
+| HUMAN cognitive-load end-to-end acceptance | OPEN — RC empirical protocol ready; qualifying HUMAN runs not yet collected |
 | Persistent Agent Workspace | PASS by schema/conformance |
 | Canonical explicit Agent Job Contract | PASS by schema/conformance |
 | Conflict-aware Multi-Agent Scheduler | PASS by schema/conformance |
@@ -117,6 +117,10 @@ Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines
 The Framework and Website starter are public/free. Factories and Operating Models are independently licensable packages. Book and future premium packages require verified entitlement.
 
 The licensing **architecture/product decision is complete**. Final legal license language, pricing, billing and entitlement-provider implementation remain separate GA work.
+
+## F-11 empirical usability disposition
+
+The RC pilot protocol is defined in `docs/master-subagent-orchestration/F11-EMPIRICAL-USABILITY-PROTOCOL.md` with immutable run records based on `docs/master-subagent-orchestration/evidence/F11-EMPIRICAL-RUN.template.json`. Automated conformance does not close F-11; the finding remains OPEN until qualifying real HUMAN fresh-chat runs satisfy the protocol.
 
 ## General Availability definition
 
