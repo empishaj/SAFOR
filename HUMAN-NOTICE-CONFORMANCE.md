@@ -1,4 +1,4 @@
-# HUMAN Notice Conformance – SAFOR 0.14.0-rc.3
+# HUMAN Notice Conformance – SAFOR 0.14.0-rc.5
 
 ## Scope
 
@@ -11,7 +11,7 @@ This matrix maps the binding HUMAN requirements to canonical product sources and
 | MASTER only fachliche HUMAN interface | Kernel invariants 218–219; agent chat model | `test_platform_not_factory_or_operating_model_owns_chat` | Implemented |
 | HUMAN `GO` is exclusive subagent trigger | `agent-bootstrap-model.json`; Agent Workspace/Scheduler | `test_human_go_is_the_only_agent_activation` | Implemented |
 | Git/automation never wakes agent | same | positive/negative activation assertions | Implemented |
-| One-time identity bootstrap and fail-closed rebind | Bootstrap model, identity schema and template | identity schema test | Implemented |
+| One-time identity bootstrap, personal-INBOX binding and fail-closed reinitialization | Bootstrap model, identity schema and template | identity schema test | Implemented |
 | Stable ID plus memorable display name | identity/registry schemas | identity schema and migration checks | Implemented |
 | Identity → personal index → job → pinned inputs | Agent Workspace + Job Contract | existing workspace/job suites plus rc.8 tests | Implemented |
 | Complete explicit Job Contract | `v0.13.0/schemas/agent-job.schema.json` | `test_job_requires_domain_response_and_chat_contracts` | Implemented |
