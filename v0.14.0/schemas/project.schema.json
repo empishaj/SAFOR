@@ -37,9 +37,12 @@
     },
     "creationType": {
       "enum": [
-        "SOFTWARE_WEBSITE",
+        "WEBSITE",
+        "SOFTWARE_SAAS",
         "BOOK"
-      ]
+      ],
+      "description": "Canonical v0.14 Creation Type.",
+      "x-safor-vocabulary-ref": "creation-type-vocabulary.json#activeCreationTypes"
     },
     "goal": {
       "type": "string",

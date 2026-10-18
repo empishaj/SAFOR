@@ -461,6 +461,51 @@
       }
     },
     {
+      "profileId": "MRP-CREATIONTYPEVOCABULARY",
+      "moduleKey": "creationTypeVocabulary",
+      "moduleClass": "POLICY_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.creationTypeVocabulary + integrityManifest.creationTypeVocabulary (v0.14.0/creation-type-vocabulary.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE",
+        "AUTOMATICALLY_RECLASSIFY_LEGACY_CREATION_TYPE"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "creationTypeVocabulary_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
+    },
+    {
       "profileId": "MRP-DETERMINISTICCONTROL",
       "moduleKey": "deterministicControl",
       "moduleClass": "RUNTIME_MODEL",
@@ -494,6 +539,50 @@
           "REPAIR_RECORD_PERSISTED"
         ],
         "successPredicate": "deterministicControl_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
+    },
+    {
+      "profileId": "MRP-DOMAINFRAMEWORKPROFILES",
+      "moduleKey": "domainFrameworkProfiles",
+      "moduleClass": "POLICY_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.domainFrameworkProfiles + integrityManifest.domainFrameworkProfiles (v0.14.0/domain-framework-profiles.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "retryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "domainFrameworkProfiles_MATCHES_PINNED_RELEASE"
       },
       "escalation": {
         "when": [

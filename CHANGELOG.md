@@ -331,3 +331,13 @@ This version remains a **Release Candidate**. General Availability still require
 - Conservative self-healing with bounded retry, reconciliation and HUMAN escalation
 - Product/runtime separation between the SAFOR repository and project memory
 - Product validation script and CI release gates
+
+## 0.14.0-rc.3
+
+- Resolves the rc.2 Creation-Type cross-schema defect with one canonical v0.14 vocabulary and explicit legacy migration.
+- Replaces ambiguous current kernel model/schema/template references with active v0.14 references and adds semantic linting.
+- Classifies current invariants as active, superseded or legacy-only and removes contradictory active semantics.
+- Discriminates REMOTE_GIT and LOCAL_GIT control prerequisites.
+- Adds persistence-failure chat fallback without invented Git references.
+- Requires provider CAS/readback before a HUMAN-GO claim becomes authoritative.
+- Adds documentation-drift validation and rebuilds every Framework distribution reproducibly.

@@ -335,7 +335,7 @@
     "optionalReferenceRuntimeDoesNotBlockInitialization": true
   },
   "agentBootstrapContract": {
-    "modelRef": "agent-bootstrap-model.json",
+    "modelRef": "agent-activation-model.json",
     "masterPreparesIdentityAndPrompt": true,
     "humanInsertsPromptOnce": true,
     "futureActivation": "HUMAN_GO_ONLY",
@@ -354,5 +354,7 @@
     "idempotentMaterializationRequired": true,
     "duplicateActiveAuthorityForbidden": true,
     "onUnknownExternalEffect": "RECONCILE_REQUIRED"
-  }
+  },
+  "creationTypeVocabularyRef": "creation-type-vocabulary.json",
+  "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy"
 }

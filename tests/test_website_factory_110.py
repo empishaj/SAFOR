@@ -100,7 +100,7 @@ class WebsiteFactory110Tests(unittest.TestCase):
         )
         self.assertNotIn("SITE_RELIABILITY_ENGINEER", roles)
         result = evaluate_domain_package_pair(
-            self.factory, self.om, "0.14.0-rc.2", "WEBSITE"
+            self.factory, self.om, "0.14.0-rc.3", "WEBSITE"
         )
         self.assertTrue(result["compatible"], result)
 

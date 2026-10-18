@@ -148,6 +148,19 @@
     ],
     "singleUseEnforced": true,
     "providerCompareAndSwapRequired": true,
-    "onConflict": "RECONCILE_REQUIRED"
+    "onConflict": "RECONCILE_REQUIRED",
+    "authoritativeSequence": [
+      "READ_PINNED_JOB_STATE",
+      "VALIDATE_GO_EVIDENCE",
+      "PREPARE_CLAIM_INTENT",
+      "CAS_COMMIT_EXPECTED_REVISION",
+      "PROVIDER_READBACK",
+      "PERSIST_ACTIVATION_CONSUMPTION",
+      "MARK_CLAIM_CONFIRMED"
+    ],
+    "inMemoryConsumptionAuthoritative": false,
+    "claimSuccessRequiresProviderReadback": true,
+    "casFailureOutcome": "RECONCILE_REQUIRED",
+    "activationConsumptionAuthority": "PERSISTED_JOB_STATE_AFTER_PROVIDER_READBACK"
   }
 }

@@ -1,7 +1,7 @@
 import copy
 import unittest
 
-from runtime.go_evidence import GoEvidenceValidationError, atomically_observe_go_and_claim, validate_human_go_evidence
+from runtime.go_evidence import GoEvidenceValidationError, confirm_go_claim_after_provider_readback, prepare_go_claim, validate_human_go_evidence
 
 
 class GoEvidenceV014Tests(unittest.TestCase):
@@ -43,20 +43,31 @@ class GoEvidenceV014Tests(unittest.TestCase):
         with self.assertRaisesRegex(GoEvidenceValidationError, "GO_EVIDENCE_ALREADY_CONSUMED"):
             validate_human_go_evidence(self.evidence(), expected=self.expected(), consumed_activation_ids={"activation-001"})
 
-    def test_atomic_claim_uses_expected_revision_and_consumes_activation(self):
+    def test_claim_requires_provider_cas_readback_before_consumption(self):
         consumed = set()
-        claimed = atomically_observe_go_and_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=7, consumed_activation_ids=consumed, go_evidence_ref=self.ref())
+        intent = prepare_go_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=7, consumed_activation_ids=consumed, go_evidence_ref=self.ref())
+        self.assertFalse(intent["authoritative"])
+        self.assertEqual(set(), consumed)
+        claimed = confirm_go_claim_after_provider_readback(
+            claim_intent=intent,
+            provider_readback={"casSucceeded": True, "readbackVerified": True, "observedRevision": 8, "observedLifecycleStatus": "CLAIMED", "observedActivationId": "activation-001", "readbackRef": "git:claim"},
+            consumed_activation_ids=consumed,
+        )
         self.assertEqual("CLAIMED", claimed["lifecycleStatus"])
         self.assertEqual(8, claimed["revision"])
         self.assertIn("activation-001", consumed)
         self.assertEqual(["activation-001"], claimed["consumedActivationIds"])
-        with self.assertRaisesRegex(GoEvidenceValidationError, "JOB_STATE_REVISION_CONFLICT"):
-            atomically_observe_go_and_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=8, consumed_activation_ids=set(), go_evidence_ref=self.ref())
 
-    def test_duplicate_claim_fails(self):
-        consumed = {"activation-001"}
+    def test_failed_cas_does_not_consume_or_confirm(self):
+        consumed = set()
+        intent = prepare_go_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=7, consumed_activation_ids=consumed, go_evidence_ref=self.ref())
+        with self.assertRaisesRegex(GoEvidenceValidationError, "PROVIDER_CAS_NOT_CONFIRMED"):
+            confirm_go_claim_after_provider_readback(claim_intent=intent, provider_readback={"casSucceeded": False, "readbackVerified": False}, consumed_activation_ids=consumed)
+        self.assertEqual(set(), consumed)
+
+    def test_duplicate_claim_fails_after_persisted_consumption(self):
         with self.assertRaisesRegex(GoEvidenceValidationError, "GO_EVIDENCE_ALREADY_CONSUMED"):
-            atomically_observe_go_and_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=7, consumed_activation_ids=consumed, go_evidence_ref=self.ref())
+            prepare_go_claim(job_state=self.state(), go_evidence=self.evidence(), expected_state_revision=7, consumed_activation_ids={"activation-001"}, go_evidence_ref=self.ref())
 
 
 if __name__ == "__main__":

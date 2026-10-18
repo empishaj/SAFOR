@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.14.0-rc.2",
+  "version": "0.14.0-rc.3",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.14.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.2.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.3.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.13.0-rc.9",
+  "previousVersion": "0.14.0-rc.2",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -165,7 +165,15 @@
     "EVIDENCE_DIMENSIONED_33_REQUIREMENT_TRACEABILITY",
     "V014_UPGRADED_DOMAIN_PACKAGES",
     "V014_UPGRADED_PROVIDER_ADAPTERS",
-    "ALL_V014_FRAMEWORK_DISTRIBUTIONS_REPRODUCIBLE"
+    "ALL_V014_FRAMEWORK_DISTRIBUTIONS_REPRODUCIBLE",
+    "CANONICAL_V014_CREATION_TYPE_VOCABULARY",
+    "EXPLICIT_LEGACY_CREATION_TYPE_MIGRATION",
+    "SEMANTIC_REFERENCE_LINTING",
+    "VERSIONED_ACTIVE_INVARIANTS",
+    "DISCRIMINATED_CONTROL_WORKSPACE_POLICY",
+    "PERSISTENCE_FAILURE_CHAT_FALLBACK",
+    "PROVIDER_CONFIRMED_GO_CLAIM_PROTOCOL",
+    "RELEASE_DOCUMENTATION_DRIFT_GUARD"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -284,9 +292,9 @@
     "CAPABILITY_MISMATCH",
     "IMPROVEMENT_PROPOSAL"
   ],
-  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.2.json",
-  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.2.md",
-  "checksumFile": "SHA256SUMS-0.14.0-rc.2.txt",
+  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.3.json",
+  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.3.md",
+  "checksumFile": "SHA256SUMS-0.14.0-rc.3.txt",
   "referenceProjectMigration": {
     "status": "COMPLETED",
     "projectId": "67454821-9325-41f3-ac41-d72121cfec5f",
@@ -326,5 +334,22 @@
       "F-11": "OPEN_EMPIRICAL_USABILITY_EVIDENCE",
       "F-12": "RESOLVED_BY_IMPLEMENTATION_DECISION_RECORD"
     }
-  }
+  },
+  "auditRemediation": {
+    "sourceRelease": "0.14.0-rc.2",
+    "targetRelease": "0.14.0-rc.3",
+    "baseCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
+    "findings": {
+      "AUDIT-RC2-01": "RESOLVED_AUTOMATED_SCHEMA_AND_DOMAIN_TESTS",
+      "AUDIT-RC2-02": "RESOLVED_SEMANTIC_REFERENCE_LINTER",
+      "AUDIT-RC2-03": "RESOLVED_ACTIVE_SUPERSEDED_INVARIANT_MODEL",
+      "AUDIT-RC2-04": "RESOLVED_DISCRIMINATED_CONTROL_WORKSPACE_POLICY",
+      "AUDIT-RC2-05": "RESOLVED_AUTOMATED_PERSISTENCE_FAILURE_CONTRACT",
+      "AUDIT-RC2-06": "CONTRACT_AND_AUTOMATED_TESTS_RESOLVED_REAL_PROVIDER_E2E_OPEN",
+      "AUDIT-RC2-07": "OPEN_REAL_GIT_E2E_AND_REFERENCE_MIGRATION",
+      "AUDIT-RC2-08": "RESOLVED_AUTOMATED_DOCUMENTATION_DRIFT_GUARD",
+      "AUDIT-RC2-09": "OPEN_EMPIRICAL_CONTEXT_AND_USABILITY_EVIDENCE"
+    }
+  },
+  "embeddedModuleCount": 93
 }

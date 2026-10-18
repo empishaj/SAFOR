@@ -44,12 +44,12 @@
     "conciseHumanCommunication": true,
     "buddyStyleHumanInteraction": true,
     "detailOnDemand": true,
-    "mandatoryProviderReadWriteBeforeProjectSelection": true,
+    "mandatoryProviderReadWriteBeforeProjectSelection": false,
     "explicitOwnerSelection": true,
     "recentRepositorySelectionMenu": true,
     "chatNativeUiOnly": true,
     "conservativeSelfHealing": true,
-    "safMemoryAbsolutePrerequisite": true,
+    "safMemoryAbsolutePrerequisite": false,
     "creationTypeMandatory": true,
     "factoryBoundDiscoveryPlanningEvidence": true,
     "repositoryNativeAgentJobs": true,
@@ -75,7 +75,7 @@
     "postDiscoveryLoadReduction": true,
     "humanDomainLanguageDefault": true,
     "humanAsDecisionMakerNotWorkflowOperator": true,
-    "terminalMenuOnEveryHumanResponse": true,
+    "terminalMenuOnEveryHumanResponse": false,
     "terminalMenuIsFinalRenderedSurface": true,
     "humanResponseEnvelopeRequired": true,
     "probabilisticWorkDeterministicGovernance": true,
@@ -157,7 +157,14 @@
     "verifiedResponseReadbackBeforeMasterCompletionClaim": true,
     "statusFreshnessDerivedNotAsserted": true,
     "partialProductControlWriteReconciliation": true,
-    "requirementsEvidenceDimensionsSeparated": true
+    "requirementsEvidenceDimensionsSeparated": true,
+    "controlWorkspaceDiscriminatedByWorkspaceType": true,
+    "remoteSaforMemoryRequiredForRemoteGit": true,
+    "localMasterControlRootSupportedWithoutRemoteMemory": true,
+    "workspaceSpecificCapabilityVerification": true,
+    "terminalMenuRequiredForInteractiveResponses": true,
+    "canonicalCreationTypeVocabularyRequired": true,
+    "providerConfirmedClaimRequired": true
   },
   "moduleArchitecture": {
     "layers": [
@@ -215,7 +222,7 @@
       },
       {
         "id": "HUMAN_INTERACTION_GOVERNANCE",
-        "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction, dynamic primary-action labeling and mandatory terminal-menu finalization for every HUMAN-facing response."
+        "responsibility": "Phase-aware HUMAN cognitive-load governance, decision gating, decision reuse, terminology abstraction, content-only informational notices and exactly one terminal menu for interactive HUMAN responses."
       },
       {
         "id": "MODULE_SELF_HEALING",
@@ -271,7 +278,7 @@
       "High HUMAN cognitive load is legitimate in Discovery when acquiring non-derivable intent/domain knowledge; after plan approval default HUMAN load decreases to LOW/VERY_LOW except for material decisions, new authority, risk, irreversible action, recovery escalation or outcome judgment.",
       "Scheduling, job IDs, leases, dispatch waves, readback, evidence collection and deterministic agent coordination are internal SAFOR responsibilities.",
       "SUMMARY surfaces use HUMAN domain language; internal SAFOR vocabulary and technical identifiers remain behind Details unless materially required.",
-      "Every SAFOR-generated HUMAN-facing response must validate against the HUMAN response contract and terminate with exactly one interaction menu.",
+      "Every SAFOR-generated HUMAN-facing response validates against the HUMAN response contract. Informational notices are content-only; interactive checkpoints terminate with exactly one state-derived menu.",
       "The terminal interaction menu is a presentation/navigation surface and does not itself imply that a HUMAN decision is required.",
       "No SAFOR-visible content may be rendered after the terminal menu; the HUMAN response finalizer stops rendering immediately after it.",
       "If contextual menu derivation fails, only a safe state-derived non-authority-expanding fallback menu may be generated.",
@@ -518,7 +525,6 @@
     "agentState": "schemas/agent-state.schema.json",
     "agentJob": "schemas/agent-job.schema.json",
     "agentJobState": "schemas/agent-job-state.schema.json",
-    "agentResult": "schemas/agent-result.schema.json",
     "agentInboxIndex": "schemas/agent-inbox-index.schema.json",
     "schedulerState": "schemas/scheduler-state.schema.json",
     "dispatchWave": "schemas/dispatch-wave.schema.json",
@@ -542,16 +548,16 @@
     "domainPackage": "schemas/domain-package.schema.json",
     "packageSelection": "schemas/package-selection.schema.json",
     "packageCompatibilityDecision": "schemas/package-compatibility-decision.schema.json",
-    "agentBootstrap": "schemas/agent-bootstrap.schema.json",
     "agentResponse": "schemas/agent-response.schema.json",
-    "agentChatStatus": "schemas/agent-chat-status.schema.json",
-    "masterStatusIndex": "schemas/master-status-index.schema.json",
     "humanGoEvidence": "schemas/human-go-evidence.schema.json",
     "executionAttempt": "schemas/execution-attempt.schema.json",
     "reconciliationRecord": "schemas/reconciliation-record.schema.json",
     "projectStatusIndex": "schemas/project-status-index.schema.json",
     "migrationManifest": "schemas/migration-manifest.schema.json",
-    "requirementsTraceability": "schemas/requirements-traceability.schema.json"
+    "requirementsTraceability": "schemas/requirements-traceability.schema.json",
+    "agentInitialization": "schemas/agent-initialization.schema.json",
+    "agentChatOutput": "schemas/agent-chat-output.schema.json",
+    "creationTypeVocabulary": "creation-type-vocabulary.json"
   },
   "controlPlane": {
     "startActionId": "K00",
@@ -1076,7 +1082,7 @@
       "COMPLETED"
     ],
     "interactionLoop": {
-      "stableCheckpointBehavior": "Every SAFOR-generated HUMAN-facing response MUST end with exactly one valid state-derived interaction menu. This applies to checkpoints, progress, decisions, blockers, recovery, status, help, pause, stop, outcome and completion. No SAFOR-visible content may follow the menu.",
+      "stableCheckpointBehavior": "Platform informational notices are content-only and non-interactive. Interactive checkpoints and genuine decisions contain exactly one valid state-derived terminal menu, followed by no SAFOR-visible content.",
       "defaultPrimaryIntent": "NEXT_ROUND",
       "roundDefinitionRef": "interaction-model.json#roundSemantics",
       "menuPolicyRef": "interaction-model.json#menuPolicy",
@@ -1107,7 +1113,9 @@
       "platformResponseGovernorRef": "interaction-model.json#platformResponseGovernor",
       "platformResponseGovernorMandatory": true,
       "domainModulePresentationOverrideForbidden": true,
-      "informationalNoticeMayOmitTerminalMenu": true
+      "informationalNoticeMayOmitTerminalMenu": true,
+      "informationalNoticeMenuForbidden": true,
+      "interactiveResponseRequiresExactlyOneMenu": true
     },
     "recoveryLoop": {
       "modelRef": "self-healing-model.json",
@@ -1201,923 +1209,1221 @@
   "invariants": [
     {
       "id": "INV-001",
-      "rule": "A factory must reference required capabilities, never concrete operating-model role IDs."
+      "rule": "A factory must reference required capabilities, never concrete operating-model role IDs.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-002",
-      "rule": "An operating model must map capabilities/authorities to roles but must not own the sequence of factory transformations."
+      "rule": "An operating model must map capabilities/authorities to roles but must not own the sequence of factory transformations.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-003",
-      "rule": "A work item can become ACCEPTED only when all configured acceptance criteria and required evidence are satisfied."
+      "rule": "A work item can become ACCEPTED only when all configured acceptance criteria and required evidence are satisfied.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-004",
-      "rule": "If independent review is required, no actor may approve its own contribution unless an explicit exception authority permits it."
+      "rule": "If independent review is required, no actor may approve its own contribution unless an explicit exception authority permits it.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-005",
-      "rule": "No external mutation may be recorded as completed without provider readback or equivalent authoritative evidence."
+      "rule": "No external mutation may be recorded as completed without provider readback or equivalent authoritative evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-006",
-      "rule": "Unknown external mutation outcome transitions to RECONCILE_REQUIRED and must not be blindly retried."
+      "rule": "Unknown external mutation outcome transitions to RECONCILE_REQUIRED and must not be blindly retried.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-007",
-      "rule": "Execution requires an active mandate whose scope covers the selected work item and capability."
+      "rule": "Execution requires an active mandate whose scope covers the selected work item and capability.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-008",
-      "rule": "STOP revokes active execution mandates; RESUME after STOP requires new execution authorization where execution would continue."
+      "rule": "STOP revokes active execution mandates; RESUME after STOP requires new execution authorization where execution would continue.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-009",
-      "rule": "Provider permissions come from the host/provider, never from JSON declarations."
+      "rule": "Provider permissions come from the host/provider, never from JSON declarations.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-010",
-      "rule": "DELIVERY_COMPLETE and VALUE_SUPPORTED are distinct states and may not be inferred from one another."
+      "rule": "DELIVERY_COMPLETE and VALUE_SUPPORTED are distinct states and may not be inferred from one another.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-011",
-      "rule": "Project-specific migration constants may not appear in global kernel schemas."
+      "rule": "Project-specific migration constants may not appear in global kernel schemas.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-012",
-      "rule": "The same authoritative fact must not be independently writable in multiple state aggregates."
+      "rule": "The same authoritative fact must not be independently writable in multiple state aggregates.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-013",
-      "rule": "At every user-relevant stable checkpoint, the MASTER presents a state-derived action menu unless no meaningful user action exists while waiting on an external effect."
+      "rule": "At every user-relevant stable checkpoint, the MASTER presents a state-derived action menu unless no meaningful user action exists while waiting on an external effect.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-234"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-014",
-      "rule": "Menu items must be generated from currently allowed transitions, guards, mandates and actual host capabilities; unavailable or unauthorized actions must not be presented as executable."
+      "rule": "Menu items must be generated from currently allowed transitions, guards, mandates and actual host capabilities; unavailable or unauthorized actions must not be presented as executable.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-015",
-      "rule": "NEXT_ROUND may continue only within existing authorization scope and must stop before any new human decision, authority expansion, unresolved external effect, block, failure or terminal completion."
+      "rule": "NEXT_ROUND may continue only within existing authorization scope and must stop before any new human decision, authority expansion, unresolved external effect, block, failure or terminal completion.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-016",
-      "rule": "If the host exposes native action buttons or choice controls, the MASTER prefers them; otherwise it renders the same action model through the structured text fallback."
+      "rule": "If the host exposes native action buttons or choice controls, the MASTER prefers them; otherwise it renders the same action model through the structured text fallback.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-017",
-      "rule": "Direct HUMAN communication is concise by default: lead with result, decision or next useful action and avoid repeating known context."
+      "rule": "Direct HUMAN communication is concise by default: lead with result, decision or next useful action and avoid repeating known context.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-018",
-      "rule": "Routine HUMAN checkpoint messages obey the configured response budget; deeper technical detail is disclosed on request or when materially required."
+      "rule": "Routine HUMAN checkpoint messages obey the configured response budget; deeper technical detail is disclosed on request or when materially required.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-019",
-      "rule": "Encouragement must be grounded in verified progress or a realistic next step; generic praise, exaggeration, guilt and emotional manipulation are forbidden."
+      "rule": "Encouragement must be grounded in verified progress or a realistic next step; generic praise, exaggeration, guilt and emotional manipulation are forbidden.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-020",
-      "rule": "The HUMAN interaction style is warm, direct and collaborative while authority, uncertainty, risk and evidence remain explicit and unblurred."
+      "rule": "The HUMAN interaction style is warm, direct and collaborative while authority, uncertainty, risk and evidence remain explicit and unblurred.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-021",
-      "rule": "After SAFOR-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery."
+      "rule": "After SAFOR-MASTER load, guided initialization starts with explicit HUMAN selection of GitHub or GitLab before project discovery.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-022",
-      "rule": "Initialization cannot proceed to owner selection unless mandatory baseline provider read/write capabilities are proven by actual host/provider evidence."
+      "rule": "Initialization cannot proceed to owner selection unless mandatory baseline provider read/write capabilities are proven by actual host/provider evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-023",
-      "rule": "If mandatory read/write access is missing or unproven, SAFOR enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAFOR never asks for a password or personal access token in chat."
+      "rule": "If mandatory read/write access is missing or unproven, SAFOR enters WAITING_HUMAN and explicitly requires the HUMAN to grant access, switch provider or request help; SAFOR never asks for a password or personal access token in chat.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-024",
-      "rule": "The project owner namespace is explicitly selected by the HUMAN and owner-scoped read/write access is re-verified before project selection."
+      "rule": "The project owner namespace is explicitly selected by the HUMAN and owner-scoped read/write access is re-verified before project selection.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-025",
-      "rule": "For EXISTING project mode, the default repository menu contains only eligible repositories under the selected owner with normalized lastActivityAt within the previous 7 days, ordered newest first."
+      "rule": "For EXISTING project mode, the default repository menu contains only eligible repositories under the selected owner with normalized lastActivityAt within the previous 7 days, ordered newest first.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-026",
-      "rule": "Selecting a repository from a menu is not sufficient evidence by itself; stable repository identity, default branch and target read/write access must be verified before binding."
+      "rule": "Selecting a repository from a menu is not sufficient evidence by itself; stable repository identity, default branch and target read/write access must be verified before binding.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-027",
-      "rule": "For NEW project mode, provider.repository.create is mandatory and no repository is created before explicit HUMAN confirmation and SETUP_APPROVAL."
+      "rule": "For NEW project mode, provider.repository.create is mandatory and no repository is created before explicit HUMAN confirmation and SETUP_APPROVAL.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-028",
-      "rule": "All HUMAN interaction uses only native UI surfaces exposed by the current chat host; custom web applications, HTML/CSS/JavaScript UI shells and iframes are forbidden."
+      "rule": "All HUMAN interaction uses only native UI surfaces exposed by the current chat host; custom web applications, HTML/CSS/JavaScript UI shells and iframes are forbidden.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-029",
-      "rule": "SAFOR controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling."
+      "rule": "SAFOR controls labels, ordering, hierarchy and semantics but never assumes control over native button colors, dropdown styling, typography or other host-owned visual styling.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-030",
-      "rule": "If native buttons or select controls are unavailable, SAFOR falls back only to native chat Markdown/plain text choices, never to a custom external interface."
+      "rule": "If native buttons or select controls are unavailable, SAFOR falls back only to native chat Markdown/plain text choices, never to a custom external interface.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-031",
-      "rule": "Self-healing may execute automatically only when the failure is classified, the repair is explicitly eligible, the active mandate covers it and required provider rights are proven."
+      "rule": "Self-healing may execute automatically only when the failure is classified, the repair is explicitly eligible, the active mandate covers it and required provider rights are proven.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-032",
-      "rule": "Every automatic repair is bounded by a retry budget and must persist an immutable repair record with pre-state references and verification evidence."
+      "rule": "Every automatic repair is bounded by a retry budget and must persist an immutable repair record with pre-state references and verification evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-033",
-      "rule": "Unknown external effects must enter reconciliation before any retry; blind repetition of a mutation is forbidden."
+      "rule": "Unknown external effects must enter reconciliation before any retry; blind repetition of a mutation is forbidden.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-034",
-      "rule": "Self-healing must never bypass human gates, reviews, policy guards, separation of duties or expand an execution mandate."
+      "rule": "Self-healing must never bypass human gates, reviews, policy guards, separation of duties or expand an execution mandate.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-035",
-      "rule": "Force-push, history rewrite, destructive repository deletion, invented evidence and ambiguous authoritative-state restoration are forbidden automatic repairs."
+      "rule": "Force-push, history rewrite, destructive repository deletion, invented evidence and ambiguous authoritative-state restoration are forbidden automatic repairs.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-036",
-      "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAFOR reclassifies, rolls back when safely authorized, or escalates to the HUMAN."
+      "rule": "A repair is successful only after authoritative readback verifies the expected state; otherwise SAFOR reclassifies, rolls back when safely authorized, or escalates to the HUMAN.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-037",
-      "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAFOR transitions to STOP and performs no project discovery, selection, planning or execution."
+      "rule": "`{selectedOwner}/safor-memory` is an absolute prerequisite: it must pre-exist and proven read/write access is mandatory; otherwise SAFOR transitions to STOP and performs no project discovery, selection, planning or execution.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-232"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-038",
-      "rule": "SAFOR must never auto-create safor-memory or silently substitute another control repository in this baseline."
+      "rule": "SAFOR must never auto-create safor-memory or silently substitute another control repository in this baseline.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-232"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-039",
-      "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed."
+      "rule": "The HUMAN must explicitly select exactly one creation type: SOFTWARE_WEBSITE or BOOK; no default or repository-content inference is allowed.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-231"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-040",
-      "rule": "Creation type deterministically fixes the Factory and compatible Operating Model until the HUMAN explicitly changes the selection through a new governed decision."
+      "rule": "Creation type deterministically fixes the Factory and compatible Operating Model until the HUMAN explicitly changes the selection through a new governed decision.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-041",
-      "rule": "Discovery questions and completion criteria come exclusively from the bound Factory discoveryContract."
+      "rule": "Discovery questions and completion criteria come exclusively from the bound Factory discoveryContract.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-042",
-      "rule": "Planning perspectives, work-item derivation and planning requirements come exclusively from the same bound Factory planningContract and confirmed Discovery."
+      "rule": "Planning perspectives, work-item derivation and planning requirements come exclusively from the same bound Factory planningContract and confirmed Discovery.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-043",
-      "rule": "Evidence requirements for domain work come exclusively from the same bound Factory evidenceContract; cross-Factory evidence substitution is forbidden."
+      "rule": "Evidence requirements for domain work come exclusively from the same bound Factory evidenceContract; cross-Factory evidence substitution is forbidden.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-044",
-      "rule": "A project may not proceed when creationType, Factory binding, Operating Model binding and persisted project descriptor disagree."
+      "rule": "A project may not proceed when creationType, Factory binding, Operating Model binding and persisted project descriptor disagree.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-045",
-      "rule": "An agent identity is persistent across jobs. Initial chat bootstrap requires only control repository, project ID and agent ID; job prompts are not transported by the HUMAN after identity bootstrap."
+      "rule": "An agent identity is persistent across jobs. Initial chat bootstrap requires only control repository, project ID and agent ID; job prompts are not transported by the HUMAN after identity bootstrap.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-046",
-      "rule": "Agent identity, agent registry, agent inbox index, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them."
+      "rule": "Agent identity, agent registry, agent inbox index, agent inbox contracts and master/jobs lifecycle records are MASTER-owned protocol artifacts; an agent must not mutate them.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-047",
-      "rule": "An agent may write only its own agent state, outbox, evidence and audit protocol paths plus separately authorized work-repository targets; protocol path ownership never grants provider rights."
+      "rule": "An agent may write only its own agent state, outbox, evidence and audit protocol paths plus separately authorized work-repository targets; protocol path ownership never grants provider rights.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-048",
-      "rule": "An agent may claim a job only when assignedAgentId and assignedIdentityRevision match its active identity and the referenced execution mandate and actual provider rights cover the requested scope."
+      "rule": "An agent may claim a job only when assignedAgentId and assignedIdentityRevision match its active identity and the referenced execution mandate and actual provider rights cover the requested scope.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-049",
-      "rule": "Agent job claims use optimistic concurrency against provider-observed agent state revision/blob identity; stale or concurrent claims must fail safely and reconcile before retry."
+      "rule": "Agent job claims use optimistic concurrency against provider-observed agent state revision/blob identity; stale or concurrent claims must fail safely and reconcile before retry.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-050",
-      "rule": "A dispatched agent job contract is immutable. Scope, mandate or assignment changes require a new dispatch revision or a superseding job."
+      "rule": "A dispatched agent job contract is immutable. Scope, mandate or assignment changes require a new dispatch revision or a superseding job.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-051",
-      "rule": "Agent-local runtime state is not authoritative for project orchestration. MASTER-owned master/jobs/{jobId}.json is the sole authoritative agent-job lifecycle state."
+      "rule": "Agent-local runtime state is not authoritative for project orchestration. MASTER-owned master/jobs/{jobId}.json is the sole authoritative agent-job lifecycle state.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-052",
-      "rule": "An agent result is a submission claim, never acceptance. The agent cannot mark its own job VERIFIED or ACCEPTED."
+      "rule": "An agent result is a submission claim, never acceptance. The agent cannot mark its own job VERIFIED or ACCEPTED.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-053",
-      "rule": "MASTER may advance an agent job to VERIFIED or ACCEPTED only after reading the result, validating job/identity binding, evaluating required evidence/review and reading back external mutations where applicable."
+      "rule": "MASTER may advance an agent job to VERIFIED or ACCEPTED only after reading the result, validating job/identity binding, evaluating required evidence/review and reading back external mutations where applicable.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-054",
-      "rule": "SAFOR does not assume a normal chat wakes itself when a repository job appears. Agent execution requires an external HUMAN, automation or host-supported activation trigger."
+      "rule": "SAFOR does not assume a normal chat wakes itself when a repository job appears. Agent execution requires an external HUMAN, automation or host-supported activation trigger.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-233",
+        "INV-237"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-055",
-      "rule": "A reviewer requirement continues to enforce separation of duties across agent identities; the performing agent may not approve its own contribution unless an explicit exception authority permits it."
+      "rule": "A reviewer requirement continues to enforce separation of duties across agent identities; the performing agent may not approve its own contribution unless an explicit exception authority permits it.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-056",
-      "rule": "Agent job discovery must use the fixed MASTER-owned agents/{agentId}/inbox/index.json projection. The index is never authoritative lifecycle state; before claim the agent must read the referenced immutable job contract and MASTER-owned master/jobs/{jobId}.json. Repository directory enumeration is not required for correctness."
+      "rule": "Agent job discovery must use the fixed MASTER-owned agents/{agentId}/inbox/index.json projection. The index is never authoritative lifecycle state; before claim the agent must read the referenced immutable job contract and MASTER-owned master/jobs/{jobId}.json. Repository directory enumeration is not required for correctness.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-057",
-      "rule": "Only ATOMIC work items may be dispatched to agents. COMPOSITE work items must first be decomposed into explicit children with a declared join policy."
+      "rule": "Only ATOMIC work items may be dispatched to agents. COMPOSITE work items must first be decomposed into explicit children with a declared join policy.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-058",
-      "rule": "An agent job may be dispatched only when its authoritative work-item resource declaration is complete and all read inputs are pinned to immutable revisions."
+      "rule": "An agent job may be dispatched only when its authoritative work-item resource declaration is complete and all read inputs are pinned to immutable revisions.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-059",
-      "rule": "Two concurrently active jobs must not share a write conflict domain, exclusive key or explicit job branch. Any unknown conflict is treated as exclusive and serialized."
+      "rule": "Two concurrently active jobs must not share a write conflict domain, exclusive key or explicit job branch. Any unknown conflict is treated as exclusive and serialized.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-060",
-      "rule": "The number of concurrently active jobs assigned to an agent must never exceed the maxConcurrentJobs declared in the MASTER-owned agent registry."
+      "rule": "The number of concurrently active jobs assigned to an agent must never exceed the maxConcurrentJobs declared in the MASTER-owned agent registry.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-061",
-      "rule": "MASTER forms dispatch waves only from dependency-ready, capability-compatible, mandate-covered and separation-of-duties-safe ATOMIC work."
+      "rule": "MASTER forms dispatch waves only from dependency-ready, capability-compatible, mandate-covered and separation-of-duties-safe ATOMIC work.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-062",
-      "rule": "All resource leases for a selected assignment must be acquired and read back before the job is treated as dispatched."
+      "rule": "All resource leases for a selected assignment must be acquired and read back before the job is treated as dispatched.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-063",
-      "rule": "Lease expiry or missing agent progress never authorizes silent reassignment. MASTER must reconcile possible external effects before another agent may receive overlapping work."
+      "rule": "Lease expiry or missing agent progress never authorizes silent reassignment. MASTER must reconcile possible external effects before another agent may receive overlapping work.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-064",
-      "rule": "Every mutating agent job uses a dedicated branch derived from jobId and agentId and may not write the default branch directly."
+      "rule": "Every mutating agent job uses a dedicated branch derived from jobId and agentId and may not write the default branch directly.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-065",
-      "rule": "Parallel branches are integrated only after their job results are VERIFIED and required review/integration gates pass."
+      "rule": "Parallel branches are integrated only after their job results are VERIFIED and required review/integration gates pass.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-066",
-      "rule": "Every agent job, including read-only work, must persist a HUMAN-readable Markdown result in the Git-backed control repository and the machine result must pin its blob and commit identity."
+      "rule": "Every agent job, including read-only work, must persist a HUMAN-readable Markdown result in the Git-backed control repository and the machine result must pin its blob and commit identity.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-067",
-      "rule": "Every mutating agent result must report Git base/head commit identities, produced commit SHAs, changed paths and provider readback sufficient for MASTER verification."
+      "rule": "Every mutating agent result must report Git base/head commit identities, produced commit SHAs, changed paths and provider readback sufficient for MASTER verification.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-068",
-      "rule": "A parent or downstream join may become execution-ready only from ACCEPTED upstream children required by its join predicate; RESULT_SUBMITTED or VERIFIED alone is insufficient."
+      "rule": "A parent or downstream join may become execution-ready only from ACCEPTED upstream children required by its join predicate; RESULT_SUBMITTED or VERIFIED alone is insufficient.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-069",
-      "rule": "Dispatch-wave records and resource-lease records are MASTER-owned audit artifacts and may not be mutated by agents."
+      "rule": "Dispatch-wave records and resource-lease records are MASTER-owned audit artifacts and may not be mutated by agents.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-070",
-      "rule": "With N free eligible agent slots and at least N mutually conflict-free READY ATOMIC jobs, the scheduler may dispatch up to N jobs in the same wave subject to the project parallelism ceiling."
+      "rule": "With N free eligible agent slots and at least N mutually conflict-free READY ATOMIC jobs, the scheduler may dispatch up to N jobs in the same wave subject to the project parallelism ceiling.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-071",
-      "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning."
+      "rule": "The scheduling dependency graph must be acyclic. Any dependency cycle is invalid planning state and blocks READY derivation and dispatch until corrected through planning/replanning.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-072",
-      "rule": "Every agent job has a globally unique immutable jobId, a HUMAN/Git-safe jobKey, packageId, workItemId and explicit plan/package/dispatch/attempt/rework sequence lineage."
+      "rule": "Every agent job has a globally unique immutable jobId, a HUMAN/Git-safe jobKey, packageId, workItemId and explicit plan/package/dispatch/attempt/rework sequence lineage.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-073",
-      "rule": "Every agent job records MASTER creation provenance including createdAt, issuedAt, masterId, masterVersion, masterRunId and masterStateRevision."
+      "rule": "Every agent job records MASTER creation provenance including createdAt, issuedAt, masterId, masterVersion, masterRunId and masterStateRevision.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-074",
-      "rule": "Every agent job explicitly binds the target agentId and identityRevision plus the roleId/role definition the agent must assume for that job."
+      "rule": "Every agent job explicitly binds the target agentId and identityRevision plus the roleId/role definition the agent must assume for that job.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-075",
-      "rule": "Every mandatory job skill is explicit, versioned, described, includes execution instructions and is pinned to an immutable skill source/blob identity."
+      "rule": "Every mandatory job skill is explicit, versioned, described, includes execution instructions and is pinned to an immutable skill source/blob identity.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-076",
-      "rule": "All job inputs are read-only and pinned to immutable repository commit identities; path-scoped inputs pin blob identity when applicable."
+      "rule": "All job inputs are read-only and pinned to immutable repository commit identities; path-scoped inputs pin blob identity when applicable.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-077",
-      "rule": "Job authorization explicitly separates provider capabilities and repository read/write/branch/commit/push/change-request/merge/deploy permissions. JSON authorization is only an upper bound and never grants provider rights."
+      "rule": "Job authorization explicitly separates provider capabilities and repository read/write/branch/commit/push/change-request/merge/deploy permissions. JSON authorization is only an upper bound and never grants provider rights.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-078",
-      "rule": "Every job declares machine result, HUMAN-readable result, evidence root and audit root before execution. The agent must not choose ad-hoc return locations."
+      "rule": "Every job declares machine result, HUMAN-readable result, evidence root and audit root before execution. The agent must not choose ad-hoc return locations.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-079",
-      "rule": "The canonical job JSON is authoritative and immutable after dispatch. Any scope, role, mandatory-skill or authorization expansion requires a new governed job/dispatch."
+      "rule": "The canonical job JSON is authoritative and immutable after dispatch. Any scope, role, mandatory-skill or authorization expansion requires a new governed job/dispatch.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-080",
-      "rule": "Every canonical job has a MASTER-generated HUMAN-readable inbox/{jobId}.md projection whose blob SHA is pinned by the JSON contract and whose content may not expand the JSON contract."
+      "rule": "Every canonical job has a MASTER-generated HUMAN-readable inbox/{jobId}.md projection whose blob SHA is pinned by the JSON contract and whose content may not expand the JSON contract.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-081",
-      "rule": "A job may become READY or enter inbox/index.json only after MASTER writes and provider-readbacks both job JSON and job Markdown and validates their binding."
+      "rule": "A job may become READY or enter inbox/index.json only after MASTER writes and provider-readbacks both job JSON and job Markdown and validates their binding.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-082",
-      "rule": "Rework never reuses a historical jobId. A new attempt receives a new jobId and may reference the superseded job through lineage."
+      "rule": "Rework never reuses a historical jobId. A new attempt receives a new jobId and may reference the superseded job through lineage.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-083",
-      "rule": "An agent must stop when mandate, identity revision, job supersession, resource lease, allowed write scope or required provider rights no longer satisfy the explicit job contract."
+      "rule": "An agent must stop when mandate, identity revision, job supersession, resource lease, allowed write scope or required provider rights no longer satisfy the explicit job contract.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-084",
-      "rule": "The assigned agent may not change its job role, substitute a mandatory skill, delegate the job, mutate the job contract or expand its own authorization."
+      "rule": "The assigned agent may not change its job role, substitute a mandatory skill, delegate the job, mutate the job contract or expand its own authorization.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-085",
-      "rule": "MASTER acceptance evaluates the explicit verificationContract from the job; result submission and agent self-check never constitute acceptance."
+      "rule": "MASTER acceptance evaluates the explicit verificationContract from the job; result submission and agent self-check never constitute acceptance.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-086",
-      "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden."
+      "rule": "MASTER may bind a job skill only from an authoritative project/package artifact or other HUMAN-approved immutable source. The job embeds the skill description/instructions and pins source ref/blob; invented skill provenance is forbidden.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-087",
-      "rule": "Every embedded SAFOR module must have exactly one valid recovery profile in module-self-healing-model.json; unprofiled or multiply-profiled modules invalidate the distribution."
+      "rule": "Every embedded SAFOR module must have exactly one valid recovery profile in module-self-healing-model.json; unprofiled or multiply-profiled modules invalidate the distribution.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-088",
-      "rule": "Each embedded module and integrity-manifest entry must reference its exact recovery profile ID."
+      "rule": "Each embedded module and integrity-manifest entry must reference its exact recovery profile ID.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-089",
-      "rule": "A module repair action is executable only when allowed by the failure class, the resolved module recovery profile, current SAFOR authority/policy and actual provider rights."
+      "rule": "A module repair action is executable only when allowed by the failure class, the resolved module recovery profile, current SAFOR authority/policy and actual provider rights.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-090",
-      "rule": "IMMUTABLE_VALIDATE_ONLY modules may never be semantically rewritten by automatic recovery; SAFOR may only verify/reload the expected pinned blob or stop/escalate."
+      "rule": "IMMUTABLE_VALIDATE_ONLY modules may never be semantically rewritten by automatic recovery; SAFOR may only verify/reload the expected pinned blob or stop/escalate.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-091",
-      "rule": "RESTORE_FROM_VERIFIED_SOURCE modules may be restored only from a source whose expected version/blob identity is independently verified."
+      "rule": "RESTORE_FROM_VERIFIED_SOURCE modules may be restored only from a source whose expected version/blob identity is independently verified.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-092",
-      "rule": "REGENERATE_DERIVED_ONLY modules may mutate only declared derived artifacts and must preserve their authoritative source unchanged."
+      "rule": "REGENERATE_DERIVED_ONLY modules may mutate only declared derived artifacts and must preserve their authoritative source unchanged.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-093",
-      "rule": "REBIND_EXTERNAL_CAPABILITY recovery may refresh/reobserve provider capabilities but must never grant, fabricate or elevate provider permissions."
+      "rule": "REBIND_EXTERNAL_CAPABILITY recovery may refresh/reobserve provider capabilities but must never grant, fabricate or elevate provider permissions.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-094",
-      "rule": "Unknown external effects always reconcile before retry or lease/resource reuse, regardless of the module profile."
+      "rule": "Unknown external effects always reconcile before retry or lease/resource reuse, regardless of the module profile.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-095",
-      "rule": "Every module repair persists moduleKey, moduleProfileId, authority type, repairability, pre-state references, selected repair action and verification evidence."
+      "rule": "Every module repair persists moduleKey, moduleProfileId, authority type, repairability, pre-state references, selected repair action and verification evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-096",
-      "rule": "Repair success requires authoritative readback plus the module-profile success predicate; assistant narration or intended action is never evidence of recovery."
+      "rule": "Repair success requires authoritative readback plus the module-profile success predicate; assistant narration or intended action is never evidence of recovery.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-097",
-      "rule": "The self-healing model, module-self-healing model and recovery-profile schema are fail-closed recovery controls. If their expected integrity cannot be proven, automatic recovery stops."
+      "rule": "The self-healing model, module-self-healing model and recovery-profile schema are fail-closed recovery controls. If their expected integrity cannot be proven, automatic recovery stops.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-098",
-      "rule": "Canonical agent job recovery may regenerate job.md or other declared projections from valid job.json, but may never automatically rewrite a dispatched authoritative job.json to change role, skill, scope, input or authorization semantics."
+      "rule": "Canonical agent job recovery may regenerate job.md or other declared projections from valid job.json, but may never automatically rewrite a dispatched authoritative job.json to change role, skill, scope, input or authorization semantics.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-099",
-      "rule": "Factory and Operating Model recovery may restore pinned package blobs and revalidate bindings, but may never automatically alter workflow semantics, decision rights, mandates or separation-of-duties policy."
+      "rule": "Factory and Operating Model recovery may restore pinned package blobs and revalidate bindings, but may never automatically alter workflow semantics, decision rights, mandates or separation-of-duties policy.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-100",
-      "rule": "Schema recovery may restore the expected schema and revalidate subjects; an authoritative subject must never be automatically coerced merely to satisfy schema validation."
+      "rule": "Schema recovery may restore the expected schema and revalidate subjects; an authoritative subject must never be automatically coerced merely to satisfy schema validation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-101",
-      "rule": "Scheduler recovery may rebuild derived READY/capacity/wave views, but resource lease expiry or uncertain job effects require reconciliation before reassignment."
+      "rule": "Scheduler recovery may rebuild derived READY/capacity/wave views, but resource lease expiry or uncertain job effects require reconciliation before reassignment.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-102",
-      "rule": "Provider-adapter recovery may retry idempotent reads, refresh revisions and rebind observed capabilities; missing required rights remain a blocker or HUMAN escalation."
+      "rule": "Provider-adapter recovery may retry idempotent reads, refresh revisions and rebind observed capabilities; missing required rights remain a blocker or HUMAN escalation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-103",
-      "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS."
+      "rule": "Conformance recovery is validate-only: failed or missing required assertions may never be automatically marked PASS.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-104",
-      "rule": "K00 module-recovery preflight runs before provider/project actions. Failure to prove exact module-profile coverage or recovery-control integrity causes STOP before external work."
+      "rule": "K00 module-recovery preflight runs before provider/project actions. Failure to prove exact module-profile coverage or recovery-control integrity causes STOP before external work.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-105",
-      "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself."
+      "rule": "Runtime self-healing is unavailable until K00 passes; SAFOR must never use an unverified recovery-control layer to repair itself.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-106",
-      "rule": "Every proposed HUMAN question or approval is evaluated by human-decision-gate-model.json before presentation and records exactly one legitimate interaction reason."
+      "rule": "Every proposed HUMAN question or approval is evaluated by human-decision-gate-model.json before presentation and records exactly one legitimate interaction reason.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-107",
-      "rule": "High HUMAN cognitive load is permitted in DISCOVERY when required to acquire non-derivable HUMAN intent, context, priorities or value judgments; technical/system-generated load remains minimized."
+      "rule": "High HUMAN cognitive load is permitted in DISCOVERY when required to acquire non-derivable HUMAN intent, context, priorities or value judgments; technical/system-generated load remains minimized.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-108",
-      "rule": "After PLAN_APPROVAL, default HUMAN load is LOW or VERY_LOW. Temporary escalation requires an explicit legitimate reason such as scope/authority change, material risk, irreversible action, goal conflict, recovery escalation or outcome judgment."
+      "rule": "After PLAN_APPROVAL, default HUMAN load is LOW or VERY_LOW. Temporary escalation requires an explicit legitimate reason such as scope/authority change, material risk, irreversible action, goal conflict, recovery escalation or outcome judgment.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-109",
-      "rule": "A HUMAN question is forbidden when its answer can be safely derived from approved state, policy and authoritative evidence."
+      "rule": "A HUMAN question is forbidden when its answer can be safely derived from approved state, policy and authoritative evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-110",
-      "rule": "An unchanged, unrevoked prior HUMAN decision with the same scope and materially unchanged bound inputs is reused and must not be requested again."
+      "rule": "An unchanged, unrevoked prior HUMAN decision with the same scope and materially unchanged bound inputs is reused and must not be requested again.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-111",
-      "rule": "Scheduling, deterministic agent selection, job IDs, Git branch naming, resource leases, dispatch waves, readbacks, evidence collection, internal transitions and recovery-profile selection must not be delegated to HUMAN."
+      "rule": "Scheduling, deterministic agent selection, job IDs, Git branch naming, resource leases, dispatch waves, readbacks, evidence collection, internal transitions and recovery-profile selection must not be delegated to HUMAN.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-112",
-      "rule": "Normal creation-profile binding does not require a second HUMAN approval when Factory, Operating Model and Provider Adapter are deterministically resolved from the approved creation type and unchanged pinned versions."
+      "rule": "Normal creation-profile binding does not require a second HUMAN approval when Factory, Operating Model and Provider Adapter are deterministically resolved from the approved creation type and unchanged pinned versions.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-113",
-      "rule": "Every HUMAN-facing turn contains at most one new decision context; multiple technical sub-decisions are consolidated by MASTER before presentation."
+      "rule": "Every HUMAN-facing turn contains at most one new decision context; multiple technical sub-decisions are consolidated by MASTER before presentation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-114",
-      "rule": "Default SUMMARY communication hides technical IDs and internal terms and explains what happened, project meaning, whether HUMAN action is required and what happens next."
+      "rule": "Default SUMMARY communication hides technical IDs and internal terms and explains what happened, project meaning, whether HUMAN action is required and what happens next.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-115",
-      "rule": "Primary-action labels are domain-specific and dynamic where possible; internal action IDs or orchestration terms are never default HUMAN labels. Fallback label is 'Weiter'."
+      "rule": "Primary-action labels are domain-specific and dynamic where possible; internal action IDs or orchestration terms are never default HUMAN labels. Fallback label is 'Weiter'.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-116",
-      "rule": "The heuristic cognitive-load score is an internal governance heuristic, not a psychometric measurement, and may not be presented as a validated scientific measure."
+      "rule": "The heuristic cognitive-load score is an internal governance heuristic, not a psychometric measurement, and may not be presented as a validated scientific measure.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-117",
-      "rule": "DISCOVERY may ask deep sequential questions, but still only one decision context per turn and only for information SAFOR cannot safely derive."
+      "rule": "DISCOVERY may ask deep sequential questions, but still only one decision context per turn and only for information SAFOR cannot safely derive.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-118",
-      "rule": "Execution and Recovery communicate by exception: successful authorized internal operations do not require HUMAN confirmations merely to acknowledge technical state transitions."
+      "rule": "Execution and Recovery communicate by exception: successful authorized internal operations do not require HUMAN confirmations merely to acknowledge technical state transitions.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-119",
-      "rule": "Existing active execution mandates and persistent agent identities are reused within unchanged scope rather than repeatedly reauthorized."
+      "rule": "Existing active execution mandates and persistent agent identities are reused within unchanged scope rather than repeatedly reauthorized.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-120",
-      "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored."
+      "rule": "If the HUMAN Decision Gate or Cognitive Load Policy cannot be validated, SAFOR must not issue nonessential HUMAN questions; it stops or uses the minimum safe blocker message until interaction governance is restored.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-121",
-      "rule": "Every SAFOR-generated HUMAN-facing response contains exactly one valid interaction menu as its terminal surface."
+      "rule": "Every SAFOR-generated HUMAN-facing response contains exactly one valid interaction menu as its terminal surface.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-234"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-122",
-      "rule": "No SAFOR-visible text, status, evidence, explanation or other content may be rendered after the terminal interaction menu."
+      "rule": "No SAFOR-visible text, status, evidence, explanation or other content may be rendered after the terminal interaction menu.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-123",
-      "rule": "A terminal interaction menu is required for normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses."
+      "rule": "A terminal interaction menu is required for normal, progress, decision, blocker, warning, recovery, status, help, pause, stop, outcome and completion responses.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-234"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-124",
-      "rule": "Presence of the terminal menu does not imply a HUMAN decision; Decision Gate semantics remain authoritative and non-decision menus may contain only valid navigation/control actions."
+      "rule": "Presence of the terminal menu does not imply a HUMAN decision; Decision Gate semantics remain authoritative and non-decision menus may contain only valid navigation/control actions.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-125",
-      "rule": "If contextual terminal-menu derivation fails, SAFOR may regenerate only a safe derived fallback menu from authoritative state and actual capabilities; it must not invent authority, scope, approval or state transitions to create menu options."
+      "rule": "If contextual terminal-menu derivation fails, SAFOR may regenerate only a safe derived fallback menu from authoritative state and actual capabilities; it must not invent authority, scope, approval or state transitions to create menu options.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-126",
-      "rule": "Within the migrated executable transition slice, no HUMAN, AGENT, provider or LLM output may directly mutate authoritative SAFOR state; it must first enter as a typed event/evidence input."
+      "rule": "Within the migrated executable transition slice, no HUMAN, AGENT, provider or LLM output may directly mutate authoritative SAFOR state; it must first enter as a typed event/evidence input.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-127",
-      "rule": "The deterministic reducer is a pure function over a pinned projection set, typed event and pinned models; provider I/O, LLM invocation, wall-clock reads, randomness and arbitrary JSON code execution are forbidden inside the reducer."
+      "rule": "The deterministic reducer is a pure function over a pinned projection set, typed event and pinned models; provider I/O, LLM invocation, wall-clock reads, randomness and arbitrary JSON code execution are forbidden inside the reducer.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-128",
-      "rule": "Transition candidates are selected from the pinned registry in canonical priority/order; more than one applicable authoritative transition is a fail-closed control failure."
+      "rule": "Transition candidates are selected from the pinned registry in canonical priority/order; more than one applicable authoritative transition is a fail-closed control failure.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-129",
-      "rule": "Event replay order is determined by contiguous event sequence, not by timestamps; a duplicate identical event is idempotent and a divergent duplicate event is an integrity failure."
+      "rule": "Event replay order is determined by contiguous event sequence, not by timestamps; a duplicate identical event is idempotent and a divergent duplicate event is an integrity failure.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-130",
-      "rule": "External mutations are represented as effect intents and are never treated as completed until a later provider outcome/readback event provides authoritative evidence."
+      "rule": "External mutations are represented as effect intents and are never treated as completed until a later provider outcome/readback event provides authoritative evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-131",
-      "rule": "An unknown external mutation outcome deterministically transitions Control State to RECONCILE_REQUIRED/RECOVERING and emits provider readback intent before any retry."
+      "rule": "An unknown external mutation outcome deterministically transitions Control State to RECONCILE_REQUIRED/RECOVERING and emits provider readback intent before any retry.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-132",
-      "rule": "Canonical state hashing excludes only the stateHash field itself; identical canonical inputs and pinned model revision must yield the same logical output and state hash."
+      "rule": "Canonical state hashing excludes only the stateHash field itself; identical canonical inputs and pinned model revision must yield the same logical output and state hash.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-133",
-      "rule": "Replay from a verified genesis snapshot through the ordered event sequence must reproduce the stored projection-set state hash or fail closed with replay divergence."
+      "rule": "Replay from a verified genesis snapshot through the ordered event sequence must reproduce the stored projection-set state hash or fail closed with replay divergence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-134",
-      "rule": "Migration of pre-0.11 projects starts from a verified MIGRATION_GENESIS_SNAPSHOT; SAFOR must never fabricate historical events."
+      "rule": "Migration of pre-0.11 projects starts from a verified MIGRATION_GENESIS_SNAPSHOT; SAFOR must never fabricate historical events.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-135",
-      "rule": "SAFOR 0.11.0-rc.1 claims determinism only for transitions explicitly listed by the deterministic-control model; non-migrated governance rules remain normative but non-executable until migrated."
+      "rule": "SAFOR 0.11.0-rc.1 claims determinism only for transitions explicitly listed by the deterministic-control model; non-migrated governance rules remain normative but non-executable until migrated.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-136",
-      "rule": "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance may be evaluated."
+      "rule": "Every executable Work Item must have exactly one approved ACTIVE Acceptance Contract before deterministic acceptance may be evaluated.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-137",
-      "rule": "Every approved acceptance criterion must be preserved in the Acceptance Contract and reference at least one typed EVIDENCE, REVIEW or AUTHORITY requirement."
+      "rule": "Every approved acceptance criterion must be preserved in the Acceptance Contract and reference at least one typed EVIDENCE, REVIEW or AUTHORITY requirement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-138",
-      "rule": "A free-text or qualitative criterion may never be directly converted to PASS by an LLM; it must be satisfied through explicit typed evidence, review or authority decision."
+      "rule": "A free-text or qualitative criterion may never be directly converted to PASS by an LLM; it must be satisfied through explicit typed evidence, review or authority decision.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-139",
-      "rule": "A Work Item may enter ACCEPTED only through WORK_ITEM_ACCEPTED with a hash-valid active contract and all typed requirements satisfied."
+      "rule": "A Work Item may enter ACCEPTED only through WORK_ITEM_ACCEPTED with a hash-valid active contract and all typed requirements satisfied.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-140",
-      "rule": "Evidence used for acceptance must match the Work Item subject and declared evidence type; PINNED requirements require a concrete revisionRef."
+      "rule": "Evidence used for acceptance must match the Work Item subject and declared evidence type; PINNED requirements require a concrete revisionRef.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-141",
-      "rule": "When independent review is required, performer and approving reviewer must differ; self-review cannot satisfy the Acceptance Contract."
+      "rule": "When independent review is required, performer and approving reviewer must differ; self-review cannot satisfy the Acceptance Contract.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-142",
-      "rule": "Agent acceptanceSelfCheck is advisory and can never substitute for required independent review, provider evidence or authority decision."
+      "rule": "Agent acceptanceSelfCheck is advisory and can never substitute for required independent review, provider evidence or authority decision.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-143",
-      "rule": "A recorded REJECTED decision for a required authority blocks acceptance for the current Acceptance Contract revision."
+      "rule": "A recorded REJECTED decision for a required authority blocks acceptance for the current Acceptance Contract revision.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-144",
-      "rule": "An approved Acceptance Contract is immutable. Material changes require a new governed contract revision and approval; Self-Healing may not relax requirements."
+      "rule": "An approved Acceptance Contract is immutable. Material changes require a new governed contract revision and approval; Self-Healing may not relax requirements.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-145",
-      "rule": "Acceptance ledger records are replay-derived pinned copies of source artifacts/events and must not become an independent writable source of business authority."
+      "rule": "Acceptance ledger records are replay-derived pinned copies of source artifacts/events and must not become an independent writable source of business authority.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-146",
-      "rule": "Duplicate acceptance record identities under different events must not be appended to the deterministic acceptance ledger."
+      "rule": "Duplicate acceptance record identities under different events must not be appended to the deterministic acceptance ledger.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-147",
-      "rule": "Work Item ACCEPTED and VALUE_SUPPORTED are distinct; deterministic acceptance does not establish business or reader outcome success."
+      "rule": "Work Item ACCEPTED and VALUE_SUPPORTED are distinct; deterministic acceptance does not establish business or reader outcome success.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-148",
-      "rule": "The SAFOR product repository and every package source are read-only sources and may never become an implicit project workspace."
+      "rule": "The SAFOR product repository and every package source are read-only sources and may never become an implicit project workspace.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-149",
-      "rule": "Every project binds exactly one HUMAN-controlled project workspace of type REMOTE_GIT or LOCAL_GIT before project mutation."
+      "rule": "Every project binds exactly one HUMAN-controlled project workspace of type REMOTE_GIT or LOCAL_GIT before project mutation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-150",
-      "rule": "REMOTE_GIT project artifacts reside only in the selected HUMAN repository; remote safor-memory contains control state and no Factory-produced domain work artifacts."
+      "rule": "REMOTE_GIT project artifacts reside only in the selected HUMAN repository; remote safor-memory contains control state and no Factory-produced domain work artifacts.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-151",
-      "rule": "LOCAL_GIT mutating execution requires proven local filesystem and Git repository/history/branch/commit capabilities."
+      "rule": "LOCAL_GIT mutating execution requires proven local filesystem and Git repository/history/branch/commit capabilities.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-152",
-      "rule": "For LOCAL_GIT, .safor/ is MASTER-only control state and is forbidden in worker write scopes."
+      "rule": "For LOCAL_GIT, .safor/ is MASTER-only control state and is forbidden in worker write scopes.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-153",
-      "rule": "Package access and project workspace are independent: entitlement cannot select or grant rights to a project workspace, and workspace ownership cannot grant package entitlement."
+      "rule": "Package access and project workspace are independent: entitlement cannot select or grant rights to a project workspace, and workspace ownership cannot grant package entitlement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-154",
-      "rule": "FREE_PUBLIC packages may resolve from the canonical public SAFOR repository only at an immutable provider revision/blob."
+      "rule": "FREE_PUBLIC packages may resolve from the canonical public SAFOR repository only at an immutable provider revision/blob.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-155",
-      "rule": "PAID_ENTITLEMENT_REQUIRED package model content must not be embedded in the public SAFOR Framework bundle."
+      "rule": "PAID_ENTITLEMENT_REQUIRED package model content must not be embedded in the public SAFOR Framework bundle.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-156",
-      "rule": "Paid package content may not resolve from PUBLIC_CANONICAL_REPOSITORY; it requires HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus verified entitlement."
+      "rule": "Paid package content may not resolve from PUBLIC_CANONICAL_REPOSITORY; it requires HUMAN_LOADED_PACKAGE or ENTITLED_PACKAGE_SOURCE plus verified entitlement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-157",
-      "rule": "A self-asserted entitlement or possession of package JSON is insufficient to satisfy paid package access."
+      "rule": "A self-asserted entitlement or possession of package JSON is insufficient to satisfy paid package access.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-158",
-      "rule": "Commercial entitlement never grants Operating Model authority, provider rights, execution mandate or project scope."
+      "rule": "Commercial entitlement never grants Operating Model authority, provider rights, execution mandate or project scope.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-159",
-      "rule": "Factory/Operating Model compatibility must be proven independently from commercial entitlement."
+      "rule": "Factory/Operating Model compatibility must be proven independently from commercial entitlement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-160",
-      "rule": "WEBSITE binds the declared FREE_PUBLIC Website Factory/Operating Model defaults unless the HUMAN explicitly supplies another compatible pair allowed by the Website profile."
+      "rule": "WEBSITE binds the declared FREE_PUBLIC Website Factory/Operating Model defaults unless the HUMAN explicitly supplies another compatible pair allowed by the Website profile.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-161",
-      "rule": "SOFTWARE_SAAS and BOOK are commercial creation profiles: both selected Factory and Operating Model must be PAID_ENTITLEMENT_REQUIRED and independently entitled before binding."
+      "rule": "SOFTWARE_SAAS and BOOK are commercial creation profiles: both selected Factory and Operating Model must be PAID_ENTITLEMENT_REQUIRED and independently entitled before binding.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-162",
-      "rule": "Project package snapshots are immutable binding evidence and never a discovery source that expands commercial access."
+      "rule": "Project package snapshots are immutable binding evidence and never a discovery source that expands commercial access.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-163",
-      "rule": "The public Framework bundle contains public package metadata but no paid Factory or paid Operating Model model content."
+      "rule": "The public Framework bundle contains public package metadata but no paid Factory or paid Operating Model model content.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-164",
-      "rule": "Pre-0.12 publicly disclosed prototype package content cannot be treated as confidential commercial distribution evidence."
+      "rule": "Pre-0.12 publicly disclosed prototype package content cannot be treated as confidential commercial distribution evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-165",
-      "rule": "Project/control data remain HUMAN-owned whether remote or local; SAFOR does not require project artifacts to be stored in an OpenAI- or SAFOR-owned repository."
+      "rule": "Project/control data remain HUMAN-owned whether remote or local; SAFOR does not require project artifacts to be stored in an OpenAI- or SAFOR-owned repository.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-166",
-      "rule": "Every selected Factory and Operating Model is represented as an independently loadable SAFOR_DOMAIN_PACKAGE JSON artifact."
+      "rule": "Every selected Factory and Operating Model is represented as an independently loadable SAFOR_DOMAIN_PACKAGE JSON artifact.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-167",
-      "rule": "A Creation Profile defines default Factory and Operating Model candidates but MUST NOT make either package non-replaceable."
+      "rule": "A Creation Profile defines default Factory and Operating Model candidates but MUST NOT make either package non-replaceable.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-168",
-      "rule": "Factory access and Operating Model access are evaluated independently for the actually selected package IDs and versions."
+      "rule": "Factory access and Operating Model access are evaluated independently for the actually selected package IDs and versions.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-169",
-      "rule": "A mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED pair is permitted only when the active Creation Profile allows mixed access and every paid package has verified entitlement."
+      "rule": "A mixed FREE_PUBLIC and PAID_ENTITLEMENT_REQUIRED pair is permitted only when the active Creation Profile allows mixed access and every paid package has verified entitlement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-170",
-      "rule": "Commercial entitlement evidence is external to SAFOR_DOMAIN_PACKAGE content; possession or modification of package JSON cannot self-authorize package use."
+      "rule": "Commercial entitlement evidence is external to SAFOR_DOMAIN_PACKAGE content; possession or modification of package JSON cannot self-authorize package use.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-171",
-      "rule": "Every SAFOR_DOMAIN_PACKAGE must pass declared-contract SHA-256 integrity verification before it may be bound."
+      "rule": "Every SAFOR_DOMAIN_PACKAGE must pass declared-contract SHA-256 integrity verification before it may be bound.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-172",
-      "rule": "Every selected domain package must explicitly support the active Framework version and Creation Type."
+      "rule": "Every selected domain package must explicitly support the active Framework version and Creation Type.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-173",
-      "rule": "Factory and Operating Model may be upgraded or replaced independently, but the resulting pair must pass capability, authority and declared counterpart compatibility checks."
+      "rule": "Factory and Operating Model may be upgraded or replaced independently, but the resulting pair must pass capability, authority and declared counterpart compatibility checks.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-174",
-      "rule": "Project bindings reference a materialized package selection and a COMPATIBLE package-compatibility decision before domain execution begins."
+      "rule": "Project bindings reference a materialized package selection and a COMPATIBLE package-compatibility decision before domain execution begins.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-175",
-      "rule": "The free WEBSITE starter path remains usable without commercial entitlement for its default Website Factory and Website Operating Model; SOFTWARE_SAAS is not part of the free starter."
+      "rule": "The free WEBSITE starter path remains usable without commercial entitlement for its default Website Factory and Website Operating Model; SOFTWARE_SAAS is not part of the free starter.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-176",
-      "rule": "WEBSITE and SOFTWARE_SAAS are distinct Creation Types with distinct default Factory/Operating Model identities and commercial policies."
+      "rule": "WEBSITE and SOFTWARE_SAAS are distinct Creation Types with distinct default Factory/Operating Model identities and commercial policies.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-177",
-      "rule": "The WEBSITE default pair is safor.factory.website-delivery + safor.om.website-team and both are FREE_PUBLIC."
+      "rule": "The WEBSITE default pair is safor.factory.website-delivery + safor.om.website-team and both are FREE_PUBLIC.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-178",
-      "rule": "The SOFTWARE_SAAS default pair is safor.factory.software-delivery + safor.om.saas-engineering and both require independently verified commercial entitlement."
+      "rule": "The SOFTWARE_SAAS default pair is safor.factory.software-delivery + safor.om.saas-engineering and both require independently verified commercial entitlement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-179",
-      "rule": "A SOFTWARE_SAAS Factory or Operating Model selection with FREE_PUBLIC access mode is invalid even if technical capability compatibility would otherwise pass."
+      "rule": "A SOFTWARE_SAAS Factory or Operating Model selection with FREE_PUBLIC access mode is invalid even if technical capability compatibility would otherwise pass.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-180",
-      "rule": "Historical publicly disclosed Software Factory/SaaS Operating Model versions are legacy bytes and MUST NOT be treated as the current protected commercial package source."
+      "rule": "Historical publicly disclosed Software Factory/SaaS Operating Model versions are legacy bytes and MUST NOT be treated as the current protected commercial package source.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-181",
-      "rule": "A paid package entitlement is usable only when status is ACTIVE and evaluatedAt lies within its validity interval."
+      "rule": "A paid package entitlement is usable only when status is ACTIVE and evaluatedAt lies within its validity interval.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-182",
-      "rule": "A paid entitlement must match the active HUMAN/organization subject, exact package/version grant and commercial-basis SKU; purchase evidence alone is not entitlement."
+      "rule": "A paid entitlement must match the active HUMAN/organization subject, exact package/version grant and commercial-basis SKU; purchase evidence alone is not entitlement.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-183",
-      "rule": "Entitlement issuer and entitlement verifier trust are supplied by explicit trusted configuration and MUST NOT be inferred from identities declared inside the entitlement record."
+      "rule": "Entitlement issuer and entitlement verifier trust are supplied by explicit trusted configuration and MUST NOT be inferred from identities declared inside the entitlement record.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-184",
-      "rule": "ENTITLED_PACKAGE_SOURCE requires external commercial delivery evidence before delivered package bytes may be used."
+      "rule": "ENTITLED_PACKAGE_SOURCE requires external commercial delivery evidence before delivered package bytes may be used.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-185",
-      "rule": "Commercial delivery evidence binds entitlementId, packageId, exact version and declared-contract artifact digest and must be valid at the explicit evaluation timestamp."
+      "rule": "Commercial delivery evidence binds entitlementId, packageId, exact version and declared-contract artifact digest and must be valid at the explicit evaluation timestamp.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-186",
-      "rule": "A delivery verifier must be explicitly trusted; self-declared delivery verification is insufficient."
+      "rule": "A delivery verifier must be explicitly trusted; self-declared delivery verification is insufficient.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-187",
-      "rule": "HUMAN_LOADED_PACKAGE may carry a licensed paid artifact without source delivery evidence, but it never bypasses entitlement status, subject, time, issuer or verifier checks."
+      "rule": "HUMAN_LOADED_PACKAGE may carry a licensed paid artifact without source delivery evidence, but it never bypasses entitlement status, subject, time, issuer or verifier checks.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-188",
-      "rule": "SAFOR domain distributions share one kernel but may embed different default Factory and Operating Model modules for WEBSITE_CREATION, SAAS_ENGINEERING and BOOK_CREATION."
+      "rule": "SAFOR domain distributions share one kernel but may embed different default Factory and Operating Model modules for WEBSITE_CREATION, SAAS_ENGINEERING and BOOK_CREATION.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-189",
-      "rule": "Loading a SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION preselects its domainId and creationType and MUST suppress redundant HUMAN creation-type selection."
+      "rule": "Loading a SAFOR_DOMAIN_FRAMEWORK_DISTRIBUTION preselects its domainId and creationType and MUST suppress redundant HUMAN creation-type selection.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-190",
-      "rule": "A domain distribution may initialize only when its embedded default Factory and Operating Model both support the distribution domain and pass bidirectional compatibility."
+      "rule": "A domain distribution may initialize only when its embedded default Factory and Operating Model both support the distribution domain and pass bidirectional compatibility.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-191",
-      "rule": "An embedded default Factory or Operating Model remains independently replaceable after initialization; embedding is a default binding, not permanent coupling."
+      "rule": "An embedded default Factory or Operating Model remains independently replaceable after initialization; embedding is a default binding, not permanent coupling.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-192",
-      "rule": "Every replacement Factory and Operating Model must explicitly support the active domainId; replacement may never change domain implicitly."
+      "rule": "Every replacement Factory and Operating Model must explicitly support the active domainId; replacement may never change domain implicitly.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-193",
-      "rule": "Factory/Operating Model compatibility is bidirectional: Factory counterpart constraints are checked against the Operating Model and Operating Model counterpart constraints are checked against the Factory."
+      "rule": "Factory/Operating Model compatibility is bidirectional: Factory counterpart constraints are checked against the Operating Model and Operating Model counterpart constraints are checked against the Factory.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-194",
-      "rule": "V2 domain packages carry packageFamily and package-family constraints are enforced independently from exact packageId so compatible Premium versions/families may replace defaults."
+      "rule": "V2 domain packages carry packageFamily and package-family constraints are enforced independently from exact packageId so compatible Premium versions/families may replace defaults.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-195",
-      "rule": "A Factory may restrict acceptable Operating Model package families and require capabilities, authorities, work-item types or artifact types from its counterpart."
+      "rule": "A Factory may restrict acceptable Operating Model package families and require capabilities, authorities, work-item types or artifact types from its counterpart.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-196",
-      "rule": "An Operating Model may restrict acceptable Factory package families and require capabilities, authorities, work-item types or artifact types from its counterpart."
+      "rule": "An Operating Model may restrict acceptable Factory package families and require capabilities, authorities, work-item types or artifact types from its counterpart.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-197",
-      "rule": "Cross-domain combinations such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model are invalid even when individual capabilities happen to overlap."
+      "rule": "Cross-domain combinations such as BOOK_CREATION Factory with SAAS_ENGINEERING Operating Model are invalid even when individual capabilities happen to overlap.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-198",
-      "rule": "PUBLIC_TEST_EVALUATION domain Frameworks may embed paid-mode prerelease test packages in the public repository solely for testing; they are not the protected commercial production package source."
+      "rule": "PUBLIC_TEST_EVALUATION domain Frameworks may embed paid-mode prerelease test packages in the public repository solely for testing; they are not the protected commercial production package source.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-199",
-      "rule": "Public visibility of a paid-mode test package or domain Framework never satisfies entitlement; possession remains non-authoritative for commercial access."
+      "rule": "Public visibility of a paid-mode test package or domain Framework never satisfies entitlement; possession remains non-authoritative for commercial access.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-200",
-      "rule": "Production catalog entries for paid SaaS and Book packages must remain ENTITLED_PACKAGE_SOURCE with no public model path even while public evaluation Frameworks exist."
+      "rule": "Production catalog entries for paid SaaS and Book packages must remain ENTITLED_PACKAGE_SOURCE with no public model path even while public evaluation Frameworks exist.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-201",
-      "rule": "The SAFOR platform exclusively owns HUMAN-visible response classification, verbosity, structure, progressive disclosure and menu rendering; Factory and Operating Model may supply domain facts, risks, evidence and legitimate decision requirements only."
+      "rule": "The SAFOR platform exclusively owns HUMAN-visible response classification, verbosity, structure, progressive disclosure and menu rendering; Factory and Operating Model may supply domain facts, risks, evidence and legitimate decision requirements only.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-202",
-      "rule": "Every HUMAN-visible output passes the platform response governor after domain fact collection and before rendering; a domain module presentation override is rejected."
+      "rule": "Every HUMAN-visible output passes the platform response governor after domain fact collection and before rendering; a domain module presentation override is rejected.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-203",
-      "rule": "Framework detection, technical comparison and safe reversible migration-plan drafting are internal SAFOR orchestration and do not create a HUMAN decision by themselves."
+      "rule": "Framework detection, technical comparison and safe reversible migration-plan drafting are internal SAFOR orchestration and do not create a HUMAN decision by themselves.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-204",
-      "rule": "A platform INFORMATIONAL_NOTICE contains at most two sentences and thirty words, hides technical identifiers and offers no choices or terminal menu."
+      "rule": "A platform INFORMATIONAL_NOTICE contains at most two sentences and thirty words, hides technical identifiers and offers no choices or terminal menu.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-205",
-      "rule": "Full technical analysis, evidence and migration mappings remain retained and auditable but are shown only when the HUMAN requests Details or material safety requires disclosure."
+      "rule": "Full technical analysis, evidence and migration mappings remain retained and auditable but are shown only when the HUMAN requests Details or material safety requires disclosure.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-206",
-      "rule": "A genuine HUMAN decision may be requested only after the Decision Gate identifies non-derivable scope, material alternative, authority, risk, irreversible action or goal conflict; response compression never suppresses such a decision."
+      "rule": "A genuine HUMAN decision may be requested only after the Decision Gate identifies non-derivable scope, material alternative, authority, risk, irreversible action or goal conflict; response compression never suppresses such a decision.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-207",
-      "rule": "A compatible ordinary LLM chat is the primary SAFOR execution surface; no customer-installed SAFOR runtime is required."
+      "rule": "A compatible ordinary LLM chat is the primary SAFOR execution surface; no customer-installed SAFOR runtime is required.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-208",
-      "rule": "Optional reference runtimes may validate or strengthen enforcement but may not be presented as an Endkunden prerequisite."
+      "rule": "Optional reference runtimes may validate or strengthen enforcement but may not be presented as an Endkunden prerequisite.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-209",
-      "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat."
+      "rule": "A chat-bound subagent may start or claim work only after explicit HUMAN GO in that same bound chat.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-210",
-      "rule": "Git push, polling, inbox creation, automation and host background events never count as HUMAN GO."
+      "rule": "Git push, polling, inbox creation, automation and host background events never count as HUMAN GO.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-211",
-      "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain."
+      "rule": "Agent chat identity is bound once and fails closed to REBIND_REQUIRED when history, identity or binding is uncertain.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-212",
-      "rule": "Every active chat agent has a stable agentId and a distinct memorable displayName; the name never replaces the ID."
+      "rule": "Every active chat agent has a stable agentId and a distinct memorable displayName; the name never replaces the ID.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-213",
-      "rule": "Agent normal reads are limited to identity, personal index, assigned job and explicitly referenced inputs."
+      "rule": "Agent normal reads are limited to identity, personal index, assigned job and explicitly referenced inputs.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-214",
-      "rule": "Every new dispatched Agent Job binds exact templates for result, error, clarification, capability mismatch and improvement proposal."
+      "rule": "Every new dispatched Agent Job binds exact templates for result, error, clarification, capability mismatch and improvement proposal.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-215",
-      "rule": "Unknown, mismatched or structurally invalid agent responses fail closed and cannot advance MASTER job state."
+      "rule": "Unknown, mismatched or structurally invalid agent responses fail closed and cannot advance MASTER job state.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-216",
-      "rule": "Product artifact writes and SAFOR control/response writes are separate authorization scopes."
+      "rule": "Product artifact writes and SAFOR control/response writes are separate authorization scopes.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-217",
-      "rule": "Subagent chat output is limited to one-line STARTED, SUBMITTED, BLOCKED or REBIND_REQUIRED operational status."
+      "rule": "Subagent chat output is limited to one-line STARTED, SUBMITTED, BLOCKED or REBIND_REQUIRED operational status.",
+      "status": "SUPERSEDED",
+      "supersededBy": [
+        "INV-235"
+      ],
+      "supersessionReason": "Replaced by the active v0.14 rc.3 contract."
     },
     {
       "id": "INV-218",
-      "rule": "Subagents do not conduct domain or governance discussions with the HUMAN; substantive questions and conflicts are Git responses to MASTER."
+      "rule": "Subagents do not conduct domain or governance discussions with the HUMAN; substantive questions and conflicts are Git responses to MASTER.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-219",
-      "rule": "MASTER is the only fachliche and organizational HUMAN interface for goals, plans, status, decisions, conflicts and integration."
+      "rule": "MASTER is the only fachliche and organizational HUMAN interface for goals, plans, status, decisions, conflicts and integration.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-220",
-      "rule": "Routine MASTER status uses compact versioned pointer indexes and loads deeper records only when referenced or required."
+      "rule": "Routine MASTER status uses compact versioned pointer indexes and loads deeper records only when referenced or required.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-221",
-      "rule": "The active Agent Registry includes every known active, paused, rebind-required or revoked project agent identity."
+      "rule": "The active Agent Registry includes every known active, paused, rebind-required or revoked project agent identity.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-222",
-      "rule": "A BLOCKED, FAILED, clarification or capability-mismatch response stops further mutating job work until MASTER resolution."
+      "rule": "A BLOCKED, FAILED, clarification or capability-mismatch response stops further mutating job work until MASTER resolution.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-223",
-      "rule": "Substantial job changes produce a superseding job or dispatch revision and preserve predecessor and decision references."
+      "rule": "Substantial job changes produce a superseding job or dispatch revision and preserve predecessor and decision references.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-224",
-      "rule": "Factory and Operating Model provide domain facts only; SAFOR platform owns HUMAN and subagent chat rendering contracts."
+      "rule": "Factory and Operating Model provide domain facts only; SAFOR platform owns HUMAN and subagent chat rendering contracts.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-225",
-      "rule": "WAITING_HUMAN_GO may advance only with structured, single-use, job-, agent-, identity-, binding- and dispatch-bound HUMAN-GO evidence."
+      "rule": "WAITING_HUMAN_GO may advance only with structured, single-use, job-, agent-, identity-, binding- and dispatch-bound HUMAN-GO evidence.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-226",
-      "rule": "Agent claim uses optimistic provider concurrency; duplicate or stale GO evidence cannot create a second claim or product mutation."
+      "rule": "Agent claim uses optimistic provider concurrency; duplicate or stale GO evidence cannot create a second claim or product mutation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-227",
-      "rule": "MASTER may report an expected response as received only after schema-valid, job-bound provider readback or an explicit decision waiving the expectation."
+      "rule": "MASTER may report an expected response as received only after schema-valid, job-bound provider readback or an explicit decision waiving the expectation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-228",
-      "rule": "A status index is CURRENT only when its deadline, source revisions and provider readback are verified; otherwise it is STALE or UNKNOWN."
+      "rule": "A status index is CURRENT only when its deadline, source revisions and provider readback are verified; otherwise it is STALE or UNKNOWN.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-229",
-      "rule": "A successful product mutation followed by failed response persistence enters reconciliation and must not repeat the known product mutation."
+      "rule": "A successful product mutation followed by failed response persistence enters reconciliation and must not repeat the known product mutation.",
+      "status": "ACTIVE"
     },
     {
       "id": "INV-230",
-      "rule": "Traceability reports design, implementation, automated tests, bundle integration, real Git E2E and cross-host evidence as separate dimensions."
+      "rule": "Traceability reports design, implementation, automated tests, bundle integration, real Git E2E and cross-host evidence as separate dimensions.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "INV-231",
+      "status": "ACTIVE",
+      "rule": "New v0.14 projects use exactly one canonical Creation Type from creation-type-vocabulary.json: WEBSITE, SOFTWARE_SAAS or BOOK. Legacy SOFTWARE_WEBSITE requires explicit contextual migration and is never silently rewritten."
+    },
+    {
+      "id": "INV-232",
+      "status": "ACTIVE",
+      "rule": "Control workspace policy is discriminated by project workspace type: REMOTE_GIT requires a separate writable HUMAN-controlled safor-memory; LOCAL_GIT requires a Git-tracked MASTER-only .safor/ root and does not require remote memory."
+    },
+    {
+      "id": "INV-233",
+      "status": "ACTIVE",
+      "rule": "A normal chat subagent may be activated only by explicit HUMAN GO in its bound chat. Git, polling, automation, another chat and background host events never activate it."
+    },
+    {
+      "id": "INV-234",
+      "status": "ACTIVE",
+      "rule": "Informational HUMAN notices contain no menu. Interactive checkpoints and genuine decisions contain exactly one terminal menu and no SAFOR-visible content after it."
+    },
+    {
+      "id": "INV-235",
+      "status": "ACTIVE",
+      "rule": "The canonical fail-closed identity status for a chat that cannot prove its binding is REIDENTIFICATION_REQUIRED."
+    },
+    {
+      "id": "INV-236",
+      "status": "ACTIVE",
+      "rule": "When a control-response write is unavailable, an agent may emit one local BLOCKED status with persistence.state=FAILED and detailsRef=null; it must not invent a Git reference or repeat an already verified product commit."
+    },
+    {
+      "id": "INV-237",
+      "status": "ACTIVE",
+      "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap against the expected state revision, provider readback and persisted activation consumption. In-memory consumption alone is never authoritative."
     }
   ],
   "evidencePolicy": {
@@ -2309,7 +2615,7 @@
     ]
   },
   "agentActivationProtocol": {
-    "modelRef": "agent-bootstrap-model.json",
+    "modelRef": "agent-activation-model.json",
     "mode": "HUMAN_GO_ONLY",
     "acceptedCommand": "GO",
     "gitEventWakeupForbidden": true,
@@ -2319,7 +2625,7 @@
   },
   "agentResponseProtocol": {
     "modelRef": "agent-response-contract-model.json",
-    "templateCatalogRef": "agent-response-templates.json",
+    "templateCatalogRef": "agent-response-contract-model.json#responseTypes",
     "schemaRef": "schemas/agent-response.schema.json",
     "requiredTypes": [
       "JOB_RESULT",
@@ -2331,14 +2637,14 @@
     "productAndControlWritesSeparatelyAuthorized": true
   },
   "agentChatProtocol": {
-    "modelRef": "agent-chat-contract-model.json",
-    "schemaRef": "schemas/agent-chat-status.schema.json",
+    "modelRef": "agent-communication-model.json",
+    "schemaRef": "schemas/agent-chat-output.schema.json",
     "mode": "MINIMAL_STATUS_ONLY",
     "masterOnlyHumanDomainInterface": true
   },
   "masterStatusProtocol": {
-    "modelRef": "master-status-index-model.json",
-    "schemaRef": "schemas/master-status-index.schema.json",
+    "modelRef": "master-status-model.json",
+    "schemaRef": "schemas/project-status-index.schema.json",
     "normalReadMode": "COMPACT_POINTER_INDEX",
     "globalFullScanForbiddenForRoutineStatus": true
   },
@@ -2352,5 +2658,16 @@
     "masterStatusModelRef": "master-status-model.json",
     "migrationModelRef": "migration-model.json",
     "executionAttemptModelRef": "execution-attempt-model.json"
+  },
+  "creationTypeVocabularyRef": "creation-type-vocabulary.json",
+  "controlWorkspacePolicyRef": "repository-policy.json#controlWorkspacePolicy",
+  "invariantPolicy": {
+    "statuses": [
+      "ACTIVE",
+      "SUPERSEDED",
+      "LEGACY_ONLY"
+    ],
+    "executionRule": "Only ACTIVE invariants participate in current v0.14 execution.",
+    "supersessionRule": "SUPERSEDED invariants remain immutable history and require supersededBy references."
   }
 }

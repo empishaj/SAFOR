@@ -1,4 +1,4 @@
-# HUMAN Notice Conformance – SAFOR 0.14.0-rc.2
+# HUMAN Notice Conformance – SAFOR 0.14.0-rc.3
 
 ## Scope
 

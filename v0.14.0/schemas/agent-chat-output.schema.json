@@ -16,20 +16,153 @@
     "detailsRef",
     "text",
     "terminal",
-    "containsDomainDetail"
+    "containsDomainDetail",
+    "persistence"
   ],
   "properties": {
-    "format": {"const": "SAFOR_AGENT_CHAT_OUTPUT"},
-    "schemaVersion": {"const": "0.14.0"},
-    "status": {"enum": ["READY", "STARTED", "SUBMITTED", "BLOCKED", "REIDENTIFICATION_REQUIRED"]},
-    "projectId": {"type": "string", "minLength": 1},
-    "agentId": {"type": "string", "minLength": 3},
-    "displayName": {"type": "string", "minLength": 3},
-    "jobKey": {"type": ["string", "null"]},
-    "targetBranch": {"type": ["string", "null"]},
-    "detailsRef": {"type": ["string", "null"]},
-    "text": {"type": "string", "minLength": 1, "maxLength": 360, "pattern": "^[^\\n\\r]+$"},
-    "terminal": {"type": "boolean"},
-    "containsDomainDetail": {"const": false}
-  }
+    "format": {
+      "const": "SAFOR_AGENT_CHAT_OUTPUT"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "status": {
+      "enum": [
+        "READY",
+        "STARTED",
+        "SUBMITTED",
+        "BLOCKED",
+        "REIDENTIFICATION_REQUIRED"
+      ]
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "displayName": {
+      "type": "string",
+      "minLength": 3
+    },
+    "jobKey": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "targetBranch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "detailsRef": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 360,
+      "pattern": "^[^\\n\\r]+$"
+    },
+    "terminal": {
+      "type": "boolean"
+    },
+    "containsDomainDetail": {
+      "const": false
+    },
+    "persistence": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "target",
+        "reasonCode",
+        "authoritativeResponsePersisted",
+        "attemptId",
+        "phase"
+      ],
+      "properties": {
+        "state": {
+          "const": "FAILED"
+        },
+        "target": {
+          "const": "CONTROL_REPOSITORY"
+        },
+        "reasonCode": {
+          "type": "string",
+          "minLength": 1
+        },
+        "authoritativeResponsePersisted": {
+          "const": false
+        },
+        "attemptId": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phase": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "BLOCKED"
+          },
+          "detailsRef": {
+            "type": "null"
+          }
+        },
+        "required": [
+          "status",
+          "detailsRef"
+        ]
+      },
+      "then": {
+        "properties": {
+          "persistence": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "persistence"
+        ]
+      }
+    },
+    {
+      "if": {
+        "not": {
+          "properties": {
+            "status": {
+              "const": "BLOCKED"
+            }
+          },
+          "required": [
+            "status"
+          ]
+        }
+      },
+      "then": {
+        "properties": {
+          "persistence": {
+            "type": "null"
+          }
+        }
+      }
+    }
+  ]
 }

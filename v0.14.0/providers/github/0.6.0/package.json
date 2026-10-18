@@ -140,6 +140,21 @@
         "fallback": "latest_default_branch_commit_at",
         "sort": "lastActivityAt DESC"
       }
+    },
+    "agentClaimProtocol": {
+      "requiredOperations": [
+        "READ_JOB_STATE_AT_PINNED_REVISION",
+        "WRITE_JOB_STATE_WITH_EXPECTED_REVISION",
+        "READ_BACK_COMMITTED_JOB_STATE"
+      ],
+      "successRequires": [
+        "COMPARE_AND_SWAP_SUCCEEDED",
+        "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
+        "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
+        "OBSERVED_ACTIVATION_ID_MATCHES"
+      ],
+      "onCasConflict": "RECONCILE_REQUIRED",
+      "inMemoryStateNeverAuthoritative": true
     }
   }
 }

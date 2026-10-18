@@ -29,7 +29,7 @@ class PlatformResponseGovernorTests(unittest.TestCase):
                 "evidenceRefs": ["git://framework/blob"],
             },
             "internalDetails": {
-                "version": "0.14.0-rc.2",
+                "version": "0.14.0-rc.3",
                 "blob": "deadbeef",
                 "factory": "safor.factory.website-delivery@1.1.0",
             },
@@ -53,7 +53,7 @@ class PlatformResponseGovernorTests(unittest.TestCase):
     def test_internal_metadata_is_retained_but_not_exposed(self):
         response = govern_platform_notice(self.framework_event())
         visible = " ".join(item["text"] for item in response["content"])
-        self.assertNotIn("0.14.0-rc.2", visible)
+        self.assertNotIn("0.14.0-rc.3", visible)
         self.assertNotIn("deadbeef", visible)
         self.assertNotIn("safor.factory", visible)
         self.assertTrue(response["governance"]["detailsAvailable"])

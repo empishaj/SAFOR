@@ -77,15 +77,15 @@ def validate_human_go_evidence(
             raise GoEvidenceValidationError(f"GO_EVIDENCE_BINDING_MISMATCH:{field}")
 
 
-def atomically_observe_go_and_claim(
+def prepare_go_claim(
     *,
     job_state: Mapping[str, Any],
     go_evidence: Mapping[str, Any],
     expected_state_revision: int,
-    consumed_activation_ids: MutableSet[str],
+    consumed_activation_ids: set[str] | frozenset[str] | None,
     go_evidence_ref: Mapping[str, Any],
 ) -> dict[str, Any]:
-    """Return the only safe claimed state; provider compare-and-swap remains required."""
+    """Prepare a non-authoritative provider CAS intent; do not consume GO yet."""
     state = deepcopy(dict(_mapping(job_state, "jobState")))
     if state.get("format") != "SAFOR_AGENT_JOB_STATE":
         raise GoEvidenceValidationError("JOB_STATE_FORMAT_INVALID")
@@ -106,35 +106,84 @@ def atomically_observe_go_and_claim(
     validate_human_go_evidence(
         go_evidence,
         expected=expected,
-        consumed_activation_ids=set(consumed_activation_ids),
+        consumed_activation_ids=set(consumed_activation_ids or ()),
     )
     for field in ("repository", "ref", "path", "blobSha"):
         _nonempty(go_evidence_ref.get(field), f"GO_EVIDENCE_REF_{field.upper()}_MISSING")
     activation_id = str(go_evidence["activationId"])
-    consumed_activation_ids.add(activation_id)
-    state["revision"] = expected_state_revision + 1
-    state["lifecycleStatus"] = "CLAIMED"
-    state["goEvidenceRef"] = dict(go_evidence_ref)
-    state["consumedActivationIds"] = sorted(
-        set(state.get("consumedActivationIds") or ()) | {activation_id}
-    )
-    state.setdefault("transitionHistory", []).extend(
+    proposed = deepcopy(state)
+    proposed["revision"] = expected_state_revision + 1
+    proposed["lifecycleStatus"] = "CLAIMED"
+    proposed["claimConfirmationStatus"] = "PENDING_PROVIDER_CAS_READBACK"
+    proposed["goEvidenceRef"] = dict(go_evidence_ref)
+    proposed.setdefault("transitionHistory", []).extend(
         [
-            {
-                "from": "WAITING_HUMAN_GO",
-                "to": "GO_OBSERVED",
-                "at": go_evidence["observedAt"],
-                "actorId": go_evidence["agentId"],
-                "evidenceRefs": [str(go_evidence_ref["path"])],
-            },
-            {
-                "from": "GO_OBSERVED",
-                "to": "CLAIMED",
-                "at": go_evidence["observedAt"],
-                "actorId": go_evidence["agentId"],
-                "evidenceRefs": [str(go_evidence_ref["path"])],
-            },
+            {"from": "WAITING_HUMAN_GO", "to": "GO_OBSERVED", "at": go_evidence["observedAt"], "actorId": go_evidence["agentId"], "evidenceRefs": [str(go_evidence_ref["path"])]},
+            {"from": "GO_OBSERVED", "to": "CLAIMED", "at": go_evidence["observedAt"], "actorId": go_evidence["agentId"], "evidenceRefs": [str(go_evidence_ref["path"])]},
         ]
     )
-    state["updatedAt"] = go_evidence["observedAt"]
+    proposed["updatedAt"] = go_evidence["observedAt"]
+    return {
+        "format": "SAFOR_GO_CLAIM_INTENT",
+        "schemaVersion": "0.14.0",
+        "authoritative": False,
+        "activationId": activation_id,
+        "expectedRevision": expected_state_revision,
+        "proposedRevision": expected_state_revision + 1,
+        "requiredProviderSequence": ["CAS_COMMIT_EXPECTED_REVISION", "PROVIDER_READBACK", "PERSIST_ACTIVATION_CONSUMPTION"],
+        "proposedState": proposed,
+    }
+
+
+def confirm_go_claim_after_provider_readback(
+    *,
+    claim_intent: Mapping[str, Any],
+    provider_readback: Mapping[str, Any],
+    consumed_activation_ids: MutableSet[str],
+) -> dict[str, Any]:
+    """Confirm authority only after provider CAS and readback prove the claim."""
+    intent = _mapping(claim_intent, "claimIntent")
+    readback = _mapping(provider_readback, "providerReadback")
+    if intent.get("format") != "SAFOR_GO_CLAIM_INTENT" or intent.get("authoritative") is not False:
+        raise GoEvidenceValidationError("GO_CLAIM_INTENT_INVALID")
+    activation_id = _nonempty(intent.get("activationId"), "GO_ACTIVATION_ID_MISSING")
+    if activation_id in consumed_activation_ids:
+        raise GoEvidenceValidationError("GO_EVIDENCE_ALREADY_CONSUMED")
+    if readback.get("casSucceeded") is not True:
+        raise GoEvidenceValidationError("PROVIDER_CAS_NOT_CONFIRMED")
+    if readback.get("readbackVerified") is not True:
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_READBACK_UNVERIFIED")
+    if readback.get("observedRevision") != intent.get("proposedRevision"):
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_REVISION_MISMATCH")
+    if readback.get("observedLifecycleStatus") != "CLAIMED":
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_STATUS_MISMATCH")
+    if readback.get("observedActivationId") != activation_id:
+        raise GoEvidenceValidationError("PROVIDER_CLAIM_ACTIVATION_MISMATCH")
+    state = deepcopy(dict(_mapping(intent.get("proposedState"), "proposedState")))
+    consumed_activation_ids.add(activation_id)
+    state["consumedActivationIds"] = sorted(set(state.get("consumedActivationIds") or ()) | {activation_id})
+    state["claimConfirmationStatus"] = "CONFIRMED_PROVIDER_CAS_READBACK"
+    state["claimProviderReadbackRef"] = readback.get("readbackRef")
     return state
+
+
+def atomically_observe_go_and_claim(
+    *,
+    job_state: Mapping[str, Any],
+    go_evidence: Mapping[str, Any],
+    expected_state_revision: int,
+    consumed_activation_ids: MutableSet[str],
+    go_evidence_ref: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Compatibility alias returning a non-authoritative claim intent.
+
+    Provider CAS and readback remain mandatory; use
+    confirm_go_claim_after_provider_readback() before treating CLAIMED as true.
+    """
+    return prepare_go_claim(
+        job_state=job_state,
+        go_evidence=go_evidence,
+        expected_state_revision=expected_state_revision,
+        consumed_activation_ids=set(consumed_activation_ids),
+        go_evidence_ref=go_evidence_ref,
+    )

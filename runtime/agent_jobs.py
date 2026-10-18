@@ -225,7 +225,7 @@ def validate_job_state_transition(*, from_status: str, to_status: str, evidence_
     if from_status == 'RESPONSE_SUBMITTED' and to_status == 'ACCEPTED':
         raise AgentJobValidationError('RESPONSE_SUBMISSION_CANNOT_SKIP_VERIFICATION')
 
-def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None) -> dict[str, Any]:
+def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
     if status == 'READY':
         text = f'Agent {display_name} ({agent_id}) bereit | Status: WAITING_HUMAN_GO'
         terminal = False
@@ -240,19 +240,28 @@ def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, dis
         text = f'Job {job_key} abgeschlossen | Status: SUBMITTED | Ergebnis: {details_ref}'
         terminal = True
     elif status == 'BLOCKED':
-        if not job_key or not details_ref:
-            raise AgentJobValidationError('BLOCKED_REQUIRES_JOB_AND_DETAILS_REF')
-        text = f'Job {job_key} blockiert | Status: BLOCKED | Meldung: {details_ref} | MASTER-Klärung erforderlich'
+        if not job_key:
+            raise AgentJobValidationError('BLOCKED_REQUIRES_JOB')
+        if details_ref:
+            text = f'Job {job_key} blockiert | Status: BLOCKED | Meldung: {details_ref} | MASTER-Klärung erforderlich'
+            persistence = None
+        else:
+            if persistence_state != 'FAILED' or not attempt_id or not phase or not reason_code:
+                raise AgentJobValidationError('BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT')
+            text = f'Job {job_key} blockiert | Status: BLOCKED | Rückmeldung nicht gespeichert | MASTER-Klärung erforderlich'
+            persistence = {'state': 'FAILED', 'target': 'CONTROL_REPOSITORY', 'reasonCode': reason_code, 'authoritativeResponsePersisted': False, 'attemptId': attempt_id, 'phase': phase}
         terminal = True
     elif status == 'REIDENTIFICATION_REQUIRED':
         text = 'Agentenidentität unsicher | Status: REIDENTIFICATION_REQUIRED | Bitte im MASTER-Chat neue Initialisierung anfordern'
         terminal = True
     else:
         raise AgentJobValidationError('CHAT_STATUS_FORBIDDEN')
+    if status != 'BLOCKED' or details_ref:
+        persistence = None
     if '\n' in text or '\r' in text:
         raise AgentJobValidationError('CHAT_OUTPUT_MUST_BE_ONE_LINE')
     if len(text.split()) > 36:
         raise AgentJobValidationError('CHAT_OUTPUT_WORD_BUDGET_EXCEEDED')
     if len(text) > 360:
         raise AgentJobValidationError('CHAT_OUTPUT_CHARACTER_BUDGET_EXCEEDED')
-    return {'format': 'SAFOR_AGENT_CHAT_OUTPUT', 'schemaVersion': '0.14.0', 'status': status, 'projectId': project_id, 'agentId': agent_id, 'displayName': display_name, 'jobKey': job_key, 'targetBranch': target_branch, 'detailsRef': details_ref, 'text': text, 'terminal': terminal, 'containsDomainDetail': False}
+    return {'format': 'SAFOR_AGENT_CHAT_OUTPUT', 'schemaVersion': '0.14.0', 'status': status, 'projectId': project_id, 'agentId': agent_id, 'displayName': display_name, 'jobKey': job_key, 'targetBranch': target_branch, 'detailsRef': details_ref, 'persistence': persistence, 'text': text, 'terminal': terminal, 'containsDomainDetail': False}
