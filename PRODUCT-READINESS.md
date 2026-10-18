@@ -2,7 +2,7 @@
 
 Current target: **v0.14.0-rc.5**
 
-Materialization state: **PENDING MATERIALIZATION**. The rc.5 inbox-pull source contract is validated; reproducible Framework artifacts, checksums and full release CI are pending.
+Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The 0.14.0-rc.5 Framework distributions and checksums are reproducible and automated validation is green.
 
 Current source baselines: **`v0.13.0/` composable domain-package overlay + `v0.12.0/` Framework/workspace boundary + `v0.11.0/` deterministic control + retained `v0.10.0/` protocol baselines**
 

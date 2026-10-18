@@ -385,5 +385,5 @@
   },
   "embeddedModuleCount": 93,
   "releaseFactsRef": "RELEASE-FACTS.json",
-  "releaseArtifactsState": "PENDING_RELEASE_MATERIALIZATION"
+  "releaseArtifactsState": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
 }
