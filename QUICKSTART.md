@@ -39,14 +39,14 @@ PUBLIC_EVALUATION_ACCESS_RESOLVED
 
 Default packages:
 
-- `safor.factory.website-delivery@1.1.0`
-- `safor.om.website-team@1.1.0`
+- `safor.factory.website-delivery@1.2.0`
+- `safor.om.website-team@1.2.0`
 
 Both are `FREE_PUBLIC`. The Website path covers audience, purpose and scope; content and information architecture; experience design; web implementation; accessibility, responsive and performance verification; optional search-visibility verification; publishing; post-publish observation; and website outcome assessment.
 
 If Discovery reveals application logic, a SaaS/service lifecycle or broader software engineering and operations, the Website Factory stops and requires an explicit switch to **Software / SaaS**.
 
-## Software / SaaS — paid-mode public evaluation in rc.6
+## Software / SaaS — paid-mode public evaluation
 
 Load both:
 
@@ -55,14 +55,14 @@ Load both:
 
 The distribution embeds:
 
-- `safor.factory.software-delivery@1.7.0-test.1`
-- `safor.om.saas-engineering@1.7.0-test.1`
+- `safor.factory.software-delivery@1.8.0-test.1`
+- `safor.om.saas-engineering@1.8.0-test.1`
 
 Both modules remain `PAID_ENTITLEMENT_REQUIRED`. The public access bundle grants only those exact test versions and is not a production license.
 
 A production SaaS selection requires a licensed Software Factory artifact, a verified entitlement for that exact Factory/version, a licensed SaaS Engineering Operating Model artifact and a separate verified entitlement for that exact Operating Model/version. A free member cannot be used to bypass the paid-pair policy.
 
-## Book — paid-mode public evaluation in rc.6
+## Book — paid-mode public evaluation
 
 Load both:
 
@@ -71,14 +71,14 @@ Load both:
 
 The distribution embeds:
 
-- `safor.factory.book-production@1.0.0-test.1`
-- `safor.om.book-authoring@1.0.0-test.1`
+- `safor.factory.book-production@1.1.0-test.1`
+- `safor.om.book-authoring@1.1.0-test.1`
 
 Book likewise requires independent entitlement evidence for Factory and Operating Model. Its public test access authorizes only the exact test pair and never production use.
 
 ## Generic engineering start — advanced
 
-Framework engineers may load `SAFOR-FRAMEWORK-v0.14.0-rc.3.json` or the current alias `SAFOR-FRAMEWORK.json`. This generic base intentionally follows a different sequence:
+Framework engineers may load `SAFOR-FRAMEWORK-v0.14.0-rc.5.json` or the current alias `SAFOR-FRAMEWORK.json`. This generic base intentionally follows a different sequence:
 
 1. Verify the shared Framework.
 2. Select **Website**, **Software / SaaS** or **Book**.

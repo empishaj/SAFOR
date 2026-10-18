@@ -7,6 +7,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 class UserOnboardingTests(unittest.TestCase):
     def setUp(self):
+        self.version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
         self.start_here = (ROOT / "START-HIER.md").read_text(encoding="utf-8")
         self.quickstart = (ROOT / "QUICKSTART.md").read_text(encoding="utf-8")
         self.readme = (ROOT / "README.md").read_text(encoding="utf-8")
@@ -49,7 +50,7 @@ class UserOnboardingTests(unittest.TestCase):
         self.assertIn("does **not** ask the HUMAN", self.quickstart)
 
     def test_readme_uses_current_rc_and_has_no_stale_path_typo(self):
-        self.assertIn("v0.14.0-rc.3", self.readme)
+        self.assertIn(f"v{self.version}", self.readme)
         self.assertNotIn("Paid package access in rc.4", self.readme)
         self.assertNotIn("v0.13.0/ packages/", self.readme)
         self.assertIn("runtime/public_evaluation_access.py", self.readme)
