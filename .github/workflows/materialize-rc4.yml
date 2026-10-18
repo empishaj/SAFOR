@@ -1,0 +1,62 @@
+name: SAFOR rc.4 Materialization
+
+on:
+  push:
+    branches:
+      - safor/review-remediation-0.14.0-rc.4
+    paths:
+      - ".github/workflows/materialize-rc4.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Configure release commit identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Materialize rc.4 distributions and provisional evidence
+        run: python tools/materialize_release.py --prepare
+
+      - name: Validate materialized worktree before PASS marking
+        run: |
+          python tools/build_bundle.py --check
+          python tools/build_domain_framework.py --check
+          python tools/validate_safor.py
+          python tools/validate_audit_remediation.py
+          python tools/validate_release_facts.py
+          python tools/validate_traceability.py
+          python -m unittest discover -s tests -v
+          sha256sum --check SHA256SUMS-0.14.0-rc.4.txt
+
+      - name: Finalize release evidence after successful validation
+        run: python tools/materialize_release.py --finalize
+
+      - name: Validate final materialized release state
+        run: |
+          python tools/build_bundle.py --check
+          python tools/build_domain_framework.py --check
+          python tools/validate_safor.py
+          python tools/validate_audit_remediation.py
+          python tools/validate_release_facts.py
+          python tools/validate_traceability.py
+          python -m unittest discover -s tests -v
+          sha256sum --check SHA256SUMS-0.14.0-rc.4.txt
+
+      - name: Commit exact materialized release
+        run: |
+          git add             SAFOR-FRAMEWORK.json             SAFOR-FRAMEWORK-v0.14.0-rc.4.json             SAFOR-FRAMEWORK-WEBSITE.json             SAFOR-FRAMEWORK-SAAS.json             SAFOR-FRAMEWORK-BOOK-CREATION.json             SAFOR-TEST-ACCESS-SAAS.json             SAFOR-TEST-ACCESS-BOOK-CREATION.json             RELEASE-FACTS.json             RELEASE-MANIFEST.json             PRODUCT-READINESS.md             RELEASE-EVIDENCE-0.14.0-rc.4.json             RELEASE-NOTES-0.14.0-rc.4.md             SHA256SUMS-0.14.0-rc.4.txt             docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json
+          git diff --cached --quiet && { echo "No materialization changes"; exit 1; }
+          git commit -m "SAFOR 0.14.0-rc.4: materialize validated release candidate"
+          git push origin HEAD:safor/review-remediation-0.14.0-rc.4
