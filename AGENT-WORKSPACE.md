@@ -131,6 +131,14 @@ The agent verifies:
 
 A failed preflight produces a typed blocker response before unauthorized product mutation.
 
+## Claim authority
+
+The agent claims a selected job only by compare-and-swap on its own `agents/{agentId}/state.json`.
+
+`master/jobs/{jobId}.json` remains MASTER-only. The agent reads the pinned MASTER job state before claim but never writes or CASes that file. After provider-confirmed readback of the agent state, the agent exposes a verified claim event. MASTER later uses that evidence to advance its own lifecycle separately.
+
+This prevents one lifecycle fact from being independently writable by both MASTER and agent.
+
 ## Typed responses
 
 Every job binds exact templates, schemas and paths for:
