@@ -12,9 +12,10 @@ class NonTechHandbookRc5Tests(unittest.TestCase):
         cls.text = (ROOT / "START-HIER.md").read_text(encoding="utf-8")
 
     def test_handbook_is_short_and_stepwise(self):
-        words = re.findall(r"\\b[\\wÄÖÜäöüß-]+\\b", self.text, flags=re.UNICODE)
+        words = re.findall(r"\b[\wÄÖÜäöüß-]+\b", self.text, flags=re.UNICODE)
         self.assertLessEqual(len(words), 650)
-        numbered = [line for line in self.text.splitlines() if re.match(r"^## \\d+\\.", line)]
+        expected = [f"## {i}." for i in range(1, 8)]
+        numbered = [line for line in self.text.splitlines() if any(line.startswith(prefix) for prefix in expected)]
         self.assertEqual(7, len(numbered))
         self.assertIn("## Kurzfassung", self.text)
 
@@ -28,17 +29,17 @@ class NonTechHandbookRc5Tests(unittest.TestCase):
                 self.assertNotIn(term.lower(), self.text.lower())
 
     def test_handbook_sentence_length_is_nontechnical(self):
-        prose = "\\n".join(
+        prose = "\n".join(
             line for line in self.text.splitlines()
             if line.strip()
             and not line.startswith("#")
             and not line.startswith("|")
             and not line.startswith("```")
             and not line.startswith("-")
-            and not re.match(r"^\\d+\\.", line.strip())
+            and not line[:1].isdigit()
         )
         sentences = [s.strip() for s in re.split(r"[.!?]+", prose) if s.strip()]
-        counts = [len(re.findall(r"\\b[\\wÄÖÜäöüß-]+\\b", s, flags=re.UNICODE)) for s in sentences]
+        counts = [len(re.findall(r"\b[\wÄÖÜäöüß-]+\b", s, flags=re.UNICODE)) for s in sentences]
         self.assertTrue(counts)
         self.assertLessEqual(sum(counts) / len(counts), 15)
         self.assertLessEqual(max(counts), 32)
