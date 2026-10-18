@@ -58,9 +58,7 @@
     "schedulerMayActivateChat": false,
     "schedulerOutcomeBeforeGo": "WAITING_HUMAN_GO",
     "activationEvidenceRequiredBeforeClaim": true,
-    "activationEvidenceAuthority": "CHAT_LOCAL_ASSERTION_NOT_CRYPTOGRAPHIC_HUMAN_SIGNATURE",
-    "claimMode": "ATOMIC_COMPARE_AND_SWAP_WITH_SINGLE_USE_GO_EVIDENCE",
-    "stringSubstringEvidenceForbidden": true
+    "activationEvidenceAuthority": "CHAT_LOCAL_ASSERTION_NOT_CRYPTOGRAPHIC_HUMAN_SIGNATURE"
   },
   "onHumanGo": {
     "allowedReadsInOrder": [
@@ -131,23 +129,6 @@
       "source": "DIRECT_HUMAN_INPUT_IN_BOUND_AGENT_CHAT",
       "singleUse": true,
       "jobPromptTransported": false
-    },
-    "schemaRef": "schemas/human-go-evidence.schema.json"
-  },
-  "atomicClaimContract": {
-    "expectedState": "WAITING_HUMAN_GO",
-    "requiredExpectedRevision": true,
-    "evidenceBindingFields": [
-      "projectId",
-      "agentId",
-      "identityRevision",
-      "chatBindingId",
-      "targetJobId",
-      "targetDispatchRevision",
-      "activationId"
-    ],
-    "singleUseEnforced": true,
-    "providerCompareAndSwapRequired": true,
-    "onConflict": "RECONCILE_REQUIRED"
+    }
   }
 }

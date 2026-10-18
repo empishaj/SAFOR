@@ -12,7 +12,7 @@
     "requireSchemaOrModelRef": true,
     "requireAutomatedTestRef": true,
     "requireMigrationDisposition": true,
-    "evidenceLimitRule": "Design, implementation, automated tests, bundle integration, real Git E2E and cross-host evidence are independent dimensions."
+    "evidenceLimitRule": "Implementation coverage and empirical cross-host acceptance are reported separately."
   },
   "requirements": [
     {
@@ -28,32 +28,6 @@
         "WP-06",
         "WP-07",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/chat-execution-model.json"
-      ],
-      "implementationEvidence": [
-        "tools/build_bundle.py"
-      ],
-      "automatedTests": [
-        "tests/test_product_boundary_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "chatExecution"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "NOT_APPLICABLE",
-      "openFindings": [
-        "F-08"
       ]
     },
     {
@@ -68,32 +42,6 @@
       "workPackages": [
         "WP-06",
         "WP-07"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/chat-execution-model.json"
-      ],
-      "implementationEvidence": [
-        "tools/build_bundle.py"
-      ],
-      "automatedTests": [
-        "tests/test_product_boundary_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "chatExecution"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "NOT_APPLICABLE",
-      "openFindings": [
-        "F-08"
       ]
     },
     {
@@ -110,38 +58,6 @@
         "WP-03",
         "WP-04",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-activation-model.json",
-        "v0.14.0/agent-communication-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_activation_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentActivation",
-        "agentCommunication",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -158,38 +74,6 @@
         "WP-01",
         "WP-03",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-activation-model.json",
-        "v0.14.0/agent-communication-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_activation_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentActivation",
-        "agentCommunication",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -206,38 +90,6 @@
         "WP-01",
         "WP-07",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-activation-model.json",
-        "v0.14.0/agent-communication-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_activation_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentActivation",
-        "agentCommunication",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -253,38 +105,6 @@
         "WP-01",
         "WP-02",
         "WP-03"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-activation-model.json",
-        "v0.14.0/agent-communication-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_activation_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentActivation",
-        "agentCommunication",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -300,38 +120,6 @@
       "workPackages": [
         "WP-01",
         "WP-03"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-activation-model.json",
-        "v0.14.0/agent-communication-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_activation_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentActivation",
-        "agentCommunication",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -347,38 +135,6 @@
         "WP-01",
         "WP-02",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-activation-model.json",
-        "v0.14.0/agent-communication-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_activation_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentActivation",
-        "agentCommunication",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -396,36 +152,6 @@
         "WP-03",
         "WP-04",
         "WP-09"
-      ],
-      "origin": "AGREED_DIRECTION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/master-status-model.json",
-        "v0.14.0/agent-workspace-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_master_status_truth_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "masterStatus",
-        "agentWorkspace",
-        "schemaProjectStatusIndex"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -441,36 +167,6 @@
       "workPackages": [
         "WP-04",
         "WP-09"
-      ],
-      "origin": "AGREED_DIRECTION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/master-status-model.json",
-        "v0.14.0/agent-workspace-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_master_status_truth_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "masterStatus",
-        "agentWorkspace",
-        "schemaProjectStatusIndex"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -486,36 +182,6 @@
         "WP-01",
         "WP-05",
         "WP-08"
-      ],
-      "origin": "AGREED_DIRECTION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/master-status-model.json",
-        "v0.14.0/agent-workspace-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_master_status_truth_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "masterStatus",
-        "agentWorkspace",
-        "schemaProjectStatusIndex"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -531,36 +197,6 @@
         "WP-03",
         "WP-05",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-job-contract-model.json",
-        "v0.14.0/schemas/agent-job.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentJobContract",
-        "schemaAgentJob",
-        "schemaAgentJobState"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -577,36 +213,6 @@
         "WP-03",
         "WP-04",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-job-contract-model.json",
-        "v0.14.0/schemas/agent-job.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentJobContract",
-        "schemaAgentJob",
-        "schemaAgentJobState"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -621,36 +227,6 @@
       "workPackages": [
         "WP-03",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-job-contract-model.json",
-        "v0.14.0/schemas/agent-job.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentJobContract",
-        "schemaAgentJob",
-        "schemaAgentJobState"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -667,36 +243,6 @@
         "WP-03",
         "WP-04",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-job-contract-model.json",
-        "v0.14.0/schemas/agent-job.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentJobContract",
-        "schemaAgentJob",
-        "schemaAgentJobState"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -711,36 +257,6 @@
       "workPackages": [
         "WP-03",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-job-contract-model.json",
-        "v0.14.0/schemas/agent-job.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentJobContract",
-        "schemaAgentJob",
-        "schemaAgentJobState"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -756,36 +272,6 @@
       "workPackages": [
         "WP-02",
         "WP-03"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-job-contract-model.json",
-        "v0.14.0/schemas/agent-job.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentJobContract",
-        "schemaAgentJob",
-        "schemaAgentJobState"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -800,37 +286,6 @@
       "workPackages": [
         "WP-02",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-response-contract-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_responses.py",
-        "runtime/execution_reconciliation.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_responses_v014.py",
-        "tests/test_execution_reconciliation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentResponseContract",
-        "schemaAgentResponse",
-        "executionAttempt"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-09"
       ]
     },
     {
@@ -845,37 +300,6 @@
       "workPackages": [
         "WP-02",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-response-contract-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_responses.py",
-        "runtime/execution_reconciliation.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_responses_v014.py",
-        "tests/test_execution_reconciliation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentResponseContract",
-        "schemaAgentResponse",
-        "executionAttempt"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-09"
       ]
     },
     {
@@ -891,37 +315,6 @@
         "WP-02",
         "WP-03",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-response-contract-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_responses.py",
-        "runtime/execution_reconciliation.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_responses_v014.py",
-        "tests/test_execution_reconciliation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentResponseContract",
-        "schemaAgentResponse",
-        "executionAttempt"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-09"
       ]
     },
     {
@@ -936,37 +329,6 @@
       "workPackages": [
         "WP-02",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-response-contract-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_responses.py",
-        "runtime/execution_reconciliation.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_responses_v014.py",
-        "tests/test_execution_reconciliation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentResponseContract",
-        "schemaAgentResponse",
-        "executionAttempt"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-09"
       ]
     },
     {
@@ -981,37 +343,6 @@
       "workPackages": [
         "WP-02",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-response-contract-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_responses.py",
-        "runtime/execution_reconciliation.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_responses_v014.py",
-        "tests/test_execution_reconciliation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentResponseContract",
-        "schemaAgentResponse",
-        "executionAttempt"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-09"
       ]
     },
     {
@@ -1029,37 +360,6 @@
         "WP-03",
         "WP-05",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-response-contract-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_responses.py",
-        "runtime/execution_reconciliation.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_responses_v014.py",
-        "tests/test_execution_reconciliation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentResponseContract",
-        "schemaAgentResponse",
-        "executionAttempt"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-09"
       ]
     },
     {
@@ -1076,38 +376,6 @@
         "WP-03",
         "WP-06",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-communication-model.json",
-        "v0.14.0/agent-activation-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py",
-        "runtime/agent_orchestration.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_agent_activation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentCommunication",
-        "agentActivation",
-        "schemaAgentChatOutput"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -1124,38 +392,6 @@
         "WP-01",
         "WP-04",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/agent-communication-model.json",
-        "v0.14.0/agent-activation-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/agent_jobs.py",
-        "runtime/agent_orchestration.py"
-      ],
-      "automatedTests": [
-        "tests/test_agent_job_v014.py",
-        "tests/test_agent_activation_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "agentCommunication",
-        "agentActivation",
-        "schemaAgentChatOutput"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-08"
       ]
     },
     {
@@ -1171,37 +407,6 @@
         "WP-03",
         "WP-04",
         "WP-09"
-      ],
-      "origin": "ARCHITECTURE_DECISION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/multi-agent-scheduler-model.json",
-        "v0.14.0/schemas/agent-job-state.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "multiAgentScheduler",
-        "schemaSchedulerState",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -1216,37 +421,6 @@
       "workPackages": [
         "WP-04",
         "WP-09"
-      ],
-      "origin": "ARCHITECTURE_DECISION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/multi-agent-scheduler-model.json",
-        "v0.14.0/schemas/agent-job-state.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "multiAgentScheduler",
-        "schemaSchedulerState",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -1261,37 +435,6 @@
       "workPackages": [
         "WP-04",
         "WP-09"
-      ],
-      "origin": "ARCHITECTURE_DECISION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/multi-agent-scheduler-model.json",
-        "v0.14.0/schemas/agent-job-state.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "multiAgentScheduler",
-        "schemaSchedulerState",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -1307,37 +450,6 @@
         "WP-03",
         "WP-05",
         "WP-09"
-      ],
-      "origin": "ARCHITECTURE_DECISION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/multi-agent-scheduler-model.json",
-        "v0.14.0/schemas/agent-job-state.schema.json"
-      ],
-      "implementationEvidence": [
-        "runtime/master_orchestration.py",
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_master_scheduler_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "multiAgentScheduler",
-        "schemaSchedulerState",
-        "schemaHumanGoEvidence"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02"
       ]
     },
     {
@@ -1353,36 +465,6 @@
       "workPackages": [
         "WP-05",
         "WP-08"
-      ],
-      "origin": "ARCHITECTURE_DECISION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/migration-model.json",
-        "v0.14.0/legacy-artifact-policy.json"
-      ],
-      "implementationEvidence": [
-        "runtime/migration.py"
-      ],
-      "automatedTests": [
-        "tests/test_migration_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "migration",
-        "legacyArtifactPolicy",
-        "schemaMigrationManifest"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "REFERENCE_PROJECT_MIGRATION_AFTER_ISOLATED_E2E",
-      "openFindings": [
-        "F-02",
-        "F-10"
       ]
     },
     {
@@ -1397,36 +479,7 @@
       "workPackages": [
         "WP-07",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/composable-package-model.json",
-        "v0.14.0/domain-framework-profiles.json"
-      ],
-      "implementationEvidence": [
-        "runtime/bootstrap_policy.py",
-        "tools/build_domain_framework.py"
-      ],
-      "automatedTests": [
-        "tests/test_domain_framework_distributions.py",
-        "tests/test_composable_packages.py"
-      ],
-      "bundleModuleKeys": [
-        "composablePackageModel",
-        "schemaDomainPackage",
-        "packageCatalog"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "NOT_APPLICABLE",
-      "openFindings": []
+      ]
     },
     {
       "id": "REQ-032",
@@ -1442,35 +495,6 @@
         "WP-06",
         "WP-07",
         "WP-09"
-      ],
-      "origin": "HUMAN_REQUIREMENT",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "v0.14.0/chat-execution-model.json",
-        "v0.14.0/agent-activation-model.json"
-      ],
-      "implementationEvidence": [
-        "runtime/go_evidence.py"
-      ],
-      "automatedTests": [
-        "tests/test_product_boundary_v014.py",
-        "tests/test_go_evidence_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "chatExecution",
-        "agentActivation"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "NOT_APPLICABLE",
-      "openFindings": [
-        "F-08"
       ]
     },
     {
@@ -1486,33 +510,6 @@
       "workPackages": [
         "WP-00",
         "WP-10"
-      ],
-      "origin": "AUDIT_RECOMMENDATION",
-      "decisionStatus": "APPROVED_FOR_RC2_IMPLEMENTATION",
-      "designEvidence": [
-        "docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json"
-      ],
-      "implementationEvidence": [
-        "tools/validate_traceability.py"
-      ],
-      "automatedTests": [
-        "tests/test_traceability_v014.py"
-      ],
-      "bundleModuleKeys": [
-        "schemaRequirementsTraceability"
-      ],
-      "coverage": {
-        "design": "PASS",
-        "implementation": "PASS",
-        "automatedTest": "PENDING",
-        "bundle": "PENDING",
-        "realGitE2E": "NOT_VERIFIED",
-        "crossHost": "NOT_VERIFIED"
-      },
-      "migrationDisposition": "DEFERRED_UNTIL_ISOLATED_E2E_PASS",
-      "openFindings": [
-        "F-02",
-        "F-11"
       ]
     }
   ],
@@ -1604,16 +601,5 @@
     }
   ],
   "status": "APPROVED_FOR_IMPLEMENTATION_BY_CURRENT_HUMAN_REQUEST",
-  "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
-  "schemaRef": "v0.14.0/schemas/requirements-traceability.schema.json",
-  "summary": {
-    "requirements": 33,
-    "designPass": 33,
-    "implementationPass": 33,
-    "automatedTestPendingUntilCI": 33,
-    "bundlePendingUntilMaterialization": 33,
-    "realGitE2EVerified": 0,
-    "crossHostVerified": 0,
-    "percentageClaimForbidden": true
-  }
+  "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json"
 }

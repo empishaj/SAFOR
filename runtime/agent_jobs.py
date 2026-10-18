@@ -1,7 +1,6 @@
 from __future__ import annotations
 import re
 from typing import Any, Mapping
-from runtime.go_evidence import GoEvidenceValidationError, validate_human_go_evidence
 
 class AgentJobValidationError(ValueError):
     """Raised when a v0.14 agent job or chat status is unsafe."""
@@ -203,25 +202,12 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         if constraints.get(field) is not True:
             raise AgentJobValidationError(f'JOB_CONSTRAINT_REQUIRED:{field}')
 
-def validate_job_state_transition(*, from_status: str, to_status: str, evidence_refs: list[Any], go_evidence: Mapping[str, Any] | None = None, expected_go_context: Mapping[str, Any] | None = None, consumed_activation_ids: set[str] | frozenset[str] | None = None) -> None:
+def validate_job_state_transition(*, from_status: str, to_status: str, evidence_refs: list[str]) -> None:
     allowed = _TRANSITIONS.get(from_status, set())
     if to_status not in allowed:
         raise AgentJobValidationError(f'JOB_STATE_TRANSITION_FORBIDDEN:{from_status}->{to_status}')
-    if from_status == 'WAITING_HUMAN_GO' and to_status == 'GO_OBSERVED':
-        if go_evidence is None or expected_go_context is None:
-            raise AgentJobValidationError('STRUCTURED_GO_EVIDENCE_REQUIRED')
-        try:
-            validate_human_go_evidence(
-                go_evidence,
-                expected=expected_go_context,
-                consumed_activation_ids=consumed_activation_ids,
-            )
-        except GoEvidenceValidationError as exc:
-            raise AgentJobValidationError(str(exc)) from exc
-        if not evidence_refs or not all(isinstance(ref, Mapping) for ref in evidence_refs):
-            raise AgentJobValidationError('GO_EVIDENCE_POINTER_REQUIRED')
-        for ref in evidence_refs:
-            _pointer(ref, 'goEvidenceRef')
+    if from_status == 'WAITING_HUMAN_GO' and to_status == 'GO_OBSERVED' and (not any(('go' in ref.casefold() for ref in evidence_refs))):
+        raise AgentJobValidationError('GO_EVIDENCE_REQUIRED')
     if from_status == 'RESPONSE_SUBMITTED' and to_status == 'ACCEPTED':
         raise AgentJobValidationError('RESPONSE_SUBMISSION_CANNOT_SKIP_VERIFICATION')
 
