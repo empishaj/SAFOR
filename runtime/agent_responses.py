@@ -1,5 +1,8 @@
 from __future__ import annotations
 
+from copy import deepcopy
+import hashlib
+import json
 from typing import Any, Mapping
 
 
@@ -60,6 +63,29 @@ _CAPABILITY_SET_FIELDS = {
 }
 
 
+_RESPONSE_FIELDS = {
+    "format", "schemaVersion", "responseId", "responseType", "projectId",
+    "jobId", "packageId", "workItemId", "agentId", "identityRevision",
+    "jobContractRef", "observedJobContractBlobSha", "responseContractRef",
+    "targetMasterRef", "createdAt", "status", "summary", "executionControl",
+    "chatStatus", "evidenceRefs", "providerMutationRefs", "payload", "immutable",
+}
+_POINTER_FIELDS = {"repository", "ref", "path", "blobSha"}
+_ARTIFACT_REF_FIELDS = {"ref", "expectedType"}
+_GIT_TRACE_FIELDS = {
+    "repository", "branch", "baseCommitSha", "headCommitSha", "commitShas",
+    "changedPaths", "changeRequestRef", "providerReadbackRef",
+}
+_CHECK_FIELDS = {"checkId", "commandOrMethod", "status", "evidenceRef"}
+
+
+def _canonical_response_digest(value: Mapping[str, Any]) -> str:
+    payload = json.dumps(
+        dict(value), ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    ).encode("utf-8")
+    return "sha256:" + hashlib.sha256(payload).hexdigest()
+
+
 def _mapping(value: Any, name: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
         raise AgentResponseValidationError(f"{name} must be a mapping")
@@ -75,6 +101,8 @@ def _nonempty(value: Any, code: str) -> str:
 
 def _validate_pointer(value: Any, name: str) -> Mapping[str, Any]:
     pointer = _mapping(value, name)
+    if set(pointer) != _POINTER_FIELDS:
+        raise AgentResponseValidationError(f"{name.upper()}_FIELDS_INVALID")
     for field in ("repository", "ref", "path", "blobSha"):
         _nonempty(pointer.get(field), f"{name.upper()}_{field.upper()}_MISSING")
     if len(str(pointer["blobSha"])) < 7:
@@ -170,6 +198,12 @@ def validate_agent_response(
     """Reference validator; normative rules remain embedded in SAFOR JSON."""
 
     response = _mapping(response, "response")
+    missing = sorted(_RESPONSE_FIELDS - set(response))
+    unknown = sorted(set(response) - _RESPONSE_FIELDS)
+    if missing or unknown:
+        raise AgentResponseValidationError(
+            f"RESPONSE_FIELDS_INVALID:missing={missing},unknown={unknown}"
+        )
     if response.get("format") != "SAFOR_AGENT_RESPONSE":
         raise AgentResponseValidationError("RESPONSE_FORMAT_INVALID")
     if response.get("schemaVersion") != "0.14.0":
@@ -246,11 +280,53 @@ def validate_agent_response(
             raise AgentResponseValidationError("JOB_RESULT_NOT_COMPLETED")
         if not isinstance(payload["outputs"], list) or not payload["outputs"]:
             raise AgentResponseValidationError("JOB_RESULT_OUTPUTS_REQUIRED")
+        for output in payload["outputs"]:
+            output = _mapping(output, "artifactRef")
+            if set(output) != _ARTIFACT_REF_FIELDS:
+                raise AgentResponseValidationError("JOB_RESULT_ARTIFACT_REF_FIELDS_INVALID")
+            _nonempty(output.get("ref"), "JOB_RESULT_ARTIFACT_REF_MISSING")
+            expected_type = output.get("expectedType")
+            if expected_type is not None and not isinstance(expected_type, str):
+                raise AgentResponseValidationError("JOB_RESULT_ARTIFACT_TYPE_INVALID")
         for field in ("gitTrace", "checks", "openItems"):
             if not isinstance(payload[field], list):
                 raise AgentResponseValidationError(
                     f"JOB_RESULT_{field.upper()}_INVALID"
                 )
+        for trace in payload["gitTrace"]:
+            trace = _mapping(trace, "gitTrace")
+            if set(trace) != _GIT_TRACE_FIELDS:
+                raise AgentResponseValidationError("JOB_RESULT_GIT_TRACE_FIELDS_INVALID")
+            for field in (
+                "repository", "branch", "baseCommitSha", "headCommitSha",
+                "providerReadbackRef",
+            ):
+                _nonempty(trace.get(field), f"JOB_RESULT_GIT_TRACE_{field.upper()}_MISSING")
+            if not isinstance(trace.get("commitShas"), list) or not trace["commitShas"]:
+                raise AgentResponseValidationError("JOB_RESULT_COMMIT_SHAS_REQUIRED")
+            if not isinstance(trace.get("changedPaths"), list):
+                raise AgentResponseValidationError("JOB_RESULT_CHANGED_PATHS_INVALID")
+            if trace.get("changeRequestRef") is not None and not isinstance(
+                trace.get("changeRequestRef"), str
+            ):
+                raise AgentResponseValidationError("JOB_RESULT_CHANGE_REQUEST_REF_INVALID")
+        for check in payload["checks"]:
+            check = _mapping(check, "check")
+            if set(check) != _CHECK_FIELDS:
+                raise AgentResponseValidationError("JOB_RESULT_CHECK_FIELDS_INVALID")
+            _nonempty(check.get("checkId"), "JOB_RESULT_CHECK_ID_MISSING")
+            _nonempty(
+                check.get("commandOrMethod"),
+                "JOB_RESULT_CHECK_COMMAND_OR_METHOD_MISSING",
+            )
+            if check.get("status") not in {"PASS", "FAIL", "NOT_RUN"}:
+                raise AgentResponseValidationError("JOB_RESULT_CHECK_STATUS_INVALID")
+            if check.get("evidenceRef") is not None and not isinstance(
+                check.get("evidenceRef"), str
+            ):
+                raise AgentResponseValidationError("JOB_RESULT_CHECK_EVIDENCE_REF_INVALID")
+        if not all(isinstance(item, str) for item in payload["openItems"]):
+            raise AgentResponseValidationError("JOB_RESULT_OPEN_ITEMS_INVALID")
 
     elif response_type == "JOB_ERROR":
         required = {
@@ -302,6 +378,136 @@ def validate_agent_response(
             raise AgentResponseValidationError("IMPROVEMENT_PROPOSAL_REQUIRES_SEPARATE_DECISION")
         if payload.get("jobScopeChanged") is not False:
             raise AgentResponseValidationError("IMPROVEMENT_PROPOSAL_CANNOT_CHANGE_JOB_SCOPE")
+
+
+def prepare_agent_response(
+    *,
+    job: Mapping[str, Any],
+    response_type: str,
+    response_id: str,
+    created_at: str,
+    summary: str,
+    payload: Mapping[str, Any],
+    job_contract_ref: Mapping[str, Any],
+    target_master_ref: str,
+    evidence_refs: list[str] | None = None,
+    provider_mutation_refs: list[str] | None = None,
+) -> dict[str, Any]:
+    """Build an exact v0.14 response envelope from the active Job binding."""
+
+    job = _mapping(job, "job")
+    identity = _mapping(job.get("identity"), "job.identity")
+    lineage = _mapping(job.get("lineage"), "job.lineage")
+    assignment = _mapping(job.get("assignment"), "job.assignment")
+    responses = _mapping(job.get("responseContracts"), "job.responseContracts")
+    if response_type not in _RESPONSE_RULES:
+        raise AgentResponseValidationError("UNKNOWN_RESPONSE_TYPE")
+    binding = _mapping(responses.get(response_type), f"responseContracts.{response_type}")
+    if binding.get("responseType") != response_type:
+        raise AgentResponseValidationError("RESPONSE_JOB_BINDING_TYPE_MISMATCH")
+    if binding.get("preWriteSchemaValidationRequired") is not True:
+        raise AgentResponseValidationError("RESPONSE_PRE_WRITE_VALIDATION_NOT_BOUND")
+    if binding.get("providerReadbackRequired") is not True:
+        raise AgentResponseValidationError("RESPONSE_PROVIDER_READBACK_NOT_BOUND")
+    if binding.get("postReadbackSchemaValidationRequired") is not True:
+        raise AgentResponseValidationError("RESPONSE_POST_READBACK_VALIDATION_NOT_BOUND")
+    template_ref = _validate_pointer(binding.get("templateRef"), "responseTemplateRef")
+    schema_ref = _validate_pointer(binding.get("schemaRef"), "responseSchemaRef")
+    if template_ref.get("path") != _RESPONSE_RULES[response_type]["templatePath"]:
+        raise AgentResponseValidationError("RESPONSE_TEMPLATE_PATH_MISMATCH")
+    if schema_ref.get("path") != "v0.14.0/schemas/agent-response.schema.json":
+        raise AgentResponseValidationError("RESPONSE_SCHEMA_PATH_MISMATCH")
+    job_contract_ref = _validate_pointer(job_contract_ref, "jobContractRef")
+
+    controls_lifecycle = response_type != "IMPROVEMENT_PROPOSAL"
+    response = {
+        "format": "SAFOR_AGENT_RESPONSE",
+        "schemaVersion": "0.14.0",
+        "responseId": _nonempty(response_id, "RESPONSE_ID_MISSING"),
+        "responseType": response_type,
+        "projectId": lineage.get("projectId"),
+        "jobId": identity.get("jobId"),
+        "packageId": lineage.get("packageId"),
+        "workItemId": lineage.get("workItemId"),
+        "agentId": assignment.get("agentId"),
+        "identityRevision": assignment.get("identityRevision"),
+        "jobContractRef": dict(job_contract_ref),
+        "observedJobContractBlobSha": job_contract_ref.get("blobSha"),
+        "responseContractRef": dict(template_ref),
+        "targetMasterRef": _nonempty(target_master_ref, "TARGET_MASTER_REF_MISSING"),
+        "createdAt": _nonempty(created_at, "RESPONSE_CREATED_AT_MISSING"),
+        "status": _RESPONSE_RULES[response_type]["status"],
+        "summary": _nonempty(summary, "RESPONSE_SUMMARY_MISSING"),
+        "executionControl": {
+            "controlsJobLifecycle": controls_lifecycle,
+            "executionStopped": controls_lifecycle,
+            "furtherProductMutationAllowed": False,
+            "scopeExpansionAllowed": False,
+            "agentMayAskHumanDomainQuestions": False,
+        },
+        "chatStatus": _RESPONSE_RULES[response_type]["chatStatus"],
+        "evidenceRefs": list(evidence_refs or []),
+        "providerMutationRefs": list(provider_mutation_refs or []),
+        "payload": deepcopy(dict(_mapping(payload, "payload"))),
+        "immutable": True,
+    }
+    expected_job = {
+        "projectId": lineage.get("projectId"),
+        "jobId": identity.get("jobId"),
+        "packageId": lineage.get("packageId"),
+        "workItemId": lineage.get("workItemId"),
+        "agentId": assignment.get("agentId"),
+        "identityRevision": assignment.get("identityRevision"),
+        "jobContractBlobSha": job_contract_ref.get("blobSha"),
+        "jobContractPath": job_contract_ref.get("path"),
+    }
+    validate_agent_response(response, expected_job=expected_job)
+    return response
+
+
+def confirm_agent_response_after_provider_readback(
+    *,
+    proposed_response: Mapping[str, Any],
+    provider_readback: Mapping[str, Any],
+    expected_job: Mapping[str, Any] | None = None,
+) -> dict[str, Any]:
+    """Confirm a typed response only after exact provider readback and revalidation."""
+
+    proposed = deepcopy(dict(_mapping(proposed_response, "proposedResponse")))
+    validate_agent_response(proposed, expected_job=expected_job)
+    readback = _mapping(provider_readback, "providerReadback")
+    if readback.get("writeSucceeded") is not True:
+        raise AgentResponseValidationError("RESPONSE_PROVIDER_WRITE_NOT_CONFIRMED")
+    if readback.get("readbackVerified") is not True:
+        raise AgentResponseValidationError("RESPONSE_PROVIDER_READBACK_UNVERIFIED")
+    observed = deepcopy(dict(_mapping(readback.get("observedResponse"), "observedResponse")))
+    validate_agent_response(observed, expected_job=expected_job)
+    if observed != proposed:
+        raise AgentResponseValidationError("RESPONSE_PROVIDER_READBACK_MISMATCH")
+    observed_digest = _canonical_response_digest(observed)
+    declared_digest = _nonempty(
+        readback.get("observedResponseDigest"),
+        "RESPONSE_PROVIDER_READBACK_DIGEST_MISSING",
+    )
+    if declared_digest != observed_digest:
+        raise AgentResponseValidationError("RESPONSE_PROVIDER_READBACK_DIGEST_INVALID")
+    readback_ref = _nonempty(
+        readback.get("readbackRef"), "RESPONSE_PROVIDER_READBACK_REF_MISSING"
+    )
+    observed_blob_sha = _nonempty(
+        readback.get("observedBlobSha"), "RESPONSE_PROVIDER_BLOB_SHA_MISSING"
+    )
+    return {
+        "format": "SAFOR_CONFIRMED_AGENT_RESPONSE",
+        "schemaVersion": "0.14.0",
+        "authoritativePersistence": True,
+        "responseId": observed["responseId"],
+        "responseType": observed["responseType"],
+        "responseDigest": observed_digest,
+        "providerReadbackRef": readback_ref,
+        "providerBlobSha": observed_blob_sha,
+        "response": observed,
+    }
 
 
 def validate_response_resolution(
