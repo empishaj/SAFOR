@@ -1937,6 +1937,24 @@
       "semanticKey": "HUMAN_ONLY_CHAT_AGENT_ACTIVATION_AUTHORITY",
       "statement": "For a normal CHAT_AGENT, HUMAN is the sole activation authority: MASTER may prepare and dispatch work but cannot activate the chat, synthesize GO, create HUMAN-GO evidence on the HUMAN's behalf or perform the Agent-owned claim.",
       "expected": true
+    },
+    {
+      "id": "CF-RC6-002",
+      "statement": "HUMAN-GO evidence is built from the embedded pinned template, validated against the embedded pinned schema, persisted and provider-read-back before claim construction; the Agent-State claim is built from the embedded pinned claim template, validates before CAS and validates again after exact provider readback before product mutation.",
+      "expected": true,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CF-RC6-003",
+      "statement": "Every typed Agent response is built from the exact templateRef/schemaRef bound in the Agent Job, validates before persistence, is fully provider-read-back and revalidated, and no SUBMITTED/BLOCKED terminal chat status is emitted before successful readback validation.",
+      "expected": true,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CF-RC6-004",
+      "statement": "The post-result Agent-State transition uses RESULT_SUBMITTED and a string lastResponseRef while preserving the provider-confirmed claim bindings; the state validates against schemaAgentState before and after persistence.",
+      "expected": true,
+      "status": "ACTIVE"
     }
   ],
   "lastManualVerification": {
