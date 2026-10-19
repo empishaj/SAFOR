@@ -1,6 +1,6 @@
 # SAFOR – einfache Anleitung
 
-> Aktuelle Version: **0.14.0-rc.5 (Release Candidate)**  
+> Aktuelle Version: **0.14.0-rc.6 (Release Candidate)**  
 > Du musst keine JSON-Datei öffnen oder verstehen. Wenn SAFOR Dateien in Git speichern soll, braucht dein Chat lediglich Zugriff auf dein Git-Projekt.
 
 ## 1. Wähle, was du machen willst
