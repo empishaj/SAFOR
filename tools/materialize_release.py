@@ -86,7 +86,7 @@ def resolve_source_identity(source_sha: str | None) -> tuple[str, str, str]:
     local_head = git_value("rev-parse", "HEAD")
     local_tree = git_value("rev-parse", "HEAD^{tree}")
     requested = (source_sha or os.environ.get("GITHUB_SHA") or local_head).strip()
-    workflow_head = (os.environ.get("GITHUB_SHA") or requested).strip()
+    workflow_head = (os.environ.get("SAFOR_WORKFLOW_HEAD_SHA") or os.environ.get("GITHUB_SHA") or requested).strip()
 
     if requested != local_head:
         raise SystemExit(
