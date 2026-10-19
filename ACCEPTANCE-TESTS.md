@@ -107,13 +107,13 @@ Do not mark GA until remote-provider, Local Git and commercial entitlement scena
 8. On external activation, the agent loads identity/state and reads the fixed inbox index without requiring repository directory enumeration.
 9. The agent reads the referenced immutable job contract, verifies its blob identity and then reads the authoritative MASTER job state.
 10. The agent rejects stale index entries or jobs assigned to another identity/revision.
-11. The agent claims the eligible job using optimistic concurrency on its own `state.json`.
-12. MASTER reads back the claim before advancing authoritative lifecycle to CLAIMED/RUNNING.
-13. The agent performs only job/mandate scope and writes evidence under its own evidence root.
+11. The agent claims the eligible job using optimistic provider CAS on its own `state.json`; the job pre-binds that exact claim target.
+12. Claim success requires exact provider readback of the committed Agent-State, persisted single-use activation consumption and matching `currentJob.claimId`; `master/jobs/{jobId}.json` is not mutated by the agent.
+13. After that confirmed claim, the agent performs only job/mandate scope and writes evidence under its own evidence root.
 14. The agent writes `outbox/{jobId}.result.json` and sets local state to RESULT_SUBMITTED.
-15. The agent does not mark its own job VERIFIED or ACCEPTED.
-16. MASTER reads the result, validates job/identity binding, evidence, reviews and provider mutations.
-17. MASTER alone advances `master/jobs/{jobId}.json` to VERIFIED/ACCEPTED when all requirements pass.
+15. The agent does not mark its own MASTER lifecycle VERIFIED or ACCEPTED.
+16. MASTER reads the confirmed Agent-State claim and result, validates job/identity binding, evidence, reviews and provider mutations, and reconciles MASTER lifecycle.
+17. MASTER alone writes `master/jobs/{jobId}.json` lifecycle, including VERIFIED/ACCEPTED when all requirements pass.
 
 **Pass condition:** all 17 observations are evidenced.
 
