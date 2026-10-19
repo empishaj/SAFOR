@@ -95,7 +95,9 @@
     "masterNeverRearmsAgentState": true,
     "rearmRequiresSettledMasterLifecycle": true,
     "rearmDoesNotConsumeNewHumanGo": true,
-    "rearmPreservesActivationHistory": true
+    "rearmPreservesActivationHistory": true,
+    "currentInboxSnapshotNeverBecomesStableBlobPrecondition": true,
+    "inboxBlobChangeAfterMasterDispatchIsExpected": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -146,7 +148,9 @@
     "exactReadbackEqualityRequired": true,
     "submittedChatStatusAllowedOnlyAfterValidatedReadback": true,
     "submittedAgentStateTemplate": "templates/agent-state-result-submitted.template.json",
-    "onValidationFailure": "BLOCKED_NO_FURTHER_PRODUCT_MUTATION"
+    "onValidationFailure": "BLOCKED_NO_FURTHER_PRODUCT_MUTATION",
+    "nakedBlockedForbidden": true,
+    "blockedRequiresPersistedTypedResponseOrStructuredPersistenceFailure": true
   },
   "agentStateRearmContract": {
     "trigger": "DIRECT_HUMAN_GO_WHILE_AGENT_STATE_RESULT_SUBMITTED",
@@ -171,5 +175,14 @@
     "secondHumanGoRequired": false,
     "nextStep": "CONTINUE_SAME_HUMAN_GO_AGAINST_CURRENT_PERSONAL_INBOX",
     "failureOutcome": "BLOCKED_NO_NEW_JOB_CLAIM"
+  },
+  "jobValidationContract": {
+    "source": "PINNED_AGENT_ACTIVATION_MODEL",
+    "authority": "PINNED_AGENT_JOB_SCHEMA_PLUS_AGENT_JOB_CONTRACT_MODEL",
+    "schemaPath": "v0.14.0/schemas/agent-job.schema.json",
+    "contractModelPath": "v0.14.0/agent-job-contract-model.json",
+    "referenceValidatorPath": "runtime/agent_jobs.py",
+    "referenceValidatorRequiredForNormalChatUse": false,
+    "globalSearchForbidden": true
   }
 }
