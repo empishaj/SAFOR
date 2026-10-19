@@ -61,6 +61,8 @@
     "AGENT_VALIDATES_READBACK_AGENT_STATE_BEFORE_CLAIM_AUTHORITY",
     "AGENT_EXECUTES_ONLY_AFTER_PROVIDER_CONFIRMED_AGENT_STATE_CLAIM",
     "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
+    "IF_RESPONSE_INDEX_IS_KNOWN_LEGACY_FORMAT_AGENT_MIGRATES_OWN_INDEX_BY_EXPECTED_BLOB_CAS",
+    "PROVIDER_READBACK_AND_VALIDATE_CANONICAL_RESPONSE_INDEX_BEFORE_RESPONSE_INDEX_UPDATE",
     "AGENT_LOADS_EXACT_BOUND_RESPONSE_TEMPLATE_AND_SCHEMA",
     "AGENT_BUILDS_AND_VALIDATES_TYPED_RESPONSE_BEFORE_WRITE",
     "AGENT_WRITES_TYPED_RESPONSE_AND_PROVIDER_READS_BACK_EXACT_BYTES",
@@ -97,7 +99,10 @@
     "rearmDoesNotConsumeNewHumanGo": true,
     "rearmPreservesActivationHistory": true,
     "currentInboxSnapshotNeverBecomesStableBlobPrecondition": true,
-    "inboxBlobChangeAfterMasterDispatchIsExpected": true
+    "inboxBlobChangeAfterMasterDispatchIsExpected": true,
+    "masterNeverRepairsAgentResponseIndex": true,
+    "legacyResponseIndexRecoveryPreservesHistory": true,
+    "unknownResponseIndexFormatFailsClosed": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -184,5 +189,17 @@
     "referenceValidatorPath": "runtime/agent_jobs.py",
     "referenceValidatorRequiredForNormalChatUse": false,
     "globalSearchForbidden": true
+  },
+  "responseIndexRecoveryContract": {
+    "owner": "AGENT",
+    "target": "agents/{agentId}/outbox/index.json",
+    "allowedLegacyFormat": "SAFOR_AGENT_OUTBOX_INDEX",
+    "canonicalFormat": "SAFOR_AGENT_RESPONSE_INDEX",
+    "method": "PROVIDER_COMPARE_AND_SWAP_PLUS_EXACT_READBACK",
+    "masterWriteForbidden": true,
+    "historicalResponseRefsPreserved": true,
+    "authoritativeAcceptance": false,
+    "unknownLegacyShapeOutcome": "BLOCKED_NO_MUTATION",
+    "requiredBeforeNextIndexUpdateWhenLegacyDetected": true
   }
 }
