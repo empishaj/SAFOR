@@ -190,6 +190,20 @@ def prepare(run_id: str, source_sha: str | None) -> None:
         if old_versioned.name != current_versioned:
             old_versioned.unlink()
 
+    current_release_metadata = {
+        evidence_path(version),
+        notes_path(version),
+        checksum_path(version),
+    }
+    for pattern in (
+        "RELEASE-EVIDENCE-*.json",
+        "RELEASE-NOTES-*.md",
+        "SHA256SUMS-*.txt",
+    ):
+        for old_release_file in ROOT.glob(pattern):
+            if old_release_file.name not in current_release_metadata:
+                old_release_file.unlink()
+
     records = artifact_records(version, source_sha)
     write_checksums(records, version)
     write_release_notes(version)
