@@ -583,7 +583,9 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
                 agent_state=self.result_submitted_state(),
                 settled_master_job_state=self.settled_master_state("VERIFIED"),
                 expected_agent_state_revision=9,
-                rearmed_at="2026-10-18T10:06:00Z",
+                human_message="GO",
+                human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+                observed_at="2026-10-18T10:06:00Z",
             )
 
     def test_agent_rearm_rejects_wrong_prior_job_binding(self):
