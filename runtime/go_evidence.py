@@ -327,7 +327,7 @@ def prepare_agent_state_rearm_after_settlement(
 
     state = deepcopy(dict(_mapping(agent_state, "agentState")))
     master = deepcopy(dict(_mapping(settled_master_job_state, "settledMasterJobState")))
-    validate_agent_state_contract(state, require_claim=True)
+    validate_agent_state_contract(state)
 
     if state.get("revision") != expected_agent_state_revision:
         raise GoEvidenceValidationError("AGENT_REARM_STATE_REVISION_CONFLICT")
@@ -335,6 +335,17 @@ def prepare_agent_state_rearm_after_settlement(
         raise GoEvidenceValidationError("AGENT_REARM_REQUIRES_RESULT_SUBMITTED")
     current = _mapping(state.get("currentJob"), "currentJob")
     session = _mapping(state.get("session"), "session")
+    activation_id = _nonempty(
+        session.get("activationId"), "AGENT_REARM_PRIOR_ACTIVATION_ID_MISSING"
+    )
+    validate_agent_state_contract(
+        state,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=str(current.get("jobId")),
+        expected_dispatch_revision=int(current.get("dispatchRevision")),
+        expected_runtime_status="RESULT_SUBMITTED",
+    )
     if not state.get("lastResponseRef"):
         raise GoEvidenceValidationError("AGENT_REARM_LAST_RESPONSE_REQUIRED")
 
@@ -354,9 +365,6 @@ def prepare_agent_state_rearm_after_settlement(
         raise GoEvidenceValidationError("AGENT_REARM_DISPATCH_REVISION_MISMATCH")
     if master.get("lifecycleStatus") not in _SETTLED_MASTER_JOB_STATUSES:
         raise GoEvidenceValidationError("AGENT_REARM_MASTER_JOB_NOT_SETTLED")
-    activation_id = _nonempty(
-        session.get("activationId"), "AGENT_REARM_PRIOR_ACTIVATION_ID_MISSING"
-    )
     if current.get("claimId") != activation_id:
         raise GoEvidenceValidationError("AGENT_REARM_PRIOR_CLAIM_BINDING_MISMATCH")
     if activation_id not in set(state.get("consumedActivationIds") or ()):
