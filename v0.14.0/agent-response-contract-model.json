@@ -79,7 +79,11 @@
     "The agent does not ask the HUMAN domain questions; MASTER owns clarification and escalation.",
     "The HUMAN-visible agent chat emits only the minimal chatStatus and Git reference.",
     "MASTER resolution is stored separately and may create a superseding job; the original response remains immutable.",
-    "An improvement proposal is advisory and cannot authorize continuation or mutation."
+    "An improvement proposal is advisory and cannot authorize continuation or mutation.",
+    "Every response is materialized from the exact response template bound in the active Agent Job; free-form response envelopes are forbidden.",
+    "The materialized response validates against the exact schemaRef bound in the active Agent Job before any response write.",
+    "Provider readback must equal the proposed response and validate against the same schema before SUBMITTED/BLOCKED chat status is emitted.",
+    "A response validation or readback failure stops further product mutation and is reported without inventing an authoritative persisted response."
   ],
   "conflictLifecycle": [
     "OPEN",
@@ -87,5 +91,30 @@
     "RESOLVED_BY_DECISION",
     "SUPERSEDED_BY_JOB",
     "CLOSED"
-  ]
+  ],
+  "persistenceProtocol": {
+    "sourceOfTemplate": "JOB.responseContracts/{responseType}.templateRef",
+    "sourceOfSchema": "JOB.responseContracts/{responseType}.schemaRef",
+    "sequence": [
+      "READ_BOUND_RESPONSE_TEMPLATE",
+      "READ_BOUND_RESPONSE_SCHEMA",
+      "MATERIALIZE_EXACT_RESPONSE_FROM_TEMPLATE",
+      "POPULATE_ONLY_SCHEMA_ALLOWED_FIELDS",
+      "VALIDATE_RESPONSE_AGAINST_BOUND_SCHEMA",
+      "VERIFY_JOB_AGENT_IDENTITY_TEMPLATE_AND_TARGET_BINDINGS",
+      "PERSIST_RESPONSE_TO_EXACT_BOUND_WRITE_TARGET",
+      "PROVIDER_READBACK_FULL_PERSISTED_RESPONSE",
+      "VERIFY_READBACK_EQUALS_PROPOSED_RESPONSE",
+      "VALIDATE_READBACK_RESPONSE_AGAINST_BOUND_SCHEMA",
+      "VERIFY_PROVIDER_BLOB_IDENTITY",
+      "ONLY_THEN_EMIT_SUBMITTED_OR_BLOCKED_CHAT_STATUS"
+    ],
+    "freeformResponseConstructionForbidden": true,
+    "preWriteSchemaValidationRequired": true,
+    "providerReadbackRequired": true,
+    "exactReadbackEqualityRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "chatTerminalStatusBeforeValidatedReadbackForbidden": true,
+    "onValidationFailure": "BLOCKED_NO_FURTHER_PRODUCT_MUTATION"
+  }
 }
