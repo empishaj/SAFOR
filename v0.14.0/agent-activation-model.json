@@ -75,7 +75,11 @@
     "masterMayActivateChat": false,
     "masterMaySynthesizeHumanGo": false,
     "masterMayCreateHumanGoEvidence": false,
-    "activationAuthority": "HUMAN_ONLY"
+    "activationAuthority": "HUMAN_ONLY",
+    "currentInboxSnapshotBlobIsStableAcrossDispatch": false,
+    "currentInboxSnapshotPurpose": "INITIALIZATION_OBSERVATION_ONLY",
+    "inboxContentChangeAfterMasterDispatch": "NORMAL_RELOAD_FROM_BOUND_MUTABLE_LOCATION",
+    "inboxBlobChangeAloneRequiresReidentification": false
   },
   "onHumanGo": {
     "allowedReadsInOrder": [
@@ -83,6 +87,8 @@
       "AGENT_STATE",
       "CURRENT_PERSONAL_INBOX_INDEX_AT_BOUND_LOCATION",
       "SELECTED_INBOX_JOB_CONTRACT",
+      "PINNED_AGENT_JOB_CONTRACT_MODEL_FROM_ACTIVATION_MODEL",
+      "PINNED_AGENT_JOB_SCHEMA_FROM_ACTIVATION_MODEL",
       "SELECTED_MASTER_JOB_STATE",
       "JOB_REFERENCED_INPUTS_ONLY",
       "BOUND_HUMAN_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
@@ -104,7 +110,7 @@
       "JOB_IDENTITY_REVISION_MATCH",
       "JOB_DISPATCH_REVISION_MATCH",
       "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
-      "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+      "AGENT_JOB_CONTRACT_MODEL_VALID",
       "AGENT_JOB_SCHEMA_VALID",
       "JOB_CONTRACT_POINTER_EXACT_MATCH",
       "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
@@ -121,7 +127,17 @@
     ],
     "failClosed": true,
     "invalidJobContractOutcome": "BLOCKED_NO_CLAIM_NO_PRODUCT_MUTATION",
-    "jobValidationAuthority": "PINNED_AGENT_JOB_SCHEMA_PLUS_REFERENCE_RUNTIME_CONTRACT",
+    "jobValidationAuthority": {
+      "authority": "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL",
+      "refSource": "SAME_REPOSITORY_AND_REF_AS_PINNED_ACTIVATION_MODEL",
+      "schemaPath": "v0.14.0/schemas/agent-job.schema.json",
+      "contractModelPath": "v0.14.0/agent-job-contract-model.json",
+      "referenceValidatorPath": "runtime/agent_jobs.py",
+      "referenceValidatorRequiredForNormalChatUse": false,
+      "referenceValidatorRole": "CI_AND_REFERENCE_VERIFICATION",
+      "globalSearchRequired": false,
+      "failClosedIfSchemaOrContractModelUnavailable": true
+    },
     "preSelectionAgentStateHandling": {
       "normalReadyStatuses": [
         "IDLE",
