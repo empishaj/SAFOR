@@ -38,7 +38,7 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertTrue({
             "JOB_CONTRACT_POINTER_EXACT_MATCH",
             "AGENT_JOB_SCHEMA_VALID",
-            "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+            "AGENT_JOB_CONTRACT_MODEL_VALID",
             "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
         }.issubset(preclaim))
         self.assertTrue(claim["preCasSchemaValidationRequired"])
@@ -54,6 +54,14 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertFalse(activation["masterMayActivateChat"])
         self.assertFalse(activation["masterMaySynthesizeHumanGo"])
         self.assertFalse(activation["masterMayCreateHumanGoEvidence"])
+        self.assertFalse(activation["currentInboxSnapshotBlobIsStableAcrossDispatch"])
+        self.assertFalse(activation["inboxBlobChangeAloneRequiresReidentification"])
+        authority = self.modules["agentActivation"]["content"]["onHumanGo"]["jobValidationAuthority"]
+        self.assertEqual(
+            "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL",
+            authority["authority"],
+        )
+        self.assertFalse(authority["referenceValidatorRequiredForNormalChatUse"])
         rearm = self.modules["agentActivation"]["content"]["onHumanGo"]["preSelectionAgentStateHandling"]
         self.assertTrue(rearm["rearmForbiddenDuringInitialization"])
         self.assertTrue(rearm["rearmRequiresSeparateDirectHumanGo"])
