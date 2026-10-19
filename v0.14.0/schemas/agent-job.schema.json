@@ -907,7 +907,16 @@
             "optimisticConcurrencyRequired",
             "humanGoEvidenceRequired",
             "claimStateTarget",
-            "claimAuthority"
+            "claimAuthority",
+            "humanGoEvidenceSchemaRef",
+            "humanGoEvidenceTemplateRef",
+            "goEvidenceWriteTarget",
+            "agentStateSchemaRef",
+            "claimStateTemplateRef",
+            "resultSubmittedStateTemplateRef",
+            "preCasSchemaValidationRequired",
+            "postReadbackSchemaValidationRequired",
+            "goEvidenceProviderReadbackRequired"
           ],
           "properties": {
             "exclusiveAgentClaim": {
@@ -925,6 +934,33 @@
             "claimAuthority": {
               "const": "AGENT_STATE_PROVIDER_CAS_READBACK",
               "description": "Claim authority is the exact provider-confirmed CAS of the assigned agent's own state.json; master/jobs remains read-only to the agent."
+            },
+            "humanGoEvidenceSchemaRef": {
+              "$ref": "#/$defs/pointer"
+            },
+            "humanGoEvidenceTemplateRef": {
+              "$ref": "#/$defs/pointer"
+            },
+            "goEvidenceWriteTarget": {
+              "$ref": "#/$defs/writeTarget"
+            },
+            "agentStateSchemaRef": {
+              "$ref": "#/$defs/pointer"
+            },
+            "claimStateTemplateRef": {
+              "$ref": "#/$defs/pointer"
+            },
+            "resultSubmittedStateTemplateRef": {
+              "$ref": "#/$defs/pointer"
+            },
+            "preCasSchemaValidationRequired": {
+              "const": true
+            },
+            "postReadbackSchemaValidationRequired": {
+              "const": true
+            },
+            "goEvidenceProviderReadbackRequired": {
+              "const": true
             }
           }
         }
@@ -966,7 +1002,10 @@
         "templateRef",
         "schemaRef",
         "writeTarget",
-        "required"
+        "required",
+        "preWriteSchemaValidationRequired",
+        "providerReadbackRequired",
+        "postReadbackSchemaValidationRequired"
       ],
       "properties": {
         "responseType": {
@@ -988,6 +1027,15 @@
           "$ref": "#/$defs/writeTarget"
         },
         "required": {
+          "const": true
+        },
+        "preWriteSchemaValidationRequired": {
+          "const": true
+        },
+        "providerReadbackRequired": {
+          "const": true
+        },
+        "postReadbackSchemaValidationRequired": {
           "const": true
         }
       }
