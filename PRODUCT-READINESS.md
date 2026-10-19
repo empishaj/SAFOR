@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.14.0-rc.5**
+Current target: **v0.14.0-rc.6**
 
-Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The 0.14.0-rc.5 Framework distributions and checksums are reproducible and automated validation is green.
+Materialization state: **PENDING MATERIALIZATION**. SAFOR 0.14.0-rc.6 is the operational-readiness candidate; no automated PASS is claimed until exact-head provenance, rebuild, validation and checksums are recorded.
 
 Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines **`v0.10.0/` through `v0.13.0/`** remain read-only references, not the current execution contract.
 
@@ -130,6 +130,6 @@ GA requires all OPEN gates above to be resolved or explicitly removed from GA sc
 
 The historical `safomwebsite` control-plane migration remains provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It is retained as legacy baseline evidence only; it does **not** prove migration to `0.14.0-rc.5`.
 
-The 0.14.0-rc.5 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
+The 0.14.0-rc.6 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
 
 Therefore `V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE` remains open for rc.5. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.
