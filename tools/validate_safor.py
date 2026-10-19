@@ -209,6 +209,31 @@ if not {"agentId", "displayName", "inboxBinding", "activationContract"}.issubset
 job_schema = modules.get("schemaAgentJob", {}).get("content", {})
 if not {"domainContext", "responseContracts", "communicationContract"}.issubset(set(job_schema.get("required", []))):
     fail("Agent job contract required fields incomplete")
+job_contract_model = modules.get("agentJobContract", {}).get("content", {})
+authority_coverage = job_contract_model.get("authorityCoverage", {})
+if authority_coverage.get("requiredBeforePublication") is not True:
+    fail("Authority-basis coverage must be required before Agent Job publication")
+if authority_coverage.get("activeStatusRequired") is not True:
+    fail("Authority-basis active status requirement missing")
+if authority_coverage.get("providerRightsAreSeparateFromMandateCoverage") is not True:
+    fail("Provider rights must remain separate from mandate coverage")
+if authority_coverage.get("onCoverageFailure") != "DO_NOT_PUBLISH_OR_DISPATCH_JOB":
+    fail("Authority undercoverage must block Agent Job publication/dispatch")
+required_authority_checks = {
+    "PROJECT_MATCH",
+    "AGENT_MATCH",
+    "CONTROL_BRANCH_COVERS_ALL_CONTROL_WRITES",
+    "PRODUCT_REPOSITORY_MATCH",
+    "PRODUCT_BRANCH_COVERS_JOB_WORKSPACE_PERMISSION_AND_OUTPUT_TARGET",
+    "PRODUCT_PATHS_COVER_JOB_PERMISSION_WORKSPACE_AND_OUTPUT_TARGET",
+    "HUMAN_GO_REQUIRED",
+    "HUMAN_ONLY_ACTIVATION_REQUIRED",
+    "MASTER_AGENT_ACTIVATION_FORBIDDEN",
+    "MERGE_FORBIDDEN",
+    "DEPLOY_FORBIDDEN",
+}
+if not required_authority_checks.issubset(set(authority_coverage.get("coverageChecks", []))):
+    fail("Authority-basis coverage checks incomplete")
 if not expected_responses.issubset(set(job_schema.get("$defs", {}).get("responseContracts", {}).get("required", []))):
     fail("Agent job does not bind all response types")
 
