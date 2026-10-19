@@ -25,7 +25,7 @@ The Markdown projection may never override or expand the JSON contract. MASTER w
 9. **Dependencies and inputs** — accepted predecessors and immutable read-only source pointers.
 10. **Authorization** — mandate, actual-rights requirement, separate work/control repository rights and explicit prohibitions.
 11. **Workspace** — product repository, dedicated branch, immutable base commit, allowed paths, response workspace and conflict keys.
-12. **Scheduling** — priority, dispatch revision, wave, leases and `HUMAN_GO_REQUIRED` claim policy.
+12. **Scheduling** — priority, dispatch revision, wave, leases, `HUMAN_GO_REQUIRED` and the exact AGENT-owned `claimStateTarget` (`agents/{agentId}/state.json`) used for provider CAS/readback.
 13. **Product output contract** — required artifact types and exact product write target.
 14. **Response contracts** — all five typed response templates, schemas, control-repository targets, response index and resolution schema.
 15. **Communication contract** — minimal chat-output model and prohibition of HUMAN domain conversation.
@@ -41,9 +41,21 @@ Publication of a job does not activate a normal chat agent. The job enters:
 WAITING_HUMAN_GO
 ```
 
-The HUMAN opens the already bound agent chat and types exactly `GO`. The agent binds single-use GO evidence to that job and dispatch revision before claiming.
+The HUMAN opens the already bound agent chat and types exactly `GO`. The agent binds single-use GO evidence to that job and dispatch revision, reads `master/jobs/{jobId}.json` only as a guard, and claims by provider-CAS of its own `agents/{agentId}/state.json`. The agent never writes MASTER lifecycle state.
 
 A Git push, scheduler, polling, automation or host event cannot replace this HUMAN action for a normal `CHAT_AGENT`.
+
+## Claim ownership
+
+The atomic execution claim has a deliberately separate authority boundary:
+
+- `master/jobs/{jobId}.json` is MASTER-owned authoritative governance lifecycle and is read-only to the agent.
+- `agents/{agentId}/state.json` is the agent-owned claim target.
+- The Job Contract must pre-bind that exact Agent-State path and require `COMPARE_AND_SWAP`.
+- A claim is authoritative only after the provider commits the exact proposed Agent-State at the expected revision/blob and the agent reads back the exact committed bytes/blob identity.
+- The consumed HUMAN activation ID and `currentJob.claimId` must both be persisted in that Agent-State.
+- Product mutation before confirmed claim readback is forbidden.
+- MASTER later reconciles CLAIMED/RUNNING/RESPONSE_SUBMITTED lifecycle from the verified claim and response evidence. Verification, acceptance and integration remain MASTER authority.
 
 ## Permission semantics
 
@@ -130,7 +142,7 @@ PREPARED
 
 These states are not interchangeable:
 
-- submission is the agent's claim;
+- the provider-confirmed Agent-State CAS is the execution claim; submission is the agent's completion/result claim;
 - verification checks binding, evidence and provider effects;
 - acceptance applies Factory, review and governance criteria;
 - integration records the actual merge or equivalent adoption.

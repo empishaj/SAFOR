@@ -156,6 +156,21 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
     claim = _mapping(scheduling.get('claimPolicy'), 'claimPolicy')
     if claim.get('humanGoEvidenceRequired') is not True:
         raise AgentJobValidationError('CLAIM_REQUIRES_HUMAN_GO_EVIDENCE')
+    if claim.get('claimAuthority') != 'AGENT_STATE_PROVIDER_CAS_READBACK':
+        raise AgentJobValidationError('CLAIM_AUTHORITY_MUST_BE_AGENT_STATE_CAS')
+    claim_target = _write_target(claim.get('claimStateTarget'), 'claimStateTarget')
+    if claim_target['repositoryClass'] != 'CONTROL_REPOSITORY':
+        raise AgentJobValidationError('CLAIM_TARGET_MUST_BE_CONTROL_REPOSITORY')
+    expected_claim_suffix = f"agents/{agent_id}/state.json"
+    if not str(claim_target.get('pathPattern', '')).endswith(expected_claim_suffix):
+        raise AgentJobValidationError('CLAIM_TARGET_MUST_BE_ASSIGNED_AGENT_STATE')
+    if '/master/jobs/' in str(claim_target.get('pathPattern', '')):
+        raise AgentJobValidationError('AGENT_MASTER_JOB_STATE_CLAIM_FORBIDDEN')
+    required_claim_ops = {'READ', 'MODIFY', 'COMMIT', 'PUSH', 'COMPARE_AND_SWAP'}
+    if not required_claim_ops.issubset(set(claim_target.get('allowedOperations') or ())):
+        raise AgentJobValidationError('CLAIM_TARGET_OPERATIONS_INCOMPLETE')
+    if claim_target['repository'] != response_workspace['repository'] or claim_target['branch'] != response_workspace['branch']:
+        raise AgentJobValidationError('CLAIM_TARGET_CONTROL_WORKSPACE_MISMATCH')
     responses = _mapping(job.get('responseContracts'), 'responseContracts')
     if not _REQUIRED_RESPONSE_TYPES.issubset(responses):
         missing = sorted(_REQUIRED_RESPONSE_TYPES - set(responses))

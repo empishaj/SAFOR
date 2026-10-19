@@ -15,6 +15,7 @@
     "session",
     "currentJob",
     "lastResponseRef",
+    "consumedActivationIds",
     "updatedAt"
   ],
   "properties": {
@@ -83,6 +84,15 @@
     "updatedAt": {
       "type": "string",
       "format": "date-time"
+    },
+    "consumedActivationIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 8
+      },
+      "description": "Single-use HUMAN-GO activation IDs authoritatively consumed by provider-confirmed CAS on this AGENT-owned state."
     }
   },
   "$defs": {

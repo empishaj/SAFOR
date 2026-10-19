@@ -215,8 +215,8 @@ def validate():
         errors.append("persistence XOR conformance assertion missing")
     activation = load("v0.14.0/agent-activation-model.json").get("atomicClaimContract", {})
     required = [
-        "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
-        "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+        "CAS_COMMIT_EXACT_PROPOSED_AGENT_STATE_AT_EXPECTED_REVISION",
+        "PROVIDER_READBACK_FULL_COMMITTED_AGENT_STATE",
         "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
         "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE",
     ]
@@ -234,10 +234,13 @@ def validate():
         if conformance_by_id.get(superseded_id, {}).get("status") != "SUPERSEDED":
             errors.append(f"legacy chat-binding conformance is not superseded: {superseded_id}")
     required_claim_evidence = {
-        "READBACK_STATE_EQUALS_PROPOSED_STATE",
+        "READBACK_STATE_EQUALS_PROPOSED_AGENT_STATE",
         "CANONICAL_STATE_DIGEST_MATCH",
         "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-        "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
+        "ACTIVATION_ID_PRESENT_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+        "CURRENT_JOB_CLAIM_ID_EQUALS_ACTIVATION_ID",
+        "AGENT_RUNTIME_STATUS_IS_RUNNING",
+        "MASTER_JOB_STATE_NOT_MUTATED_BY_AGENT",
         "READBACK_REF_PRESENT",
         "READBACK_BLOB_IDENTITY_PRESENT",
     }
@@ -245,10 +248,13 @@ def validate():
         errors.append("GO claim success evidence is incomplete")
 
     provider_claim_requirements = {
-        "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+        "OBSERVED_FULL_AGENT_STATE_EQUALS_PROPOSED_STATE",
         "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
         "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-        "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
+        "OBSERVED_ACTIVATION_ID_PERSISTED_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+        "OBSERVED_CURRENT_JOB_CLAIM_ID_MATCHES_ACTIVATION_ID",
+        "OBSERVED_RUNTIME_STATUS_IS_RUNNING",
+        "MASTER_JOB_STATE_WAS_NOT_MUTATED_BY_AGENT",
         "READBACK_REFERENCE_PRESENT",
         "OBSERVED_BLOB_IDENTITY_PRESENT",
     }
@@ -261,6 +267,10 @@ def validate():
             errors.append(f"provider claim readback contract incomplete: {provider_path}")
         if provider.get("onReadbackMismatch") != "RECONCILE_REQUIRED":
             errors.append(f"provider claim mismatch is not fail-closed: {provider_path}")
+        if provider.get("claimStateOwner") != "AGENT":
+            errors.append(f"provider claim owner is not AGENT: {provider_path}")
+        if provider.get("masterJobStateMutationAllowed") is not False:
+            errors.append(f"provider permits agent MASTER job-state mutation: {provider_path}")
 
     module_map = bundle_map.get("modulePaths", {})
     recovery = load("v0.14.0/module-self-healing-model.json").get("moduleProfiles", [])

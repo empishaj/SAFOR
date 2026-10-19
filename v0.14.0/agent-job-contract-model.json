@@ -29,13 +29,18 @@
     "preGoLifecycle": "WAITING_HUMAN_GO",
     "claimRequiresGoEvidence": true,
     "jobPromptTransportRequired": false,
-    "automaticChatActivationForbidden": true
+    "automaticChatActivationForbidden": true,
+    "claimStateTarget": "agents/{agentId}/state.json",
+    "claimAuthority": "AGENT_STATE_PROVIDER_CAS_READBACK",
+    "masterJobStateAccessDuringClaim": "READ_ONLY"
   },
   "writeSeparation": {
     "productArtifacts": "WORK_REPOSITORY on dedicated branch and allowed paths",
     "responses": "CONTROL_REPOSITORY on explicit response paths",
     "onePermissionNeverImpliesTheOther": true,
-    "agentMayWriteMasterLifecycle": false
+    "agentMayWriteMasterLifecycle": false,
+    "agentClaimState": "Agent may CAS only its own agents/{agentId}/state.json using the exact prebound claim target.",
+    "masterLifecycleReconciliation": "MASTER reconciles master/jobs/{jobId}.json from verified claim/response evidence and retains sole verification/acceptance authority."
   },
   "responses": {
     "requiredTypes": [

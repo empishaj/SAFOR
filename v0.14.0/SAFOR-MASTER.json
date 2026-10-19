@@ -2443,7 +2443,7 @@
     {
       "id": "INV-237",
       "status": "ACTIVE",
-      "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap against the expected state revision, provider readback and persisted activation consumption. In-memory consumption alone is never authoritative."
+      "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap of the assigned agent's own state.json against the expected agent-state revision, exact provider readback and persisted activation consumption. The agent never writes master/jobs/{jobId}.json; in-memory consumption alone is never authoritative."
     },
     {
       "id": "INV-RC5-001",

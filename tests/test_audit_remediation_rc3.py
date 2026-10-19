@@ -40,6 +40,23 @@ class AuditRemediationRc3Tests(unittest.TestCase):
             "transitionHistory": [], "updatedAt": "2026-10-18T09:59:00Z",
         }
 
+    def agent_state(self):
+        return {
+            "format": "SAFOR_AGENT_STATE", "schemaVersion": "0.14.0",
+            "projectId": "project-001", "agentId": "agent-a",
+            "identityRevision": 2, "revision": 7,
+            "runtimeStatus": "WAITING_HUMAN_GO", "session": None,
+            "currentJob": None, "lastResponseRef": None,
+            "consumedActivationIds": [], "updatedAt": "2026-10-18T09:59:00Z",
+        }
+
+    def master_ref(self):
+        return {
+            "repository": "example/safor-memory", "ref": "mastercommit",
+            "path": "projects/example/master/jobs/job-001.json",
+            "blobSha": "masterblob123",
+        }
+
     def ref(self):
         return {"repository": "example/safor-memory", "ref": "commit123", "path": "projects/example/evidence/go.json", "blobSha": "blob1234"}
 
@@ -107,10 +124,19 @@ class AuditRemediationRc3Tests(unittest.TestCase):
 
     def test_go_claim_is_not_authoritative_before_exact_provider_readback(self):
         consumed = set()
+        master = self.state()
+        master["contractRef"] = {
+            "repository": "example/safor-memory", "ref": "jobcommit",
+            "path": "projects/example/agents/agent-a/inbox/job-001.json",
+            "blobSha": "jobblob123",
+        }
         intent = prepare_go_claim(
-            job_state=self.state(), go_evidence=self.evidence(),
-            expected_state_revision=7, consumed_activation_ids=consumed,
+            agent_state=self.agent_state(),
+            master_job_state=master,
+            go_evidence=self.evidence(),
+            expected_agent_state_revision=7,
             go_evidence_ref=self.ref(),
+            master_job_state_ref=self.master_ref(),
         )
         self.assertFalse(intent["authoritative"])
         self.assertEqual(set(), consumed)

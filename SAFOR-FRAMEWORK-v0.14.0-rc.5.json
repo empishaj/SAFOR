@@ -130,7 +130,7 @@
     "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
     "selfHealingRule": "Use one profile-constrained INITIAL recovery attempt separately from retry accounting. SAFOR 0.14 module profiles permit zero additional retries; unknown effects reconcile read-only, and a proven product mutation is never replayed.",
     "agentWorkspaceRule": "AGENT work uses persistent chat-bound identities and repository-native jobs; local .safor/ is never a worker write target.",
-    "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate, claim or start a subagent job; Git and automation events never wake an agent.",
+    "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate a subagent. The atomic claim is provider-CAS/readback of the assigned agent's own state.json; master/jobs remains read-only to the agent, and Git or automation events never wake an agent.",
     "agentResponseRule": "Every dispatched job binds all five typed response templates and exact separate Git return targets before READY.",
     "agentChatRule": "Subagent chats render only minimal operational status; all substantive results, errors, questions and conflicts are versioned Git responses for MASTER.",
     "masterStatusIndexRule": "Routine status is read from compact versioned pointer indexes; global repository scans are forbidden in the normal path.",
@@ -263,7 +263,7 @@
   "integrityManifest": {
     "kernel": {
       "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "800c2585fbf7e2b02b1c5b676929cc53e4d0b32e",
+      "sourceBlobSha": "f5074ec00b6d1d5a0a4a342817963dfa5c38d6cf",
       "selfHealingProfileId": "MRP-KERNEL"
     },
     "initialization": {
@@ -288,7 +288,7 @@
     },
     "agentActivation": {
       "sourcePath": "v0.14.0/agent-activation-model.json",
-      "sourceBlobSha": "340ca7a191febbd6d8086ee6be887b45e3dcec5a",
+      "sourceBlobSha": "c954c7131ec400b2e855cc8fdc0d9fc426591825",
       "selfHealingProfileId": "MRP-AGENTACTIVATION"
     },
     "agentCommunication": {
@@ -303,12 +303,12 @@
     },
     "agentWorkspace": {
       "sourcePath": "v0.14.0/agent-workspace-model.json",
-      "sourceBlobSha": "c2b92b2d3aeb743585418aa52639029642c26a0e",
+      "sourceBlobSha": "e256061d3d0dc981df35a5769860885e0d183b81",
       "selfHealingProfileId": "MRP-AGENTWORKSPACE"
     },
     "agentJobContract": {
       "sourcePath": "v0.14.0/agent-job-contract-model.json",
-      "sourceBlobSha": "7d08c32603f4a1c05b4bd0a2b1b57287d8414759",
+      "sourceBlobSha": "6f95f69e6810304567f201215a31bc1088607011",
       "selfHealingProfileId": "MRP-AGENTJOBCONTRACT"
     },
     "multiAgentScheduler": {
@@ -378,12 +378,12 @@
     },
     "providerGithub": {
       "sourcePath": "v0.14.0/providers/github/0.6.0/package.json",
-      "sourceBlobSha": "1b3253da907af63b74bc7d06a978b8d63c3ba13c",
+      "sourceBlobSha": "c3f2c1a8c0aa077fae9ecdefa86155722693fed0",
       "selfHealingProfileId": "MRP-PROVIDERGITHUB"
     },
     "providerGitlab": {
       "sourcePath": "v0.14.0/providers/gitlab/0.6.0/package.json",
-      "sourceBlobSha": "192a8f3890f8347171a65acd27b338a334a35c65",
+      "sourceBlobSha": "76386d4c5075e69edb5b5a4ded02e55fc2099528",
       "selfHealingProfileId": "MRP-PROVIDERGITLAB"
     },
     "schemaPackageManifest": {
@@ -478,12 +478,12 @@
     },
     "schemaAgentState": {
       "sourcePath": "v0.14.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "93e797b5e35831ffb33f009ffb95fbd4af40b0c5",
+      "sourceBlobSha": "d45ec378fb9cd18987dae3de18a4f7209300a4f3",
       "selfHealingProfileId": "MRP-SCHEMAAGENTSTATE"
     },
     "schemaAgentJob": {
       "sourcePath": "v0.14.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "8cd949e734c14ff4e9691a086ee60a42917c8d67",
+      "sourceBlobSha": "3736b21a58e4926bc3c2523d38aa20ccc8593229",
       "selfHealingProfileId": "MRP-SCHEMAAGENTJOB"
     },
     "schemaAgentJobState": {
@@ -678,7 +678,7 @@
     },
     "conformance": {
       "sourcePath": "v0.14.0/conformance.json",
-      "sourceBlobSha": "8957b3bf0b857dcca70fd14164185502d9668146",
+      "sourceBlobSha": "27f08b3ba3e70ba72d6789e17e32405f875f8477",
       "selfHealingProfileId": "MRP-CONFORMANCE"
     },
     "composablePackageModel": {
@@ -731,7 +731,7 @@
     "kernel": {
       "key": "kernel",
       "sourcePath": "v0.14.0/SAFOR-MASTER.json",
-      "sourceBlobSha": "800c2585fbf7e2b02b1c5b676929cc53e4d0b32e",
+      "sourceBlobSha": "f5074ec00b6d1d5a0a4a342817963dfa5c38d6cf",
       "content": {
         "format": "SAFOR_MASTER_BOOTSTRAP",
         "schemaVersion": "0.14.0",
@@ -3177,7 +3177,7 @@
           {
             "id": "INV-237",
             "status": "ACTIVE",
-            "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap against the expected state revision, provider readback and persisted activation consumption. In-memory consumption alone is never authoritative."
+            "rule": "A HUMAN-GO job claim becomes authoritative only after provider compare-and-swap of the assigned agent's own state.json against the expected agent-state revision, exact provider readback and persisted activation consumption. The agent never writes master/jobs/{jobId}.json; in-memory consumption alone is never authoritative."
           },
           {
             "id": "INV-RC5-001",
@@ -5291,7 +5291,7 @@
     "agentActivation": {
       "key": "agentActivation",
       "sourcePath": "v0.14.0/agent-activation-model.json",
-      "sourceBlobSha": "340ca7a191febbd6d8086ee6be887b45e3dcec5a",
+      "sourceBlobSha": "c954c7131ec400b2e855cc8fdc0d9fc426591825",
       "content": {
         "format": "SAFOR_AGENT_ACTIVATION_MODEL",
         "schemaVersion": "0.14.0",
@@ -5360,7 +5360,7 @@
           "schedulerOutcomeBeforeGo": "WAITING_HUMAN_GO",
           "activationEvidenceRequiredBeforeClaim": true,
           "activationEvidenceAuthority": "DIRECT_HUMAN_GO_BOUND_TO_PINNED_IDENTITY_AND_PERSONAL_INBOX",
-          "claimMode": "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
+          "claimMode": "ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
           "stringSubstringEvidenceForbidden": true,
           "hostSessionAttestationRequired": false,
           "currentInboxSource": "BOUND_MUTABLE_INBOX_INDEX_LOCATION",
@@ -5394,6 +5394,8 @@
             "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
             "ROLE_AND_SKILL_MATCH",
             "MANDATE_ACTIVE",
+            "MASTER_JOB_STATE_READ_ONLY_AND_WAITING_HUMAN_GO",
+            "AGENT_STATE_CLAIM_TARGET_BOUND",
             "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT"
           ],
           "failClosed": true
@@ -5440,8 +5442,12 @@
           "schemaRef": "schemas/human-go-evidence.schema.json"
         },
         "atomicClaimContract": {
-          "expectedState": "WAITING_HUMAN_GO",
-          "requiredExpectedRevision": true,
+          "expectedAgentState": "WAITING_HUMAN_GO",
+          "masterJobStateRequired": "WAITING_HUMAN_GO",
+          "claimStateOwner": "AGENT",
+          "claimStateTarget": "agents/{agentId}/state.json",
+          "masterJobStateMutationAllowed": false,
+          "requiredExpectedAgentStateRevision": true,
           "evidenceBindingFields": [
             "projectId",
             "agentId",
@@ -5454,27 +5460,31 @@
           "providerCompareAndSwapRequired": true,
           "onConflict": "RECONCILE_REQUIRED",
           "authoritativeSequence": [
-            "READ_PINNED_JOB_STATE",
-            "VALIDATE_GO_EVIDENCE",
-            "BUILD_EXACT_PROPOSED_CLAIM_STATE",
-            "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_STATE",
-            "CALCULATE_CANONICAL_PROPOSED_STATE_DIGEST",
-            "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
-            "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+            "READ_AGENT_STATE_AT_EXPECTED_REVISION",
+            "READ_MASTER_JOB_STATE_READ_ONLY",
+            "VALIDATE_GO_EVIDENCE_AND_JOB_BINDINGS",
+            "BUILD_EXACT_PROPOSED_AGENT_CLAIM_STATE",
+            "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_AGENT_STATE",
+            "CALCULATE_CANONICAL_PROPOSED_AGENT_STATE_DIGEST",
+            "CAS_COMMIT_EXACT_PROPOSED_AGENT_STATE_AT_EXPECTED_REVISION",
+            "PROVIDER_READBACK_FULL_COMMITTED_AGENT_STATE",
             "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
             "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE"
           ],
           "inMemoryConsumptionAuthoritative": false,
           "claimSuccessRequiresProviderReadback": true,
           "casFailureOutcome": "RECONCILE_REQUIRED",
-          "activationConsumptionAuthority": "CAS_COMMITTED_JOB_STATE_VERIFIED_BY_PROVIDER_READBACK",
+          "activationConsumptionAuthority": "CAS_COMMITTED_AGENT_STATE_VERIFIED_BY_PROVIDER_READBACK",
           "claimSuccessRequires": [
             "CAS_SUCCEEDED",
-            "FULL_COMMITTED_STATE_READ_BACK",
-            "READBACK_STATE_EQUALS_PROPOSED_STATE",
+            "FULL_COMMITTED_AGENT_STATE_READ_BACK",
+            "READBACK_STATE_EQUALS_PROPOSED_AGENT_STATE",
             "CANONICAL_STATE_DIGEST_MATCH",
             "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-            "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
+            "ACTIVATION_ID_PRESENT_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+            "CURRENT_JOB_CLAIM_ID_EQUALS_ACTIVATION_ID",
+            "AGENT_RUNTIME_STATUS_IS_RUNNING",
+            "MASTER_JOB_STATE_NOT_MUTATED_BY_AGENT",
             "READBACK_REF_PRESENT",
             "READBACK_BLOB_IDENTITY_PRESENT"
           ],
@@ -5482,6 +5492,7 @@
           "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
           "proposedStateIsNonAuthoritativeUntilReadback": true,
           "inboxJobIsAuthoritativeDispatch": true,
+          "masterLifecycleReconciliation": "MASTER_LATER_RECONCILES_CLAIMED_RUNNING_RESPONSE_STATE_FROM_PROVIDER_CONFIRMED_AGENT_CLAIM_AND_RESPONSE_EVIDENCE",
           "hostSessionBindingRequired": false
         }
       },
@@ -5690,7 +5701,7 @@
     "agentWorkspace": {
       "key": "agentWorkspace",
       "sourcePath": "v0.14.0/agent-workspace-model.json",
-      "sourceBlobSha": "c2b92b2d3aeb743585418aa52639029642c26a0e",
+      "sourceBlobSha": "e256061d3d0dc981df35a5769860885e0d183b81",
       "content": {
         "format": "SAFOR_AGENT_WORKSPACE_MODEL",
         "schemaVersion": "0.14.0",
@@ -5712,7 +5723,8 @@
           "masterJobState": "master/jobs/{jobId}.json",
           "masterResponseResolution": "master/response-resolutions/{responseId}.json",
           "inboxIndexSemantics": "MUTABLE_MASTER_OWNED_DISCOVERABILITY_PROJECTION_AT_STABLE_LOCATION",
-          "inboxBootstrapRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
+          "inboxBootstrapRefSemantics": "IMMUTABLE_PROVENANCE_ONLY",
+          "agentClaimState": "agents/{agentId}/state.json"
         },
         "ownership": {
           "MASTER_ONLY": [
@@ -5744,7 +5756,8 @@
           "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
           "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
           "AGENT_RUNS_PREFLIGHT",
-          "AGENT_CLAIMS_WITH_OPTIMISTIC_CONCURRENCY",
+          "AGENT_CLAIMS_OWN_STATE_WITH_PROVIDER_CAS_AND_EXACT_READBACK",
+          "AGENT_EXECUTES_ONLY_AFTER_PROVIDER_CONFIRMED_AGENT_STATE_CLAIM",
           "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
           "AGENT_WRITES_TYPED_RESPONSE_AND_RESPONSE_INDEX",
           "AGENT_EMITS_ONE_LINE_TERMINAL_CHAT_STATUS",
@@ -5765,7 +5778,9 @@
           "noHostSessionAttestationDependency": true,
           "identityComesFromPinnedInitializationNotJob": true,
           "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
-          "identityRemainsStableWhenInboxIndexChanges": true
+          "identityRemainsStableWhenInboxIndexChanges": true,
+          "agentClaimMutatesOnlyOwnState": true,
+          "masterJobLifecycleReconciledFromClaimAndResponseEvidence": true
         },
         "dispatchContract": {
           "sender": "MASTER",
@@ -5779,6 +5794,23 @@
           "rule": "A job is dispatched when MASTER writes the immutable job contract and updates the personal inbox index at the stable bound locator. The identity's bootstrap inbox blob is provenance only and may become stale after dispatch; it is never used for current job discovery. The agent never waits for a copied job prompt and never scans globally for work.",
           "discoverabilityIndexLocationSemantics": "STABLE_REPOSITORY_REF_PATH_LOCATOR_WITH_MUTABLE_CONTENT",
           "bootstrapIndexRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
+        },
+        "claimContract": {
+          "target": "agents/{agentId}/state.json",
+          "owner": "AGENT",
+          "masterJobStateAccess": "READ_ONLY",
+          "method": "PROVIDER_COMPARE_AND_SWAP_PLUS_EXACT_READBACK",
+          "successRuntimeStatus": "RUNNING",
+          "requiredPersistedBindings": [
+            "activationId",
+            "jobId",
+            "dispatchRevision",
+            "identityRevision",
+            "claimId"
+          ],
+          "productMutationBeforeConfirmedClaim": "FORBIDDEN",
+          "masterLifecycleWriteByAgent": "FORBIDDEN",
+          "masterReconciliation": "MASTER may later advance master/jobs/{jobId}.json from verified claim and response evidence."
         }
       },
       "selfHealingProfileId": "MRP-AGENTWORKSPACE"
@@ -5786,7 +5818,7 @@
     "agentJobContract": {
       "key": "agentJobContract",
       "sourcePath": "v0.14.0/agent-job-contract-model.json",
-      "sourceBlobSha": "7d08c32603f4a1c05b4bd0a2b1b57287d8414759",
+      "sourceBlobSha": "6f95f69e6810304567f201215a31bc1088607011",
       "content": {
         "format": "SAFOR_AGENT_JOB_CONTRACT_MODEL",
         "schemaVersion": "0.14.0",
@@ -5818,13 +5850,18 @@
           "preGoLifecycle": "WAITING_HUMAN_GO",
           "claimRequiresGoEvidence": true,
           "jobPromptTransportRequired": false,
-          "automaticChatActivationForbidden": true
+          "automaticChatActivationForbidden": true,
+          "claimStateTarget": "agents/{agentId}/state.json",
+          "claimAuthority": "AGENT_STATE_PROVIDER_CAS_READBACK",
+          "masterJobStateAccessDuringClaim": "READ_ONLY"
         },
         "writeSeparation": {
           "productArtifacts": "WORK_REPOSITORY on dedicated branch and allowed paths",
           "responses": "CONTROL_REPOSITORY on explicit response paths",
           "onePermissionNeverImpliesTheOther": true,
-          "agentMayWriteMasterLifecycle": false
+          "agentMayWriteMasterLifecycle": false,
+          "agentClaimState": "Agent may CAS only its own agents/{agentId}/state.json using the exact prebound claim target.",
+          "masterLifecycleReconciliation": "MASTER reconciles master/jobs/{jobId}.json from verified claim/response evidence and retains sole verification/acceptance authority."
         },
         "responses": {
           "requiredTypes": [
@@ -11894,7 +11931,7 @@
     "providerGithub": {
       "key": "providerGithub",
       "sourcePath": "v0.14.0/providers/github/0.6.0/package.json",
-      "sourceBlobSha": "1b3253da907af63b74bc7d06a978b8d63c3ba13c",
+      "sourceBlobSha": "c3f2c1a8c0aa077fae9ecdefa86155722693fed0",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.14.0",
@@ -12040,19 +12077,22 @@
           },
           "agentClaimProtocol": {
             "requiredOperations": [
-              "READ_JOB_STATE_AT_PINNED_REVISION",
-              "WRITE_EXACT_PROPOSED_JOB_STATE_WITH_EXPECTED_REVISION",
-              "READ_BACK_FULL_COMMITTED_JOB_STATE",
+              "READ_AGENT_STATE_AT_EXPECTED_REVISION",
+              "READ_MASTER_JOB_STATE_READ_ONLY",
+              "WRITE_EXACT_PROPOSED_AGENT_STATE_WITH_EXPECTED_REVISION",
+              "READ_BACK_FULL_COMMITTED_AGENT_STATE",
               "READ_BACK_COMMITTED_BLOB_IDENTITY"
             ],
             "successRequires": [
               "COMPARE_AND_SWAP_SUCCEEDED",
-              "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+              "OBSERVED_FULL_AGENT_STATE_EQUALS_PROPOSED_STATE",
               "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
               "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-              "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
+              "OBSERVED_ACTIVATION_ID_PERSISTED_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+              "OBSERVED_CURRENT_JOB_CLAIM_ID_MATCHES_ACTIVATION_ID",
               "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
-              "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
+              "OBSERVED_RUNTIME_STATUS_IS_RUNNING",
+              "MASTER_JOB_STATE_WAS_NOT_MUTATED_BY_AGENT",
               "READBACK_REFERENCE_PRESENT",
               "OBSERVED_BLOB_IDENTITY_PRESENT"
             ],
@@ -12061,7 +12101,9 @@
             "onReadbackMismatch": "RECONCILE_REQUIRED",
             "proposedStateNeverAuthoritativeBeforeReadback": true,
             "hostSessionBindingRequired": false,
-            "identityAuthority": "PINNED_AGENT_IDENTITY_PLUS_PERSONAL_INBOX_ASSIGNMENT"
+            "identityAuthority": "PINNED_AGENT_IDENTITY_PLUS_PERSONAL_INBOX_ASSIGNMENT",
+            "claimStateOwner": "AGENT",
+            "masterJobStateMutationAllowed": false
           }
         }
       },
@@ -12070,7 +12112,7 @@
     "providerGitlab": {
       "key": "providerGitlab",
       "sourcePath": "v0.14.0/providers/gitlab/0.6.0/package.json",
-      "sourceBlobSha": "192a8f3890f8347171a65acd27b338a334a35c65",
+      "sourceBlobSha": "76386d4c5075e69edb5b5a4ded02e55fc2099528",
       "content": {
         "format": "SAFOR_PACKAGE_MANIFEST",
         "schemaVersion": "0.14.0",
@@ -12215,19 +12257,22 @@
           },
           "agentClaimProtocol": {
             "requiredOperations": [
-              "READ_JOB_STATE_AT_PINNED_REVISION",
-              "WRITE_EXACT_PROPOSED_JOB_STATE_WITH_EXPECTED_REVISION",
-              "READ_BACK_FULL_COMMITTED_JOB_STATE",
+              "READ_AGENT_STATE_AT_EXPECTED_REVISION",
+              "READ_MASTER_JOB_STATE_READ_ONLY",
+              "WRITE_EXACT_PROPOSED_AGENT_STATE_WITH_EXPECTED_REVISION",
+              "READ_BACK_FULL_COMMITTED_AGENT_STATE",
               "READ_BACK_COMMITTED_BLOB_IDENTITY"
             ],
             "successRequires": [
               "COMPARE_AND_SWAP_SUCCEEDED",
-              "OBSERVED_FULL_STATE_EQUALS_PROPOSED_STATE",
+              "OBSERVED_FULL_AGENT_STATE_EQUALS_PROPOSED_STATE",
               "OBSERVED_CANONICAL_STATE_DIGEST_MATCHES",
               "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-              "OBSERVED_ACTIVATION_ID_PERSISTED_IN_CONSUMED_ACTIVATION_IDS",
+              "OBSERVED_ACTIVATION_ID_PERSISTED_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+              "OBSERVED_CURRENT_JOB_CLAIM_ID_MATCHES_ACTIVATION_ID",
               "OBSERVED_REVISION_MATCHES_PROPOSED_REVISION",
-              "OBSERVED_LIFECYCLE_STATUS_IS_CLAIMED",
+              "OBSERVED_RUNTIME_STATUS_IS_RUNNING",
+              "MASTER_JOB_STATE_WAS_NOT_MUTATED_BY_AGENT",
               "READBACK_REFERENCE_PRESENT",
               "OBSERVED_BLOB_IDENTITY_PRESENT"
             ],
@@ -12236,7 +12281,9 @@
             "onReadbackMismatch": "RECONCILE_REQUIRED",
             "proposedStateNeverAuthoritativeBeforeReadback": true,
             "hostSessionBindingRequired": false,
-            "identityAuthority": "PINNED_AGENT_IDENTITY_PLUS_PERSONAL_INBOX_ASSIGNMENT"
+            "identityAuthority": "PINNED_AGENT_IDENTITY_PLUS_PERSONAL_INBOX_ASSIGNMENT",
+            "claimStateOwner": "AGENT",
+            "masterJobStateMutationAllowed": false
           }
         }
       },
@@ -16384,7 +16431,7 @@
     "schemaAgentState": {
       "key": "schemaAgentState",
       "sourcePath": "v0.14.0/schemas/agent-state.schema.json",
-      "sourceBlobSha": "93e797b5e35831ffb33f009ffb95fbd4af40b0c5",
+      "sourceBlobSha": "d45ec378fb9cd18987dae3de18a4f7209300a4f3",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "urn:safor:agent-state:0.14.0",
@@ -16402,6 +16449,7 @@
           "session",
           "currentJob",
           "lastResponseRef",
+          "consumedActivationIds",
           "updatedAt"
         ],
         "properties": {
@@ -16470,6 +16518,15 @@
           "updatedAt": {
             "type": "string",
             "format": "date-time"
+          },
+          "consumedActivationIds": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "minLength": 8
+            },
+            "description": "Single-use HUMAN-GO activation IDs authoritatively consumed by provider-confirmed CAS on this AGENT-owned state."
           }
         },
         "$defs": {
@@ -16554,7 +16611,7 @@
     "schemaAgentJob": {
       "key": "schemaAgentJob",
       "sourcePath": "v0.14.0/schemas/agent-job.schema.json",
-      "sourceBlobSha": "8cd949e734c14ff4e9691a086ee60a42917c8d67",
+      "sourceBlobSha": "3736b21a58e4926bc3c2523d38aa20ccc8593229",
       "content": {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
         "$id": "urn:safor:agent-job:0.14.0",
@@ -16726,7 +16783,8 @@
                     "COMMIT",
                     "PUSH",
                     "OPEN_CHANGE_REQUEST",
-                    "UPDATE_INDEX"
+                    "UPDATE_INDEX",
+                    "COMPARE_AND_SWAP"
                   ]
                 }
               }
@@ -17461,7 +17519,9 @@
                 "required": [
                   "exclusiveAgentClaim",
                   "optimisticConcurrencyRequired",
-                  "humanGoEvidenceRequired"
+                  "humanGoEvidenceRequired",
+                  "claimStateTarget",
+                  "claimAuthority"
                 ],
                 "properties": {
                   "exclusiveAgentClaim": {
@@ -17472,6 +17532,13 @@
                   },
                   "humanGoEvidenceRequired": {
                     "const": true
+                  },
+                  "claimStateTarget": {
+                    "$ref": "#/$defs/writeTarget"
+                  },
+                  "claimAuthority": {
+                    "const": "AGENT_STATE_PROVIDER_CAS_READBACK",
+                    "description": "Claim authority is the exact provider-confirmed CAS of the assigned agent's own state.json; master/jobs remains read-only to the agent."
                   }
                 }
               }
@@ -24094,7 +24161,7 @@
     "conformance": {
       "key": "conformance",
       "sourcePath": "v0.14.0/conformance.json",
-      "sourceBlobSha": "8957b3bf0b857dcca70fd14164185502d9668146",
+      "sourceBlobSha": "27f08b3ba3e70ba72d6789e17e32405f875f8477",
       "content": {
         "format": "SAFOR_CONFORMANCE_SUITE",
         "schemaVersion": "0.14.0",
@@ -26011,7 +26078,7 @@
             "id": "CF-RC5-004",
             "status": "ACTIVE",
             "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
-            "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
+            "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS of the assigned agent's own state.json and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; master/jobs/{jobId}.json remains read-only to the agent.",
             "expected": true
           },
           {
@@ -26019,6 +26086,13 @@
             "status": "ACTIVE",
             "semanticKey": "MUTABLE_INBOX_INDEX_STABLE_IDENTITY",
             "statement": "A persistent Agent Identity separates immutable inbox bootstrap evidence from the mutable personal inbox locator: MASTER may update inbox/index.json for dispatch without changing identityRevision, and agents must never use the bootstrap blob for current job discovery.",
+            "expected": true
+          },
+          {
+            "id": "CF-RC5-006",
+            "status": "ACTIVE",
+            "semanticKey": "AGENT_CLAIM_OWNERSHIP",
+            "statement": "Agent claim authority and MASTER lifecycle authority are separated: the agent may CAS only its own state.json claim target, while master/jobs/{jobId}.json remains MASTER-owned and is reconciled from verified claim and response evidence.",
             "expected": true
           }
         ],
