@@ -58,10 +58,13 @@ class InboxPullAuditRc5Tests(unittest.TestCase):
         activation = model["chatAgentActivationContract"]
         self.assertEqual("HUMAN_GO_REQUIRED", activation["activationMode"])
         self.assertEqual(
-            "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
+            "ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
             activation["claimMode"],
         )
         self.assertFalse(activation["hostSessionAttestationRequired"])
+        self.assertEqual("AGENT", model["atomicClaimContract"]["claimStateOwner"])
+        self.assertFalse(model["atomicClaimContract"]["masterJobStateMutationAllowed"])
+        self.assertEqual("agents/{agentId}/state.json", model["atomicClaimContract"]["claimStateTarget"])
         self.assertEqual(
             "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
             activation["source"],
