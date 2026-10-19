@@ -2459,6 +2459,11 @@
       "id": "INV-RC5-003",
       "status": "ACTIVE",
       "rule": "MASTER dispatches a subagent job by writing the immutable Agent Job JSON to agents/{agentId}/inbox/{jobId}.json and updating agents/{agentId}/inbox/index.json; no job prompt must be transported through chat."
+    },
+    {
+      "id": "INV-RC6-001",
+      "status": "ACTIVE",
+      "rule": "For a normal CHAT_AGENT, MASTER may prepare identity, persist and dispatch Jobs, report readiness and reconcile evidence, but MUST NOT activate the Agent, open or start its chat on behalf of the HUMAN, synthesize HUMAN GO, manufacture HUMAN-GO evidence or advance the Agent-owned execution claim. Only direct HUMAN GO in the initialized Agent chat may trigger execution."
     }
   ],
   "evidencePolicy": {
