@@ -151,7 +151,14 @@
       "masterMayWriteAgentState": false,
       "newHumanGoConsumptionDuringRearm": false,
       "secondHumanGoRequired": false,
-      "onUnsettledPriorMasterJob": "BLOCKED_NO_NEW_JOB_CLAIM"
+      "onUnsettledPriorMasterJob": "BLOCKED_NO_NEW_JOB_CLAIM",
+      "rearmForbiddenDuringInitialization": true,
+      "rearmRequiresSeparateDirectHumanGo": true,
+      "rearmHumanInputSource": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+      "rearmHumanMessage": "GO",
+      "rearmStateMustRetainAllRequiredTopLevelFields": true,
+      "rearmSessionAndCurrentJobRepresentation": "EXPLICIT_NULL",
+      "readyStatusForbiddenIfPersistedStateInvalid": true
     }
   },
   "reidentificationProtocol": {
