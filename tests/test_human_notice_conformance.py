@@ -123,6 +123,15 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertTrue(persistence["providerReadbackRequired"])
         self.assertTrue(persistence["postReadbackSchemaValidationRequired"])
         self.assertTrue(persistence["chatTerminalStatusBeforeValidatedReadbackForbidden"])
+        recovery = model["legacyResponseIndexRecovery"]
+        self.assertEqual("SAFOR_AGENT_OUTBOX_INDEX", recovery["knownLegacyFormat"])
+        self.assertEqual("SAFOR_AGENT_RESPONSE_INDEX", recovery["canonicalFormat"])
+        self.assertEqual("AGENT", recovery["owner"])
+        self.assertEqual(
+            "EXPECTED_BLOB_COMPARE_AND_SWAP_PLUS_PROVIDER_READBACK",
+            recovery["method"],
+        )
+        self.assertIn("MASTER_WRITE_AGENT_OUTBOX_INDEX", recovery["forbidden"])
 
     def test_agent_chat_is_platform_owned_single_line_and_non_domain(self):
         model = self.modules["agentCommunication"]["content"]
