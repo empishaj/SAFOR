@@ -126,6 +126,17 @@ required_preclaim = {
 missing_preclaim = sorted(required_preclaim - preclaim)
 if missing_preclaim:
     fail(f"Agent Job fail-closed preclaim checks missing: {missing_preclaim}")
+rearm = activation_model.get("onHumanGo", {}).get("preSelectionAgentStateHandling", {})
+if rearm.get("rearmStateOwner") != "AGENT":
+    fail("Agent State rearm owner must be AGENT")
+if rearm.get("masterMayWriteAgentState") is not False:
+    fail("MASTER must not rearm Agent State")
+if rearm.get("secondHumanGoRequired") is not False:
+    fail("Safe settled-state rearm must continue the same direct HUMAN GO")
+if set(rearm.get("settledMasterStatuses", [])) != {
+    "REJECTED", "ACCEPTED", "INTEGRATED", "CANCELED", "SUPERSEDED"
+}:
+    fail("Agent State rearm terminal MASTER status set invalid")
 
 responses = modules.get("agentResponseContract", {}).get("content", {}).get("responseTypes", {})
 expected_responses = {"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}
