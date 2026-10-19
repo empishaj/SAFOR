@@ -1,0 +1,74 @@
+{
+  "format": "SAFOR_RELEASE_EVIDENCE_CONTRACT",
+  "contractVersion": "1.0",
+  "appliesToSchemaVersion": "0.14.0",
+  "purpose": "Fail-closed binding of one release candidate to one exact source head, one CI execution and one exact distributable artifact set.",
+  "requiredTopLevelFields": [
+    "format",
+    "schemaVersion",
+    "contractVersion",
+    "contractRef",
+    "product",
+    "version",
+    "status",
+    "createdAt",
+    "provenance",
+    "artifacts",
+    "artifactSetDigest",
+    "artifactCount",
+    "checksumFile",
+    "checksumFileSha256",
+    "validation",
+    "validatedCommands",
+    "truthBoundary",
+    "materializedAt"
+  ],
+  "requiredProvenanceFields": [
+    "repository",
+    "sourceCommitSha",
+    "sourceTreeSha",
+    "workflowHeadSha",
+    "workflowRunId",
+    "workflowRunAttempt",
+    "integrationRef",
+    "exactHeadRequired"
+  ],
+  "requiredArtifactFields": [
+    "path",
+    "sha256",
+    "bytes",
+    "generatedFromSourceCommit"
+  ],
+  "requiredValidationFields": [
+    "status",
+    "validationSourceCommitSha",
+    "validationWorkflowHeadSha",
+    "validationWorkflowRunId",
+    "validatedArtifactSetDigest",
+    "validatedChecksumFileSha256",
+    "validatedAt"
+  ],
+  "invariants": [
+    "provenance.repository == empishaj/SAFOR",
+    "provenance.sourceCommitSha == provenance.workflowHeadSha",
+    "provenance.exactHeadRequired == true",
+    "every artifact.generatedFromSourceCommit == provenance.sourceCommitSha",
+    "every artifact.sha256 == SHA256(actual artifact bytes)",
+    "artifactSetDigest == canonical SHA256 of the ordered artifact identity records",
+    "checksum file path set exactly equals the artifact path set",
+    "checksum values exactly equal every artifact.sha256",
+    "checksumFileSha256 == SHA256(actual checksum file bytes)",
+    "PASS requires validation.status == PASS",
+    "PASS requires validation.validationSourceCommitSha == provenance.sourceCommitSha",
+    "PASS requires validation.validationWorkflowHeadSha == provenance.workflowHeadSha",
+    "PASS requires validation.validationWorkflowRunId == provenance.workflowRunId",
+    "PASS requires validation.validatedArtifactSetDigest == artifactSetDigest",
+    "PASS requires validation.validatedChecksumFileSha256 == checksumFileSha256",
+    "LOCAL workflow evidence may never authorize MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
+  ],
+  "prohibitedClaims": [
+    "A prior successful workflow proves a later changed source tree.",
+    "Updating artifact hashes without exact-source CI provenance is sufficient release evidence.",
+    "Artifact existence alone proves materialization correctness."
+  ]
+}
