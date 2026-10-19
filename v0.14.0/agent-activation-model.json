@@ -121,7 +121,38 @@
     ],
     "failClosed": true,
     "invalidJobContractOutcome": "BLOCKED_NO_CLAIM_NO_PRODUCT_MUTATION",
-    "jobValidationAuthority": "PINNED_AGENT_JOB_SCHEMA_PLUS_REFERENCE_RUNTIME_CONTRACT"
+    "jobValidationAuthority": "PINNED_AGENT_JOB_SCHEMA_PLUS_REFERENCE_RUNTIME_CONTRACT",
+    "preSelectionAgentStateHandling": {
+      "normalReadyStatuses": [
+        "IDLE",
+        "WAITING_HUMAN_GO"
+      ],
+      "settledPriorExecutionStatus": "RESULT_SUBMITTED",
+      "onSettledPriorExecution": [
+        "READ_PRIOR_CURRENT_JOB_BINDING_FROM_AGENT_STATE",
+        "READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+        "REQUIRE_PRIOR_MASTER_JOB_TERMINALLY_SETTLED",
+        "BUILD_REARMED_AGENT_STATE",
+        "PRESERVE_CONSUMED_ACTIVATION_IDS_AND_LAST_RESPONSE_REF",
+        "CLEAR_SESSION_AND_CURRENT_JOB",
+        "VALIDATE_REARMED_AGENT_STATE",
+        "CAS_REARM_AGENT_STATE_AT_EXPECTED_REVISION",
+        "PROVIDER_READBACK_REARMED_AGENT_STATE",
+        "CONTINUE_SAME_DIRECT_HUMAN_GO_WITH_CURRENT_PERSONAL_INBOX"
+      ],
+      "settledMasterStatuses": [
+        "REJECTED",
+        "ACCEPTED",
+        "INTEGRATED",
+        "CANCELED",
+        "SUPERSEDED"
+      ],
+      "rearmStateOwner": "AGENT",
+      "masterMayWriteAgentState": false,
+      "newHumanGoConsumptionDuringRearm": false,
+      "secondHumanGoRequired": false,
+      "onUnsettledPriorMasterJob": "BLOCKED_NO_NEW_JOB_CLAIM"
+    }
   },
   "reidentificationProtocol": {
     "triggers": [
@@ -249,6 +280,10 @@
     "postReadbackSchemaValidationRequired": true,
     "goEvidenceProviderReadbackRequired": true,
     "invalidSchemaOutcome": "BLOCKED_NO_PRODUCT_MUTATION",
-    "freeformClaimStateConstructionForbidden": true
+    "freeformClaimStateConstructionForbidden": true,
+    "rearmBeforeNextClaimWhenPriorResultSettled": true,
+    "rearmRequiresProviderCasAndReadback": true,
+    "rearmPreservesConsumedActivationIds": true,
+    "rearmPreservesLastResponseRef": true
   }
 }
