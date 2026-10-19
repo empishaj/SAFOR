@@ -34,6 +34,13 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         claim = self.modules["agentActivation"]["content"]["atomicClaimContract"]
         self.assertEqual("AGENT", claim["claimStateOwner"])
         self.assertFalse(claim["masterJobStateMutationAllowed"])
+        preclaim = set(self.modules["agentActivation"]["content"]["onHumanGo"]["preClaimChecks"])
+        self.assertTrue({
+            "JOB_CONTRACT_POINTER_EXACT_MATCH",
+            "AGENT_JOB_SCHEMA_VALID",
+            "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+            "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
+        }.issubset(preclaim))
         self.assertTrue(claim["preCasSchemaValidationRequired"])
         self.assertTrue(claim["postReadbackSchemaValidationRequired"])
         self.assertTrue(claim["goEvidenceProviderReadbackRequired"])
