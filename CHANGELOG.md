@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.14.0-rc.6
+
+- Starts the Operational Readiness candidate without reinterpreting the rc.5 evidence history.
+- Freezes the HUMAN operating model: one Domain Framework JSON enters the MASTER chat; MASTER remains the only domain-facing HUMAN interface.
+- Subagents are initialized once with persistent identity and personal Git INBOX binding; later jobs are transported only through Git.
+- Explicit HUMAN `GO` is the only normal chat-agent activation signal and carries no job payload.
+- Release, automated-test and bundle evidence reset to PENDING until exact-head provenance and materialized validation are recorded.
+- Reference-project migration remains blocked until isolated real-Git end-to-end acceptance passes.
+
 ## 0.14.0-rc.5
 
 - Replaces unverifiable host chat/session binding with pinned Agent Identity plus a personal Git INBOX binding.
