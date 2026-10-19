@@ -84,7 +84,9 @@
       "CURRENT_PERSONAL_INBOX_INDEX_AT_BOUND_LOCATION",
       "SELECTED_INBOX_JOB_CONTRACT",
       "SELECTED_MASTER_JOB_STATE",
-      "JOB_REFERENCED_INPUTS_ONLY"
+      "JOB_REFERENCED_INPUTS_ONLY",
+      "BOUND_HUMAN_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
+      "BOUND_AGENT_STATE_SCHEMA_AND_CLAIM_TEMPLATE"
     ],
     "forbiddenDiscovery": [
       "GLOBAL_REPOSITORY_SEARCH",
@@ -106,7 +108,12 @@
       "MANDATE_ACTIVE",
       "MASTER_JOB_STATE_READ_ONLY_AND_WAITING_HUMAN_GO",
       "AGENT_STATE_CLAIM_TARGET_BOUND",
-      "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT"
+      "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT",
+      "HUMAN_GO_EVIDENCE_SCHEMA_AND_TEMPLATE_PINNED",
+      "AGENT_STATE_SCHEMA_AND_CLAIM_TEMPLATE_PINNED",
+      "PROPOSED_GO_EVIDENCE_VALIDATES_BEFORE_PERSISTENCE",
+      "PERSISTED_GO_EVIDENCE_PROVIDER_READBACK_VALID",
+      "PROPOSED_AGENT_STATE_VALIDATES_BEFORE_CAS"
     ],
     "failClosed": true
   },
@@ -149,7 +156,16 @@
       "singleUse": true,
       "jobPromptTransported": false
     },
-    "schemaRef": "schemas/human-go-evidence.schema.json"
+    "schemaRef": "schemas/human-go-evidence.schema.json",
+    "templateRef": "templates/human-go-evidence.template.json",
+    "persistence": {
+      "pathPattern": "agents/{agentId}/evidence/{jobId}/human-go-{activationId}.json",
+      "owner": "AGENT",
+      "requiredBeforeClaim": true,
+      "providerReadbackRequired": true,
+      "schemaValidationRequiredBeforeWrite": true,
+      "schemaValidationRequiredAfterReadback": true
+    }
   },
   "atomicClaimContract": {
     "expectedAgentState": "WAITING_HUMAN_GO",
@@ -172,12 +188,22 @@
     "authoritativeSequence": [
       "READ_AGENT_STATE_AT_EXPECTED_REVISION",
       "READ_MASTER_JOB_STATE_READ_ONLY",
+      "LOAD_BOUND_HUMAN_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
+      "BUILD_EXACT_HUMAN_GO_EVIDENCE_FROM_TEMPLATE",
+      "VALIDATE_HUMAN_GO_EVIDENCE_AGAINST_SCHEMA",
+      "PERSIST_HUMAN_GO_EVIDENCE",
+      "PROVIDER_READBACK_HUMAN_GO_EVIDENCE",
+      "VALIDATE_READBACK_HUMAN_GO_EVIDENCE_AGAINST_SCHEMA",
       "VALIDATE_GO_EVIDENCE_AND_JOB_BINDINGS",
-      "BUILD_EXACT_PROPOSED_AGENT_CLAIM_STATE",
+      "LOAD_BOUND_AGENT_STATE_SCHEMA_AND_CLAIM_TEMPLATE",
+      "BUILD_EXACT_PROPOSED_AGENT_CLAIM_STATE_FROM_TEMPLATE",
       "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_AGENT_STATE",
+      "SET_CURRENT_JOB_CLAIM_ID_EQUAL_ACTIVATION_ID",
+      "VALIDATE_PROPOSED_AGENT_STATE_AGAINST_SCHEMA",
       "CALCULATE_CANONICAL_PROPOSED_AGENT_STATE_DIGEST",
       "CAS_COMMIT_EXACT_PROPOSED_AGENT_STATE_AT_EXPECTED_REVISION",
       "PROVIDER_READBACK_FULL_COMMITTED_AGENT_STATE",
+      "VALIDATE_READBACK_AGENT_STATE_AGAINST_SCHEMA",
       "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
       "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE"
     ],
@@ -196,13 +222,27 @@
       "AGENT_RUNTIME_STATUS_IS_RUNNING",
       "MASTER_JOB_STATE_NOT_MUTATED_BY_AGENT",
       "READBACK_REF_PRESENT",
-      "READBACK_BLOB_IDENTITY_PRESENT"
+      "READBACK_BLOB_IDENTITY_PRESENT",
+      "GO_EVIDENCE_PERSISTED_AND_PROVIDER_READ_BACK",
+      "GO_EVIDENCE_VALIDATES_AGAINST_BOUND_SCHEMA",
+      "PROPOSED_AGENT_STATE_VALIDATES_AGAINST_BOUND_SCHEMA_BEFORE_CAS",
+      "READBACK_AGENT_STATE_VALIDATES_AGAINST_BOUND_SCHEMA"
     ],
     "persistActivationConsumptionInsideCasState": true,
     "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
     "proposedStateIsNonAuthoritativeUntilReadback": true,
     "inboxJobIsAuthoritativeDispatch": true,
     "masterLifecycleReconciliation": "MASTER_LATER_RECONCILES_CLAIMED_RUNNING_RESPONSE_STATE_FROM_PROVIDER_CONFIRMED_AGENT_CLAIM_AND_RESPONSE_EVIDENCE",
-    "hostSessionBindingRequired": false
+    "hostSessionBindingRequired": false,
+    "humanGoEvidenceSchemaRef": "schemas/human-go-evidence.schema.json",
+    "humanGoEvidenceTemplateRef": "templates/human-go-evidence.template.json",
+    "agentStateSchemaRef": "schemas/agent-state.schema.json",
+    "claimStateTemplateRef": "templates/agent-state-claim.template.json",
+    "resultSubmittedStateTemplateRef": "templates/agent-state-result-submitted.template.json",
+    "preCasSchemaValidationRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "goEvidenceProviderReadbackRequired": true,
+    "invalidSchemaOutcome": "BLOCKED_NO_PRODUCT_MUTATION",
+    "freeformClaimStateConstructionForbidden": true
   }
 }
