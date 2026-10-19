@@ -220,6 +220,13 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         target = _write_target(binding.get('writeTarget'), 'responseWriteTarget')
         if target['repositoryClass'] != 'CONTROL_REPOSITORY':
             raise AgentJobValidationError(f'RESPONSE_TARGET_NOT_CONTROL:{response_type}')
+        expected_response_suffix = (
+            f"agents/{agent_id}/outbox/{{jobId}}/{{responseId}}.json"
+        )
+        if not str(target.get('pathPattern', '')).endswith(expected_response_suffix):
+            raise AgentJobValidationError(
+                f'RESPONSE_TARGET_PATH_INVALID:{response_type}'
+            )
         response_repositories.add((target['repository'], target['branch']))
         if binding.get('required') is not True:
             raise AgentJobValidationError(f'RESPONSE_CONTRACT_MUST_BE_REQUIRED:{response_type}')
@@ -237,6 +244,9 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
     index_target = _write_target(responses.get('responseIndexTarget'), 'responseIndexTarget')
     if (index_target['repository'], index_target['branch']) not in response_repositories:
         raise AgentJobValidationError('RESPONSE_INDEX_TARGET_MISMATCH')
+    expected_index_suffix = f"agents/{agent_id}/outbox/index.json"
+    if not str(index_target.get('pathPattern', '')).endswith(expected_index_suffix):
+        raise AgentJobValidationError('RESPONSE_INDEX_TARGET_PATH_INVALID')
     _pointer(responses.get('resolutionSchemaRef'), 'resolutionSchemaRef')
     communication = _mapping(job.get('communicationContract'), 'communicationContract')
     _pointer(communication.get('modelRef'), 'communicationModelRef')
