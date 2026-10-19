@@ -268,6 +268,158 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         if constraints.get(field) is not True:
             raise AgentJobValidationError(f'JOB_CONSTRAINT_REQUIRED:{field}')
 
+
+def _path_is_covered(path: str, allowed_paths: list[str]) -> bool:
+    value = str(path or "")
+    for allowed in allowed_paths:
+        prefix = str(allowed or "")
+        if not prefix:
+            continue
+        if value == prefix or value.startswith(prefix):
+            return True
+    return False
+
+
+def validate_authority_basis_coverage(
+    *,
+    job: Mapping[str, Any],
+    authority_basis: Mapping[str, Any],
+    authority_basis_ref: Mapping[str, Any] | None = None,
+) -> None:
+    """Fail closed when a resolved active mandate does not cover the Job.
+
+    The job's authorityBasis pointer stays immutable. MASTER and the Agent may
+    use this validator after provider readback of that pointer. Provider rights
+    remain a separate, mandatory check.
+    """
+
+    validate_agent_job(job)
+    job = _mapping(job, "job")
+    mandate = _mapping(authority_basis, "authorityBasisRecord")
+    authorization = _mapping(job.get("authorization"), "authorization")
+    pinned = _pointer(authorization.get("authorityBasis"), "authorityBasis")
+
+    if authority_basis_ref is not None:
+        observed = _pointer(authority_basis_ref, "authorityBasisRef")
+        for field in ("repository", "ref", "path", "blobSha"):
+            if observed.get(field) != pinned.get(field):
+                raise AgentJobValidationError(
+                    f"AUTHORITY_BASIS_POINTER_MISMATCH:{field}"
+                )
+
+    if mandate.get("schemaVersion") != "0.14.0":
+        raise AgentJobValidationError("AUTHORITY_BASIS_SCHEMA_VERSION_INVALID")
+    if mandate.get("status") != "ACTIVE":
+        raise AgentJobValidationError("AUTHORITY_BASIS_NOT_ACTIVE")
+
+    lineage = _mapping(job.get("lineage"), "lineage")
+    assignment = _mapping(job.get("assignment"), "assignment")
+    if mandate.get("projectId") != lineage.get("projectId"):
+        raise AgentJobValidationError("AUTHORITY_BASIS_PROJECT_MISMATCH")
+    if mandate.get("agentId") != assignment.get("agentId"):
+        raise AgentJobValidationError("AUTHORITY_BASIS_AGENT_MISMATCH")
+
+    if mandate.get("humanGoRequired") is not True:
+        raise AgentJobValidationError("AUTHORITY_BASIS_HUMAN_GO_REQUIRED")
+    if mandate.get("humanOnlyActivation") is not True:
+        raise AgentJobValidationError("AUTHORITY_BASIS_HUMAN_ONLY_REQUIRED")
+    if mandate.get("masterMayActivateAgent") is not False:
+        raise AgentJobValidationError("AUTHORITY_BASIS_MASTER_ACTIVATION_FORBIDDEN")
+    if mandate.get("mergeAllowed") is not False:
+        raise AgentJobValidationError("AUTHORITY_BASIS_MERGE_FORBIDDEN")
+    if mandate.get("deployAllowed") is not False:
+        raise AgentJobValidationError("AUTHORITY_BASIS_DEPLOY_FORBIDDEN")
+
+    permissions = authorization.get("repositoryPermissions") or []
+    product_permissions = [
+        _mapping(p, "productPermission")
+        for p in permissions
+        if isinstance(p, Mapping) and p.get("repositoryClass") == "WORK_REPOSITORY"
+    ]
+    control_permissions = [
+        _mapping(p, "controlPermission")
+        for p in permissions
+        if isinstance(p, Mapping) and p.get("repositoryClass") == "CONTROL_REPOSITORY"
+    ]
+    if len(product_permissions) != 1 or len(control_permissions) != 1:
+        raise AgentJobValidationError("AUTHORITY_BASIS_PERMISSION_CLASS_CARDINALITY_INVALID")
+
+    product = product_permissions[0]
+    control = control_permissions[0]
+    if product.get("repository") != mandate.get("allowedProductRepository"):
+        raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_REPOSITORY_NOT_COVERED")
+
+    allowed_product_branches = mandate.get("allowedProductBranches")
+    if allowed_product_branches is None:
+        single = mandate.get("allowedProductBranch")
+        allowed_product_branches = [single] if single else []
+    if not isinstance(allowed_product_branches, list) or not allowed_product_branches:
+        raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_BRANCH_SET_MISSING")
+
+    requested_product_branches = list(
+        _mapping(product.get("write"), "productWriteScope").get("allowedBranches") or []
+    )
+    workspace = _mapping(job.get("workspace"), "workspace")
+    product_workspace = _mapping(workspace.get("productWorkspace"), "productWorkspace")
+    requested_product_branches.append(str(product_workspace.get("jobBranch") or ""))
+    product_target = _write_target(
+        _mapping(job.get("outputContract"), "outputContract").get("productWriteTarget"),
+        "productWriteTarget",
+    )
+    requested_product_branches.append(str(product_target.get("branch") or ""))
+    for requested in requested_product_branches:
+        if requested not in allowed_product_branches:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_PRODUCT_BRANCH_NOT_COVERED"
+            )
+
+    allowed_paths = mandate.get("allowedProductPaths")
+    if not isinstance(allowed_paths, list) or not allowed_paths:
+        raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_PATH_SET_MISSING")
+    requested_paths = list(
+        _mapping(product.get("write"), "productWriteScope").get("allowedPaths") or []
+    )
+    requested_paths.extend(product_workspace.get("allowedPaths") or [])
+    requested_paths.append(str(product_target.get("pathPattern") or ""))
+    for requested in requested_paths:
+        if not _path_is_covered(str(requested), allowed_paths):
+            raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_PATH_NOT_COVERED")
+
+    allowed_control_branch = _nonempty(
+        mandate.get("allowedControlBranch"),
+        "AUTHORITY_BASIS_CONTROL_BRANCH_MISSING",
+    )
+    control_branches = list(
+        _mapping(control.get("write"), "controlWriteScope").get("allowedBranches") or []
+    )
+    response_workspace = _write_target(
+        workspace.get("responseWorkspace"), "responseWorkspace"
+    )
+    control_branches.append(str(response_workspace.get("branch") or ""))
+    claim = _mapping(
+        _mapping(job.get("scheduling"), "scheduling").get("claimPolicy"),
+        "claimPolicy",
+    )
+    control_branches.append(
+        str(_write_target(claim.get("claimStateTarget"), "claimStateTarget").get("branch") or "")
+    )
+    control_branches.append(
+        str(_write_target(claim.get("goEvidenceWriteTarget"), "goEvidenceWriteTarget").get("branch") or "")
+    )
+    for requested in control_branches:
+        if requested != allowed_control_branch:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_CONTROL_BRANCH_NOT_COVERED"
+            )
+
+    provenance = _mapping(job.get("provenance"), "provenance")
+    mandate_ref = _pointer(provenance.get("mandateRef"), "mandateRef")
+    for field in ("repository", "ref", "path", "blobSha"):
+        if mandate_ref.get(field) != pinned.get(field):
+            raise AgentJobValidationError(
+                f"JOB_MANDATE_AND_AUTHORITY_BASIS_POINTER_MISMATCH:{field}"
+            )
+
 def validate_job_state_transition(*, from_status: str, to_status: str, evidence_refs: list[Any], go_evidence: Mapping[str, Any] | None = None, expected_go_context: Mapping[str, Any] | None = None, consumed_activation_ids: set[str] | frozenset[str] | None = None) -> None:
     allowed = _TRANSITIONS.get(from_status, set())
     if to_status not in allowed:
