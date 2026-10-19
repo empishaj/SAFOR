@@ -112,6 +112,25 @@ class HumanNoticeConformanceTests(unittest.TestCase):
             "postReadbackSchemaValidationRequired",
         }.issubset(response_binding_required))
 
+    def test_agent_job_contract_requires_authority_coverage_before_dispatch(self):
+        model = self.modules["agentJobContract"]["content"]
+        coverage = model["authorityCoverage"]
+        self.assertTrue(coverage["requiredBeforePublication"])
+        self.assertTrue(coverage["activeStatusRequired"])
+        self.assertTrue(coverage["providerRightsAreSeparateFromMandateCoverage"])
+        self.assertEqual(
+            "DO_NOT_PUBLISH_OR_DISPATCH_JOB",
+            coverage["onCoverageFailure"],
+        )
+        self.assertIn(
+            "PRODUCT_BRANCH_COVERS_JOB_WORKSPACE_PERMISSION_AND_OUTPUT_TARGET",
+            coverage["coverageChecks"],
+        )
+        self.assertIn(
+            "CONTROL_BRANCH_COVERS_ALL_CONTROL_WRITES",
+            coverage["coverageChecks"],
+        )
+
     def test_response_contract_has_exact_five_types(self):
         model = self.modules["agentResponseContract"]["content"]
         self.assertEqual({"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}, set(model["responseTypes"]))
