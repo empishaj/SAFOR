@@ -154,7 +154,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         observed = json.loads(json.dumps(intent["proposedState"]))
         observed["currentJob"]["jobId"] = "job-other"
         with self.assertRaisesRegex(
-            GoEvidenceValidationError, "PROVIDER_CLAIM_STATE_MISMATCH"
+            GoEvidenceValidationError, "AGENT_STATE_CURRENT_JOB_BINDING_MISMATCH"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=intent,
@@ -196,7 +196,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         tampered_intent["proposedState"] = observed
         tampered_intent["proposedStateDigest"] = digest(observed)
         with self.assertRaisesRegex(
-            GoEvidenceValidationError, "PROVIDER_CLAIM_ACTIVATION_NOT_PERSISTED"
+            GoEvidenceValidationError, "AGENT_STATE_CLAIM_ACTIVATION_NOT_CONSUMED"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
@@ -212,7 +212,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         tampered_intent["proposedState"] = observed
         tampered_intent["proposedStateDigest"] = digest(observed)
         with self.assertRaisesRegex(
-            GoEvidenceValidationError, "PROVIDER_CLAIM_ID_NOT_PERSISTED"
+            GoEvidenceValidationError, "AGENT_STATE_CLAIM_ID_BINDING_MISMATCH"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
