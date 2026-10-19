@@ -34,6 +34,15 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         claim = self.modules["agentActivation"]["content"]["atomicClaimContract"]
         self.assertEqual("AGENT", claim["claimStateOwner"])
         self.assertFalse(claim["masterJobStateMutationAllowed"])
+        self.assertTrue(claim["preCasSchemaValidationRequired"])
+        self.assertTrue(claim["postReadbackSchemaValidationRequired"])
+        self.assertTrue(claim["goEvidenceProviderReadbackRequired"])
+        self.assertEqual("schemas/agent-state.schema.json", claim["agentStateSchemaRef"])
+        self.assertEqual("templates/agent-state-claim.template.json", claim["claimStateTemplateRef"])
+        self.assertEqual(
+            "templates/agent-state-result-submitted.template.json",
+            claim["resultSubmittedStateTemplateRef"],
+        )
         self.assertEqual("HUMAN_ONLY", activation["activationAuthority"])
         self.assertFalse(activation["masterMayActivateChat"])
         self.assertFalse(activation["masterMaySynthesizeHumanGo"])
@@ -58,12 +67,38 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertTrue({"domainContext", "responseContracts", "communicationContract"}.issubset(schema["required"]))
         required_responses = set(schema["$defs"]["responseContracts"]["required"])
         self.assertTrue({"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}.issubset(required_responses))
+        claim_required = set(
+            schema["$defs"]["scheduling"]["properties"]["claimPolicy"]["required"]
+        )
+        self.assertTrue({
+            "humanGoEvidenceSchemaRef",
+            "humanGoEvidenceTemplateRef",
+            "goEvidenceWriteTarget",
+            "agentStateSchemaRef",
+            "claimStateTemplateRef",
+            "resultSubmittedStateTemplateRef",
+            "preCasSchemaValidationRequired",
+            "postReadbackSchemaValidationRequired",
+            "goEvidenceProviderReadbackRequired",
+        }.issubset(claim_required))
+        response_binding_required = set(schema["$defs"]["responseBinding"]["required"])
+        self.assertTrue({
+            "preWriteSchemaValidationRequired",
+            "providerReadbackRequired",
+            "postReadbackSchemaValidationRequired",
+        }.issubset(response_binding_required))
 
     def test_response_contract_has_exact_five_types(self):
         model = self.modules["agentResponseContract"]["content"]
         self.assertEqual({"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}, set(model["responseTypes"]))
         for response_type, contract in model["responseTypes"].items():
             self.assertTrue(contract["templateRef"].startswith("templates/responses/"), response_type)
+        persistence = model["persistenceProtocol"]
+        self.assertTrue(persistence["freeformResponseConstructionForbidden"])
+        self.assertTrue(persistence["preWriteSchemaValidationRequired"])
+        self.assertTrue(persistence["providerReadbackRequired"])
+        self.assertTrue(persistence["postReadbackSchemaValidationRequired"])
+        self.assertTrue(persistence["chatTerminalStatusBeforeValidatedReadbackForbidden"])
 
     def test_agent_chat_is_platform_owned_single_line_and_non_domain(self):
         model = self.modules["agentCommunication"]["content"]
@@ -82,7 +117,13 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertTrue(model["principles"]["staleProjectionMustBeDisclosed"])
 
     def test_all_domain_distributions_embed_integrated_v014_contracts(self):
-        required = {"chatExecution", "agentActivation", "agentResponseContract", "agentCommunication", "masterStatus", "schemaHumanGoEvidence", "schemaAgentResponse", "schemaAgentChatOutput", "executionAttempt"}
+        required = {
+            "chatExecution", "agentActivation", "agentResponseContract",
+            "agentCommunication", "masterStatus", "schemaHumanGoEvidence",
+            "schemaAgentResponse", "schemaAgentChatOutput", "executionAttempt",
+            "templateHumanGoEvidence", "templateAgentStateClaim",
+            "templateAgentStateResultSubmitted",
+        }
         for file_name in ("SAFOR-FRAMEWORK-WEBSITE.json", "SAFOR-FRAMEWORK-SAAS.json", "SAFOR-FRAMEWORK-BOOK-CREATION.json"):
             distribution = load(file_name)
             framework = distribution["framework"]
