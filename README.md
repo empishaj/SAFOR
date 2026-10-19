@@ -12,6 +12,8 @@ SAFOR is loaded as JSON into an ordinary compatible LLM chat. No customer-instal
 
 MASTER is the only fachliche and organizational HUMAN interface. An agent does not conduct domain discussion with the HUMAN; it writes substantive results, questions, conflicts and evidence to the contracted Git targets and renders only minimal operational status in its initialized agent chat.
 
+For normal `CHAT_AGENT` execution, activation authority is HUMAN-only: MASTER prepares and dispatches the Job, but only direct HUMAN `GO` in the initialized Agent chat may trigger execution. MASTER does not start the Agent chat, synthesize `GO` or create HUMAN-GO evidence on the HUMAN's behalf.
+
 ## Start here
 
 - Nontechnical German test guide: [START-HIER.md](START-HIER.md)
