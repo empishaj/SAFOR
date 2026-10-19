@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 from pathlib import Path
-from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_job_state_transition
+from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_job_state_transition, validate_initialization_acknowledgement
 ROOT = Path(__file__).resolve().parents[1]
 
 def load(path):
@@ -180,6 +180,70 @@ class AgentJobV014Tests(unittest.TestCase):
                 self.assertNotIn('\n', output['text'])
                 self.assertLessEqual(len(output['text'].split()), 36)
                 self.assertFalse(output['containsDomainDetail'])
+
+    def test_initialization_acknowledgement_requires_exact_pinned_identity(self):
+        pinned = {
+            'format': 'SAFOR_AGENT_IDENTITY',
+            'projectId': 'project-001',
+            'agentId': 'agent-dev-003',
+            'displayName': 'Nova Dev',
+            'identityRevision': 2,
+        }
+        output = render_agent_chat_output(
+            status='READY',
+            project_id='project-001',
+            agent_id='agent-dev-003',
+            display_name='Nova Dev',
+            identity_revision=2,
+        )
+        validate_initialization_acknowledgement(
+            pinned_identity=pinned,
+            chat_output=output,
+        )
+
+    def test_initialization_acknowledgement_rejects_self_versioned_agent_id(self):
+        pinned = {
+            'format': 'SAFOR_AGENT_IDENTITY',
+            'projectId': 'project-001',
+            'agentId': 'worker-e2e',
+            'displayName': 'Echo E2E',
+            'identityRevision': 1,
+        }
+        output = render_agent_chat_output(
+            status='READY',
+            project_id='project-001',
+            agent_id='worker-e2e-002',
+            display_name='Echo E2E v2',
+            identity_revision=2,
+        )
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'INITIALIZATION_AGENT_ID_MISMATCH',
+        ):
+            validate_initialization_acknowledgement(
+                pinned_identity=pinned,
+                chat_output=output,
+            )
+
+    def test_reidentification_output_is_allowed_instead_of_false_ready(self):
+        pinned = {
+            'format': 'SAFOR_AGENT_IDENTITY',
+            'projectId': 'project-001',
+            'agentId': 'worker-e2e',
+            'displayName': 'Echo E2E',
+            'identityRevision': 1,
+        }
+        output = render_agent_chat_output(
+            status='REIDENTIFICATION_REQUIRED',
+            project_id='project-001',
+            agent_id='worker-e2e',
+            display_name='Echo E2E',
+            identity_revision=1,
+        )
+        validate_initialization_acknowledgement(
+            pinned_identity=pinned,
+            chat_output=output,
+        )
 
     def test_blocked_chat_requires_git_reference(self):
         with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT'):
