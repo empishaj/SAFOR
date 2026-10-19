@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from tools.release_provenance import collect_validation_errors
+from release_provenance import collect_validation_errors
 
 ROOT = Path(__file__).resolve().parents[1]
 CONTRACT_REF = "docs/releases/RELEASE-EVIDENCE-CONTRACT-v1.json"
