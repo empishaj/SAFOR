@@ -7,7 +7,9 @@ from pathlib import Path
 from runtime.agent_responses import (
     AgentResponseValidationError,
     confirm_agent_response_after_provider_readback,
+    confirm_legacy_response_index_recovery_after_provider_readback,
     prepare_agent_response,
+    prepare_legacy_response_index_recovery,
     validate_agent_response,
     validate_agent_response_index,
     validate_response_index_binding,
@@ -570,6 +572,110 @@ class AgentResponsesV014Tests(unittest.TestCase):
                 expected_agent_id=response["agentId"],
                 expected_identity_revision=response["identityRevision"],
                 expected_response=response,
+            )
+
+    def legacy_outbox_index(self):
+        return {
+            "format": "SAFOR_AGENT_OUTBOX_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": "project-001",
+            "agentId": "agent-dev-003",
+            "identityRevision": 2,
+            "revision": 1,
+            "entries": [
+                {
+                    "responseId": "legacy-result-001",
+                    "responseType": "JOB_RESULT",
+                    "jobId": "job-013",
+                    "responseRef": {
+                        "repository": "example/safor-memory",
+                        "ref": "legacy-commit",
+                        "path": (
+                            "projects/example/agents/agent-dev-003/outbox/"
+                            "job-013.job_result.json"
+                        ),
+                        "blobSha": "legacyblob123",
+                    },
+                    "status": "SUBMITTED",
+                    "createdAt": "2026-10-16T10:00:00Z",
+                }
+            ],
+            "updatedAt": "2026-10-16T10:01:00Z",
+        }
+
+    def test_legacy_outbox_index_recovery_preserves_history_and_canonicalizes(self):
+        legacy = self.legacy_outbox_index()
+        intent = prepare_legacy_response_index_recovery(
+            legacy_index=legacy,
+            expected_project_id="project-001",
+            expected_agent_id="agent-dev-003",
+            expected_identity_revision=2,
+            expected_blob_sha="legacy-index-blob",
+            recovered_at="2026-10-19T19:00:00Z",
+        )
+        self.assertFalse(intent["authoritative"])
+        self.assertEqual("AGENT", intent["stateOwner"])
+        proposed = intent["proposedIndex"]
+        self.assertEqual("SAFOR_AGENT_RESPONSE_INDEX", proposed["format"])
+        self.assertEqual(2, proposed["revision"])
+        self.assertFalse(proposed["authoritativeAcceptance"])
+        self.assertEqual(1, len(proposed["entries"]))
+        migrated = proposed["entries"][0]
+        self.assertEqual(
+            legacy["entries"][0]["responseRef"],
+            migrated["responseRef"],
+        )
+        self.assertEqual("SUPERSEDED", migrated["responseState"])
+        self.assertIsNone(migrated["resolutionRef"])
+        validate_agent_response_index(
+            proposed,
+            expected_project_id="project-001",
+            expected_agent_id="agent-dev-003",
+            expected_identity_revision=2,
+        )
+
+        confirmed = confirm_legacy_response_index_recovery_after_provider_readback(
+            recovery_intent=intent,
+            provider_readback={
+                "casSucceeded": True,
+                "readbackVerified": True,
+                "observedIndex": copy.deepcopy(proposed),
+                "observedBlobSha": "canonical-index-blob",
+            },
+        )
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("AGENT", confirmed["stateOwner"])
+        self.assertEqual(proposed, confirmed["index"])
+
+    def test_legacy_response_index_recovery_rejects_unknown_shape(self):
+        legacy = self.legacy_outbox_index()
+        legacy["unexpected"] = True
+        with self.assertRaisesRegex(
+            AgentResponseValidationError,
+            "LEGACY_RESPONSE_INDEX_FIELDS_INVALID",
+        ):
+            prepare_legacy_response_index_recovery(
+                legacy_index=legacy,
+                expected_project_id="project-001",
+                expected_agent_id="agent-dev-003",
+                expected_identity_revision=2,
+                expected_blob_sha="legacy-index-blob",
+                recovered_at="2026-10-19T19:00:00Z",
+            )
+
+    def test_legacy_response_index_recovery_rejects_foreign_agent(self):
+        legacy = self.legacy_outbox_index()
+        with self.assertRaisesRegex(
+            AgentResponseValidationError,
+            "LEGACY_RESPONSE_INDEX_AGENT_MISMATCH",
+        ):
+            prepare_legacy_response_index_recovery(
+                legacy_index=legacy,
+                expected_project_id="project-001",
+                expected_agent_id="other-agent",
+                expected_identity_revision=2,
+                expected_blob_sha="legacy-index-blob",
+                recovered_at="2026-10-19T19:00:00Z",
             )
 
     def test_response_index_path_is_deterministic(self):
