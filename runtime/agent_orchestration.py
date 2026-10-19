@@ -3,6 +3,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any, Mapping
 
+from runtime.agent_recovery import AgentRecoveryError, build_blocked_supersession_recovery_plan
+
 
 class AgentOrchestrationError(ValueError):
     """Base error for deterministic SAFOR agent-orchestration checks."""
@@ -19,6 +21,7 @@ class ActivationDecision:
     reason_code: str
     selected_job: Mapping[str, Any] | None = None
     activation_evidence: Mapping[str, Any] | None = None
+    recovery_plan: Mapping[str, Any] | None = None
     required_reads: tuple[str, ...] = ()
     forbidden_reads: tuple[str, ...] = ()
 
@@ -30,6 +33,9 @@ class ActivationDecision:
             "selectedJob": dict(self.selected_job) if self.selected_job else None,
             "activationEvidence": (
                 dict(self.activation_evidence) if self.activation_evidence else None
+            ),
+            "recoveryPlan": (
+                dict(self.recovery_plan) if self.recovery_plan else None
             ),
             "requiredReads": list(self.required_reads),
             "forbiddenReads": list(self.forbidden_reads),
@@ -201,6 +207,7 @@ def evaluate_human_go_activation(
     human_message: str,
     activation_id: str,
     observed_at: str,
+    response_resolution: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Evaluate one deliberate HUMAN-GO activation without mutating repositories."""
 
@@ -225,7 +232,7 @@ def evaluate_human_go_activation(
         reason = "AGENT_STATE_AGENT_MISMATCH"
     elif agent_state.get("identityRevision") != revision:
         reason = "AGENT_STATE_IDENTITY_REVISION_MISMATCH"
-    elif agent_state.get("runtimeStatus") not in {"IDLE", "WAITING_HUMAN_GO"}:
+    elif agent_state.get("runtimeStatus") not in {"IDLE", "WAITING_HUMAN_GO", "BLOCKED"}:
         reason = "AGENT_NOT_WAITING_FOR_GO"
     else:
         reason = ""
