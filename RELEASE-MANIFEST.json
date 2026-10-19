@@ -177,7 +177,12 @@
     "PERSONAL_AGENT_INBOX_JOB_TRANSPORT",
     "HUMAN_GO_INBOX_PULL_ACTIVATION",
     "HOST_SESSION_ATTESTATION_NOT_REQUIRED",
-    "IDENTITY_REVISION_AND_INBOX_BOUND_CLAIM"
+    "IDENTITY_REVISION_AND_INBOX_BOUND_CLAIM",
+    "EXACT_RELEASE_SOURCE_PROVENANCE",
+    "WORKFLOW_HEAD_SOURCE_BINDING",
+    "ARTIFACT_SET_DIGEST_BINDING",
+    "CHECKSUM_FILE_DIGEST_BINDING",
+    "RELEASE_EVIDENCE_DRIFT_FAIL_CLOSED"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -404,6 +409,8 @@
       "OR-09_REFERENCE_MIGRATION_PASS",
       "OR-10_SINGLE_AGENT_OPERATION_PASS",
       "OR-11_MULTI_AGENT_OPERATION_PASS"
-    ]
+    ],
+    "releaseProvenanceContractRef": "docs/releases/RELEASE-EVIDENCE-CONTRACT-v1.json",
+    "releaseMaterializationWorkflowRef": ".github/workflows/rc6-release-provenance-validation.yml"
   }
 }
