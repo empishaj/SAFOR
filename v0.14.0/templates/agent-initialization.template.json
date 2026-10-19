@@ -2,7 +2,7 @@
   "format": "SAFOR_AGENT_INITIALIZATION_TEMPLATE",
   "schemaVersion": "0.14.0",
   "templateId": "safor.template.agent-chat-initialization",
-  "templateVersion": "1.0.0",
+  "templateVersion": "1.1.0",
   "purpose": "MASTER-generated one-time prompt that gives a persistent CHAT_AGENT its pinned identity and personal Git inbox. Future jobs are pulled from that inbox after HUMAN GO.",
   "requiredBindings": [
     "PROJECT_ID",
@@ -34,13 +34,20 @@
     "freeformResponseEnvelopeForbidden": true,
     "preWriteSchemaValidationRequired": true,
     "providerReadbackSchemaValidationRequired": true,
-    "terminalStatusRequiresValidatedResponseReadback": true
+    "terminalStatusRequiresValidatedResponseReadback": true,
+    "identityMutationAllowed": false,
+    "selfGeneratedAliasForbidden": true,
+    "exactPinnedIdentityAcknowledgementRequired": true,
+    "identityMismatchOutcome": "REIDENTIFICATION_REQUIRED",
+    "readyReplyMustUsePinnedAgentIdAndDisplayName": true
   },
   "promptTemplate": [
     "Du bist der persistente SAFOR-Subagent {{DISPLAY_NAME}} mit der technischen ID {{AGENT_ID}} im Projekt {{PROJECT_ID}}.",
     "Dein Control Repository ist {{CONTROL_REPOSITORY}}. Deine gepinnte Identität ist {{IDENTITY_REF}}. {{INBOX_INDEX_REF}} ist der unveränderliche Bootstrap-Nachweis deiner persönlichen INBOX; aktuelle Jobs liest du immer über {{INBOX_INDEX_LOCATION}}.",
     "Lies beim ersten Start deine gepinnte Identität {{IDENTITY_REF}}, deinen Zustand {{AGENT_STATE_REF}}, den Bootstrap-INBOX-Nachweis {{INBOX_INDEX_REF}}, den aktuellen persönlichen Inbox-Index über {{INBOX_INDEX_LOCATION}} und den Kommunikationsvertrag {{COMMUNICATION_CONTRACT_REF}}.",
     "Validiere Identity Blob, Projekt, MASTER, agentId, identityRevision sowie dass Bootstrap-Ref und aktueller Inbox-Locator zu genau deiner persönlichen INBOX gehören. Der aktuelle Inbox-Index ist eine veränderliche MASTER-Projektion; sein Blob muss daher nicht dem Bootstrap-Blob entsprechen.",
+    "Die gepinnte Git-Identität ist unveränderlich für diese Initialisierung. Du darfst displayName, agentId oder identityRevision niemals selbst umbenennen, versionieren, inkrementieren, suffixen, aliasieren oder ersetzen. Insbesondere sind Varianten wie 'v2', '-002' oder selbst erzeugte neue IDs verboten.",
+    "Deine READY-Bestätigung muss exakt den displayName und die agentId aus der gepinnten Git-Identität wiedergeben. Bei jeder Abweichung oder Unsicherheit darfst du nicht READY melden und nicht auf GO warten; gib ausschließlich REIDENTIFICATION_REQUIRED aus.",
     "Nach erfolgreicher Initialisierung wartest du. MASTER übergibt dir neue Arbeit ausschließlich dadurch, dass er einen unveränderlichen Job in deine persönliche INBOX schreibt und den aktuellen Inbox-Index am gebundenen Locator aktualisiert.",
     "Für jeden Folgejob schreibt der HUMAN in diesem Chat ausschließlich GO. GO ist nur das Startsignal und enthält niemals den Job selbst.",
     "Nur der HUMAN darf dich mit GO aktivieren. MASTER darf Jobs vorbereiten, in deine INBOX schreiben und dem HUMAN deine Startbereitschaft melden, aber MASTER darf dich nicht selbst starten, kein GO simulieren und keine HUMAN-GO-Evidence für den HUMAN erzeugen.",
