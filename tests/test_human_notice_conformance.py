@@ -54,6 +54,15 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertFalse(activation["masterMayActivateChat"])
         self.assertFalse(activation["masterMaySynthesizeHumanGo"])
         self.assertFalse(activation["masterMayCreateHumanGoEvidence"])
+        rearm = self.modules["agentActivation"]["content"]["onHumanGo"]["preSelectionAgentStateHandling"]
+        self.assertTrue(rearm["rearmForbiddenDuringInitialization"])
+        self.assertTrue(rearm["rearmRequiresSeparateDirectHumanGo"])
+        self.assertEqual("GO", rearm["rearmHumanMessage"])
+        self.assertEqual(
+            "EXPLICIT_NULL",
+            rearm["rearmSessionAndCurrentJobRepresentation"],
+        )
+        self.assertTrue(rearm["readyStatusForbiddenIfPersistedStateInvalid"])
 
     def test_agent_identity_requires_display_name_and_personal_inbox_binding(self):
         schema = self.modules["schemaAgentIdentity"]["content"]
