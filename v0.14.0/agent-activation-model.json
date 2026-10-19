@@ -66,7 +66,7 @@
     "schedulerOutcomeBeforeGo": "WAITING_HUMAN_GO",
     "activationEvidenceRequiredBeforeClaim": true,
     "activationEvidenceAuthority": "DIRECT_HUMAN_GO_BOUND_TO_PINNED_IDENTITY_AND_PERSONAL_INBOX",
-    "claimMode": "ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
+    "claimMode": "ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE",
     "stringSubstringEvidenceForbidden": true,
     "hostSessionAttestationRequired": false,
     "currentInboxSource": "BOUND_MUTABLE_INBOX_INDEX_LOCATION",
@@ -100,6 +100,8 @@
       "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
       "ROLE_AND_SKILL_MATCH",
       "MANDATE_ACTIVE",
+      "MASTER_JOB_STATE_READ_ONLY_AND_WAITING_HUMAN_GO",
+      "AGENT_STATE_CLAIM_TARGET_BOUND",
       "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT"
     ],
     "failClosed": true
@@ -146,8 +148,12 @@
     "schemaRef": "schemas/human-go-evidence.schema.json"
   },
   "atomicClaimContract": {
-    "expectedState": "WAITING_HUMAN_GO",
-    "requiredExpectedRevision": true,
+    "expectedAgentState": "WAITING_HUMAN_GO",
+    "masterJobStateRequired": "WAITING_HUMAN_GO",
+    "claimStateOwner": "AGENT",
+    "claimStateTarget": "agents/{agentId}/state.json",
+    "masterJobStateMutationAllowed": false,
+    "requiredExpectedAgentStateRevision": true,
     "evidenceBindingFields": [
       "projectId",
       "agentId",
@@ -160,27 +166,31 @@
     "providerCompareAndSwapRequired": true,
     "onConflict": "RECONCILE_REQUIRED",
     "authoritativeSequence": [
-      "READ_PINNED_JOB_STATE",
-      "VALIDATE_GO_EVIDENCE",
-      "BUILD_EXACT_PROPOSED_CLAIM_STATE",
-      "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_STATE",
-      "CALCULATE_CANONICAL_PROPOSED_STATE_DIGEST",
-      "CAS_COMMIT_EXACT_PROPOSED_STATE_AT_EXPECTED_REVISION",
-      "PROVIDER_READBACK_FULL_COMMITTED_STATE",
+      "READ_AGENT_STATE_AT_EXPECTED_REVISION",
+      "READ_MASTER_JOB_STATE_READ_ONLY",
+      "VALIDATE_GO_EVIDENCE_AND_JOB_BINDINGS",
+      "BUILD_EXACT_PROPOSED_AGENT_CLAIM_STATE",
+      "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_AGENT_STATE",
+      "CALCULATE_CANONICAL_PROPOSED_AGENT_STATE_DIGEST",
+      "CAS_COMMIT_EXACT_PROPOSED_AGENT_STATE_AT_EXPECTED_REVISION",
+      "PROVIDER_READBACK_FULL_COMMITTED_AGENT_STATE",
       "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
       "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE"
     ],
     "inMemoryConsumptionAuthoritative": false,
     "claimSuccessRequiresProviderReadback": true,
     "casFailureOutcome": "RECONCILE_REQUIRED",
-    "activationConsumptionAuthority": "CAS_COMMITTED_JOB_STATE_VERIFIED_BY_PROVIDER_READBACK",
+    "activationConsumptionAuthority": "CAS_COMMITTED_AGENT_STATE_VERIFIED_BY_PROVIDER_READBACK",
     "claimSuccessRequires": [
       "CAS_SUCCEEDED",
-      "FULL_COMMITTED_STATE_READ_BACK",
-      "READBACK_STATE_EQUALS_PROPOSED_STATE",
+      "FULL_COMMITTED_AGENT_STATE_READ_BACK",
+      "READBACK_STATE_EQUALS_PROPOSED_AGENT_STATE",
       "CANONICAL_STATE_DIGEST_MATCH",
       "PROJECT_JOB_AGENT_IDENTITY_DISPATCH_BINDINGS_MATCH",
-      "ACTIVATION_ID_PRESENT_IN_PERSISTED_CONSUMED_ACTIVATION_IDS",
+      "ACTIVATION_ID_PRESENT_IN_AGENT_STATE_CONSUMED_ACTIVATION_IDS",
+      "CURRENT_JOB_CLAIM_ID_EQUALS_ACTIVATION_ID",
+      "AGENT_RUNTIME_STATUS_IS_RUNNING",
+      "MASTER_JOB_STATE_NOT_MUTATED_BY_AGENT",
       "READBACK_REF_PRESENT",
       "READBACK_BLOB_IDENTITY_PRESENT"
     ],
@@ -188,6 +198,7 @@
     "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
     "proposedStateIsNonAuthoritativeUntilReadback": true,
     "inboxJobIsAuthoritativeDispatch": true,
+    "masterLifecycleReconciliation": "MASTER_LATER_RECONCILES_CLAIMED_RUNNING_RESPONSE_STATE_FROM_PROVIDER_CONFIRMED_AGENT_CLAIM_AND_RESPONSE_EVIDENCE",
     "hostSessionBindingRequired": false
   }
 }
