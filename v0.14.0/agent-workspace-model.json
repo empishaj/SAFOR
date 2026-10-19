@@ -19,7 +19,8 @@
     "masterJobState": "master/jobs/{jobId}.json",
     "masterResponseResolution": "master/response-resolutions/{responseId}.json",
     "inboxIndexSemantics": "MUTABLE_MASTER_OWNED_DISCOVERABILITY_PROJECTION_AT_STABLE_LOCATION",
-    "inboxBootstrapRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
+    "inboxBootstrapRefSemantics": "IMMUTABLE_PROVENANCE_ONLY",
+    "agentClaimState": "agents/{agentId}/state.json"
   },
   "ownership": {
     "MASTER_ONLY": [
@@ -51,7 +52,8 @@
     "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
     "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
     "AGENT_RUNS_PREFLIGHT",
-    "AGENT_CLAIMS_WITH_OPTIMISTIC_CONCURRENCY",
+    "AGENT_CLAIMS_OWN_STATE_WITH_PROVIDER_CAS_AND_EXACT_READBACK",
+    "AGENT_EXECUTES_ONLY_AFTER_PROVIDER_CONFIRMED_AGENT_STATE_CLAIM",
     "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
     "AGENT_WRITES_TYPED_RESPONSE_AND_RESPONSE_INDEX",
     "AGENT_EMITS_ONE_LINE_TERMINAL_CHAT_STATUS",
@@ -72,7 +74,9 @@
     "noHostSessionAttestationDependency": true,
     "identityComesFromPinnedInitializationNotJob": true,
     "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
-    "identityRemainsStableWhenInboxIndexChanges": true
+    "identityRemainsStableWhenInboxIndexChanges": true,
+    "agentClaimMutatesOnlyOwnState": true,
+    "masterJobLifecycleReconciledFromClaimAndResponseEvidence": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -86,5 +90,22 @@
     "rule": "A job is dispatched when MASTER writes the immutable job contract and updates the personal inbox index at the stable bound locator. The identity's bootstrap inbox blob is provenance only and may become stale after dispatch; it is never used for current job discovery. The agent never waits for a copied job prompt and never scans globally for work.",
     "discoverabilityIndexLocationSemantics": "STABLE_REPOSITORY_REF_PATH_LOCATOR_WITH_MUTABLE_CONTENT",
     "bootstrapIndexRefSemantics": "IMMUTABLE_PROVENANCE_ONLY"
+  },
+  "claimContract": {
+    "target": "agents/{agentId}/state.json",
+    "owner": "AGENT",
+    "masterJobStateAccess": "READ_ONLY",
+    "method": "PROVIDER_COMPARE_AND_SWAP_PLUS_EXACT_READBACK",
+    "successRuntimeStatus": "RUNNING",
+    "requiredPersistedBindings": [
+      "activationId",
+      "jobId",
+      "dispatchRevision",
+      "identityRevision",
+      "claimId"
+    ],
+    "productMutationBeforeConfirmedClaim": "FORBIDDEN",
+    "masterLifecycleWriteByAgent": "FORBIDDEN",
+    "masterReconciliation": "MASTER may later advance master/jobs/{jobId}.json from verified claim and response evidence."
   }
 }
