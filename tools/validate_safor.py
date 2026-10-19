@@ -115,6 +115,17 @@ if activation.get("activationAuthority") != "HUMAN_ONLY":
     fail("Normal chat-agent activation authority must be HUMAN_ONLY")
 if activation.get("claimMode") != "ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE":
     fail("Atomic single-use GO claim mode missing")
+activation_model = modules.get("agentActivation", {}).get("content", {})
+preclaim = set(activation_model.get("onHumanGo", {}).get("preClaimChecks", []))
+required_preclaim = {
+    "JOB_CONTRACT_POINTER_EXACT_MATCH",
+    "AGENT_JOB_SCHEMA_VALID",
+    "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+    "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
+}
+missing_preclaim = sorted(required_preclaim - preclaim)
+if missing_preclaim:
+    fail(f"Agent Job fail-closed preclaim checks missing: {missing_preclaim}")
 
 responses = modules.get("agentResponseContract", {}).get("content", {}).get("responseTypes", {})
 expected_responses = {"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}
