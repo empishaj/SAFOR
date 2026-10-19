@@ -18,6 +18,10 @@
     "PIN_ALL_INPUTS",
     "ALLOCATE_DEDICATED_PRODUCT_BRANCH_WHEN_MUTATING",
     "DECLARE_SEPARATE_PRODUCT_AND_RESPONSE_WRITE_SCOPES",
+    "RESOLVE_PINNED_AUTHORITY_BASIS_RECORD",
+    "REQUIRE_AUTHORITY_BASIS_ACTIVE",
+    "REQUIRE_AUTHORITY_BASIS_COVERS_JOB_REPOSITORIES_BRANCHES_PATHS_AND_HUMAN_GO",
+    "VERIFY_ACTUAL_PROVIDER_RIGHTS_SEPARATELY_FROM_MANDATE_COVERAGE",
     "BIND_HUMAN_GO_EVIDENCE_SCHEMA_TEMPLATE_AND_WRITE_TARGET",
     "BIND_AGENT_STATE_SCHEMA_CLAIM_AND_RESULT_SUBMITTED_TEMPLATES",
     "REQUIRE_PRE_CAS_AND_POST_READBACK_AGENT_STATE_SCHEMA_VALIDATION",
@@ -93,5 +97,40 @@
     "VERIFIED",
     "ACCEPTED",
     "INTEGRATED"
-  ]
+  ],
+  "authorityCoverage": {
+    "requiredBeforePublication": true,
+    "authorityBasisSource": "JOB.authorization.authorityBasis",
+    "provenanceMandateRefMustMatchAuthorityBasisPointer": true,
+    "activeStatusRequired": true,
+    "requiredBindings": [
+      "projectId",
+      "agentId",
+      "allowedControlBranch",
+      "allowedProductRepository",
+      "allowedProductBranch_or_allowedProductBranches",
+      "allowedProductPaths",
+      "humanGoRequired",
+      "humanOnlyActivation",
+      "masterMayActivateAgent",
+      "mergeAllowed",
+      "deployAllowed"
+    ],
+    "coverageChecks": [
+      "PROJECT_MATCH",
+      "AGENT_MATCH",
+      "CONTROL_BRANCH_COVERS_ALL_CONTROL_WRITES",
+      "PRODUCT_REPOSITORY_MATCH",
+      "PRODUCT_BRANCH_COVERS_JOB_WORKSPACE_PERMISSION_AND_OUTPUT_TARGET",
+      "PRODUCT_PATHS_COVER_JOB_PERMISSION_WORKSPACE_AND_OUTPUT_TARGET",
+      "HUMAN_GO_REQUIRED",
+      "HUMAN_ONLY_ACTIVATION_REQUIRED",
+      "MASTER_AGENT_ACTIVATION_FORBIDDEN",
+      "MERGE_FORBIDDEN",
+      "DEPLOY_FORBIDDEN"
+    ],
+    "providerRightsAreSeparateFromMandateCoverage": true,
+    "onCoverageFailure": "DO_NOT_PUBLISH_OR_DISPATCH_JOB",
+    "reworkBranchChangeRequiresCoveringSupersedingAuthorityIfPriorMandateIsExactBranchOnly": true
+  }
 }
