@@ -322,6 +322,7 @@ def finalize(run_id: str, source_sha: str | None) -> None:
     facts["traceability"]["automatedTest"] = "PASS"
     facts["traceability"]["bundle"] = "PASS"
     manifest["releaseArtifactsState"] = "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
+    trace["status"] = "RC6_MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS_EXACT_HEAD"
 
     for item in trace["requirements"]:
         item["coverage"]["automatedTest"] = "PASS"
