@@ -141,6 +141,8 @@ Nach `GO` prüft der Agent:
 
 Erst danach erfolgt der Claim.
 
+Der Claim schreibt **nicht** in `master/jobs/{jobId}.json`. Der Agent führt einen providerseitigen Compare-and-Swap ausschließlich auf seinem eigenen `agents/{agentId}/state.json` aus. Der Jobvertrag muss diesen `claimStateTarget` vorab binden. Erst exakter Provider-Readback macht den Claim autoritativ; danach darf der Agent innerhalb des bereits erteilten Mandats arbeiten. MASTER reconciliert seinen Job-Lifecycle später aus Claim- und Response-Evidence.
+
 ## Rückgabeobjekte
 
 | Typ | Auslöser | Wirkung |
