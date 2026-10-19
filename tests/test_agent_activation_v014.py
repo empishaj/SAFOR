@@ -335,6 +335,13 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertEqual(template["renderingRules"]["subsequentHumanInput"], "GO")
         self.assertFalse(template["renderingRules"]["includeJobContent"])
         self.assertFalse(template["renderingRules"]["includeDomainTaskPrompt"])
+        self.assertTrue(template["renderingRules"]["currentInboxSnapshotIsObservationOnly"])
+        self.assertTrue(template["renderingRules"]["currentInboxBlobMayChangeAfterMasterDispatch"])
+        self.assertTrue(template["renderingRules"]["currentInboxBlobDriftAloneNeverRequiresReidentification"])
+        self.assertTrue(template["renderingRules"]["jobValidationUsesPinnedSchemaAndContractModel"])
+        self.assertFalse(template["renderingRules"]["referencePythonValidatorRequiredForNormalChatUse"])
+        self.assertTrue(template["renderingRules"]["nakedBlockedForbidden"])
+        self.assertTrue(template["renderingRules"]["blockedRequiresDetailsRefOrPersistenceFailureMetadata"])
 
     def test_activation_model_requires_human_go_and_no_runtime_install(self):
         model = load("v0.14.0/agent-activation-model.json")
@@ -348,7 +355,7 @@ class AgentActivationV014Tests(unittest.TestCase):
         required_preclaim = {
             "JOB_CONTRACT_POINTER_EXACT_MATCH",
             "AGENT_JOB_SCHEMA_VALID",
-            "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+            "AGENT_JOB_CONTRACT_MODEL_VALID",
             "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
         }
         self.assertTrue(
@@ -358,6 +365,30 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertFalse(contract["masterMaySynthesizeHumanGo"])
         self.assertFalse(contract["masterMayCreateHumanGoEvidence"])
         self.assertEqual("HUMAN_ONLY", contract["activationAuthority"])
+        self.assertFalse(contract["currentInboxSnapshotBlobIsStableAcrossDispatch"])
+        self.assertFalse(contract["inboxBlobChangeAloneRequiresReidentification"])
+        authority = model["onHumanGo"]["jobValidationAuthority"]
+        self.assertEqual(
+            "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL",
+            authority["authority"],
+        )
+        self.assertEqual(
+            "v0.14.0/schemas/agent-job.schema.json",
+            authority["schemaPath"],
+        )
+        self.assertEqual(
+            "v0.14.0/agent-job-contract-model.json",
+            authority["contractModelPath"],
+        )
+        self.assertFalse(authority["referenceValidatorRequiredForNormalChatUse"])
+        self.assertIn(
+            "PINNED_AGENT_JOB_SCHEMA_FROM_ACTIVATION_MODEL",
+            model["onHumanGo"]["allowedReadsInOrder"],
+        )
+        self.assertIn(
+            "PINNED_AGENT_JOB_CONTRACT_MODEL_FROM_ACTIVATION_MODEL",
+            model["onHumanGo"]["allowedReadsInOrder"],
+        )
         rearm = model["onHumanGo"]["preSelectionAgentStateHandling"]
         self.assertTrue(rearm["rearmForbiddenDuringInitialization"])
         self.assertTrue(rearm["rearmRequiresSeparateDirectHumanGo"])
