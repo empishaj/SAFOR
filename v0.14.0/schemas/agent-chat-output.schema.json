@@ -11,6 +11,7 @@
     "projectId",
     "agentId",
     "displayName",
+    "identityRevision",
     "jobKey",
     "targetBranch",
     "detailsRef",
@@ -115,6 +116,10 @@
           "minLength": 1
         }
       }
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
     }
   },
   "allOf": [
