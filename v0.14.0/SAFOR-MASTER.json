@@ -2499,6 +2499,11 @@
       "id": "INV-RC6-008",
       "status": "ACTIVE",
       "rule": "Initialization and reinitialization are strictly non-mutating for Agent State. A RESULT_SUBMITTED Agent may rearm only after a later separate direct HUMAN GO. Rearm must preserve the exact Agent-State top-level schema, including explicit session:null and currentJob:null, and READY is forbidden while provider-persisted Agent State is schema-invalid."
+    },
+    {
+      "id": "INV-RC6-009",
+      "status": "ACTIVE",
+      "rule": "A known legacy SAFOR_AGENT_OUTBOX_INDEX at an AGENT-owned outbox/index.json may be migrated only by that Agent through expected-blob provider CAS/readback into SAFOR_AGENT_RESPONSE_INDEX. Historical response pointers are preserved, migrated legacy entries are marked SUPERSEDED, authoritativeAcceptance remains false, MASTER never writes the Agent index, and unknown legacy shapes fail closed."
     }
   ],
   "evidencePolicy": {
