@@ -1983,6 +1983,13 @@
       "semanticKey": "NON_MUTATING_REINITIALIZATION_AND_EXPLICIT_NULL_REARM",
       "statement": "Agent initialization/reinitialization must not mutate Agent State. Rearm requires a later separate direct HUMAN GO, and the rearmed state retains all required top-level fields with session and currentJob explicitly null; invalid persisted state may not be reported READY.",
       "expected": true
+    },
+    {
+      "id": "CF-RC6-009",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_OWNED_LEGACY_RESPONSE_INDEX_RECOVERY",
+      "statement": "Known SAFOR_AGENT_OUTBOX_INDEX state is recoverable only by the owning Agent via expected-blob CAS/readback into canonical SAFOR_AGENT_RESPONSE_INDEX while preserving historical response refs and authoritativeAcceptance=false; MASTER writes and heuristic unknown-format migration are forbidden.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
