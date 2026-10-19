@@ -9,7 +9,7 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
-from tools.release_provenance import (
+from release_provenance import (
     ReleaseProvenanceError,
     artifact_set_digest,
     sha256_bytes,
