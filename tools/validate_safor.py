@@ -108,9 +108,11 @@ if chat.get("primaryExecutionMode") != "DECLARATIVE_LLM_CHAT" or chat.get("custo
 activation = modules.get("agentActivation", {}).get("content", {}).get("chatAgentActivationContract", {})
 if activation.get("activationMode") != "HUMAN_GO_REQUIRED" or activation.get("acceptedHumanMessage") != "GO":
     fail("HUMAN-GO activation contract invalid")
-for field in ("backgroundWakeupAssumed", "gitEventActivationAllowed", "pollingActivationAllowed", "automationActivationAllowed", "hostTriggerActivationAllowed", "schedulerMayActivateChat"):
+for field in ("backgroundWakeupAssumed", "gitEventActivationAllowed", "pollingActivationAllowed", "automationActivationAllowed", "hostTriggerActivationAllowed", "schedulerMayActivateChat", "masterMayActivateChat", "masterMaySynthesizeHumanGo", "masterMayCreateHumanGoEvidence"):
     if activation.get(field) is not False:
         fail(f"Forbidden activation trigger enabled: {field}")
+if activation.get("activationAuthority") != "HUMAN_ONLY":
+    fail("Normal chat-agent activation authority must be HUMAN_ONLY")
 if activation.get("claimMode") != "ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE":
     fail("Atomic single-use GO claim mode missing")
 
