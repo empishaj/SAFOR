@@ -47,6 +47,28 @@ class AgentJobV014Tests(unittest.TestCase):
         with self.assertRaisesRegex(AgentJobValidationError, 'REQUIRED_RESPONSE_CONTRACTS_MISSING'):
             validate_agent_job(job)
 
+    def test_response_target_must_use_canonical_job_response_path(self):
+        job = self.base_job()
+        job['responseContracts']['JOB_RESULT']['writeTarget']['pathPattern'] = (
+            'projects/example/agents/agent-dev-003/outbox/{jobId}.job_result.json'
+        )
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'RESPONSE_TARGET_PATH_INVALID:JOB_RESULT',
+        ):
+            validate_agent_job(job)
+
+    def test_response_index_target_must_use_canonical_path(self):
+        job = self.base_job()
+        job['responseContracts']['responseIndexTarget']['pathPattern'] = (
+            'projects/example/agents/agent-dev-003/outbox/custom-index.json'
+        )
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'RESPONSE_INDEX_TARGET_PATH_INVALID',
+        ):
+            validate_agent_job(job)
+
     def test_response_contract_cannot_point_to_wrong_template(self):
         job = self.base_job()
         job['responseContracts']['JOB_RESULT']['templateRef']['path'] = 'v0.14.0/templates/responses/job-error.template.json'
