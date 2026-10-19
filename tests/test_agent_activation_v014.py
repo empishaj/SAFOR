@@ -337,6 +337,15 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertFalse(contract["hostTriggerActivationAllowed"])
         self.assertFalse(contract["gitEventActivationAllowed"])
         self.assertFalse(contract["schedulerMayActivateChat"])
+        required_preclaim = {
+            "JOB_CONTRACT_POINTER_EXACT_MATCH",
+            "AGENT_JOB_SCHEMA_VALID",
+            "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+            "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
+        }
+        self.assertTrue(
+            required_preclaim.issubset(set(model["onHumanGo"]["preClaimChecks"]))
+        )
         self.assertFalse(contract["masterMayActivateChat"])
         self.assertFalse(contract["masterMaySynthesizeHumanGo"])
         self.assertFalse(contract["masterMayCreateHumanGoEvidence"])
