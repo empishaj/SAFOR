@@ -1930,6 +1930,13 @@
       "semanticKey": "AGENT_CLAIM_OWNERSHIP",
       "statement": "Agent claim authority and MASTER lifecycle authority are separated: the agent may CAS only its own state.json claim target, while master/jobs/{jobId}.json remains MASTER-owned and is reconciled from verified claim and response evidence.",
       "expected": true
+    },
+    {
+      "id": "CF-RC6-001",
+      "status": "ACTIVE",
+      "semanticKey": "HUMAN_ONLY_CHAT_AGENT_ACTIVATION_AUTHORITY",
+      "statement": "For a normal CHAT_AGENT, HUMAN is the sole activation authority: MASTER may prepare and dispatch work but cannot activate the chat, synthesize GO, create HUMAN-GO evidence on the HUMAN's behalf or perform the Agent-owned claim.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
