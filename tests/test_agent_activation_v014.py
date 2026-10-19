@@ -337,6 +337,10 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertFalse(contract["hostTriggerActivationAllowed"])
         self.assertFalse(contract["gitEventActivationAllowed"])
         self.assertFalse(contract["schedulerMayActivateChat"])
+        self.assertFalse(contract["masterMayActivateChat"])
+        self.assertFalse(contract["masterMaySynthesizeHumanGo"])
+        self.assertFalse(contract["masterMayCreateHumanGoEvidence"])
+        self.assertEqual("HUMAN_ONLY", contract["activationAuthority"])
 
 
 if __name__ == "__main__":
