@@ -47,6 +47,9 @@
     "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
     "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
     "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
+    "IF_PRIOR_AGENT_STATE_IS_RESULT_SUBMITTED_READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+    "IF_PRIOR_MASTER_JOB_IS_TERMINALLY_SETTLED_AGENT_CAS_REARMS_OWN_STATE_AND_PROVIDER_READS_BACK",
+    "CONTINUE_THE_SAME_DIRECT_HUMAN_GO_AFTER_CONFIRMED_REARM",
     "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_CURRENT_PERSONAL_INBOX_INDEX_FROM_BOUND_LOCATION",
     "AGENT_SELECTS_NEXT_ELIGIBLE_PERSONAL_INBOX_JOB",
     "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
@@ -88,7 +91,11 @@
     "noUnvalidatedAgentStatePersistence": true,
     "noUnvalidatedResponsePersistence": true,
     "noSubmittedChatStatusBeforeValidatedResponseReadback": true,
-    "schemaValidationFailureBlocksProductMutation": true
+    "schemaValidationFailureBlocksProductMutation": true,
+    "masterNeverRearmsAgentState": true,
+    "rearmRequiresSettledMasterLifecycle": true,
+    "rearmDoesNotConsumeNewHumanGo": true,
+    "rearmPreservesActivationHistory": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -140,5 +147,29 @@
     "submittedChatStatusAllowedOnlyAfterValidatedReadback": true,
     "submittedAgentStateTemplate": "templates/agent-state-result-submitted.template.json",
     "onValidationFailure": "BLOCKED_NO_FURTHER_PRODUCT_MUTATION"
+  },
+  "agentStateRearmContract": {
+    "trigger": "DIRECT_HUMAN_GO_WHILE_AGENT_STATE_RESULT_SUBMITTED",
+    "priorMasterJobAccess": "READ_ONLY",
+    "allowedPriorMasterStatuses": [
+      "REJECTED",
+      "ACCEPTED",
+      "INTEGRATED",
+      "CANCELED",
+      "SUPERSEDED"
+    ],
+    "stateOwner": "AGENT",
+    "method": "PROVIDER_COMPARE_AND_SWAP_PLUS_EXACT_READBACK",
+    "proposedState": {
+      "runtimeStatus": "WAITING_HUMAN_GO",
+      "session": null,
+      "currentJob": null,
+      "lastResponseRef": "PRESERVE",
+      "consumedActivationIds": "PRESERVE",
+      "revision": "INCREMENT_BY_ONE"
+    },
+    "secondHumanGoRequired": false,
+    "nextStep": "CONTINUE_SAME_HUMAN_GO_AGAINST_CURRENT_PERSONAL_INBOX",
+    "failureOutcome": "BLOCKED_NO_NEW_JOB_CLAIM"
   }
 }
