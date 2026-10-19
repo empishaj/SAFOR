@@ -182,7 +182,13 @@
     "WORKFLOW_HEAD_SOURCE_BINDING",
     "ARTIFACT_SET_DIGEST_BINDING",
     "CHECKSUM_FILE_DIGEST_BINDING",
-    "RELEASE_EVIDENCE_DRIFT_FAIL_CLOSED"
+    "RELEASE_EVIDENCE_DRIFT_FAIL_CLOSED",
+    "SCHEMA_VALIDATED_AGENT_STATE_BEFORE_CAS",
+    "SCHEMA_VALIDATED_AGENT_STATE_AFTER_READBACK",
+    "PERSISTED_PROVIDER_READBACK_HUMAN_GO_EVIDENCE",
+    "TEMPLATE_BOUND_TYPED_RESPONSE_CONSTRUCTION",
+    "SCHEMA_VALIDATED_RESPONSE_BEFORE_WRITE",
+    "SCHEMA_VALIDATED_RESPONSE_AFTER_READBACK"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -391,7 +397,7 @@
       "purpose": "Replace unverifiable host chat/session binding with pinned agent identity plus MASTER-written personal inbox job transport."
     }
   },
-  "embeddedModuleCount": 93,
+  "embeddedModuleCount": 96,
   "releaseFactsRef": "RELEASE-FACTS.json",
   "releaseArtifactsState": "PENDING_RELEASE_MATERIALIZATION",
   "operationalReadiness": {
@@ -411,6 +417,18 @@
       "OR-11_MULTI_AGENT_OPERATION_PASS"
     ],
     "releaseProvenanceContractRef": "docs/releases/RELEASE-EVIDENCE-CONTRACT-v1.json",
-    "releaseMaterializationWorkflowRef": ".github/workflows/rc6-release-provenance-validation.yml"
+    "releaseMaterializationWorkflowRef": ".github/workflows/rc6-release-provenance-validation.yml",
+    "echoE2EFailureRemediation": {
+      "finding": "FREEFORM_AGENT_STATE_AND_RESPONSE_ENVELOPE",
+      "status": "IMPLEMENTED_PENDING_CI_AND_RERUN",
+      "sourceEvidence": "projects/safor-rc6-e2e/audit/or03-or04-verification-failure.json",
+      "remediation": [
+        "PIN_EXACT_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
+        "PIN_EXACT_AGENT_STATE_SCHEMA_AND_TRANSITION_TEMPLATES",
+        "VALIDATE_BEFORE_CAS_AND_AFTER_READBACK",
+        "PIN_EXACT_RESPONSE_TEMPLATE_AND_SCHEMA",
+        "VALIDATE_BEFORE_RESPONSE_WRITE_AND_AFTER_READBACK"
+      ]
+    }
   }
 }
