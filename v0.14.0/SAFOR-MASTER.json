@@ -2464,6 +2464,21 @@
       "id": "INV-RC6-001",
       "status": "ACTIVE",
       "rule": "For a normal CHAT_AGENT, MASTER may prepare identity, persist and dispatch Jobs, report readiness and reconcile evidence, but MUST NOT activate the Agent, open or start its chat on behalf of the HUMAN, synthesize HUMAN GO, manufacture HUMAN-GO evidence or advance the Agent-owned execution claim. Only direct HUMAN GO in the initialized Agent chat may trigger execution."
+    },
+    {
+      "id": "INV-RC6-002",
+      "rule": "Before any product mutation after HUMAN GO, a CHAT_AGENT must materialize HUMAN-GO evidence from the pinned template, validate it against the pinned schema, persist it to the bound evidence target, verify exact provider readback, then materialize the Agent-State claim only from the pinned claim template. The proposed Agent-State must validate before CAS and the full provider readback must validate again; free-form claim-state construction is forbidden.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "INV-RC6-003",
+      "rule": "Every Agent-to-MASTER response is materialized from the exact response template and schema bound in the active Agent Job. The response must validate before persistence, provider readback must equal the proposed response and validate again, and SUBMITTED/BLOCKED chat status is forbidden until that readback validation succeeds.",
+      "status": "ACTIVE"
+    },
+    {
+      "id": "INV-RC6-004",
+      "rule": "After a provider-read-back-valid JOB_RESULT, the Agent may update its own state only with the pinned result-submitted state template: runtimeStatus is RESULT_SUBMITTED, current claim bindings are preserved, and lastResponseRef is a canonical string reference rather than an invented pointer object.",
+      "status": "ACTIVE"
     }
   ],
   "evidencePolicy": {
