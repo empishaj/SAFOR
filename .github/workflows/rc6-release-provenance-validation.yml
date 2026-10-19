@@ -4,6 +4,9 @@ on:
   push:
     branches:
       - safor/operational-readiness-0.14.0-rc.6
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
