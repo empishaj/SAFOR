@@ -1618,7 +1618,7 @@
       ]
     }
   ],
-  "status": "RC5_MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+  "status": "RC6_PENDING_MATERIALIZATION_AND_EXACT_HEAD_VALIDATION",
   "implementationDecisionRef": "docs/master-subagent-orchestration/IMPLEMENTATION-DECISION-v0.14.0-rc.2.json",
   "schemaRef": "v0.14.0/schemas/requirements-traceability.schema.json",
   "summary": {
@@ -1647,7 +1647,11 @@
       "repository": "empishaj/SAFOR",
       "workflowRunId": null,
       "runAttempt": null,
-      "sourceCommitBeforeMaterialization": null,
+      "sourceCommitSha": null,
+      "sourceTreeSha": null,
+      "workflowHeadSha": null,
+      "artifactSetDigest": null,
+      "checksumFileSha256": null,
       "status": "PENDING_MATERIALIZATION_AND_EXACT_HEAD_VALIDATION"
     }
   }
