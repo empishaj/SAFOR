@@ -74,6 +74,15 @@ The exclusive normal activation signal is an explicit HUMAN message:
 
 The GO message contains no Job payload, role instructions, file paths or domain context.
 
+**Activation authority is HUMAN-only.** MASTER may prepare and dispatch the Job and tell the HUMAN which Agent is ready, but MASTER must not open/start the normal Agent chat for the HUMAN, simulate `GO`, create HUMAN-GO evidence on the HUMAN's behalf or perform the Agent-owned claim.
+
+Normative shorthand:
+
+`MASTER → READY`
+
+`HUMAN GO → EXECUTION`
+
+
 After GO, the Agent validates identity, inbox assignment, Job/dispatch revision, role/skill fit, mandate, STOP/PAUSE state and actual provider rights before claiming.
 
 ## 6. Claim authority
