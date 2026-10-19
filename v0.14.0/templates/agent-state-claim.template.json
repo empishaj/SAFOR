@@ -1,0 +1,71 @@
+{
+  "format": "SAFOR_AGENT_STATE_CLAIM_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.template.agent-state-claim",
+  "templateVersion": "1.0.0",
+  "targetSchemaRef": "v0.14.0/schemas/agent-state.schema.json",
+  "purpose": "Exact key-shape for the proposed Agent-State written by provider CAS after a valid persisted HUMAN-GO evidence record.",
+  "topLevelExactFields": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "revision",
+    "runtimeStatus",
+    "session",
+    "currentJob",
+    "lastResponseRef",
+    "consumedActivationIds",
+    "updatedAt"
+  ],
+  "sessionExactFields": [
+    "activationId",
+    "activationEvidenceRef",
+    "activatedAt",
+    "selectedJobId",
+    "selectedDispatchRevision"
+  ],
+  "currentJobExactFields": [
+    "jobId",
+    "jobRef",
+    "jobBlobSha",
+    "masterJobStateRef",
+    "dispatchRevision",
+    "claimId"
+  ],
+  "stateTemplate": {
+    "format": "SAFOR_AGENT_STATE",
+    "schemaVersion": "0.14.0",
+    "projectId": "{{PROJECT_ID}}",
+    "agentId": "{{AGENT_ID}}",
+    "identityRevision": "{{IDENTITY_REVISION_INTEGER}}",
+    "revision": "{{PRIOR_REVISION_PLUS_ONE_INTEGER}}",
+    "runtimeStatus": "RUNNING",
+    "session": {
+      "activationId": "{{ACTIVATION_ID}}",
+      "activationEvidenceRef": "{{GO_EVIDENCE_PATH}}",
+      "activatedAt": "{{GO_OBSERVED_AT_RFC3339}}",
+      "selectedJobId": "{{JOB_ID}}",
+      "selectedDispatchRevision": "{{DISPATCH_REVISION_INTEGER}}"
+    },
+    "currentJob": {
+      "jobId": "{{JOB_ID}}",
+      "jobRef": "{{JOB_CONTRACT_PATH}}",
+      "jobBlobSha": "{{JOB_CONTRACT_BLOB_SHA}}",
+      "masterJobStateRef": "{{MASTER_JOB_STATE_PATH}}",
+      "dispatchRevision": "{{DISPATCH_REVISION_INTEGER}}",
+      "claimId": "{{ACTIVATION_ID}}"
+    },
+    "lastResponseRef": null,
+    "consumedActivationIds": "{{PRIOR_CONSUMED_ACTIVATION_IDS_PLUS_ACTIVATION_ID_ARRAY}}",
+    "updatedAt": "{{GO_OBSERVED_AT_RFC3339}}"
+  },
+  "rules": [
+    "Materialize exactly the listed top-level, session and currentJob keys; additional keys are forbidden.",
+    "currentJob.claimId must exactly equal session.activationId and the persisted HUMAN-GO evidence activationId.",
+    "session.activationEvidenceRef must point to the provider-read-back HUMAN-GO evidence artifact.",
+    "Validate the complete proposed state against targetSchemaRef before CAS.",
+    "After CAS, read back the full state from the provider and validate it again against targetSchemaRef before any product mutation."
+  ]
+}
