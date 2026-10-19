@@ -71,7 +71,11 @@
     "hostSessionAttestationRequired": false,
     "currentInboxSource": "BOUND_MUTABLE_INBOX_INDEX_LOCATION",
     "bootstrapInboxBlobMayBecomeStaleAfterDispatch": true,
-    "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true
+    "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
+    "masterMayActivateChat": false,
+    "masterMaySynthesizeHumanGo": false,
+    "masterMayCreateHumanGoEvidence": false,
+    "activationAuthority": "HUMAN_ONLY"
   },
   "onHumanGo": {
     "allowedReadsInOrder": [
