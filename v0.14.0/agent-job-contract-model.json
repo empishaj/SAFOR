@@ -18,6 +18,10 @@
     "PIN_ALL_INPUTS",
     "ALLOCATE_DEDICATED_PRODUCT_BRANCH_WHEN_MUTATING",
     "DECLARE_SEPARATE_PRODUCT_AND_RESPONSE_WRITE_SCOPES",
+    "BIND_HUMAN_GO_EVIDENCE_SCHEMA_TEMPLATE_AND_WRITE_TARGET",
+    "BIND_AGENT_STATE_SCHEMA_CLAIM_AND_RESULT_SUBMITTED_TEMPLATES",
+    "REQUIRE_PRE_CAS_AND_POST_READBACK_AGENT_STATE_SCHEMA_VALIDATION",
+    "REQUIRE_PRE_WRITE_AND_POST_READBACK_RESPONSE_SCHEMA_VALIDATION",
     "BIND_ALL_FIVE_RESPONSE_TEMPLATES",
     "BIND_MINIMAL_AGENT_CHAT_CONTRACT",
     "DECLARE_VERIFICATION_REVIEW_AND_ACCEPTANCE",
@@ -32,7 +36,17 @@
     "automaticChatActivationForbidden": true,
     "claimStateTarget": "agents/{agentId}/state.json",
     "claimAuthority": "AGENT_STATE_PROVIDER_CAS_READBACK",
-    "masterJobStateAccessDuringClaim": "READ_ONLY"
+    "masterJobStateAccessDuringClaim": "READ_ONLY",
+    "humanGoEvidenceSchema": "schemas/human-go-evidence.schema.json",
+    "humanGoEvidenceTemplate": "templates/human-go-evidence.template.json",
+    "agentStateSchema": "schemas/agent-state.schema.json",
+    "claimStateTemplate": "templates/agent-state-claim.template.json",
+    "resultSubmittedStateTemplate": "templates/agent-state-result-submitted.template.json",
+    "goEvidencePersistenceRequiredBeforeClaim": true,
+    "goEvidenceProviderReadbackRequired": true,
+    "preCasSchemaValidationRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "freeformClaimStateConstructionForbidden": true
   },
   "writeSeparation": {
     "productArtifacts": "WORK_REPOSITORY on dedicated branch and allowed paths",
@@ -40,7 +54,8 @@
     "onePermissionNeverImpliesTheOther": true,
     "agentMayWriteMasterLifecycle": false,
     "agentClaimState": "Agent may CAS only its own agents/{agentId}/state.json using the exact prebound claim target.",
-    "masterLifecycleReconciliation": "MASTER reconciles master/jobs/{jobId}.json from verified claim/response evidence and retains sole verification/acceptance authority."
+    "masterLifecycleReconciliation": "MASTER reconciles master/jobs/{jobId}.json from verified claim/response evidence and retains sole verification/acceptance authority.",
+    "schemaValidationDoesNotGrantProviderRights": true
   },
   "responses": {
     "requiredTypes": [
@@ -52,7 +67,13 @@
     ],
     "schema": "schemas/agent-response.schema.json",
     "masterResolution": "schemas/agent-response-resolution.schema.json",
-    "responseIndex": "schemas/agent-response-index.schema.json"
+    "responseIndex": "schemas/agent-response-index.schema.json",
+    "templateBoundPerType": true,
+    "preWriteSchemaValidationRequired": true,
+    "providerReadbackRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "freeformResponseEnvelopeForbidden": true,
+    "submittedChatStatusRequiresValidatedReadback": true
   },
   "immutability": {
     "afterPublication": true,
@@ -60,7 +81,8 @@
     "roleOrSkillChange": "NEW_JOB_REQUIRED",
     "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB_REQUIRED",
     "rework": "NEW_JOB_ID_WITH_SUPERSEDES_AND_CONFLICT_REF",
-    "historicalJobIdReuseForbidden": true
+    "historicalJobIdReuseForbidden": true,
+    "persistenceTemplateBindingsImmutableAfterPublication": true
   },
   "lifecycleSeparation": [
     "WAITING_HUMAN_GO",
