@@ -301,6 +301,167 @@ def validate_human_go_evidence(
             raise GoEvidenceValidationError(f"GO_EVIDENCE_BINDING_MISMATCH:{field}")
 
 
+
+_SETTLED_MASTER_JOB_STATUSES = {
+    "REJECTED",
+    "ACCEPTED",
+    "INTEGRATED",
+    "CANCELED",
+    "SUPERSEDED",
+}
+
+
+def prepare_agent_state_rearm_after_settlement(
+    *,
+    agent_state: Mapping[str, Any],
+    settled_master_job_state: Mapping[str, Any],
+    expected_agent_state_revision: int,
+    rearmed_at: str,
+) -> dict[str, Any]:
+    """Prepare an AGENT-owned CAS that clears a settled prior execution slot.
+
+    This is used only after a new direct HUMAN GO reaches an initialized chat
+    whose previous result has already been terminally reconciled by MASTER.
+    It does not itself consume or manufacture HUMAN-GO evidence for the next Job.
+    """
+
+    state = deepcopy(dict(_mapping(agent_state, "agentState")))
+    master = deepcopy(dict(_mapping(settled_master_job_state, "settledMasterJobState")))
+    validate_agent_state_contract(state, require_claim=True)
+
+    if state.get("revision") != expected_agent_state_revision:
+        raise GoEvidenceValidationError("AGENT_REARM_STATE_REVISION_CONFLICT")
+    if state.get("runtimeStatus") != "RESULT_SUBMITTED":
+        raise GoEvidenceValidationError("AGENT_REARM_REQUIRES_RESULT_SUBMITTED")
+    current = _mapping(state.get("currentJob"), "currentJob")
+    session = _mapping(state.get("session"), "session")
+    if not state.get("lastResponseRef"):
+        raise GoEvidenceValidationError("AGENT_REARM_LAST_RESPONSE_REQUIRED")
+
+    if master.get("format") != "SAFOR_AGENT_JOB_STATE":
+        raise GoEvidenceValidationError("AGENT_REARM_MASTER_JOB_FORMAT_INVALID")
+    if master.get("schemaVersion") != "0.14.0":
+        raise GoEvidenceValidationError("AGENT_REARM_MASTER_JOB_SCHEMA_INVALID")
+    if master.get("projectId") != state.get("projectId"):
+        raise GoEvidenceValidationError("AGENT_REARM_PROJECT_MISMATCH")
+    if master.get("jobId") != current.get("jobId"):
+        raise GoEvidenceValidationError("AGENT_REARM_JOB_MISMATCH")
+    if master.get("assignedAgentId") != state.get("agentId"):
+        raise GoEvidenceValidationError("AGENT_REARM_AGENT_MISMATCH")
+    if master.get("assignedIdentityRevision") != state.get("identityRevision"):
+        raise GoEvidenceValidationError("AGENT_REARM_IDENTITY_REVISION_MISMATCH")
+    if master.get("dispatchRevision") != current.get("dispatchRevision"):
+        raise GoEvidenceValidationError("AGENT_REARM_DISPATCH_REVISION_MISMATCH")
+    if master.get("lifecycleStatus") not in _SETTLED_MASTER_JOB_STATUSES:
+        raise GoEvidenceValidationError("AGENT_REARM_MASTER_JOB_NOT_SETTLED")
+    activation_id = _nonempty(
+        session.get("activationId"), "AGENT_REARM_PRIOR_ACTIVATION_ID_MISSING"
+    )
+    if current.get("claimId") != activation_id:
+        raise GoEvidenceValidationError("AGENT_REARM_PRIOR_CLAIM_BINDING_MISMATCH")
+    if activation_id not in set(state.get("consumedActivationIds") or ()):
+        raise GoEvidenceValidationError("AGENT_REARM_PRIOR_ACTIVATION_NOT_CONSUMED")
+    _parse_datetime(rearmed_at, "AGENT_REARM_AT_INVALID")
+
+    proposed = deepcopy(state)
+    proposed["revision"] = expected_agent_state_revision + 1
+    proposed["runtimeStatus"] = "WAITING_HUMAN_GO"
+    proposed["session"] = None
+    proposed["currentJob"] = None
+    proposed["updatedAt"] = rearmed_at
+
+    validate_agent_state_contract(proposed)
+    return {
+        "format": "SAFOR_AGENT_STATE_REARM_INTENT",
+        "schemaVersion": "0.14.0",
+        "authoritative": False,
+        "stateOwner": "AGENT",
+        "masterJobStateMutationAllowed": False,
+        "settledJobId": master.get("jobId"),
+        "settledLifecycleStatus": master.get("lifecycleStatus"),
+        "priorActivationId": activation_id,
+        "expectedRevision": expected_agent_state_revision,
+        "proposedRevision": expected_agent_state_revision + 1,
+        "priorStateDigest": _canonical_digest(state),
+        "readOnlyMasterJobStateDigest": _canonical_digest(master),
+        "proposedStateDigest": _canonical_digest(proposed),
+        "proposedState": proposed,
+        "requiredProviderSequence": [
+            "READ_AGENT_STATE_AT_EXPECTED_REVISION",
+            "READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+            "VERIFY_PRIOR_JOB_IS_TERMINALLY_SETTLED",
+            "BUILD_REARMED_AGENT_STATE_WITHOUT_CONSUMING_NEW_GO",
+            "VALIDATE_REARMED_AGENT_STATE",
+            "CAS_COMMIT_EXACT_REARMED_AGENT_STATE",
+            "PROVIDER_READBACK_FULL_REARMED_AGENT_STATE",
+            "VERIFY_REARMED_STATE_DIGEST",
+            "CONTINUE_SAME_DIRECT_HUMAN_GO_AGAINST_CURRENT_PERSONAL_INBOX",
+        ],
+    }
+
+
+def confirm_agent_state_rearm_after_provider_readback(
+    *,
+    rearm_intent: Mapping[str, Any],
+    provider_readback: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Confirm a rearm only after exact provider CAS/readback."""
+
+    intent = _mapping(rearm_intent, "rearmIntent")
+    readback = _mapping(provider_readback, "providerReadback")
+    if (
+        intent.get("format") != "SAFOR_AGENT_STATE_REARM_INTENT"
+        or intent.get("authoritative") is not False
+    ):
+        raise GoEvidenceValidationError("AGENT_REARM_INTENT_INVALID")
+    if intent.get("stateOwner") != "AGENT":
+        raise GoEvidenceValidationError("AGENT_REARM_OWNER_INVALID")
+    if intent.get("masterJobStateMutationAllowed") is not False:
+        raise GoEvidenceValidationError("AGENT_REARM_MASTER_MUTATION_FORBIDDEN")
+    if readback.get("casSucceeded") is not True:
+        raise GoEvidenceValidationError("AGENT_REARM_PROVIDER_CAS_NOT_CONFIRMED")
+    if readback.get("readbackVerified") is not True:
+        raise GoEvidenceValidationError("AGENT_REARM_PROVIDER_READBACK_UNVERIFIED")
+
+    proposed = deepcopy(dict(_mapping(intent.get("proposedState"), "proposedState")))
+    observed = deepcopy(dict(_mapping(readback.get("observedState"), "observedState")))
+    validate_agent_state_contract(proposed)
+    validate_agent_state_contract(observed)
+    if proposed.get("runtimeStatus") != "WAITING_HUMAN_GO":
+        raise GoEvidenceValidationError("AGENT_REARM_PROPOSED_STATUS_INVALID")
+    if proposed.get("session") is not None or proposed.get("currentJob") is not None:
+        raise GoEvidenceValidationError("AGENT_REARM_PROPOSED_BINDINGS_NOT_CLEARED")
+    observed_digest = _canonical_digest(observed)
+    if readback.get("observedStateDigest") != observed_digest:
+        raise GoEvidenceValidationError("AGENT_REARM_PROVIDER_DIGEST_INVALID")
+    if (
+        observed != proposed
+        or observed_digest != intent.get("proposedStateDigest")
+    ):
+        raise GoEvidenceValidationError("AGENT_REARM_PROVIDER_STATE_MISMATCH")
+    if observed.get("revision") != intent.get("proposedRevision"):
+        raise GoEvidenceValidationError("AGENT_REARM_PROVIDER_REVISION_MISMATCH")
+    if observed.get("runtimeStatus") != "WAITING_HUMAN_GO":
+        raise GoEvidenceValidationError("AGENT_REARM_PROVIDER_STATUS_MISMATCH")
+    readback_ref = _nonempty(
+        readback.get("readbackRef"), "AGENT_REARM_PROVIDER_READBACK_REF_MISSING"
+    )
+    observed_blob_sha = _nonempty(
+        readback.get("observedBlobSha"), "AGENT_REARM_PROVIDER_BLOB_SHA_MISSING"
+    )
+    return {
+        "format": "SAFOR_CONFIRMED_AGENT_STATE_REARM",
+        "schemaVersion": "0.14.0",
+        "authoritative": True,
+        "stateOwner": "AGENT",
+        "settledJobId": intent.get("settledJobId"),
+        "settledLifecycleStatus": intent.get("settledLifecycleStatus"),
+        "stateDigest": observed_digest,
+        "providerReadbackRef": readback_ref,
+        "providerBlobSha": observed_blob_sha,
+        "state": observed,
+    }
+
 def prepare_go_claim(
     *,
     agent_state: Mapping[str, Any],
