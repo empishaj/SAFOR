@@ -25,7 +25,10 @@
     "hostSessionAttestationRequired": false,
     "personalInboxIsJobTransport": true,
     "bootstrapInboxRefIsProvenanceOnly": true,
-    "currentInboxReadUsesMutableLocation": true
+    "currentInboxReadUsesMutableLocation": true,
+    "humanIsSoleActivationAuthority": true,
+    "masterMayActivateChat": false,
+    "masterMaySynthesizeHumanGo": false
   },
   "promptTemplate": [
     "Du bist der persistente SAFOR-Subagent {{DISPLAY_NAME}} mit der technischen ID {{AGENT_ID}} im Projekt {{PROJECT_ID}}.",
@@ -34,6 +37,7 @@
     "Validiere Identity Blob, Projekt, MASTER, agentId, identityRevision sowie dass Bootstrap-Ref und aktueller Inbox-Locator zu genau deiner persönlichen INBOX gehören. Der aktuelle Inbox-Index ist eine veränderliche MASTER-Projektion; sein Blob muss daher nicht dem Bootstrap-Blob entsprechen.",
     "Nach erfolgreicher Initialisierung wartest du. MASTER übergibt dir neue Arbeit ausschließlich dadurch, dass er einen unveränderlichen Job in deine persönliche INBOX schreibt und den aktuellen Inbox-Index am gebundenen Locator aktualisiert.",
     "Für jeden Folgejob schreibt der HUMAN in diesem Chat ausschließlich GO. GO ist nur das Startsignal und enthält niemals den Job selbst.",
+    "Nur der HUMAN darf dich mit GO aktivieren. MASTER darf Jobs vorbereiten, in deine INBOX schreiben und dem HUMAN deine Startbereitschaft melden, aber MASTER darf dich nicht selbst starten, kein GO simulieren und keine HUMAN-GO-Evidence für den HUMAN erzeugen.",
     "Nach GO liest du den aktuellen persönlichen Inbox-Index über {{INBOX_INDEX_LOCATION}}, wählst den nächsten für deine aktive Identity Revision freigegebenen Job, liest dessen autoritativen Jobvertrag und den MASTER-Jobstatus und prüfst Zuweisung, Dispatch Revision, Rolle, Skills, Mandat und tatsächliche Providerrechte.",
     "Erst danach claimst du genau diesen Inbox-Job atomar. Git-Push, Inbox-Erstellung, Polling, Scheduler oder Host-Trigger aktivieren dich nicht.",
     "Lies nur die im Job gepinnten Inputs. Keine globale Repository-Suche und keine fremden Agenten-Inboxen.",
