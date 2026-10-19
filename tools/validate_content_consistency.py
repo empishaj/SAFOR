@@ -33,12 +33,23 @@ def main() -> None:
         fail(errors, "RELEASE-MANIFEST version differs from VERSION")
     if trace.get("releaseTarget") != version:
         fail(errors, "Traceability releaseTarget differs from VERSION")
-    if facts.get("releaseArtifacts", {}).get("state") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
-        fail(errors, "Release facts do not declare materialized automated validation PASS")
-    if manifest.get("releaseArtifactsState") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
-        fail(errors, "Manifest does not declare materialized automated validation PASS")
-    if "PENDING" in str(trace.get("status", "")):
-        fail(errors, "Traceability status still declares a pending release phase")
+    artifact_state = facts.get("releaseArtifacts", {}).get("state")
+    if artifact_state == "PENDING_MATERIALIZATION":
+        if facts.get("status") != "PENDING_MATERIALIZATION":
+            fail(errors, "Pending release facts status mismatch")
+        if manifest.get("releaseArtifactsState") != "PENDING_RELEASE_MATERIALIZATION":
+            fail(errors, "Pending manifest artifact state mismatch")
+        if trace.get("status") != "RC6_PENDING_MATERIALIZATION_AND_EXACT_HEAD_VALIDATION":
+            fail(errors, "Pending rc.6 traceability status mismatch")
+    elif artifact_state == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+        if facts.get("status") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+            fail(errors, "Release facts PASS status mismatch")
+        if manifest.get("releaseArtifactsState") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
+            fail(errors, "Manifest does not declare materialized automated validation PASS")
+        if "PENDING" in str(trace.get("status", "")):
+            fail(errors, "PASS release traceability still declares a pending release phase")
+    else:
+        fail(errors, f"Unsupported release artifact state: {artifact_state}")
     if manifest.get("auditRemediation", {}).get("rc5InboxPull", {}).get("status") != "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS":
         fail(errors, "rc.5 inbox-pull remediation status is not materialized/pass")
 
@@ -182,7 +193,12 @@ def main() -> None:
     if "MASTER schreibt den Job in die INBOX. Du schreibst nur GO. Der Agent holt den Job selbst ab." not in handbook:
         fail(errors, "Non-tech handbook lacks the canonical agent handoff mnemonic")
 
-    for path in ("README.md", "START-HIER.md", "SUPPORT.md", "HUMAN-NOTICE-CONFORMANCE.md", "PRODUCT-READINESS.md"):
+    version_docs = (
+        ("PRODUCT-READINESS.md",)
+        if artifact_state == "PENDING_MATERIALIZATION"
+        else ("README.md", "START-HIER.md", "SUPPORT.md", "HUMAN-NOTICE-CONFORMANCE.md", "PRODUCT-READINESS.md")
+    )
+    for path in version_docs:
         text = (ROOT / path).read_text(encoding="utf-8")
         if version not in text:
             fail(errors, f"Current release version missing from {path}")
