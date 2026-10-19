@@ -316,7 +316,9 @@ def prepare_agent_state_rearm_after_settlement(
     agent_state: Mapping[str, Any],
     settled_master_job_state: Mapping[str, Any],
     expected_agent_state_revision: int,
-    rearmed_at: str,
+    human_message: str,
+    human_input_source: str,
+    observed_at: str,
 ) -> dict[str, Any]:
     """Prepare an AGENT-owned CAS that clears a settled prior execution slot.
 
@@ -324,6 +326,12 @@ def prepare_agent_state_rearm_after_settlement(
     whose previous result has already been terminally reconciled by MASTER.
     It does not itself consume or manufacture HUMAN-GO evidence for the next Job.
     """
+
+    if str(human_input_source) != "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT":
+        raise GoEvidenceValidationError("AGENT_REARM_HUMAN_SOURCE_INVALID")
+    if str(human_message).strip().casefold() != "go":
+        raise GoEvidenceValidationError("AGENT_REARM_REQUIRES_SEPARATE_HUMAN_GO")
+    _parse_datetime(observed_at, "AGENT_REARM_HUMAN_GO_AT_INVALID")
 
     state = deepcopy(dict(_mapping(agent_state, "agentState")))
     master = deepcopy(dict(_mapping(settled_master_job_state, "settledMasterJobState")))
@@ -369,14 +377,18 @@ def prepare_agent_state_rearm_after_settlement(
         raise GoEvidenceValidationError("AGENT_REARM_PRIOR_CLAIM_BINDING_MISMATCH")
     if activation_id not in set(state.get("consumedActivationIds") or ()):
         raise GoEvidenceValidationError("AGENT_REARM_PRIOR_ACTIVATION_NOT_CONSUMED")
-    _parse_datetime(rearmed_at, "AGENT_REARM_AT_INVALID")
-
     proposed = deepcopy(state)
     proposed["revision"] = expected_agent_state_revision + 1
     proposed["runtimeStatus"] = "WAITING_HUMAN_GO"
     proposed["session"] = None
     proposed["currentJob"] = None
-    proposed["updatedAt"] = rearmed_at
+    proposed["updatedAt"] = observed_at
+
+    required_top_level = set(_AGENT_STATE_FIELDS)
+    if set(proposed) != required_top_level:
+        raise GoEvidenceValidationError("AGENT_REARM_REQUIRED_TOP_LEVEL_FIELDS_MISSING")
+    if proposed.get("session") is not None or proposed.get("currentJob") is not None:
+        raise GoEvidenceValidationError("AGENT_REARM_BINDINGS_MUST_BE_EXPLICIT_NULL")
 
     validate_agent_state_contract(proposed)
     return {
@@ -388,6 +400,8 @@ def prepare_agent_state_rearm_after_settlement(
         "settledJobId": master.get("jobId"),
         "settledLifecycleStatus": master.get("lifecycleStatus"),
         "priorActivationId": activation_id,
+        "humanGoObservedAt": observed_at,
+        "humanInputSource": human_input_source,
         "expectedRevision": expected_agent_state_revision,
         "proposedRevision": expected_agent_state_revision + 1,
         "priorStateDigest": _canonical_digest(state),
