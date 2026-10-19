@@ -3,6 +3,8 @@ import hashlib
 import json
 import unittest
 
+from tests.v014_fixtures import TEST_JOB_ID, valid_agent_job
+
 from runtime.go_evidence import (
     GoEvidenceValidationError,
     confirm_go_claim_after_provider_readback,
@@ -21,7 +23,7 @@ class GoEvidenceV014Tests(unittest.TestCase):
             "projectId": "project-001",
             "agentId": "agent-a",
             "identityRevision": 2,
-            "targetJobId": "job-001",
+            "targetJobId": TEST_JOB_ID,
             "targetDispatchRevision": 3,
             "intent": "GO",
             "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
@@ -35,7 +37,7 @@ class GoEvidenceV014Tests(unittest.TestCase):
             "projectId": "project-001",
             "agentId": "agent-a",
             "identityRevision": 2,
-            "targetJobId": "job-001",
+            "targetJobId": TEST_JOB_ID,
             "targetDispatchRevision": 3,
         }
 
@@ -60,7 +62,7 @@ class GoEvidenceV014Tests(unittest.TestCase):
             "format": "SAFOR_AGENT_JOB_STATE",
             "schemaVersion": "0.14.0",
             "projectId": "project-001",
-            "jobId": "job-001",
+            "jobId": TEST_JOB_ID,
             "assignedAgentId": "agent-a",
             "assignedIdentityRevision": 2,
             "dispatchRevision": 3,
@@ -73,6 +75,23 @@ class GoEvidenceV014Tests(unittest.TestCase):
                 "blobSha": "jobblob123",
             },
         }
+
+    def job_contract(self):
+        return valid_agent_job(
+            project_id="project-001",
+            job_id=TEST_JOB_ID,
+            agent_id="agent-a",
+            display_name="Agent Alpha",
+            identity_revision=2,
+            dispatch_revision=3,
+            control_repository="example/safor-memory",
+            control_branch="main",
+            product_repository="example/product",
+            product_branch="safor/job/test",
+        )
+
+    def job_contract_ref(self):
+        return dict(self.master_state()["contractRef"])
 
     def ref(self):
         return {
@@ -94,6 +113,8 @@ class GoEvidenceV014Tests(unittest.TestCase):
         return prepare_go_claim(
             agent_state=agent_state or self.agent_state(),
             master_job_state=self.master_state(),
+            job_contract=self.job_contract(),
+            job_contract_ref=self.job_contract_ref(),
             go_evidence=self.evidence(),
             expected_agent_state_revision=7,
             go_evidence_ref=self.ref(),
@@ -175,6 +196,24 @@ class GoEvidenceV014Tests(unittest.TestCase):
                     "observedBlobSha": "blob-go-001",
                 },
                 consumed_activation_ids=set(),
+            )
+
+    def test_claim_rejects_incomplete_agent_job_contract_before_state_mutation(self):
+        invalid = self.job_contract()
+        del invalid["scheduling"]["claimPolicy"]["humanGoEvidenceSchemaRef"]
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_JOB_CONTRACT_INVALID",
+        ):
+            prepare_go_claim(
+                agent_state=self.agent_state(),
+                master_job_state=self.master_state(),
+                job_contract=invalid,
+                job_contract_ref=self.job_contract_ref(),
+                go_evidence=self.evidence(),
+                expected_agent_state_revision=7,
+                go_evidence_ref=self.ref(),
+                master_job_state_ref=self.master_ref(),
             )
 
     def test_claim_requires_provider_cas_readback_before_consumption(self):
