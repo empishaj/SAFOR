@@ -17,7 +17,23 @@ def digest(value):
 
 
 class GoClaimIntegrityV014Tests(unittest.TestCase):
-    def state(self):
+    def agent_state(self):
+        return {
+            "format": "SAFOR_AGENT_STATE",
+            "schemaVersion": "0.14.0",
+            "projectId": "project-001",
+            "agentId": "agent-a",
+            "identityRevision": 2,
+            "revision": 7,
+            "runtimeStatus": "WAITING_HUMAN_GO",
+            "session": None,
+            "currentJob": None,
+            "lastResponseRef": None,
+            "consumedActivationIds": [],
+            "updatedAt": "2026-10-18T09:59:00Z",
+        }
+
+    def master_job_state(self):
         return {
             "format": "SAFOR_AGENT_JOB_STATE",
             "schemaVersion": "0.14.0",
@@ -26,12 +42,14 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "assignedAgentId": "agent-a",
             "assignedIdentityRevision": 2,
             "dispatchRevision": 3,
-            "revision": 7,
+            "revision": 5,
             "lifecycleStatus": "WAITING_HUMAN_GO",
-            "goEvidenceRef": None,
-            "consumedActivationIds": [],
-            "transitionHistory": [],
-            "updatedAt": "2026-10-18T09:59:00Z",
+            "contractRef": {
+                "repository": "example/safor-memory",
+                "ref": "job-commit",
+                "path": "projects/example/agents/agent-a/inbox/job-001.json",
+                "blobSha": "jobblob123",
+            },
         }
 
     def evidence(self):
@@ -55,17 +73,26 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         return {
             "repository": "example/safor-memory",
             "ref": "commit-go",
-            "path": "projects/example/evidence/go.json",
+            "path": "projects/example/agents/agent-a/evidence/go.json",
             "blobSha": "blob-go-123",
         }
 
-    def intent(self):
+    def master_ref(self):
+        return {
+            "repository": "example/safor-memory",
+            "ref": "master-commit",
+            "path": "projects/example/master/jobs/job-001.json",
+            "blobSha": "masterblob123",
+        }
+
+    def intent(self, agent_state=None, master_state=None):
         return prepare_go_claim(
-            job_state=self.state(),
+            agent_state=agent_state or self.agent_state(),
+            master_job_state=master_state or self.master_job_state(),
             go_evidence=self.evidence(),
-            expected_state_revision=7,
-            consumed_activation_ids=set(),
+            expected_agent_state_revision=7,
             go_evidence_ref=self.evidence_ref(),
+            master_job_state_ref=self.master_ref(),
         )
 
     def readback(self, intent, observed=None):
@@ -79,11 +106,24 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "observedBlobSha": "blob-claim-123",
         }
 
-    def test_claim_persists_activation_consumption_inside_cas_state(self):
-        intent = self.intent()
+    def test_claim_mutates_only_agent_state_and_persists_activation(self):
+        master = self.master_job_state()
+        intent = self.intent(master_state=master)
+        self.assertEqual("AGENT", intent["claimStateOwner"])
+        self.assertFalse(intent["masterJobStateMutationAllowed"])
+        self.assertEqual("RUNNING", intent["proposedState"]["runtimeStatus"])
+        self.assertEqual("job-001", intent["proposedState"]["currentJob"]["jobId"])
+        self.assertEqual(
+            "activation-rc4-001",
+            intent["proposedState"]["currentJob"]["claimId"],
+        )
         self.assertIn(
             "activation-rc4-001",
             intent["proposedState"]["consumedActivationIds"],
+        )
+        self.assertEqual(
+            digest(master),
+            intent["readOnlyMasterJobStateDigest"],
         )
 
     def test_exact_provider_readback_confirms_claim(self):
@@ -94,13 +134,22 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             consumed_activation_ids=set(),
         )
         self.assertTrue(result["authoritative"])
+        self.assertEqual("AGENT", result["claimStateOwner"])
         self.assertEqual(intent["proposedStateDigest"], result["stateDigest"])
         self.assertEqual(intent["bindings"], result["bindings"])
+
+    def test_master_job_state_must_remain_waiting_and_read_only(self):
+        master = self.master_job_state()
+        master["lifecycleStatus"] = "CLAIMED"
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError, "JOB_NOT_WAITING_HUMAN_GO"
+        ):
+            self.intent(master_state=master)
 
     def test_tampered_job_binding_is_rejected(self):
         intent = self.intent()
         observed = json.loads(json.dumps(intent["proposedState"]))
-        observed["jobId"] = "job-other"
+        observed["currentJob"]["jobId"] = "job-other"
         with self.assertRaisesRegex(
             GoEvidenceValidationError, "PROVIDER_CLAIM_STATE_MISMATCH"
         ):
@@ -113,7 +162,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
     def test_tampered_agent_binding_is_rejected(self):
         intent = self.intent()
         observed = json.loads(json.dumps(intent["proposedState"]))
-        observed["assignedAgentId"] = "agent-b"
+        observed["agentId"] = "agent-b"
         with self.assertRaisesRegex(
             GoEvidenceValidationError, "PROVIDER_CLAIM_STATE_MISMATCH"
         ):
@@ -145,6 +194,22 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         tampered_intent["proposedStateDigest"] = digest(observed)
         with self.assertRaisesRegex(
             GoEvidenceValidationError, "PROVIDER_CLAIM_ACTIVATION_NOT_PERSISTED"
+        ):
+            confirm_go_claim_after_provider_readback(
+                claim_intent=tampered_intent,
+                provider_readback=self.readback(tampered_intent, observed),
+                consumed_activation_ids=set(),
+            )
+
+    def test_missing_current_job_claim_id_is_rejected(self):
+        intent = self.intent()
+        observed = json.loads(json.dumps(intent["proposedState"]))
+        observed["currentJob"]["claimId"] = "other-claim"
+        tampered_intent = dict(intent)
+        tampered_intent["proposedState"] = observed
+        tampered_intent["proposedStateDigest"] = digest(observed)
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError, "PROVIDER_CLAIM_ID_NOT_PERSISTED"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
