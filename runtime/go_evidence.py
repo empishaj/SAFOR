@@ -46,6 +46,208 @@ def _canonical_digest(value: Mapping[str, Any]) -> str:
     return "sha256:" + hashlib.sha256(payload).hexdigest()
 
 
+_AGENT_STATE_FIELDS = {
+    "format", "schemaVersion", "projectId", "agentId", "identityRevision",
+    "revision", "runtimeStatus", "session", "currentJob", "lastResponseRef",
+    "consumedActivationIds", "updatedAt",
+}
+_AGENT_SESSION_FIELDS = {
+    "activationId", "activationEvidenceRef", "activatedAt",
+    "selectedJobId", "selectedDispatchRevision",
+}
+_AGENT_CURRENT_JOB_FIELDS = {
+    "jobId", "jobRef", "jobBlobSha", "masterJobStateRef",
+    "dispatchRevision", "claimId",
+}
+_AGENT_RUNTIME_STATUSES = {
+    "IDLE", "WAITING_HUMAN_GO", "PREFLIGHT", "CLAIMING", "RUNNING",
+    "RESULT_SUBMITTED", "BLOCKED", "REIDENTIFICATION_REQUIRED", "PAUSED",
+    "REVOKED",
+}
+
+
+def _exact_fields(value: Mapping[str, Any], expected: set[str], code: str) -> None:
+    missing = sorted(expected - set(value))
+    unknown = sorted(set(value) - expected)
+    if missing or unknown:
+        raise GoEvidenceValidationError(
+            f"{code}:missing={missing},unknown={unknown}"
+        )
+
+
+def _positive_int(value: Any, code: str, *, minimum: int = 1) -> int:
+    if not isinstance(value, int) or isinstance(value, bool) or value < minimum:
+        raise GoEvidenceValidationError(code)
+    return value
+
+
+def validate_agent_state_contract(
+    state: Mapping[str, Any],
+    *,
+    require_claim: bool = False,
+    expected_activation_id: str | None = None,
+    expected_job_id: str | None = None,
+    expected_dispatch_revision: int | None = None,
+) -> None:
+    """Validate the exact v0.14 Agent-State shape used for persistence."""
+
+    state = _mapping(state, "agentState")
+    _exact_fields(state, _AGENT_STATE_FIELDS, "AGENT_STATE_FIELDS_INVALID")
+    if state.get("format") != "SAFOR_AGENT_STATE":
+        raise GoEvidenceValidationError("AGENT_STATE_FORMAT_INVALID")
+    if state.get("schemaVersion") != "0.14.0":
+        raise GoEvidenceValidationError("AGENT_STATE_SCHEMA_VERSION_INVALID")
+    _nonempty(state.get("projectId"), "AGENT_STATE_PROJECT_ID_MISSING")
+    _nonempty(state.get("agentId"), "AGENT_STATE_AGENT_ID_MISSING")
+    _positive_int(state.get("identityRevision"), "AGENT_STATE_IDENTITY_REVISION_INVALID")
+    _positive_int(state.get("revision"), "AGENT_STATE_REVISION_INVALID", minimum=0)
+    if state.get("runtimeStatus") not in _AGENT_RUNTIME_STATUSES:
+        raise GoEvidenceValidationError("AGENT_STATE_RUNTIME_STATUS_INVALID")
+    _parse_datetime(state.get("updatedAt"), "AGENT_STATE_UPDATED_AT_INVALID")
+
+    consumed = state.get("consumedActivationIds")
+    if not isinstance(consumed, list):
+        raise GoEvidenceValidationError("AGENT_STATE_CONSUMED_ACTIVATIONS_INVALID")
+    if len(consumed) != len(set(consumed)):
+        raise GoEvidenceValidationError("AGENT_STATE_CONSUMED_ACTIVATIONS_DUPLICATE")
+    for activation in consumed:
+        if not isinstance(activation, str) or len(activation.strip()) < 8:
+            raise GoEvidenceValidationError("AGENT_STATE_CONSUMED_ACTIVATION_INVALID")
+
+    last_response = state.get("lastResponseRef")
+    if last_response is not None and (
+        not isinstance(last_response, str) or not last_response.strip()
+    ):
+        raise GoEvidenceValidationError("AGENT_STATE_LAST_RESPONSE_REF_INVALID")
+
+    session_value = state.get("session")
+    current_value = state.get("currentJob")
+    if session_value is None:
+        if require_claim:
+            raise GoEvidenceValidationError("AGENT_STATE_CLAIM_SESSION_REQUIRED")
+        session = None
+    else:
+        session = _mapping(session_value, "session")
+        _exact_fields(session, _AGENT_SESSION_FIELDS, "AGENT_SESSION_FIELDS_INVALID")
+        activation_id = _nonempty(
+            session.get("activationId"), "AGENT_SESSION_ACTIVATION_ID_MISSING"
+        )
+        _nonempty(
+            session.get("activationEvidenceRef"),
+            "AGENT_SESSION_ACTIVATION_EVIDENCE_REF_MISSING",
+        )
+        _parse_datetime(session.get("activatedAt"), "AGENT_SESSION_ACTIVATED_AT_INVALID")
+        _nonempty(session.get("selectedJobId"), "AGENT_SESSION_JOB_ID_MISSING")
+        _positive_int(
+            session.get("selectedDispatchRevision"),
+            "AGENT_SESSION_DISPATCH_REVISION_INVALID",
+        )
+        if expected_activation_id is not None and activation_id != expected_activation_id:
+            raise GoEvidenceValidationError("AGENT_STATE_ACTIVATION_BINDING_MISMATCH")
+        if expected_job_id is not None and session.get("selectedJobId") != expected_job_id:
+            raise GoEvidenceValidationError("AGENT_STATE_SESSION_JOB_BINDING_MISMATCH")
+        if (
+            expected_dispatch_revision is not None
+            and session.get("selectedDispatchRevision") != expected_dispatch_revision
+        ):
+            raise GoEvidenceValidationError(
+                "AGENT_STATE_SESSION_DISPATCH_BINDING_MISMATCH"
+            )
+
+    if current_value is None:
+        if require_claim:
+            raise GoEvidenceValidationError("AGENT_STATE_CURRENT_JOB_REQUIRED")
+        current = None
+    else:
+        current = _mapping(current_value, "currentJob")
+        _exact_fields(
+            current, _AGENT_CURRENT_JOB_FIELDS, "AGENT_CURRENT_JOB_FIELDS_INVALID"
+        )
+        _nonempty(current.get("jobId"), "AGENT_CURRENT_JOB_ID_MISSING")
+        _nonempty(current.get("jobRef"), "AGENT_CURRENT_JOB_REF_MISSING")
+        _nonempty(current.get("jobBlobSha"), "AGENT_CURRENT_JOB_BLOB_SHA_MISSING")
+        _nonempty(
+            current.get("masterJobStateRef"),
+            "AGENT_CURRENT_JOB_MASTER_STATE_REF_MISSING",
+        )
+        _positive_int(
+            current.get("dispatchRevision"),
+            "AGENT_CURRENT_JOB_DISPATCH_REVISION_INVALID",
+        )
+        claim_id = current.get("claimId")
+        if claim_id is not None:
+            claim_id = _nonempty(claim_id, "AGENT_CURRENT_JOB_CLAIM_ID_INVALID")
+        if expected_job_id is not None and current.get("jobId") != expected_job_id:
+            raise GoEvidenceValidationError("AGENT_STATE_CURRENT_JOB_BINDING_MISMATCH")
+        if (
+            expected_dispatch_revision is not None
+            and current.get("dispatchRevision") != expected_dispatch_revision
+        ):
+            raise GoEvidenceValidationError(
+                "AGENT_STATE_CURRENT_JOB_DISPATCH_BINDING_MISMATCH"
+            )
+        if expected_activation_id is not None and claim_id != expected_activation_id:
+            raise GoEvidenceValidationError("AGENT_STATE_CLAIM_ID_BINDING_MISMATCH")
+
+    if require_claim:
+        if state.get("runtimeStatus") != "RUNNING":
+            raise GoEvidenceValidationError("AGENT_STATE_CLAIM_STATUS_INVALID")
+        if expected_activation_id is None:
+            raise GoEvidenceValidationError("AGENT_STATE_EXPECTED_ACTIVATION_REQUIRED")
+        if expected_activation_id not in consumed:
+            raise GoEvidenceValidationError(
+                "AGENT_STATE_CLAIM_ACTIVATION_NOT_CONSUMED"
+            )
+        if session is None or current is None:
+            raise GoEvidenceValidationError("AGENT_STATE_CLAIM_BINDINGS_REQUIRED")
+        if session["activationId"] != current["claimId"]:
+            raise GoEvidenceValidationError("AGENT_STATE_SESSION_CLAIM_ID_MISMATCH")
+
+
+def confirm_human_go_evidence_after_provider_readback(
+    *,
+    go_evidence: Mapping[str, Any],
+    expected: Mapping[str, Any],
+    provider_readback: Mapping[str, Any],
+    consumed_activation_ids: set[str] | frozenset[str] | None = None,
+) -> dict[str, Any]:
+    """Confirm persisted HUMAN-GO evidence before any Agent-State claim is built."""
+
+    validate_human_go_evidence(
+        go_evidence,
+        expected=expected,
+        consumed_activation_ids=consumed_activation_ids,
+    )
+    readback = _mapping(provider_readback, "goEvidenceProviderReadback")
+    if readback.get("writeSucceeded") is not True:
+        raise GoEvidenceValidationError("GO_EVIDENCE_PROVIDER_WRITE_NOT_CONFIRMED")
+    if readback.get("readbackVerified") is not True:
+        raise GoEvidenceValidationError("GO_EVIDENCE_PROVIDER_READBACK_UNVERIFIED")
+    observed = _mapping(readback.get("observedEvidence"), "observedEvidence")
+    validate_human_go_evidence(
+        observed,
+        expected=expected,
+        consumed_activation_ids=consumed_activation_ids,
+    )
+    if dict(observed) != dict(go_evidence):
+        raise GoEvidenceValidationError("GO_EVIDENCE_PROVIDER_READBACK_MISMATCH")
+    readback_ref = _nonempty(
+        readback.get("readbackRef"), "GO_EVIDENCE_PROVIDER_READBACK_REF_MISSING"
+    )
+    observed_blob_sha = _nonempty(
+        readback.get("observedBlobSha"), "GO_EVIDENCE_PROVIDER_BLOB_SHA_MISSING"
+    )
+    return {
+        "format": "SAFOR_CONFIRMED_HUMAN_GO_EVIDENCE",
+        "schemaVersion": "0.14.0",
+        "activationId": go_evidence["activationId"],
+        "authoritativePersistence": True,
+        "readbackRef": readback_ref,
+        "observedBlobSha": observed_blob_sha,
+        "evidence": dict(observed),
+    }
+
+
 def _claim_bindings(agent_state: Mapping[str, Any], activation_id: str) -> dict[str, Any]:
     current = _mapping(agent_state.get("currentJob"), "currentJob")
     return {
@@ -107,6 +309,8 @@ def prepare_go_claim(
     """Prepare an AGENT-state CAS claim intent without mutating MASTER lifecycle."""
     agent = deepcopy(dict(_mapping(agent_state, "agentState")))
     master = deepcopy(dict(_mapping(master_job_state, "masterJobState")))
+
+    validate_agent_state_contract(agent)
 
     if agent.get("format") != "SAFOR_AGENT_STATE":
         raise GoEvidenceValidationError("AGENT_STATE_FORMAT_INVALID")
@@ -175,6 +379,14 @@ def prepare_go_claim(
     proposed["consumedActivationIds"] = sorted(consumed | {activation_id})
     proposed["updatedAt"] = go_evidence["observedAt"]
 
+    validate_agent_state_contract(
+        proposed,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=master["jobId"],
+        expected_dispatch_revision=master["dispatchRevision"],
+    )
+
     return {
         "format": "SAFOR_GO_CLAIM_INTENT",
         "schemaVersion": "0.14.0",
@@ -229,6 +441,21 @@ def confirm_go_claim_after_provider_readback(
 
     proposed = deepcopy(dict(_mapping(intent.get("proposedState"), "proposedState")))
     observed = deepcopy(dict(_mapping(readback.get("observedState"), "observedState")))
+    expected_bindings_for_schema = _mapping(intent.get("bindings"), "claimBindings")
+    validate_agent_state_contract(
+        proposed,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=str(expected_bindings_for_schema.get("jobId")),
+        expected_dispatch_revision=int(expected_bindings_for_schema.get("dispatchRevision")),
+    )
+    validate_agent_state_contract(
+        observed,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=str(expected_bindings_for_schema.get("jobId")),
+        expected_dispatch_revision=int(expected_bindings_for_schema.get("dispatchRevision")),
+    )
     expected_digest = _nonempty(intent.get("proposedStateDigest"), "GO_CLAIM_PROPOSED_DIGEST_MISSING")
     observed_digest = _canonical_digest(observed)
     declared_observed_digest = _nonempty(
