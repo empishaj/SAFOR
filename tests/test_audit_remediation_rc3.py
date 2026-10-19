@@ -5,6 +5,7 @@ import sys
 import unittest
 from pathlib import Path
 
+from tests.v014_fixtures import TEST_JOB_ID, valid_agent_job
 from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output
 from runtime.go_evidence import (
     GoEvidenceValidationError,
@@ -24,7 +25,7 @@ class AuditRemediationRc3Tests(unittest.TestCase):
             "format": "SAFOR_HUMAN_GO_EVIDENCE", "schemaVersion": "0.14.0",
             "activationId": "activation-rc3-001", "projectId": "project-001",
             "agentId": "agent-a", "identityRevision": 2,
-            "targetJobId": "job-001", "targetDispatchRevision": 3,
+            "targetJobId": TEST_JOB_ID, "targetDispatchRevision": 3,
             "intent": "GO", "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
             "observedAt": "2026-10-18T10:00:00Z", "singleUse": True,
             "jobPromptTransported": False,
@@ -33,7 +34,7 @@ class AuditRemediationRc3Tests(unittest.TestCase):
     def state(self):
         return {
             "format": "SAFOR_AGENT_JOB_STATE", "schemaVersion": "0.14.0",
-            "projectId": "project-001", "jobId": "job-001",
+            "projectId": "project-001", "jobId": TEST_JOB_ID,
             "assignedAgentId": "agent-a", "assignedIdentityRevision": 2, "dispatchRevision": 3,
             "revision": 7, "lifecycleStatus": "WAITING_HUMAN_GO",
             "goEvidenceRef": None, "consumedActivationIds": [],
@@ -49,6 +50,20 @@ class AuditRemediationRc3Tests(unittest.TestCase):
             "currentJob": None, "lastResponseRef": None,
             "consumedActivationIds": [], "updatedAt": "2026-10-18T09:59:00Z",
         }
+
+    def job_contract(self):
+        return valid_agent_job(
+            project_id="project-001",
+            job_id=TEST_JOB_ID,
+            agent_id="agent-a",
+            display_name="Agent Alpha",
+            identity_revision=2,
+            dispatch_revision=3,
+            control_repository="example/safor-memory",
+            control_branch="main",
+            product_repository="example/product",
+            product_branch="safor/job/test",
+        )
 
     def master_ref(self):
         return {
@@ -133,6 +148,8 @@ class AuditRemediationRc3Tests(unittest.TestCase):
         intent = prepare_go_claim(
             agent_state=self.agent_state(),
             master_job_state=master,
+            job_contract=self.job_contract(),
+            job_contract_ref=dict(master["contractRef"]),
             go_evidence=self.evidence(),
             expected_agent_state_revision=7,
             go_evidence_ref=self.ref(),
