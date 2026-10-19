@@ -513,7 +513,9 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             agent_state=state,
             settled_master_job_state=self.settled_master_state(),
             expected_agent_state_revision=9,
-            rearmed_at="2026-10-18T10:06:00Z",
+            human_message="GO",
+            human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+            observed_at="2026-10-18T10:06:00Z",
         )
         self.assertFalse(intent["authoritative"])
         self.assertEqual("AGENT", intent["stateOwner"])
@@ -543,6 +545,34 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         )
         self.assertTrue(confirmed["authoritative"])
         self.assertEqual("WAITING_HUMAN_GO", confirmed["state"]["runtimeStatus"])
+
+    def test_agent_rearm_requires_separate_direct_human_go(self):
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_REQUIRES_SEPARATE_HUMAN_GO",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=self.settled_master_state(),
+                expected_agent_state_revision=9,
+                human_message="INITIALIZE",
+                human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+                observed_at="2026-10-18T10:06:00Z",
+            )
+
+    def test_agent_rearm_rejects_nonhuman_trigger_source(self):
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_HUMAN_SOURCE_INVALID",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=self.settled_master_state(),
+                expected_agent_state_revision=9,
+                human_message="GO",
+                human_input_source="MASTER_TRIGGER",
+                observed_at="2026-10-18T10:06:00Z",
+            )
 
     def test_agent_rearm_rejects_unsettled_master_job(self):
         with self.assertRaisesRegex(
