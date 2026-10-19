@@ -171,6 +171,37 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         raise AgentJobValidationError('CLAIM_TARGET_OPERATIONS_INCOMPLETE')
     if claim_target['repository'] != response_workspace['repository'] or claim_target['branch'] != response_workspace['branch']:
         raise AgentJobValidationError('CLAIM_TARGET_CONTROL_WORKSPACE_MISMATCH')
+
+    claim_refs = {
+        'humanGoEvidenceSchemaRef': 'v0.14.0/schemas/human-go-evidence.schema.json',
+        'humanGoEvidenceTemplateRef': 'v0.14.0/templates/human-go-evidence.template.json',
+        'agentStateSchemaRef': 'v0.14.0/schemas/agent-state.schema.json',
+        'claimStateTemplateRef': 'v0.14.0/templates/agent-state-claim.template.json',
+        'resultSubmittedStateTemplateRef': 'v0.14.0/templates/agent-state-result-submitted.template.json',
+    }
+    for field, expected_path in claim_refs.items():
+        ref = _pointer(claim.get(field), field)
+        if ref['path'] != expected_path:
+            raise AgentJobValidationError(f'CLAIM_BINDING_PATH_MISMATCH:{field}')
+    go_target = _write_target(claim.get('goEvidenceWriteTarget'), 'goEvidenceWriteTarget')
+    if go_target['repositoryClass'] != 'CONTROL_REPOSITORY':
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_MUST_BE_CONTROL_REPOSITORY')
+    expected_go_suffix = f"agents/{agent_id}/evidence/{{jobId}}/human-go-{{activationId}}.json"
+    if not str(go_target.get('pathPattern', '')).endswith(expected_go_suffix):
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_PATH_INVALID')
+    required_go_ops = {'READ', 'CREATE', 'COMMIT', 'PUSH'}
+    if not required_go_ops.issubset(set(go_target.get('allowedOperations') or ())):
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_OPERATIONS_INCOMPLETE')
+    if go_target['repository'] != response_workspace['repository'] or go_target['branch'] != response_workspace['branch']:
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_CONTROL_WORKSPACE_MISMATCH')
+    for field in (
+        'preCasSchemaValidationRequired',
+        'postReadbackSchemaValidationRequired',
+        'goEvidenceProviderReadbackRequired',
+    ):
+        if claim.get(field) is not True:
+            raise AgentJobValidationError(f'CLAIM_SCHEMA_VALIDATION_REQUIRED:{field}')
+
     responses = _mapping(job.get('responseContracts'), 'responseContracts')
     if not _REQUIRED_RESPONSE_TYPES.issubset(responses):
         missing = sorted(_REQUIRED_RESPONSE_TYPES - set(responses))
@@ -192,6 +223,15 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         response_repositories.add((target['repository'], target['branch']))
         if binding.get('required') is not True:
             raise AgentJobValidationError(f'RESPONSE_CONTRACT_MUST_BE_REQUIRED:{response_type}')
+        for validation_field in (
+            'preWriteSchemaValidationRequired',
+            'providerReadbackRequired',
+            'postReadbackSchemaValidationRequired',
+        ):
+            if binding.get(validation_field) is not True:
+                raise AgentJobValidationError(
+                    f'RESPONSE_SCHEMA_VALIDATION_REQUIRED:{response_type}:{validation_field}'
+                )
     if len(response_repositories) != 1:
         raise AgentJobValidationError('ALL_RESPONSE_TYPES_MUST_SHARE_CONTROL_TARGET')
     index_target = _write_target(responses.get('responseIndexTarget'), 'responseIndexTarget')
