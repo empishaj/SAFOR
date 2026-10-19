@@ -1,7 +1,7 @@
 {
   "format": "SAFOR_REQUIREMENTS_TRACEABILITY",
   "schemaVersion": "0.14.0",
-  "releaseTarget": "0.14.0-rc.5",
+  "releaseTarget": "0.14.0-rc.6",
   "source": {
     "document": "HUMAN NOTICE – SAFOR: Master–Subagent-Orchestrierung über Git",
     "date": "2026-10-17",
@@ -46,8 +46,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -86,8 +86,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -133,8 +133,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -181,8 +181,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -229,8 +229,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -276,8 +276,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -323,8 +323,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -371,8 +371,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -419,8 +419,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -464,8 +464,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -509,8 +509,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -554,8 +554,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -600,8 +600,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -644,8 +644,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -690,8 +690,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -734,8 +734,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -779,8 +779,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -823,8 +823,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -870,8 +870,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -918,8 +918,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -965,8 +965,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1012,8 +1012,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1062,8 +1062,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1112,8 +1112,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1160,8 +1160,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1207,8 +1207,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1252,8 +1252,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1297,8 +1297,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1343,8 +1343,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1387,8 +1387,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "PASS",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1435,8 +1435,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1478,8 +1478,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1519,8 +1519,8 @@
       "coverage": {
         "design": "PASS",
         "implementation": "PASS",
-        "automatedTest": "PASS",
-        "bundle": "PASS",
+        "automatedTest": "PENDING",
+        "bundle": "PENDING",
         "realGitE2E": "NOT_VERIFIED",
         "crossHost": "NOT_VERIFIED"
       },
@@ -1625,29 +1625,30 @@
     "requirements": 33,
     "designPass": 33,
     "implementationPass": 33,
-    "automatedTestPendingUntilCI": 0,
-    "bundlePendingUntilMaterialization": 0,
+    "automatedTestPendingUntilCI": 33,
+    "bundlePendingUntilMaterialization": 33,
     "realGitE2EVerified": 7,
     "crossHostVerified": 0,
     "percentageClaimForbidden": true,
-    "automatedTestPass": 33,
-    "bundlePass": 33
+    "automatedTestPass": 0,
+    "bundlePass": 0
   },
   "ciEvidence": {
     "priorMaterializedRelease": {
-      "releaseTarget": "0.14.0-rc.2",
-      "repository": "empishaj/SAFOR",
-      "workflowRunId": "39113701629",
-      "runAttempt": "1",
-      "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_PRIOR_MATERIALIZED_HEAD"
-    },
-    "currentCandidate": {
       "releaseTarget": "0.14.0-rc.5",
       "repository": "empishaj/SAFOR",
       "workflowRunId": "39146270880",
       "runAttempt": "1",
       "sourceCommitBeforeMaterialization": "570daf6573f8b007ee3d2afd512133e1431a963a",
       "status": "PASS_FOR_AUTOMATED_AND_BUNDLE_VALIDATION_ON_MATERIALIZED_WORKTREE"
+    },
+    "currentCandidate": {
+      "releaseTarget": "0.14.0-rc.6",
+      "repository": "empishaj/SAFOR",
+      "workflowRunId": null,
+      "runAttempt": null,
+      "sourceCommitBeforeMaterialization": null,
+      "status": "PENDING_MATERIALIZATION_AND_EXACT_HEAD_VALIDATION"
     }
   }
 }
