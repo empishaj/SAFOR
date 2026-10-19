@@ -83,7 +83,8 @@
     "Every response is materialized from the exact response template bound in the active Agent Job; free-form response envelopes are forbidden.",
     "The materialized response validates against the exact schemaRef bound in the active Agent Job before any response write.",
     "Provider readback must equal the proposed response and validate against the same schema before SUBMITTED/BLOCKED chat status is emitted.",
-    "A response validation or readback failure stops further product mutation and is reported without inventing an authoritative persisted response."
+    "A response validation or readback failure stops further product mutation and is reported without inventing an authoritative persisted response.",
+    "A known legacy SAFOR_AGENT_OUTBOX_INDEX may be migrated only by the owning Agent through exact expected-blob CAS/readback; historical response references are preserved and never upgraded into acceptance evidence."
   ],
   "conflictLifecycle": [
     "OPEN",
@@ -116,5 +117,34 @@
     "postReadbackSchemaValidationRequired": true,
     "chatTerminalStatusBeforeValidatedReadbackForbidden": true,
     "onValidationFailure": "BLOCKED_NO_FURTHER_PRODUCT_MUTATION"
+  },
+  "legacyResponseIndexRecovery": {
+    "knownLegacyFormat": "SAFOR_AGENT_OUTBOX_INDEX",
+    "canonicalFormat": "SAFOR_AGENT_RESPONSE_INDEX",
+    "owner": "AGENT",
+    "trigger": "DETECTED_KNOWN_LEGACY_INDEX_BEFORE_NEXT_RESPONSE_INDEX_UPDATE",
+    "writeTarget": "agents/{agentId}/outbox/index.json",
+    "method": "EXPECTED_BLOB_COMPARE_AND_SWAP_PLUS_PROVIDER_READBACK",
+    "requirements": [
+      "EXACT_PROJECT_AGENT_IDENTITY_MATCH",
+      "LEGACY_TOP_LEVEL_SHAPE_EXACT_MATCH",
+      "EVERY_HISTORICAL_RESPONSE_POINTER_VALID",
+      "PRESERVE_HISTORICAL_RESPONSE_POINTER_BYTES",
+      "MARK_MIGRATED_LEGACY_ENTRIES_SUPERSEDED",
+      "AUTHORITATIVE_ACCEPTANCE_FALSE",
+      "INCREMENT_INDEX_REVISION",
+      "VALIDATE_PROPOSED_CANONICAL_INDEX",
+      "PROVIDER_CAS_AT_EXPECTED_LEGACY_BLOB",
+      "READBACK_FULL_CANONICAL_INDEX",
+      "REVALIDATE_READBACK"
+    ],
+    "forbidden": [
+      "MASTER_WRITE_AGENT_OUTBOX_INDEX",
+      "INVENT_RESPONSE_POINTER",
+      "INVENT_ACCEPTANCE_OR_RESOLUTION",
+      "DROP_HISTORICAL_RESPONSE_ENTRY",
+      "HEURISTIC_UNKNOWN_LEGACY_FORMAT_MIGRATION"
+    ],
+    "failureOutcome": "BLOCKED_NO_RESPONSE_INDEX_MUTATION"
   }
 }
