@@ -1976,6 +1976,13 @@
       "semanticKey": "AGENT_OWNED_REARM_AFTER_SETTLED_RESULT",
       "statement": "After a prior RESULT_SUBMITTED execution, a persistent normal chat agent may accept the next Job only after direct HUMAN GO triggers an AGENT-owned CAS/readback that clears the prior session/currentJob, preserves activation/response history, and is allowed only when the prior MASTER Job is terminally settled; MASTER never rewrites Agent State.",
       "expected": true
+    },
+    {
+      "id": "CF-RC6-008",
+      "status": "ACTIVE",
+      "semanticKey": "NON_MUTATING_REINITIALIZATION_AND_EXPLICIT_NULL_REARM",
+      "statement": "Agent initialization/reinitialization must not mutate Agent State. Rearm requires a later separate direct HUMAN GO, and the rearmed state retains all required top-level fields with session and currentJob explicitly null; invalid persisted state may not be reported READY.",
+      "expected": true
     }
   ],
   "lastManualVerification": {
