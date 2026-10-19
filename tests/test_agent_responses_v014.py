@@ -9,6 +9,7 @@ from runtime.agent_responses import (
     confirm_agent_response_after_provider_readback,
     prepare_agent_response,
     validate_agent_response,
+    validate_agent_response_index,
     validate_response_index_binding,
     validate_response_resolution,
 )
@@ -507,6 +508,69 @@ class AgentResponsesV014Tests(unittest.TestCase):
             AgentResponseValidationError, "SUPERSEDING_JOB_ID_REQUIRED"
         ):
             validate_response_resolution(resolution, response=response)
+
+    def test_canonical_response_index_validates(self):
+        response = self.result()
+        index = {
+            "format": "SAFOR_AGENT_RESPONSE_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": response["projectId"],
+            "agentId": response["agentId"],
+            "identityRevision": response["identityRevision"],
+            "revision": 1,
+            "authoritativeAcceptance": False,
+            "entries": [
+                {
+                    "responseId": response["responseId"],
+                    "responseType": response["responseType"],
+                    "jobId": response["jobId"],
+                    "responseRef": {
+                        "repository": "example/safor-memory",
+                        "ref": "commit123",
+                        "path": (
+                            "projects/example/agents/agent-dev-003/outbox/"
+                            f"{response['jobId']}/{response['responseId']}.json"
+                        ),
+                        "blobSha": "blob1234",
+                    },
+                    "createdAt": response["createdAt"],
+                    "responseState": "SUBMITTED",
+                    "resolutionRef": None,
+                }
+            ],
+            "updatedAt": response["createdAt"],
+        }
+        validate_agent_response_index(
+            index,
+            expected_project_id=response["projectId"],
+            expected_agent_id=response["agentId"],
+            expected_identity_revision=response["identityRevision"],
+            expected_response=response,
+        )
+
+    def test_real_git_outbox_index_shape_is_rejected(self):
+        response = self.result()
+        invalid = {
+            "format": "SAFOR_AGENT_OUTBOX_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": response["projectId"],
+            "agentId": response["agentId"],
+            "identityRevision": response["identityRevision"],
+            "revision": 1,
+            "entries": [],
+            "updatedAt": response["createdAt"],
+        }
+        with self.assertRaisesRegex(
+            AgentResponseValidationError,
+            "RESPONSE_INDEX_FIELDS_INVALID|RESPONSE_INDEX_FORMAT_INVALID",
+        ):
+            validate_agent_response_index(
+                invalid,
+                expected_project_id=response["projectId"],
+                expected_agent_id=response["agentId"],
+                expected_identity_revision=response["identityRevision"],
+                expected_response=response,
+            )
 
     def test_response_index_path_is_deterministic(self):
         response = self.result()
