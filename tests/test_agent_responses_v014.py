@@ -1,10 +1,13 @@
 import copy
+import hashlib
 import json
 import unittest
 from pathlib import Path
 
 from runtime.agent_responses import (
     AgentResponseValidationError,
+    confirm_agent_response_after_provider_readback,
+    prepare_agent_response,
     validate_agent_response,
     validate_response_index_binding,
     validate_response_resolution,
@@ -73,6 +76,53 @@ class AgentResponsesV014Tests(unittest.TestCase):
             "providerMutationRefs": [],
             "payload": {},
             "immutable": True,
+        }
+
+    def job(self):
+        response_types = {
+            "JOB_RESULT": "job-result",
+            "JOB_ERROR": "job-error",
+            "CLARIFICATION_REQUEST": "clarification-request",
+            "CAPABILITY_MISMATCH": "capability-mismatch",
+            "IMPROVEMENT_PROPOSAL": "improvement-proposal",
+        }
+        contracts = {}
+        for response_type, slug in response_types.items():
+            contracts[response_type] = {
+                "responseType": response_type,
+                "templateRef": {
+                    "repository": "empishaj/SAFOR",
+                    "ref": "commit-rc6",
+                    "path": f"v0.14.0/templates/responses/{slug}.template.json",
+                    "blobSha": "template123",
+                },
+                "schemaRef": {
+                    "repository": "empishaj/SAFOR",
+                    "ref": "commit-rc6",
+                    "path": "v0.14.0/schemas/agent-response.schema.json",
+                    "blobSha": "schema123",
+                },
+                "writeTarget": {
+                    "repositoryClass": "CONTROL_REPOSITORY",
+                    "repository": "example/safor-memory",
+                    "branch": "main",
+                    "pathPattern": "projects/example/agents/agent-dev-003/outbox/{jobId}/{responseId}.json",
+                    "allowedOperations": ["READ", "CREATE", "COMMIT", "PUSH"],
+                },
+                "required": True,
+                "preWriteSchemaValidationRequired": True,
+                "providerReadbackRequired": True,
+                "postReadbackSchemaValidationRequired": True,
+            }
+        return {
+            "identity": {"jobId": "job-014"},
+            "lineage": {
+                "projectId": "project-001",
+                "packageId": "WP-014",
+                "workItemId": "WP-014-IMPL",
+            },
+            "assignment": {"agentId": "agent-dev-003", "identityRevision": 2},
+            "responseContracts": contracts,
         }
 
     def conflict(self, conflict_type="TECHNICAL_FAILURE"):
@@ -213,6 +263,114 @@ class AgentResponsesV014Tests(unittest.TestCase):
         ):
             with self.subTest(response_type=response["responseType"]):
                 validate_agent_response(response, expected_job=self.expected_job)
+
+    def test_prepare_response_uses_bound_template_and_schema(self):
+        job_contract_ref = copy.deepcopy(self.pointer)
+        response = prepare_agent_response(
+            job=self.job(),
+            response_type="JOB_RESULT",
+            response_id="response-job_result-002",
+            created_at="2026-10-19T13:38:00Z",
+            summary="Completed.",
+            payload={
+                "completionStatus": "COMPLETED",
+                "outputs": [{"ref": "product:artifact", "expectedType": "CONTRIBUTION"}],
+                "gitTrace": [],
+                "checks": [],
+                "openItems": [],
+            },
+            job_contract_ref=job_contract_ref,
+            target_master_ref="projects/example/master/jobs/job-014.json",
+            evidence_refs=["evidence:claim"],
+            provider_mutation_refs=["git:product:commit"],
+        )
+        self.assertEqual(set(response), {
+            "format", "schemaVersion", "responseId", "responseType", "projectId",
+            "jobId", "packageId", "workItemId", "agentId", "identityRevision",
+            "jobContractRef", "observedJobContractBlobSha", "responseContractRef",
+            "targetMasterRef", "createdAt", "status", "summary", "executionControl",
+            "chatStatus", "evidenceRefs", "providerMutationRefs", "payload", "immutable",
+        })
+        self.assertEqual(
+            "v0.14.0/templates/responses/job-result.template.json",
+            response["responseContractRef"]["path"],
+        )
+        validate_agent_response(response, expected_job=self.expected_job)
+
+    def test_provider_readback_must_match_and_revalidate_response(self):
+        response = self.result()
+        digest = "sha256:" + hashlib.sha256(
+            json.dumps(
+                response,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        confirmed = confirm_agent_response_after_provider_readback(
+            proposed_response=response,
+            provider_readback={
+                "writeSucceeded": True,
+                "readbackVerified": True,
+                "observedResponse": copy.deepcopy(response),
+                "observedResponseDigest": digest,
+                "readbackRef": "git:response:commit",
+                "observedBlobSha": "responseblob123",
+            },
+            expected_job=self.expected_job,
+        )
+        self.assertTrue(confirmed["authoritativePersistence"])
+        self.assertEqual(response["responseId"], confirmed["responseId"])
+
+    def test_echo_e2e_simplified_job_result_is_rejected(self):
+        response = {
+            "format": "SAFOR_AGENT_RESPONSE",
+            "schemaVersion": "0.14.0",
+            "responseType": "JOB_RESULT",
+            "responseId": "019d9f6b-0000-7abc-8d21-000000000001",
+            "projectId": "project-001",
+            "jobId": "job-014",
+            "jobKey": "or03-human-go-real-git-001",
+            "agentId": "agent-dev-003",
+            "identityRevision": 2,
+            "status": "SUBMITTED",
+            "createdAt": "2026-10-19T13:38:00Z",
+            "summary": "Plausible but nonconforming result.",
+            "result": {"productArtifact": {"path": "proof.md"}},
+            "evidence": {"claimReadback": {"commitSha": "abc1234"}},
+        }
+        with self.assertRaisesRegex(
+            AgentResponseValidationError, "RESPONSE_FIELDS_INVALID"
+        ):
+            validate_agent_response(response, expected_job=self.expected_job)
+
+    def test_readback_with_extra_field_is_rejected_before_submission(self):
+        response = self.result()
+        observed = copy.deepcopy(response)
+        observed["jobKey"] = "forbidden-freeform-field"
+        digest = "sha256:" + hashlib.sha256(
+            json.dumps(
+                observed,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        with self.assertRaisesRegex(
+            AgentResponseValidationError, "RESPONSE_FIELDS_INVALID"
+        ):
+            confirm_agent_response_after_provider_readback(
+                proposed_response=response,
+                provider_readback={
+                    "writeSucceeded": True,
+                    "readbackVerified": True,
+                    "observedResponse": observed,
+                    "observedResponseDigest": digest,
+                    "readbackRef": "git:response:commit",
+                    "observedBlobSha": "responseblob123",
+                },
+                expected_job=self.expected_job,
+            )
 
     def test_result_requires_output(self):
         response = self.result()
