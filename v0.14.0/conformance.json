@@ -1914,7 +1914,7 @@
       "id": "CF-RC5-004",
       "status": "ACTIVE",
       "semanticKey": "GO_CLAIM_STATE_INTEGRITY",
-      "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; host chat/session binding fields are not part of the authority proof.",
+      "statement": "A HUMAN-GO claim becomes authoritative only after provider CAS of the assigned agent's own state.json and exact full-state readback matching project, job, agent, identityRevision, dispatchRevision and persisted activation consumption; master/jobs/{jobId}.json remains read-only to the agent.",
       "expected": true
     },
     {
@@ -1922,6 +1922,13 @@
       "status": "ACTIVE",
       "semanticKey": "MUTABLE_INBOX_INDEX_STABLE_IDENTITY",
       "statement": "A persistent Agent Identity separates immutable inbox bootstrap evidence from the mutable personal inbox locator: MASTER may update inbox/index.json for dispatch without changing identityRevision, and agents must never use the bootstrap blob for current job discovery.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC5-006",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_CLAIM_OWNERSHIP",
+      "statement": "Agent claim authority and MASTER lifecycle authority are separated: the agent may CAS only its own state.json claim target, while master/jobs/{jobId}.json remains MASTER-owned and is reconciled from verified claim and response evidence.",
       "expected": true
     }
   ],
