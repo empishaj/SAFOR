@@ -131,7 +131,7 @@ class InboxPullAuditRc5Tests(unittest.TestCase):
     def test_materialized_bundle_contains_inbox_pull_contract(self):
         version = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
         framework = self.load(f"SAFOR-FRAMEWORK-v{version}.json")
-        self.assertEqual("0.14.0-rc.5", framework["bundleVersion"])
+        self.assertEqual(version, framework["bundleVersion"])
         modules = framework["embeddedModules"]
 
         activation = modules["agentActivation"]["content"]
