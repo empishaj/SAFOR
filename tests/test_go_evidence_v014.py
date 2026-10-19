@@ -6,6 +6,7 @@ import unittest
 from runtime.go_evidence import (
     GoEvidenceValidationError,
     confirm_go_claim_after_provider_readback,
+    confirm_human_go_evidence_after_provider_readback,
     prepare_go_claim,
     validate_human_go_evidence,
 )
@@ -136,6 +137,44 @@ class GoEvidenceV014Tests(unittest.TestCase):
                 self.evidence(),
                 expected=self.expected(),
                 consumed_activation_ids={"activation-001"},
+            )
+
+    def test_go_evidence_must_be_persisted_and_read_back_before_claim(self):
+        evidence = self.evidence()
+        confirmed = confirm_human_go_evidence_after_provider_readback(
+            go_evidence=evidence,
+            expected=self.expected(),
+            provider_readback={
+                "writeSucceeded": True,
+                "readbackVerified": True,
+                "observedEvidence": copy.deepcopy(evidence),
+                "readbackRef": "git:evidence:activation-001",
+                "observedBlobSha": "blob-go-001",
+            },
+            consumed_activation_ids=set(),
+        )
+        self.assertTrue(confirmed["authoritativePersistence"])
+        self.assertEqual("activation-001", confirmed["activationId"])
+
+    def test_go_evidence_readback_mismatch_fails_closed(self):
+        evidence = self.evidence()
+        observed = copy.deepcopy(evidence)
+        observed["targetJobId"] = "job-other"
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "GO_EVIDENCE_BINDING_MISMATCH:targetJobId",
+        ):
+            confirm_human_go_evidence_after_provider_readback(
+                go_evidence=evidence,
+                expected=self.expected(),
+                provider_readback={
+                    "writeSucceeded": True,
+                    "readbackVerified": True,
+                    "observedEvidence": observed,
+                    "readbackRef": "git:evidence:activation-001",
+                    "observedBlobSha": "blob-go-001",
+                },
+                consumed_activation_ids=set(),
             )
 
     def test_claim_requires_provider_cas_readback_before_consumption(self):
