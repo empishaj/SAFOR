@@ -137,6 +137,20 @@ if set(rearm.get("settledMasterStatuses", [])) != {
     "REJECTED", "ACCEPTED", "INTEGRATED", "CANCELED", "SUPERSEDED"
 }:
     fail("Agent State rearm terminal MASTER status set invalid")
+if rearm.get("rearmForbiddenDuringInitialization") is not True:
+    fail("Agent State rearm must be forbidden during initialization/reinitialization")
+if rearm.get("rearmRequiresSeparateDirectHumanGo") is not True:
+    fail("Agent State rearm must require a later separate direct HUMAN GO")
+if rearm.get("rearmHumanInputSource") != "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT":
+    fail("Agent State rearm HUMAN source invalid")
+if rearm.get("rearmHumanMessage") != "GO":
+    fail("Agent State rearm HUMAN message must be GO")
+if rearm.get("rearmStateMustRetainAllRequiredTopLevelFields") is not True:
+    fail("Agent State rearm must retain all required top-level fields")
+if rearm.get("rearmSessionAndCurrentJobRepresentation") != "EXPLICIT_NULL":
+    fail("Agent State rearm must persist session/currentJob as explicit null")
+if rearm.get("readyStatusForbiddenIfPersistedStateInvalid") is not True:
+    fail("READY must be forbidden for schema-invalid persisted Agent State")
 
 responses = modules.get("agentResponseContract", {}).get("content", {}).get("responseTypes", {})
 expected_responses = {"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}
