@@ -12,8 +12,10 @@ from tests.v014_fixtures import (
 from runtime.agent_responses import prepare_agent_response
 from runtime.go_evidence import (
     GoEvidenceValidationError,
+    confirm_agent_state_rearm_after_provider_readback,
     confirm_go_claim_after_provider_readback,
     confirm_result_submitted_state_after_provider_readback,
+    prepare_agent_state_rearm_after_settlement,
     prepare_go_claim,
     prepare_result_submitted_agent_state,
     validate_agent_state_contract,
@@ -480,6 +482,92 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
                 expected_job_id=TEST_JOB_ID,
                 expected_dispatch_revision=3,
                 expected_runtime_status="RESULT_SUBMITTED",
+            )
+
+    def result_submitted_state(self):
+        intent = self.intent()
+        state = json.loads(json.dumps(intent["proposedState"]))
+        state["revision"] = 9
+        state["runtimeStatus"] = "RESULT_SUBMITTED"
+        state["lastResponseRef"] = "git:response:response-001"
+        state["updatedAt"] = "2026-10-18T10:05:00Z"
+        validate_agent_state_contract(
+            state,
+            require_claim=True,
+            expected_activation_id="activation-rc4-001",
+            expected_job_id=TEST_JOB_ID,
+            expected_dispatch_revision=3,
+            expected_runtime_status="RESULT_SUBMITTED",
+        )
+        return state
+
+    def settled_master_state(self, status="REJECTED"):
+        master = self.master_job_state()
+        master["revision"] = 6
+        master["lifecycleStatus"] = status
+        return master
+
+    def test_agent_rearm_after_master_rejection_preserves_history(self):
+        state = self.result_submitted_state()
+        intent = prepare_agent_state_rearm_after_settlement(
+            agent_state=state,
+            settled_master_job_state=self.settled_master_state(),
+            expected_agent_state_revision=9,
+            rearmed_at="2026-10-18T10:06:00Z",
+        )
+        self.assertFalse(intent["authoritative"])
+        self.assertEqual("AGENT", intent["stateOwner"])
+        self.assertFalse(intent["masterJobStateMutationAllowed"])
+        proposed = intent["proposedState"]
+        self.assertEqual(10, proposed["revision"])
+        self.assertEqual("WAITING_HUMAN_GO", proposed["runtimeStatus"])
+        self.assertIsNone(proposed["session"])
+        self.assertIsNone(proposed["currentJob"])
+        self.assertEqual(
+            state["consumedActivationIds"],
+            proposed["consumedActivationIds"],
+        )
+        self.assertEqual(state["lastResponseRef"], proposed["lastResponseRef"])
+
+        readback = {
+            "casSucceeded": True,
+            "readbackVerified": True,
+            "observedState": json.loads(json.dumps(proposed)),
+            "observedStateDigest": digest(proposed),
+            "readbackRef": "git:commit:rearm",
+            "observedBlobSha": "blob-rearm-123",
+        }
+        confirmed = confirm_agent_state_rearm_after_provider_readback(
+            rearm_intent=intent,
+            provider_readback=readback,
+        )
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("WAITING_HUMAN_GO", confirmed["state"]["runtimeStatus"])
+
+    def test_agent_rearm_rejects_unsettled_master_job(self):
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_MASTER_JOB_NOT_SETTLED",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=self.settled_master_state("VERIFIED"),
+                expected_agent_state_revision=9,
+                rearmed_at="2026-10-18T10:06:00Z",
+            )
+
+    def test_agent_rearm_rejects_wrong_prior_job_binding(self):
+        master = self.settled_master_state()
+        master["jobId"] = "other-job"
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_JOB_MISMATCH",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=master,
+                expected_agent_state_revision=9,
+                rearmed_at="2026-10-18T10:06:00Z",
             )
 
     def test_duplicate_confirm_is_rejected_by_local_cache(self):
