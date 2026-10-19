@@ -183,7 +183,7 @@ def build_bundle():
             "deterministicAcceptanceRule": "Work Item acceptance is evaluated only from an approved hash-valid Acceptance Contract and replayed typed Evidence/Review/Authority records.",
             "selfHealingRule": "Use one profile-constrained INITIAL recovery attempt separately from retry accounting. SAFOR 0.14 module profiles permit zero additional retries; unknown effects reconcile read-only, and a proven product mutation is never replayed.",
             "agentWorkspaceRule": "AGENT work uses persistent chat-bound identities and repository-native jobs; local .safor/ is never a worker write target.",
-            "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate, claim or start a subagent job; Git and automation events never wake an agent.",
+            "agentActivationRule": "Only explicit HUMAN GO in the bound agent chat may activate a subagent. The atomic claim is provider-CAS/readback of the assigned agent's own state.json; master/jobs remains read-only to the agent, and Git or automation events never wake an agent.",
             "agentResponseRule": "Every dispatched job binds all five typed response templates and exact separate Git return targets before READY.",
             "agentChatRule": "Subagent chats render only minimal operational status; all substantive results, errors, questions and conflicts are versioned Git responses for MASTER.",
             "masterStatusIndexRule": "Routine status is read from compact versioned pointer indexes; global repository scans are forbidden in the normal path.",
