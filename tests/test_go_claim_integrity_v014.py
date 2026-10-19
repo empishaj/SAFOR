@@ -599,7 +599,9 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
                 agent_state=self.result_submitted_state(),
                 settled_master_job_state=master,
                 expected_agent_state_revision=9,
-                rearmed_at="2026-10-18T10:06:00Z",
+                human_message="GO",
+                human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+                observed_at="2026-10-18T10:06:00Z",
             )
 
     def test_duplicate_confirm_is_rejected_by_local_cache(self):
