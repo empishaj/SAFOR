@@ -202,7 +202,13 @@
     "providers/github/0.6.0/package.json": "providerGithub",
     "providers/gitlab/0.6.0/package.json": "providerGitlab",
     "creation-type-vocabulary.json": "creationTypeVocabulary",
-    "domain-framework-profiles.json": "domainFrameworkProfiles"
+    "domain-framework-profiles.json": "domainFrameworkProfiles",
+    "human-go-evidence.template.json": "templateHumanGoEvidence",
+    "agent-state-claim.template.json": "templateAgentStateClaim",
+    "agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted",
+    "templates/human-go-evidence.template.json": "templateHumanGoEvidence",
+    "templates/agent-state-claim.template.json": "templateAgentStateClaim",
+    "templates/agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted"
   },
   "v014AuthoritativeKeys": [
     "acceptanceModel",
