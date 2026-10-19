@@ -6,6 +6,9 @@ import hashlib
 import json
 from typing import Any, Mapping, MutableSet
 
+from runtime.agent_jobs import AgentJobValidationError, validate_agent_job
+from runtime.agent_responses import AgentResponseValidationError, validate_agent_response, validate_agent_response_index
+
 
 class GoEvidenceValidationError(ValueError):
     """Raised when HUMAN-GO evidence is not safely bound to one job claim."""
@@ -303,6 +306,8 @@ def prepare_go_claim(
     *,
     agent_state: Mapping[str, Any],
     master_job_state: Mapping[str, Any],
+    job_contract: Mapping[str, Any],
+    job_contract_blob_sha: str,
     go_evidence: Mapping[str, Any],
     expected_agent_state_revision: int,
     go_evidence_ref: Mapping[str, Any],
@@ -335,6 +340,27 @@ def prepare_go_claim(
         raise GoEvidenceValidationError("CLAIM_AGENT_BINDING_MISMATCH")
     if master.get("assignedIdentityRevision") != agent.get("identityRevision"):
         raise GoEvidenceValidationError("CLAIM_IDENTITY_REVISION_MISMATCH")
+
+    job = deepcopy(dict(_mapping(job_contract, "jobContract")))
+    try:
+        validate_agent_job(job)
+    except AgentJobValidationError as exc:
+        raise GoEvidenceValidationError(f"AGENT_JOB_CONTRACT_INVALID:{exc}") from exc
+
+    job_identity = _mapping(job.get("identity"), "job.identity")
+    job_lineage = _mapping(job.get("lineage"), "job.lineage")
+    job_assignment = _mapping(job.get("assignment"), "job.assignment")
+    if job_identity.get("jobId") != master.get("jobId"):
+        raise GoEvidenceValidationError("JOB_CONTRACT_MASTER_JOB_ID_MISMATCH")
+    if job_lineage.get("projectId") != master.get("projectId"):
+        raise GoEvidenceValidationError("JOB_CONTRACT_PROJECT_BINDING_MISMATCH")
+    if job_assignment.get("agentId") != master.get("assignedAgentId"):
+        raise GoEvidenceValidationError("JOB_CONTRACT_AGENT_BINDING_MISMATCH")
+    if job_assignment.get("identityRevision") != master.get("assignedIdentityRevision"):
+        raise GoEvidenceValidationError("JOB_CONTRACT_IDENTITY_REVISION_MISMATCH")
+    contract_ref_for_job = _mapping(master.get("contractRef"), "contractRef")
+    if str(contract_ref_for_job.get("blobSha")) != str(job_contract_blob_sha):
+        raise GoEvidenceValidationError("JOB_CONTRACT_BLOB_MISMATCH")
 
     expected = {
         "projectId": master.get("projectId"),
@@ -407,6 +433,8 @@ def prepare_go_claim(
         "requiredProviderSequence": [
             "READ_AGENT_STATE_AT_EXPECTED_REVISION",
             "READ_MASTER_JOB_STATE_READ_ONLY",
+            "READ_PINNED_AGENT_JOB_CONTRACT",
+            "VALIDATE_AGENT_JOB_SCHEMA_AND_RUNTIME_CONTRACT",
             "VALIDATE_GO_AND_JOB_BINDINGS",
             "CAS_COMMIT_EXACT_PROPOSED_AGENT_STATE_AT_EXPECTED_REVISION",
             "PROVIDER_READBACK_FULL_COMMITTED_AGENT_STATE",
@@ -507,6 +535,9 @@ def prepare_result_submitted_agent_state(
     *,
     agent_state: Mapping[str, Any],
     expected_agent_state_revision: int,
+    response: Mapping[str, Any],
+    response_index: Mapping[str, Any],
+    expected_job: Mapping[str, Any],
     response_ref: str,
     submitted_at: str,
 ) -> dict[str, Any]:
@@ -530,6 +561,20 @@ def prepare_result_submitted_agent_state(
         raise GoEvidenceValidationError("AGENT_STATE_REVISION_CONFLICT")
     _parse_datetime(submitted_at, "RESULT_SUBMITTED_AT_INVALID")
     response_ref = _nonempty(response_ref, "RESULT_RESPONSE_REF_MISSING")
+    response_value = deepcopy(dict(_mapping(response, "response")))
+    response_index_value = deepcopy(dict(_mapping(response_index, "responseIndex")))
+    expected_job_value = deepcopy(dict(_mapping(expected_job, "expectedJob")))
+    try:
+        validate_agent_response(response_value, expected_job=expected_job_value)
+        validate_agent_response_index(
+            response_index_value,
+            expected_project_id=str(state.get("projectId")),
+            expected_agent_id=str(state.get("agentId")),
+            expected_identity_revision=int(state.get("identityRevision")),
+            expected_response=response_value,
+        )
+    except AgentResponseValidationError as exc:
+        raise GoEvidenceValidationError(f"RESULT_RESPONSE_CONTRACT_INVALID:{exc}") from exc
 
     proposed = deepcopy(state)
     proposed["revision"] = expected_agent_state_revision + 1
@@ -635,6 +680,8 @@ def atomically_observe_go_and_claim(
     *,
     agent_state: Mapping[str, Any],
     master_job_state: Mapping[str, Any],
+    job_contract: Mapping[str, Any],
+    job_contract_blob_sha: str,
     go_evidence: Mapping[str, Any],
     expected_agent_state_revision: int,
     consumed_activation_ids: MutableSet[str],
@@ -645,6 +692,8 @@ def atomically_observe_go_and_claim(
     return prepare_go_claim(
         agent_state=agent_state,
         master_job_state=master_job_state,
+        job_contract=job_contract,
+        job_contract_blob_sha=job_contract_blob_sha,
         go_evidence=go_evidence,
         expected_agent_state_revision=expected_agent_state_revision,
         go_evidence_ref=go_evidence_ref,
