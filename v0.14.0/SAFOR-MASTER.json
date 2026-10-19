@@ -2479,6 +2479,16 @@
       "id": "INV-RC6-004",
       "rule": "After a provider-read-back-valid JOB_RESULT, the Agent may update its own state only with the pinned result-submitted state template: runtimeStatus is RESULT_SUBMITTED, current claim bindings are preserved, and lastResponseRef is a canonical string reference rather than an invented pointer object.",
       "status": "ACTIVE"
+    },
+    {
+      "id": "INV-RC6-005",
+      "status": "ACTIVE",
+      "rule": "A CHAT_AGENT may acknowledge READY only with the exact pinned Git identity. It must not invent, rename, alias, suffix, version or increment displayName, agentId or identityRevision. Any mismatch or uncertainty requires REIDENTIFICATION_REQUIRED and forbids HUMAN-GO activation."
+    },
+    {
+      "id": "INV-RC6-006",
+      "status": "ACTIVE",
+      "rule": "A CHAT_AGENT may not create HUMAN-GO claim authority or mutate product state until the exact MASTER-pinned Agent Job Contract has passed canonical v0.14 schema and runtime validation, all mandatory claim and response bindings are present, and the observed repository/ref/path/blob exactly matches MASTER contractRef. Invalid jobs fail closed with no claim and no product mutation."
     }
   ],
   "evidencePolicy": {
