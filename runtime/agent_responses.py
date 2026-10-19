@@ -536,6 +536,75 @@ def validate_response_resolution(
         )
 
 
+def validate_agent_response_index(
+    index: Mapping[str, Any],
+    *,
+    expected_project_id: str,
+    expected_agent_id: str,
+    expected_identity_revision: int,
+    expected_response: Mapping[str, Any] | None = None,
+) -> None:
+    index = _mapping(index, "responseIndex")
+    required = {
+        "format", "schemaVersion", "projectId", "agentId", "identityRevision",
+        "revision", "authoritativeAcceptance", "entries", "updatedAt",
+    }
+    if set(index) != required:
+        raise AgentResponseValidationError("RESPONSE_INDEX_FIELDS_INVALID")
+    if index.get("format") != "SAFOR_AGENT_RESPONSE_INDEX":
+        raise AgentResponseValidationError("RESPONSE_INDEX_FORMAT_INVALID")
+    if index.get("schemaVersion") != "0.14.0":
+        raise AgentResponseValidationError("RESPONSE_INDEX_SCHEMA_VERSION_INVALID")
+    if index.get("projectId") != expected_project_id:
+        raise AgentResponseValidationError("RESPONSE_INDEX_PROJECT_MISMATCH")
+    if index.get("agentId") != expected_agent_id:
+        raise AgentResponseValidationError("RESPONSE_INDEX_AGENT_MISMATCH")
+    if index.get("identityRevision") != expected_identity_revision:
+        raise AgentResponseValidationError("RESPONSE_INDEX_IDENTITY_REVISION_MISMATCH")
+    if not isinstance(index.get("revision"), int) or index["revision"] < 1:
+        raise AgentResponseValidationError("RESPONSE_INDEX_REVISION_INVALID")
+    if index.get("authoritativeAcceptance") is not False:
+        raise AgentResponseValidationError("RESPONSE_INDEX_MUST_NOT_BE_ACCEPTANCE_AUTHORITY")
+    if not isinstance(index.get("entries"), list):
+        raise AgentResponseValidationError("RESPONSE_INDEX_ENTRIES_INVALID")
+    _nonempty(index.get("updatedAt"), "RESPONSE_INDEX_UPDATED_AT_MISSING")
+
+    entry_required = {
+        "responseId", "responseType", "jobId", "responseRef",
+        "createdAt", "responseState", "resolutionRef",
+    }
+    matching_entries = []
+    for raw in index["entries"]:
+        entry = _mapping(raw, "responseIndexEntry")
+        if set(entry) != entry_required:
+            raise AgentResponseValidationError("RESPONSE_INDEX_ENTRY_FIELDS_INVALID")
+        _nonempty(entry.get("responseId"), "RESPONSE_INDEX_RESPONSE_ID_MISSING")
+        if entry.get("responseType") not in _RESPONSE_RULES:
+            raise AgentResponseValidationError("RESPONSE_INDEX_RESPONSE_TYPE_INVALID")
+        _nonempty(entry.get("jobId"), "RESPONSE_INDEX_JOB_ID_MISSING")
+        _validate_pointer(entry.get("responseRef"), "responseRef")
+        _nonempty(entry.get("createdAt"), "RESPONSE_INDEX_CREATED_AT_MISSING")
+        if entry.get("responseState") not in {
+            "SUBMITTED", "ACKNOWLEDGED", "RESOLVED", "SUPERSEDED", "CLOSED"
+        }:
+            raise AgentResponseValidationError("RESPONSE_INDEX_STATE_INVALID")
+        resolution_ref = entry.get("resolutionRef")
+        if resolution_ref is not None:
+            _validate_pointer(resolution_ref, "resolutionRef")
+        if expected_response is not None and entry.get("responseId") == expected_response.get("responseId"):
+            matching_entries.append(entry)
+
+    if expected_response is not None:
+        if len(matching_entries) != 1:
+            raise AgentResponseValidationError("RESPONSE_INDEX_EXPECTED_RESPONSE_ENTRY_MISSING_OR_DUPLICATE")
+        validate_response_index_binding(
+            response=expected_response,
+            index_entry=matching_entries[0],
+        )
+        if matching_entries[0].get("responseState") != "SUBMITTED":
+            raise AgentResponseValidationError("RESPONSE_INDEX_EXPECTED_RESPONSE_NOT_SUBMITTED")
+
+
 def validate_response_index_binding(
     *, response: Mapping[str, Any], index_entry: Mapping[str, Any]
 ) -> None:
