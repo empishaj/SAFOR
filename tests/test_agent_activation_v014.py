@@ -321,6 +321,14 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertIn("PROJECT_TREE_FULL_SCAN", result["forbiddenReads"])
         self.assertIn("OTHER_AGENT_INBOX_READ", result["forbiddenReads"])
 
+    def test_initialization_template_forbids_implicit_rearm(self):
+        template = load("v0.14.0/templates/agent-initialization.template.json")
+        rules = template["renderingRules"]
+        self.assertTrue(rules["rearmForbiddenDuringInitialization"])
+        self.assertTrue(rules["rearmRequiresLaterSeparateHumanGo"])
+        self.assertTrue(rules["rearmMustPersistSessionAndCurrentJobAsExplicitNull"])
+        self.assertTrue(rules["readyForbiddenIfAgentStateSchemaInvalid"])
+
     def test_template_contains_one_time_prompt_and_go_reuse(self):
         template = load("v0.14.0/templates/agent-initialization.template.json")
         self.assertTrue(template["renderingRules"]["oneTimeOnly"])
@@ -350,6 +358,20 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertFalse(contract["masterMaySynthesizeHumanGo"])
         self.assertFalse(contract["masterMayCreateHumanGoEvidence"])
         self.assertEqual("HUMAN_ONLY", contract["activationAuthority"])
+        rearm = model["onHumanGo"]["preSelectionAgentStateHandling"]
+        self.assertTrue(rearm["rearmForbiddenDuringInitialization"])
+        self.assertTrue(rearm["rearmRequiresSeparateDirectHumanGo"])
+        self.assertEqual(
+            "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+            rearm["rearmHumanInputSource"],
+        )
+        self.assertEqual("GO", rearm["rearmHumanMessage"])
+        self.assertTrue(rearm["rearmStateMustRetainAllRequiredTopLevelFields"])
+        self.assertEqual(
+            "EXPLICIT_NULL",
+            rearm["rearmSessionAndCurrentJobRepresentation"],
+        )
+        self.assertTrue(rearm["readyStatusForbiddenIfPersistedStateInvalid"])
 
 
 if __name__ == "__main__":
