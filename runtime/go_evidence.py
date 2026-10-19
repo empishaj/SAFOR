@@ -6,7 +6,6 @@ import hashlib
 import json
 from typing import Any, Mapping, MutableSet
 
-from runtime.agent_jobs import AgentJobValidationError, validate_agent_job
 from runtime.agent_responses import AgentResponseValidationError, validate_agent_response, validate_agent_response_index
 
 
@@ -342,6 +341,7 @@ def prepare_go_claim(
         raise GoEvidenceValidationError("CLAIM_IDENTITY_REVISION_MISMATCH")
 
     job = deepcopy(dict(_mapping(job_contract, "jobContract")))
+    from runtime.agent_jobs import AgentJobValidationError, validate_agent_job
     try:
         validate_agent_job(job)
     except AgentJobValidationError as exc:
