@@ -15,11 +15,14 @@ permissions:
 jobs:
   materialize-and-validate:
     runs-on: ubuntu-latest
+    env:
+      SAFOR_WORKFLOW_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
     steps:
       - name: Checkout exact candidate head
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ env.SAFOR_WORKFLOW_HEAD_SHA }}
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
@@ -29,7 +32,7 @@ jobs:
         run: |
           python tools/materialize_release.py --prepare \
             --workflow-run-id "$GITHUB_RUN_ID" \
-            --source-sha "$GITHUB_SHA"
+            --source-sha "$SAFOR_WORKFLOW_HEAD_SHA"
 
       - name: Verify reproducible generic Framework
         run: python tools/build_bundle.py --check
@@ -41,7 +44,7 @@ jobs:
         run: python tools/validate_audit_remediation.py
       - name: Validate pending release provenance
         env:
-          SAFOR_RELEASE_SOURCE_SHA: ${{ github.sha }}
+          SAFOR_RELEASE_SOURCE_SHA: ${{ env.SAFOR_WORKFLOW_HEAD_SHA }}
           SAFOR_RELEASE_WORKFLOW_RUN_ID: ${{ github.run_id }}
         run: python tools/validate_release_facts.py
       - name: Validate traceability
@@ -57,11 +60,11 @@ jobs:
         run: |
           python tools/materialize_release.py --finalize \
             --workflow-run-id "$GITHUB_RUN_ID" \
-            --source-sha "$GITHUB_SHA"
+            --source-sha "$SAFOR_WORKFLOW_HEAD_SHA"
 
       - name: Validate finalized exact-head provenance
         env:
-          SAFOR_RELEASE_SOURCE_SHA: ${{ github.sha }}
+          SAFOR_RELEASE_SOURCE_SHA: ${{ env.SAFOR_WORKFLOW_HEAD_SHA }}
           SAFOR_RELEASE_WORKFLOW_RUN_ID: ${{ github.run_id }}
         run: python tools/validate_release_facts.py
       - name: Revalidate finalized traceability
