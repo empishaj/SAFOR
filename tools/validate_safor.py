@@ -120,12 +120,32 @@ preclaim = set(activation_model.get("onHumanGo", {}).get("preClaimChecks", []))
 required_preclaim = {
     "JOB_CONTRACT_POINTER_EXACT_MATCH",
     "AGENT_JOB_SCHEMA_VALID",
-    "AGENT_JOB_RUNTIME_CONTRACT_VALID",
+    "AGENT_JOB_CONTRACT_MODEL_VALID",
     "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
 }
 missing_preclaim = sorted(required_preclaim - preclaim)
 if missing_preclaim:
     fail(f"Agent Job fail-closed preclaim checks missing: {missing_preclaim}")
+job_validation = activation_model.get("onHumanGo", {}).get("jobValidationAuthority", {})
+if job_validation.get("authority") != "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL":
+    fail("Normal chat Agent Job validation authority invalid")
+if job_validation.get("schemaPath") != "v0.14.0/schemas/agent-job.schema.json":
+    fail("Pinned Agent Job schema path invalid")
+if job_validation.get("contractModelPath") != "v0.14.0/agent-job-contract-model.json":
+    fail("Pinned Agent Job contract model path invalid")
+if job_validation.get("referenceValidatorRequiredForNormalChatUse") is not False:
+    fail("Python reference validator must not be required for normal chat use")
+allowed_go_reads = set(activation_model.get("onHumanGo", {}).get("allowedReadsInOrder", []))
+for required_read in (
+    "PINNED_AGENT_JOB_SCHEMA_FROM_ACTIVATION_MODEL",
+    "PINNED_AGENT_JOB_CONTRACT_MODEL_FROM_ACTIVATION_MODEL",
+):
+    if required_read not in allowed_go_reads:
+        fail(f"Normal chat Job validation read missing: {required_read}")
+if activation.get("currentInboxSnapshotBlobIsStableAcrossDispatch") is not False:
+    fail("Current Inbox snapshot blob must not be stable across dispatch")
+if activation.get("inboxBlobChangeAloneRequiresReidentification") is not False:
+    fail("Inbox blob change alone must not require reidentification")
 rearm = activation_model.get("onHumanGo", {}).get("preSelectionAgentStateHandling", {})
 if rearm.get("rearmStateOwner") != "AGENT":
     fail("Agent State rearm owner must be AGENT")
@@ -163,6 +183,10 @@ if communication.get("humanBoundary", {}).get("masterIsOnlyDomainInterface") is 
     fail("MASTER-only HUMAN interface missing")
 if communication.get("budgets", {}).get("maxLines") != 1 or communication.get("rendering", {}).get("menuForbidden") is not True:
     fail("Minimal single-line no-menu agent chat invalid")
+if communication.get("persistenceXorContract", {}).get("mutuallyExclusive") is not True:
+    fail("BLOCKED persistence XOR contract missing")
+if "BLOCKED_PERSISTENCE_FAILURE" not in communication.get("patterns", {}):
+    fail("BLOCKED persistence failure fallback pattern missing")
 master_status = modules.get("masterStatus", {}).get("content", {})
 if master_status.get("principles", {}).get("fullRepositoryScanForRoutineStatusForbidden") is not True:
     fail("MASTER routine full-scan prohibition missing")
