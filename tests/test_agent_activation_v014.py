@@ -117,6 +117,7 @@ class AgentActivationV014Tests(unittest.TestCase):
             "session": None,
             "currentJob": None,
             "lastResponseRef": None,
+            "consumedActivationIds": [],
             "updatedAt": "2026-10-17T20:01:00Z",
         }
         pointer = {
