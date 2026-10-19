@@ -34,6 +34,10 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         claim = self.modules["agentActivation"]["content"]["atomicClaimContract"]
         self.assertEqual("AGENT", claim["claimStateOwner"])
         self.assertFalse(claim["masterJobStateMutationAllowed"])
+        self.assertEqual("HUMAN_ONLY", activation["activationAuthority"])
+        self.assertFalse(activation["masterMayActivateChat"])
+        self.assertFalse(activation["masterMaySynthesizeHumanGo"])
+        self.assertFalse(activation["masterMayCreateHumanGoEvidence"])
 
     def test_agent_identity_requires_display_name_and_personal_inbox_binding(self):
         schema = self.modules["schemaAgentIdentity"]["content"]
