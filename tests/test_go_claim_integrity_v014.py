@@ -5,7 +5,9 @@ import unittest
 from runtime.go_evidence import (
     GoEvidenceValidationError,
     confirm_go_claim_after_provider_readback,
+    confirm_result_submitted_state_after_provider_readback,
     prepare_go_claim,
+    prepare_result_submitted_agent_state,
     validate_agent_state_contract,
 )
 
@@ -278,6 +280,58 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
                 claim_intent=intent,
                 provider_readback=self.readback(intent, observed),
                 consumed_activation_ids=set(),
+            )
+
+    def test_result_submitted_state_uses_exact_schema_transition(self):
+        intent = self.intent()
+        running = intent["proposedState"]
+        submitted = prepare_result_submitted_agent_state(
+            agent_state=running,
+            expected_agent_state_revision=8,
+            response_ref="git:response:response-001",
+            submitted_at="2026-10-18T10:05:00Z",
+        )
+        proposed = submitted["proposedState"]
+        self.assertEqual("RESULT_SUBMITTED", proposed["runtimeStatus"])
+        self.assertEqual("git:response:response-001", proposed["lastResponseRef"])
+        self.assertEqual(
+            running["currentJob"]["claimId"],
+            proposed["currentJob"]["claimId"],
+        )
+        readback = {
+            "casSucceeded": True,
+            "readbackVerified": True,
+            "observedState": json.loads(json.dumps(proposed)),
+            "observedStateDigest": digest(proposed),
+            "readbackRef": "git:commit:submitted",
+            "observedBlobSha": "blob-submitted-123",
+        }
+        confirmed = confirm_result_submitted_state_after_provider_readback(
+            state_intent=submitted,
+            provider_readback=readback,
+        )
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("RESULT_SUBMITTED", confirmed["state"]["runtimeStatus"])
+
+    def test_echo_e2e_freeform_submitted_state_is_rejected(self):
+        intent = self.intent()
+        invalid = json.loads(json.dumps(intent["proposedState"]))
+        invalid["runtimeStatus"] = "SUBMITTED"
+        invalid["lastResponseRef"] = {
+            "repository": "example/safor-memory",
+            "path": "response.json",
+        }
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_STATE_RUNTIME_STATUS_INVALID|AGENT_STATE_LAST_RESPONSE_REF_INVALID",
+        ):
+            validate_agent_state_contract(
+                invalid,
+                require_claim=True,
+                expected_activation_id="activation-rc4-001",
+                expected_job_id="job-001",
+                expected_dispatch_revision=3,
+                expected_runtime_status="RESULT_SUBMITTED",
             )
 
     def test_duplicate_confirm_is_rejected_by_local_cache(self):
