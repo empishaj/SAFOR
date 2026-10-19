@@ -29,8 +29,11 @@ class HumanNoticeConformanceTests(unittest.TestCase):
         self.assertEqual("GO", activation["acceptedHumanMessage"])
         for field in ("backgroundWakeupAssumed", "gitEventActivationAllowed", "pollingActivationAllowed", "automationActivationAllowed", "hostTriggerActivationAllowed", "schedulerMayActivateChat"):
             self.assertFalse(activation[field])
-        self.assertEqual("ATOMIC_INBOX_JOB_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE", activation["claimMode"])
+        self.assertEqual("ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE", activation["claimMode"])
         self.assertTrue(activation["stringSubstringEvidenceForbidden"])
+        claim = self.modules["agentActivation"]["content"]["atomicClaimContract"]
+        self.assertEqual("AGENT", claim["claimStateOwner"])
+        self.assertFalse(claim["masterJobStateMutationAllowed"])
 
     def test_agent_identity_requires_display_name_and_personal_inbox_binding(self):
         schema = self.modules["schemaAgentIdentity"]["content"]
