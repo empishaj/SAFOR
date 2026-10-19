@@ -88,6 +88,7 @@ def validate_agent_state_contract(
     expected_activation_id: str | None = None,
     expected_job_id: str | None = None,
     expected_dispatch_revision: int | None = None,
+    expected_runtime_status: str | None = None,
 ) -> None:
     """Validate the exact v0.14 Agent-State shape used for persistence."""
 
@@ -190,7 +191,8 @@ def validate_agent_state_contract(
             raise GoEvidenceValidationError("AGENT_STATE_CLAIM_ID_BINDING_MISMATCH")
 
     if require_claim:
-        if state.get("runtimeStatus") != "RUNNING":
+        required_status = expected_runtime_status or "RUNNING"
+        if state.get("runtimeStatus") != required_status:
             raise GoEvidenceValidationError("AGENT_STATE_CLAIM_STATUS_INVALID")
         if expected_activation_id is None:
             raise GoEvidenceValidationError("AGENT_STATE_EXPECTED_ACTIVATION_REQUIRED")
@@ -497,6 +499,134 @@ def confirm_go_claim_after_provider_readback(
         "providerReadbackRef": readback_ref,
         "providerBlobSha": observed_blob_sha,
         "masterJobStateRef": dict(_mapping(intent.get("masterJobStateRef"), "masterJobStateRef")),
+        "state": observed,
+    }
+
+
+def prepare_result_submitted_agent_state(
+    *,
+    agent_state: Mapping[str, Any],
+    expected_agent_state_revision: int,
+    response_ref: str,
+    submitted_at: str,
+) -> dict[str, Any]:
+    """Prepare the exact Agent-State transition after a validated response readback."""
+
+    state = deepcopy(dict(_mapping(agent_state, "agentState")))
+    current = _mapping(state.get("currentJob"), "currentJob")
+    session = _mapping(state.get("session"), "session")
+    activation_id = _nonempty(
+        session.get("activationId"), "AGENT_SESSION_ACTIVATION_ID_MISSING"
+    )
+    validate_agent_state_contract(
+        state,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=str(current.get("jobId")),
+        expected_dispatch_revision=int(current.get("dispatchRevision")),
+        expected_runtime_status="RUNNING",
+    )
+    if state.get("revision") != expected_agent_state_revision:
+        raise GoEvidenceValidationError("AGENT_STATE_REVISION_CONFLICT")
+    _parse_datetime(submitted_at, "RESULT_SUBMITTED_AT_INVALID")
+    response_ref = _nonempty(response_ref, "RESULT_RESPONSE_REF_MISSING")
+
+    proposed = deepcopy(state)
+    proposed["revision"] = expected_agent_state_revision + 1
+    proposed["runtimeStatus"] = "RESULT_SUBMITTED"
+    proposed["lastResponseRef"] = response_ref
+    proposed["updatedAt"] = submitted_at
+
+    validate_agent_state_contract(
+        proposed,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=str(current.get("jobId")),
+        expected_dispatch_revision=int(current.get("dispatchRevision")),
+        expected_runtime_status="RESULT_SUBMITTED",
+    )
+    return {
+        "format": "SAFOR_RESULT_SUBMITTED_STATE_INTENT",
+        "schemaVersion": "0.14.0",
+        "authoritative": False,
+        "expectedRevision": expected_agent_state_revision,
+        "proposedRevision": expected_agent_state_revision + 1,
+        "activationId": activation_id,
+        "jobId": current.get("jobId"),
+        "dispatchRevision": current.get("dispatchRevision"),
+        "responseRef": response_ref,
+        "proposedStateDigest": _canonical_digest(proposed),
+        "proposedState": proposed,
+    }
+
+
+def confirm_result_submitted_state_after_provider_readback(
+    *,
+    state_intent: Mapping[str, Any],
+    provider_readback: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Confirm RESULT_SUBMITTED only after exact provider CAS/readback."""
+
+    intent = _mapping(state_intent, "stateIntent")
+    if (
+        intent.get("format") != "SAFOR_RESULT_SUBMITTED_STATE_INTENT"
+        or intent.get("authoritative") is not False
+    ):
+        raise GoEvidenceValidationError("RESULT_STATE_INTENT_INVALID")
+    readback = _mapping(provider_readback, "providerReadback")
+    if readback.get("casSucceeded") is not True:
+        raise GoEvidenceValidationError("RESULT_STATE_PROVIDER_CAS_NOT_CONFIRMED")
+    if readback.get("readbackVerified") is not True:
+        raise GoEvidenceValidationError("RESULT_STATE_PROVIDER_READBACK_UNVERIFIED")
+
+    proposed = deepcopy(dict(_mapping(intent.get("proposedState"), "proposedState")))
+    observed = deepcopy(dict(_mapping(readback.get("observedState"), "observedState")))
+    activation_id = _nonempty(intent.get("activationId"), "RESULT_STATE_ACTIVATION_ID_MISSING")
+    job_id = _nonempty(intent.get("jobId"), "RESULT_STATE_JOB_ID_MISSING")
+    dispatch_revision = _positive_int(
+        intent.get("dispatchRevision"), "RESULT_STATE_DISPATCH_REVISION_INVALID"
+    )
+    validate_agent_state_contract(
+        proposed,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=job_id,
+        expected_dispatch_revision=dispatch_revision,
+        expected_runtime_status="RESULT_SUBMITTED",
+    )
+    validate_agent_state_contract(
+        observed,
+        require_claim=True,
+        expected_activation_id=activation_id,
+        expected_job_id=job_id,
+        expected_dispatch_revision=dispatch_revision,
+        expected_runtime_status="RESULT_SUBMITTED",
+    )
+    observed_digest = _canonical_digest(observed)
+    declared_digest = _nonempty(
+        readback.get("observedStateDigest"),
+        "RESULT_STATE_PROVIDER_DIGEST_MISSING",
+    )
+    if declared_digest != observed_digest:
+        raise GoEvidenceValidationError("RESULT_STATE_PROVIDER_DIGEST_INVALID")
+    if (
+        observed != proposed
+        or observed_digest != intent.get("proposedStateDigest")
+    ):
+        raise GoEvidenceValidationError("RESULT_STATE_PROVIDER_READBACK_MISMATCH")
+    readback_ref = _nonempty(
+        readback.get("readbackRef"), "RESULT_STATE_PROVIDER_READBACK_REF_MISSING"
+    )
+    observed_blob_sha = _nonempty(
+        readback.get("observedBlobSha"), "RESULT_STATE_PROVIDER_BLOB_SHA_MISSING"
+    )
+    return {
+        "format": "SAFOR_CONFIRMED_RESULT_SUBMITTED_STATE",
+        "schemaVersion": "0.14.0",
+        "authoritative": True,
+        "stateDigest": observed_digest,
+        "providerReadbackRef": readback_ref,
+        "providerBlobSha": observed_blob_sha,
         "state": observed,
     }
 
