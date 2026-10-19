@@ -75,7 +75,7 @@ jobs:
       - name: Upload exact materialized release candidate
         uses: actions/upload-artifact@v4
         with:
-          name: safor-${{ github.sha }}-rc6-materialized
+          name: safor-${{ env.SAFOR_WORKFLOW_HEAD_SHA }}-rc6-materialized
           if-no-files-found: error
           path: |
             SAFOR-FRAMEWORK.json
