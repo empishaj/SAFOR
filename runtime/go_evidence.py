@@ -306,7 +306,7 @@ def prepare_go_claim(
     agent_state: Mapping[str, Any],
     master_job_state: Mapping[str, Any],
     job_contract: Mapping[str, Any],
-    job_contract_blob_sha: str,
+    job_contract_ref: Mapping[str, Any],
     go_evidence: Mapping[str, Any],
     expected_agent_state_revision: int,
     go_evidence_ref: Mapping[str, Any],
@@ -359,8 +359,16 @@ def prepare_go_claim(
     if job_assignment.get("identityRevision") != master.get("assignedIdentityRevision"):
         raise GoEvidenceValidationError("JOB_CONTRACT_IDENTITY_REVISION_MISMATCH")
     contract_ref_for_job = _mapping(master.get("contractRef"), "contractRef")
-    if str(contract_ref_for_job.get("blobSha")) != str(job_contract_blob_sha):
-        raise GoEvidenceValidationError("JOB_CONTRACT_BLOB_MISMATCH")
+    observed_contract_ref = _mapping(job_contract_ref, "jobContractRef")
+    for field in ("repository", "ref", "path", "blobSha"):
+        _nonempty(
+            observed_contract_ref.get(field),
+            f"JOB_CONTRACT_OBSERVED_REF_{field.upper()}_MISSING",
+        )
+        if observed_contract_ref.get(field) != contract_ref_for_job.get(field):
+            raise GoEvidenceValidationError(
+                f"JOB_CONTRACT_REF_BINDING_MISMATCH:{field}"
+            )
 
     expected = {
         "projectId": master.get("projectId"),
@@ -681,7 +689,7 @@ def atomically_observe_go_and_claim(
     agent_state: Mapping[str, Any],
     master_job_state: Mapping[str, Any],
     job_contract: Mapping[str, Any],
-    job_contract_blob_sha: str,
+    job_contract_ref: Mapping[str, Any],
     go_evidence: Mapping[str, Any],
     expected_agent_state_revision: int,
     consumed_activation_ids: MutableSet[str],
@@ -693,7 +701,7 @@ def atomically_observe_go_and_claim(
         agent_state=agent_state,
         master_job_state=master_job_state,
         job_contract=job_contract,
-        job_contract_blob_sha=job_contract_blob_sha,
+        job_contract_ref=job_contract_ref,
         go_evidence=go_evidence,
         expected_agent_state_revision=expected_agent_state_revision,
         go_evidence_ref=go_evidence_ref,
