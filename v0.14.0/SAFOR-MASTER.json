@@ -2489,6 +2489,11 @@
       "id": "INV-RC6-006",
       "status": "ACTIVE",
       "rule": "A CHAT_AGENT may not create HUMAN-GO claim authority or mutate product state until the exact MASTER-pinned Agent Job Contract has passed canonical v0.14 schema and runtime validation, all mandatory claim and response bindings are present, and the observed repository/ref/path/blob exactly matches MASTER contractRef. Invalid jobs fail closed with no claim and no product mutation."
+    },
+    {
+      "id": "INV-RC6-007",
+      "status": "ACTIVE",
+      "rule": "A persistent CHAT_AGENT with RESULT_SUBMITTED may be rearmed for a later Job only by an AGENT-owned provider CAS/readback after direct HUMAN GO and after read-only verification that its prior MASTER Job is terminally settled (REJECTED, ACCEPTED, INTEGRATED, CANCELED or SUPERSEDED). Rearm clears session/currentJob, preserves consumedActivationIds and lastResponseRef, consumes no new GO by itself, and MASTER never writes Agent State."
     }
   ],
   "evidencePolicy": {
