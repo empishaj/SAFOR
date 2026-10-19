@@ -280,7 +280,27 @@ def validate_job_state_transition(*, from_status: str, to_status: str, evidence_
     if from_status == 'RESPONSE_SUBMITTED' and to_status == 'ACCEPTED':
         raise AgentJobValidationError('RESPONSE_SUBMISSION_CANNOT_SKIP_VERIFICATION')
 
-def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
+def validate_initialization_acknowledgement(*, pinned_identity: Mapping[str, Any], chat_output: Mapping[str, Any]) -> None:
+    pinned = _mapping(pinned_identity, 'pinnedIdentity')
+    output = _mapping(chat_output, 'chatOutput')
+    if pinned.get('format') != 'SAFOR_AGENT_IDENTITY':
+        raise AgentJobValidationError('PINNED_IDENTITY_FORMAT_INVALID')
+    if output.get('format') != 'SAFOR_AGENT_CHAT_OUTPUT':
+        raise AgentJobValidationError('CHAT_OUTPUT_FORMAT_INVALID')
+    if output.get('status') == 'REIDENTIFICATION_REQUIRED':
+        return
+    if output.get('status') != 'READY':
+        raise AgentJobValidationError('INITIALIZATION_ACK_MUST_BE_READY_OR_REIDENTIFICATION_REQUIRED')
+    if output.get('projectId') != pinned.get('projectId'):
+        raise AgentJobValidationError('INITIALIZATION_PROJECT_ID_MISMATCH')
+    if output.get('agentId') != pinned.get('agentId'):
+        raise AgentJobValidationError('INITIALIZATION_AGENT_ID_MISMATCH')
+    if output.get('displayName') != pinned.get('displayName'):
+        raise AgentJobValidationError('INITIALIZATION_DISPLAY_NAME_MISMATCH')
+    if output.get('identityRevision') != pinned.get('identityRevision'):
+        raise AgentJobValidationError('INITIALIZATION_IDENTITY_REVISION_MISMATCH')
+
+def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, identity_revision: int=1, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
     persistence_context_supplied = any(
         value is not None
         for value in (persistence_state, attempt_id, phase, reason_code)
@@ -327,4 +347,4 @@ def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, dis
         raise AgentJobValidationError('CHAT_OUTPUT_WORD_BUDGET_EXCEEDED')
     if len(text) > 360:
         raise AgentJobValidationError('CHAT_OUTPUT_CHARACTER_BUDGET_EXCEEDED')
-    return {'format': 'SAFOR_AGENT_CHAT_OUTPUT', 'schemaVersion': '0.14.0', 'status': status, 'projectId': project_id, 'agentId': agent_id, 'displayName': display_name, 'jobKey': job_key, 'targetBranch': target_branch, 'detailsRef': details_ref, 'persistence': persistence, 'text': text, 'terminal': terminal, 'containsDomainDetail': False}
+    return {'format': 'SAFOR_AGENT_CHAT_OUTPUT', 'schemaVersion': '0.14.0', 'status': status, 'projectId': project_id, 'agentId': agent_id, 'displayName': display_name, 'identityRevision': identity_revision, 'jobKey': job_key, 'targetBranch': target_branch, 'detailsRef': details_ref, 'persistence': persistence, 'text': text, 'terminal': terminal, 'containsDomainDetail': False}
