@@ -6,6 +6,7 @@ from runtime.go_evidence import (
     GoEvidenceValidationError,
     confirm_go_claim_after_provider_readback,
     prepare_go_claim,
+    validate_agent_state_contract,
 )
 
 
@@ -214,6 +215,68 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
                 provider_readback=self.readback(tampered_intent, observed),
+                consumed_activation_ids=set(),
+            )
+
+    def test_proposed_claim_state_matches_exact_agent_state_contract(self):
+        intent = self.intent()
+        proposed = intent["proposedState"]
+        validate_agent_state_contract(
+            proposed,
+            require_claim=True,
+            expected_activation_id="activation-rc4-001",
+            expected_job_id="job-001",
+            expected_dispatch_revision=3,
+        )
+        self.assertEqual(
+            {
+                "activationId",
+                "activationEvidenceRef",
+                "activatedAt",
+                "selectedJobId",
+                "selectedDispatchRevision",
+            },
+            set(proposed["session"]),
+        )
+        self.assertEqual(
+            {
+                "jobId",
+                "jobRef",
+                "jobBlobSha",
+                "masterJobStateRef",
+                "dispatchRevision",
+                "claimId",
+            },
+            set(proposed["currentJob"]),
+        )
+        self.assertEqual(
+            proposed["session"]["activationId"],
+            proposed["currentJob"]["claimId"],
+        )
+
+    def test_echo_e2e_freeform_claim_state_is_rejected(self):
+        intent = self.intent()
+        observed = json.loads(json.dumps(intent["proposedState"]))
+        observed["session"] = {
+            "activationMode": "HUMAN_GO_REQUIRED",
+            "activationId": "activation-rc4-001",
+            "activatedAt": "2026-10-18T10:00:00Z",
+            "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+        }
+        observed["currentJob"] = {
+            "jobId": "job-001",
+            "jobKey": "or03-human-go-real-git-001",
+            "contractRevision": 1,
+            "dispatchRevision": 3,
+            "claimedAt": "2026-10-18T10:00:00Z",
+            "claimAuthority": "AGENT_STATE_PROVIDER_CAS_READBACK",
+        }
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError, "AGENT_SESSION_FIELDS_INVALID"
+        ):
+            confirm_go_claim_after_provider_readback(
+                claim_intent=intent,
+                provider_readback=self.readback(intent, observed),
                 consumed_activation_ids=set(),
             )
 
