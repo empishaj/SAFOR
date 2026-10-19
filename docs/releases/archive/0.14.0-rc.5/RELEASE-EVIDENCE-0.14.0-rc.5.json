@@ -1,0 +1,83 @@
+{
+  "format": "SAFOR_RELEASE_EVIDENCE",
+  "schemaVersion": "0.14.0",
+  "product": "SAFOR",
+  "version": "0.14.0-rc.5",
+  "status": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
+  "createdAt": "2026-10-18T12:52:00Z",
+  "sourceCommitBeforeMaterialization": "570daf6573f8b007ee3d2afd512133e1431a963a",
+  "integrationBranch": "self-healing-retry-semantics",
+  "workflow": {
+    "repository": "empishaj/SAFOR",
+    "runId": "39146270880",
+    "runAttempt": "1"
+  },
+  "validatedCommands": [
+    "python tools/build_bundle.py --check",
+    "python tools/build_domain_framework.py --check",
+    "python tools/validate_safor.py",
+    "python tools/validate_audit_remediation.py",
+    "python tools/validate_release_facts.py",
+    "python tools/validate_traceability.py",
+    "python tools/validate_content_consistency.py",
+    "python -m unittest discover -s tests -v",
+    "sha256sum --check SHA256SUMS-0.14.0-rc.5.txt"
+  ],
+  "artifacts": [
+    {
+      "path": "SAFOR-FRAMEWORK.json",
+      "sha256": "fe1fe8ae44249cfa84c766e35a4fa0e0e29fc9ba495c06bce8fa3854d9ba22bb",
+      "bytes": 1043283
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-v0.14.0-rc.5.json",
+      "sha256": "fe1fe8ae44249cfa84c766e35a4fa0e0e29fc9ba495c06bce8fa3854d9ba22bb",
+      "bytes": 1043283
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-WEBSITE.json",
+      "sha256": "6bb36e21d8574b377f1f6ada09e5a44f5a3322043fe060a321bd0b4e82166212",
+      "bytes": 1126538
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-SAAS.json",
+      "sha256": "8d18e7351d2451cc05eb37ff992b3db6e5bd129a985f44718c6a2a67fbddb733",
+      "bytes": 1151589
+    },
+    {
+      "path": "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+      "sha256": "6f556f42b235ecfcd4fe86b01afa425a0567f7e44b2cd9674f07943b61c160c7",
+      "bytes": 1123018
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-SAAS.json",
+      "sha256": "f5e8b7aa994e164cbff4e462611b8fbf7374514b15d0f196c07ca70fe781ffc0",
+      "bytes": 3664
+    },
+    {
+      "path": "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+      "sha256": "250e3731d015380bda4db94854a3ee8e70c86c530a7cbcdf3d0ee65da6c1164c",
+      "bytes": 3634
+    }
+  ],
+  "truthBoundary": [
+    "Automated PASS is not proof of behavior on every external LLM host.",
+    "Normal chat agents still require explicit HUMAN GO before pulling and claiming an INBOX job.",
+    "Host sessionId/chatBindingId attestation is intentionally not required for normal chat-agent execution identity.",
+    "Provider claim authority still requires actual compare-and-swap and exact provider readback.",
+    "JSON does not create provider permissions or expand authority."
+  ],
+  "materializedAt": "2026-10-18T12:52:00Z",
+  "artifactCount": 7,
+  "checksumFile": "SHA256SUMS-0.14.0-rc.5.txt",
+  "automatedValidationCompletedAt": "2026-10-18T16:43:15Z",
+  "postMaterializationAudit": {
+    "auditRef": "docs/master-subagent-orchestration/RC5-INBOX-PULL-AUDIT.md",
+    "regressionTest": "tests/test_inbox_pull_audit_rc5.py",
+    "focusedValidationRun": "39129220852",
+    "standardValidationRun": "39129220880",
+    "fullSuiteTests": 275,
+    "result": "PASS_FRAMEWORK_CONTRACT_LEVEL",
+    "residualBoundary": "External host must expose required repository/provider capabilities; host session attestation is intentionally not required."
+  }
+}
