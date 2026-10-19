@@ -3898,6 +3898,96 @@
       }
     },
     {
+      "profileId": "MRP-TEMPLATEAGENTSTATECLAIM",
+      "moduleKey": "templateAgentStateClaim",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.templateAgentStateClaim + integrityManifest.templateAgentStateClaim (v0.14.0/templates/agent-state-claim.template.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "initialAutomaticAttemptBudget": 1,
+      "additionalRetryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "templateAgentStateClaim_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
+    },
+    {
+      "profileId": "MRP-TEMPLATEAGENTSTATERESULTSUBMITTED",
+      "moduleKey": "templateAgentStateResultSubmitted",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.templateAgentStateResultSubmitted + integrityManifest.templateAgentStateResultSubmitted (v0.14.0/templates/agent-state-result-submitted.template.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "initialAutomaticAttemptBudget": 1,
+      "additionalRetryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "templateAgentStateResultSubmitted_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
+    },
+    {
       "profileId": "MRP-TEMPLATECAPABILITYMISMATCH",
       "moduleKey": "templateCapabilityMismatch",
       "moduleClass": "RUNTIME_MODEL",
@@ -3977,6 +4067,51 @@
           "REPAIR_RECORD_PERSISTED"
         ],
         "successPredicate": "templateClarificationRequest_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
+    },
+    {
+      "profileId": "MRP-TEMPLATEHUMANGOEVIDENCE",
+      "moduleKey": "templateHumanGoEvidence",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.templateHumanGoEvidence + integrityManifest.templateHumanGoEvidence (v0.14.0/templates/human-go-evidence.template.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "initialAutomaticAttemptBudget": 1,
+      "additionalRetryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "templateHumanGoEvidence_MATCHES_PINNED_RELEASE"
       },
       "escalation": {
         "when": [
