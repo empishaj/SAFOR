@@ -172,10 +172,22 @@ if rearm.get("rearmSessionAndCurrentJobRepresentation") != "EXPLICIT_NULL":
 if rearm.get("readyStatusForbiddenIfPersistedStateInvalid") is not True:
     fail("READY must be forbidden for schema-invalid persisted Agent State")
 
-responses = modules.get("agentResponseContract", {}).get("content", {}).get("responseTypes", {})
+response_model = modules.get("agentResponseContract", {}).get("content", {})
+responses = response_model.get("responseTypes", {})
 expected_responses = {"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}
 if set(responses) != expected_responses:
     fail("Typed response family mismatch")
+legacy_index_recovery = response_model.get("legacyResponseIndexRecovery", {})
+if legacy_index_recovery.get("knownLegacyFormat") != "SAFOR_AGENT_OUTBOX_INDEX":
+    fail("Known legacy Agent outbox-index format recovery missing")
+if legacy_index_recovery.get("canonicalFormat") != "SAFOR_AGENT_RESPONSE_INDEX":
+    fail("Canonical Agent response-index recovery target invalid")
+if legacy_index_recovery.get("owner") != "AGENT":
+    fail("Legacy Agent response-index recovery must remain AGENT-owned")
+if legacy_index_recovery.get("method") != "EXPECTED_BLOB_COMPARE_AND_SWAP_PLUS_PROVIDER_READBACK":
+    fail("Legacy Agent response-index recovery method invalid")
+if "MASTER_WRITE_AGENT_OUTBOX_INDEX" not in set(legacy_index_recovery.get("forbidden", [])):
+    fail("MASTER response-index repair must remain forbidden")
 communication = modules.get("agentCommunication", {}).get("content", {})
 if communication.get("owner") != "SAFOR_PLATFORM":
     fail("Agent communication must be platform-owned")
