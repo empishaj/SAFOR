@@ -92,6 +92,21 @@ A Git push, repository change, polling loop, scheduler decision, automation or h
 
 Service agents, when supported, use a separate explicit activation contract. Their semantics must not be silently applied to normal chat agents.
 
+### Schema-bound activation persistence
+
+After HUMAN `GO`, the agent does not invent a claim payload. The active Job must pin:
+
+- the HUMAN-GO evidence schema and exact construction template;
+- the HUMAN-GO evidence write target;
+- the Agent-State schema;
+- the exact claim-state template;
+- the exact result-submitted-state template;
+- mandatory validation before CAS and after provider readback.
+
+The agent first materializes HUMAN-GO evidence from the bound template, validates it, persists it and verifies provider readback. It then materializes the proposed Agent-State from the bound claim template, validates the complete state before CAS, and validates the full provider-read state again before claim authority exists.
+
+Any schema, binding or readback mismatch yields `BLOCKED` and forbids product mutation.
+
 ## Pointer-only job discovery
 
 After `GO`, the agent reads in order:
@@ -132,6 +147,11 @@ The agent verifies:
 A failed preflight produces a typed blocker response before unauthorized product mutation.
 
 ## Typed responses
+
+A response is never a free-form envelope. The agent must load the exact `templateRef` and `schemaRef` from the active Job, materialize only schema-allowed fields, validate before the write, persist to the exact bound target, read the full response back from the provider, require exact equality and validate the readback again.
+
+Only after this succeeds may the agent emit `SUBMITTED` or `BLOCKED` in chat. A `JOB_RESULT` then transitions the Agent-owned state through the pinned result-submitted template with `runtimeStatus=RESULT_SUBMITTED` and a string `lastResponseRef`.
+
 
 Every job binds exact templates, schemas and paths for:
 
