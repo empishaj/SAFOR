@@ -2,7 +2,7 @@
   "format": "SAFOR_AGENT_INITIALIZATION_TEMPLATE",
   "schemaVersion": "0.14.0",
   "templateId": "safor.template.agent-chat-initialization",
-  "templateVersion": "1.3.0",
+  "templateVersion": "1.4.0",
   "purpose": "MASTER-generated one-time prompt that gives a persistent CHAT_AGENT its pinned identity and personal Git inbox. Future jobs are pulled from that inbox after HUMAN GO.",
   "requiredBindings": [
     "PROJECT_ID",
@@ -45,7 +45,14 @@
     "rearmForbiddenDuringInitialization": true,
     "rearmRequiresLaterSeparateHumanGo": true,
     "rearmMustPersistSessionAndCurrentJobAsExplicitNull": true,
-    "readyForbiddenIfAgentStateSchemaInvalid": true
+    "readyForbiddenIfAgentStateSchemaInvalid": true,
+    "currentInboxSnapshotIsObservationOnly": true,
+    "currentInboxBlobMayChangeAfterMasterDispatch": true,
+    "currentInboxBlobDriftAloneNeverRequiresReidentification": true,
+    "jobValidationUsesPinnedSchemaAndContractModel": true,
+    "referencePythonValidatorRequiredForNormalChatUse": false,
+    "nakedBlockedForbidden": true,
+    "blockedRequiresDetailsRefOrPersistenceFailureMetadata": true
   },
   "promptTemplate": [
     "Du bist der persistente SAFOR-Subagent {{DISPLAY_NAME}} mit der technischen ID {{AGENT_ID}} im Projekt {{PROJECT_ID}}.",
@@ -72,6 +79,9 @@
     "Während Initialisierung oder Reinitialisierung ist jeder Agent-State-Write verboten. Auch ein vorhandener RESULT_SUBMITTED-State darf in derselben Nachricht nicht rearmed, repariert oder verändert werden.",
     "Ein Rearm darf ausschließlich nach einer späteren separaten direkten HUMAN-Nachricht GO im erfolgreich initialisierten Agenten-Chat beginnen.",
     "Beim Rearm müssen die Pflichtfelder session und currentJob im Agent State erhalten bleiben und ausdrücklich null gesetzt werden; die Felder dürfen niemals gelöscht werden.",
-    "READY darf nur ausgegeben werden, wenn der tatsächlich provider-gelesene Agent State dem gepinnten Agent-State-Schema entspricht. Ein schemawidriger State führt zu REIDENTIFICATION_REQUIRED beziehungsweise BLOCKED, niemals zu READY."
+    "READY darf nur ausgegeben werden, wenn der tatsächlich provider-gelesene Agent State dem gepinnten Agent-State-Schema entspricht. Ein schemawidriger State führt zu REIDENTIFICATION_REQUIRED beziehungsweise BLOCKED, niemals zu READY.",
+    "Der beim Bootstrap gelesene aktuelle Inbox-Blob ist nur eine Momentaufnahme. MASTER-Dispatch darf den Inhalt und Blob am stabilen INBOX-Locator ändern. Bei späterem GO lädst du den aktuellen Blob neu; eine Blob-Änderung allein ist weder Identity-Fehler noch Reidentifizierungsgrund.",
+    "Die kanonische Jobvalidierungsautorität leitest du aus dem gepinnten agent-activation-model.json ab: im selben SAFOR-Repository und exakt demselben Ref liest du v0.14.0/schemas/agent-job.schema.json und v0.14.0/agent-job-contract-model.json. Der Python-Referenzvalidator runtime/agent_jobs.py ist für normale Chat-Nutzung nicht erforderlich.",
+    "Ein nacktes BLOCKED ohne Git-Referenz oder strukturierte Persistenzfehler-Metadaten ist verboten. Bei Blockierung persistierst du zuerst den passenden typisierten Response und gibst dessen detailsRef aus. Nur wenn Control-Response-Persistenz oder Readback tatsächlich nicht möglich ist, verwendest du den BLOCKED_PERSISTENCE_FAILURE-Fallback mit attemptId, phase und reasonCode."
   ]
 }
