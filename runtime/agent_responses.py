@@ -536,6 +536,197 @@ def validate_response_resolution(
         )
 
 
+
+_LEGACY_OUTBOX_INDEX_FIELDS = {
+    "format", "schemaVersion", "projectId", "agentId", "identityRevision",
+    "revision", "entries", "updatedAt",
+}
+_LEGACY_OUTBOX_ENTRY_FIELDS = {
+    "responseId", "responseType", "jobId", "responseRef", "status", "createdAt",
+}
+
+
+def prepare_legacy_response_index_recovery(
+    *,
+    legacy_index: Mapping[str, Any],
+    expected_project_id: str,
+    expected_agent_id: str,
+    expected_identity_revision: int,
+    expected_blob_sha: str,
+    recovered_at: str,
+) -> dict[str, Any]:
+    """Prepare an AGENT-owned migration of the known legacy outbox index shape.
+
+    This recovery is intentionally narrow. It preserves historical response
+    pointers exactly and does not infer response acceptance or resolution.
+    """
+
+    legacy = deepcopy(dict(_mapping(legacy_index, "legacyResponseIndex")))
+    if set(legacy) != _LEGACY_OUTBOX_INDEX_FIELDS:
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_FIELDS_INVALID")
+    if legacy.get("format") != "SAFOR_AGENT_OUTBOX_INDEX":
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_FORMAT_INVALID")
+    if legacy.get("schemaVersion") != "0.14.0":
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_SCHEMA_INVALID")
+    if legacy.get("projectId") != expected_project_id:
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_PROJECT_MISMATCH")
+    if legacy.get("agentId") != expected_agent_id:
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_AGENT_MISMATCH")
+    if legacy.get("identityRevision") != expected_identity_revision:
+        raise AgentResponseValidationError(
+            "LEGACY_RESPONSE_INDEX_IDENTITY_REVISION_MISMATCH"
+        )
+    if not isinstance(legacy.get("revision"), int) or legacy["revision"] < 1:
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_REVISION_INVALID")
+    _nonempty(expected_blob_sha, "LEGACY_RESPONSE_INDEX_EXPECTED_BLOB_MISSING")
+    _nonempty(recovered_at, "LEGACY_RESPONSE_INDEX_RECOVERED_AT_MISSING")
+    entries = legacy.get("entries")
+    if not isinstance(entries, list):
+        raise AgentResponseValidationError("LEGACY_RESPONSE_INDEX_ENTRIES_INVALID")
+
+    migrated_entries = []
+    for raw in entries:
+        entry = _mapping(raw, "legacyResponseIndexEntry")
+        if set(entry) != _LEGACY_OUTBOX_ENTRY_FIELDS:
+            raise AgentResponseValidationError(
+                "LEGACY_RESPONSE_INDEX_ENTRY_FIELDS_INVALID"
+            )
+        response_id = _nonempty(
+            entry.get("responseId"), "LEGACY_RESPONSE_INDEX_RESPONSE_ID_MISSING"
+        )
+        response_type = entry.get("responseType")
+        if response_type not in _RESPONSE_RULES:
+            raise AgentResponseValidationError(
+                "LEGACY_RESPONSE_INDEX_RESPONSE_TYPE_INVALID"
+            )
+        job_id = _nonempty(
+            entry.get("jobId"), "LEGACY_RESPONSE_INDEX_JOB_ID_MISSING"
+        )
+        response_ref = dict(
+            _validate_pointer(entry.get("responseRef"), "legacyResponseRef")
+        )
+        created_at = _nonempty(
+            entry.get("createdAt"), "LEGACY_RESPONSE_INDEX_CREATED_AT_MISSING"
+        )
+        if entry.get("status") not in {
+            "SUBMITTED", "FAILED", "BLOCKED", "ADVISORY", "ACKNOWLEDGED",
+            "RESOLVED", "CLOSED", "SUPERSEDED",
+        }:
+            raise AgentResponseValidationError(
+                "LEGACY_RESPONSE_INDEX_STATUS_INVALID"
+            )
+        migrated_entries.append(
+            {
+                "responseId": response_id,
+                "responseType": response_type,
+                "jobId": job_id,
+                "responseRef": response_ref,
+                "createdAt": created_at,
+                "responseState": "SUPERSEDED",
+                "resolutionRef": None,
+            }
+        )
+
+    proposed = {
+        "format": "SAFOR_AGENT_RESPONSE_INDEX",
+        "schemaVersion": "0.14.0",
+        "projectId": expected_project_id,
+        "agentId": expected_agent_id,
+        "identityRevision": expected_identity_revision,
+        "revision": legacy["revision"] + 1,
+        "authoritativeAcceptance": False,
+        "entries": migrated_entries,
+        "updatedAt": recovered_at,
+    }
+    validate_agent_response_index(
+        proposed,
+        expected_project_id=expected_project_id,
+        expected_agent_id=expected_agent_id,
+        expected_identity_revision=expected_identity_revision,
+    )
+    return {
+        "format": "SAFOR_AGENT_RESPONSE_INDEX_RECOVERY_INTENT",
+        "schemaVersion": "0.14.0",
+        "authoritative": False,
+        "stateOwner": "AGENT",
+        "legacyFormat": "SAFOR_AGENT_OUTBOX_INDEX",
+        "expectedBlobSha": expected_blob_sha,
+        "priorRevision": legacy["revision"],
+        "proposedRevision": proposed["revision"],
+        "preservesHistoricalResponseRefs": True,
+        "authoritativeAcceptance": False,
+        "proposedIndex": proposed,
+    }
+
+
+def confirm_legacy_response_index_recovery_after_provider_readback(
+    *,
+    recovery_intent: Mapping[str, Any],
+    provider_readback: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Confirm legacy response-index recovery only after exact CAS/readback."""
+
+    intent = _mapping(recovery_intent, "responseIndexRecoveryIntent")
+    if (
+        intent.get("format") != "SAFOR_AGENT_RESPONSE_INDEX_RECOVERY_INTENT"
+        or intent.get("authoritative") is not False
+    ):
+        raise AgentResponseValidationError("RESPONSE_INDEX_RECOVERY_INTENT_INVALID")
+    if intent.get("stateOwner") != "AGENT":
+        raise AgentResponseValidationError("RESPONSE_INDEX_RECOVERY_OWNER_INVALID")
+    if intent.get("legacyFormat") != "SAFOR_AGENT_OUTBOX_INDEX":
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_LEGACY_FORMAT_INVALID"
+        )
+    if intent.get("preservesHistoricalResponseRefs") is not True:
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_HISTORY_PRESERVATION_REQUIRED"
+        )
+    if intent.get("authoritativeAcceptance") is not False:
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_CANNOT_ASSERT_ACCEPTANCE"
+        )
+
+    readback = _mapping(provider_readback, "providerReadback")
+    if readback.get("casSucceeded") is not True:
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_PROVIDER_CAS_NOT_CONFIRMED"
+        )
+    if readback.get("readbackVerified") is not True:
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_PROVIDER_READBACK_UNVERIFIED"
+        )
+    observed_blob = _nonempty(
+        readback.get("observedBlobSha"),
+        "RESPONSE_INDEX_RECOVERY_PROVIDER_BLOB_SHA_MISSING",
+    )
+    observed = deepcopy(
+        dict(_mapping(readback.get("observedIndex"), "observedResponseIndex"))
+    )
+    proposed = deepcopy(dict(_mapping(intent.get("proposedIndex"), "proposedIndex")))
+    validate_agent_response_index(
+        observed,
+        expected_project_id=str(proposed.get("projectId")),
+        expected_agent_id=str(proposed.get("agentId")),
+        expected_identity_revision=int(proposed.get("identityRevision")),
+    )
+    if observed != proposed:
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_PROVIDER_READBACK_MISMATCH"
+        )
+    if observed.get("revision") != intent.get("proposedRevision"):
+        raise AgentResponseValidationError(
+            "RESPONSE_INDEX_RECOVERY_PROVIDER_REVISION_MISMATCH"
+        )
+    return {
+        "format": "SAFOR_CONFIRMED_AGENT_RESPONSE_INDEX_RECOVERY",
+        "schemaVersion": "0.14.0",
+        "authoritative": True,
+        "stateOwner": "AGENT",
+        "providerBlobSha": observed_blob,
+        "index": observed,
+    }
+
 def validate_agent_response_index(
     index: Mapping[str, Any],
     *,
