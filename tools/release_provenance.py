@@ -11,6 +11,19 @@ SHA1_RE = re.compile(r"^[0-9a-f]{40}$")
 SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
 
 
+def canonical_artifact_paths(version: str) -> list[str]:
+    """Return the only distributable artifact paths valid for one release."""
+    return [
+        "SAFOR-FRAMEWORK.json",
+        f"SAFOR-FRAMEWORK-v{version}.json",
+        "SAFOR-FRAMEWORK-WEBSITE.json",
+        "SAFOR-FRAMEWORK-SAAS.json",
+        "SAFOR-FRAMEWORK-BOOK-CREATION.json",
+        "SAFOR-TEST-ACCESS-SAAS.json",
+        "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
+    ]
+
+
 class ReleaseProvenanceError(ValueError):
     """Raised when release provenance or artifact identity is inconsistent."""
 
@@ -85,6 +98,42 @@ def _require_sha1(value: Any, code: str) -> str:
     return text
 
 
+def _resolve_repo_file(root: Path, rel: str, *, kind: str) -> Path:
+    """Resolve a canonical release file without permitting path or symlink escape."""
+    if "\\x00" in rel or "\\" in rel:
+        raise ReleaseProvenanceError(f"{kind}_PATH_INVALID:{rel}")
+
+    relative = Path(rel)
+    if (
+        relative.is_absolute()
+        or relative.as_posix() != rel
+        or any(part in {"", ".", ".."} for part in relative.parts)
+    ):
+        raise ReleaseProvenanceError(f"{kind}_PATH_INVALID:{rel}")
+
+    root_resolved = root.resolve()
+    cursor = root_resolved
+    for part in relative.parts:
+        cursor = cursor / part
+        if cursor.is_symlink():
+            raise ReleaseProvenanceError(f"{kind}_SYMLINK_FORBIDDEN:{rel}")
+
+    candidate = root_resolved.joinpath(*relative.parts)
+    try:
+        resolved = candidate.resolve(strict=True)
+    except FileNotFoundError:
+        raise ReleaseProvenanceError(f"{kind}_NOT_FOUND:{rel}") from None
+
+    try:
+        resolved.relative_to(root_resolved)
+    except ValueError:
+        raise ReleaseProvenanceError(f"{kind}_OUTSIDE_ROOT:{rel}") from None
+
+    if not resolved.is_file():
+        raise ReleaseProvenanceError(f"{kind}_NOT_FILE:{rel}")
+    return resolved
+
+
 def validate_release_evidence(
     *,
     root: Path,
@@ -146,12 +195,20 @@ def validate_release_evidence(
         raise ReleaseProvenanceError("RELEASE_ARTIFACT_COUNT_MISMATCH")
 
     seen: set[str] = set()
+    normalized_artifacts: list[tuple[Mapping[str, Any], str]] = []
     for item in artifacts:
         item = _require_mapping(item, "RELEASE_ARTIFACT_RECORD_INVALID")
         rel = _require_nonempty(item.get("path"), "RELEASE_ARTIFACT_PATH_MISSING")
         if rel in seen:
             raise ReleaseProvenanceError(f"RELEASE_ARTIFACT_DUPLICATE:{rel}")
         seen.add(rel)
+        normalized_artifacts.append((item, rel))
+
+    expected_paths = set(canonical_artifact_paths(expected_version))
+    if seen != expected_paths:
+        raise ReleaseProvenanceError("RELEASE_ARTIFACT_PATH_SET_INVALID")
+
+    for item, rel in normalized_artifacts:
         if item.get("generatedFromSourceCommit") != source_sha:
             raise ReleaseProvenanceError(
                 f"RELEASE_ARTIFACT_SOURCE_COMMIT_MISMATCH:{rel}"
@@ -161,9 +218,7 @@ def validate_release_evidence(
         )
         if not SHA256_RE.fullmatch(declared):
             raise ReleaseProvenanceError(f"RELEASE_ARTIFACT_DIGEST_INVALID:{rel}")
-        path = root / rel
-        if not path.is_file():
-            raise ReleaseProvenanceError(f"RELEASE_ARTIFACT_MISSING:{rel}")
+        path = _resolve_repo_file(root, rel, kind="RELEASE_ARTIFACT")
         raw = path.read_bytes()
         if len(raw) != item.get("bytes"):
             raise ReleaseProvenanceError(f"RELEASE_ARTIFACT_SIZE_DRIFT:{rel}")
@@ -177,9 +232,12 @@ def validate_release_evidence(
     checksum_file = _require_nonempty(
         evidence.get("checksumFile"), "RELEASE_CHECKSUM_FILE_MISSING"
     )
-    checksum_path = root / checksum_file
-    if not checksum_path.is_file():
-        raise ReleaseProvenanceError("RELEASE_CHECKSUM_FILE_NOT_FOUND")
+    expected_checksum_file = f"SHA256SUMS-{expected_version}.txt"
+    if checksum_file != expected_checksum_file:
+        raise ReleaseProvenanceError("RELEASE_CHECKSUM_FILE_NAME_INVALID")
+    checksum_path = _resolve_repo_file(
+        root, checksum_file, kind="RELEASE_CHECKSUM_FILE"
+    )
     checksums = parse_checksum_file(checksum_path)
     artifact_paths = {item["path"] for item in artifacts}
     if set(checksums) != artifact_paths:
