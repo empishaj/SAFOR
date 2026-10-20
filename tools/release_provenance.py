@@ -140,7 +140,10 @@ def validate_release_evidence(
     evidence: Mapping[str, Any],
     expected_version: str,
     expected_source_sha: str | None = None,
+    expected_source_tree_sha: str | None = None,
     expected_workflow_run_id: str | None = None,
+    expected_workflow_run_attempt: str | None = None,
+    expected_integration_ref: str | None = None,
     require_pass: bool = True,
 ) -> None:
     evidence = _require_mapping(evidence, "RELEASE_EVIDENCE_NOT_OBJECT")
@@ -168,7 +171,9 @@ def validate_release_evidence(
     source_sha = _require_sha1(
         provenance.get("sourceCommitSha"), "RELEASE_SOURCE_COMMIT_INVALID"
     )
-    _require_sha1(provenance.get("sourceTreeSha"), "RELEASE_SOURCE_TREE_INVALID")
+    source_tree_sha = _require_sha1(
+        provenance.get("sourceTreeSha"), "RELEASE_SOURCE_TREE_INVALID"
+    )
     workflow_head = _require_sha1(
         provenance.get("workflowHeadSha"), "RELEASE_WORKFLOW_HEAD_INVALID"
     )
@@ -181,12 +186,29 @@ def validate_release_evidence(
     run_id = _require_nonempty(
         provenance.get("workflowRunId"), "RELEASE_WORKFLOW_RUN_ID_MISSING"
     )
+    run_attempt = _require_nonempty(
+        provenance.get("workflowRunAttempt"), "RELEASE_WORKFLOW_RUN_ATTEMPT_MISSING"
+    )
+    if not re.fullmatch(r"[1-9][0-9]*", run_attempt):
+        raise ReleaseProvenanceError("RELEASE_WORKFLOW_RUN_ATTEMPT_INVALID")
+    integration_ref = _require_nonempty(
+        provenance.get("integrationRef"), "RELEASE_INTEGRATION_REF_MISSING"
+    )
     if run_id == "LOCAL" and require_pass:
         raise ReleaseProvenanceError("RELEASE_PASS_CANNOT_USE_LOCAL_RUN")
     if expected_source_sha and source_sha != expected_source_sha:
         raise ReleaseProvenanceError("RELEASE_EXPECTED_SOURCE_SHA_MISMATCH")
+    if expected_source_tree_sha and source_tree_sha != expected_source_tree_sha:
+        raise ReleaseProvenanceError("RELEASE_EXPECTED_SOURCE_TREE_MISMATCH")
     if expected_workflow_run_id and run_id != str(expected_workflow_run_id):
         raise ReleaseProvenanceError("RELEASE_EXPECTED_WORKFLOW_RUN_MISMATCH")
+    if (
+        expected_workflow_run_attempt
+        and run_attempt != str(expected_workflow_run_attempt)
+    ):
+        raise ReleaseProvenanceError("RELEASE_EXPECTED_WORKFLOW_RUN_ATTEMPT_MISMATCH")
+    if expected_integration_ref and integration_ref != expected_integration_ref:
+        raise ReleaseProvenanceError("RELEASE_EXPECTED_INTEGRATION_REF_MISMATCH")
 
     artifacts = evidence.get("artifacts")
     if not isinstance(artifacts, list) or not artifacts:
