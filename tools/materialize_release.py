@@ -43,6 +43,14 @@ def checksum_path(version: str) -> str:
     return f"SHA256SUMS-{version}.txt"
 
 
+def workflow_source_ref() -> str:
+    return (
+        os.environ.get("SAFOR_WORKFLOW_SOURCE_REF")
+        or os.environ.get("GITHUB_REF_NAME")
+        or "LOCAL"
+    ).strip()
+
+
 def now() -> str:
     return (
         datetime.now(timezone.utc)
@@ -222,7 +230,7 @@ def prepare(run_id: str, source_sha: str | None) -> None:
             "workflowHeadSha": workflow_head_sha,
             "workflowRunId": workflow_run_id,
             "workflowRunAttempt": workflow_attempt,
-            "integrationRef": os.environ.get("GITHUB_REF_NAME", "LOCAL"),
+            "integrationRef": workflow_source_ref(),
             "exactHeadRequired": True,
         },
         "validatedCommands": [],
@@ -254,7 +262,7 @@ def prepare(run_id: str, source_sha: str | None) -> None:
 
 def finalize(run_id: str, source_sha: str | None) -> None:
     version = current_version()
-    source_sha, _source_tree_sha, workflow_head_sha = resolve_source_identity(source_sha)
+    source_sha, source_tree_sha, workflow_head_sha = resolve_source_identity(source_sha)
     workflow_run_id = str(run_id or os.environ.get("GITHUB_RUN_ID") or "LOCAL")
     if workflow_run_id == "LOCAL":
         raise SystemExit("RELEASE_PASS_REQUIRES_NON_LOCAL_WORKFLOW_RUN")
@@ -314,7 +322,10 @@ def finalize(run_id: str, source_sha: str | None) -> None:
             evidence=evidence,
             expected_version=version,
             expected_source_sha=source_sha,
+            expected_source_tree_sha=source_tree_sha,
             expected_workflow_run_id=workflow_run_id,
+            expected_workflow_run_attempt=os.environ.get("GITHUB_RUN_ATTEMPT", "1"),
+            expected_integration_ref=workflow_source_ref(),
             require_pass=True,
         )
     except ReleaseProvenanceError as exc:
