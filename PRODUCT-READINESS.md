@@ -75,7 +75,7 @@ Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
 | Current unit and regression suite | **PASS in CI; count derived from workflow logs** |
-| Module-wide Self-Healing exact coverage | **96/96 PASS by exact module/profile coverage; rc.6 CI revalidation pending** |
+| Module-wide Self-Healing exact coverage | **98/98 PASS by exact module/profile coverage; rc.6 CI revalidation pending** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |
@@ -139,4 +139,4 @@ Therefore `V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE` remains open for rc.5. G
 
 The first isolated HUMAN-GO real-Git run correctly proved no activation before HUMAN `GO`, one bounded product mutation and no Agent mutation of MASTER-owned job lifecycle state. MASTER nevertheless rejected the run because the chat agent constructed a free-form Agent-State claim and a simplified `JOB_RESULT` that did not conform to the pinned v0.14 schemas.
 
-The rc.6 remediation now embeds three additional persistence templates (96 Framework modules / 96 Self-Healing profiles), requires HUMAN-GO evidence persistence/readback before claim construction, requires exact template-based Agent-State construction with schema validation before CAS and after provider readback, and requires exact template-based typed responses with schema validation before write and after provider readback. The failed run remains audit evidence and is not reclassified as PASS. A fresh Job ID is required for the rerun.
+The rc.6 remediation now embeds the persistence contracts plus the reidentification evidence/rearm modules (98 Framework modules / 98 Self-Healing profiles), requires HUMAN-GO evidence persistence/readback before claim construction, requires exact template-based Agent-State construction with schema validation before CAS and after provider readback, requires exact template-based typed responses with schema validation before write and after provider readback, and keeps reidentification state mutation agent-owned through provider CAS on the later direct HUMAN GO. The failed run remains audit evidence and is not reclassified as PASS. A fresh Job ID is required for the rerun.
