@@ -711,32 +711,41 @@
       "sourceOfTruth": "embeddedModules.executionAttempt + integrityManifest.executionAttempt (v0.14.0/execution-attempt-model.json)",
       "failureDetectors": [
         "MODULE_BLOB_MISMATCH",
-        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID",
+        "PRODUCT_COMMIT_RESPONSE_PERSISTENCE_PARTIAL_FAILURE"
       ],
       "automaticRepairs": [
         "RELOAD_VERIFIED_EMBEDDED_MODULE",
-        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE",
+        "RECONCILE_AND_RETRY_RESPONSE_ONLY"
       ],
       "forbiddenRepairs": [
         "INVENT_MISSING_EVIDENCE",
         "EXPAND_AUTHORITY_OR_SCOPE",
         "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
-        "ACCEPT_UNVERIFIED_STATE"
+        "ACCEPT_UNVERIFIED_STATE",
+        "REPLAY_PROVEN_PRODUCT_MUTATION"
       ],
       "initialAutomaticAttemptBudget": 1,
       "additionalRetryBudget": 0,
       "preconditions": [
         "CURRENT_PROVIDER_RIGHTS_PROVEN",
         "PRE_REPAIR_STATE_REFERENCED",
-        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION",
+        "PROVEN_PRODUCT_COMMIT_READBACK",
+        "MISSING_RESPONSE_PERSISTENCE_CONFIRMED"
       ],
       "verification": {
         "requiredEvidence": [
           "AUTHORITATIVE_READBACK",
           "EXPECTED_STATE_MATCH",
-          "REPAIR_RECORD_PERSISTED"
+          "REPAIR_RECORD_PERSISTED",
+          "PRODUCT_COMMIT_READBACK",
+          "RESPONSE_PROVIDER_READBACK",
+          "PRODUCT_COMMIT_UNCHANGED",
+          "RECONCILIATION_RECORD_PERSISTED"
         ],
-        "successPredicate": "executionAttempt_MATCHES_PINNED_RELEASE"
+        "successPredicate": "executionAttempt_MATCHES_PINNED_RELEASE_AND_SH32_RESPONSE_ONLY_RECOVERY_DOES_NOT_REPLAY_PRODUCT_MUTATION"
       },
       "escalation": {
         "when": [
