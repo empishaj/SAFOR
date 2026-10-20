@@ -484,6 +484,76 @@ def validate_initialization_acknowledgement(*, pinned_identity: Mapping[str, Any
     if output.get('identityRevision') != pinned.get('identityRevision'):
         raise AgentJobValidationError('INITIALIZATION_IDENTITY_REVISION_MISMATCH')
 
+def validate_reidentification_ready_transition(*, current_state: Mapping[str, Any], proposed_state: Mapping[str, Any], pinned_identity: Mapping[str, Any], evidence: Mapping[str, Any]) -> None:
+    current = _mapping(current_state, 'currentState')
+    proposed = _mapping(proposed_state, 'proposedState')
+    identity = _mapping(pinned_identity, 'pinnedIdentity')
+    proof = _mapping(evidence, 'reidentificationEvidence')
+
+    if identity.get('format') != 'SAFOR_AGENT_IDENTITY':
+        raise AgentJobValidationError('PINNED_IDENTITY_FORMAT_INVALID')
+    if identity.get('status') != 'ACTIVE':
+        raise AgentJobValidationError('REIDENTIFICATION_IDENTITY_NOT_ACTIVE')
+    if proof.get('format') != 'SAFOR_AGENT_REIDENTIFICATION_EVIDENCE':
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_FORMAT_INVALID')
+    if proof.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_SCHEMA_VERSION_INVALID')
+    if proof.get('source') != 'HUMAN_REPORTED_AGENT_REPLY_IN_MASTER_CHAT':
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_SOURCE_INVALID')
+    if proof.get('result') != 'PASS' or proof.get('validForRearm') is not True or proof.get('immutable') is not True:
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_NOT_REARMABLE')
+    if proof.get('initializationStateMutationObserved') is not False:
+        raise AgentJobValidationError('REIDENTIFICATION_INITIALIZATION_STATE_MUTATION_FORBIDDEN')
+
+    expected_reply = (
+        f"Agent {identity.get('displayName')} ({identity.get('agentId')}) "
+        "bereit | Status: WAITING_HUMAN_GO"
+    )
+    if proof.get('expectedAgentReply') != expected_reply or proof.get('observedAgentReply') != expected_reply:
+        raise AgentJobValidationError('REIDENTIFICATION_READY_REPLY_MISMATCH')
+
+    for field in ('projectId', 'agentId', 'identityRevision'):
+        expected = identity.get(field)
+        if current.get(field) != expected:
+            raise AgentJobValidationError(f'REIDENTIFICATION_CURRENT_STATE_{field.upper()}_MISMATCH')
+        if proposed.get(field) != expected:
+            raise AgentJobValidationError(f'REIDENTIFICATION_PROPOSED_STATE_{field.upper()}_MISMATCH')
+        if proof.get(field) != expected:
+            raise AgentJobValidationError(f'REIDENTIFICATION_EVIDENCE_{field.upper()}_MISMATCH')
+
+    if current.get('format') != 'SAFOR_AGENT_STATE' or current.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REIDENTIFICATION_CURRENT_STATE_FORMAT_INVALID')
+    if proposed.get('format') != 'SAFOR_AGENT_STATE' or proposed.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REIDENTIFICATION_PROPOSED_STATE_FORMAT_INVALID')
+    if current.get('runtimeStatus') != 'REIDENTIFICATION_REQUIRED':
+        raise AgentJobValidationError('REIDENTIFICATION_CURRENT_STATE_STATUS_INVALID')
+    if proposed.get('runtimeStatus') != 'WAITING_HUMAN_GO':
+        raise AgentJobValidationError('REIDENTIFICATION_PROPOSED_STATE_STATUS_INVALID')
+    if not isinstance(current.get('revision'), int) or proposed.get('revision') != current.get('revision') + 1:
+        raise AgentJobValidationError('REIDENTIFICATION_STATE_REVISION_MUST_INCREMENT_ONCE')
+    if proposed.get('session') is not None or proposed.get('currentJob') is not None:
+        raise AgentJobValidationError('REIDENTIFICATION_REARM_MUST_CLEAR_SESSION_AND_CURRENT_JOB')
+    if proposed.get('lastResponseRef') != current.get('lastResponseRef'):
+        raise AgentJobValidationError('REIDENTIFICATION_REARM_MUST_PRESERVE_LAST_RESPONSE')
+    if proposed.get('consumedActivationIds') != current.get('consumedActivationIds'):
+        raise AgentJobValidationError('REIDENTIFICATION_REARM_MUST_PRESERVE_CONSUMED_ACTIVATIONS')
+    _nonempty(proposed.get('updatedAt'), 'REIDENTIFICATION_REARM_UPDATED_AT_REQUIRED')
+
+    state_at_bootstrap = _mapping(proof.get('stateAtBootstrap'), 'stateAtBootstrap')
+    _pointer(state_at_bootstrap.get('ref'), 'stateAtBootstrapRef')
+    if state_at_bootstrap.get('revision') != current.get('revision'):
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_STATE_REVISION_MISMATCH')
+    if state_at_bootstrap.get('runtimeStatus') != 'REIDENTIFICATION_REQUIRED':
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_STATE_STATUS_INVALID')
+
+    inbox_at_bootstrap = _mapping(proof.get('inboxAtBootstrap'), 'inboxAtBootstrap')
+    _pointer(inbox_at_bootstrap.get('ref'), 'inboxAtBootstrapRef')
+    if not isinstance(inbox_at_bootstrap.get('revision'), int) or inbox_at_bootstrap.get('revision') < 1:
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_INBOX_REVISION_INVALID')
+    if not isinstance(inbox_at_bootstrap.get('entryCount'), int) or inbox_at_bootstrap.get('entryCount') < 0:
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_INBOX_ENTRY_COUNT_INVALID')
+
+
 def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, identity_revision: int=1, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
     persistence_context_supplied = any(
         value is not None
