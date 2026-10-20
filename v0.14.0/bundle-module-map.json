@@ -97,7 +97,9 @@
     "domainFrameworkProfiles": "v0.14.0/domain-framework-profiles.json",
     "templateHumanGoEvidence": "v0.14.0/templates/human-go-evidence.template.json",
     "templateAgentStateClaim": "v0.14.0/templates/agent-state-claim.template.json",
-    "templateAgentStateResultSubmitted": "v0.14.0/templates/agent-state-result-submitted.template.json"
+    "templateAgentStateResultSubmitted": "v0.14.0/templates/agent-state-result-submitted.template.json",
+    "schemaAgentReidentificationEvidence": "v0.14.0/schemas/agent-reidentification-evidence.schema.json",
+    "templateAgentStateReidentificationReady": "v0.14.0/templates/agent-state-reidentification-ready.template.json"
   },
   "referenceResolution": {
     "SAFOR-MASTER.json": "kernel",
@@ -208,7 +210,11 @@
     "agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted",
     "templates/human-go-evidence.template.json": "templateHumanGoEvidence",
     "templates/agent-state-claim.template.json": "templateAgentStateClaim",
-    "templates/agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted"
+    "templates/agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted",
+    "agent-reidentification-evidence.schema.json": "schemaAgentReidentificationEvidence",
+    "schemas/agent-reidentification-evidence.schema.json": "schemaAgentReidentificationEvidence",
+    "agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady",
+    "templates/agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady"
   },
   "v014AuthoritativeKeys": [
     "acceptanceModel",
@@ -251,6 +257,7 @@
     "schemaAgentJob",
     "schemaAgentJobState",
     "schemaAgentRegistry",
+    "schemaAgentReidentificationEvidence",
     "schemaAgentResponse",
     "schemaAgentResponseIndex",
     "schemaAgentResponseResolution",
@@ -297,6 +304,7 @@
     "selfHealing",
     "templateAgentInitialization",
     "templateAgentJobHuman",
+    "templateAgentStateReidentificationReady",
     "templateCapabilityMismatch",
     "templateClarificationRequest",
     "templateImprovementProposal",
