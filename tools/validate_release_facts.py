@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 import os
+import subprocess
 from pathlib import Path
 
 from release_provenance import collect_validation_errors
@@ -13,6 +14,14 @@ CONTRACT_REF = "docs/releases/RELEASE-EVIDENCE-CONTRACT-v1.json"
 
 def load(path: str):
     return json.loads((ROOT / path).read_text(encoding="utf-8"))
+
+
+def git_tree_sha() -> str:
+    return subprocess.check_output(
+        ["git", "rev-parse", "HEAD^{tree}"],
+        cwd=ROOT,
+        text=True,
+    ).strip()
 
 
 def main() -> None:
@@ -69,7 +78,12 @@ def main() -> None:
     evidence_ref = artifacts.get("evidence")
     evidence_file = ROOT / str(evidence_ref or "")
     expected_source_sha = os.environ.get("SAFOR_RELEASE_SOURCE_SHA")
+    expected_source_tree_sha = git_tree_sha() if expected_source_sha else None
     expected_workflow_run_id = os.environ.get("SAFOR_RELEASE_WORKFLOW_RUN_ID")
+    expected_workflow_run_attempt = (
+        os.environ.get("GITHUB_RUN_ATTEMPT") if expected_workflow_run_id else None
+    )
+    expected_integration_ref = os.environ.get("SAFOR_RELEASE_INTEGRATION_REF")
 
     if artifact_state == "PENDING_MATERIALIZATION":
         if facts.get("status") != "PENDING_MATERIALIZATION":
@@ -92,7 +106,10 @@ def main() -> None:
                 evidence=evidence,
                 expected_version=version,
                 expected_source_sha=expected_source_sha,
+                expected_source_tree_sha=expected_source_tree_sha,
                 expected_workflow_run_id=expected_workflow_run_id,
+                expected_workflow_run_attempt=expected_workflow_run_attempt,
+                expected_integration_ref=expected_integration_ref,
                 require_pass=False,
             ):
                 errors.append(f"release provenance: {error}")
@@ -124,7 +141,10 @@ def main() -> None:
                 evidence=evidence,
                 expected_version=version,
                 expected_source_sha=expected_source_sha,
+                expected_source_tree_sha=expected_source_tree_sha,
                 expected_workflow_run_id=expected_workflow_run_id,
+                expected_workflow_run_attempt=expected_workflow_run_attempt,
+                expected_integration_ref=expected_integration_ref,
                 require_pass=True,
             ):
                 errors.append(f"release provenance: {error}")
