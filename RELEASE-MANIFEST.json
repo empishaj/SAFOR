@@ -397,7 +397,7 @@
       "purpose": "Replace unverifiable host chat/session binding with pinned agent identity plus MASTER-written personal inbox job transport."
     }
   },
-  "embeddedModuleCount": 96,
+  "embeddedModuleCount": 98,
   "releaseFactsRef": "RELEASE-FACTS.json",
   "releaseArtifactsState": "PENDING_RELEASE_MATERIALIZATION",
   "operationalReadiness": {
