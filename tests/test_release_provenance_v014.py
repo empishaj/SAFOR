@@ -5,6 +5,10 @@ import unittest
 from pathlib import Path
 
 from tools.release_provenance import (
+    REQUIRED_ARTIFACT_FIELDS,
+    REQUIRED_PROVENANCE_FIELDS,
+    REQUIRED_TOP_LEVEL_FIELDS,
+    REQUIRED_VALIDATION_FIELDS,
     ReleaseProvenanceError,
     artifact_set_digest,
     canonical_artifact_paths,
@@ -104,6 +108,80 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
             ),
             require_pass=kwargs.get("require_pass", True),
         )
+
+    def test_contract_required_field_sets_match_validator(self):
+        contract = json.loads(
+            (
+                Path(__file__).resolve().parents[1]
+                / "docs/releases/RELEASE-EVIDENCE-CONTRACT-v1.json"
+            ).read_text(encoding="utf-8")
+        )
+        self.assertEqual(
+            list(REQUIRED_TOP_LEVEL_FIELDS), contract["requiredTopLevelFields"]
+        )
+        self.assertEqual(
+            list(REQUIRED_PROVENANCE_FIELDS), contract["requiredProvenanceFields"]
+        )
+        self.assertEqual(
+            list(REQUIRED_ARTIFACT_FIELDS), contract["requiredArtifactFields"]
+        )
+        self.assertEqual(
+            list(REQUIRED_VALIDATION_FIELDS), contract["requiredValidationFields"]
+        )
+
+    def test_missing_required_top_level_field_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        del evidence["truthBoundary"]
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_EVIDENCE_REQUIRED_FIELD_MISSING:truthBoundary"
+        ):
+            self.validate(root, evidence)
+
+    def test_wrong_product_identity_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["product"] = "OTHER"
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_EVIDENCE_PRODUCT_INVALID"
+        ):
+            self.validate(root, evidence)
+
+    def test_invalid_created_timestamp_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["createdAt"] = "2026-10-19T12:00:00+02:00"
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_CREATED_AT_INVALID"
+        ):
+            self.validate(root, evidence)
+
+    def test_materialized_before_created_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["materializedAt"] = "2026-10-19T11:59:59Z"
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_MATERIALIZED_BEFORE_CREATED"
+        ):
+            self.validate(root, evidence)
+
+    def test_pass_requires_nonempty_validated_commands(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["validatedCommands"] = []
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_PASS_VALIDATED_COMMANDS_REQUIRED"
+        ):
+            self.validate(root, evidence)
+
+    def test_artifact_size_must_be_nonnegative_integer(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["artifacts"][0]["bytes"] = True
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_ARTIFACT_SIZE_INVALID"
+        ):
+            self.validate(root, evidence)
 
     def test_exact_release_evidence_passes(self):
         temp, root, evidence = self.make_fixture()
