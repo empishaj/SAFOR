@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:safor:agent-reidentification-evidence:0.14.0",
+  "title": "SAFOR Agent Reidentification Evidence 0.14.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "evidenceId",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "identityRef",
+    "observedAgentReply",
+    "expectedAgentReply",
+    "observedAt",
+    "source",
+    "result",
+    "stateAtBootstrap",
+    "inboxAtBootstrap",
+    "initializationStateMutationObserved",
+    "validForRearm",
+    "immutable"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_AGENT_REIDENTIFICATION_EVIDENCE"
+    },
+    "schemaVersion": {
+      "const": "0.14.0"
+    },
+    "evidenceId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agentId": {
+      "type": "string",
+      "minLength": 3
+    },
+    "identityRevision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "identityRef": {
+      "$ref": "#/$defs/pointer"
+    },
+    "observedAgentReply": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expectedAgentReply": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "source": {
+      "const": "HUMAN_REPORTED_AGENT_REPLY_IN_MASTER_CHAT"
+    },
+    "result": {
+      "const": "PASS"
+    },
+    "stateAtBootstrap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "revision",
+        "runtimeStatus"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/pointer"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "runtimeStatus": {
+          "const": "REIDENTIFICATION_REQUIRED"
+        }
+      }
+    },
+    "inboxAtBootstrap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "revision",
+        "entryCount"
+      ],
+      "properties": {
+        "ref": {
+          "$ref": "#/$defs/pointer"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "entryCount": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "initializationStateMutationObserved": {
+      "const": false
+    },
+    "validForRearm": {
+      "const": true
+    },
+    "immutable": {
+      "const": true
+    }
+  },
+  "$defs": {
+    "pointer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "ref",
+        "path",
+        "blobSha"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blobSha": {
+          "type": "string",
+          "minLength": 7
+        }
+      }
+    }
+  }
+}
