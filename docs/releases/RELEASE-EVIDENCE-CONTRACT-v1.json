@@ -70,13 +70,20 @@
     "LOCAL workflow evidence may never authorize MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS",
     "during CI validation provenance.sourceTreeSha == git tree of provenance.sourceCommitSha at the checked-out exact head",
     "provenance.workflowRunAttempt is a positive integer and matches the current workflow attempt when CI context is asserted",
-    "provenance.integrationRef is nonempty and matches the exact workflow source ref when CI context is asserted"
+    "provenance.integrationRef is nonempty and matches the exact workflow source ref when CI context is asserted",
+    "validator required-field sets exactly equal this contract's required field lists",
+    "product == SAFOR",
+    "createdAt and materializedAt are UTC Z timestamps and createdAt <= materializedAt",
+    "PASS requires a nonempty validatedCommands list",
+    "PASS requires validation.validatedAt to be a UTC Z timestamp at or after materializedAt",
+    "every artifact.bytes is a nonnegative integer"
   ],
   "prohibitedClaims": [
     "A prior successful workflow proves a later changed source tree.",
     "Updating artifact hashes without exact-source CI provenance is sufficient release evidence.",
     "Artifact existence alone proves materialization correctness.",
     "Matching hashes for arbitrary or out-of-root paths may substitute for the canonical release artifact set.",
-    "A matching commit SHA with a mismatched source tree, workflow attempt or workflow source ref may authorize release PASS."
+    "A matching commit SHA with a mismatched source tree, workflow attempt or workflow source ref may authorize release PASS.",
+    "A PASS record with omitted contract-required fields, invalid temporal ordering, empty validation commands or non-integer artifact sizes is acceptable."
   ]
 }
