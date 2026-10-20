@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 from pathlib import Path
-from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_authority_basis_coverage, validate_job_state_transition, validate_initialization_acknowledgement
+from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_authority_basis_coverage, validate_job_state_transition, validate_initialization_acknowledgement, validate_reidentification_ready_transition
 ROOT = Path(__file__).resolve().parents[1]
 
 def load(path):
@@ -362,6 +362,146 @@ class AgentJobV014Tests(unittest.TestCase):
             pinned_identity=pinned,
             chat_output=output,
         )
+
+    def reidentification_fixture(self):
+        identity = {
+            'format': 'SAFOR_AGENT_IDENTITY',
+            'schemaVersion': '0.14.0',
+            'projectId': 'project-001',
+            'agentId': 'worker-architect',
+            'displayName': 'Atlas UX',
+            'identityRevision': 6,
+            'status': 'ACTIVE',
+        }
+        current = {
+            'format': 'SAFOR_AGENT_STATE',
+            'schemaVersion': '0.14.0',
+            'projectId': 'project-001',
+            'agentId': 'worker-architect',
+            'identityRevision': 6,
+            'revision': 0,
+            'runtimeStatus': 'REIDENTIFICATION_REQUIRED',
+            'session': None,
+            'currentJob': None,
+            'lastResponseRef': None,
+            'consumedActivationIds': [],
+            'updatedAt': '2026-10-20T20:30:00Z',
+        }
+        proposed = copy.deepcopy(current)
+        proposed['revision'] = 1
+        proposed['runtimeStatus'] = 'WAITING_HUMAN_GO'
+        proposed['updatedAt'] = '2026-10-20T21:00:00Z'
+        ready = 'Agent Atlas UX (worker-architect) bereit | Status: WAITING_HUMAN_GO'
+        evidence = {
+            'format': 'SAFOR_AGENT_REIDENTIFICATION_EVIDENCE',
+            'schemaVersion': '0.14.0',
+            'evidenceId': 'reid-001',
+            'projectId': 'project-001',
+            'agentId': 'worker-architect',
+            'identityRevision': 6,
+            'identityRef': self.pointer('projects/example/agents/worker-architect/identity.rc6.json'),
+            'observedAgentReply': ready,
+            'expectedAgentReply': ready,
+            'observedAt': '2026-10-20T20:59:00Z',
+            'source': 'HUMAN_REPORTED_AGENT_REPLY_IN_MASTER_CHAT',
+            'result': 'PASS',
+            'stateAtBootstrap': {
+                'ref': self.pointer('projects/example/agents/worker-architect/state.json'),
+                'revision': 0,
+                'runtimeStatus': 'REIDENTIFICATION_REQUIRED',
+            },
+            'inboxAtBootstrap': {
+                'ref': self.pointer('projects/example/agents/worker-architect/inbox/index.json'),
+                'revision': 1,
+                'entryCount': 0,
+            },
+            'initializationStateMutationObserved': False,
+            'validForRearm': True,
+            'immutable': True,
+        }
+        return identity, current, proposed, evidence
+
+    def test_reidentification_rearm_is_agent_owned_waiting_state_transition(self):
+        identity, current, proposed, evidence = self.reidentification_fixture()
+        validate_reidentification_ready_transition(
+            current_state=current,
+            proposed_state=proposed,
+            pinned_identity=identity,
+            evidence=evidence,
+        )
+
+    def test_reidentification_rearm_rejects_activation_consumption_or_running_claim(self):
+        identity, current, proposed, evidence = self.reidentification_fixture()
+        proposed['consumedActivationIds'] = ['activation-too-early']
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'REIDENTIFICATION_REARM_MUST_PRESERVE_CONSUMED_ACTIVATIONS',
+        ):
+            validate_reidentification_ready_transition(
+                current_state=current,
+                proposed_state=proposed,
+                pinned_identity=identity,
+                evidence=evidence,
+            )
+        proposed = copy.deepcopy(current)
+        proposed['revision'] = 1
+        proposed['runtimeStatus'] = 'RUNNING'
+        proposed['updatedAt'] = '2026-10-20T21:00:00Z'
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'REIDENTIFICATION_PROPOSED_STATE_STATUS_INVALID',
+        ):
+            validate_reidentification_ready_transition(
+                current_state=current,
+                proposed_state=proposed,
+                pinned_identity=identity,
+                evidence=evidence,
+            )
+
+    def test_reidentification_rearm_requires_exact_master_recorded_ready_evidence(self):
+        identity, current, proposed, evidence = self.reidentification_fixture()
+        evidence['observedAgentReply'] = 'READY'
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'REIDENTIFICATION_READY_REPLY_MISMATCH',
+        ):
+            validate_reidentification_ready_transition(
+                current_state=current,
+                proposed_state=proposed,
+                pinned_identity=identity,
+                evidence=evidence,
+            )
+        identity, current, proposed, evidence = self.reidentification_fixture()
+        evidence['initializationStateMutationObserved'] = True
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'REIDENTIFICATION_INITIALIZATION_STATE_MUTATION_FORBIDDEN',
+        ):
+            validate_reidentification_ready_transition(
+                current_state=current,
+                proposed_state=proposed,
+                pinned_identity=identity,
+                evidence=evidence,
+            )
+
+    def test_reidentification_contract_is_embedded_and_same_go_continues(self):
+        activation = load('v0.14.0/agent-activation-model.json')
+        handling = activation['onHumanGo']['preSelectionAgentStateHandling']
+        self.assertEqual(handling['reidentificationStatus'], 'REIDENTIFICATION_REQUIRED')
+        self.assertFalse(handling['reidentificationRearmConsumesHumanGo'])
+        self.assertFalse(handling['reidentificationSecondHumanGoRequired'])
+        self.assertTrue(handling['reidentificationRearmRequiresProviderCasAndReadback'])
+        self.assertEqual(
+            handling['reidentificationEvidenceSchemaRef'],
+            'schemas/agent-reidentification-evidence.schema.json',
+        )
+        self.assertEqual(
+            handling['reidentificationStateTemplateRef'],
+            'templates/agent-state-reidentification-ready.template.json',
+        )
+        bundle_map = load('v0.14.0/bundle-module-map.json')
+        self.assertIn('schemaAgentReidentificationEvidence', bundle_map['v014AuthoritativeKeys'])
+        self.assertIn('templateAgentStateReidentificationReady', bundle_map['v014AuthoritativeKeys'])
 
     def test_blocked_chat_requires_git_reference(self):
         with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT'):
