@@ -52,6 +52,9 @@
     "provenance.repository == empishaj/SAFOR",
     "provenance.sourceCommitSha == provenance.workflowHeadSha",
     "provenance.exactHeadRequired == true",
+    "artifact path set exactly equals the canonical seven distributable paths for version",
+    "every artifact path is normalized, relative, symlink-free and resolves inside the repository root",
+    "checksumFile exactly equals SHA256SUMS-{version}.txt and resolves inside the repository root",
     "every artifact.generatedFromSourceCommit == provenance.sourceCommitSha",
     "every artifact.sha256 == SHA256(actual artifact bytes)",
     "artifactSetDigest == canonical SHA256 of the ordered artifact identity records",
@@ -69,6 +72,7 @@
   "prohibitedClaims": [
     "A prior successful workflow proves a later changed source tree.",
     "Updating artifact hashes without exact-source CI provenance is sufficient release evidence.",
-    "Artifact existence alone proves materialization correctness."
+    "Artifact existence alone proves materialization correctness.",
+    "Matching hashes for arbitrary or out-of-root paths may substitute for the canonical release artifact set."
   ]
 }
