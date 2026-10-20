@@ -192,6 +192,9 @@ class AgentJobV014Tests(unittest.TestCase):
         product_permission['commit'] = False
         product_permission['push'] = False
         product_permission['changeRequestCreate'] = False
+        job['provenance']['mandateRef'] = copy.deepcopy(
+            job['authorization']['authorityBasis']
+        )
 
         mandate = {
             'schemaVersion': '0.14.0',
@@ -235,6 +238,9 @@ class AgentJobV014Tests(unittest.TestCase):
         product_permission['commit'] = False
         product_permission['push'] = False
         product_permission['changeRequestCreate'] = False
+        job['provenance']['mandateRef'] = copy.deepcopy(
+            job['authorization']['authorityBasis']
+        )
         mandate = {
             'schemaVersion': '0.14.0',
             'status': 'ACTIVE',
