@@ -100,7 +100,7 @@ def _require_sha1(value: Any, code: str) -> str:
 
 def _resolve_repo_file(root: Path, rel: str, *, kind: str) -> Path:
     """Resolve a canonical release file without permitting path or symlink escape."""
-    if "\\x00" in rel or "\\" in rel:
+    if "\x00" in rel or "\\" in rel:
         raise ReleaseProvenanceError(f"{kind}_PATH_INVALID:{rel}")
 
     relative = Path(rel)
