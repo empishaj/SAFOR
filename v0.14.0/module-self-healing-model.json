@@ -4355,6 +4355,96 @@
         ],
         "target": "MASTER"
       }
+    },
+    {
+      "profileId": "MRP-SCHEMAAGENTREIDENTIFICATIONEVIDENCE",
+      "moduleKey": "schemaAgentReidentificationEvidence",
+      "moduleClass": "SCHEMA",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.schemaAgentReidentificationEvidence + integrityManifest.schemaAgentReidentificationEvidence (v0.14.0/schemas/agent-reidentification-evidence.schema.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "initialAutomaticAttemptBudget": 1,
+      "additionalRetryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "schemaAgentReidentificationEvidence_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
+    },
+    {
+      "profileId": "MRP-TEMPLATEAGENTSTATEREIDENTIFICATIONREADY",
+      "moduleKey": "templateAgentStateReidentificationReady",
+      "moduleClass": "RUNTIME_MODEL",
+      "authorityType": "PINNED_CANONICAL_SOURCE",
+      "repairability": "RESTORE_FROM_VERIFIED_SOURCE",
+      "sourceOfTruth": "embeddedModules.templateAgentStateReidentificationReady + integrityManifest.templateAgentStateReidentificationReady (v0.14.0/templates/agent-state-reidentification-ready.template.json)",
+      "failureDetectors": [
+        "MODULE_BLOB_MISMATCH",
+        "MODULE_SCHEMA_OR_CONTRACT_INVALID"
+      ],
+      "automaticRepairs": [
+        "RELOAD_VERIFIED_EMBEDDED_MODULE",
+        "COMPARE_WITH_PINNED_CANONICAL_SOURCE"
+      ],
+      "forbiddenRepairs": [
+        "INVENT_MISSING_EVIDENCE",
+        "EXPAND_AUTHORITY_OR_SCOPE",
+        "BYPASS_HUMAN_GATE_OR_REQUIRED_REVIEW",
+        "ACCEPT_UNVERIFIED_STATE"
+      ],
+      "initialAutomaticAttemptBudget": 1,
+      "additionalRetryBudget": 0,
+      "preconditions": [
+        "CURRENT_PROVIDER_RIGHTS_PROVEN",
+        "PRE_REPAIR_STATE_REFERENCED",
+        "SUCCESS_EVIDENCE_DEFINED_BEFORE_MUTATION"
+      ],
+      "verification": {
+        "requiredEvidence": [
+          "AUTHORITATIVE_READBACK",
+          "EXPECTED_STATE_MATCH",
+          "REPAIR_RECORD_PERSISTED"
+        ],
+        "successPredicate": "templateAgentStateReidentificationReady_MATCHES_PINNED_RELEASE"
+      },
+      "escalation": {
+        "when": [
+          "SOURCE_OF_TRUTH_AMBIGUOUS",
+          "AUTHORITATIVE_READBACK_FAILS",
+          "REPAIR_WOULD_CHANGE_SEMANTICS_OR_AUTHORITY"
+        ],
+        "target": "MASTER"
+      }
     }
   ]
 }
