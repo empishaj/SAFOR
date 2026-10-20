@@ -6,8 +6,8 @@
   "frameworkSchemaVersion": "0.14.0",
   "status": "PENDING_MATERIALIZATION",
   "sourceRoot": "v0.14.0",
-  "moduleCount": 96,
-  "recoveryProfileCount": 96,
+  "moduleCount": 98,
+  "recoveryProfileCount": 98,
   "domainDefaults": {
     "WEBSITE": {
       "creationType": "WEBSITE",
