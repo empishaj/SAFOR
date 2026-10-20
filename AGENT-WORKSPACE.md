@@ -204,6 +204,8 @@ A substantial task, role, skill or authority change creates a new job. Historica
 - `supersedesJobId`;
 - triggering conflict or decision reference.
 
+A persisted `BLOCKED` Agent state is also a settled execution state only after MASTER has resolved the prior Job terminally as `REJECTED`, `CANCELED` or `SUPERSEDED`. Rearm additionally requires provider readback of the typed blocking response (`JOB_ERROR`, `CLARIFICATION_REQUEST` or `CAPABILITY_MISMATCH`) bound to the same prior job, agent and identity. `ACCEPTED` or `INTEGRATED` cannot settle a blocked execution for rearm. A later direct HUMAN `GO` lets only the Agent CAS its own state back to `WAITING_HUMAN_GO`, preserving `consumedActivationIds` and `lastResponseRef`, clearing `session`/`currentJob`, then continuing that same GO to the next eligible Job.
+
 ## Concurrency
 
 Claims use optimistic concurrency on the agent state. Mutating jobs use dedicated branches and leases. Ambiguous mutation overlap is treated as a conflict. Lease expiry produces `RECONCILE_REQUIRED`; it never authorizes silent reassignment.

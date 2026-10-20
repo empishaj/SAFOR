@@ -164,6 +164,8 @@ A historical job ID is never reused. Rework or substantial changes produce a new
 - immutable conflict/decision reference;
 - fresh authority, input and branch snapshots.
 
+A Job that terminates through a persisted typed blocking response remains immutable. MASTER may resolve it as `REJECTED`, `CANCELED` or `SUPERSEDED` and create a new UUIDv7 rework Job. The owning Agent may rearm a persisted `BLOCKED` state only on a later direct HUMAN `GO`, after read-only verification of that terminal MASTER resolution and provider readback of the blocking response. Rearm is an Agent-owned CAS/readback, preserves activation and response history, clears session/currentJob, and does not consume the new GO; the same GO then continues to the superseding Job. MASTER never resets Agent State.
+
 ## Independent review
 
 When independent review is required, the reviewer must differ from the contribution author. The reviewer receives a separate job with its own role, skills, inputs, branch/read scope and response contracts.

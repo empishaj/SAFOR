@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 from pathlib import Path
-from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_authority_basis_coverage, validate_job_state_transition, validate_initialization_acknowledgement, validate_reidentification_ready_transition
+from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_agent_state_rearm_transition, validate_authority_basis_coverage, validate_job_state_transition, validate_initialization_acknowledgement, validate_reidentification_ready_transition
 ROOT = Path(__file__).resolve().parents[1]
 
 def load(path):
@@ -506,5 +506,98 @@ class AgentJobV014Tests(unittest.TestCase):
     def test_blocked_chat_requires_git_reference(self):
         with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT'):
             render_agent_chat_output(status='BLOCKED', project_id='project-001', agent_id='agent-dev-003', display_name='Nova Dev', job_key='wp-014-impl')
+    def settled_rearm_fixture(self, runtime_status='BLOCKED', master_status='SUPERSEDED'):
+        job_id = '0199f0aa-7e40-7abc-8a12-000000000010'
+        current = {
+            'format': 'SAFOR_AGENT_STATE',
+            'schemaVersion': '0.14.0',
+            'projectId': 'project-001',
+            'agentId': 'agent-dev-003',
+            'identityRevision': 2,
+            'revision': 3,
+            'runtimeStatus': runtime_status,
+            'session': {'activationId': 'go-old'},
+            'currentJob': {'jobId': job_id, 'dispatchRevision': 1, 'claimId': 'go-old'},
+            'lastResponseRef': f'projects/example/agents/agent-dev-003/outbox/{job_id}/response-old.json',
+            'consumedActivationIds': ['go-old'],
+            'updatedAt': '2026-10-20T20:00:00Z',
+        }
+        proposed = copy.deepcopy(current)
+        proposed['revision'] = 4
+        proposed['runtimeStatus'] = 'WAITING_HUMAN_GO'
+        proposed['session'] = None
+        proposed['currentJob'] = None
+        proposed['updatedAt'] = '2026-10-20T21:00:00Z'
+        master = {
+            'format': 'SAFOR_AGENT_JOB_STATE',
+            'schemaVersion': '0.14.0',
+            'projectId': 'project-001',
+            'jobId': job_id,
+            'assignedAgentId': 'agent-dev-003',
+            'assignedIdentityRevision': 2,
+            'lifecycleStatus': master_status,
+            'responseRefs': [self.pointer(f'projects/example/agents/agent-dev-003/outbox/{job_id}/response-old.json')],
+        }
+        response = {
+            'format': 'SAFOR_AGENT_RESPONSE',
+            'schemaVersion': '0.14.0',
+            'responseId': 'response-old',
+            'responseType': 'JOB_ERROR',
+            'projectId': 'project-001',
+            'jobId': job_id,
+            'packageId': 'OR-10',
+            'workItemId': 'WI-WEB-03',
+            'agentId': 'agent-dev-003',
+            'identityRevision': 2,
+            'immutable': True,
+        }
+        return current, proposed, master, response
+
+    def test_blocked_agent_rearms_only_after_terminal_master_resolution(self):
+        current, proposed, master, response = self.settled_rearm_fixture()
+        validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master, prior_response=response)
+
+    def test_blocked_agent_rearm_rejects_accepted_master_job(self):
+        current, proposed, master, response = self.settled_rearm_fixture(master_status='ACCEPTED')
+        with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_REARM_MASTER_STATUS_INVALID'):
+            validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master, prior_response=response)
+
+    def test_blocked_agent_rearm_requires_typed_blocking_response_and_master_pointer(self):
+        current, proposed, master, response = self.settled_rearm_fixture()
+        with self.assertRaisesRegex(AgentJobValidationError, 'priorResponse must be a mapping'):
+            validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master, prior_response=None)
+        master['responseRefs'] = []
+        with self.assertRaisesRegex(AgentJobValidationError, 'BLOCKED_REARM_MASTER_RESPONSE_REF_REQUIRED'):
+            validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master, prior_response=response)
+
+    def test_rearm_preserves_history_and_clears_prior_claim(self):
+        current, proposed, master, response = self.settled_rearm_fixture()
+        proposed['consumedActivationIds'] = []
+        with self.assertRaisesRegex(AgentJobValidationError, 'REARM_MUST_PRESERVE_CONSUMED_ACTIVATIONS'):
+            validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master, prior_response=response)
+        current, proposed, master, response = self.settled_rearm_fixture()
+        proposed['currentJob'] = current['currentJob']
+        with self.assertRaisesRegex(AgentJobValidationError, 'REARM_MUST_CLEAR_SESSION_AND_CURRENT_JOB'):
+            validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master, prior_response=response)
+
+    def test_result_submitted_rearm_remains_supported(self):
+        current, proposed, master, _ = self.settled_rearm_fixture(runtime_status='RESULT_SUBMITTED', master_status='ACCEPTED')
+        validate_agent_state_rearm_transition(current_state=current, proposed_state=proposed, prior_master_job_state=master)
+
+    def test_blocked_job_can_be_superseded_but_not_accepted(self):
+        validate_job_state_transition(from_status='BLOCKED', to_status='SUPERSEDED', evidence_refs=['typed-blocker', 'superseding-job'])
+        with self.assertRaisesRegex(AgentJobValidationError, 'JOB_STATE_TRANSITION_FORBIDDEN:BLOCKED->ACCEPTED'):
+            validate_job_state_transition(from_status='BLOCKED', to_status='ACCEPTED', evidence_refs=['invalid'])
+
+    def test_activation_contract_covers_blocked_rearm(self):
+        activation = load('v0.14.0/agent-activation-model.json')
+        handling = activation['onHumanGo']['preSelectionAgentStateHandling']
+        self.assertEqual(['RESULT_SUBMITTED', 'BLOCKED'], handling['settledPriorExecutionStatuses'])
+        blocked = handling['blockedPriorExecutionRequirements']
+        self.assertEqual(['REJECTED', 'CANCELED', 'SUPERSEDED'], blocked['allowedPriorMasterStatuses'])
+        self.assertIn('JOB_ERROR', blocked['requiredLastResponseTypes'])
+        self.assertTrue(blocked['providerReadbackOfBlockingResponseRequired'])
+        self.assertTrue(blocked['priorMasterResponseRefRequired'])
+
 if __name__ == '__main__':
     unittest.main()

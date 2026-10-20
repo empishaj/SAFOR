@@ -47,7 +47,8 @@
     "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
     "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
     "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
-    "IF_PRIOR_AGENT_STATE_IS_RESULT_SUBMITTED_READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+    "IF_PRIOR_AGENT_STATE_IS_RESULT_SUBMITTED_OR_BLOCKED_READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+    "IF_PRIOR_AGENT_STATE_IS_BLOCKED_READ_AND_VALIDATE_LAST_TYPED_BLOCKING_RESPONSE",
     "IF_PRIOR_MASTER_JOB_IS_TERMINALLY_SETTLED_AGENT_CAS_REARMS_OWN_STATE_AND_PROVIDER_READS_BACK",
     "CONTINUE_THE_SAME_DIRECT_HUMAN_GO_AFTER_CONFIRMED_REARM",
     "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_CURRENT_PERSONAL_INBOX_INDEX_FROM_BOUND_LOCATION",
@@ -102,7 +103,9 @@
     "inboxBlobChangeAfterMasterDispatchIsExpected": true,
     "masterNeverRepairsAgentResponseIndex": true,
     "legacyResponseIndexRecoveryPreservesHistory": true,
-    "unknownResponseIndexFormatFailsClosed": true
+    "unknownResponseIndexFormatFailsClosed": true,
+    "blockedRearmRequiresPersistedTypedBlockingResponse": true,
+    "blockedRearmRequiresTerminalMasterResolution": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -158,7 +161,7 @@
     "blockedRequiresPersistedTypedResponseOrStructuredPersistenceFailure": true
   },
   "agentStateRearmContract": {
-    "trigger": "DIRECT_HUMAN_GO_WHILE_AGENT_STATE_RESULT_SUBMITTED",
+    "trigger": "DIRECT_HUMAN_GO_WHILE_AGENT_STATE_RESULT_SUBMITTED_OR_BLOCKED",
     "priorMasterJobAccess": "READ_ONLY",
     "allowedPriorMasterStatuses": [
       "REJECTED",
@@ -179,7 +182,26 @@
     },
     "secondHumanGoRequired": false,
     "nextStep": "CONTINUE_SAME_HUMAN_GO_AGAINST_CURRENT_PERSONAL_INBOX",
-    "failureOutcome": "BLOCKED_NO_NEW_JOB_CLAIM"
+    "failureOutcome": "BLOCKED_NO_NEW_JOB_CLAIM",
+    "allowedPriorAgentStatuses": [
+      "RESULT_SUBMITTED",
+      "BLOCKED"
+    ],
+    "blockedPriorExecutionRequirements": {
+      "allowedPriorMasterStatuses": [
+        "REJECTED",
+        "CANCELED",
+        "SUPERSEDED"
+      ],
+      "requiredLastResponseTypes": [
+        "JOB_ERROR",
+        "CLARIFICATION_REQUEST",
+        "CAPABILITY_MISMATCH"
+      ],
+      "requireProviderReadback": true,
+      "requireMasterResponseRef": true,
+      "acceptedOrIntegratedForbidden": true
+    }
   },
   "jobValidationContract": {
     "source": "PINNED_AGENT_ACTIVATION_MODEL",

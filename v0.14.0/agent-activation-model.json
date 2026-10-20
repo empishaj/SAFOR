@@ -147,10 +147,11 @@
         "IDLE",
         "WAITING_HUMAN_GO"
       ],
-      "settledPriorExecutionStatus": "RESULT_SUBMITTED",
       "onSettledPriorExecution": [
         "READ_PRIOR_CURRENT_JOB_BINDING_FROM_AGENT_STATE",
         "READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+        "IF_PRIOR_AGENT_STATE_BLOCKED_READ_AND_VALIDATE_LAST_TYPED_BLOCKING_RESPONSE",
+        "IF_PRIOR_AGENT_STATE_BLOCKED_REQUIRE_PRIOR_MASTER_JOB_REJECTED_CANCELED_OR_SUPERSEDED",
         "REQUIRE_PRIOR_MASTER_JOB_TERMINALLY_SETTLED",
         "BUILD_REARMED_AGENT_STATE",
         "PRESERVE_CONSUMED_ACTIVATION_IDS_AND_LAST_RESPONSE_REF",
@@ -200,7 +201,27 @@
       "reidentificationRearmConsumesHumanGo": false,
       "reidentificationSecondHumanGoRequired": false,
       "reidentificationRearmRequiresProviderCasAndReadback": true,
-      "reidentificationOnMissingOrInvalidEvidence": "BLOCKED_NO_NEW_JOB_CLAIM"
+      "reidentificationOnMissingOrInvalidEvidence": "BLOCKED_NO_NEW_JOB_CLAIM",
+      "settledPriorExecutionStatuses": [
+        "RESULT_SUBMITTED",
+        "BLOCKED"
+      ],
+      "blockedPriorExecutionRequirements": {
+        "requiredLastResponseTypes": [
+          "JOB_ERROR",
+          "CLARIFICATION_REQUEST",
+          "CAPABILITY_MISMATCH"
+        ],
+        "providerReadbackOfBlockingResponseRequired": true,
+        "responseMustMatchPriorJobAgentAndIdentity": true,
+        "allowedPriorMasterStatuses": [
+          "REJECTED",
+          "CANCELED",
+          "SUPERSEDED"
+        ],
+        "priorMasterResponseRefRequired": true,
+        "rule": "A BLOCKED Agent State is rearmable only after the typed blocking response is provider-read-back and the prior MASTER Job is terminally resolved as REJECTED, CANCELED or SUPERSEDED. ACCEPTED or INTEGRATED may never settle a BLOCKED execution for rearm."
+      }
     }
   },
   "reidentificationProtocol": {
@@ -348,7 +369,6 @@
     "goEvidenceProviderReadbackRequired": true,
     "invalidSchemaOutcome": "BLOCKED_NO_PRODUCT_MUTATION",
     "freeformClaimStateConstructionForbidden": true,
-    "rearmBeforeNextClaimWhenPriorResultSettled": true,
     "rearmRequiresProviderCasAndReadback": true,
     "rearmPreservesConsumedActivationIds": true,
     "rearmPreservesLastResponseRef": true,
@@ -356,6 +376,12 @@
     "reidentificationRearmRequiresProviderCasAndReadback": true,
     "reidentificationRearmConsumesActivation": false,
     "reidentificationEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
-    "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json"
+    "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json",
+    "rearmBeforeNextClaimWhenPriorExecutionSettled": true,
+    "rearmAllowedPriorAgentStatuses": [
+      "RESULT_SUBMITTED",
+      "BLOCKED"
+    ],
+    "blockedRearmRequiresTypedBlockingResponseAndTerminalMasterResolution": true
   }
 }

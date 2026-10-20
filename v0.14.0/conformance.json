@@ -1973,15 +1973,15 @@
     {
       "id": "CF-RC6-007",
       "status": "ACTIVE",
-      "semanticKey": "AGENT_OWNED_REARM_AFTER_SETTLED_RESULT",
-      "statement": "After a prior RESULT_SUBMITTED execution, a persistent normal chat agent may accept the next Job only after direct HUMAN GO triggers an AGENT-owned CAS/readback that clears the prior session/currentJob, preserves activation/response history, and is allowed only when the prior MASTER Job is terminally settled; MASTER never rewrites Agent State.",
+      "semanticKey": "AGENT_OWNED_REARM_AFTER_SETTLED_EXECUTION",
+      "statement": "After a prior RESULT_SUBMITTED or terminally resolved BLOCKED execution, a persistent normal chat agent may accept the next Job only after a later direct HUMAN GO triggers an AGENT-owned CAS/readback that clears the prior session/currentJob and preserves activation/response history. BLOCKED additionally requires a provider-read-back typed blocking response bound to the prior job and a prior MASTER status of REJECTED, CANCELED or SUPERSEDED; ACCEPTED/INTEGRATED are forbidden. MASTER never rewrites Agent State.",
       "expected": true
     },
     {
       "id": "CF-RC6-008",
       "status": "ACTIVE",
       "semanticKey": "NON_MUTATING_REINITIALIZATION_AND_EXPLICIT_NULL_REARM",
-      "statement": "Agent initialization/reinitialization must not mutate Agent State. Rearm requires a later separate direct HUMAN GO, and the rearmed state retains all required top-level fields with session and currentJob explicitly null; invalid persisted state may not be reported READY.",
+      "statement": "Agent initialization/reinitialization must not mutate Agent State. Rearm of RESULT_SUBMITTED or terminally resolved BLOCKED state requires a later separate direct HUMAN GO; the rearmed state retains all required top-level fields with session and currentJob explicitly null, preserves activation/response history, and invalid persisted state may not be reported READY.",
       "expected": true
     },
     {

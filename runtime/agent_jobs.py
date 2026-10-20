@@ -8,7 +8,7 @@ class AgentJobValidationError(ValueError):
 _REQUIRED_RESPONSE_TYPES = {'JOB_RESULT', 'JOB_ERROR', 'CLARIFICATION_REQUEST', 'CAPABILITY_MISMATCH', 'IMPROVEMENT_PROPOSAL'}
 _TEMPLATE_PATHS = {'JOB_RESULT': 'v0.14.0/templates/responses/job-result.template.json', 'JOB_ERROR': 'v0.14.0/templates/responses/job-error.template.json', 'CLARIFICATION_REQUEST': 'v0.14.0/templates/responses/clarification-request.template.json', 'CAPABILITY_MISMATCH': 'v0.14.0/templates/responses/capability-mismatch.template.json', 'IMPROVEMENT_PROPOSAL': 'v0.14.0/templates/responses/improvement-proposal.template.json'}
 _UUIDV7 = re.compile('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
-_TRANSITIONS = {'PREPARED': {'WAITING_HUMAN_GO', 'CANCELED', 'SUPERSEDED'}, 'WAITING_HUMAN_GO': {'GO_OBSERVED', 'CANCELED', 'SUPERSEDED'}, 'GO_OBSERVED': {'CLAIMED', 'BLOCKED', 'CANCELED'}, 'CLAIMED': {'RUNNING', 'BLOCKED', 'CANCELED'}, 'RUNNING': {'RESPONSE_SUBMITTED', 'BLOCKED', 'CANCELED'}, 'RESPONSE_SUBMITTED': {'VERIFIED', 'REJECTED', 'BLOCKED'}, 'VERIFIED': {'ACCEPTED', 'REJECTED'}, 'ACCEPTED': {'INTEGRATED'}, 'REJECTED': {'REWORK_READY', 'CANCELED'}, 'REWORK_READY': {'WAITING_HUMAN_GO', 'SUPERSEDED', 'CANCELED'}}
+_TRANSITIONS = {'PREPARED': {'WAITING_HUMAN_GO', 'CANCELED', 'SUPERSEDED'}, 'WAITING_HUMAN_GO': {'GO_OBSERVED', 'CANCELED', 'SUPERSEDED'}, 'GO_OBSERVED': {'CLAIMED', 'BLOCKED', 'CANCELED'}, 'CLAIMED': {'RUNNING', 'BLOCKED', 'CANCELED'}, 'RUNNING': {'RESPONSE_SUBMITTED', 'BLOCKED', 'CANCELED'}, 'RESPONSE_SUBMITTED': {'VERIFIED', 'REJECTED', 'BLOCKED'}, 'VERIFIED': {'ACCEPTED', 'REJECTED'}, 'ACCEPTED': {'INTEGRATED'}, 'REJECTED': {'REWORK_READY', 'CANCELED'}, 'BLOCKED': {'REWORK_READY', 'SUPERSEDED', 'CANCELED'}, 'REWORK_READY': {'WAITING_HUMAN_GO', 'SUPERSEDED', 'CANCELED'}}
 
 def _mapping(value: Any, name: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
@@ -463,6 +463,71 @@ def validate_job_state_transition(*, from_status: str, to_status: str, evidence_
             _pointer(ref, 'goEvidenceRef')
     if from_status == 'RESPONSE_SUBMITTED' and to_status == 'ACCEPTED':
         raise AgentJobValidationError('RESPONSE_SUBMISSION_CANNOT_SKIP_VERIFICATION')
+
+_SETTLED_AGENT_RUNTIME_STATUSES = {'RESULT_SUBMITTED', 'BLOCKED'}
+_SETTLED_MASTER_JOB_STATUSES = {'REJECTED', 'ACCEPTED', 'INTEGRATED', 'CANCELED', 'SUPERSEDED'}
+_BLOCKED_REARM_MASTER_STATUSES = {'REJECTED', 'CANCELED', 'SUPERSEDED'}
+_BLOCKING_RESPONSE_TYPES = {'JOB_ERROR', 'CLARIFICATION_REQUEST', 'CAPABILITY_MISMATCH'}
+
+
+def validate_agent_state_rearm_transition(*, current_state: Mapping[str, Any], proposed_state: Mapping[str, Any], prior_master_job_state: Mapping[str, Any], prior_response: Mapping[str, Any] | None = None) -> None:
+    """Validate agent-owned rearm after a terminal prior execution."""
+    current = _mapping(current_state, 'currentState')
+    proposed = _mapping(proposed_state, 'proposedState')
+    master = _mapping(prior_master_job_state, 'priorMasterJobState')
+    status = current.get('runtimeStatus')
+    if status not in _SETTLED_AGENT_RUNTIME_STATUSES:
+        raise AgentJobValidationError('REARM_CURRENT_AGENT_STATUS_NOT_SETTLED')
+    for field in ('format', 'schemaVersion', 'projectId', 'agentId', 'identityRevision'):
+        if proposed.get(field) != current.get(field):
+            raise AgentJobValidationError(f'REARM_MUST_PRESERVE_{field.upper()}')
+    if current.get('format') != 'SAFOR_AGENT_STATE' or current.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REARM_CURRENT_STATE_FORMAT_INVALID')
+    if proposed.get('runtimeStatus') != 'WAITING_HUMAN_GO':
+        raise AgentJobValidationError('REARM_PROPOSED_STATUS_INVALID')
+    if not isinstance(current.get('revision'), int) or proposed.get('revision') != current.get('revision') + 1:
+        raise AgentJobValidationError('REARM_STATE_REVISION_MUST_INCREMENT_ONCE')
+    if proposed.get('session') is not None or proposed.get('currentJob') is not None:
+        raise AgentJobValidationError('REARM_MUST_CLEAR_SESSION_AND_CURRENT_JOB')
+    if proposed.get('lastResponseRef') != current.get('lastResponseRef') or not current.get('lastResponseRef'):
+        raise AgentJobValidationError('REARM_MUST_PRESERVE_LAST_RESPONSE')
+    if proposed.get('consumedActivationIds') != current.get('consumedActivationIds'):
+        raise AgentJobValidationError('REARM_MUST_PRESERVE_CONSUMED_ACTIVATIONS')
+    _nonempty(proposed.get('updatedAt'), 'REARM_UPDATED_AT_REQUIRED')
+
+    current_job = _mapping(current.get('currentJob'), 'currentJob')
+    job_id = _nonempty(current_job.get('jobId'), 'REARM_PRIOR_JOB_ID_REQUIRED')
+    if master.get('format') != 'SAFOR_AGENT_JOB_STATE' or master.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REARM_MASTER_JOB_STATE_FORMAT_INVALID')
+    if master.get('projectId') != current.get('projectId') or master.get('jobId') != job_id:
+        raise AgentJobValidationError('REARM_MASTER_JOB_BINDING_MISMATCH')
+    if master.get('assignedAgentId') != current.get('agentId') or master.get('assignedIdentityRevision') != current.get('identityRevision'):
+        raise AgentJobValidationError('REARM_MASTER_AGENT_BINDING_MISMATCH')
+    master_status = master.get('lifecycleStatus')
+    if master_status not in _SETTLED_MASTER_JOB_STATUSES:
+        raise AgentJobValidationError('REARM_PRIOR_MASTER_JOB_NOT_TERMINALLY_SETTLED')
+
+    if status == 'BLOCKED':
+        if master_status not in _BLOCKED_REARM_MASTER_STATUSES:
+            raise AgentJobValidationError('BLOCKED_REARM_MASTER_STATUS_INVALID')
+        response = _mapping(prior_response, 'priorResponse')
+        if response.get('format') != 'SAFOR_AGENT_RESPONSE' or response.get('schemaVersion') != '0.14.0':
+            raise AgentJobValidationError('BLOCKED_REARM_RESPONSE_FORMAT_INVALID')
+        if response.get('responseType') not in _BLOCKING_RESPONSE_TYPES:
+            raise AgentJobValidationError('BLOCKED_REARM_TYPED_BLOCKING_RESPONSE_REQUIRED')
+        for field, expected in (
+            ('projectId', current.get('projectId')),
+            ('jobId', job_id),
+            ('agentId', current.get('agentId')),
+            ('identityRevision', current.get('identityRevision')),
+        ):
+            if response.get(field) != expected:
+                raise AgentJobValidationError(f'BLOCKED_REARM_RESPONSE_{field.upper()}_MISMATCH')
+        if response.get('immutable') is not True:
+            raise AgentJobValidationError('BLOCKED_REARM_RESPONSE_MUST_BE_IMMUTABLE')
+        response_refs = master.get('responseRefs')
+        if not isinstance(response_refs, list) or not response_refs:
+            raise AgentJobValidationError('BLOCKED_REARM_MASTER_RESPONSE_REF_REQUIRED')
 
 def validate_initialization_acknowledgement(*, pinned_identity: Mapping[str, Any], chat_output: Mapping[str, Any]) -> None:
     pinned = _mapping(pinned_identity, 'pinnedIdentity')

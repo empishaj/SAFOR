@@ -2493,12 +2493,12 @@
     {
       "id": "INV-RC6-007",
       "status": "ACTIVE",
-      "rule": "A persistent CHAT_AGENT with RESULT_SUBMITTED may be rearmed for a later Job only by an AGENT-owned provider CAS/readback after direct HUMAN GO and after read-only verification that its prior MASTER Job is terminally settled (REJECTED, ACCEPTED, INTEGRATED, CANCELED or SUPERSEDED). Rearm clears session/currentJob, preserves consumedActivationIds and lastResponseRef, consumes no new GO by itself, and MASTER never writes Agent State."
+      "rule": "A persistent CHAT_AGENT with RESULT_SUBMITTED or BLOCKED may be rearmed for a later Job only by an AGENT-owned provider CAS/readback after a later direct HUMAN GO and read-only verification that its prior MASTER Job is terminally settled. RESULT_SUBMITTED accepts REJECTED, ACCEPTED, INTEGRATED, CANCELED or SUPERSEDED. BLOCKED additionally requires a provider-read-back typed blocking response bound to the prior job/agent/identity and a prior MASTER status of REJECTED, CANCELED or SUPERSEDED; ACCEPTED/INTEGRATED are forbidden for blocked rearm. Rearm clears session/currentJob, preserves consumedActivationIds and lastResponseRef, consumes no new GO by itself, and MASTER never writes Agent State."
     },
     {
       "id": "INV-RC6-008",
       "status": "ACTIVE",
-      "rule": "Initialization and reinitialization are strictly non-mutating for Agent State. A RESULT_SUBMITTED Agent may rearm only after a later separate direct HUMAN GO. Rearm must preserve the exact Agent-State top-level schema, including explicit session:null and currentJob:null, and READY is forbidden while provider-persisted Agent State is schema-invalid."
+      "rule": "Initialization and reinitialization are strictly non-mutating for Agent State. A RESULT_SUBMITTED or terminally resolved BLOCKED Agent may rearm only after a later separate direct HUMAN GO. Rearm must preserve the exact Agent-State top-level schema, including explicit session:null and currentJob:null, preserve response/activation history, and READY is forbidden while provider-persisted Agent State is schema-invalid."
     },
     {
       "id": "INV-RC6-009",
