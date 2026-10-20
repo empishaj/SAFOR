@@ -12,6 +12,7 @@ from pathlib import Path
 from release_provenance import (
     ReleaseProvenanceError,
     artifact_set_digest,
+    canonical_artifact_paths,
     sha256_bytes,
     sha256_file,
     validate_release_evidence,
@@ -27,15 +28,7 @@ def current_version() -> str:
 
 
 def artifact_paths(version: str) -> list[str]:
-    return [
-        "SAFOR-FRAMEWORK.json",
-        f"SAFOR-FRAMEWORK-v{version}.json",
-        "SAFOR-FRAMEWORK-WEBSITE.json",
-        "SAFOR-FRAMEWORK-SAAS.json",
-        "SAFOR-FRAMEWORK-BOOK-CREATION.json",
-        "SAFOR-TEST-ACCESS-SAAS.json",
-        "SAFOR-TEST-ACCESS-BOOK-CREATION.json",
-    ]
+    return canonical_artifact_paths(version)
 
 
 def evidence_path(version: str) -> str:
