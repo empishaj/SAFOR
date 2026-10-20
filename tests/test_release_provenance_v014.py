@@ -17,6 +17,8 @@ from tools.release_provenance import (
 SOURCE_SHA = "1" * 40
 TREE_SHA = "2" * 40
 RUN_ID = "123456789"
+RUN_ATTEMPT = "1"
+INTEGRATION_REF = "safor/operational-readiness-0.14.0-rc.6"
 
 
 class ReleaseProvenanceV014Tests(unittest.TestCase):
@@ -62,8 +64,8 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
                 "sourceTreeSha": TREE_SHA,
                 "workflowHeadSha": SOURCE_SHA,
                 "workflowRunId": RUN_ID,
-                "workflowRunAttempt": "1",
-                "integrationRef": "safor/operational-readiness-0.14.0-rc.6",
+                "workflowRunAttempt": RUN_ATTEMPT,
+                "integrationRef": INTEGRATION_REF,
                 "exactHeadRequired": True,
             },
             "validatedCommands": ["tests"],
@@ -92,7 +94,14 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
             evidence=evidence,
             expected_version="0.14.0-rc.6",
             expected_source_sha=kwargs.get("expected_source_sha", SOURCE_SHA),
+            expected_source_tree_sha=kwargs.get("expected_source_tree_sha", TREE_SHA),
             expected_workflow_run_id=kwargs.get("expected_workflow_run_id", RUN_ID),
+            expected_workflow_run_attempt=kwargs.get(
+                "expected_workflow_run_attempt", RUN_ATTEMPT
+            ),
+            expected_integration_ref=kwargs.get(
+                "expected_integration_ref", INTEGRATION_REF
+            ),
             require_pass=kwargs.get("require_pass", True),
         )
 
@@ -108,6 +117,39 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
             ReleaseProvenanceError, "RELEASE_EXPECTED_SOURCE_SHA_MISMATCH"
         ):
             self.validate(root, evidence, expected_source_sha="3" * 40)
+
+    def test_source_tree_mismatch_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_EXPECTED_SOURCE_TREE_MISMATCH"
+        ):
+            self.validate(root, evidence, expected_source_tree_sha="3" * 40)
+
+    def test_workflow_run_attempt_must_be_positive_integer(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["provenance"]["workflowRunAttempt"] = "0"
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_WORKFLOW_RUN_ATTEMPT_INVALID"
+        ):
+            self.validate(root, evidence)
+
+    def test_workflow_run_attempt_mismatch_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_EXPECTED_WORKFLOW_RUN_ATTEMPT_MISMATCH"
+        ):
+            self.validate(root, evidence, expected_workflow_run_attempt="2")
+
+    def test_integration_ref_mismatch_fails(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_EXPECTED_INTEGRATION_REF_MISMATCH"
+        ):
+            self.validate(root, evidence, expected_integration_ref="main")
 
     def test_workflow_head_source_drift_fails(self):
         temp, root, evidence = self.make_fixture()
