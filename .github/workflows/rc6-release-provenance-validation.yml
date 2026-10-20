@@ -17,6 +17,8 @@ jobs:
     runs-on: ubuntu-latest
     env:
       SAFOR_WORKFLOW_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SAFOR_WORKFLOW_SOURCE_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      SAFOR_RELEASE_INTEGRATION_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
     steps:
       - name: Checkout exact candidate head
         uses: actions/checkout@v4
