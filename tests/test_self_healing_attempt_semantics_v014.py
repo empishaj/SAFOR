@@ -57,6 +57,45 @@ class SelfHealingAttemptSemanticsV014Tests(unittest.TestCase):
         self.assertIn("Every retry reads provider state", rules)
         self.assertIn("Unknown external effects enter RECONCILE_REQUIRED", rules)
 
+    def test_sh32_has_executable_execution_attempt_profile_intersection(self):
+        healing = self.load("v0.14.0/self-healing-model.json")
+        modules = self.load("v0.14.0/module-self-healing-model.json")
+
+        sh32 = next(item for item in healing["failureClasses"] if item["id"] == "SH-32")
+        profile = next(item for item in modules["moduleProfiles"] if item["moduleKey"] == "executionAttempt")
+
+        self.assertEqual(
+            "RECONCILE_AND_RETRY_RESPONSE_ONLY",
+            sh32["automaticRepair"],
+        )
+        self.assertIn(
+            sh32["automaticRepair"],
+            profile["automaticRepairs"],
+        )
+        self.assertIn(
+            "PRODUCT_COMMIT_RESPONSE_PERSISTENCE_PARTIAL_FAILURE",
+            profile["failureDetectors"],
+        )
+        self.assertIn(
+            "REPLAY_PROVEN_PRODUCT_MUTATION",
+            profile["forbiddenRepairs"],
+        )
+        self.assertIn(
+            "PROVEN_PRODUCT_COMMIT_READBACK",
+            profile["preconditions"],
+        )
+        self.assertIn(
+            "MISSING_RESPONSE_PERSISTENCE_CONFIRMED",
+            profile["preconditions"],
+        )
+        for evidence in (
+            "PRODUCT_COMMIT_READBACK",
+            "RESPONSE_PROVIDER_READBACK",
+            "PRODUCT_COMMIT_UNCHANGED",
+            "RECONCILIATION_RECORD_PERSISTED",
+        ):
+            self.assertIn(evidence, profile["verification"]["requiredEvidence"])
+
     def test_single_file_bundle_carries_same_contract(self):
         framework = self.load("SAFOR-FRAMEWORK.json")
         self_healing = framework["embeddedModules"]["selfHealing"]["content"]
