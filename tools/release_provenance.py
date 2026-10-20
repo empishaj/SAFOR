@@ -265,7 +265,7 @@ def validate_release_evidence(
     validated_commands = _require_string_list(
         evidence.get("validatedCommands"),
         "RELEASE_VALIDATED_COMMANDS_INVALID",
-        allow_empty=status == "MATERIALIZED_VALIDATION_PENDING",
+        allow_empty=True,
     )
     if status == "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS" and not validated_commands:
         raise ReleaseProvenanceError("RELEASE_PASS_VALIDATED_COMMANDS_REQUIRED")
