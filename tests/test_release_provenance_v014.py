@@ -7,6 +7,7 @@ from pathlib import Path
 from tools.release_provenance import (
     ReleaseProvenanceError,
     artifact_set_digest,
+    canonical_artifact_paths,
     sha256_bytes,
     sha256_file,
     validate_release_evidence,
@@ -24,10 +25,10 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
         root = Path(temp.name)
 
         artifacts = []
-        for name, payload in (
-            ("SAFOR-FRAMEWORK.json", b'{"a":1}\n'),
-            ("SAFOR-FRAMEWORK-v0.14.0-rc.6.json", b'{"a":1}\n'),
-        ):
+        for name in canonical_artifact_paths("0.14.0-rc.6"):
+            payload = (json.dumps({"artifact": name}, sort_keys=True) + "\n").encode(
+                "utf-8"
+            )
             (root / name).write_bytes(payload)
             artifacts.append(
                 {
@@ -158,6 +159,68 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
 
         with self.assertRaisesRegex(
             ReleaseProvenanceError, "RELEASE_ARTIFACT_SET_DIGEST_DRIFT"
+        ):
+            self.validate(root, evidence)
+
+    def test_release_artifact_path_set_must_be_canonical(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["artifacts"][0]["path"] = "README.md"
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_ARTIFACT_PATH_SET_INVALID"
+        ):
+            self.validate(root, evidence)
+
+    def test_parent_traversal_artifact_path_fails_closed(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["artifacts"][0]["path"] = "../SAFOR-FRAMEWORK.json"
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_ARTIFACT_PATH_SET_INVALID"
+        ):
+            self.validate(root, evidence)
+
+    def test_absolute_artifact_path_fails_closed(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        evidence["artifacts"][0]["path"] = str(
+            (root / "SAFOR-FRAMEWORK.json").resolve()
+        )
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_ARTIFACT_PATH_SET_INVALID"
+        ):
+            self.validate(root, evidence)
+
+    def test_symlinked_canonical_artifact_is_forbidden(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+        external = tempfile.TemporaryDirectory()
+        self.addCleanup(external.cleanup)
+
+        name = "SAFOR-FRAMEWORK.json"
+        original = root / name
+        payload = original.read_bytes()
+        external_file = Path(external.name) / name
+        external_file.write_bytes(payload)
+        original.unlink()
+        original.symlink_to(external_file)
+
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_ARTIFACT_SYMLINK_FORBIDDEN"
+        ):
+            self.validate(root, evidence)
+
+    def test_checksum_file_name_must_be_canonical(self):
+        temp, root, evidence = self.make_fixture()
+        self.addCleanup(temp.cleanup)
+
+        original = root / evidence["checksumFile"]
+        alternate = root / "checksums.txt"
+        alternate.write_bytes(original.read_bytes())
+        evidence["checksumFile"] = alternate.name
+
+        with self.assertRaisesRegex(
+            ReleaseProvenanceError, "RELEASE_CHECKSUM_FILE_NAME_INVALID"
         ):
             self.validate(root, evidence)
 
