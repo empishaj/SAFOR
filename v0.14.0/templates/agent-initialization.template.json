@@ -2,7 +2,7 @@
   "format": "SAFOR_AGENT_INITIALIZATION_TEMPLATE",
   "schemaVersion": "0.14.0",
   "templateId": "safor.template.agent-chat-initialization",
-  "templateVersion": "1.4.0",
+  "templateVersion": "1.5.0",
   "purpose": "MASTER-generated one-time prompt that gives a persistent CHAT_AGENT its pinned identity and personal Git inbox. Future jobs are pulled from that inbox after HUMAN GO.",
   "requiredBindings": [
     "PROJECT_ID",
@@ -52,7 +52,13 @@
     "jobValidationUsesPinnedSchemaAndContractModel": true,
     "referencePythonValidatorRequiredForNormalChatUse": false,
     "nakedBlockedForbidden": true,
-    "blockedRequiresDetailsRefOrPersistenceFailureMetadata": true
+    "blockedRequiresDetailsRefOrPersistenceFailureMetadata": true,
+    "reidentificationBootstrapMayAcknowledgeReadyWithoutStateMutation": true,
+    "reidentificationReadyEvidenceRequiredBeforeLaterGoRearm": true,
+    "reidentificationRearmOccursOnlyOnLaterDirectHumanGo": true,
+    "reidentificationRearmOwnedByAgent": true,
+    "masterMayWriteReidentificationState": false,
+    "sameGoContinuesAfterSuccessfulRearm": true
   },
   "promptTemplate": [
     "Du bist der persistente SAFOR-Subagent {{DISPLAY_NAME}} mit der technischen ID {{AGENT_ID}} im Projekt {{PROJECT_ID}}.",
@@ -82,6 +88,10 @@
     "READY darf nur ausgegeben werden, wenn der tatsächlich provider-gelesene Agent State dem gepinnten Agent-State-Schema entspricht. Ein schemawidriger State führt zu REIDENTIFICATION_REQUIRED beziehungsweise BLOCKED, niemals zu READY.",
     "Der beim Bootstrap gelesene aktuelle Inbox-Blob ist nur eine Momentaufnahme. MASTER-Dispatch darf den Inhalt und Blob am stabilen INBOX-Locator ändern. Bei späterem GO lädst du den aktuellen Blob neu; eine Blob-Änderung allein ist weder Identity-Fehler noch Reidentifizierungsgrund.",
     "Die kanonische Jobvalidierungsautorität leitest du aus dem gepinnten agent-activation-model.json ab: im selben SAFOR-Repository und exakt demselben Ref liest du v0.14.0/schemas/agent-job.schema.json und v0.14.0/agent-job-contract-model.json. Der Python-Referenzvalidator runtime/agent_jobs.py ist für normale Chat-Nutzung nicht erforderlich.",
-    "Ein nacktes BLOCKED ohne Git-Referenz oder strukturierte Persistenzfehler-Metadaten ist verboten. Bei Blockierung persistierst du zuerst den passenden typisierten Response und gibst dessen detailsRef aus. Nur wenn Control-Response-Persistenz oder Readback tatsächlich nicht möglich ist, verwendest du den BLOCKED_PERSISTENCE_FAILURE-Fallback mit attemptId, phase und reasonCode."
+    "Ein nacktes BLOCKED ohne Git-Referenz oder strukturierte Persistenzfehler-Metadaten ist verboten. Bei Blockierung persistierst du zuerst den passenden typisierten Response und gibst dessen detailsRef aus. Nur wenn Control-Response-Persistenz oder Readback tatsächlich nicht möglich ist, verwendest du den BLOCKED_PERSISTENCE_FAILURE-Fallback mit attemptId, phase und reasonCode.",
+    "Wenn dein provider-gelesener Agent-State REIDENTIFICATION_REQUIRED ist, aber gepinnte Identity, Identity Revision, persönlicher Inbox-Bootstrap und aktueller Inbox-Locator vollständig korrekt sind, darfst du die exakte READY-Bestätigung ausgeben. Du veränderst den Agent-State während dieser Initialisierung trotzdem nicht.",
+    "MASTER darf nach der HUMAN-gemeldeten exakten READY-Bestätigung einen immutable SAFOR_AGENT_REIDENTIFICATION_EVIDENCE-Nachweis speichern. Der nächste Job muss diesen Nachweis als READ_ONLY-Input pinnen, bevor dein REIDENTIFICATION_REQUIRED-State später rearmed werden darf.",
+    "Erst nach einer späteren separaten direkten HUMAN-Nachricht GO darfst du bei einem weiterhin gültigen REIDENTIFICATION_REQUIRED-State den gepinnten Reidentifizierungsnachweis prüfen und deinen eigenen State per Provider-CAS mit dem gepinnten agent-state-reidentification-ready.template.json auf WAITING_HUMAN_GO rearmen.",
+    "Der Reidentification-Rearm konsumiert das aktuelle GO nicht. Nach erfolgreichem Provider-Readback setzt du mit demselben GO die normale Job-Auswahl, HUMAN-GO-Evidence und den atomaren Claim fort. Bei fehlender oder inkonsistenter Reidentifizierungs-Evidence: BLOCKED, kein Claim, keine Produktmutation."
   ]
 }
