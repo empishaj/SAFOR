@@ -2,7 +2,7 @@ import copy
 import json
 import unittest
 from pathlib import Path
-from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_job_state_transition, validate_initialization_acknowledgement
+from runtime.agent_jobs import AgentJobValidationError, render_agent_chat_output, validate_agent_job, validate_authority_basis_coverage, validate_job_state_transition, validate_initialization_acknowledgement
 ROOT = Path(__file__).resolve().parents[1]
 
 def load(path):
@@ -169,6 +169,96 @@ class AgentJobV014Tests(unittest.TestCase):
             'RESPONSE_SCHEMA_VALIDATION_REQUIRED:JOB_RESULT:postReadbackSchemaValidationRequired',
         ):
             validate_agent_job(job)
+
+    def test_read_only_reviewer_authority_coverage_needs_no_product_write_target(self):
+        job = self.base_job()
+        job['identity']['jobType'] = 'REVIEW'
+        job['roleContract']['roleId'] = 'INDEPENDENT_REVIEWER'
+        job['roleContract']['roleName'] = 'Independent Reviewer'
+        job['roleContract']['mustNotActAs'] = ['AUTHOR', 'MASTER']
+        job['workspace']['productWorkspace']['mutating'] = False
+        job['outputContract']['productWriteTarget'] = None
+        product_permission = next(
+            item
+            for item in job['authorization']['repositoryPermissions']
+            if item['repositoryClass'] == 'WORK_REPOSITORY'
+        )
+        product_permission['write'] = {
+            'allowed': False,
+            'allowedBranches': [],
+            'allowedPaths': [],
+        }
+        product_permission['branchCreate'] = False
+        product_permission['commit'] = False
+        product_permission['push'] = False
+        product_permission['changeRequestCreate'] = False
+
+        mandate = {
+            'schemaVersion': '0.14.0',
+            'status': 'ACTIVE',
+            'projectId': job['lineage']['projectId'],
+            'agentId': job['assignment']['agentId'],
+            'humanGoRequired': True,
+            'humanOnlyActivation': True,
+            'masterMayActivateAgent': False,
+            'mergeAllowed': False,
+            'deployAllowed': False,
+            'allowedProductRepository': 'example/product',
+            'allowedProductBranch': 'safor/job/wp-014/agent-dev-003',
+            'allowedProductPaths': ['src/', 'tests/'],
+            'allowedControlBranch': 'main',
+        }
+
+        validate_agent_job(job)
+        validate_authority_basis_coverage(
+            job=job,
+            authority_basis=mandate,
+            authority_basis_ref=job['authorization']['authorityBasis'],
+        )
+
+    def test_read_only_reviewer_authority_coverage_rejects_out_of_scope_read_workspace(self):
+        job = self.base_job()
+        job['workspace']['productWorkspace']['mutating'] = False
+        job['workspace']['productWorkspace']['allowedPaths'] = ['secrets/']
+        job['outputContract']['productWriteTarget'] = None
+        product_permission = next(
+            item
+            for item in job['authorization']['repositoryPermissions']
+            if item['repositoryClass'] == 'WORK_REPOSITORY'
+        )
+        product_permission['write'] = {
+            'allowed': False,
+            'allowedBranches': [],
+            'allowedPaths': [],
+        }
+        product_permission['branchCreate'] = False
+        product_permission['commit'] = False
+        product_permission['push'] = False
+        product_permission['changeRequestCreate'] = False
+        mandate = {
+            'schemaVersion': '0.14.0',
+            'status': 'ACTIVE',
+            'projectId': job['lineage']['projectId'],
+            'agentId': job['assignment']['agentId'],
+            'humanGoRequired': True,
+            'humanOnlyActivation': True,
+            'masterMayActivateAgent': False,
+            'mergeAllowed': False,
+            'deployAllowed': False,
+            'allowedProductRepository': 'example/product',
+            'allowedProductBranch': 'safor/job/wp-014/agent-dev-003',
+            'allowedProductPaths': ['src/', 'tests/'],
+            'allowedControlBranch': 'main',
+        }
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            'AUTHORITY_BASIS_PRODUCT_PATH_NOT_COVERED',
+        ):
+            validate_authority_basis_coverage(
+                job=job,
+                authority_basis=mandate,
+                authority_basis_ref=job['authorization']['authorityBasis'],
+            )
 
     def test_independent_reviewer_must_differ(self):
         job = self.base_job()
