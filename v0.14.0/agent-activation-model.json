@@ -48,7 +48,11 @@
     ],
     "jobPromptTransportRequired": false,
     "onValidationFailure": "IDENTITY_OR_INBOX_REINITIALIZATION_REQUIRED",
-    "performedOncePerAgentChatBootstrap": true
+    "performedOncePerAgentChatBootstrap": true,
+    "reidentificationBootstrapStateMutationAllowed": false,
+    "reidentificationReadyEvidenceRecordedByMaster": true,
+    "reidentificationReadyEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+    "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json"
   },
   "chatAgentActivationContract": {
     "activationMode": "HUMAN_GO_REQUIRED",
@@ -174,7 +178,29 @@
       "rearmHumanMessage": "GO",
       "rearmStateMustRetainAllRequiredTopLevelFields": true,
       "rearmSessionAndCurrentJobRepresentation": "EXPLICIT_NULL",
-      "readyStatusForbiddenIfPersistedStateInvalid": true
+      "readyStatusForbiddenIfPersistedStateInvalid": true,
+      "reidentificationStatus": "REIDENTIFICATION_REQUIRED",
+      "onReidentifiedAgent": [
+        "READ_PINNED_REIDENTIFICATION_EVIDENCE_FROM_SELECTED_JOB_INPUTS",
+        "VALIDATE_REIDENTIFICATION_EVIDENCE_IDENTITY_AND_BOOTSTRAP_BINDINGS",
+        "LOAD_PINNED_REIDENTIFICATION_READY_STATE_TEMPLATE",
+        "BUILD_REIDENTIFIED_WAITING_STATE",
+        "PRESERVE_CONSUMED_ACTIVATION_IDS_AND_LAST_RESPONSE_REF",
+        "CLEAR_SESSION_AND_CURRENT_JOB",
+        "VALIDATE_REIDENTIFIED_WAITING_STATE",
+        "CAS_REIDENTIFIED_WAITING_STATE_AT_EXPECTED_REVISION",
+        "PROVIDER_READBACK_REIDENTIFIED_WAITING_STATE",
+        "CONTINUE_SAME_DIRECT_HUMAN_GO_WITH_CURRENT_PERSONAL_INBOX"
+      ],
+      "reidentificationStateOwner": "AGENT",
+      "masterMayWriteReidentificationState": false,
+      "reidentificationEvidenceExpectedType": "SAFOR_AGENT_REIDENTIFICATION_EVIDENCE",
+      "reidentificationEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+      "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json",
+      "reidentificationRearmConsumesHumanGo": false,
+      "reidentificationSecondHumanGoRequired": false,
+      "reidentificationRearmRequiresProviderCasAndReadback": true,
+      "reidentificationOnMissingOrInvalidEvidence": "BLOCKED_NO_NEW_JOB_CLAIM"
     }
   },
   "reidentificationProtocol": {
@@ -192,7 +218,25 @@
       "NO_RESPONSE_PATH_GUESSING",
       "EMIT_MINIMAL_REINITIALIZATION_STATUS"
     ],
-    "requiredHumanPath": "RELOAD_MASTER_GENERATED_AGENT_INITIALIZATION_PROMPT"
+    "requiredHumanPath": "RELOAD_MASTER_GENERATED_AGENT_INITIALIZATION_PROMPT",
+    "successfulBootstrap": [
+      "MASTER_RECORDS_HUMAN_REPORTED_EXACT_READY_ACKNOWLEDGEMENT_AS_IMMUTABLE_REIDENTIFICATION_EVIDENCE",
+      "MASTER_MUST_NOT_MUTATE_AGENT_STATE",
+      "NEXT_DISPATCHED_JOB_PINS_REIDENTIFICATION_EVIDENCE_AS_READ_ONLY_INPUT",
+      "AGENT_STATE_REMAINS_REIDENTIFICATION_REQUIRED_UNTIL_LATER_DIRECT_HUMAN_GO"
+    ],
+    "onLaterHumanGo": [
+      "AGENT_VALIDATES_PINNED_REIDENTIFICATION_EVIDENCE",
+      "AGENT_CAS_REARMS_OWN_STATE_TO_WAITING_HUMAN_GO_WITHOUT_CONSUMING_GO",
+      "AGENT_READS_BACK_AND_VALIDATES_REARMED_STATE",
+      "SAME_DIRECT_HUMAN_GO_CONTINUES_TO_NORMAL_JOB_ACTIVATION"
+    ],
+    "evidenceFormat": "SAFOR_AGENT_REIDENTIFICATION_EVIDENCE",
+    "evidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+    "stateTemplateRef": "templates/agent-state-reidentification-ready.template.json",
+    "initializationStateMutationForbidden": true,
+    "masterStateMutationForbidden": true,
+    "secondHumanGoRequired": false
   },
   "goEvidenceContract": {
     "format": "SAFOR_HUMAN_GO_EVIDENCE",
@@ -307,6 +351,11 @@
     "rearmBeforeNextClaimWhenPriorResultSettled": true,
     "rearmRequiresProviderCasAndReadback": true,
     "rearmPreservesConsumedActivationIds": true,
-    "rearmPreservesLastResponseRef": true
+    "rearmPreservesLastResponseRef": true,
+    "reidentificationRearmBeforeClaimWhenRequired": true,
+    "reidentificationRearmRequiresProviderCasAndReadback": true,
+    "reidentificationRearmConsumesActivation": false,
+    "reidentificationEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+    "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json"
   }
 }
