@@ -129,7 +129,10 @@ class ReleaseProvenanceV014Tests(unittest.TestCase):
     def test_artifact_content_drift_fails(self):
         temp, root, evidence = self.make_fixture()
         self.addCleanup(temp.cleanup)
-        (root / "SAFOR-FRAMEWORK.json").write_bytes(b'{"a":2}\n')
+        path = root / "SAFOR-FRAMEWORK.json"
+        original = path.read_bytes()
+        replacement_tail = b"X" if original[-1:] != b"X" else b"Y"
+        path.write_bytes(original[:-1] + replacement_tail)
         with self.assertRaisesRegex(
             ReleaseProvenanceError, "RELEASE_ARTIFACT_DIGEST_DRIFT"
         ):
