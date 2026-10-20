@@ -356,17 +356,39 @@ def validate_authority_basis_coverage(
     if not isinstance(allowed_product_branches, list) or not allowed_product_branches:
         raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_BRANCH_SET_MISSING")
 
-    requested_product_branches = list(
-        _mapping(product.get("write"), "productWriteScope").get("allowedBranches") or []
-    )
+    product_write = _mapping(product.get("write"), "productWriteScope")
+    requested_product_branches = list(product_write.get("allowedBranches") or [])
     workspace = _mapping(job.get("workspace"), "workspace")
-    product_workspace = _mapping(workspace.get("productWorkspace"), "productWorkspace")
-    requested_product_branches.append(str(product_workspace.get("jobBranch") or ""))
-    product_target = _write_target(
-        _mapping(job.get("outputContract"), "outputContract").get("productWriteTarget"),
-        "productWriteTarget",
+    raw_product_workspace = workspace.get("productWorkspace")
+    product_workspace = (
+        None
+        if raw_product_workspace is None
+        else _mapping(raw_product_workspace, "productWorkspace")
     )
-    requested_product_branches.append(str(product_target.get("branch") or ""))
+    output = _mapping(job.get("outputContract"), "outputContract")
+    raw_product_target = output.get("productWriteTarget")
+    product_target = (
+        None
+        if raw_product_target is None
+        else _write_target(raw_product_target, "productWriteTarget")
+    )
+
+    if product_write.get("allowed") is not True:
+        if product_workspace is not None and product_workspace.get("mutating") is True:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_READ_ONLY_PRODUCT_MUTATION_FORBIDDEN"
+            )
+        if product_target is not None:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_READ_ONLY_PRODUCT_TARGET_FORBIDDEN"
+            )
+
+    if product_workspace is not None:
+        requested_product_branches.append(
+            str(product_workspace.get("jobBranch") or "")
+        )
+    if product_target is not None:
+        requested_product_branches.append(str(product_target.get("branch") or ""))
     for requested in requested_product_branches:
         if requested not in allowed_product_branches:
             raise AgentJobValidationError(
@@ -376,11 +398,11 @@ def validate_authority_basis_coverage(
     allowed_paths = mandate.get("allowedProductPaths")
     if not isinstance(allowed_paths, list) or not allowed_paths:
         raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_PATH_SET_MISSING")
-    requested_paths = list(
-        _mapping(product.get("write"), "productWriteScope").get("allowedPaths") or []
-    )
-    requested_paths.extend(product_workspace.get("allowedPaths") or [])
-    requested_paths.append(str(product_target.get("pathPattern") or ""))
+    requested_paths = list(product_write.get("allowedPaths") or [])
+    if product_workspace is not None:
+        requested_paths.extend(product_workspace.get("allowedPaths") or [])
+    if product_target is not None:
+        requested_paths.append(str(product_target.get("pathPattern") or ""))
     for requested in requested_paths:
         if not _path_is_covered(str(requested), allowed_paths):
             raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_PATH_NOT_COVERED")
