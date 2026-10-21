@@ -2,73 +2,25 @@
   "format": "SAFOR_SCENARIO_STATUS_INDEX",
   "schemaVersion": "1.1",
   "suiteId": "SAFOR-HARDENING-200",
-  "updatedAt": "2026-10-21T14:25:00Z",
+  "updatedAt": "2026-10-21T15:45:00Z",
   "updateRule": "DERIVED_FROM_APPEND_ONLY_STATUS_EVENTS",
   "resolutionRule": "Use overrides[scenarioId] when present; otherwise use defaultRecord. The scenario universe is defined by manifest.json and contains exactly 200 IDs.",
   "allowedStatuses": ["NOT_RUN","RUNNING","PASS","FAIL","ERROR","BLOCKED","INCONCLUSIVE","SKIPPED"],
-  "scenarioUniverse": {
-    "manifestRef": "../manifest.json",
-    "scenarioCount": 200,
-    "idPattern": "^SC-[0-9]{3}$"
-  },
-  "defaultRecord": {
-    "status": "NOT_RUN",
-    "attempts": 0,
-    "lastRunId": null,
-    "lastRunAt": null,
-    "latestEvidenceRefs": [],
-    "latestVerdictReason": null,
-    "lastFrameworkCommit": null,
-    "remediationRequired": false,
-    "retestRequired": false
-  },
-  "summary": {
-    "total": 200,
-    "NOT_RUN": 198,
-    "RUNNING": 1,
-    "PASS": 1,
-    "FAIL": 0,
-    "ERROR": 0,
-    "BLOCKED": 0,
-    "INCONCLUSIVE": 0,
-    "SKIPPED": 0
-  },
+  "scenarioUniverse": {"manifestRef":"../manifest.json","scenarioCount":200,"idPattern":"^SC-[0-9]{3}$"},
+  "defaultRecord": {"status":"NOT_RUN","attempts":0,"lastRunId":null,"lastRunAt":null,"latestEvidenceRefs":[],"latestVerdictReason":null,"lastFrameworkCommit":null,"remediationRequired":false,"retestRequired":false},
+  "summary": {"total":200,"NOT_RUN":198,"RUNNING":0,"PASS":1,"FAIL":1,"ERROR":0,"BLOCKED":0,"INCONCLUSIVE":0,"SKIPPED":0},
   "overrides": {
     "SC-091": {
-      "status": "PASS",
-      "attempts": 2,
-      "lastRunId": "SC091-RUN-002",
-      "lastRunAt": "2026-10-21T14:09:11Z",
-      "latestEvidenceRefs": [
-        "empishaj/safor-memory@6729faf2a69918c8485422fa6257902ca9c43954:projects/safomwebsite/agents/worker-architect/outbox/019a0c00-0000-7abc-8a12-000000000011/or10-result-011.json@a8a304db28f719f14b632e4dfcc691726ace3efc",
-        "empishaj/safor-memory@ca2882af54dd9a1be44a9db41bc8a41618402a1f:projects/safomwebsite/agents/worker-architect/evidence/019a0c00-0000-7abc-8a12-000000000011/experience-design-011.json@a7c84b067e7da2a2f585e0623677d2e502604abc",
-        "empishaj/safor-memory@44f1725705c55818c273d7202b876e25e596d331:projects/safomwebsite/agents/worker-architect/audit/019a0c00-0000-7abc-8a12-000000000011/finalization-011.json@9eb3f0146cf2ffbcf2461a7527b4a654f2e4749d",
-        "empishaj/safor-memory@11ec0e11473cebd030aaacf187c2c6779de445c1:projects/safomwebsite/decisions/or10-job011-verification-acceptance.json@7bfc7c8fd43ce4dd983ffdb5ad28c37b78ad72db",
-        "empishaj/safor-memory@255cde0563c869b09e2f670c6548b424ea775b34:projects/safomwebsite/master/jobs/019a0c00-0000-7abc-8a12-000000000011.json@fae71a51261f064aa965875fd64ffe4ba1da8af5",
-        "empishaj/safor-memory@316eb553f4dec5b5f69627d18124e37201cae834:projects/safomwebsite/decisions/or10-gate-status.json@9f1c8689abbae1b6ea956972f2a8a24c89ddb39d",
-        "empishaj/safomwebsite@1026ff2176d739aeedc506e5970b48528aa8ad23"
-      ],
-      "latestVerdictReason": "PASS: Job 011 completed through the hardened rc.6 single-agent lifecycle, MASTER independently verified and accepted all operational and Spec 011 criteria, and OR-10_SINGLE_AGENT_OPERATION_PASS is provider-backed. Product main and Job 010 history remained unchanged. Implementation, empirical product tests and multi-agent readiness are not claimed.",
-      "lastFrameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
-      "remediationRequired": false,
-      "retestRequired": false,
-      "previousTerminalStatus": "FAIL",
-      "previousTerminalRunId": "SC091-RUN-001"
+      "status":"PASS","attempts":2,"lastRunId":"SC091-RUN-002","lastRunAt":"2026-10-21T14:09:11Z",
+      "latestEvidenceRefs":["empishaj/safor-memory@6729faf2a69918c8485422fa6257902ca9c43954:projects/safomwebsite/agents/worker-architect/outbox/019a0c00-0000-7abc-8a12-000000000011/or10-result-011.json@a8a304db28f719f14b632e4dfcc691726ace3efc","empishaj/safor-memory@11ec0e11473cebd030aaacf187c2c6779de445c1:projects/safomwebsite/decisions/or10-job011-verification-acceptance.json@7bfc7c8fd43ce4dd983ffdb5ad28c37b78ad72db","empishaj/safor-memory@316eb553f4dec5b5f69627d18124e37201cae834:projects/safomwebsite/decisions/or10-gate-status.json@9f1c8689abbae1b6ea956972f2a8a24c89ddb39d","empishaj/safomwebsite@1026ff2176d739aeedc506e5970b48528aa8ad23"],
+      "latestVerdictReason":"PASS: Job 011 completed through the hardened rc.6 single-agent lifecycle and OR-10 is provider-backed.",
+      "lastFrameworkCommit":"88014fe6be32ab1c9a4b319421f255e68529ff33","remediationRequired":false,"retestRequired":false,"previousTerminalStatus":"FAIL","previousTerminalRunId":"SC091-RUN-001"
     },
     "SC-101": {
-      "status": "RUNNING",
-      "attempts": 1,
-      "lastRunId": "SC101-RUN-001",
-      "lastRunAt": "2026-10-21T14:25:00Z",
-      "latestEvidenceRefs": [
-        "empishaj/safor-memory@51c8a9e4f64fb86433b46e64a4d534472a4e339a:projects/safomwebsite/master/plans/or11-sc101-six-agent-wave-001.json@de09120e82db8d3cdc1726666d245e43fae21724",
-        "empishaj/safor-memory@73a1d10818f0956d839785db79f0cad75ee6741a:projects/safomwebsite/evidence/or11-sc101-reidentification-preparation-001.json@bef2d306133dc1e1a517daf2c20e668f7b527ec5",
-        "empishaj/SAFOR@f4f0c4e434a3ca3b02992fddaaf99487c2c3ae9d:scenario-hardening/runs/SC-101/SC101-RUN-001.json"
-      ],
-      "latestVerdictReason": "RUNNING: OR-11 SC-101 has selected six conflict-free Agents and prepared five exact reidentification bootstraps. No jobs are published yet. Waiting for five exact HUMAN-reported bootstrap acknowledgements before dispatch.",
-      "lastFrameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
-      "remediationRequired": false,
-      "retestRequired": false
+      "status":"FAIL","attempts":1,"lastRunId":"SC101-RUN-001","lastRunAt":"2026-10-21T15:45:00Z",
+      "latestEvidenceRefs":["empishaj/safor-memory@69a2764a072d43c14797662b0101522083274afe:projects/safomwebsite/evidence/or11-sc101-run001-contract-preflight-failure.json@54da5383974d2f30cd98d0ce7c2a9017682ce2bc","empishaj/safor-memory@9bb2e5bcf4dfe193de7640923d695472dc29f809:projects/safomwebsite/decisions/or11-sc101-wave001-reidentification-binding-rework.json@7c8b10e93b81f32040cd825b8b1285b8bec4b5db","empishaj/SAFOR@0857424152d11e4960c235bffe5c36fa542031c0:tests/test_agent_job_fixture_contract_alignment.py@46293f0551ea5cfcefccb4a29e52d2eba40c86d4"],
+      "latestVerdictReason":"FAIL: Wave 001 was stopped before any HUMAN GO or claim. Its immutable Jobs were not valid against the exact pinned claim-policy schema; Jobs for REIDENTIFICATION_REQUIRED Agents also omitted the required Job-pinned reidentification evidence, and the aggregate mandate was not Agent-specific.",
+      "lastFrameworkCommit":"88014fe6be32ab1c9a4b319421f255e68529ff33","remediationRequired":true,"retestRequired":true
     }
   }
 }
