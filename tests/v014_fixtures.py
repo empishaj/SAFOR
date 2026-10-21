@@ -289,10 +289,6 @@ def valid_agent_job(
                     "v0.14.0/templates/agent-state-result-submitted.template.json",
                     "empishaj/SAFOR",
                 ),
-                "settledRearmStateTemplateRef": pointer(
-                    "v0.14.0/templates/agent-state-settled-rearm.template.json",
-                    "empishaj/SAFOR",
-                ),
                 "preCasSchemaValidationRequired": True,
                 "postReadbackSchemaValidationRequired": True,
                 "goEvidenceProviderReadbackRequired": True,
