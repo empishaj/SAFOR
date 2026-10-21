@@ -57,6 +57,22 @@
         "github-actions:39588623606"
       ],
       "note": "Run 001 remediation is provider-validated. Job 011 is immutably published and queued. SC-091 Run 002 is active and waiting for a later direct HUMAN GO in the initialized Atlas UX chat; MASTER has not changed Agent State or synthesized activation."
+    },
+    {
+      "eventId": "SC091-RUN-002-CHAT-LOST",
+      "eventType": "SCENARIO_PHASE_CHANGED",
+      "occurredAt": "2026-10-21T11:50:18Z",
+      "actor": "HUMAN:empishaj",
+      "scenarioId": "SC-091",
+      "runId": "SC091-RUN-002",
+      "fromStatus": "RUNNING",
+      "toStatus": "RUNNING",
+      "frameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
+      "evidenceRefs": [
+        "empishaj/safor-memory@cc6c299987961cbecb2f348666250eeb96107542:projects/safomwebsite/evidence/sc091-atlas-chat-loss-001.json@fee8f2a31a9001aaf9825110f1057902b46cde98",
+        "empishaj/safor-memory@2decf3c97bdd469b42960aae425e96dcfc7d6dbb:projects/safomwebsite/agents/worker-architect/chat-recovery.sc091.job011.md@c325b0158c4bfc80c0ee370db74662288d30af90"
+      ],
+      "note": "HUMAN reported deletion of the previously initialized Atlas UX host chat. This does not revoke the persistent Identity or mutate Agent State, Inbox or Job 011. The active run now waits for a new chat bootstrap and a later separate HUMAN GO in that newly initialized chat."
     }
   ]
 }
