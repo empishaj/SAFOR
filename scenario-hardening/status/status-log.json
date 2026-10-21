@@ -13,6 +13,18 @@
       "fromStatus": null,
       "toStatus": null,
       "note": "Initialized 200-scenario hardening campaign. All scenarios start as NOT_RUN; historical evidence may be referenced during execution but does not pre-mark campaign scenarios PASS."
+    },
+    {
+      "eventId": "SC091-RUN-001-START",
+      "eventType": "SCENARIO_RUN_STARTED",
+      "occurredAt": "2026-10-21T10:26:41Z",
+      "actor": "SAFOR_MASTER",
+      "scenarioId": "SC-091",
+      "runId": "SC091-RUN-001",
+      "fromStatus": "NOT_RUN",
+      "toStatus": "RUNNING",
+      "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+      "note": "HUMAN authorized continuation in MASTER chat. MASTER may prepare/publish Job 011; normal Atlas UX execution still requires later direct HUMAN GO in the initialized Atlas UX chat."
     }
   ]
 }

@@ -2,7 +2,7 @@
   "format": "SAFOR_SCENARIO_STATUS_INDEX",
   "schemaVersion": "1.0",
   "suiteId": "SAFOR-HARDENING-200",
-  "updatedAt": "2026-10-21T00:00:00Z",
+  "updatedAt": "2026-10-21T10:26:41Z",
   "updateRule": "DERIVED_FROM_APPEND_ONLY_STATUS_EVENTS",
   "allowedStatuses": [
     "NOT_RUN",
@@ -16,8 +16,8 @@
   ],
   "summary": {
     "total": 200,
-    "NOT_RUN": 200,
-    "RUNNING": 0,
+    "NOT_RUN": 199,
+    "RUNNING": 1,
     "PASS": 0,
     "FAIL": 0,
     "ERROR": 0,
@@ -1017,13 +1017,16 @@
       "retestRequired": false
     },
     "SC-091": {
-      "status": "NOT_RUN",
-      "attempts": 0,
-      "lastRunId": null,
-      "lastRunAt": null,
-      "latestEvidenceRefs": [],
-      "latestVerdictReason": null,
-      "lastFrameworkCommit": null,
+      "status": "RUNNING",
+      "attempts": 1,
+      "lastRunId": "SC091-RUN-001",
+      "lastRunAt": "2026-10-21T10:26:41Z",
+      "latestEvidenceRefs": [
+        "empishaj/safor-memory:projects/safomwebsite/decisions/or10-job010-rework-decision.json",
+        "empishaj/safor-memory:projects/safomwebsite/master/inputs/or10-visual-semantics-011.json"
+      ],
+      "latestVerdictReason": "Formal campaign run started by HUMAN GO in MASTER chat; MASTER preparation phase active. Agent activation remains pending direct HUMAN GO in Atlas UX chat.",
+      "lastFrameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
       "remediationRequired": false,
       "retestRequired": false
     },
