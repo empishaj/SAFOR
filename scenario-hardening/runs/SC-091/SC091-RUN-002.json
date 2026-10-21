@@ -1,0 +1,57 @@
+{
+  "format": "SAFOR_SCENARIO_RUN_RECORD",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "runId": "SC091-RUN-002",
+  "scenarioId": "SC-091",
+  "scenarioVersion": 1,
+  "frameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
+  "startedAt": "2026-10-21T11:03:45Z",
+  "finishedAt": null,
+  "status": "RUNNING",
+  "phase": "WAITING_DIRECT_HUMAN_GO",
+  "preconditionEvidence": [
+    "Framework 0.14.0-rc.6 exact-head validation and materialization succeeded for 88014fe6 with 99/99 modules and recovery profiles.",
+    "The later regression-only head 0857424 passed 390 tests and did not require rewriting immutable Job 011.",
+    "OR-09 exact-head reference migration revalidation is PASS.",
+    "Job 010 is SUPERSEDED and NOT_CLAIMABLE; its typed JOB_ERROR remains immutable.",
+    "Atlas UX remains provider-read-back BLOCKED at Agent-State revision 3; MASTER did not rearm it.",
+    "Job 011 is immutable, source-bound, queued and WAITING_HUMAN_GO.",
+    "The scheduler and MASTER status projections identify Job 011 as the sole startable job.",
+    "The product repository main head remains unchanged at 1026ff2176d739aeedc506e5970b48528aa8ad23.",
+    "The malformed MASTER Control-State IA pointer found during pre-GO readback was corrected before activation and retained as immutable evidence."
+  ],
+  "observations": [
+    "No HUMAN-GO evidence exists for Job 011.",
+    "No Job 011 claim or execution has started.",
+    "The old activationId remains consumed and may not be reused.",
+    "The next authorized transition is Agent-owned settled-execution rearm after direct HUMAN GO in the initialized Atlas UX chat.",
+    "The same direct GO must continue through Job 011 GO-evidence persistence/readback and atomic claim; MASTER may not synthesize or perform these actions."
+  ],
+  "evidenceRefs": [
+    "empishaj/safor-memory@755068a99129cfa974de80676bb664ba29eb4d5e:projects/safomwebsite/evidence/sc091-run002-pre-go-readiness.json@df3c6c6b8c56495b9a8622fd25d693a59cc5ef26",
+    "empishaj/safor-memory@92ff47d7d8be4a357913781dff628fb045c0b8ee:projects/safomwebsite/evidence/sc091-control-pointer-correction-001.json@9a78b087c9237612f49622b5e7615d12aec0c492",
+    "github-actions:39585568258",
+    "github-actions:39585568359",
+    "github-actions:39588623777",
+    "github-actions:39588623606"
+  ],
+  "verdict": null,
+  "verdictReason": null,
+  "findingClass": null,
+  "rootCause": null,
+  "remediationRefs": [
+    "empishaj/SAFOR@88014fe6be32ab1c9a4b319421f255e68529ff33"
+  ],
+  "regressionTestRefs": [
+    "tests/test_agent_job_v014.py",
+    "tests/test_agent_job_fixture_contract_alignment.py"
+  ],
+  "retestRequired": false,
+  "learnedRule": "A MASTER pre-GO readback must validate not only immutable Job inputs but also every mutable control/status projection pointer before HUMAN activation is requested.",
+  "nextAuthorizedAction": {
+    "actor": "HUMAN",
+    "surface": "chat:worker-architect",
+    "message": "GO"
+  }
+}
