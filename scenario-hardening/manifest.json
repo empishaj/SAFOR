@@ -50,21 +50,8 @@
     {"id": "S", "name": "Non-Tech UX & Real HUMAN", "count": 10},
     {"id": "T", "name": "Release Truth, Evidence & Product Readiness", "count": 10}
   ],
-  "priorityCounts": {
-    "P0": 140,
-    "P1": 52,
-    "P2": 8
-  },
-  "allowedCurrentStatuses": [
-    "NOT_RUN",
-    "RUNNING",
-    "PASS",
-    "FAIL",
-    "ERROR",
-    "BLOCKED",
-    "INCONCLUSIVE",
-    "SKIPPED"
-  ],
+  "priorityCounts": {"P0": 140, "P1": 52, "P2": 8},
+  "allowedCurrentStatuses": ["NOT_RUN","RUNNING","PASS","FAIL","ERROR","BLOCKED","INCONCLUSIVE","SKIPPED"],
   "scenarioPathPattern": "scenarios/SC-{NNN}.json",
   "runRecordPathPattern": "runs/{SCENARIO_ID}/{RUN_ID}.json",
   "statusIndex": "status/status-index.json",
@@ -74,12 +61,21 @@
   "scenarioSchema": "schemas/scenario.schema.json",
   "statusSchema": "schemas/status-index.schema.json",
   "campaignState": "RUNNING",
-  "activeRuns": [
+  "campaignProgress": {
+    "notRun": 199,
+    "running": 0,
+    "pass": 1,
+    "currentTerminalFailures": 0,
+    "historicalFailedAttempts": 1
+  },
+  "activeRuns": [],
+  "completedRuns": [
     {
       "scenarioId": "SC-091",
       "runId": "SC091-RUN-002",
-      "phase": "WAITING_DIRECT_HUMAN_GO"
+      "verdict": "PASS",
+      "gate": "OR-10_SINGLE_AGENT_OPERATION_PASS"
     }
   ],
-  "truthRule": "Scenario definitions and current status are separate. Historical execution events and immutable run records are append-only and must never be rewritten to manufacture a PASS."
+  "truthRule": "Scenario definitions and current status are separate. Status history is append-only. A RUNNING run record may be terminalized once; after terminalization it is immutable. Failed attempts and their evidence must never be deleted or rewritten to manufacture a PASS."
 }
