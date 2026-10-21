@@ -14,7 +14,7 @@ class ReleaseFactsV014Tests(unittest.TestCase):
         facts = self.load("RELEASE-FACTS.json")
         manifest = self.load("RELEASE-MANIFEST.json")
         trace = self.load("docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json")
-        self.assertEqual("0.14.0-rc.5", version)
+        self.assertEqual("0.14.0-rc.6", version)
         self.assertEqual(version, facts["targetVersion"])
         self.assertEqual(version, manifest["version"])
         self.assertEqual(version, trace["releaseTarget"])

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.14.0-rc.6
+
+- Starts the Operational Readiness candidate without reinterpreting the rc.5 evidence history.
+- Freezes the HUMAN operating model: one Domain Framework JSON enters the MASTER chat; MASTER remains the only domain-facing HUMAN interface.
+- Subagents are initialized once with persistent identity and personal Git INBOX binding; later jobs are transported only through Git.
+- Explicit HUMAN `GO` is the only normal chat-agent activation signal and carries no job payload.
+- Release, automated-test and bundle evidence reset to PENDING until exact-head provenance and materialized validation are recorded.
+- Reference-project migration remains blocked until isolated real-Git end-to-end acceptance passes.
+- First isolated rc.6 HUMAN-GO real-Git execution was correctly rejected by MASTER because the chat agent wrote a free-form Agent-State claim and simplified JOB_RESULT outside the pinned schemas; the failed run remains immutable audit evidence.
+- Adds embedded HUMAN-GO evidence, Agent-State claim and RESULT_SUBMITTED state templates, increasing exact Framework/Self-Healing coverage to 99/99 modules.
+- Requires GO evidence validation + persistence + provider readback before claim construction.
+- Requires Agent-State schema validation before CAS and after exact provider readback; currentJob.claimId must equal activationId.
+- Requires typed responses to be constructed from the Job-bound template/schema, validated before write and revalidated after exact provider readback before terminal chat status.
+
 ## 0.14.0-rc.5
 
 - Replaces unverifiable host chat/session binding with pinned Agent Identity plus a personal Git INBOX binding.

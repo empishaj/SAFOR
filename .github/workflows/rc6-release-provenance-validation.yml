@@ -1,0 +1,96 @@
+name: SAFOR rc.6 Exact-Head Release Materialization
+
+on:
+  push:
+    branches:
+      - safor/operational-readiness-0.14.0-rc.6
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  materialize-and-validate:
+    runs-on: ubuntu-latest
+    env:
+      SAFOR_WORKFLOW_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+      SAFOR_WORKFLOW_SOURCE_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+      SAFOR_RELEASE_INTEGRATION_REF: ${{ github.event.pull_request.head.ref || github.ref_name }}
+    steps:
+      - name: Checkout exact candidate head
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.SAFOR_WORKFLOW_HEAD_SHA }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Prepare exact-head materialization
+        run: |
+          python tools/materialize_release.py --prepare \
+            --workflow-run-id "$GITHUB_RUN_ID" \
+            --source-sha "$SAFOR_WORKFLOW_HEAD_SHA"
+
+      - name: Verify reproducible generic Framework
+        run: python tools/build_bundle.py --check
+      - name: Verify reproducible domain Frameworks
+        run: python tools/build_domain_framework.py --check
+      - name: Validate SAFOR distribution
+        run: python tools/validate_safor.py
+      - name: Validate audit remediation
+        run: python tools/validate_audit_remediation.py
+      - name: Validate pending release provenance
+        env:
+          SAFOR_RELEASE_SOURCE_SHA: ${{ env.SAFOR_WORKFLOW_HEAD_SHA }}
+          SAFOR_RELEASE_WORKFLOW_RUN_ID: ${{ github.run_id }}
+        run: python tools/validate_release_facts.py
+      - name: Validate traceability
+        run: python tools/validate_traceability.py
+      - name: Validate content consistency
+        run: python tools/validate_content_consistency.py
+      - name: Run complete unit and regression suite
+        run: python -m unittest discover -s tests -v
+      - name: Verify prepared checksums
+        run: sha256sum --check "SHA256SUMS-$(cat VERSION).txt"
+
+      - name: Finalize exact-head release evidence
+        run: |
+          python tools/materialize_release.py --finalize \
+            --workflow-run-id "$GITHUB_RUN_ID" \
+            --source-sha "$SAFOR_WORKFLOW_HEAD_SHA"
+
+      - name: Validate finalized exact-head provenance
+        env:
+          SAFOR_RELEASE_SOURCE_SHA: ${{ env.SAFOR_WORKFLOW_HEAD_SHA }}
+          SAFOR_RELEASE_WORKFLOW_RUN_ID: ${{ github.run_id }}
+        run: python tools/validate_release_facts.py
+      - name: Revalidate finalized traceability
+        run: python tools/validate_traceability.py
+      - name: Reverify finalized checksums
+        run: sha256sum --check "SHA256SUMS-$(cat VERSION).txt"
+
+      - name: Upload exact materialized release candidate
+        uses: actions/upload-artifact@v4
+        with:
+          name: safor-${{ env.SAFOR_WORKFLOW_HEAD_SHA }}-rc6-materialized
+          if-no-files-found: error
+          path: |
+            SAFOR-FRAMEWORK.json
+            SAFOR-FRAMEWORK-v0.14.0-rc.6.json
+            SAFOR-FRAMEWORK-WEBSITE.json
+            SAFOR-FRAMEWORK-SAAS.json
+            SAFOR-FRAMEWORK-BOOK-CREATION.json
+            SAFOR-TEST-ACCESS-SAAS.json
+            SAFOR-TEST-ACCESS-BOOK-CREATION.json
+            RELEASE-EVIDENCE-0.14.0-rc.6.json
+            RELEASE-NOTES-0.14.0-rc.6.md
+            SHA256SUMS-0.14.0-rc.6.txt
+            RELEASE-FACTS.json
+            RELEASE-MANIFEST.json
+            PRODUCT-READINESS.md
+            docs/master-subagent-orchestration/requirements-traceability-v0.14.0.json

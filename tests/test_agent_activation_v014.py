@@ -321,12 +321,27 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertIn("PROJECT_TREE_FULL_SCAN", result["forbiddenReads"])
         self.assertIn("OTHER_AGENT_INBOX_READ", result["forbiddenReads"])
 
+    def test_initialization_template_forbids_implicit_rearm(self):
+        template = load("v0.14.0/templates/agent-initialization.template.json")
+        rules = template["renderingRules"]
+        self.assertTrue(rules["rearmForbiddenDuringInitialization"])
+        self.assertTrue(rules["rearmRequiresLaterSeparateHumanGo"])
+        self.assertTrue(rules["rearmMustPersistSessionAndCurrentJobAsExplicitNull"])
+        self.assertTrue(rules["readyForbiddenIfAgentStateSchemaInvalid"])
+
     def test_template_contains_one_time_prompt_and_go_reuse(self):
         template = load("v0.14.0/templates/agent-initialization.template.json")
         self.assertTrue(template["renderingRules"]["oneTimeOnly"])
         self.assertEqual(template["renderingRules"]["subsequentHumanInput"], "GO")
         self.assertFalse(template["renderingRules"]["includeJobContent"])
         self.assertFalse(template["renderingRules"]["includeDomainTaskPrompt"])
+        self.assertTrue(template["renderingRules"]["currentInboxSnapshotIsObservationOnly"])
+        self.assertTrue(template["renderingRules"]["currentInboxBlobMayChangeAfterMasterDispatch"])
+        self.assertTrue(template["renderingRules"]["currentInboxBlobDriftAloneNeverRequiresReidentification"])
+        self.assertTrue(template["renderingRules"]["jobValidationUsesPinnedSchemaAndContractModel"])
+        self.assertFalse(template["renderingRules"]["referencePythonValidatorRequiredForNormalChatUse"])
+        self.assertTrue(template["renderingRules"]["nakedBlockedForbidden"])
+        self.assertTrue(template["renderingRules"]["blockedRequiresDetailsRefOrPersistenceFailureMetadata"])
 
     def test_activation_model_requires_human_go_and_no_runtime_install(self):
         model = load("v0.14.0/agent-activation-model.json")
@@ -337,6 +352,57 @@ class AgentActivationV014Tests(unittest.TestCase):
         self.assertFalse(contract["hostTriggerActivationAllowed"])
         self.assertFalse(contract["gitEventActivationAllowed"])
         self.assertFalse(contract["schedulerMayActivateChat"])
+        required_preclaim = {
+            "JOB_CONTRACT_POINTER_EXACT_MATCH",
+            "AGENT_JOB_SCHEMA_VALID",
+            "AGENT_JOB_CONTRACT_MODEL_VALID",
+            "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
+        }
+        self.assertTrue(
+            required_preclaim.issubset(set(model["onHumanGo"]["preClaimChecks"]))
+        )
+        self.assertFalse(contract["masterMayActivateChat"])
+        self.assertFalse(contract["masterMaySynthesizeHumanGo"])
+        self.assertFalse(contract["masterMayCreateHumanGoEvidence"])
+        self.assertEqual("HUMAN_ONLY", contract["activationAuthority"])
+        self.assertFalse(contract["currentInboxSnapshotBlobIsStableAcrossDispatch"])
+        self.assertFalse(contract["inboxBlobChangeAloneRequiresReidentification"])
+        authority = model["onHumanGo"]["jobValidationAuthority"]
+        self.assertEqual(
+            "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL",
+            authority["authority"],
+        )
+        self.assertEqual(
+            "v0.14.0/schemas/agent-job.schema.json",
+            authority["schemaPath"],
+        )
+        self.assertEqual(
+            "v0.14.0/agent-job-contract-model.json",
+            authority["contractModelPath"],
+        )
+        self.assertFalse(authority["referenceValidatorRequiredForNormalChatUse"])
+        self.assertIn(
+            "PINNED_AGENT_JOB_SCHEMA_FROM_ACTIVATION_MODEL",
+            model["onHumanGo"]["allowedReadsInOrder"],
+        )
+        self.assertIn(
+            "PINNED_AGENT_JOB_CONTRACT_MODEL_FROM_ACTIVATION_MODEL",
+            model["onHumanGo"]["allowedReadsInOrder"],
+        )
+        rearm = model["onHumanGo"]["preSelectionAgentStateHandling"]
+        self.assertTrue(rearm["rearmForbiddenDuringInitialization"])
+        self.assertTrue(rearm["rearmRequiresSeparateDirectHumanGo"])
+        self.assertEqual(
+            "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+            rearm["rearmHumanInputSource"],
+        )
+        self.assertEqual("GO", rearm["rearmHumanMessage"])
+        self.assertTrue(rearm["rearmStateMustRetainAllRequiredTopLevelFields"])
+        self.assertEqual(
+            "EXPLICIT_NULL",
+            rearm["rearmSessionAndCurrentJobRepresentation"],
+        )
+        self.assertTrue(rearm["readyStatusForbiddenIfPersistedStateInvalid"])
 
 
 if __name__ == "__main__":

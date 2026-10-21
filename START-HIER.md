@@ -1,6 +1,6 @@
 # SAFOR – einfache Anleitung
 
-> Aktuelle Version: **0.14.0-rc.5 (Release Candidate)**  
+> Aktuelle Version: **0.14.0-rc.6 (Release Candidate)**  
 > Du musst keine JSON-Datei öffnen oder verstehen. Wenn SAFOR Dateien in Git speichern soll, braucht dein Chat lediglich Zugriff auf dein Git-Projekt.
 
 ## 1. Wähle, was du machen willst
@@ -51,7 +51,7 @@ Dann läuft es so:
 2. Falls nötig, gibt dir der MASTER einen Initialisierungstext für einen neuen Agenten-Chat.
 3. Diesen Text fügst du **einmal** in den neuen Agenten-Chat ein.
 4. Der MASTER legt spätere Jobs selbst in die persönliche **INBOX** dieses Agenten.
-5. Wenn der MASTER dir sagt, dass der Agent startbereit ist, schreibst du im Agenten-Chat nur:
+5. Der MASTER kann den Agenten nicht für dich starten. **Du bist der Trigger.** Wenn der MASTER dir sagt, dass der Agent startbereit ist, öffnest du den Agenten-Chat und schreibst nur:
 
 ```text
 GO

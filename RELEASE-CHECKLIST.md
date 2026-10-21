@@ -10,6 +10,20 @@ Use this checklist for every SAFOR release candidate. Current values come from `
 - [ ] Root contains only the current versioned generic Framework artifact.
 - [ ] Current release evidence and checksum file cover all seven distributed/evaluation artifacts.
 
+## Exact release provenance
+
+- [ ] Release materialization runs from one exact checked-out source commit.
+- [ ] `provenance.sourceCommitSha == provenance.workflowHeadSha`.
+- [ ] `provenance.sourceTreeSha` is recorded for the exact source commit.
+- [ ] Every distributable records the same `generatedFromSourceCommit`.
+- [ ] Every recorded artifact SHA-256 and byte count matches the actual file.
+- [ ] Canonical `artifactSetDigest` matches the complete ordered artifact identity set.
+- [ ] The checksum file contains exactly the distributed artifact path set.
+- [ ] `checksumFileSha256` matches the actual checksum file bytes.
+- [ ] Final validation source SHA, workflow head and workflow run match preparation provenance.
+- [ ] A LOCAL run cannot authorize a release PASS.
+- [ ] Negative tests prove stale source, old workflow run, artifact drift and checksum drift fail closed.
+
 ## Framework build
 
 - [ ] `python tools/build_bundle.py --check` passes.

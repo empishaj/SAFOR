@@ -8,7 +8,7 @@ class AgentJobValidationError(ValueError):
 _REQUIRED_RESPONSE_TYPES = {'JOB_RESULT', 'JOB_ERROR', 'CLARIFICATION_REQUEST', 'CAPABILITY_MISMATCH', 'IMPROVEMENT_PROPOSAL'}
 _TEMPLATE_PATHS = {'JOB_RESULT': 'v0.14.0/templates/responses/job-result.template.json', 'JOB_ERROR': 'v0.14.0/templates/responses/job-error.template.json', 'CLARIFICATION_REQUEST': 'v0.14.0/templates/responses/clarification-request.template.json', 'CAPABILITY_MISMATCH': 'v0.14.0/templates/responses/capability-mismatch.template.json', 'IMPROVEMENT_PROPOSAL': 'v0.14.0/templates/responses/improvement-proposal.template.json'}
 _UUIDV7 = re.compile('^[0-9a-f]{8}-[0-9a-f]{4}-7[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$')
-_TRANSITIONS = {'PREPARED': {'WAITING_HUMAN_GO', 'CANCELED', 'SUPERSEDED'}, 'WAITING_HUMAN_GO': {'GO_OBSERVED', 'CANCELED', 'SUPERSEDED'}, 'GO_OBSERVED': {'CLAIMED', 'BLOCKED', 'CANCELED'}, 'CLAIMED': {'RUNNING', 'BLOCKED', 'CANCELED'}, 'RUNNING': {'RESPONSE_SUBMITTED', 'BLOCKED', 'CANCELED'}, 'RESPONSE_SUBMITTED': {'VERIFIED', 'REJECTED', 'BLOCKED'}, 'VERIFIED': {'ACCEPTED', 'REJECTED'}, 'ACCEPTED': {'INTEGRATED'}, 'REJECTED': {'REWORK_READY', 'CANCELED'}, 'REWORK_READY': {'WAITING_HUMAN_GO', 'SUPERSEDED', 'CANCELED'}}
+_TRANSITIONS = {'PREPARED': {'WAITING_HUMAN_GO', 'CANCELED', 'SUPERSEDED'}, 'WAITING_HUMAN_GO': {'GO_OBSERVED', 'CANCELED', 'SUPERSEDED'}, 'GO_OBSERVED': {'CLAIMED', 'BLOCKED', 'CANCELED'}, 'CLAIMED': {'RUNNING', 'BLOCKED', 'CANCELED'}, 'RUNNING': {'RESPONSE_SUBMITTED', 'BLOCKED', 'CANCELED'}, 'RESPONSE_SUBMITTED': {'VERIFIED', 'REJECTED', 'BLOCKED'}, 'VERIFIED': {'ACCEPTED', 'REJECTED'}, 'ACCEPTED': {'INTEGRATED'}, 'REJECTED': {'REWORK_READY', 'CANCELED'}, 'BLOCKED': {'REWORK_READY', 'SUPERSEDED', 'CANCELED'}, 'REWORK_READY': {'WAITING_HUMAN_GO', 'SUPERSEDED', 'CANCELED'}}
 
 def _mapping(value: Any, name: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
@@ -171,6 +171,37 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         raise AgentJobValidationError('CLAIM_TARGET_OPERATIONS_INCOMPLETE')
     if claim_target['repository'] != response_workspace['repository'] or claim_target['branch'] != response_workspace['branch']:
         raise AgentJobValidationError('CLAIM_TARGET_CONTROL_WORKSPACE_MISMATCH')
+
+    claim_refs = {
+        'humanGoEvidenceSchemaRef': 'v0.14.0/schemas/human-go-evidence.schema.json',
+        'humanGoEvidenceTemplateRef': 'v0.14.0/templates/human-go-evidence.template.json',
+        'agentStateSchemaRef': 'v0.14.0/schemas/agent-state.schema.json',
+        'claimStateTemplateRef': 'v0.14.0/templates/agent-state-claim.template.json',
+        'resultSubmittedStateTemplateRef': 'v0.14.0/templates/agent-state-result-submitted.template.json',
+    }
+    for field, expected_path in claim_refs.items():
+        ref = _pointer(claim.get(field), field)
+        if ref['path'] != expected_path:
+            raise AgentJobValidationError(f'CLAIM_BINDING_PATH_MISMATCH:{field}')
+    go_target = _write_target(claim.get('goEvidenceWriteTarget'), 'goEvidenceWriteTarget')
+    if go_target['repositoryClass'] != 'CONTROL_REPOSITORY':
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_MUST_BE_CONTROL_REPOSITORY')
+    expected_go_suffix = f"agents/{agent_id}/evidence/{{jobId}}/human-go-{{activationId}}.json"
+    if not str(go_target.get('pathPattern', '')).endswith(expected_go_suffix):
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_PATH_INVALID')
+    required_go_ops = {'READ', 'CREATE', 'COMMIT', 'PUSH'}
+    if not required_go_ops.issubset(set(go_target.get('allowedOperations') or ())):
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_OPERATIONS_INCOMPLETE')
+    if go_target['repository'] != response_workspace['repository'] or go_target['branch'] != response_workspace['branch']:
+        raise AgentJobValidationError('GO_EVIDENCE_TARGET_CONTROL_WORKSPACE_MISMATCH')
+    for field in (
+        'preCasSchemaValidationRequired',
+        'postReadbackSchemaValidationRequired',
+        'goEvidenceProviderReadbackRequired',
+    ):
+        if claim.get(field) is not True:
+            raise AgentJobValidationError(f'CLAIM_SCHEMA_VALIDATION_REQUIRED:{field}')
+
     responses = _mapping(job.get('responseContracts'), 'responseContracts')
     if not _REQUIRED_RESPONSE_TYPES.issubset(responses):
         missing = sorted(_REQUIRED_RESPONSE_TYPES - set(responses))
@@ -189,14 +220,33 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         target = _write_target(binding.get('writeTarget'), 'responseWriteTarget')
         if target['repositoryClass'] != 'CONTROL_REPOSITORY':
             raise AgentJobValidationError(f'RESPONSE_TARGET_NOT_CONTROL:{response_type}')
+        expected_response_suffix = (
+            f"agents/{agent_id}/outbox/{{jobId}}/{{responseId}}.json"
+        )
+        if not str(target.get('pathPattern', '')).endswith(expected_response_suffix):
+            raise AgentJobValidationError(
+                f'RESPONSE_TARGET_PATH_INVALID:{response_type}'
+            )
         response_repositories.add((target['repository'], target['branch']))
         if binding.get('required') is not True:
             raise AgentJobValidationError(f'RESPONSE_CONTRACT_MUST_BE_REQUIRED:{response_type}')
+        for validation_field in (
+            'preWriteSchemaValidationRequired',
+            'providerReadbackRequired',
+            'postReadbackSchemaValidationRequired',
+        ):
+            if binding.get(validation_field) is not True:
+                raise AgentJobValidationError(
+                    f'RESPONSE_SCHEMA_VALIDATION_REQUIRED:{response_type}:{validation_field}'
+                )
     if len(response_repositories) != 1:
         raise AgentJobValidationError('ALL_RESPONSE_TYPES_MUST_SHARE_CONTROL_TARGET')
     index_target = _write_target(responses.get('responseIndexTarget'), 'responseIndexTarget')
     if (index_target['repository'], index_target['branch']) not in response_repositories:
         raise AgentJobValidationError('RESPONSE_INDEX_TARGET_MISMATCH')
+    expected_index_suffix = f"agents/{agent_id}/outbox/index.json"
+    if not str(index_target.get('pathPattern', '')).endswith(expected_index_suffix):
+        raise AgentJobValidationError('RESPONSE_INDEX_TARGET_PATH_INVALID')
     _pointer(responses.get('resolutionSchemaRef'), 'resolutionSchemaRef')
     communication = _mapping(job.get('communicationContract'), 'communicationContract')
     _pointer(communication.get('modelRef'), 'communicationModelRef')
@@ -217,6 +267,180 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
     for field in ('noScopeExpansion', 'noRoleSwitch', 'noSelfAcceptance', 'noMasterStateWrite', 'noAutomaticJobSwitch', 'noJobPromptTransport'):
         if constraints.get(field) is not True:
             raise AgentJobValidationError(f'JOB_CONSTRAINT_REQUIRED:{field}')
+
+
+def _path_is_covered(path: str, allowed_paths: list[str]) -> bool:
+    value = str(path or "")
+    for allowed in allowed_paths:
+        prefix = str(allowed or "")
+        if not prefix:
+            continue
+        if value == prefix or value.startswith(prefix):
+            return True
+    return False
+
+
+def validate_authority_basis_coverage(
+    *,
+    job: Mapping[str, Any],
+    authority_basis: Mapping[str, Any],
+    authority_basis_ref: Mapping[str, Any] | None = None,
+) -> None:
+    """Fail closed when a resolved active mandate does not cover the Job.
+
+    The job's authorityBasis pointer stays immutable. MASTER and the Agent may
+    use this validator after provider readback of that pointer. Provider rights
+    remain a separate, mandatory check.
+    """
+
+    validate_agent_job(job)
+    job = _mapping(job, "job")
+    mandate = _mapping(authority_basis, "authorityBasisRecord")
+    authorization = _mapping(job.get("authorization"), "authorization")
+    pinned = _pointer(authorization.get("authorityBasis"), "authorityBasis")
+
+    if authority_basis_ref is not None:
+        observed = _pointer(authority_basis_ref, "authorityBasisRef")
+        for field in ("repository", "ref", "path", "blobSha"):
+            if observed.get(field) != pinned.get(field):
+                raise AgentJobValidationError(
+                    f"AUTHORITY_BASIS_POINTER_MISMATCH:{field}"
+                )
+
+    if mandate.get("schemaVersion") != "0.14.0":
+        raise AgentJobValidationError("AUTHORITY_BASIS_SCHEMA_VERSION_INVALID")
+    if mandate.get("status") != "ACTIVE":
+        raise AgentJobValidationError("AUTHORITY_BASIS_NOT_ACTIVE")
+
+    lineage = _mapping(job.get("lineage"), "lineage")
+    assignment = _mapping(job.get("assignment"), "assignment")
+    if mandate.get("projectId") != lineage.get("projectId"):
+        raise AgentJobValidationError("AUTHORITY_BASIS_PROJECT_MISMATCH")
+    if mandate.get("agentId") != assignment.get("agentId"):
+        raise AgentJobValidationError("AUTHORITY_BASIS_AGENT_MISMATCH")
+
+    if mandate.get("humanGoRequired") is not True:
+        raise AgentJobValidationError("AUTHORITY_BASIS_HUMAN_GO_REQUIRED")
+    if mandate.get("humanOnlyActivation") is not True:
+        raise AgentJobValidationError("AUTHORITY_BASIS_HUMAN_ONLY_REQUIRED")
+    if mandate.get("masterMayActivateAgent") is not False:
+        raise AgentJobValidationError("AUTHORITY_BASIS_MASTER_ACTIVATION_FORBIDDEN")
+    if mandate.get("mergeAllowed") is not False:
+        raise AgentJobValidationError("AUTHORITY_BASIS_MERGE_FORBIDDEN")
+    if mandate.get("deployAllowed") is not False:
+        raise AgentJobValidationError("AUTHORITY_BASIS_DEPLOY_FORBIDDEN")
+
+    permissions = authorization.get("repositoryPermissions") or []
+    product_permissions = [
+        _mapping(p, "productPermission")
+        for p in permissions
+        if isinstance(p, Mapping) and p.get("repositoryClass") == "WORK_REPOSITORY"
+    ]
+    control_permissions = [
+        _mapping(p, "controlPermission")
+        for p in permissions
+        if isinstance(p, Mapping) and p.get("repositoryClass") == "CONTROL_REPOSITORY"
+    ]
+    if len(product_permissions) != 1 or len(control_permissions) != 1:
+        raise AgentJobValidationError("AUTHORITY_BASIS_PERMISSION_CLASS_CARDINALITY_INVALID")
+
+    product = product_permissions[0]
+    control = control_permissions[0]
+    if product.get("repository") != mandate.get("allowedProductRepository"):
+        raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_REPOSITORY_NOT_COVERED")
+
+    allowed_product_branches = mandate.get("allowedProductBranches")
+    if allowed_product_branches is None:
+        single = mandate.get("allowedProductBranch")
+        allowed_product_branches = [single] if single else []
+    if not isinstance(allowed_product_branches, list) or not allowed_product_branches:
+        raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_BRANCH_SET_MISSING")
+
+    product_write = _mapping(product.get("write"), "productWriteScope")
+    requested_product_branches = list(product_write.get("allowedBranches") or [])
+    workspace = _mapping(job.get("workspace"), "workspace")
+    raw_product_workspace = workspace.get("productWorkspace")
+    product_workspace = (
+        None
+        if raw_product_workspace is None
+        else _mapping(raw_product_workspace, "productWorkspace")
+    )
+    output = _mapping(job.get("outputContract"), "outputContract")
+    raw_product_target = output.get("productWriteTarget")
+    product_target = (
+        None
+        if raw_product_target is None
+        else _write_target(raw_product_target, "productWriteTarget")
+    )
+
+    if product_write.get("allowed") is not True:
+        if product_workspace is not None and product_workspace.get("mutating") is True:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_READ_ONLY_PRODUCT_MUTATION_FORBIDDEN"
+            )
+        if product_target is not None:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_READ_ONLY_PRODUCT_TARGET_FORBIDDEN"
+            )
+
+    if product_workspace is not None:
+        requested_product_branches.append(
+            str(product_workspace.get("jobBranch") or "")
+        )
+    if product_target is not None:
+        requested_product_branches.append(str(product_target.get("branch") or ""))
+    for requested in requested_product_branches:
+        if requested not in allowed_product_branches:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_PRODUCT_BRANCH_NOT_COVERED"
+            )
+
+    allowed_paths = mandate.get("allowedProductPaths")
+    if not isinstance(allowed_paths, list) or not allowed_paths:
+        raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_PATH_SET_MISSING")
+    requested_paths = list(product_write.get("allowedPaths") or [])
+    if product_workspace is not None:
+        requested_paths.extend(product_workspace.get("allowedPaths") or [])
+    if product_target is not None:
+        requested_paths.append(str(product_target.get("pathPattern") or ""))
+    for requested in requested_paths:
+        if not _path_is_covered(str(requested), allowed_paths):
+            raise AgentJobValidationError("AUTHORITY_BASIS_PRODUCT_PATH_NOT_COVERED")
+
+    allowed_control_branch = _nonempty(
+        mandate.get("allowedControlBranch"),
+        "AUTHORITY_BASIS_CONTROL_BRANCH_MISSING",
+    )
+    control_branches = list(
+        _mapping(control.get("write"), "controlWriteScope").get("allowedBranches") or []
+    )
+    response_workspace = _write_target(
+        workspace.get("responseWorkspace"), "responseWorkspace"
+    )
+    control_branches.append(str(response_workspace.get("branch") or ""))
+    claim = _mapping(
+        _mapping(job.get("scheduling"), "scheduling").get("claimPolicy"),
+        "claimPolicy",
+    )
+    control_branches.append(
+        str(_write_target(claim.get("claimStateTarget"), "claimStateTarget").get("branch") or "")
+    )
+    control_branches.append(
+        str(_write_target(claim.get("goEvidenceWriteTarget"), "goEvidenceWriteTarget").get("branch") or "")
+    )
+    for requested in control_branches:
+        if requested != allowed_control_branch:
+            raise AgentJobValidationError(
+                "AUTHORITY_BASIS_CONTROL_BRANCH_NOT_COVERED"
+            )
+
+    provenance = _mapping(job.get("provenance"), "provenance")
+    mandate_ref = _pointer(provenance.get("mandateRef"), "mandateRef")
+    for field in ("repository", "ref", "path", "blobSha"):
+        if mandate_ref.get(field) != pinned.get(field):
+            raise AgentJobValidationError(
+                f"JOB_MANDATE_AND_AUTHORITY_BASIS_POINTER_MISMATCH:{field}"
+            )
 
 def validate_job_state_transition(*, from_status: str, to_status: str, evidence_refs: list[Any], go_evidence: Mapping[str, Any] | None = None, expected_go_context: Mapping[str, Any] | None = None, consumed_activation_ids: set[str] | frozenset[str] | None = None) -> None:
     allowed = _TRANSITIONS.get(from_status, set())
@@ -240,7 +464,162 @@ def validate_job_state_transition(*, from_status: str, to_status: str, evidence_
     if from_status == 'RESPONSE_SUBMITTED' and to_status == 'ACCEPTED':
         raise AgentJobValidationError('RESPONSE_SUBMISSION_CANNOT_SKIP_VERIFICATION')
 
-def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
+_SETTLED_AGENT_RUNTIME_STATUSES = {'RESULT_SUBMITTED', 'BLOCKED'}
+_SETTLED_MASTER_JOB_STATUSES = {'REJECTED', 'ACCEPTED', 'INTEGRATED', 'CANCELED', 'SUPERSEDED'}
+_BLOCKED_REARM_MASTER_STATUSES = {'REJECTED', 'CANCELED', 'SUPERSEDED'}
+_BLOCKING_RESPONSE_TYPES = {'JOB_ERROR', 'CLARIFICATION_REQUEST', 'CAPABILITY_MISMATCH'}
+
+
+def validate_agent_state_rearm_transition(*, current_state: Mapping[str, Any], proposed_state: Mapping[str, Any], prior_master_job_state: Mapping[str, Any], prior_response: Mapping[str, Any] | None = None) -> None:
+    """Validate agent-owned rearm after a terminal prior execution."""
+    current = _mapping(current_state, 'currentState')
+    proposed = _mapping(proposed_state, 'proposedState')
+    master = _mapping(prior_master_job_state, 'priorMasterJobState')
+    status = current.get('runtimeStatus')
+    if status not in _SETTLED_AGENT_RUNTIME_STATUSES:
+        raise AgentJobValidationError('REARM_CURRENT_AGENT_STATUS_NOT_SETTLED')
+    for field in ('format', 'schemaVersion', 'projectId', 'agentId', 'identityRevision'):
+        if proposed.get(field) != current.get(field):
+            raise AgentJobValidationError(f'REARM_MUST_PRESERVE_{field.upper()}')
+    if current.get('format') != 'SAFOR_AGENT_STATE' or current.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REARM_CURRENT_STATE_FORMAT_INVALID')
+    if proposed.get('runtimeStatus') != 'WAITING_HUMAN_GO':
+        raise AgentJobValidationError('REARM_PROPOSED_STATUS_INVALID')
+    if not isinstance(current.get('revision'), int) or proposed.get('revision') != current.get('revision') + 1:
+        raise AgentJobValidationError('REARM_STATE_REVISION_MUST_INCREMENT_ONCE')
+    if proposed.get('session') is not None or proposed.get('currentJob') is not None:
+        raise AgentJobValidationError('REARM_MUST_CLEAR_SESSION_AND_CURRENT_JOB')
+    if proposed.get('lastResponseRef') != current.get('lastResponseRef') or not current.get('lastResponseRef'):
+        raise AgentJobValidationError('REARM_MUST_PRESERVE_LAST_RESPONSE')
+    if proposed.get('consumedActivationIds') != current.get('consumedActivationIds'):
+        raise AgentJobValidationError('REARM_MUST_PRESERVE_CONSUMED_ACTIVATIONS')
+    _nonempty(proposed.get('updatedAt'), 'REARM_UPDATED_AT_REQUIRED')
+
+    current_job = _mapping(current.get('currentJob'), 'currentJob')
+    job_id = _nonempty(current_job.get('jobId'), 'REARM_PRIOR_JOB_ID_REQUIRED')
+    if master.get('format') != 'SAFOR_AGENT_JOB_STATE' or master.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REARM_MASTER_JOB_STATE_FORMAT_INVALID')
+    if master.get('projectId') != current.get('projectId') or master.get('jobId') != job_id:
+        raise AgentJobValidationError('REARM_MASTER_JOB_BINDING_MISMATCH')
+    if master.get('assignedAgentId') != current.get('agentId') or master.get('assignedIdentityRevision') != current.get('identityRevision'):
+        raise AgentJobValidationError('REARM_MASTER_AGENT_BINDING_MISMATCH')
+    master_status = master.get('lifecycleStatus')
+    if master_status not in _SETTLED_MASTER_JOB_STATUSES:
+        raise AgentJobValidationError('REARM_PRIOR_MASTER_JOB_NOT_TERMINALLY_SETTLED')
+
+    if status == 'BLOCKED':
+        if master_status not in _BLOCKED_REARM_MASTER_STATUSES:
+            raise AgentJobValidationError('BLOCKED_REARM_MASTER_STATUS_INVALID')
+        response = _mapping(prior_response, 'priorResponse')
+        if response.get('format') != 'SAFOR_AGENT_RESPONSE' or response.get('schemaVersion') != '0.14.0':
+            raise AgentJobValidationError('BLOCKED_REARM_RESPONSE_FORMAT_INVALID')
+        if response.get('responseType') not in _BLOCKING_RESPONSE_TYPES:
+            raise AgentJobValidationError('BLOCKED_REARM_TYPED_BLOCKING_RESPONSE_REQUIRED')
+        for field, expected in (
+            ('projectId', current.get('projectId')),
+            ('jobId', job_id),
+            ('agentId', current.get('agentId')),
+            ('identityRevision', current.get('identityRevision')),
+        ):
+            if response.get(field) != expected:
+                raise AgentJobValidationError(f'BLOCKED_REARM_RESPONSE_{field.upper()}_MISMATCH')
+        if response.get('immutable') is not True:
+            raise AgentJobValidationError('BLOCKED_REARM_RESPONSE_MUST_BE_IMMUTABLE')
+        response_refs = master.get('responseRefs')
+        if not isinstance(response_refs, list) or not response_refs:
+            raise AgentJobValidationError('BLOCKED_REARM_MASTER_RESPONSE_REF_REQUIRED')
+
+def validate_initialization_acknowledgement(*, pinned_identity: Mapping[str, Any], chat_output: Mapping[str, Any]) -> None:
+    pinned = _mapping(pinned_identity, 'pinnedIdentity')
+    output = _mapping(chat_output, 'chatOutput')
+    if pinned.get('format') != 'SAFOR_AGENT_IDENTITY':
+        raise AgentJobValidationError('PINNED_IDENTITY_FORMAT_INVALID')
+    if output.get('format') != 'SAFOR_AGENT_CHAT_OUTPUT':
+        raise AgentJobValidationError('CHAT_OUTPUT_FORMAT_INVALID')
+    if output.get('status') == 'REIDENTIFICATION_REQUIRED':
+        return
+    if output.get('status') != 'READY':
+        raise AgentJobValidationError('INITIALIZATION_ACK_MUST_BE_READY_OR_REIDENTIFICATION_REQUIRED')
+    if output.get('projectId') != pinned.get('projectId'):
+        raise AgentJobValidationError('INITIALIZATION_PROJECT_ID_MISMATCH')
+    if output.get('agentId') != pinned.get('agentId'):
+        raise AgentJobValidationError('INITIALIZATION_AGENT_ID_MISMATCH')
+    if output.get('displayName') != pinned.get('displayName'):
+        raise AgentJobValidationError('INITIALIZATION_DISPLAY_NAME_MISMATCH')
+    if output.get('identityRevision') != pinned.get('identityRevision'):
+        raise AgentJobValidationError('INITIALIZATION_IDENTITY_REVISION_MISMATCH')
+
+def validate_reidentification_ready_transition(*, current_state: Mapping[str, Any], proposed_state: Mapping[str, Any], pinned_identity: Mapping[str, Any], evidence: Mapping[str, Any]) -> None:
+    current = _mapping(current_state, 'currentState')
+    proposed = _mapping(proposed_state, 'proposedState')
+    identity = _mapping(pinned_identity, 'pinnedIdentity')
+    proof = _mapping(evidence, 'reidentificationEvidence')
+
+    if identity.get('format') != 'SAFOR_AGENT_IDENTITY':
+        raise AgentJobValidationError('PINNED_IDENTITY_FORMAT_INVALID')
+    if identity.get('status') != 'ACTIVE':
+        raise AgentJobValidationError('REIDENTIFICATION_IDENTITY_NOT_ACTIVE')
+    if proof.get('format') != 'SAFOR_AGENT_REIDENTIFICATION_EVIDENCE':
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_FORMAT_INVALID')
+    if proof.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_SCHEMA_VERSION_INVALID')
+    if proof.get('source') != 'HUMAN_REPORTED_AGENT_REPLY_IN_MASTER_CHAT':
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_SOURCE_INVALID')
+    if proof.get('result') != 'PASS' or proof.get('validForRearm') is not True or proof.get('immutable') is not True:
+        raise AgentJobValidationError('REIDENTIFICATION_EVIDENCE_NOT_REARMABLE')
+    if proof.get('initializationStateMutationObserved') is not False:
+        raise AgentJobValidationError('REIDENTIFICATION_INITIALIZATION_STATE_MUTATION_FORBIDDEN')
+
+    expected_reply = (
+        f"Agent {identity.get('displayName')} ({identity.get('agentId')}) "
+        "bereit | Status: WAITING_HUMAN_GO"
+    )
+    if proof.get('expectedAgentReply') != expected_reply or proof.get('observedAgentReply') != expected_reply:
+        raise AgentJobValidationError('REIDENTIFICATION_READY_REPLY_MISMATCH')
+
+    for field in ('projectId', 'agentId', 'identityRevision'):
+        expected = identity.get(field)
+        if current.get(field) != expected:
+            raise AgentJobValidationError(f'REIDENTIFICATION_CURRENT_STATE_{field.upper()}_MISMATCH')
+        if proposed.get(field) != expected:
+            raise AgentJobValidationError(f'REIDENTIFICATION_PROPOSED_STATE_{field.upper()}_MISMATCH')
+        if proof.get(field) != expected:
+            raise AgentJobValidationError(f'REIDENTIFICATION_EVIDENCE_{field.upper()}_MISMATCH')
+
+    if current.get('format') != 'SAFOR_AGENT_STATE' or current.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REIDENTIFICATION_CURRENT_STATE_FORMAT_INVALID')
+    if proposed.get('format') != 'SAFOR_AGENT_STATE' or proposed.get('schemaVersion') != '0.14.0':
+        raise AgentJobValidationError('REIDENTIFICATION_PROPOSED_STATE_FORMAT_INVALID')
+    if current.get('runtimeStatus') != 'REIDENTIFICATION_REQUIRED':
+        raise AgentJobValidationError('REIDENTIFICATION_CURRENT_STATE_STATUS_INVALID')
+    if proposed.get('runtimeStatus') != 'WAITING_HUMAN_GO':
+        raise AgentJobValidationError('REIDENTIFICATION_PROPOSED_STATE_STATUS_INVALID')
+    if not isinstance(current.get('revision'), int) or proposed.get('revision') != current.get('revision') + 1:
+        raise AgentJobValidationError('REIDENTIFICATION_STATE_REVISION_MUST_INCREMENT_ONCE')
+    if proposed.get('session') is not None or proposed.get('currentJob') is not None:
+        raise AgentJobValidationError('REIDENTIFICATION_REARM_MUST_CLEAR_SESSION_AND_CURRENT_JOB')
+    if proposed.get('lastResponseRef') != current.get('lastResponseRef'):
+        raise AgentJobValidationError('REIDENTIFICATION_REARM_MUST_PRESERVE_LAST_RESPONSE')
+    if proposed.get('consumedActivationIds') != current.get('consumedActivationIds'):
+        raise AgentJobValidationError('REIDENTIFICATION_REARM_MUST_PRESERVE_CONSUMED_ACTIVATIONS')
+    _nonempty(proposed.get('updatedAt'), 'REIDENTIFICATION_REARM_UPDATED_AT_REQUIRED')
+
+    state_at_bootstrap = _mapping(proof.get('stateAtBootstrap'), 'stateAtBootstrap')
+    _pointer(state_at_bootstrap.get('ref'), 'stateAtBootstrapRef')
+    if state_at_bootstrap.get('revision') != current.get('revision'):
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_STATE_REVISION_MISMATCH')
+    if state_at_bootstrap.get('runtimeStatus') != 'REIDENTIFICATION_REQUIRED':
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_STATE_STATUS_INVALID')
+
+    inbox_at_bootstrap = _mapping(proof.get('inboxAtBootstrap'), 'inboxAtBootstrap')
+    _pointer(inbox_at_bootstrap.get('ref'), 'inboxAtBootstrapRef')
+    if not isinstance(inbox_at_bootstrap.get('revision'), int) or inbox_at_bootstrap.get('revision') < 1:
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_INBOX_REVISION_INVALID')
+    if not isinstance(inbox_at_bootstrap.get('entryCount'), int) or inbox_at_bootstrap.get('entryCount') < 0:
+        raise AgentJobValidationError('REIDENTIFICATION_BOOTSTRAP_INBOX_ENTRY_COUNT_INVALID')
+
+
+def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, display_name: str, identity_revision: int=1, job_key: str | None=None, target_branch: str | None=None, details_ref: str | None=None, persistence_state: str | None=None, attempt_id: str | None=None, phase: str | None=None, reason_code: str | None=None) -> dict[str, Any]:
     persistence_context_supplied = any(
         value is not None
         for value in (persistence_state, attempt_id, phase, reason_code)
@@ -287,4 +666,4 @@ def render_agent_chat_output(*, status: str, project_id: str, agent_id: str, dis
         raise AgentJobValidationError('CHAT_OUTPUT_WORD_BUDGET_EXCEEDED')
     if len(text) > 360:
         raise AgentJobValidationError('CHAT_OUTPUT_CHARACTER_BUDGET_EXCEEDED')
-    return {'format': 'SAFOR_AGENT_CHAT_OUTPUT', 'schemaVersion': '0.14.0', 'status': status, 'projectId': project_id, 'agentId': agent_id, 'displayName': display_name, 'jobKey': job_key, 'targetBranch': target_branch, 'detailsRef': details_ref, 'persistence': persistence, 'text': text, 'terminal': terminal, 'containsDomainDetail': False}
+    return {'format': 'SAFOR_AGENT_CHAT_OUTPUT', 'schemaVersion': '0.14.0', 'status': status, 'projectId': project_id, 'agentId': agent_id, 'displayName': display_name, 'identityRevision': identity_revision, 'jobKey': job_key, 'targetBranch': target_branch, 'detailsRef': details_ref, 'persistence': persistence, 'text': text, 'terminal': terminal, 'containsDomainDetail': False}

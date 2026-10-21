@@ -94,7 +94,13 @@
     "schemaPackageSelection": "v0.14.0/schemas/package-selection.schema.json",
     "schemaPackageCompatibilityDecision": "v0.14.0/schemas/package-compatibility-decision.schema.json",
     "creationTypeVocabulary": "v0.14.0/creation-type-vocabulary.json",
-    "domainFrameworkProfiles": "v0.14.0/domain-framework-profiles.json"
+    "domainFrameworkProfiles": "v0.14.0/domain-framework-profiles.json",
+    "templateHumanGoEvidence": "v0.14.0/templates/human-go-evidence.template.json",
+    "templateAgentStateClaim": "v0.14.0/templates/agent-state-claim.template.json",
+    "templateAgentStateResultSubmitted": "v0.14.0/templates/agent-state-result-submitted.template.json",
+    "schemaAgentReidentificationEvidence": "v0.14.0/schemas/agent-reidentification-evidence.schema.json",
+    "templateAgentStateReidentificationReady": "v0.14.0/templates/agent-state-reidentification-ready.template.json",
+    "templateAgentStateSettledRearm": "v0.14.0/templates/agent-state-settled-rearm.template.json"
   },
   "referenceResolution": {
     "SAFOR-MASTER.json": "kernel",
@@ -199,7 +205,19 @@
     "providers/github/0.6.0/package.json": "providerGithub",
     "providers/gitlab/0.6.0/package.json": "providerGitlab",
     "creation-type-vocabulary.json": "creationTypeVocabulary",
-    "domain-framework-profiles.json": "domainFrameworkProfiles"
+    "domain-framework-profiles.json": "domainFrameworkProfiles",
+    "human-go-evidence.template.json": "templateHumanGoEvidence",
+    "agent-state-claim.template.json": "templateAgentStateClaim",
+    "agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted",
+    "templates/human-go-evidence.template.json": "templateHumanGoEvidence",
+    "templates/agent-state-claim.template.json": "templateAgentStateClaim",
+    "templates/agent-state-result-submitted.template.json": "templateAgentStateResultSubmitted",
+    "agent-reidentification-evidence.schema.json": "schemaAgentReidentificationEvidence",
+    "schemas/agent-reidentification-evidence.schema.json": "schemaAgentReidentificationEvidence",
+    "agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady",
+    "templates/agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady",
+    "agent-state-settled-rearm.template.json": "templateAgentStateSettledRearm",
+    "templates/agent-state-settled-rearm.template.json": "templateAgentStateSettledRearm"
   },
   "v014AuthoritativeKeys": [
     "acceptanceModel",
@@ -242,6 +260,7 @@
     "schemaAgentJob",
     "schemaAgentJobState",
     "schemaAgentRegistry",
+    "schemaAgentReidentificationEvidence",
     "schemaAgentResponse",
     "schemaAgentResponseIndex",
     "schemaAgentResponseResolution",
@@ -288,6 +307,8 @@
     "selfHealing",
     "templateAgentInitialization",
     "templateAgentJobHuman",
+    "templateAgentStateReidentificationReady",
+    "templateAgentStateSettledRearm",
     "templateCapabilityMismatch",
     "templateClarificationRequest",
     "templateImprovementProposal",

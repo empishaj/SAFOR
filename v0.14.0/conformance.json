@@ -1930,6 +1930,66 @@
       "semanticKey": "AGENT_CLAIM_OWNERSHIP",
       "statement": "Agent claim authority and MASTER lifecycle authority are separated: the agent may CAS only its own state.json claim target, while master/jobs/{jobId}.json remains MASTER-owned and is reconciled from verified claim and response evidence.",
       "expected": true
+    },
+    {
+      "id": "CF-RC6-001",
+      "status": "ACTIVE",
+      "semanticKey": "HUMAN_ONLY_CHAT_AGENT_ACTIVATION_AUTHORITY",
+      "statement": "For a normal CHAT_AGENT, HUMAN is the sole activation authority: MASTER may prepare and dispatch work but cannot activate the chat, synthesize GO, create HUMAN-GO evidence on the HUMAN's behalf or perform the Agent-owned claim.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC6-002",
+      "statement": "HUMAN-GO evidence is built from the embedded pinned template, validated against the embedded pinned schema, persisted and provider-read-back before claim construction; the Agent-State claim is built from the embedded pinned claim template, validates before CAS and validates again after exact provider readback before product mutation.",
+      "expected": true,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CF-RC6-003",
+      "statement": "Every typed Agent response is built from the exact templateRef/schemaRef bound in the Agent Job, validates before persistence, is fully provider-read-back and revalidated, and no SUBMITTED/BLOCKED terminal chat status is emitted before successful readback validation.",
+      "expected": true,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CF-RC6-004",
+      "statement": "The post-result Agent-State transition uses RESULT_SUBMITTED and a string lastResponseRef while preserving the provider-confirmed claim bindings; the state validates against schemaAgentState before and after persistence.",
+      "expected": true,
+      "status": "ACTIVE"
+    },
+    {
+      "id": "CF-RC6-005",
+      "status": "ACTIVE",
+      "semanticKey": "EXACT_PINNED_AGENT_IDENTITY_ACKNOWLEDGEMENT",
+      "statement": "A normal CHAT_AGENT may report READY only with the exact pinned displayName, agentId and identityRevision; self-generated aliases, v2 labels, numeric suffixes or identity substitutions require REIDENTIFICATION_REQUIRED and no GO.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC6-006",
+      "status": "ACTIVE",
+      "semanticKey": "VALID_AGENT_JOB_REQUIRED_BEFORE_GO_CLAIM",
+      "statement": "A HUMAN-GO claim is forbidden until the exact MASTER-pinned Agent Job passes canonical schema/runtime validation with complete claim/response bindings; malformed Jobs produce no claim and no product mutation.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC6-007",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_OWNED_REARM_AFTER_SETTLED_EXECUTION",
+      "statement": "After a prior RESULT_SUBMITTED or terminally resolved BLOCKED execution, a persistent normal chat agent may accept the next Job only after a later direct HUMAN GO triggers an AGENT-owned CAS/readback that clears the prior session/currentJob and preserves activation/response history. BLOCKED additionally requires a provider-read-back typed blocking response bound to the prior job and a prior MASTER status of REJECTED, CANCELED or SUPERSEDED; ACCEPTED/INTEGRATED are forbidden. MASTER never rewrites Agent State.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC6-008",
+      "status": "ACTIVE",
+      "semanticKey": "NON_MUTATING_REINITIALIZATION_AND_EXPLICIT_NULL_REARM",
+      "statement": "Agent initialization/reinitialization must not mutate Agent State. Rearm of RESULT_SUBMITTED or terminally resolved BLOCKED state requires a later separate direct HUMAN GO; the rearmed state retains all required top-level fields with session and currentJob explicitly null, preserves activation/response history, and invalid persisted state may not be reported READY.",
+      "expected": true
+    },
+    {
+      "id": "CF-RC6-009",
+      "status": "ACTIVE",
+      "semanticKey": "AGENT_OWNED_LEGACY_RESPONSE_INDEX_RECOVERY",
+      "statement": "Known SAFOR_AGENT_OUTBOX_INDEX state is recoverable only by the owning Agent via expected-blob CAS/readback into canonical SAFOR_AGENT_RESPONSE_INDEX while preserving historical response refs and authoritativeAcceptance=false; MASTER writes and heuristic unknown-format migration are forbidden.",
+      "expected": true
     }
   ],
   "lastManualVerification": {

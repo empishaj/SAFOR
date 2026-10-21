@@ -2,10 +2,23 @@ import hashlib
 import json
 import unittest
 
+from tests.v014_fixtures import (
+    TEST_JOB_ID,
+    canonical_response_index,
+    expected_job_binding,
+    pointer,
+    valid_agent_job,
+)
+from runtime.agent_responses import prepare_agent_response
 from runtime.go_evidence import (
     GoEvidenceValidationError,
+    confirm_agent_state_rearm_after_provider_readback,
     confirm_go_claim_after_provider_readback,
+    confirm_result_submitted_state_after_provider_readback,
+    prepare_agent_state_rearm_after_settlement,
     prepare_go_claim,
+    prepare_result_submitted_agent_state,
+    validate_agent_state_contract,
 )
 
 
@@ -38,7 +51,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "format": "SAFOR_AGENT_JOB_STATE",
             "schemaVersion": "0.14.0",
             "projectId": "project-001",
-            "jobId": "job-001",
+            "jobId": TEST_JOB_ID,
             "assignedAgentId": "agent-a",
             "assignedIdentityRevision": 2,
             "dispatchRevision": 3,
@@ -52,6 +65,23 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             },
         }
 
+    def job_contract(self):
+        return valid_agent_job(
+            project_id="project-001",
+            job_id=TEST_JOB_ID,
+            agent_id="agent-a",
+            display_name="Agent Alpha",
+            identity_revision=2,
+            dispatch_revision=3,
+            control_repository="example/safor-memory",
+            control_branch="main",
+            product_repository="example/product",
+            product_branch="safor/job/test",
+        )
+
+    def job_contract_ref(self, master_state=None):
+        return dict((master_state or self.master_job_state())["contractRef"])
+
     def evidence(self):
         return {
             "format": "SAFOR_HUMAN_GO_EVIDENCE",
@@ -60,7 +90,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "projectId": "project-001",
             "agentId": "agent-a",
             "identityRevision": 2,
-            "targetJobId": "job-001",
+            "targetJobId": TEST_JOB_ID,
             "targetDispatchRevision": 3,
             "intent": "GO",
             "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
@@ -89,6 +119,8 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         return prepare_go_claim(
             agent_state=agent_state or self.agent_state(),
             master_job_state=master_state or self.master_job_state(),
+            job_contract=self.job_contract(),
+            job_contract_ref=self.job_contract_ref(master_state),
             go_evidence=self.evidence(),
             expected_agent_state_revision=7,
             go_evidence_ref=self.evidence_ref(),
@@ -106,13 +138,31 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
             "observedBlobSha": "blob-claim-123",
         }
 
+    def test_claim_rejects_job_missing_required_claim_binding(self):
+        invalid = self.job_contract()
+        del invalid["scheduling"]["claimPolicy"]["agentStateSchemaRef"]
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_JOB_CONTRACT_INVALID",
+        ):
+            prepare_go_claim(
+                agent_state=self.agent_state(),
+                master_job_state=self.master_job_state(),
+                job_contract=invalid,
+                job_contract_ref=self.job_contract_ref(),
+                go_evidence=self.evidence(),
+                expected_agent_state_revision=7,
+                go_evidence_ref=self.evidence_ref(),
+                master_job_state_ref=self.master_ref(),
+            )
+
     def test_claim_mutates_only_agent_state_and_persists_activation(self):
         master = self.master_job_state()
         intent = self.intent(master_state=master)
         self.assertEqual("AGENT", intent["claimStateOwner"])
         self.assertFalse(intent["masterJobStateMutationAllowed"])
         self.assertEqual("RUNNING", intent["proposedState"]["runtimeStatus"])
-        self.assertEqual("job-001", intent["proposedState"]["currentJob"]["jobId"])
+        self.assertEqual(TEST_JOB_ID, intent["proposedState"]["currentJob"]["jobId"])
         self.assertEqual(
             "activation-rc4-001",
             intent["proposedState"]["currentJob"]["claimId"],
@@ -151,7 +201,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         observed = json.loads(json.dumps(intent["proposedState"]))
         observed["currentJob"]["jobId"] = "job-other"
         with self.assertRaisesRegex(
-            GoEvidenceValidationError, "PROVIDER_CLAIM_STATE_MISMATCH"
+            GoEvidenceValidationError, "AGENT_STATE_CURRENT_JOB_BINDING_MISMATCH"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=intent,
@@ -193,7 +243,7 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         tampered_intent["proposedState"] = observed
         tampered_intent["proposedStateDigest"] = digest(observed)
         with self.assertRaisesRegex(
-            GoEvidenceValidationError, "PROVIDER_CLAIM_ACTIVATION_NOT_PERSISTED"
+            GoEvidenceValidationError, "AGENT_STATE_CLAIM_ACTIVATION_NOT_CONSUMED"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
@@ -209,12 +259,349 @@ class GoClaimIntegrityV014Tests(unittest.TestCase):
         tampered_intent["proposedState"] = observed
         tampered_intent["proposedStateDigest"] = digest(observed)
         with self.assertRaisesRegex(
-            GoEvidenceValidationError, "PROVIDER_CLAIM_ID_NOT_PERSISTED"
+            GoEvidenceValidationError, "AGENT_STATE_CLAIM_ID_BINDING_MISMATCH"
         ):
             confirm_go_claim_after_provider_readback(
                 claim_intent=tampered_intent,
                 provider_readback=self.readback(tampered_intent, observed),
                 consumed_activation_ids=set(),
+            )
+
+    def test_proposed_claim_state_matches_exact_agent_state_contract(self):
+        intent = self.intent()
+        proposed = intent["proposedState"]
+        validate_agent_state_contract(
+            proposed,
+            require_claim=True,
+            expected_activation_id="activation-rc4-001",
+            expected_job_id=TEST_JOB_ID,
+            expected_dispatch_revision=3,
+        )
+        self.assertEqual(
+            {
+                "activationId",
+                "activationEvidenceRef",
+                "activatedAt",
+                "selectedJobId",
+                "selectedDispatchRevision",
+            },
+            set(proposed["session"]),
+        )
+        self.assertEqual(
+            {
+                "jobId",
+                "jobRef",
+                "jobBlobSha",
+                "masterJobStateRef",
+                "dispatchRevision",
+                "claimId",
+            },
+            set(proposed["currentJob"]),
+        )
+        self.assertEqual(
+            proposed["session"]["activationId"],
+            proposed["currentJob"]["claimId"],
+        )
+
+    def test_echo_e2e_freeform_claim_state_is_rejected(self):
+        intent = self.intent()
+        observed = json.loads(json.dumps(intent["proposedState"]))
+        observed["session"] = {
+            "activationMode": "HUMAN_GO_REQUIRED",
+            "activationId": "activation-rc4-001",
+            "activatedAt": "2026-10-18T10:00:00Z",
+            "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+        }
+        observed["currentJob"] = {
+            "jobId": TEST_JOB_ID,
+            "jobKey": "or03-human-go-real-git-001",
+            "contractRevision": 1,
+            "dispatchRevision": 3,
+            "claimedAt": "2026-10-18T10:00:00Z",
+            "claimAuthority": "AGENT_STATE_PROVIDER_CAS_READBACK",
+        }
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError, "AGENT_SESSION_FIELDS_INVALID"
+        ):
+            confirm_go_claim_after_provider_readback(
+                claim_intent=intent,
+                provider_readback=self.readback(intent, observed),
+                consumed_activation_ids=set(),
+            )
+
+    def test_result_submitted_state_uses_exact_schema_transition(self):
+        intent = self.intent()
+        running = intent["proposedState"]
+        job = self.job_contract()
+        contract_ref = self.job_contract_ref()
+        payload = {
+            "completionStatus": "COMPLETED",
+            "outputs": [
+                {
+                    "ref": "example/product@safor/job/test:test-output/result.txt",
+                    "expectedType": "TEST_OUTPUT",
+                }
+            ],
+            "gitTrace": [
+                {
+                    "repository": "example/product",
+                    "branch": "safor/job/test",
+                    "baseCommitSha": "abcdef1234567",
+                    "headCommitSha": "abcdef7654321",
+                    "commitShas": ["abcdef7654321"],
+                    "changedPaths": ["test-output/result.txt"],
+                    "changeRequestRef": None,
+                    "providerReadbackRef": "git:readback:product",
+                }
+            ],
+            "checks": [
+                {
+                    "checkId": "product-readback",
+                    "commandOrMethod": "provider readback",
+                    "status": "PASS",
+                    "evidenceRef": "git:readback:product",
+                }
+            ],
+            "openItems": [],
+        }
+        response = prepare_agent_response(
+            job=job,
+            response_type="JOB_RESULT",
+            response_id="response-001",
+            created_at="2026-10-18T10:04:00Z",
+            summary="Test result submitted.",
+            payload=payload,
+            job_contract_ref=contract_ref,
+            target_master_ref="projects/example/master/jobs/job.json",
+            evidence_refs=["git:claim"],
+            provider_mutation_refs=["git:product"],
+        )
+        expected_job = expected_job_binding(
+            job,
+            blob_sha=contract_ref["blobSha"],
+            contract_path=contract_ref["path"],
+        )
+        response_index = canonical_response_index(response=response)
+        submitted = prepare_result_submitted_agent_state(
+            agent_state=running,
+            expected_agent_state_revision=8,
+            response=response,
+            response_index=response_index,
+            expected_job=expected_job,
+            response_ref="git:response:response-001",
+            submitted_at="2026-10-18T10:05:00Z",
+        )
+        proposed = submitted["proposedState"]
+        self.assertEqual("RESULT_SUBMITTED", proposed["runtimeStatus"])
+        self.assertEqual("git:response:response-001", proposed["lastResponseRef"])
+        self.assertEqual(
+            running["currentJob"]["claimId"],
+            proposed["currentJob"]["claimId"],
+        )
+        readback = {
+            "casSucceeded": True,
+            "readbackVerified": True,
+            "observedState": json.loads(json.dumps(proposed)),
+            "observedStateDigest": digest(proposed),
+            "readbackRef": "git:commit:submitted",
+            "observedBlobSha": "blob-submitted-123",
+        }
+        confirmed = confirm_result_submitted_state_after_provider_readback(
+            state_intent=submitted,
+            provider_readback=readback,
+        )
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("RESULT_SUBMITTED", confirmed["state"]["runtimeStatus"])
+
+    def test_result_submitted_rejects_noncanonical_response_index(self):
+        intent = self.intent()
+        running = intent["proposedState"]
+        job = self.job_contract()
+        contract_ref = self.job_contract_ref()
+        payload = {
+            "completionStatus": "COMPLETED",
+            "outputs": [{"ref": "git:output", "expectedType": "TEST_OUTPUT"}],
+            "gitTrace": [],
+            "checks": [],
+            "openItems": [],
+        }
+        response = prepare_agent_response(
+            job=job,
+            response_type="JOB_RESULT",
+            response_id="response-001",
+            created_at="2026-10-18T10:04:00Z",
+            summary="Test result submitted.",
+            payload=payload,
+            job_contract_ref=contract_ref,
+            target_master_ref="projects/example/master/jobs/job.json",
+        )
+        invalid_index = {
+            "format": "SAFOR_AGENT_OUTBOX_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": "project-001",
+            "agentId": "agent-a",
+            "identityRevision": 2,
+            "revision": 1,
+            "entries": [],
+            "updatedAt": "2026-10-18T10:04:00Z",
+        }
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "RESULT_RESPONSE_CONTRACT_INVALID:RESPONSE_INDEX",
+        ):
+            prepare_result_submitted_agent_state(
+                agent_state=running,
+                expected_agent_state_revision=8,
+                response=response,
+                response_index=invalid_index,
+                expected_job=expected_job_binding(
+                    job,
+                    blob_sha=contract_ref["blobSha"],
+                    contract_path=contract_ref["path"],
+                ),
+                response_ref="git:response:response-001",
+                submitted_at="2026-10-18T10:05:00Z",
+            )
+
+    def test_echo_e2e_freeform_submitted_state_is_rejected(self):
+        intent = self.intent()
+        invalid = json.loads(json.dumps(intent["proposedState"]))
+        invalid["runtimeStatus"] = "SUBMITTED"
+        invalid["lastResponseRef"] = {
+            "repository": "example/safor-memory",
+            "path": "response.json",
+        }
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_STATE_RUNTIME_STATUS_INVALID|AGENT_STATE_LAST_RESPONSE_REF_INVALID",
+        ):
+            validate_agent_state_contract(
+                invalid,
+                require_claim=True,
+                expected_activation_id="activation-rc4-001",
+                expected_job_id=TEST_JOB_ID,
+                expected_dispatch_revision=3,
+                expected_runtime_status="RESULT_SUBMITTED",
+            )
+
+    def result_submitted_state(self):
+        intent = self.intent()
+        state = json.loads(json.dumps(intent["proposedState"]))
+        state["revision"] = 9
+        state["runtimeStatus"] = "RESULT_SUBMITTED"
+        state["lastResponseRef"] = "git:response:response-001"
+        state["updatedAt"] = "2026-10-18T10:05:00Z"
+        validate_agent_state_contract(
+            state,
+            require_claim=True,
+            expected_activation_id="activation-rc4-001",
+            expected_job_id=TEST_JOB_ID,
+            expected_dispatch_revision=3,
+            expected_runtime_status="RESULT_SUBMITTED",
+        )
+        return state
+
+    def settled_master_state(self, status="REJECTED"):
+        master = self.master_job_state()
+        master["revision"] = 6
+        master["lifecycleStatus"] = status
+        return master
+
+    def test_agent_rearm_after_master_rejection_preserves_history(self):
+        state = self.result_submitted_state()
+        intent = prepare_agent_state_rearm_after_settlement(
+            agent_state=state,
+            settled_master_job_state=self.settled_master_state(),
+            expected_agent_state_revision=9,
+            human_message="GO",
+            human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+            observed_at="2026-10-18T10:06:00Z",
+        )
+        self.assertFalse(intent["authoritative"])
+        self.assertEqual("AGENT", intent["stateOwner"])
+        self.assertFalse(intent["masterJobStateMutationAllowed"])
+        proposed = intent["proposedState"]
+        self.assertEqual(10, proposed["revision"])
+        self.assertEqual("WAITING_HUMAN_GO", proposed["runtimeStatus"])
+        self.assertIsNone(proposed["session"])
+        self.assertIsNone(proposed["currentJob"])
+        self.assertEqual(
+            state["consumedActivationIds"],
+            proposed["consumedActivationIds"],
+        )
+        self.assertEqual(state["lastResponseRef"], proposed["lastResponseRef"])
+
+        readback = {
+            "casSucceeded": True,
+            "readbackVerified": True,
+            "observedState": json.loads(json.dumps(proposed)),
+            "observedStateDigest": digest(proposed),
+            "readbackRef": "git:commit:rearm",
+            "observedBlobSha": "blob-rearm-123",
+        }
+        confirmed = confirm_agent_state_rearm_after_provider_readback(
+            rearm_intent=intent,
+            provider_readback=readback,
+        )
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("WAITING_HUMAN_GO", confirmed["state"]["runtimeStatus"])
+
+    def test_agent_rearm_requires_separate_direct_human_go(self):
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_REQUIRES_SEPARATE_HUMAN_GO",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=self.settled_master_state(),
+                expected_agent_state_revision=9,
+                human_message="INITIALIZE",
+                human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+                observed_at="2026-10-18T10:06:00Z",
+            )
+
+    def test_agent_rearm_rejects_nonhuman_trigger_source(self):
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_HUMAN_SOURCE_INVALID",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=self.settled_master_state(),
+                expected_agent_state_revision=9,
+                human_message="GO",
+                human_input_source="MASTER_TRIGGER",
+                observed_at="2026-10-18T10:06:00Z",
+            )
+
+    def test_agent_rearm_rejects_unsettled_master_job(self):
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_MASTER_JOB_NOT_SETTLED",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=self.settled_master_state("VERIFIED"),
+                expected_agent_state_revision=9,
+                human_message="GO",
+                human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+                observed_at="2026-10-18T10:06:00Z",
+            )
+
+    def test_agent_rearm_rejects_wrong_prior_job_binding(self):
+        master = self.settled_master_state()
+        master["jobId"] = "other-job"
+        with self.assertRaisesRegex(
+            GoEvidenceValidationError,
+            "AGENT_REARM_JOB_MISMATCH",
+        ):
+            prepare_agent_state_rearm_after_settlement(
+                agent_state=self.result_submitted_state(),
+                settled_master_job_state=master,
+                expected_agent_state_revision=9,
+                human_message="GO",
+                human_input_source="DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+                observed_at="2026-10-18T10:06:00Z",
             )
 
     def test_duplicate_confirm_is_rejected_by_local_cache(self):

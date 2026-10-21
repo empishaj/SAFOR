@@ -1,11 +1,17 @@
 import copy
+import hashlib
 import json
 import unittest
 from pathlib import Path
 
 from runtime.agent_responses import (
     AgentResponseValidationError,
+    confirm_agent_response_after_provider_readback,
+    confirm_legacy_response_index_recovery_after_provider_readback,
+    prepare_agent_response,
+    prepare_legacy_response_index_recovery,
     validate_agent_response,
+    validate_agent_response_index,
     validate_response_index_binding,
     validate_response_resolution,
 )
@@ -73,6 +79,53 @@ class AgentResponsesV014Tests(unittest.TestCase):
             "providerMutationRefs": [],
             "payload": {},
             "immutable": True,
+        }
+
+    def job(self):
+        response_types = {
+            "JOB_RESULT": "job-result",
+            "JOB_ERROR": "job-error",
+            "CLARIFICATION_REQUEST": "clarification-request",
+            "CAPABILITY_MISMATCH": "capability-mismatch",
+            "IMPROVEMENT_PROPOSAL": "improvement-proposal",
+        }
+        contracts = {}
+        for response_type, slug in response_types.items():
+            contracts[response_type] = {
+                "responseType": response_type,
+                "templateRef": {
+                    "repository": "empishaj/SAFOR",
+                    "ref": "commit-rc6",
+                    "path": f"v0.14.0/templates/responses/{slug}.template.json",
+                    "blobSha": "template123",
+                },
+                "schemaRef": {
+                    "repository": "empishaj/SAFOR",
+                    "ref": "commit-rc6",
+                    "path": "v0.14.0/schemas/agent-response.schema.json",
+                    "blobSha": "schema123",
+                },
+                "writeTarget": {
+                    "repositoryClass": "CONTROL_REPOSITORY",
+                    "repository": "example/safor-memory",
+                    "branch": "main",
+                    "pathPattern": "projects/example/agents/agent-dev-003/outbox/{jobId}/{responseId}.json",
+                    "allowedOperations": ["READ", "CREATE", "COMMIT", "PUSH"],
+                },
+                "required": True,
+                "preWriteSchemaValidationRequired": True,
+                "providerReadbackRequired": True,
+                "postReadbackSchemaValidationRequired": True,
+            }
+        return {
+            "identity": {"jobId": "job-014"},
+            "lineage": {
+                "projectId": "project-001",
+                "packageId": "WP-014",
+                "workItemId": "WP-014-IMPL",
+            },
+            "assignment": {"agentId": "agent-dev-003", "identityRevision": 2},
+            "responseContracts": contracts,
         }
 
     def conflict(self, conflict_type="TECHNICAL_FAILURE"):
@@ -214,6 +267,114 @@ class AgentResponsesV014Tests(unittest.TestCase):
             with self.subTest(response_type=response["responseType"]):
                 validate_agent_response(response, expected_job=self.expected_job)
 
+    def test_prepare_response_uses_bound_template_and_schema(self):
+        job_contract_ref = copy.deepcopy(self.pointer)
+        response = prepare_agent_response(
+            job=self.job(),
+            response_type="JOB_RESULT",
+            response_id="response-job_result-002",
+            created_at="2026-10-19T13:38:00Z",
+            summary="Completed.",
+            payload={
+                "completionStatus": "COMPLETED",
+                "outputs": [{"ref": "product:artifact", "expectedType": "CONTRIBUTION"}],
+                "gitTrace": [],
+                "checks": [],
+                "openItems": [],
+            },
+            job_contract_ref=job_contract_ref,
+            target_master_ref="projects/example/master/jobs/job-014.json",
+            evidence_refs=["evidence:claim"],
+            provider_mutation_refs=["git:product:commit"],
+        )
+        self.assertEqual(set(response), {
+            "format", "schemaVersion", "responseId", "responseType", "projectId",
+            "jobId", "packageId", "workItemId", "agentId", "identityRevision",
+            "jobContractRef", "observedJobContractBlobSha", "responseContractRef",
+            "targetMasterRef", "createdAt", "status", "summary", "executionControl",
+            "chatStatus", "evidenceRefs", "providerMutationRefs", "payload", "immutable",
+        })
+        self.assertEqual(
+            "v0.14.0/templates/responses/job-result.template.json",
+            response["responseContractRef"]["path"],
+        )
+        validate_agent_response(response, expected_job=self.expected_job)
+
+    def test_provider_readback_must_match_and_revalidate_response(self):
+        response = self.result()
+        digest = "sha256:" + hashlib.sha256(
+            json.dumps(
+                response,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        confirmed = confirm_agent_response_after_provider_readback(
+            proposed_response=response,
+            provider_readback={
+                "writeSucceeded": True,
+                "readbackVerified": True,
+                "observedResponse": copy.deepcopy(response),
+                "observedResponseDigest": digest,
+                "readbackRef": "git:response:commit",
+                "observedBlobSha": "responseblob123",
+            },
+            expected_job=self.expected_job,
+        )
+        self.assertTrue(confirmed["authoritativePersistence"])
+        self.assertEqual(response["responseId"], confirmed["responseId"])
+
+    def test_echo_e2e_simplified_job_result_is_rejected(self):
+        response = {
+            "format": "SAFOR_AGENT_RESPONSE",
+            "schemaVersion": "0.14.0",
+            "responseType": "JOB_RESULT",
+            "responseId": "019d9f6b-0000-7abc-8d21-000000000001",
+            "projectId": "project-001",
+            "jobId": "job-014",
+            "jobKey": "or03-human-go-real-git-001",
+            "agentId": "agent-dev-003",
+            "identityRevision": 2,
+            "status": "SUBMITTED",
+            "createdAt": "2026-10-19T13:38:00Z",
+            "summary": "Plausible but nonconforming result.",
+            "result": {"productArtifact": {"path": "proof.md"}},
+            "evidence": {"claimReadback": {"commitSha": "abc1234"}},
+        }
+        with self.assertRaisesRegex(
+            AgentResponseValidationError, "RESPONSE_FIELDS_INVALID"
+        ):
+            validate_agent_response(response, expected_job=self.expected_job)
+
+    def test_readback_with_extra_field_is_rejected_before_submission(self):
+        response = self.result()
+        observed = copy.deepcopy(response)
+        observed["jobKey"] = "forbidden-freeform-field"
+        digest = "sha256:" + hashlib.sha256(
+            json.dumps(
+                observed,
+                ensure_ascii=False,
+                sort_keys=True,
+                separators=(",", ":"),
+            ).encode("utf-8")
+        ).hexdigest()
+        with self.assertRaisesRegex(
+            AgentResponseValidationError, "RESPONSE_FIELDS_INVALID"
+        ):
+            confirm_agent_response_after_provider_readback(
+                proposed_response=response,
+                provider_readback={
+                    "writeSucceeded": True,
+                    "readbackVerified": True,
+                    "observedResponse": observed,
+                    "observedResponseDigest": digest,
+                    "readbackRef": "git:response:commit",
+                    "observedBlobSha": "responseblob123",
+                },
+                expected_job=self.expected_job,
+            )
+
     def test_result_requires_output(self):
         response = self.result()
         response["payload"]["outputs"] = []
@@ -349,6 +510,173 @@ class AgentResponsesV014Tests(unittest.TestCase):
             AgentResponseValidationError, "SUPERSEDING_JOB_ID_REQUIRED"
         ):
             validate_response_resolution(resolution, response=response)
+
+    def test_canonical_response_index_validates(self):
+        response = self.result()
+        index = {
+            "format": "SAFOR_AGENT_RESPONSE_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": response["projectId"],
+            "agentId": response["agentId"],
+            "identityRevision": response["identityRevision"],
+            "revision": 1,
+            "authoritativeAcceptance": False,
+            "entries": [
+                {
+                    "responseId": response["responseId"],
+                    "responseType": response["responseType"],
+                    "jobId": response["jobId"],
+                    "responseRef": {
+                        "repository": "example/safor-memory",
+                        "ref": "commit123",
+                        "path": (
+                            "projects/example/agents/agent-dev-003/outbox/"
+                            f"{response['jobId']}/{response['responseId']}.json"
+                        ),
+                        "blobSha": "blob1234",
+                    },
+                    "createdAt": response["createdAt"],
+                    "responseState": "SUBMITTED",
+                    "resolutionRef": None,
+                }
+            ],
+            "updatedAt": response["createdAt"],
+        }
+        validate_agent_response_index(
+            index,
+            expected_project_id=response["projectId"],
+            expected_agent_id=response["agentId"],
+            expected_identity_revision=response["identityRevision"],
+            expected_response=response,
+        )
+
+    def test_real_git_outbox_index_shape_is_rejected(self):
+        response = self.result()
+        invalid = {
+            "format": "SAFOR_AGENT_OUTBOX_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": response["projectId"],
+            "agentId": response["agentId"],
+            "identityRevision": response["identityRevision"],
+            "revision": 1,
+            "entries": [],
+            "updatedAt": response["createdAt"],
+        }
+        with self.assertRaisesRegex(
+            AgentResponseValidationError,
+            "RESPONSE_INDEX_FIELDS_INVALID|RESPONSE_INDEX_FORMAT_INVALID",
+        ):
+            validate_agent_response_index(
+                invalid,
+                expected_project_id=response["projectId"],
+                expected_agent_id=response["agentId"],
+                expected_identity_revision=response["identityRevision"],
+                expected_response=response,
+            )
+
+    def legacy_outbox_index(self):
+        return {
+            "format": "SAFOR_AGENT_OUTBOX_INDEX",
+            "schemaVersion": "0.14.0",
+            "projectId": "project-001",
+            "agentId": "agent-dev-003",
+            "identityRevision": 2,
+            "revision": 1,
+            "entries": [
+                {
+                    "responseId": "legacy-result-001",
+                    "responseType": "JOB_RESULT",
+                    "jobId": "job-013",
+                    "responseRef": {
+                        "repository": "example/safor-memory",
+                        "ref": "legacy-commit",
+                        "path": (
+                            "projects/example/agents/agent-dev-003/outbox/"
+                            "job-013.job_result.json"
+                        ),
+                        "blobSha": "legacyblob123",
+                    },
+                    "status": "SUBMITTED",
+                    "createdAt": "2026-10-16T10:00:00Z",
+                }
+            ],
+            "updatedAt": "2026-10-16T10:01:00Z",
+        }
+
+    def test_legacy_outbox_index_recovery_preserves_history_and_canonicalizes(self):
+        legacy = self.legacy_outbox_index()
+        intent = prepare_legacy_response_index_recovery(
+            legacy_index=legacy,
+            expected_project_id="project-001",
+            expected_agent_id="agent-dev-003",
+            expected_identity_revision=2,
+            expected_blob_sha="legacy-index-blob",
+            recovered_at="2026-10-19T19:00:00Z",
+        )
+        self.assertFalse(intent["authoritative"])
+        self.assertEqual("AGENT", intent["stateOwner"])
+        proposed = intent["proposedIndex"]
+        self.assertEqual("SAFOR_AGENT_RESPONSE_INDEX", proposed["format"])
+        self.assertEqual(2, proposed["revision"])
+        self.assertFalse(proposed["authoritativeAcceptance"])
+        self.assertEqual(1, len(proposed["entries"]))
+        migrated = proposed["entries"][0]
+        self.assertEqual(
+            legacy["entries"][0]["responseRef"],
+            migrated["responseRef"],
+        )
+        self.assertEqual("SUPERSEDED", migrated["responseState"])
+        self.assertIsNone(migrated["resolutionRef"])
+        validate_agent_response_index(
+            proposed,
+            expected_project_id="project-001",
+            expected_agent_id="agent-dev-003",
+            expected_identity_revision=2,
+        )
+
+        confirmed = confirm_legacy_response_index_recovery_after_provider_readback(
+            recovery_intent=intent,
+            provider_readback={
+                "casSucceeded": True,
+                "readbackVerified": True,
+                "observedIndex": copy.deepcopy(proposed),
+                "observedBlobSha": "canonical-index-blob",
+            },
+        )
+        self.assertTrue(confirmed["authoritative"])
+        self.assertEqual("AGENT", confirmed["stateOwner"])
+        self.assertEqual(proposed, confirmed["index"])
+
+    def test_legacy_response_index_recovery_rejects_unknown_shape(self):
+        legacy = self.legacy_outbox_index()
+        legacy["unexpected"] = True
+        with self.assertRaisesRegex(
+            AgentResponseValidationError,
+            "LEGACY_RESPONSE_INDEX_FIELDS_INVALID",
+        ):
+            prepare_legacy_response_index_recovery(
+                legacy_index=legacy,
+                expected_project_id="project-001",
+                expected_agent_id="agent-dev-003",
+                expected_identity_revision=2,
+                expected_blob_sha="legacy-index-blob",
+                recovered_at="2026-10-19T19:00:00Z",
+            )
+
+    def test_legacy_response_index_recovery_rejects_foreign_agent(self):
+        legacy = self.legacy_outbox_index()
+        with self.assertRaisesRegex(
+            AgentResponseValidationError,
+            "LEGACY_RESPONSE_INDEX_AGENT_MISMATCH",
+        ):
+            prepare_legacy_response_index_recovery(
+                legacy_index=legacy,
+                expected_project_id="project-001",
+                expected_agent_id="other-agent",
+                expected_identity_revision=2,
+                expected_blob_sha="legacy-index-blob",
+                recovered_at="2026-10-19T19:00:00Z",
+            )
 
     def test_response_index_path_is_deterministic(self):
         response = self.result()

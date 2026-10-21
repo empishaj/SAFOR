@@ -3,13 +3,13 @@
   "schemaVersion": "1.0",
   "product": "SAFOR",
   "expansion": "Systemic AI Factory Orchestration Runtime",
-  "version": "0.14.0-rc.5",
+  "version": "0.14.0-rc.6",
   "status": "RELEASE_CANDIDATE",
   "canonicalRepository": "empishaj/SAFOR",
   "sourceRoot": "v0.14.0",
-  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.5.json",
+  "distributable": "SAFOR-FRAMEWORK-v0.14.0-rc.6.json",
   "latestAlias": "SAFOR-FRAMEWORK.json",
-  "previousVersion": "0.14.0-rc.4",
+  "previousVersion": "0.14.0-rc.5",
   "runtimeMemoryPattern": "{selectedOwner}/safor-memory",
   "requiredCreationTypes": [
     "WEBSITE",
@@ -177,7 +177,20 @@
     "PERSONAL_AGENT_INBOX_JOB_TRANSPORT",
     "HUMAN_GO_INBOX_PULL_ACTIVATION",
     "HOST_SESSION_ATTESTATION_NOT_REQUIRED",
-    "IDENTITY_REVISION_AND_INBOX_BOUND_CLAIM"
+    "IDENTITY_REVISION_AND_INBOX_BOUND_CLAIM",
+    "EXACT_RELEASE_SOURCE_PROVENANCE",
+    "WORKFLOW_HEAD_SOURCE_BINDING",
+    "ARTIFACT_SET_DIGEST_BINDING",
+    "CHECKSUM_FILE_DIGEST_BINDING",
+    "RELEASE_EVIDENCE_DRIFT_FAIL_CLOSED",
+    "SCHEMA_VALIDATED_AGENT_STATE_BEFORE_CAS",
+    "SCHEMA_VALIDATED_AGENT_STATE_AFTER_READBACK",
+    "PERSISTED_PROVIDER_READBACK_HUMAN_GO_EVIDENCE",
+    "TEMPLATE_BOUND_TYPED_RESPONSE_CONSTRUCTION",
+    "SCHEMA_VALIDATED_RESPONSE_BEFORE_WRITE",
+    "SCHEMA_VALIDATED_RESPONSE_AFTER_READBACK",
+    "SCHEMA_BOUND_SETTLED_AGENT_REARM_TEMPLATE",
+    "BLOCKED_AGENT_SAFE_REARM"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -298,9 +311,9 @@
     "CAPABILITY_MISMATCH",
     "IMPROVEMENT_PROPOSAL"
   ],
-  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.5.json",
-  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.5.md",
-  "checksumFile": "SHA256SUMS-0.14.0-rc.5.txt",
+  "releaseEvidenceRef": "RELEASE-EVIDENCE-0.14.0-rc.6.json",
+  "releaseNotesRef": "RELEASE-NOTES-0.14.0-rc.6.md",
+  "checksumFile": "SHA256SUMS-0.14.0-rc.6.txt",
   "referenceProjectMigration": {
     "historicalBaselineMigration": {
       "status": "COMPLETED",
@@ -326,7 +339,7 @@
       }
     },
     "candidateMigration": {
-      "targetVersion": "0.14.0-rc.5",
+      "targetVersion": "0.14.0-rc.6",
       "status": "NOT_STARTED",
       "prerequisites": [
         "V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE"
@@ -361,7 +374,7 @@
   },
   "auditRemediation": {
     "sourceRelease": "0.14.0-rc.2",
-    "targetRelease": "0.14.0-rc.5",
+    "targetRelease": "0.14.0-rc.6",
     "baseCommit": "c1019b6253e5906b315c8eaa31413ff5acca3605",
     "findings": {
       "AUDIT-RC2-01": "RESOLVED_AUTOMATED_SCHEMA_AND_DOMAIN_TESTS",
@@ -386,7 +399,38 @@
       "purpose": "Replace unverifiable host chat/session binding with pinned agent identity plus MASTER-written personal inbox job transport."
     }
   },
-  "embeddedModuleCount": 93,
+  "embeddedModuleCount": 99,
   "releaseFactsRef": "RELEASE-FACTS.json",
-  "releaseArtifactsState": "MATERIALIZED_AND_AUTOMATED_VALIDATION_PASS"
+  "releaseArtifactsState": "PENDING_RELEASE_MATERIALIZATION",
+  "operationalReadiness": {
+    "status": "INITIALIZED_PENDING_EVIDENCE",
+    "baselineRef": "docs/master-subagent-orchestration/OPERATIONAL-READINESS-BASELINE-0.14.0-rc.6.md",
+    "requiredGates": [
+      "OR-01_EXACT_RELEASE_PROVENANCE_PASS",
+      "OR-02_AUTOMATED_EXACT_HEAD_VALIDATION_PASS",
+      "OR-03_HUMAN_GO_REAL_GIT_PASS",
+      "OR-04_AGENT_STATE_CAS_PASS",
+      "OR-05_MASTER_RECONCILIATION_PASS",
+      "OR-06_REAL_JOB_RESULT_PASS",
+      "OR-07_INDEPENDENT_REVIEW_PASS",
+      "OR-08_FAILURE_RECOVERY_PASS",
+      "OR-09_REFERENCE_MIGRATION_PASS",
+      "OR-10_SINGLE_AGENT_OPERATION_PASS",
+      "OR-11_MULTI_AGENT_OPERATION_PASS"
+    ],
+    "releaseProvenanceContractRef": "docs/releases/RELEASE-EVIDENCE-CONTRACT-v1.json",
+    "releaseMaterializationWorkflowRef": ".github/workflows/rc6-release-provenance-validation.yml",
+    "echoE2EFailureRemediation": {
+      "finding": "FREEFORM_AGENT_STATE_AND_RESPONSE_ENVELOPE",
+      "status": "IMPLEMENTED_PENDING_CI_AND_RERUN",
+      "sourceEvidence": "projects/safor-rc6-e2e/audit/or03-or04-verification-failure.json",
+      "remediation": [
+        "PIN_EXACT_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
+        "PIN_EXACT_AGENT_STATE_SCHEMA_AND_TRANSITION_TEMPLATES",
+        "VALIDATE_BEFORE_CAS_AND_AFTER_READBACK",
+        "PIN_EXACT_RESPONSE_TEMPLATE_AND_SCHEMA",
+        "VALIDATE_BEFORE_RESPONSE_WRITE_AND_AFTER_READBACK"
+      ]
+    }
+  }
 }

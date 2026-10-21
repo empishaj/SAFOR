@@ -4,13 +4,15 @@
 
 SAFOR is a system-oriented orchestration runtime for HUMAN-governed, evidence-backed AI work across interchangeable Factories and Operating Models.
 
-> Current maturity: **v0.14.0-rc.5 — Release Candidate**
+> Current maturity: **v0.14.0-rc.6 — Release Candidate**
 
 ## Product execution model
 
 SAFOR is loaded as JSON into an ordinary compatible LLM chat. No customer-installed runtime is required. The chat follows the declarative contract and uses only real host/Git capabilities. Optional Python reference implementations support validation and stronger host integration but are not an end-user prerequisite.
 
 MASTER is the only fachliche and organizational HUMAN interface. An agent does not conduct domain discussion with the HUMAN; it writes substantive results, questions, conflicts and evidence to the contracted Git targets and renders only minimal operational status in its initialized agent chat.
+
+For normal `CHAT_AGENT` execution, activation authority is HUMAN-only: MASTER prepares and dispatches the Job, but only direct HUMAN `GO` in the initialized Agent chat may trigger execution. MASTER does not start the Agent chat, synthesize `GO` or create HUMAN-GO evidence on the HUMAN's behalf.
 
 ## Start here
 
@@ -27,7 +29,7 @@ Use the domain-specific entrypoint:
 
 The Domain Framework already fixes Website, SaaS or Book and embeds the matching default Factory and Operating Model. SAFOR must not ask the user to select the domain again. The additional SaaS/Book test file is entitlement evidence for the exact public test versions; it is not another domain module and never grants production authorization.
 
-`SAFOR-FRAMEWORK.json` and `SAFOR-FRAMEWORK-v0.14.0-rc.5.json` remain the generic shared base Frameworks for engineering and distribution building. They intentionally ask for a Creation Type and are not the simplest end-user entrypoint.
+`SAFOR-FRAMEWORK.json` and `SAFOR-FRAMEWORK-v0.14.0-rc.6.json` remain the generic shared base Frameworks for engineering and distribution building. They intentionally ask for a Creation Type and are not the simplest end-user entrypoint.
 
 ## Platform-owned HUMAN communication
 
@@ -63,8 +65,8 @@ These public access bundles are not purchase evidence, are not transferable and 
 
 ## Distribution
 
-- `SAFOR-FRAMEWORK-v0.14.0-rc.5.json` — versioned generic Framework release candidate.
-- `RELEASE-EVIDENCE-0.14.0-rc.5.json` — versioned release, migration and validation evidence.
+- `SAFOR-FRAMEWORK-v0.14.0-rc.6.json` — versioned generic Framework release candidate.
+- `RELEASE-EVIDENCE-0.14.0-rc.6.json` — versioned release, migration and validation evidence.
 - `SAFOR-FRAMEWORK.json` — current generic Framework alias.
 - `SAFOR-FRAMEWORK-WEBSITE.json` — end-user Website distribution.
 - `SAFOR-FRAMEWORK-SAAS.json` — end-user public SaaS evaluation distribution.

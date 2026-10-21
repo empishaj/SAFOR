@@ -16,11 +16,23 @@
     "BIND_DOMAIN_FACTORY_AND_OPERATING_MODEL_CONTEXT",
     "BIND_EXPLICIT_ROLE_AND_VERSIONED_SKILLS",
     "PIN_ALL_INPUTS",
+    "IF_CURRENT_AGENT_STATE_IS_REIDENTIFICATION_REQUIRED_PIN_EXACT_REIDENTIFICATION_EVIDENCE_AS_READ_ONLY_INPUT",
+    "IF_CURRENT_AGENT_STATE_IS_RESULT_SUBMITTED_OR_BLOCKED_PIN_EXACT_SETTLED_REARM_TEMPLATE_AS_READ_ONLY_INPUT",
     "ALLOCATE_DEDICATED_PRODUCT_BRANCH_WHEN_MUTATING",
     "DECLARE_SEPARATE_PRODUCT_AND_RESPONSE_WRITE_SCOPES",
+    "RESOLVE_PINNED_AGENT_SPECIFIC_AUTHORITY_BASIS_RECORD",
+    "REQUIRE_AUTHORITY_BASIS_ACTIVE",
+    "REQUIRE_AUTHORITY_BASIS_COVERS_JOB_REPOSITORIES_BRANCHES_PATHS_AND_HUMAN_GO",
+    "VERIFY_ACTUAL_PROVIDER_RIGHTS_SEPARATELY_FROM_MANDATE_COVERAGE",
+    "BIND_HUMAN_GO_EVIDENCE_SCHEMA_TEMPLATE_AND_WRITE_TARGET",
+    "BIND_AGENT_STATE_SCHEMA_CLAIM_AND_RESULT_SUBMITTED_TEMPLATES",
+    "REQUIRE_PRE_CAS_AND_POST_READBACK_AGENT_STATE_SCHEMA_VALIDATION",
+    "REQUIRE_PRE_WRITE_AND_POST_READBACK_RESPONSE_SCHEMA_VALIDATION",
     "BIND_ALL_FIVE_RESPONSE_TEMPLATES",
     "BIND_MINIMAL_AGENT_CHAT_CONTRACT",
     "DECLARE_VERIFICATION_REVIEW_AND_ACCEPTANCE",
+    "VALIDATE_EXACT_JSON_SCHEMA_AND_REJECT_UNKNOWN_FIELDS",
+    "FOR_MULTI_AGENT_WAVE_VALIDATE_ALL_JOBS_AUTHORITY_CURRENT_AGENT_STATES_REARM_INPUTS_CAPACITY_PATHS_AND_EXCLUSIVE_KEYS_BEFORE_ANY_PUBLICATION",
     "RENDER_AND_READ_BACK_JSON_AND_MARKDOWN",
     "PUBLISH_AS_WAITING_HUMAN_GO"
   ],
@@ -32,7 +44,49 @@
     "automaticChatActivationForbidden": true,
     "claimStateTarget": "agents/{agentId}/state.json",
     "claimAuthority": "AGENT_STATE_PROVIDER_CAS_READBACK",
-    "masterJobStateAccessDuringClaim": "READ_ONLY"
+    "masterJobStateAccessDuringClaim": "READ_ONLY",
+    "humanGoEvidenceSchema": "schemas/human-go-evidence.schema.json",
+    "humanGoEvidenceTemplate": "templates/human-go-evidence.template.json",
+    "agentStateSchema": "schemas/agent-state.schema.json",
+    "claimStateTemplate": "templates/agent-state-claim.template.json",
+    "resultSubmittedStateTemplate": "templates/agent-state-result-submitted.template.json",
+    "goEvidencePersistenceRequiredBeforeClaim": true,
+    "goEvidenceProviderReadbackRequired": true,
+    "preCasSchemaValidationRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "freeformClaimStateConstructionForbidden": true,
+    "preselectionRearmBindingsBelongInReadOnlyJobInputsNotClaimPolicy": true
+  },
+  "multiAgentWavePreflight": {
+    "requiredBeforeAnyJobPublicationOrHumanActivationInstruction": true,
+    "referenceValidator": "runtime/multi_agent_preflight.py",
+    "atomicCandidateSetRequired": true,
+    "jobSetMustEqualWaveSet": true,
+    "checks": [
+      "EVERY_JOB_VALIDATES_AGAINST_EXACT_PINNED_SCHEMA_WITH_NO_UNKNOWN_FIELDS",
+      "EVERY_JOB_BINDS_ONE_DISTINCT_AGENT_AND_CAPACITY_SLOT",
+      "EVERY_JOB_HAS_ACTIVE_AGENT_SPECIFIC_AUTHORITY_BASIS",
+      "EVERY_JOB_AUTHORITY_COVERS_REPOSITORIES_BRANCHES_PATHS_AND_HUMAN_GO",
+      "CURRENT_AGENT_STATE_MATCHES_PROJECT_AGENT_AND_IDENTITY_REVISION",
+      "REIDENTIFICATION_REQUIRED_STATE_REQUIRES_EXACT_JOB_PINNED_REIDENTIFICATION_EVIDENCE",
+      "RESULT_SUBMITTED_OR_BLOCKED_STATE_REQUIRES_EXACT_JOB_PINNED_SETTLED_REARM_TEMPLATE",
+      "PRESELECTION_REARM_BINDINGS_MUST_NOT_EXTEND_CLAIM_POLICY",
+      "MUTABLE_CONTROL_PATHS_DO_NOT_INTERSECT",
+      "EXCLUSIVE_KEYS_DO_NOT_INTERSECT",
+      "PRODUCT_ACCESS_MATCHES_WAVE_POLICY",
+      "NO_JOB_OR_INBOX_BECOMES_STARTABLE_BEFORE_ALL_CHECKS_AND_PROVIDER_READBACK_PASS"
+    ],
+    "publicationProtocol": [
+      "BUILD_ALL_CANDIDATE_JOBS_WAVE_MANDATES_STATES_AND_INBOX_PROJECTIONS_OFF_PROVIDER",
+      "VALIDATE_COMPLETE_CANDIDATE_SET",
+      "WRITE_ONE_ATOMIC_PROVIDER_COMMIT_WHEN_SUPPORTED",
+      "READ_BACK_EVERY_JOB_WAVE_MANDATE_STATE_AND_INBOX",
+      "ONLY_THEN_EXPOSE_WAITING_HUMAN_GO"
+    ],
+    "onFailureBeforePublication": "DO_NOT_PUBLISH_ANY_JOB_OR_WAVE",
+    "onFailureAfterPartialPublication": "SUPERSEDE_ALL_AFFECTED_JOBS_REMOVE_WAITING_HUMAN_GO_PROJECTIONS_AND_REQUIRE_NEW_JOB_IDS",
+    "masterMaySynthesizeHumanGo": false,
+    "masterMayRepairAgentState": false
   },
   "writeSeparation": {
     "productArtifacts": "WORK_REPOSITORY on dedicated branch and allowed paths",
@@ -40,19 +94,20 @@
     "onePermissionNeverImpliesTheOther": true,
     "agentMayWriteMasterLifecycle": false,
     "agentClaimState": "Agent may CAS only its own agents/{agentId}/state.json using the exact prebound claim target.",
-    "masterLifecycleReconciliation": "MASTER reconciles master/jobs/{jobId}.json from verified claim/response evidence and retains sole verification/acceptance authority."
+    "masterLifecycleReconciliation": "MASTER reconciles master/jobs/{jobId}.json from verified claim/response evidence and retains sole verification/acceptance authority.",
+    "schemaValidationDoesNotGrantProviderRights": true
   },
   "responses": {
-    "requiredTypes": [
-      "JOB_RESULT",
-      "JOB_ERROR",
-      "CLARIFICATION_REQUEST",
-      "CAPABILITY_MISMATCH",
-      "IMPROVEMENT_PROPOSAL"
-    ],
+    "requiredTypes": ["JOB_RESULT","JOB_ERROR","CLARIFICATION_REQUEST","CAPABILITY_MISMATCH","IMPROVEMENT_PROPOSAL"],
     "schema": "schemas/agent-response.schema.json",
     "masterResolution": "schemas/agent-response-resolution.schema.json",
-    "responseIndex": "schemas/agent-response-index.schema.json"
+    "responseIndex": "schemas/agent-response-index.schema.json",
+    "templateBoundPerType": true,
+    "preWriteSchemaValidationRequired": true,
+    "providerReadbackRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "freeformResponseEnvelopeForbidden": true,
+    "submittedChatStatusRequiresValidatedReadback": true
   },
   "immutability": {
     "afterPublication": true,
@@ -60,16 +115,19 @@
     "roleOrSkillChange": "NEW_JOB_REQUIRED",
     "authorizationExpansion": "NEW_HUMAN_AUTHORITY_AND_NEW_JOB_REQUIRED",
     "rework": "NEW_JOB_ID_WITH_SUPERSEDES_AND_CONFLICT_REF",
-    "historicalJobIdReuseForbidden": true
+    "historicalJobIdReuseForbidden": true,
+    "persistenceTemplateBindingsImmutableAfterPublication": true
   },
-  "lifecycleSeparation": [
-    "WAITING_HUMAN_GO",
-    "GO_OBSERVED",
-    "CLAIMED",
-    "RUNNING",
-    "RESPONSE_SUBMITTED",
-    "VERIFIED",
-    "ACCEPTED",
-    "INTEGRATED"
-  ]
+  "lifecycleSeparation": ["WAITING_HUMAN_GO","GO_OBSERVED","CLAIMED","RUNNING","RESPONSE_SUBMITTED","VERIFIED","ACCEPTED","INTEGRATED"],
+  "authorityCoverage": {
+    "requiredBeforePublication": true,
+    "authorityBasisSource": "JOB.authorization.authorityBasis",
+    "provenanceMandateRefMustMatchAuthorityBasisPointer": true,
+    "activeStatusRequired": true,
+    "requiredBindings": ["projectId","agentId","allowedControlBranch","allowedProductRepository","allowedProductBranch_or_allowedProductBranches","allowedProductPaths","humanGoRequired","humanOnlyActivation","masterMayActivateAgent","mergeAllowed","deployAllowed"],
+    "coverageChecks": ["PROJECT_MATCH","AGENT_MATCH","CONTROL_BRANCH_COVERS_ALL_CONTROL_WRITES","PRODUCT_REPOSITORY_MATCH","PRODUCT_BRANCH_COVERS_JOB_WORKSPACE_PERMISSION_AND_OUTPUT_TARGET","PRODUCT_PATHS_COVER_JOB_PERMISSION_WORKSPACE_AND_OUTPUT_TARGET","HUMAN_GO_REQUIRED","HUMAN_ONLY_ACTIVATION_REQUIRED","MASTER_AGENT_ACTIVATION_FORBIDDEN","MERGE_FORBIDDEN","DEPLOY_FORBIDDEN"],
+    "providerRightsAreSeparateFromMandateCoverage": true,
+    "onCoverageFailure": "DO_NOT_PUBLISH_OR_DISPATCH_JOB",
+    "reworkBranchChangeRequiresCoveringSupersedingAuthorityIfPriorMandateIsExactBranchOnly": true
+  }
 }

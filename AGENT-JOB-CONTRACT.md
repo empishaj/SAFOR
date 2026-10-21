@@ -25,9 +25,9 @@ The Markdown projection may never override or expand the JSON contract. MASTER w
 9. **Dependencies and inputs** — accepted predecessors and immutable read-only source pointers.
 10. **Authorization** — mandate, actual-rights requirement, separate work/control repository rights and explicit prohibitions.
 11. **Workspace** — product repository, dedicated branch, immutable base commit, allowed paths, response workspace and conflict keys.
-12. **Scheduling** — priority, dispatch revision, wave, leases, `HUMAN_GO_REQUIRED` and the exact AGENT-owned `claimStateTarget` (`agents/{agentId}/state.json`) used for provider CAS/readback.
+12. **Scheduling** — priority, dispatch revision, wave, leases, `HUMAN_GO_REQUIRED`, exact AGENT-owned `claimStateTarget`, pinned HUMAN-GO evidence schema/template/write target, pinned Agent-State schema/claim/result templates, and mandatory pre-CAS/post-readback validation.
 13. **Product output contract** — required artifact types and exact product write target.
-14. **Response contracts** — all five typed response templates, schemas, control-repository targets, response index and resolution schema.
+14. **Response contracts** — all five typed response templates, schemas, control-repository targets, response index and resolution schema, plus mandatory pre-write/provider-readback/post-readback schema validation.
 15. **Communication contract** — minimal chat-output model and prohibition of HUMAN domain conversation.
 16. **Verification contract** — evidence, independent review, acceptance and integration authority.
 17. **Constraints** — STOP/PAUSE/stale/mismatch behavior and prohibitions against scope expansion, role switch, self-acceptance, MASTER-state writes, automatic job switching and prompt transport.
@@ -56,6 +56,14 @@ The atomic execution claim has a deliberately separate authority boundary:
 - The consumed HUMAN activation ID and `currentJob.claimId` must both be persisted in that Agent-State.
 - Product mutation before confirmed claim readback is forbidden.
 - MASTER later reconciles CLAIMED/RUNNING/RESPONSE_SUBMITTED lifecycle from the verified claim and response evidence. Verification, acceptance and integration remain MASTER authority.
+
+## Schema-valid persistence
+
+A dispatchable Job must make the persistence shape deterministic. Claim and response envelopes may not be reconstructed from memory or improvised by a chat agent.
+
+For the claim path the Job binds the HUMAN-GO evidence template/schema, GO evidence write target, Agent-State schema, claim-state template and result-submitted-state template. The proposed claim state is validated before CAS and the complete provider readback is validated again.
+
+For each response type the Job binds the exact response template and schema and requires validation before write and after full provider readback. A terminal chat status is not authoritative evidence and must not precede validated response readback.
 
 ## Permission semantics
 
@@ -155,6 +163,8 @@ A historical job ID is never reused. Rework or substantial changes produce a new
 - `supersedesJobId`;
 - immutable conflict/decision reference;
 - fresh authority, input and branch snapshots.
+
+A Job that terminates through a persisted typed blocking response remains immutable. MASTER may resolve it as `REJECTED`, `CANCELED` or `SUPERSEDED` and create a new UUIDv7 rework Job. The owning Agent may rearm a persisted `BLOCKED` state only on a later direct HUMAN `GO`, after read-only verification of that terminal MASTER resolution and provider readback of the blocking response. Rearm is an Agent-owned CAS/readback, preserves activation and response history, clears session/currentJob, and does not consume the new GO; the same GO then continues to the superseding Job. MASTER never resets Agent State.
 
 ## Independent review
 

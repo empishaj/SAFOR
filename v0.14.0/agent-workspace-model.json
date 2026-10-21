@@ -47,15 +47,28 @@
     "MASTER_UPDATES_PERSONAL_INBOX_INDEX_AND_MASTER_JOB_STATE",
     "AGENT_REMAINS_IDLE_UNTIL_HUMAN_GO",
     "HUMAN_TYPES_GO_IN_INITIALIZED_AGENT_CHAT",
+    "IF_PRIOR_AGENT_STATE_IS_RESULT_SUBMITTED_OR_BLOCKED_READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+    "IF_PRIOR_AGENT_STATE_IS_BLOCKED_READ_AND_VALIDATE_LAST_TYPED_BLOCKING_RESPONSE",
+    "IF_PRIOR_MASTER_JOB_IS_TERMINALLY_SETTLED_AGENT_CAS_REARMS_OWN_STATE_AND_PROVIDER_READS_BACK",
+    "CONTINUE_THE_SAME_DIRECT_HUMAN_GO_AFTER_CONFIRMED_REARM",
     "AGENT_LOADS_PINNED_IDENTITY_STATE_AND_CURRENT_PERSONAL_INBOX_INDEX_FROM_BOUND_LOCATION",
     "AGENT_SELECTS_NEXT_ELIGIBLE_PERSONAL_INBOX_JOB",
     "AGENT_READS_AUTHORITATIVE_JOB_AND_REFERENCED_INPUTS_ONLY",
-    "AGENT_BINDS_GO_EVIDENCE_TO_SELECTED_INBOX_JOB",
-    "AGENT_RUNS_PREFLIGHT",
+    "AGENT_LOADS_JOB_BOUND_GO_EVIDENCE_AND_AGENT_STATE_TEMPLATES_AND_SCHEMAS",
+    "AGENT_BUILDS_VALIDATES_PERSISTS_AND_READS_BACK_GO_EVIDENCE",
+    "AGENT_BUILDS_EXACT_PROPOSED_AGENT_STATE_FROM_BOUND_TEMPLATE",
+    "AGENT_VALIDATES_PROPOSED_AGENT_STATE_BEFORE_PROVIDER_CAS",
     "AGENT_CLAIMS_OWN_STATE_WITH_PROVIDER_CAS_AND_EXACT_READBACK",
+    "AGENT_VALIDATES_READBACK_AGENT_STATE_BEFORE_CLAIM_AUTHORITY",
     "AGENT_EXECUTES_ONLY_AFTER_PROVIDER_CONFIRMED_AGENT_STATE_CLAIM",
     "AGENT_WRITES_PRODUCT_ARTIFACTS_ONLY_WITHIN_PRODUCT_SCOPE",
-    "AGENT_WRITES_TYPED_RESPONSE_AND_RESPONSE_INDEX",
+    "IF_RESPONSE_INDEX_IS_KNOWN_LEGACY_FORMAT_AGENT_MIGRATES_OWN_INDEX_BY_EXPECTED_BLOB_CAS",
+    "PROVIDER_READBACK_AND_VALIDATE_CANONICAL_RESPONSE_INDEX_BEFORE_RESPONSE_INDEX_UPDATE",
+    "AGENT_LOADS_EXACT_BOUND_RESPONSE_TEMPLATE_AND_SCHEMA",
+    "AGENT_BUILDS_AND_VALIDATES_TYPED_RESPONSE_BEFORE_WRITE",
+    "AGENT_WRITES_TYPED_RESPONSE_AND_PROVIDER_READS_BACK_EXACT_BYTES",
+    "AGENT_VALIDATES_READBACK_RESPONSE_BEFORE_SUBMITTED_CHAT_STATUS",
+    "AGENT_UPDATES_OWN_STATE_TO_RESULT_SUBMITTED_FROM_BOUND_TEMPLATE",
     "AGENT_EMITS_ONE_LINE_TERMINAL_CHAT_STATUS",
     "MASTER_READS_RESPONSE_AND_PROVIDER_EFFECTS",
     "MASTER_VERIFIES_REVIEWS_AND_ACCEPTANCE",
@@ -76,7 +89,23 @@
     "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
     "identityRemainsStableWhenInboxIndexChanges": true,
     "agentClaimMutatesOnlyOwnState": true,
-    "masterJobLifecycleReconciledFromClaimAndResponseEvidence": true
+    "masterJobLifecycleReconciledFromClaimAndResponseEvidence": true,
+    "noFreeformClaimStateConstruction": true,
+    "noUnvalidatedAgentStatePersistence": true,
+    "noUnvalidatedResponsePersistence": true,
+    "noSubmittedChatStatusBeforeValidatedResponseReadback": true,
+    "schemaValidationFailureBlocksProductMutation": true,
+    "masterNeverRearmsAgentState": true,
+    "rearmRequiresSettledMasterLifecycle": true,
+    "rearmDoesNotConsumeNewHumanGo": true,
+    "rearmPreservesActivationHistory": true,
+    "currentInboxSnapshotNeverBecomesStableBlobPrecondition": true,
+    "inboxBlobChangeAfterMasterDispatchIsExpected": true,
+    "masterNeverRepairsAgentResponseIndex": true,
+    "legacyResponseIndexRecoveryPreservesHistory": true,
+    "unknownResponseIndexFormatFailsClosed": true,
+    "blockedRearmRequiresPersistedTypedBlockingResponse": true,
+    "blockedRearmRequiresTerminalMasterResolution": true
   },
   "dispatchContract": {
     "sender": "MASTER",
@@ -106,6 +135,93 @@
     ],
     "productMutationBeforeConfirmedClaim": "FORBIDDEN",
     "masterLifecycleWriteByAgent": "FORBIDDEN",
-    "masterReconciliation": "MASTER may later advance master/jobs/{jobId}.json from verified claim and response evidence."
+    "masterReconciliation": "MASTER may later advance master/jobs/{jobId}.json from verified claim and response evidence.",
+    "humanGoEvidenceSchema": "schemas/human-go-evidence.schema.json",
+    "humanGoEvidenceTemplate": "templates/human-go-evidence.template.json",
+    "agentStateSchema": "schemas/agent-state.schema.json",
+    "claimStateTemplate": "templates/agent-state-claim.template.json",
+    "resultSubmittedStateTemplate": "templates/agent-state-result-submitted.template.json",
+    "goEvidencePersistence": "agents/{agentId}/evidence/{jobId}/human-go-{activationId}.json",
+    "goEvidenceReadbackRequired": true,
+    "proposedStateSchemaValidationRequired": true,
+    "readbackStateSchemaValidationRequired": true
+  },
+  "responsePersistenceContract": {
+    "templateSource": "JOB.responseContracts/{responseType}/templateRef",
+    "schemaSource": "JOB.responseContracts/{responseType}/schemaRef",
+    "freeformResponseConstructionForbidden": true,
+    "preWriteSchemaValidationRequired": true,
+    "providerReadbackRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "exactReadbackEqualityRequired": true,
+    "submittedChatStatusAllowedOnlyAfterValidatedReadback": true,
+    "submittedAgentStateTemplate": "templates/agent-state-result-submitted.template.json",
+    "onValidationFailure": "BLOCKED_NO_FURTHER_PRODUCT_MUTATION",
+    "nakedBlockedForbidden": true,
+    "blockedRequiresPersistedTypedResponseOrStructuredPersistenceFailure": true
+  },
+  "agentStateRearmContract": {
+    "trigger": "DIRECT_HUMAN_GO_WHILE_AGENT_STATE_RESULT_SUBMITTED_OR_BLOCKED",
+    "priorMasterJobAccess": "READ_ONLY",
+    "allowedPriorMasterStatuses": [
+      "REJECTED",
+      "ACCEPTED",
+      "INTEGRATED",
+      "CANCELED",
+      "SUPERSEDED"
+    ],
+    "stateOwner": "AGENT",
+    "method": "PROVIDER_COMPARE_AND_SWAP_PLUS_EXACT_READBACK",
+    "proposedState": {
+      "runtimeStatus": "WAITING_HUMAN_GO",
+      "session": null,
+      "currentJob": null,
+      "lastResponseRef": "PRESERVE",
+      "consumedActivationIds": "PRESERVE",
+      "revision": "INCREMENT_BY_ONE"
+    },
+    "secondHumanGoRequired": false,
+    "nextStep": "CONTINUE_SAME_HUMAN_GO_AGAINST_CURRENT_PERSONAL_INBOX",
+    "failureOutcome": "BLOCKED_NO_NEW_JOB_CLAIM",
+    "allowedPriorAgentStatuses": [
+      "RESULT_SUBMITTED",
+      "BLOCKED"
+    ],
+    "blockedPriorExecutionRequirements": {
+      "allowedPriorMasterStatuses": [
+        "REJECTED",
+        "CANCELED",
+        "SUPERSEDED"
+      ],
+      "requiredLastResponseTypes": [
+        "JOB_ERROR",
+        "CLARIFICATION_REQUEST",
+        "CAPABILITY_MISMATCH"
+      ],
+      "requireProviderReadback": true,
+      "requireMasterResponseRef": true,
+      "acceptedOrIntegratedForbidden": true
+    }
+  },
+  "jobValidationContract": {
+    "source": "PINNED_AGENT_ACTIVATION_MODEL",
+    "authority": "PINNED_AGENT_JOB_SCHEMA_PLUS_AGENT_JOB_CONTRACT_MODEL",
+    "schemaPath": "v0.14.0/schemas/agent-job.schema.json",
+    "contractModelPath": "v0.14.0/agent-job-contract-model.json",
+    "referenceValidatorPath": "runtime/agent_jobs.py",
+    "referenceValidatorRequiredForNormalChatUse": false,
+    "globalSearchForbidden": true
+  },
+  "responseIndexRecoveryContract": {
+    "owner": "AGENT",
+    "target": "agents/{agentId}/outbox/index.json",
+    "allowedLegacyFormat": "SAFOR_AGENT_OUTBOX_INDEX",
+    "canonicalFormat": "SAFOR_AGENT_RESPONSE_INDEX",
+    "method": "PROVIDER_COMPARE_AND_SWAP_PLUS_EXACT_READBACK",
+    "masterWriteForbidden": true,
+    "historicalResponseRefsPreserved": true,
+    "authoritativeAcceptance": false,
+    "unknownLegacyShapeOutcome": "BLOCKED_NO_MUTATION",
+    "requiredBeforeNextIndexUpdateWhenLegacyDetected": true
   }
 }

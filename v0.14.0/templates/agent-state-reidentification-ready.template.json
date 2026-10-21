@@ -1,0 +1,49 @@
+{
+  "format": "SAFOR_AGENT_STATE_REIDENTIFICATION_READY_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.template.agent-state-reidentification-ready",
+  "templateVersion": "1.0.0",
+  "targetSchemaRef": "v0.14.0/schemas/agent-state.schema.json",
+  "purpose": "Exact Agent-State transition performed by the AGENT on a later direct HUMAN GO after a successful rc.6 reidentification bootstrap. Initialization itself remains read-only.",
+  "topLevelExactFields": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "revision",
+    "runtimeStatus",
+    "session",
+    "currentJob",
+    "lastResponseRef",
+    "consumedActivationIds",
+    "updatedAt"
+  ],
+  "stateTemplate": {
+    "format": "SAFOR_AGENT_STATE",
+    "schemaVersion": "0.14.0",
+    "projectId": "{{PROJECT_ID}}",
+    "agentId": "{{AGENT_ID}}",
+    "identityRevision": "{{IDENTITY_REVISION_INTEGER}}",
+    "revision": "{{PRIOR_REVISION_PLUS_ONE_INTEGER}}",
+    "runtimeStatus": "WAITING_HUMAN_GO",
+    "session": null,
+    "currentJob": null,
+    "lastResponseRef": "{{PRIOR_LAST_RESPONSE_REF_OR_NULL}}",
+    "consumedActivationIds": "{{PRIOR_CONSUMED_ACTIVATION_IDS_ARRAY}}",
+    "updatedAt": "{{REARMED_AT_RFC3339}}"
+  },
+  "rules": [
+    "This template is never written during initialization or reinitialization.",
+    "Use only on a later separate direct HUMAN GO after successful initialization evidence has been persisted by MASTER and pinned by the selected Job.",
+    "The AGENT owns the transition and MUST persist it by provider compare-and-swap at the exact prior Agent-State revision.",
+    "The prior runtimeStatus must be REIDENTIFICATION_REQUIRED.",
+    "Increment revision by exactly one.",
+    "Set runtimeStatus to WAITING_HUMAN_GO.",
+    "Keep session and currentJob explicitly null.",
+    "Preserve lastResponseRef and consumedActivationIds exactly.",
+    "Do not consume the current HUMAN GO during this rearm transition.",
+    "Validate the complete proposed state against targetSchemaRef before CAS and validate provider readback again afterwards.",
+    "After successful readback, continue the same direct HUMAN GO through normal job selection, GO-evidence persistence and atomic claim."
+  ]
+}

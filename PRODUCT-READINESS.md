@@ -1,8 +1,8 @@
 # SAFOR Product Readiness
 
-Current target: **v0.14.0-rc.5**
+Current target: **v0.14.0-rc.6**
 
-Materialization state: **MATERIALIZED + AUTOMATED VALIDATION PASS**. The 0.14.0-rc.5 Framework distributions and checksums are reproducible and automated validation is green.
+Materialization state: **PENDING MATERIALIZATION**. SAFOR 0.14.0-rc.6 is the operational-readiness candidate; no automated PASS is claimed until exact-head provenance, rebuild, validation and checksums are recorded.
 
 Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines **`v0.10.0/` through `v0.13.0/`** remain read-only references, not the current execution contract.
 
@@ -75,7 +75,7 @@ Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
 | Current unit and regression suite | **PASS in CI; count derived from workflow logs** |
-| Module-wide Self-Healing exact coverage | **93/93 PASS** |
+| Module-wide Self-Healing exact coverage | **99/99 PASS by exact module/profile coverage; rc.6 CI revalidation pending** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |
@@ -130,6 +130,13 @@ GA requires all OPEN gates above to be resolved or explicitly removed from GA sc
 
 The historical `safomwebsite` control-plane migration remains provider-verified at `empishaj/safor-memory@85e08eab15b18a86868090d7b18573b9e2484aea`. It is retained as legacy baseline evidence only; it does **not** prove migration to `0.14.0-rc.5`.
 
-The 0.14.0-rc.5 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
+The 0.14.0-rc.6 candidate migration is **NOT_STARTED** and remains gated by `V014_ISOLATED_REAL_GIT_END_TO_END_ACCEPTANCE`. Historical artifacts must be preserved, and the product repository must not be mutated before that gate passes.
 
 Therefore `V014_REFERENCE_PROJECT_MIGRATION_ACCEPTANCE` remains open for rc.5. General Availability still depends on the remaining provider, cross-host, commercial-delivery, governance and end-to-end acceptance items in `RELEASE-MANIFEST.json`.
+
+
+## rc.6 Echo E2E remediation
+
+The first isolated HUMAN-GO real-Git run correctly proved no activation before HUMAN `GO`, one bounded product mutation and no Agent mutation of MASTER-owned job lifecycle state. MASTER nevertheless rejected the run because the chat agent constructed a free-form Agent-State claim and a simplified `JOB_RESULT` that did not conform to the pinned v0.14 schemas.
+
+The rc.6 remediation now embeds the persistence contracts plus the reidentification evidence/rearm modules (98 Framework modules / 98 Self-Healing profiles), requires HUMAN-GO evidence persistence/readback before claim construction, requires exact template-based Agent-State construction with schema validation before CAS and after provider readback, requires exact template-based typed responses with schema validation before write and after provider readback, and keeps reidentification state mutation agent-owned through provider CAS on the later direct HUMAN GO. The failed run remains audit evidence and is not reclassified as PASS. A fresh Job ID is required for the rerun.

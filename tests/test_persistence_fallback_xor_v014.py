@@ -11,6 +11,19 @@ class PersistenceFallbackXorV014Tests(unittest.TestCase):
     def load(self, path):
         return json.loads((ROOT / path).read_text(encoding="utf-8"))
 
+    def test_naked_blocked_is_rejected(self):
+        with self.assertRaisesRegex(
+            AgentJobValidationError,
+            "BLOCKED_WITHOUT_DETAILS_REQUIRES_PERSISTENCE_FAILURE_CONTEXT",
+        ):
+            render_agent_chat_output(
+                status="BLOCKED",
+                project_id="project-001",
+                agent_id="agent-a",
+                display_name="Nova Dev",
+                job_key="WP-001",
+            )
+
     def test_persisted_blocker_has_reference_and_no_failure_object(self):
         output = render_agent_chat_output(
             status="BLOCKED",

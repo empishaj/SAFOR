@@ -1,0 +1,45 @@
+{
+  "format": "SAFOR_HUMAN_GO_EVIDENCE_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.template.human-go-evidence",
+  "templateVersion": "1.0.0",
+  "targetSchemaRef": "v0.14.0/schemas/human-go-evidence.schema.json",
+  "purpose": "Exact construction template for single-use HUMAN-GO evidence. The agent must materialize only these fields, validate against the bound schema, persist it, and verify provider readback before building a claim state.",
+  "exactFields": [
+    "format",
+    "schemaVersion",
+    "activationId",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "targetJobId",
+    "targetDispatchRevision",
+    "intent",
+    "source",
+    "observedAt",
+    "singleUse",
+    "jobPromptTransported"
+  ],
+  "evidenceTemplate": {
+    "format": "SAFOR_HUMAN_GO_EVIDENCE",
+    "schemaVersion": "0.14.0",
+    "activationId": "{{ACTIVATION_ID}}",
+    "projectId": "{{PROJECT_ID}}",
+    "agentId": "{{AGENT_ID}}",
+    "identityRevision": "{{IDENTITY_REVISION_INTEGER}}",
+    "targetJobId": "{{JOB_ID}}",
+    "targetDispatchRevision": "{{DISPATCH_REVISION_INTEGER}}",
+    "intent": "GO",
+    "source": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+    "observedAt": "{{OBSERVED_AT_RFC3339}}",
+    "singleUse": true,
+    "jobPromptTransported": false
+  },
+  "rules": [
+    "Do not add, rename or omit fields.",
+    "identityRevision and targetDispatchRevision are integers after materialization.",
+    "activationId must be unique for this HUMAN GO and not already consumed.",
+    "The materialized evidence must validate against targetSchemaRef before persistence.",
+    "Provider readback of the exact persisted evidence is required before Agent-State claim construction."
+  ]
+}

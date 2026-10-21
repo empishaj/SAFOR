@@ -1,0 +1,35 @@
+{
+  "format": "SAFOR_AGENT_STATE_RESULT_SUBMITTED_TEMPLATE",
+  "schemaVersion": "0.14.0",
+  "templateId": "safor.template.agent-state-result-submitted",
+  "templateVersion": "1.0.0",
+  "targetSchemaRef": "v0.14.0/schemas/agent-state.schema.json",
+  "purpose": "Exact Agent-State transition after a validated typed response has been persisted and read back.",
+  "topLevelExactFields": [
+    "format",
+    "schemaVersion",
+    "projectId",
+    "agentId",
+    "identityRevision",
+    "revision",
+    "runtimeStatus",
+    "session",
+    "currentJob",
+    "lastResponseRef",
+    "consumedActivationIds",
+    "updatedAt"
+  ],
+  "stateRules": [
+    "Copy projectId, agentId, identityRevision, session, currentJob and consumedActivationIds unchanged from the provider-confirmed RUNNING claim state.",
+    "Increment revision by exactly one from the last provider-read Agent-State revision.",
+    "Set runtimeStatus to RESULT_SUBMITTED, never SUBMITTED.",
+    "Set lastResponseRef to one canonical string reference for the provider-read-back response; it is not a pointer object.",
+    "Set updatedAt to the response submission timestamp.",
+    "Validate the complete proposed state against targetSchemaRef before persistence and validate provider readback again afterwards."
+  ],
+  "fixedValues": {
+    "format": "SAFOR_AGENT_STATE",
+    "schemaVersion": "0.14.0",
+    "runtimeStatus": "RESULT_SUBMITTED"
+  }
+}

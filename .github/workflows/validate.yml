@@ -18,21 +18,43 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Materialize pending candidate in validation worktree
+        shell: bash
+        run: |
+          STATE="$(python -c 'import json; print(json.load(open("RELEASE-FACTS.json"))["releaseArtifacts"]["state"])')"
+          if [ "$STATE" = "PENDING_MATERIALIZATION" ]; then
+            python tools/materialize_release.py --prepare \
+              --workflow-run-id "$GITHUB_RUN_ID" \
+              --source-sha "$GITHUB_SHA"
+          fi
       - name: Check reproducible bundle
         run: python tools/build_bundle.py --check
       - name: Check domain Framework distributions
         run: python tools/build_domain_framework.py --check
       - name: Validate SAFOR distribution
         run: python tools/validate_safor.py
+      - name: Validate audit remediation
+        run: python tools/validate_audit_remediation.py
       - name: Validate release facts
-        run: python tools/validate_release_facts.py
+        shell: bash
+        run: |
+          STATE="$(python -c 'import json; print(json.load(open("RELEASE-FACTS.json"))["releaseArtifacts"]["state"])')"
+          if [ "$STATE" = "PENDING_MATERIALIZATION" ]; then
+            SAFOR_RELEASE_SOURCE_SHA="$GITHUB_SHA" \
+            SAFOR_RELEASE_WORKFLOW_RUN_ID="$GITHUB_RUN_ID" \
+              python tools/validate_release_facts.py
+          else
+            python tools/validate_release_facts.py
+          fi
       - name: Validate traceability
         run: python tools/validate_traceability.py
       - name: Validate content consistency
         run: python tools/validate_content_consistency.py
-      - name: Run deterministic control tests
+      - name: Run deterministic control and regression tests
         run: python -m unittest discover -s tests -v

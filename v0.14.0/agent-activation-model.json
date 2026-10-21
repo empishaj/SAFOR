@@ -48,7 +48,11 @@
     ],
     "jobPromptTransportRequired": false,
     "onValidationFailure": "IDENTITY_OR_INBOX_REINITIALIZATION_REQUIRED",
-    "performedOncePerAgentChatBootstrap": true
+    "performedOncePerAgentChatBootstrap": true,
+    "reidentificationBootstrapStateMutationAllowed": false,
+    "reidentificationReadyEvidenceRecordedByMaster": true,
+    "reidentificationReadyEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+    "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json"
   },
   "chatAgentActivationContract": {
     "activationMode": "HUMAN_GO_REQUIRED",
@@ -71,7 +75,15 @@
     "hostSessionAttestationRequired": false,
     "currentInboxSource": "BOUND_MUTABLE_INBOX_INDEX_LOCATION",
     "bootstrapInboxBlobMayBecomeStaleAfterDispatch": true,
-    "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true
+    "bootstrapInboxBlobNeverUsedForCurrentJobDiscovery": true,
+    "masterMayActivateChat": false,
+    "masterMaySynthesizeHumanGo": false,
+    "masterMayCreateHumanGoEvidence": false,
+    "activationAuthority": "HUMAN_ONLY",
+    "currentInboxSnapshotBlobIsStableAcrossDispatch": false,
+    "currentInboxSnapshotPurpose": "INITIALIZATION_OBSERVATION_ONLY",
+    "inboxContentChangeAfterMasterDispatch": "NORMAL_RELOAD_FROM_BOUND_MUTABLE_LOCATION",
+    "inboxBlobChangeAloneRequiresReidentification": false
   },
   "onHumanGo": {
     "allowedReadsInOrder": [
@@ -79,8 +91,12 @@
       "AGENT_STATE",
       "CURRENT_PERSONAL_INBOX_INDEX_AT_BOUND_LOCATION",
       "SELECTED_INBOX_JOB_CONTRACT",
+      "PINNED_AGENT_JOB_CONTRACT_MODEL_FROM_ACTIVATION_MODEL",
+      "PINNED_AGENT_JOB_SCHEMA_FROM_ACTIVATION_MODEL",
       "SELECTED_MASTER_JOB_STATE",
-      "JOB_REFERENCED_INPUTS_ONLY"
+      "JOB_REFERENCED_INPUTS_ONLY",
+      "BOUND_HUMAN_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
+      "BOUND_AGENT_STATE_SCHEMA_AND_CLAIM_TEMPLATE"
     ],
     "forbiddenDiscovery": [
       "GLOBAL_REPOSITORY_SEARCH",
@@ -97,14 +113,118 @@
       "JOB_AGENT_ASSIGNMENT_MATCH",
       "JOB_IDENTITY_REVISION_MATCH",
       "JOB_DISPATCH_REVISION_MATCH",
+      "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
+      "AGENT_JOB_CONTRACT_MODEL_VALID",
+      "AGENT_JOB_SCHEMA_VALID",
+      "JOB_CONTRACT_POINTER_EXACT_MATCH",
       "HUMAN_GO_EVIDENCE_BOUND_TO_SELECTED_JOB",
       "ROLE_AND_SKILL_MATCH",
       "MANDATE_ACTIVE",
       "MASTER_JOB_STATE_READ_ONLY_AND_WAITING_HUMAN_GO",
       "AGENT_STATE_CLAIM_TARGET_BOUND",
-      "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT"
+      "ACTUAL_PROVIDER_RIGHTS_SUFFICIENT",
+      "HUMAN_GO_EVIDENCE_SCHEMA_AND_TEMPLATE_PINNED",
+      "AGENT_STATE_SCHEMA_AND_CLAIM_TEMPLATE_PINNED",
+      "PROPOSED_GO_EVIDENCE_VALIDATES_BEFORE_PERSISTENCE",
+      "PERSISTED_GO_EVIDENCE_PROVIDER_READBACK_VALID",
+      "PROPOSED_AGENT_STATE_VALIDATES_BEFORE_CAS"
     ],
-    "failClosed": true
+    "failClosed": true,
+    "invalidJobContractOutcome": "BLOCKED_NO_CLAIM_NO_PRODUCT_MUTATION",
+    "jobValidationAuthority": {
+      "authority": "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL",
+      "refSource": "SAME_REPOSITORY_AND_REF_AS_PINNED_ACTIVATION_MODEL",
+      "schemaPath": "v0.14.0/schemas/agent-job.schema.json",
+      "contractModelPath": "v0.14.0/agent-job-contract-model.json",
+      "referenceValidatorPath": "runtime/agent_jobs.py",
+      "referenceValidatorRequiredForNormalChatUse": false,
+      "referenceValidatorRole": "CI_AND_REFERENCE_VERIFICATION",
+      "globalSearchRequired": false,
+      "failClosedIfSchemaOrContractModelUnavailable": true
+    },
+    "preSelectionAgentStateHandling": {
+      "normalReadyStatuses": [
+        "IDLE",
+        "WAITING_HUMAN_GO"
+      ],
+      "onSettledPriorExecution": [
+        "READ_PRIOR_CURRENT_JOB_BINDING_FROM_AGENT_STATE",
+        "READ_PRIOR_MASTER_JOB_STATE_READ_ONLY",
+        "IF_PRIOR_AGENT_STATE_BLOCKED_READ_AND_VALIDATE_LAST_TYPED_BLOCKING_RESPONSE",
+        "IF_PRIOR_AGENT_STATE_BLOCKED_REQUIRE_PRIOR_MASTER_JOB_REJECTED_CANCELED_OR_SUPERSEDED",
+        "REQUIRE_PRIOR_MASTER_JOB_TERMINALLY_SETTLED",
+        "LOAD_PINNED_SETTLED_REARM_STATE_TEMPLATE",
+        "BUILD_REARMED_AGENT_STATE",
+        "PRESERVE_CONSUMED_ACTIVATION_IDS_AND_LAST_RESPONSE_REF",
+        "CLEAR_SESSION_AND_CURRENT_JOB",
+        "VALIDATE_REARMED_AGENT_STATE",
+        "CAS_REARM_AGENT_STATE_AT_EXPECTED_REVISION",
+        "PROVIDER_READBACK_REARMED_AGENT_STATE",
+        "CONTINUE_SAME_DIRECT_HUMAN_GO_WITH_CURRENT_PERSONAL_INBOX"
+      ],
+      "settledMasterStatuses": [
+        "REJECTED",
+        "ACCEPTED",
+        "INTEGRATED",
+        "CANCELED",
+        "SUPERSEDED"
+      ],
+      "rearmStateOwner": "AGENT",
+      "masterMayWriteAgentState": false,
+      "newHumanGoConsumptionDuringRearm": false,
+      "secondHumanGoRequired": false,
+      "onUnsettledPriorMasterJob": "BLOCKED_NO_NEW_JOB_CLAIM",
+      "rearmForbiddenDuringInitialization": true,
+      "rearmRequiresSeparateDirectHumanGo": true,
+      "rearmHumanInputSource": "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT",
+      "rearmHumanMessage": "GO",
+      "rearmStateMustRetainAllRequiredTopLevelFields": true,
+      "rearmSessionAndCurrentJobRepresentation": "EXPLICIT_NULL",
+      "readyStatusForbiddenIfPersistedStateInvalid": true,
+      "reidentificationStatus": "REIDENTIFICATION_REQUIRED",
+      "onReidentifiedAgent": [
+        "READ_PINNED_REIDENTIFICATION_EVIDENCE_FROM_SELECTED_JOB_INPUTS",
+        "VALIDATE_REIDENTIFICATION_EVIDENCE_IDENTITY_AND_BOOTSTRAP_BINDINGS",
+        "LOAD_PINNED_REIDENTIFICATION_READY_STATE_TEMPLATE",
+        "BUILD_REIDENTIFIED_WAITING_STATE",
+        "PRESERVE_CONSUMED_ACTIVATION_IDS_AND_LAST_RESPONSE_REF",
+        "CLEAR_SESSION_AND_CURRENT_JOB",
+        "VALIDATE_REIDENTIFIED_WAITING_STATE",
+        "CAS_REIDENTIFIED_WAITING_STATE_AT_EXPECTED_REVISION",
+        "PROVIDER_READBACK_REIDENTIFIED_WAITING_STATE",
+        "CONTINUE_SAME_DIRECT_HUMAN_GO_WITH_CURRENT_PERSONAL_INBOX"
+      ],
+      "reidentificationStateOwner": "AGENT",
+      "masterMayWriteReidentificationState": false,
+      "reidentificationEvidenceExpectedType": "SAFOR_AGENT_REIDENTIFICATION_EVIDENCE",
+      "reidentificationEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+      "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json",
+      "reidentificationRearmConsumesHumanGo": false,
+      "reidentificationSecondHumanGoRequired": false,
+      "reidentificationRearmRequiresProviderCasAndReadback": true,
+      "reidentificationOnMissingOrInvalidEvidence": "BLOCKED_NO_NEW_JOB_CLAIM",
+      "settledPriorExecutionStatuses": [
+        "RESULT_SUBMITTED",
+        "BLOCKED"
+      ],
+      "blockedPriorExecutionRequirements": {
+        "requiredLastResponseTypes": [
+          "JOB_ERROR",
+          "CLARIFICATION_REQUEST",
+          "CAPABILITY_MISMATCH"
+        ],
+        "providerReadbackOfBlockingResponseRequired": true,
+        "responseMustMatchPriorJobAgentAndIdentity": true,
+        "allowedPriorMasterStatuses": [
+          "REJECTED",
+          "CANCELED",
+          "SUPERSEDED"
+        ],
+        "priorMasterResponseRefRequired": true,
+        "rule": "A BLOCKED Agent State is rearmable only after the typed blocking response is provider-read-back and the prior MASTER Job is terminally resolved as REJECTED, CANCELED or SUPERSEDED. ACCEPTED or INTEGRATED may never settle a BLOCKED execution for rearm."
+      },
+      "settledRearmStateTemplateRef": "templates/agent-state-settled-rearm.template.json"
+    }
   },
   "reidentificationProtocol": {
     "triggers": [
@@ -121,7 +241,25 @@
       "NO_RESPONSE_PATH_GUESSING",
       "EMIT_MINIMAL_REINITIALIZATION_STATUS"
     ],
-    "requiredHumanPath": "RELOAD_MASTER_GENERATED_AGENT_INITIALIZATION_PROMPT"
+    "requiredHumanPath": "RELOAD_MASTER_GENERATED_AGENT_INITIALIZATION_PROMPT",
+    "successfulBootstrap": [
+      "MASTER_RECORDS_HUMAN_REPORTED_EXACT_READY_ACKNOWLEDGEMENT_AS_IMMUTABLE_REIDENTIFICATION_EVIDENCE",
+      "MASTER_MUST_NOT_MUTATE_AGENT_STATE",
+      "NEXT_DISPATCHED_JOB_PINS_REIDENTIFICATION_EVIDENCE_AS_READ_ONLY_INPUT",
+      "AGENT_STATE_REMAINS_REIDENTIFICATION_REQUIRED_UNTIL_LATER_DIRECT_HUMAN_GO"
+    ],
+    "onLaterHumanGo": [
+      "AGENT_VALIDATES_PINNED_REIDENTIFICATION_EVIDENCE",
+      "AGENT_CAS_REARMS_OWN_STATE_TO_WAITING_HUMAN_GO_WITHOUT_CONSUMING_GO",
+      "AGENT_READS_BACK_AND_VALIDATES_REARMED_STATE",
+      "SAME_DIRECT_HUMAN_GO_CONTINUES_TO_NORMAL_JOB_ACTIVATION"
+    ],
+    "evidenceFormat": "SAFOR_AGENT_REIDENTIFICATION_EVIDENCE",
+    "evidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+    "stateTemplateRef": "templates/agent-state-reidentification-ready.template.json",
+    "initializationStateMutationForbidden": true,
+    "masterStateMutationForbidden": true,
+    "secondHumanGoRequired": false
   },
   "goEvidenceContract": {
     "format": "SAFOR_HUMAN_GO_EVIDENCE",
@@ -145,7 +283,16 @@
       "singleUse": true,
       "jobPromptTransported": false
     },
-    "schemaRef": "schemas/human-go-evidence.schema.json"
+    "schemaRef": "schemas/human-go-evidence.schema.json",
+    "templateRef": "templates/human-go-evidence.template.json",
+    "persistence": {
+      "pathPattern": "agents/{agentId}/evidence/{jobId}/human-go-{activationId}.json",
+      "owner": "AGENT",
+      "requiredBeforeClaim": true,
+      "providerReadbackRequired": true,
+      "schemaValidationRequiredBeforeWrite": true,
+      "schemaValidationRequiredAfterReadback": true
+    }
   },
   "atomicClaimContract": {
     "expectedAgentState": "WAITING_HUMAN_GO",
@@ -168,12 +315,22 @@
     "authoritativeSequence": [
       "READ_AGENT_STATE_AT_EXPECTED_REVISION",
       "READ_MASTER_JOB_STATE_READ_ONLY",
+      "LOAD_BOUND_HUMAN_GO_EVIDENCE_TEMPLATE_AND_SCHEMA",
+      "BUILD_EXACT_HUMAN_GO_EVIDENCE_FROM_TEMPLATE",
+      "VALIDATE_HUMAN_GO_EVIDENCE_AGAINST_SCHEMA",
+      "PERSIST_HUMAN_GO_EVIDENCE",
+      "PROVIDER_READBACK_HUMAN_GO_EVIDENCE",
+      "VALIDATE_READBACK_HUMAN_GO_EVIDENCE_AGAINST_SCHEMA",
       "VALIDATE_GO_EVIDENCE_AND_JOB_BINDINGS",
-      "BUILD_EXACT_PROPOSED_AGENT_CLAIM_STATE",
+      "LOAD_BOUND_AGENT_STATE_SCHEMA_AND_CLAIM_TEMPLATE",
+      "BUILD_EXACT_PROPOSED_AGENT_CLAIM_STATE_FROM_TEMPLATE",
       "PERSIST_ACTIVATION_CONSUMPTION_INSIDE_PROPOSED_AGENT_STATE",
+      "SET_CURRENT_JOB_CLAIM_ID_EQUAL_ACTIVATION_ID",
+      "VALIDATE_PROPOSED_AGENT_STATE_AGAINST_SCHEMA",
       "CALCULATE_CANONICAL_PROPOSED_AGENT_STATE_DIGEST",
       "CAS_COMMIT_EXACT_PROPOSED_AGENT_STATE_AT_EXPECTED_REVISION",
       "PROVIDER_READBACK_FULL_COMMITTED_AGENT_STATE",
+      "VALIDATE_READBACK_AGENT_STATE_AGAINST_SCHEMA",
       "VERIFY_CANONICAL_STATE_DIGEST_AND_BINDINGS",
       "MARK_CLAIM_AUTHORITY_FROM_PROVIDER_EVIDENCE"
     ],
@@ -192,13 +349,43 @@
       "AGENT_RUNTIME_STATUS_IS_RUNNING",
       "MASTER_JOB_STATE_NOT_MUTATED_BY_AGENT",
       "READBACK_REF_PRESENT",
-      "READBACK_BLOB_IDENTITY_PRESENT"
+      "READBACK_BLOB_IDENTITY_PRESENT",
+      "GO_EVIDENCE_PERSISTED_AND_PROVIDER_READ_BACK",
+      "GO_EVIDENCE_VALIDATES_AGAINST_BOUND_SCHEMA",
+      "PROPOSED_AGENT_STATE_VALIDATES_AGAINST_BOUND_SCHEMA_BEFORE_CAS",
+      "READBACK_AGENT_STATE_VALIDATES_AGAINST_BOUND_SCHEMA"
     ],
     "persistActivationConsumptionInsideCasState": true,
     "authoritativeReturnType": "SAFOR_CONFIRMED_GO_CLAIM",
     "proposedStateIsNonAuthoritativeUntilReadback": true,
     "inboxJobIsAuthoritativeDispatch": true,
     "masterLifecycleReconciliation": "MASTER_LATER_RECONCILES_CLAIMED_RUNNING_RESPONSE_STATE_FROM_PROVIDER_CONFIRMED_AGENT_CLAIM_AND_RESPONSE_EVIDENCE",
-    "hostSessionBindingRequired": false
+    "hostSessionBindingRequired": false,
+    "humanGoEvidenceSchemaRef": "schemas/human-go-evidence.schema.json",
+    "humanGoEvidenceTemplateRef": "templates/human-go-evidence.template.json",
+    "agentStateSchemaRef": "schemas/agent-state.schema.json",
+    "claimStateTemplateRef": "templates/agent-state-claim.template.json",
+    "resultSubmittedStateTemplateRef": "templates/agent-state-result-submitted.template.json",
+    "preCasSchemaValidationRequired": true,
+    "postReadbackSchemaValidationRequired": true,
+    "goEvidenceProviderReadbackRequired": true,
+    "invalidSchemaOutcome": "BLOCKED_NO_PRODUCT_MUTATION",
+    "freeformClaimStateConstructionForbidden": true,
+    "rearmRequiresProviderCasAndReadback": true,
+    "rearmPreservesConsumedActivationIds": true,
+    "rearmPreservesLastResponseRef": true,
+    "reidentificationRearmBeforeClaimWhenRequired": true,
+    "reidentificationRearmRequiresProviderCasAndReadback": true,
+    "reidentificationRearmConsumesActivation": false,
+    "reidentificationEvidenceSchemaRef": "schemas/agent-reidentification-evidence.schema.json",
+    "reidentificationStateTemplateRef": "templates/agent-state-reidentification-ready.template.json",
+    "rearmBeforeNextClaimWhenPriorExecutionSettled": true,
+    "rearmAllowedPriorAgentStatuses": [
+      "RESULT_SUBMITTED",
+      "BLOCKED"
+    ],
+    "blockedRearmRequiresTypedBlockingResponseAndTerminalMasterResolution": true,
+    "settledRearmStateTemplateRef": "templates/agent-state-settled-rearm.template.json",
+    "freeformSettledRearmStateConstructionForbidden": true
   }
 }

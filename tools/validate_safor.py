@@ -108,16 +108,86 @@ if chat.get("primaryExecutionMode") != "DECLARATIVE_LLM_CHAT" or chat.get("custo
 activation = modules.get("agentActivation", {}).get("content", {}).get("chatAgentActivationContract", {})
 if activation.get("activationMode") != "HUMAN_GO_REQUIRED" or activation.get("acceptedHumanMessage") != "GO":
     fail("HUMAN-GO activation contract invalid")
-for field in ("backgroundWakeupAssumed", "gitEventActivationAllowed", "pollingActivationAllowed", "automationActivationAllowed", "hostTriggerActivationAllowed", "schedulerMayActivateChat"):
+for field in ("backgroundWakeupAssumed", "gitEventActivationAllowed", "pollingActivationAllowed", "automationActivationAllowed", "hostTriggerActivationAllowed", "schedulerMayActivateChat", "masterMayActivateChat", "masterMaySynthesizeHumanGo", "masterMayCreateHumanGoEvidence"):
     if activation.get(field) is not False:
         fail(f"Forbidden activation trigger enabled: {field}")
+if activation.get("activationAuthority") != "HUMAN_ONLY":
+    fail("Normal chat-agent activation authority must be HUMAN_ONLY")
 if activation.get("claimMode") != "ATOMIC_AGENT_STATE_CLAIM_WITH_SINGLE_USE_GO_EVIDENCE":
     fail("Atomic single-use GO claim mode missing")
+activation_model = modules.get("agentActivation", {}).get("content", {})
+preclaim = set(activation_model.get("onHumanGo", {}).get("preClaimChecks", []))
+required_preclaim = {
+    "JOB_CONTRACT_POINTER_EXACT_MATCH",
+    "AGENT_JOB_SCHEMA_VALID",
+    "AGENT_JOB_CONTRACT_MODEL_VALID",
+    "JOB_CLAIM_AND_RESPONSE_BINDINGS_COMPLETE",
+}
+missing_preclaim = sorted(required_preclaim - preclaim)
+if missing_preclaim:
+    fail(f"Agent Job fail-closed preclaim checks missing: {missing_preclaim}")
+job_validation = activation_model.get("onHumanGo", {}).get("jobValidationAuthority", {})
+if job_validation.get("authority") != "PINNED_SCHEMA_PLUS_PINNED_CONTRACT_MODEL":
+    fail("Normal chat Agent Job validation authority invalid")
+if job_validation.get("schemaPath") != "v0.14.0/schemas/agent-job.schema.json":
+    fail("Pinned Agent Job schema path invalid")
+if job_validation.get("contractModelPath") != "v0.14.0/agent-job-contract-model.json":
+    fail("Pinned Agent Job contract model path invalid")
+if job_validation.get("referenceValidatorRequiredForNormalChatUse") is not False:
+    fail("Python reference validator must not be required for normal chat use")
+allowed_go_reads = set(activation_model.get("onHumanGo", {}).get("allowedReadsInOrder", []))
+for required_read in (
+    "PINNED_AGENT_JOB_SCHEMA_FROM_ACTIVATION_MODEL",
+    "PINNED_AGENT_JOB_CONTRACT_MODEL_FROM_ACTIVATION_MODEL",
+):
+    if required_read not in allowed_go_reads:
+        fail(f"Normal chat Job validation read missing: {required_read}")
+if activation.get("currentInboxSnapshotBlobIsStableAcrossDispatch") is not False:
+    fail("Current Inbox snapshot blob must not be stable across dispatch")
+if activation.get("inboxBlobChangeAloneRequiresReidentification") is not False:
+    fail("Inbox blob change alone must not require reidentification")
+rearm = activation_model.get("onHumanGo", {}).get("preSelectionAgentStateHandling", {})
+if rearm.get("rearmStateOwner") != "AGENT":
+    fail("Agent State rearm owner must be AGENT")
+if rearm.get("masterMayWriteAgentState") is not False:
+    fail("MASTER must not rearm Agent State")
+if rearm.get("secondHumanGoRequired") is not False:
+    fail("Safe settled-state rearm must continue the same direct HUMAN GO")
+if set(rearm.get("settledMasterStatuses", [])) != {
+    "REJECTED", "ACCEPTED", "INTEGRATED", "CANCELED", "SUPERSEDED"
+}:
+    fail("Agent State rearm terminal MASTER status set invalid")
+if rearm.get("rearmForbiddenDuringInitialization") is not True:
+    fail("Agent State rearm must be forbidden during initialization/reinitialization")
+if rearm.get("rearmRequiresSeparateDirectHumanGo") is not True:
+    fail("Agent State rearm must require a later separate direct HUMAN GO")
+if rearm.get("rearmHumanInputSource") != "DIRECT_HUMAN_INPUT_IN_INITIALIZED_AGENT_CHAT":
+    fail("Agent State rearm HUMAN source invalid")
+if rearm.get("rearmHumanMessage") != "GO":
+    fail("Agent State rearm HUMAN message must be GO")
+if rearm.get("rearmStateMustRetainAllRequiredTopLevelFields") is not True:
+    fail("Agent State rearm must retain all required top-level fields")
+if rearm.get("rearmSessionAndCurrentJobRepresentation") != "EXPLICIT_NULL":
+    fail("Agent State rearm must persist session/currentJob as explicit null")
+if rearm.get("readyStatusForbiddenIfPersistedStateInvalid") is not True:
+    fail("READY must be forbidden for schema-invalid persisted Agent State")
 
-responses = modules.get("agentResponseContract", {}).get("content", {}).get("responseTypes", {})
+response_model = modules.get("agentResponseContract", {}).get("content", {})
+responses = response_model.get("responseTypes", {})
 expected_responses = {"JOB_RESULT", "JOB_ERROR", "CLARIFICATION_REQUEST", "CAPABILITY_MISMATCH", "IMPROVEMENT_PROPOSAL"}
 if set(responses) != expected_responses:
     fail("Typed response family mismatch")
+legacy_index_recovery = response_model.get("legacyResponseIndexRecovery", {})
+if legacy_index_recovery.get("knownLegacyFormat") != "SAFOR_AGENT_OUTBOX_INDEX":
+    fail("Known legacy Agent outbox-index format recovery missing")
+if legacy_index_recovery.get("canonicalFormat") != "SAFOR_AGENT_RESPONSE_INDEX":
+    fail("Canonical Agent response-index recovery target invalid")
+if legacy_index_recovery.get("owner") != "AGENT":
+    fail("Legacy Agent response-index recovery must remain AGENT-owned")
+if legacy_index_recovery.get("method") != "EXPECTED_BLOB_COMPARE_AND_SWAP_PLUS_PROVIDER_READBACK":
+    fail("Legacy Agent response-index recovery method invalid")
+if "MASTER_WRITE_AGENT_OUTBOX_INDEX" not in set(legacy_index_recovery.get("forbidden", [])):
+    fail("MASTER response-index repair must remain forbidden")
 communication = modules.get("agentCommunication", {}).get("content", {})
 if communication.get("owner") != "SAFOR_PLATFORM":
     fail("Agent communication must be platform-owned")
@@ -125,6 +195,10 @@ if communication.get("humanBoundary", {}).get("masterIsOnlyDomainInterface") is 
     fail("MASTER-only HUMAN interface missing")
 if communication.get("budgets", {}).get("maxLines") != 1 or communication.get("rendering", {}).get("menuForbidden") is not True:
     fail("Minimal single-line no-menu agent chat invalid")
+if communication.get("persistenceXorContract", {}).get("mutuallyExclusive") is not True:
+    fail("BLOCKED persistence XOR contract missing")
+if "BLOCKED_PERSISTENCE_FAILURE" not in communication.get("patterns", {}):
+    fail("BLOCKED persistence failure fallback pattern missing")
 master_status = modules.get("masterStatus", {}).get("content", {})
 if master_status.get("principles", {}).get("fullRepositoryScanForRoutineStatusForbidden") is not True:
     fail("MASTER routine full-scan prohibition missing")
@@ -135,6 +209,31 @@ if not {"agentId", "displayName", "inboxBinding", "activationContract"}.issubset
 job_schema = modules.get("schemaAgentJob", {}).get("content", {})
 if not {"domainContext", "responseContracts", "communicationContract"}.issubset(set(job_schema.get("required", []))):
     fail("Agent job contract required fields incomplete")
+job_contract_model = modules.get("agentJobContract", {}).get("content", {})
+authority_coverage = job_contract_model.get("authorityCoverage", {})
+if authority_coverage.get("requiredBeforePublication") is not True:
+    fail("Authority-basis coverage must be required before Agent Job publication")
+if authority_coverage.get("activeStatusRequired") is not True:
+    fail("Authority-basis active status requirement missing")
+if authority_coverage.get("providerRightsAreSeparateFromMandateCoverage") is not True:
+    fail("Provider rights must remain separate from mandate coverage")
+if authority_coverage.get("onCoverageFailure") != "DO_NOT_PUBLISH_OR_DISPATCH_JOB":
+    fail("Authority undercoverage must block Agent Job publication/dispatch")
+required_authority_checks = {
+    "PROJECT_MATCH",
+    "AGENT_MATCH",
+    "CONTROL_BRANCH_COVERS_ALL_CONTROL_WRITES",
+    "PRODUCT_REPOSITORY_MATCH",
+    "PRODUCT_BRANCH_COVERS_JOB_WORKSPACE_PERMISSION_AND_OUTPUT_TARGET",
+    "PRODUCT_PATHS_COVER_JOB_PERMISSION_WORKSPACE_AND_OUTPUT_TARGET",
+    "HUMAN_GO_REQUIRED",
+    "HUMAN_ONLY_ACTIVATION_REQUIRED",
+    "MASTER_AGENT_ACTIVATION_FORBIDDEN",
+    "MERGE_FORBIDDEN",
+    "DEPLOY_FORBIDDEN",
+}
+if not required_authority_checks.issubset(set(authority_coverage.get("coverageChecks", []))):
+    fail("Authority-basis coverage checks incomplete")
 if not expected_responses.issubset(set(job_schema.get("$defs", {}).get("responseContracts", {}).get("required", []))):
     fail("Agent job does not bind all response types")
 
