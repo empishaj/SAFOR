@@ -2,19 +2,10 @@
   "format": "SAFOR_SCENARIO_STATUS_INDEX",
   "schemaVersion": "1.1",
   "suiteId": "SAFOR-HARDENING-200",
-  "updatedAt": "2026-10-21T14:09:11Z",
+  "updatedAt": "2026-10-21T14:25:00Z",
   "updateRule": "DERIVED_FROM_APPEND_ONLY_STATUS_EVENTS",
   "resolutionRule": "Use overrides[scenarioId] when present; otherwise use defaultRecord. The scenario universe is defined by manifest.json and contains exactly 200 IDs.",
-  "allowedStatuses": [
-    "NOT_RUN",
-    "RUNNING",
-    "PASS",
-    "FAIL",
-    "ERROR",
-    "BLOCKED",
-    "INCONCLUSIVE",
-    "SKIPPED"
-  ],
+  "allowedStatuses": ["NOT_RUN","RUNNING","PASS","FAIL","ERROR","BLOCKED","INCONCLUSIVE","SKIPPED"],
   "scenarioUniverse": {
     "manifestRef": "../manifest.json",
     "scenarioCount": 200,
@@ -33,8 +24,8 @@
   },
   "summary": {
     "total": 200,
-    "NOT_RUN": 199,
-    "RUNNING": 0,
+    "NOT_RUN": 198,
+    "RUNNING": 1,
     "PASS": 1,
     "FAIL": 0,
     "ERROR": 0,
@@ -63,6 +54,21 @@
       "retestRequired": false,
       "previousTerminalStatus": "FAIL",
       "previousTerminalRunId": "SC091-RUN-001"
+    },
+    "SC-101": {
+      "status": "RUNNING",
+      "attempts": 1,
+      "lastRunId": "SC101-RUN-001",
+      "lastRunAt": "2026-10-21T14:25:00Z",
+      "latestEvidenceRefs": [
+        "empishaj/safor-memory@51c8a9e4f64fb86433b46e64a4d534472a4e339a:projects/safomwebsite/master/plans/or11-sc101-six-agent-wave-001.json@de09120e82db8d3cdc1726666d245e43fae21724",
+        "empishaj/safor-memory@73a1d10818f0956d839785db79f0cad75ee6741a:projects/safomwebsite/evidence/or11-sc101-reidentification-preparation-001.json@bef2d306133dc1e1a517daf2c20e668f7b527ec5",
+        "empishaj/SAFOR@f4f0c4e434a3ca3b02992fddaaf99487c2c3ae9d:scenario-hardening/runs/SC-101/SC101-RUN-001.json"
+      ],
+      "latestVerdictReason": "RUNNING: OR-11 SC-101 has selected six conflict-free Agents and prepared five exact reidentification bootstraps. No jobs are published yet. Waiting for five exact HUMAN-reported bootstrap acknowledgements before dispatch.",
+      "lastFrameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
+      "remediationRequired": false,
+      "retestRequired": false
     }
   }
 }
