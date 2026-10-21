@@ -188,7 +188,9 @@
     "PERSISTED_PROVIDER_READBACK_HUMAN_GO_EVIDENCE",
     "TEMPLATE_BOUND_TYPED_RESPONSE_CONSTRUCTION",
     "SCHEMA_VALIDATED_RESPONSE_BEFORE_WRITE",
-    "SCHEMA_VALIDATED_RESPONSE_AFTER_READBACK"
+    "SCHEMA_VALIDATED_RESPONSE_AFTER_READBACK",
+    "SCHEMA_BOUND_SETTLED_AGENT_REARM_TEMPLATE",
+    "BLOCKED_AGENT_SAFE_REARM"
   ],
   "buildCommand": "python tools/build_bundle.py",
   "validationCommand": "python tools/validate_safor.py",
@@ -397,7 +399,7 @@
       "purpose": "Replace unverifiable host chat/session binding with pinned agent identity plus MASTER-written personal inbox job transport."
     }
   },
-  "embeddedModuleCount": 98,
+  "embeddedModuleCount": 99,
   "releaseFactsRef": "RELEASE-FACTS.json",
   "releaseArtifactsState": "PENDING_RELEASE_MATERIALIZATION",
   "operationalReadiness": {
