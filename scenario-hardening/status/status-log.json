@@ -109,6 +109,23 @@
         "empishaj/safomwebsite@1026ff2176d739aeedc506e5970b48528aa8ad23"
       ],
       "note": "Job 011 completed through direct HUMAN GO, Agent-owned settled rearm, provider-backed claim, source-bound evidence, typed response and RESULT_SUBMITTED state. MASTER independently verified and accepted the result. OR-10 single-agent operational readiness is PASS. Website implementation, empirical product tests and multi-agent readiness remain explicitly open."
+    },
+    {
+      "eventId": "SC101-RUN-001-START",
+      "eventType": "SCENARIO_RUN_STARTED",
+      "occurredAt": "2026-10-21T14:25:00Z",
+      "actor": "SAFOR_MASTER",
+      "scenarioId": "SC-101",
+      "runId": "SC101-RUN-001",
+      "fromStatus": "NOT_RUN",
+      "toStatus": "RUNNING",
+      "frameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
+      "evidenceRefs": [
+        "empishaj/safor-memory@51c8a9e4f64fb86433b46e64a4d534472a4e339a:projects/safomwebsite/master/plans/or11-sc101-six-agent-wave-001.json@de09120e82db8d3cdc1726666d245e43fae21724",
+        "empishaj/safor-memory@73a1d10818f0956d839785db79f0cad75ee6741a:projects/safomwebsite/evidence/or11-sc101-reidentification-preparation-001.json@bef2d306133dc1e1a517daf2c20e668f7b527ec5",
+        "empishaj/SAFOR@f4f0c4e434a3ca3b02992fddaaf99487c2c3ae9d:scenario-hardening/runs/SC-101/SC101-RUN-001.json"
+      ],
+      "note": "OR-11 SC-101 started. Six conflict-free Agents and outputs are planned; five exact read-only reidentification bootstraps are provider-backed. No jobs or HUMAN-GO evidence exist yet. The run waits for five HUMAN-reported exact bootstrap acknowledgements before the six-job wave can be published."
     }
   ]
 }
