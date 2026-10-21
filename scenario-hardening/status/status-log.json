@@ -25,6 +25,19 @@
       "toStatus": "RUNNING",
       "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
       "note": "HUMAN authorized continuation in MASTER chat. MASTER may prepare/publish Job 011; normal Atlas UX execution still requires later direct HUMAN GO in the initialized Atlas UX chat."
+    },
+    {
+      "eventId": "SC091-RUN-001-FAIL",
+      "eventType": "SCENARIO_RUN_FINISHED",
+      "occurredAt": "2026-10-21T10:33:02Z",
+      "actor": "SAFOR_MASTER",
+      "scenarioId": "SC-091",
+      "runId": "SC091-RUN-001",
+      "fromStatus": "RUNNING",
+      "toStatus": "FAIL",
+      "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+      "findingClass": "CONTRACT_DRIFT",
+      "note": "Pre-publication validation found that BLOCKED settled-execution rearm was supported by runtime/activation semantics but lacked an exact schema-bound state template. Job 011 was not published. Remediation created a dedicated settled-rearm template and bindings on the rc.6 operational branch; retest required after exact-head CI passes."
     }
   ]
 }

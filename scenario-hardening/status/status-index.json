@@ -2,7 +2,7 @@
   "format": "SAFOR_SCENARIO_STATUS_INDEX",
   "schemaVersion": "1.0",
   "suiteId": "SAFOR-HARDENING-200",
-  "updatedAt": "2026-10-21T10:26:41Z",
+  "updatedAt": "2026-10-21T10:33:02Z",
   "updateRule": "DERIVED_FROM_APPEND_ONLY_STATUS_EVENTS",
   "allowedStatuses": [
     "NOT_RUN",
@@ -17,9 +17,9 @@
   "summary": {
     "total": 200,
     "NOT_RUN": 199,
-    "RUNNING": 1,
+    "RUNNING": 0,
     "PASS": 0,
-    "FAIL": 0,
+    "FAIL": 1,
     "ERROR": 0,
     "BLOCKED": 0,
     "INCONCLUSIVE": 0,
@@ -1017,18 +1017,22 @@
       "retestRequired": false
     },
     "SC-091": {
-      "status": "RUNNING",
+      "status": "FAIL",
       "attempts": 1,
       "lastRunId": "SC091-RUN-001",
-      "lastRunAt": "2026-10-21T10:26:41Z",
+      "lastRunAt": "2026-10-21T10:33:02Z",
       "latestEvidenceRefs": [
-        "empishaj/safor-memory:projects/safomwebsite/decisions/or10-job010-rework-decision.json",
-        "empishaj/safor-memory:projects/safomwebsite/master/inputs/or10-visual-semantics-011.json"
+        "empishaj/SAFOR@1596f4677c23d9838db25dc06f608395aee2c5c3:v0.14.0/agent-activation-model.json",
+        "empishaj/SAFOR@1596f4677c23d9838db25dc06f608395aee2c5c3:runtime/agent_jobs.py",
+        "empishaj/SAFOR@1596f4677c23d9838db25dc06f608395aee2c5c3:v0.14.0/templates/agent-state-reidentification-ready.template.json",
+        "empishaj/SAFOR@e4b888b7a015b54e573df22beedf067c27f4f18b:v0.14.0/templates/agent-state-settled-rearm.template.json",
+        "github-actions:39585130459",
+        "github-actions:39585130257"
       ],
-      "latestVerdictReason": "Formal campaign run started by HUMAN GO in MASTER chat; MASTER preparation phase active. Agent activation remains pending direct HUMAN GO in Atlas UX chat.",
+      "latestVerdictReason": "FAIL: rc.6 allowed BLOCKED settled-execution rearm in the activation/runtime contract but had no separately bound state-construction template. The only existing rearm template was explicitly restricted to prior REIDENTIFICATION_REQUIRED. Publishing Job 011 would therefore require free-form or semantically contradictory state construction.",
       "lastFrameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
-      "remediationRequired": false,
-      "retestRequired": false
+      "remediationRequired": true,
+      "retestRequired": true
     },
     "SC-092": {
       "status": "NOT_RUN",

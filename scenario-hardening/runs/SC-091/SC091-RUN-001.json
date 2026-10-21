@@ -1,0 +1,47 @@
+{
+  "format": "SAFOR_SCENARIO_RUN_RECORD",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "runId": "SC091-RUN-001",
+  "scenarioId": "SC-091",
+  "scenarioVersion": 1,
+  "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+  "startedAt": "2026-10-21T10:26:41Z",
+  "finishedAt": "2026-10-21T10:33:02Z",
+  "preconditionEvidence": [
+    "OR-09 exact-head revalidation PASS on 1596f467...",
+    "Job 010 SUPERSEDED/NOT_CLAIMABLE",
+    "Atlas UX Agent State BLOCKED revision 3",
+    "source-bound visual semantics input 011 exists"
+  ],
+  "observations": [
+    "Activation model supports settled prior execution statuses RESULT_SUBMITTED and BLOCKED and requires Agent-owned rearm before next claim.",
+    "Runtime validate_agent_state_rearm_transition validates BLOCKED -> WAITING_HUMAN_GO after terminal MASTER resolution and typed blocking response.",
+    "The only rearm state template in the Framework was agent-state-reidentification-ready.template.json.",
+    "That template explicitly requires prior runtimeStatus REIDENTIFICATION_REQUIRED.",
+    "Agent Job schema did not bind a distinct settled-execution rearm template.",
+    "Publishing Job 011 safely would therefore require free-form state construction or misuse of a contradictory template."
+  ],
+  "evidenceRefs": [
+    "empishaj/SAFOR@1596f4677c23d9838db25dc06f608395aee2c5c3:v0.14.0/agent-activation-model.json",
+    "empishaj/SAFOR@1596f4677c23d9838db25dc06f608395aee2c5c3:runtime/agent_jobs.py",
+    "empishaj/SAFOR@1596f4677c23d9838db25dc06f608395aee2c5c3:v0.14.0/templates/agent-state-reidentification-ready.template.json",
+    "empishaj/SAFOR@e4b888b7a015b54e573df22beedf067c27f4f18b:v0.14.0/templates/agent-state-settled-rearm.template.json",
+    "github-actions:39585130459",
+    "github-actions:39585130257"
+  ],
+  "verdict": "FAIL",
+  "verdictReason": "FAIL: rc.6 allowed BLOCKED settled-execution rearm in the activation/runtime contract but had no separately bound state-construction template. The only existing rearm template was explicitly restricted to prior REIDENTIFICATION_REQUIRED. Publishing Job 011 would therefore require free-form or semantically contradictory state construction.",
+  "findingClass": "CONTRACT_DRIFT",
+  "rootCause": "The BLOCKED/RESULT_SUBMITTED rearm lifecycle was added to runtime and activation semantics without adding a separate immutable state-construction template and mandatory Job binding for that transition.",
+  "remediationRefs": [
+    "empishaj/SAFOR@e4b888b7a015b54e573df22beedf067c27f4f18b",
+    "empishaj/SAFOR@0028b91e926ded39a8b3064776ad360d99cb4f4a"
+  ],
+  "regressionTestRefs": [
+    "tests/test_agent_job_v014.py#test_claim_requires_pinned_settled_rearm_template",
+    "tests/test_agent_job_v014.py#test_activation_contract_covers_blocked_rearm"
+  ],
+  "retestRequired": true,
+  "learnedRule": "Every authoritative Agent-State transition that an LLM must materialize must have a distinct exact template bound by the active Job whenever its semantic preconditions differ; runtime support alone is insufficient."
+}
