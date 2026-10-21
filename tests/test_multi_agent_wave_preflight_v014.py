@@ -109,11 +109,7 @@ class MultiAgentWavePreflightV014Tests(unittest.TestCase):
             if item["repositoryClass"] == "WORK_REPOSITORY"
         )
         work_permission["read"] = False
-        work_permission["write"] = {
-            "allowed": False,
-            "allowedBranches": [],
-            "allowedPaths": [],
-        }
+        work_permission["write"]["allowed"] = False
         work_permission["commit"] = False
         work_permission["push"] = False
         job["workspace"]["productWorkspace"] = None
@@ -282,9 +278,6 @@ class MultiAgentWavePreflightV014Tests(unittest.TestCase):
             job_id: self.mandate(job)
             for job_id, job in jobs.items()
         }
-        for mandate in authority.values():
-            mandate["allowedProductBranch"] = "main"
-            mandate["allowedProductPaths"] = ["/"]
         result = self.run_preflight(
             wave=wave,
             jobs_by_id=jobs,
