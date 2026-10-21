@@ -110,20 +110,31 @@ class ScenarioHardeningSuiteTests(unittest.TestCase):
                 if run.get("status") == "RUNNING":
                     self.assertIsNone(run["finishedAt"])
                     self.assertIsNone(run["verdict"])
+                if run.get("status") == "PASS":
+                    self.assertIsNotNone(run["finishedAt"])
+                    self.assertEqual("PASS", run["verdict"])
+                    self.assertTrue(run["verdictReason"])
 
-    def test_sc091_retest_preserves_prior_failure_and_waits_for_human_go(self):
+    def test_sc091_retest_preserves_prior_failure_and_passes_with_master_acceptance(self):
         record = self.status["overrides"]["SC-091"]
-        self.assertEqual("RUNNING", record["status"])
+        self.assertEqual("PASS", record["status"])
         self.assertEqual(2, record["attempts"])
         self.assertEqual("SC091-RUN-002", record["lastRunId"])
         self.assertEqual("FAIL", record["previousTerminalStatus"])
         self.assertEqual("SC091-RUN-001", record["previousTerminalRunId"])
+        self.assertTrue(record["latestEvidenceRefs"])
+
+        prior = load(SUITE / "runs" / "SC-091" / "SC091-RUN-001.json")
+        self.assertEqual("FAIL", prior["verdict"])
+        self.assertTrue(prior["retestRequired"])
 
         run = load(SUITE / "runs" / "SC-091" / "SC091-RUN-002.json")
-        self.assertEqual("WAITING_DIRECT_HUMAN_GO", run["phase"])
-        self.assertEqual("HUMAN", run["nextAuthorizedAction"]["actor"])
-        self.assertEqual("chat:worker-architect", run["nextAuthorizedAction"]["surface"])
-        self.assertEqual("GO", run["nextAuthorizedAction"]["message"])
+        self.assertEqual("PASS", run["status"])
+        self.assertEqual("PASS", run["verdict"])
+        self.assertEqual("MASTER_ACCEPTED_OR10_GATE_PASS", run["phase"])
+        self.assertIsNone(run["nextAuthorizedAction"])
+        self.assertIn("OR-10", run["verdictReason"])
+        self.assertFalse(run["retestRequired"])
 
 
 if __name__ == "__main__":
