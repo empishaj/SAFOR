@@ -33,14 +33,25 @@ class AgentJobFixtureContractAlignmentTests(unittest.TestCase):
             handling["onSettledPriorExecution"],
         )
 
-        contract = self.load("v0.14.0/agent-job-contract-model.json")
+        bundle_map = self.load("v0.14.0/bundle-module-map.json")
         self.assertEqual(
-            "templates/agent-state-settled-rearm.template.json",
-            contract["activation"]["settledRearmStateTemplate"],
+            "v0.14.0/templates/agent-state-settled-rearm.template.json",
+            bundle_map["modulePaths"]["templateAgentStateSettledRearm"],
         )
-        self.assertTrue(
-            contract["activation"]["freeformSettledRearmStateConstructionForbidden"]
+        self.assertIn(
+            "templateAgentStateSettledRearm",
+            bundle_map["v014AuthoritativeKeys"],
         )
+
+        template = self.load(
+            "v0.14.0/templates/agent-state-settled-rearm.template.json"
+        )
+        self.assertEqual(
+            "WAITING_HUMAN_GO",
+            template["stateTemplate"]["runtimeStatus"],
+        )
+        self.assertIsNone(template["stateTemplate"]["session"])
+        self.assertIsNone(template["stateTemplate"]["currentJob"])
 
 
 if __name__ == "__main__":
