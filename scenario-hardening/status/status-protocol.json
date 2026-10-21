@@ -1,9 +1,11 @@
 {
   "format": "SAFOR_SCENARIO_STATUS_PROTOCOL",
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "suiteId": "SAFOR-HARDENING-200",
   "authoritativeCurrentStatus": "status/status-index.json",
   "authoritativeHistory": "status/status-log.json",
+  "currentStatusModel": "DEFAULT_PLUS_OVERRIDES",
+  "currentStatusResolution": "For each scenario ID declared by manifest.json, use overrides[scenarioId] when present; otherwise use defaultRecord.",
   "statuses": {
     "NOT_RUN": "Scenario has not yet been executed as part of this formal campaign.",
     "RUNNING": "A test execution is currently active and has not reached a terminal verdict.",
@@ -31,6 +33,10 @@
     "INCONCLUSIVE is used when evidence cannot support a decisive verdict.",
     "A retest creates a new run/event and never overwrites historical evidence.",
     "Current status is derived from the latest authoritative event for the scenario.",
+    "A scenario absent from overrides inherits defaultRecord; absence never means deletion or unknown status.",
+    "The summary must equal the resolved status counts across all 200 scenario IDs from manifest.json.",
+    "An override must exist for every scenario whose resolved current record differs from defaultRecord.",
+    "The append-only log and immutable run records retain previous terminal outcomes even when a retest is RUNNING.",
     "Any framework remediation triggered by a scenario must reference the originating scenarioId/runId.",
     "Every learned safety rule should become an invariant, conformance rule, recovery rule, regression test or explicit documented product boundary."
   ],
