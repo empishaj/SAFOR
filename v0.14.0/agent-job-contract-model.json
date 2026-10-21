@@ -24,6 +24,7 @@
     "VERIFY_ACTUAL_PROVIDER_RIGHTS_SEPARATELY_FROM_MANDATE_COVERAGE",
     "BIND_HUMAN_GO_EVIDENCE_SCHEMA_TEMPLATE_AND_WRITE_TARGET",
     "BIND_AGENT_STATE_SCHEMA_CLAIM_AND_RESULT_SUBMITTED_TEMPLATES",
+    "BIND_SETTLED_AGENT_REARM_STATE_TEMPLATE",
     "REQUIRE_PRE_CAS_AND_POST_READBACK_AGENT_STATE_SCHEMA_VALIDATION",
     "REQUIRE_PRE_WRITE_AND_POST_READBACK_RESPONSE_SCHEMA_VALIDATION",
     "BIND_ALL_FIVE_RESPONSE_TEMPLATES",
@@ -50,7 +51,9 @@
     "goEvidenceProviderReadbackRequired": true,
     "preCasSchemaValidationRequired": true,
     "postReadbackSchemaValidationRequired": true,
-    "freeformClaimStateConstructionForbidden": true
+    "freeformClaimStateConstructionForbidden": true,
+    "settledRearmStateTemplate": "templates/agent-state-settled-rearm.template.json",
+    "freeformSettledRearmStateConstructionForbidden": true
   },
   "writeSeparation": {
     "productArtifacts": "WORK_REPOSITORY on dedicated branch and allowed paths",

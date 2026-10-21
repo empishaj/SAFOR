@@ -75,7 +75,7 @@ Current normative source root: **`v0.14.0/`**. Compatibility and audit baselines
 | Deterministic Acceptance unit/replay suite | PASS |
 | Modular bootstrap/package/workspace unit suite | PASS |
 | Current unit and regression suite | **PASS in CI; count derived from workflow logs** |
-| Module-wide Self-Healing exact coverage | **98/98 PASS by exact module/profile coverage; rc.6 CI revalidation pending** |
+| Module-wide Self-Healing exact coverage | **99/99 PASS by exact module/profile coverage; rc.6 CI revalidation pending** |
 | Package/workspace Self-Healing boundary SH-23 | PASS by schema/conformance |
 | HUMAN Decision Gate / derive-before-ask | PASS by schema/conformance |
 | Terminal HUMAN menu contract | PASS by schema/conformance |

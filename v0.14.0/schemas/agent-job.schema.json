@@ -914,6 +914,7 @@
             "agentStateSchemaRef",
             "claimStateTemplateRef",
             "resultSubmittedStateTemplateRef",
+            "settledRearmStateTemplateRef",
             "preCasSchemaValidationRequired",
             "postReadbackSchemaValidationRequired",
             "goEvidenceProviderReadbackRequired"
@@ -961,6 +962,9 @@
             },
             "goEvidenceProviderReadbackRequired": {
               "const": true
+            },
+            "settledRearmStateTemplateRef": {
+              "$ref": "#/$defs/pointer"
             }
           }
         }

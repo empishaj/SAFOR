@@ -178,6 +178,7 @@ def validate_agent_job(job: Mapping[str, Any]) -> None:
         'agentStateSchemaRef': 'v0.14.0/schemas/agent-state.schema.json',
         'claimStateTemplateRef': 'v0.14.0/templates/agent-state-claim.template.json',
         'resultSubmittedStateTemplateRef': 'v0.14.0/templates/agent-state-result-submitted.template.json',
+        'settledRearmStateTemplateRef': 'v0.14.0/templates/agent-state-settled-rearm.template.json',
     }
     for field, expected_path in claim_refs.items():
         ref = _pointer(claim.get(field), field)

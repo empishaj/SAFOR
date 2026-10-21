@@ -99,7 +99,8 @@
     "templateAgentStateClaim": "v0.14.0/templates/agent-state-claim.template.json",
     "templateAgentStateResultSubmitted": "v0.14.0/templates/agent-state-result-submitted.template.json",
     "schemaAgentReidentificationEvidence": "v0.14.0/schemas/agent-reidentification-evidence.schema.json",
-    "templateAgentStateReidentificationReady": "v0.14.0/templates/agent-state-reidentification-ready.template.json"
+    "templateAgentStateReidentificationReady": "v0.14.0/templates/agent-state-reidentification-ready.template.json",
+    "templateAgentStateSettledRearm": "v0.14.0/templates/agent-state-settled-rearm.template.json"
   },
   "referenceResolution": {
     "SAFOR-MASTER.json": "kernel",
@@ -214,7 +215,9 @@
     "agent-reidentification-evidence.schema.json": "schemaAgentReidentificationEvidence",
     "schemas/agent-reidentification-evidence.schema.json": "schemaAgentReidentificationEvidence",
     "agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady",
-    "templates/agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady"
+    "templates/agent-state-reidentification-ready.template.json": "templateAgentStateReidentificationReady",
+    "agent-state-settled-rearm.template.json": "templateAgentStateSettledRearm",
+    "templates/agent-state-settled-rearm.template.json": "templateAgentStateSettledRearm"
   },
   "v014AuthoritativeKeys": [
     "acceptanceModel",
@@ -305,6 +308,7 @@
     "templateAgentInitialization",
     "templateAgentJobHuman",
     "templateAgentStateReidentificationReady",
+    "templateAgentStateSettledRearm",
     "templateCapabilityMismatch",
     "templateClarificationRequest",
     "templateImprovementProposal",
