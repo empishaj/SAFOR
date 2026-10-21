@@ -1,117 +1,54 @@
 {
   "format": "SAFOR_SCENARIO_SUITE_MANIFEST",
-  "schemaVersion": "1.0",
+  "schemaVersion": "1.1",
   "suiteId": "SAFOR-HARDENING-200",
   "title": "SAFOR 200-Scenario Operational Hardening Suite",
   "purpose": "Scenario-driven empirical hardening of SAFOR across bootstrap, governance, agent lifecycle, provider behavior, recovery, multi-agent orchestration, commercial boundaries, security, HUMAN UX and release truth.",
-  "baseline": {
+  "initialBaseline": {
     "frameworkVersion": "0.14.0-rc.6",
     "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
     "branch": "safor/operational-readiness-0.14.0-rc.6"
   },
+  "currentValidatedRuntimeBaseline": {
+    "frameworkVersion": "0.14.0-rc.6",
+    "frameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
+    "validationRunId": 39585568258,
+    "exactHeadMaterializationRunId": 39585568359,
+    "artifactId": 12339059100,
+    "moduleCount": 99,
+    "recoveryProfileCount": 99,
+    "testCount": 388
+  },
+  "latestRegressionValidation": {
+    "commit": "0857424152d11e4960c235bffe5c36fa542031c0",
+    "validationRunId": 39588623777,
+    "exactHeadMaterializationRunId": 39588623606,
+    "testCount": 390,
+    "runtimeRebindRequired": false
+  },
   "scenarioCount": 200,
   "categoryCount": 20,
   "categories": [
-    {
-      "id": "A",
-      "name": "Framework Bootstrap & Integrität",
-      "count": 10
-    },
-    {
-      "id": "B",
-      "name": "Domain, Factory & Operating Model",
-      "count": 10
-    },
-    {
-      "id": "C",
-      "name": "HUMAN Interaction & Cognitive Load",
-      "count": 10
-    },
-    {
-      "id": "D",
-      "name": "Agent Identity & Reidentification",
-      "count": 10
-    },
-    {
-      "id": "E",
-      "name": "HUMAN GO & Aktivierung",
-      "count": 10
-    },
-    {
-      "id": "F",
-      "name": "Agent Job Contract",
-      "count": 10
-    },
-    {
-      "id": "G",
-      "name": "Claim, CAS & Agent State",
-      "count": 10
-    },
-    {
-      "id": "H",
-      "name": "Typed Responses & MASTER Reconciliation",
-      "count": 10
-    },
-    {
-      "id": "I",
-      "name": "Self-Healing & Partial Writes",
-      "count": 10
-    },
-    {
-      "id": "J",
-      "name": "Single-Agent Lifecycle & Rework",
-      "count": 10
-    },
-    {
-      "id": "K",
-      "name": "Multi-Agent Scheduling",
-      "count": 10
-    },
-    {
-      "id": "L",
-      "name": "Dependencies, Fan-out & Fan-in",
-      "count": 10
-    },
-    {
-      "id": "M",
-      "name": "Review, SoD & Acceptance",
-      "count": 10
-    },
-    {
-      "id": "N",
-      "name": "Git Provider & Workspace",
-      "count": 10
-    },
-    {
-      "id": "O",
-      "name": "Migration & Versioning",
-      "count": 10
-    },
-    {
-      "id": "P",
-      "name": "Commercial Licensing & Entitlements",
-      "count": 10
-    },
-    {
-      "id": "Q",
-      "name": "Security & Adversarial Behavior",
-      "count": 10
-    },
-    {
-      "id": "R",
-      "name": "Provider Chaos & Resilience",
-      "count": 10
-    },
-    {
-      "id": "S",
-      "name": "Non-Tech UX & Real HUMAN",
-      "count": 10
-    },
-    {
-      "id": "T",
-      "name": "Release Truth, Evidence & Product Readiness",
-      "count": 10
-    }
+    {"id": "A", "name": "Framework Bootstrap & Integrität", "count": 10},
+    {"id": "B", "name": "Domain, Factory & Operating Model", "count": 10},
+    {"id": "C", "name": "HUMAN Interaction & Cognitive Load", "count": 10},
+    {"id": "D", "name": "Agent Identity & Reidentification", "count": 10},
+    {"id": "E", "name": "HUMAN GO & Aktivierung", "count": 10},
+    {"id": "F", "name": "Agent Job Contract", "count": 10},
+    {"id": "G", "name": "Claim, CAS & Agent State", "count": 10},
+    {"id": "H", "name": "Typed Responses & MASTER Reconciliation", "count": 10},
+    {"id": "I", "name": "Self-Healing & Partial Writes", "count": 10},
+    {"id": "J", "name": "Single-Agent Lifecycle & Rework", "count": 10},
+    {"id": "K", "name": "Multi-Agent Scheduling", "count": 10},
+    {"id": "L", "name": "Dependencies, Fan-out & Fan-in", "count": 10},
+    {"id": "M", "name": "Review, SoD & Acceptance", "count": 10},
+    {"id": "N", "name": "Git Provider & Workspace", "count": 10},
+    {"id": "O", "name": "Migration & Versioning", "count": 10},
+    {"id": "P", "name": "Commercial Licensing & Entitlements", "count": 10},
+    {"id": "Q", "name": "Security & Adversarial Behavior", "count": 10},
+    {"id": "R", "name": "Provider Chaos & Resilience", "count": 10},
+    {"id": "S", "name": "Non-Tech UX & Real HUMAN", "count": 10},
+    {"id": "T", "name": "Release Truth, Evidence & Product Readiness", "count": 10}
   ],
   "priorityCounts": {
     "P0": 140,
@@ -129,11 +66,20 @@
     "SKIPPED"
   ],
   "scenarioPathPattern": "scenarios/SC-{NNN}.json",
+  "runRecordPathPattern": "runs/{SCENARIO_ID}/{RUN_ID}.json",
   "statusIndex": "status/status-index.json",
+  "statusIndexModel": "DEFAULT_PLUS_OVERRIDES",
   "statusLog": "status/status-log.json",
   "statusProtocol": "status/status-protocol.json",
   "scenarioSchema": "schemas/scenario.schema.json",
   "statusSchema": "schemas/status-index.schema.json",
-  "campaignState": "INITIALIZED_NOT_EXECUTED",
-  "truthRule": "Scenario definitions and current status are separate. Historical execution events are append-only and must never be rewritten to manufacture a PASS."
+  "campaignState": "RUNNING",
+  "activeRuns": [
+    {
+      "scenarioId": "SC-091",
+      "runId": "SC091-RUN-002",
+      "phase": "WAITING_DIRECT_HUMAN_GO"
+    }
+  ],
+  "truthRule": "Scenario definitions and current status are separate. Historical execution events and immutable run records are append-only and must never be rewritten to manufacture a PASS."
 }
