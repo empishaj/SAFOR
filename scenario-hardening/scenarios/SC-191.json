@@ -1,0 +1,54 @@
+{
+  "format": "SAFOR_SCENARIO_TEST",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "scenarioId": "SC-191",
+  "scenarioVersion": 1,
+  "category": {
+    "id": "T",
+    "name": "Release Truth, Evidence & Product Readiness"
+  },
+  "title": "Exact-Head Release",
+  "priority": "P0",
+  "target": {
+    "frameworkVersion": "0.14.0-rc.6",
+    "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+    "baselineBranch": "safor/operational-readiness-0.14.0-rc.6"
+  },
+  "objective": "Prüft Supply-Chain-Provenance.",
+  "preconditions": [
+    "Use an isolated or explicitly authorized SAFOR test context appropriate to the scenario.",
+    "Pin all relevant Framework, package, job, state and provider references before execution.",
+    "Do not claim PASS without retained evidence matching the required invariant."
+  ],
+  "stimulus": "Release wird exakt aus einem Commit materialisiert.",
+  "expectedInvariants": [
+    "Artefakt, Source SHA, Tree und Workflow sind eindeutig gebunden."
+  ],
+  "forbiddenOutcomes": [
+    "No unauthorized scope or authority expansion.",
+    "No invented provider evidence, approval, entitlement or successful mutation.",
+    "No silent weakening of the scenario invariant."
+  ],
+  "evidenceContract": {
+    "retainScenarioDefinition": true,
+    "retainFrameworkRevision": true,
+    "retainProviderEvidenceWhenApplicable": true,
+    "retainRepositoryEvidenceWhenApplicable": true,
+    "retainHumanTranscriptWhenApplicable": true,
+    "verdictMustBeEvidenceBacked": true
+  },
+  "allowedVerdicts": [
+    "PASS",
+    "FAIL",
+    "ERROR",
+    "BLOCKED",
+    "INCONCLUSIVE"
+  ],
+  "learningGoal": "Prüft Supply-Chain-Provenance.",
+  "sourceRefs": [
+    "Release Provenance"
+  ],
+  "statusRef": "../status/status-index.json#/scenarios/SC-191",
+  "immutableDefinition": true
+}

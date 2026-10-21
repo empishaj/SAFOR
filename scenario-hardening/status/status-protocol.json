@@ -1,0 +1,56 @@
+{
+  "format": "SAFOR_SCENARIO_STATUS_PROTOCOL",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "authoritativeCurrentStatus": "status/status-index.json",
+  "authoritativeHistory": "status/status-log.json",
+  "statuses": {
+    "NOT_RUN": "Scenario has not yet been executed as part of this formal campaign.",
+    "RUNNING": "A test execution is currently active and has not reached a terminal verdict.",
+    "PASS": "All required invariants passed and retained evidence supports the verdict.",
+    "FAIL": "One or more required invariants were violated by the observed product/framework behavior.",
+    "ERROR": "The test could not complete because of an unexpected test harness, provider, tooling or execution error that prevents a valid product verdict.",
+    "BLOCKED": "Execution cannot proceed because a declared prerequisite, authority, capability or safe precondition is missing.",
+    "INCONCLUSIVE": "Execution completed or partially completed, but evidence is insufficient or contradictory for PASS/FAIL.",
+    "SKIPPED": "Scenario was deliberately not executed for a recorded governed reason."
+  },
+  "terminalVerdicts": [
+    "PASS",
+    "FAIL",
+    "ERROR",
+    "BLOCKED",
+    "INCONCLUSIVE",
+    "SKIPPED"
+  ],
+  "rules": [
+    "Every attempt receives a unique runId and an append-only event.",
+    "PASS requires explicit evidence references sufficient to verify every expected invariant.",
+    "FAIL must preserve the failed evidence; failed runs may never be deleted or rewritten into PASS.",
+    "ERROR is not FAIL unless product behavior itself violated an invariant.",
+    "BLOCKED records the exact unmet prerequisite and must not be interpreted as product PASS.",
+    "INCONCLUSIVE is used when evidence cannot support a decisive verdict.",
+    "A retest creates a new run/event and never overwrites historical evidence.",
+    "Current status is derived from the latest authoritative event for the scenario.",
+    "Any framework remediation triggered by a scenario must reference the originating scenarioId/runId.",
+    "Every learned safety rule should become an invariant, conformance rule, recovery rule, regression test or explicit documented product boundary."
+  ],
+  "requiredRunRecordFields": [
+    "runId",
+    "scenarioId",
+    "scenarioVersion",
+    "frameworkCommit",
+    "startedAt",
+    "finishedAt",
+    "preconditionEvidence",
+    "observations",
+    "evidenceRefs",
+    "verdict",
+    "verdictReason",
+    "findingClass",
+    "rootCause",
+    "remediationRefs",
+    "regressionTestRefs",
+    "retestRequired",
+    "learnedRule"
+  ]
+}

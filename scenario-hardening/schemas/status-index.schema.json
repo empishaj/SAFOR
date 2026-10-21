@@ -1,0 +1,36 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/scenario-hardening/status-index.schema.json",
+  "title": "SAFOR Scenario Status Index",
+  "type": "object",
+  "required": [
+    "format",
+    "schemaVersion",
+    "suiteId",
+    "allowedStatuses",
+    "summary",
+    "scenarios"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_SCENARIO_STATUS_INDEX"
+    },
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "suiteId": {
+      "const": "SAFOR-HARDENING-200"
+    },
+    "allowedStatuses": {
+      "type": "array"
+    },
+    "summary": {
+      "type": "object"
+    },
+    "scenarios": {
+      "type": "object",
+      "minProperties": 200,
+      "maxProperties": 200
+    }
+  }
+}

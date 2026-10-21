@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/scenario-hardening/scenario.schema.json",
+  "title": "SAFOR Scenario Test",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "suiteId",
+    "scenarioId",
+    "scenarioVersion",
+    "category",
+    "title",
+    "priority",
+    "target",
+    "objective",
+    "preconditions",
+    "stimulus",
+    "expectedInvariants",
+    "forbiddenOutcomes",
+    "evidenceContract",
+    "allowedVerdicts",
+    "learningGoal",
+    "sourceRefs",
+    "statusRef",
+    "immutableDefinition"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_SCENARIO_TEST"
+    },
+    "schemaVersion": {
+      "const": "1.0"
+    },
+    "suiteId": {
+      "const": "SAFOR-HARDENING-200"
+    },
+    "scenarioId": {
+      "type": "string",
+      "pattern": "^SC-[0-9]{3}$"
+    },
+    "scenarioVersion": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "category": {
+      "type": "object",
+      "required": [
+        "id",
+        "name"
+      ],
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "priority": {
+      "enum": [
+        "P0",
+        "P1",
+        "P2"
+      ]
+    },
+    "target": {
+      "type": "object"
+    },
+    "objective": {
+      "type": "string",
+      "minLength": 1
+    },
+    "preconditions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "stimulus": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expectedInvariants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "forbiddenOutcomes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "evidenceContract": {
+      "type": "object"
+    },
+    "allowedVerdicts": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "PASS",
+          "FAIL",
+          "ERROR",
+          "BLOCKED",
+          "INCONCLUSIVE"
+        ]
+      }
+    },
+    "learningGoal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "sourceRefs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "statusRef": {
+      "type": "string",
+      "minLength": 1
+    },
+    "immutableDefinition": {
+      "const": true
+    }
+  }
+}

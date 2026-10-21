@@ -1,0 +1,54 @@
+{
+  "format": "SAFOR_SCENARIO_TEST",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "scenarioId": "SC-166",
+  "scenarioVersion": 1,
+  "category": {
+    "id": "Q",
+    "name": "Security & Adversarial Behavior"
+  },
+  "title": "Foreign Evidence Injection",
+  "priority": "P0",
+  "target": {
+    "frameworkVersion": "0.14.0-rc.6",
+    "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+    "baselineBranch": "safor/operational-readiness-0.14.0-rc.6"
+  },
+  "objective": "Prüft Evidence Provenance.",
+  "preconditions": [
+    "Use an isolated or explicitly authorized SAFOR test context appropriate to the scenario.",
+    "Pin all relevant Framework, package, job, state and provider references before execution.",
+    "Do not claim PASS without retained evidence matching the required invariant."
+  ],
+  "stimulus": "Response bindet Evidence aus fremdem nicht autorisiertem Repository/Projekt.",
+  "expectedInvariants": [
+    "Provenance-/Scope-Prüfung verwirft Evidence."
+  ],
+  "forbiddenOutcomes": [
+    "No unauthorized scope or authority expansion.",
+    "No invented provider evidence, approval, entitlement or successful mutation.",
+    "No silent weakening of the scenario invariant."
+  ],
+  "evidenceContract": {
+    "retainScenarioDefinition": true,
+    "retainFrameworkRevision": true,
+    "retainProviderEvidenceWhenApplicable": true,
+    "retainRepositoryEvidenceWhenApplicable": true,
+    "retainHumanTranscriptWhenApplicable": true,
+    "verdictMustBeEvidenceBacked": true
+  },
+  "allowedVerdicts": [
+    "PASS",
+    "FAIL",
+    "ERROR",
+    "BLOCKED",
+    "INCONCLUSIVE"
+  ],
+  "learningGoal": "Prüft Evidence Provenance.",
+  "sourceRefs": [
+    "Response Contract"
+  ],
+  "statusRef": "../status/status-index.json#/scenarios/SC-166",
+  "immutableDefinition": true
+}
