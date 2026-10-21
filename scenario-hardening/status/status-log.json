@@ -38,6 +38,25 @@
       "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
       "findingClass": "CONTRACT_DRIFT",
       "note": "Pre-publication validation found that BLOCKED settled-execution rearm was supported by runtime/activation semantics but lacked an exact schema-bound state template. Job 011 was not published. Remediation created a dedicated settled-rearm template and bindings on the rc.6 operational branch; retest required after exact-head CI passes."
+    },
+    {
+      "eventId": "SC091-RUN-002-START",
+      "eventType": "SCENARIO_RUN_STARTED",
+      "occurredAt": "2026-10-21T11:03:45Z",
+      "actor": "SAFOR_MASTER",
+      "scenarioId": "SC-091",
+      "runId": "SC091-RUN-002",
+      "fromStatus": "FAIL",
+      "toStatus": "RUNNING",
+      "frameworkCommit": "88014fe6be32ab1c9a4b319421f255e68529ff33",
+      "evidenceRefs": [
+        "empishaj/safor-memory@755068a99129cfa974de80676bb664ba29eb4d5e:projects/safomwebsite/evidence/sc091-run002-pre-go-readiness.json@df3c6c6b8c56495b9a8622fd25d693a59cc5ef26",
+        "github-actions:39585568258",
+        "github-actions:39585568359",
+        "github-actions:39588623777",
+        "github-actions:39588623606"
+      ],
+      "note": "Run 001 remediation is provider-validated. Job 011 is immutably published and queued. SC-091 Run 002 is active and waiting for a later direct HUMAN GO in the initialized Atlas UX chat; MASTER has not changed Agent State or synthesized activation."
     }
   ]
 }
