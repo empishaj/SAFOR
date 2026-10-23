@@ -1,0 +1,33 @@
+{
+  "format": "SAFOR_SCENARIO_PHASE_EVIDENCE",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "scenarioId": "SC-091",
+  "runId": "SC091-RUN-002",
+  "phase": "CHAT_RECOVERED_WAITING_DIRECT_HUMAN_GO",
+  "observedAt": "2026-10-21T12:27:56Z",
+  "actor": "HUMAN:empishaj",
+  "reportedAcknowledgement": "Agent Atlas UX (worker-architect) bereit | Status: WAITING_HUMAN_GO",
+  "expectedAcknowledgement": "Agent Atlas UX (worker-architect) bereit | Status: WAITING_HUMAN_GO",
+  "acknowledgementMatchesExactly": true,
+  "evidenceRefs": [
+    "empishaj/safor-memory@5289e8a53d7311ec70a459bc5c353739e81c710c:projects/safomwebsite/evidence/sc091-atlas-chat-recovery-ack-001.json@18fb5c680f007e9d5c700201835864feb6129254",
+    "empishaj/safor-memory@00413c7b8158a60dad2653217b753deaa5f406fd:projects/safomwebsite/master/chat-bindings/worker-architect.json@f2e80248de934be9be7c5ee1f8da26c90c044090"
+  ],
+  "guards": {
+    "identityRevisionUnchanged": true,
+    "agentStateUnchangedDuringBootstrap": true,
+    "job011Unchanged": true,
+    "humanGoNotYetObserved": true,
+    "humanGoEvidenceNotYetCreated": true,
+    "job011NotYetClaimed": true,
+    "productRepositoryNotMutated": true
+  },
+  "nextAuthorizedAction": {
+    "actor": "HUMAN",
+    "surface": "THE_SAME_RECOVERED_ATLAS_UX_CHAT",
+    "message": "GO",
+    "additionalTextAllowed": false
+  },
+  "immutable": true
+}

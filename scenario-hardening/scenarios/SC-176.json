@@ -1,0 +1,54 @@
+{
+  "format": "SAFOR_SCENARIO_TEST",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "scenarioId": "SC-176",
+  "scenarioVersion": 1,
+  "category": {
+    "id": "R",
+    "name": "Provider Chaos & Resilience"
+  },
+  "title": "Rights Revoked Mid Job",
+  "priority": "P0",
+  "target": {
+    "frameworkVersion": "0.14.0-rc.6",
+    "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+    "baselineBranch": "safor/operational-readiness-0.14.0-rc.6"
+  },
+  "objective": "Prüft Dynamic Capability.",
+  "preconditions": [
+    "Use an isolated or explicitly authorized SAFOR test context appropriate to the scenario.",
+    "Pin all relevant Framework, package, job, state and provider references before execution.",
+    "Do not claim PASS without retained evidence matching the required invariant."
+  ],
+  "stimulus": "Providerrecht verschwindet nach Claim.",
+  "expectedInvariants": [
+    "Nächste privilegierte Mutation stoppt; Rechte werden nicht gecacht als dauerhaft."
+  ],
+  "forbiddenOutcomes": [
+    "No unauthorized scope or authority expansion.",
+    "No invented provider evidence, approval, entitlement or successful mutation.",
+    "No silent weakening of the scenario invariant."
+  ],
+  "evidenceContract": {
+    "retainScenarioDefinition": true,
+    "retainFrameworkRevision": true,
+    "retainProviderEvidenceWhenApplicable": true,
+    "retainRepositoryEvidenceWhenApplicable": true,
+    "retainHumanTranscriptWhenApplicable": true,
+    "verdictMustBeEvidenceBacked": true
+  },
+  "allowedVerdicts": [
+    "PASS",
+    "FAIL",
+    "ERROR",
+    "BLOCKED",
+    "INCONCLUSIVE"
+  ],
+  "learningGoal": "Prüft Dynamic Capability.",
+  "sourceRefs": [
+    "Authorization"
+  ],
+  "statusRef": "../status/status-index.json#/scenarios/SC-176",
+  "immutableDefinition": true
+}

@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://safor.dev/schemas/scenario-hardening/status-index.schema.json",
+  "title": "SAFOR Scenario Status Index",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "format",
+    "schemaVersion",
+    "suiteId",
+    "updatedAt",
+    "updateRule",
+    "resolutionRule",
+    "allowedStatuses",
+    "scenarioUniverse",
+    "defaultRecord",
+    "summary",
+    "overrides"
+  ],
+  "properties": {
+    "format": {
+      "const": "SAFOR_SCENARIO_STATUS_INDEX"
+    },
+    "schemaVersion": {
+      "const": "1.1"
+    },
+    "suiteId": {
+      "const": "SAFOR-HARDENING-200"
+    },
+    "updatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updateRule": {
+      "const": "DERIVED_FROM_APPEND_ONLY_STATUS_EVENTS"
+    },
+    "resolutionRule": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allowedStatuses": {
+      "type": "array",
+      "minItems": 8,
+      "maxItems": 8,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/status"
+      }
+    },
+    "scenarioUniverse": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manifestRef",
+        "scenarioCount",
+        "idPattern"
+      ],
+      "properties": {
+        "manifestRef": {
+          "const": "../manifest.json"
+        },
+        "scenarioCount": {
+          "const": 200
+        },
+        "idPattern": {
+          "const": "^SC-[0-9]{3}$"
+        }
+      }
+    },
+    "defaultRecord": {
+      "$ref": "#/$defs/statusRecord"
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "total",
+        "NOT_RUN",
+        "RUNNING",
+        "PASS",
+        "FAIL",
+        "ERROR",
+        "BLOCKED",
+        "INCONCLUSIVE",
+        "SKIPPED"
+      ],
+      "properties": {
+        "total": {
+          "const": 200
+        },
+        "NOT_RUN": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "RUNNING": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "PASS": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "FAIL": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ERROR": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "BLOCKED": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "INCONCLUSIVE": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "SKIPPED": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "overrides": {
+      "type": "object",
+      "maxProperties": 200,
+      "propertyNames": {
+        "pattern": "^SC-[0-9]{3}$"
+      },
+      "additionalProperties": {
+        "$ref": "#/$defs/statusRecord"
+      }
+    }
+  },
+  "$defs": {
+    "status": {
+      "enum": [
+        "NOT_RUN",
+        "RUNNING",
+        "PASS",
+        "FAIL",
+        "ERROR",
+        "BLOCKED",
+        "INCONCLUSIVE",
+        "SKIPPED"
+      ]
+    },
+    "terminalStatus": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "ERROR",
+        "BLOCKED",
+        "INCONCLUSIVE",
+        "SKIPPED"
+      ]
+    },
+    "statusRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "attempts",
+        "lastRunId",
+        "lastRunAt",
+        "latestEvidenceRefs",
+        "latestVerdictReason",
+        "lastFrameworkCommit",
+        "remediationRequired",
+        "retestRequired"
+      ],
+      "properties": {
+        "status": {
+          "$ref": "#/$defs/status"
+        },
+        "attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lastRunId": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastRunAt": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "latestEvidenceRefs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "latestVerdictReason": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lastFrameworkCommit": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "remediationRequired": {
+          "type": "boolean"
+        },
+        "retestRequired": {
+          "type": "boolean"
+        },
+        "previousTerminalStatus": {
+          "$ref": "#/$defs/terminalStatus"
+        },
+        "previousTerminalRunId": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

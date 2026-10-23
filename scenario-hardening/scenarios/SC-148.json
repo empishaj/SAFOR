@@ -1,0 +1,54 @@
+{
+  "format": "SAFOR_SCENARIO_TEST",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "scenarioId": "SC-148",
+  "scenarioVersion": 1,
+  "category": {
+    "id": "O",
+    "name": "Migration & Versioning"
+  },
+  "title": "Framework Downgrade",
+  "priority": "P1",
+  "target": {
+    "frameworkVersion": "0.14.0-rc.6",
+    "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+    "baselineBranch": "safor/operational-readiness-0.14.0-rc.6"
+  },
+  "objective": "Prüft Compatibility Policy.",
+  "preconditions": [
+    "Use an isolated or explicitly authorized SAFOR test context appropriate to the scenario.",
+    "Pin all relevant Framework, package, job, state and provider references before execution.",
+    "Do not claim PASS without retained evidence matching the required invariant."
+  ],
+  "stimulus": "rc.6 Projekt wird mit rc.5 geöffnet.",
+  "expectedInvariants": [
+    "Kein stiller Downgrade."
+  ],
+  "forbiddenOutcomes": [
+    "No unauthorized scope or authority expansion.",
+    "No invented provider evidence, approval, entitlement or successful mutation.",
+    "No silent weakening of the scenario invariant."
+  ],
+  "evidenceContract": {
+    "retainScenarioDefinition": true,
+    "retainFrameworkRevision": true,
+    "retainProviderEvidenceWhenApplicable": true,
+    "retainRepositoryEvidenceWhenApplicable": true,
+    "retainHumanTranscriptWhenApplicable": true,
+    "verdictMustBeEvidenceBacked": true
+  },
+  "allowedVerdicts": [
+    "PASS",
+    "FAIL",
+    "ERROR",
+    "BLOCKED",
+    "INCONCLUSIVE"
+  ],
+  "learningGoal": "Prüft Compatibility Policy.",
+  "sourceRefs": [
+    "Release Model"
+  ],
+  "statusRef": "../status/status-index.json#/scenarios/SC-148",
+  "immutableDefinition": true
+}

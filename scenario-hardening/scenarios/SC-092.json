@@ -1,0 +1,54 @@
+{
+  "format": "SAFOR_SCENARIO_TEST",
+  "schemaVersion": "1.0",
+  "suiteId": "SAFOR-HARDENING-200",
+  "scenarioId": "SC-092",
+  "scenarioVersion": 1,
+  "category": {
+    "id": "J",
+    "name": "Single-Agent Lifecycle & Rework"
+  },
+  "title": "Missing-Input Rework",
+  "priority": "P0",
+  "target": {
+    "frameworkVersion": "0.14.0-rc.6",
+    "frameworkCommit": "1596f4677c23d9838db25dc06f608395aee2c5c3",
+    "baselineBranch": "safor/operational-readiness-0.14.0-rc.6"
+  },
+  "objective": "Regression des realen Job-010-Learnings.",
+  "preconditions": [
+    "Use an isolated or explicitly authorized SAFOR test context appropriate to the scenario.",
+    "Pin all relevant Framework, package, job, state and provider references before execution.",
+    "Do not claim PASS without retained evidence matching the required invariant."
+  ],
+  "stimulus": "Job blockiert wegen fehlender Inputs und wird durch source-bound Rework ersetzt.",
+  "expectedInvariants": [
+    "Historie/alter Job bleiben immutable; neuer Job erhält neue Inputs und JobId."
+  ],
+  "forbiddenOutcomes": [
+    "No unauthorized scope or authority expansion.",
+    "No invented provider evidence, approval, entitlement or successful mutation.",
+    "No silent weakening of the scenario invariant."
+  ],
+  "evidenceContract": {
+    "retainScenarioDefinition": true,
+    "retainFrameworkRevision": true,
+    "retainProviderEvidenceWhenApplicable": true,
+    "retainRepositoryEvidenceWhenApplicable": true,
+    "retainHumanTranscriptWhenApplicable": true,
+    "verdictMustBeEvidenceBacked": true
+  },
+  "allowedVerdicts": [
+    "PASS",
+    "FAIL",
+    "ERROR",
+    "BLOCKED",
+    "INCONCLUSIVE"
+  ],
+  "learningGoal": "Regression des realen Job-010-Learnings.",
+  "sourceRefs": [
+    "OR-10"
+  ],
+  "statusRef": "../status/status-index.json#/scenarios/SC-092",
+  "immutableDefinition": true
+}
